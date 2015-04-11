@@ -200,7 +200,7 @@ class Order extends Controller {
     
     protected function getList() {
         $data = $this->theme->language('sale/order');
-        //$this->theme->test($this->session->data);
+        
         if (isset($this->request->get['filter_order_id'])) {
             $filter_order_id = $this->request->get['filter_order_id'];
         } else {

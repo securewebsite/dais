@@ -126,12 +126,12 @@ class Footerblocks extends Controller {
         endswitch;
         
         foreach ($menus as $menu):
-            $block = array();
+            $block                      = array();
             $this->items[$menu['type']] = $menu['items'];
-            $block['class'] = $class;
-            $block['menu_name'] = $menu['name'];
-            $block['menu_items'] = $this->{$menu['type']}();
-            $data['menu_blocks'][] = $block;
+            $block['class']             = $class;
+            $block['menu_name']         = $menu['name'];
+            $block['menu_items']        = call_user_func(array(__CLASS__, $menu['type']));
+            $data['menu_blocks'][]      = $block;
         endforeach;
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);

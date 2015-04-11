@@ -60,7 +60,7 @@ class Contact extends Controller {
     }
     
     public function send() {
-        $data = $this->theme->language('content/contact');
+        $this->theme->language('content/contact');
         
         $json = array();
 

@@ -16,7 +16,6 @@
 
 namespace Front\Model\Checkout;
 use Dais\Engine\Model;
-use Dais\Library\Language;
 use Dais\Library\Template;
 use Dais\Library\Text;
 
@@ -537,12 +536,6 @@ class Order extends Model {
 			");
 
 			$temp['status'] = $order_status_query->row['name'];
-            
-            if ($order_status_query->num_rows):
-                $order_status = $order_status_query->row['name'];
-            else:
-                $order_status = '';
-            endif;
             
             // Add Reward
             if ($product_reward && ($order_status_id == $this->config->get('config_order_status_id'))):

@@ -177,7 +177,7 @@ class Notification extends Controller {
             $this->response->redirect($this->url->link('account/notification/#tab-settings', '', 'SSL'));
         endif;
 
-        $data = $this->theme->language('account/notification');
+        $this->theme->language('account/notification');
     }
 
     public function webversion() {

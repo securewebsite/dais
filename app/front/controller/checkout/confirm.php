@@ -339,7 +339,9 @@ class Confirm extends Controller {
 
             if ($affiliate_id && ($affiliate_id !== $this->customer->getId())):
                 $order['affiliate_id'] = $affiliate_id;
-                $order['commission']   = $this->model_account_affiliate->getAffiliateCommission($affiliate_id);
+                $percent               = $this->model_account_affiliate->getAffiliateCommission($affiliate_id);
+                $commission            = $subtotal * ($percent / 100);
+                $order['commission']   = number_format($commission, 2);
             else:
                 $order['affiliate_id'] = 0;
                 $order['commission']   = 0;

@@ -341,8 +341,6 @@ class Customer extends Model {
     }
 
     public function getAffiliateDetails($customer_id) {
-        $details = array();
-
         $query = $this->db->query("
             SELECT 
                 affiliate_status, 
@@ -374,21 +372,8 @@ class Customer extends Model {
             $this->db->query("
 				UPDATE {$this->db->prefix}customer 
 				SET approved = '1' 
-				WHERE customer_id = '" . (int)$customer_id . "'");
-            
-            $this->language->load('mail/customer');
-            
-            $this->theme->model('setting/store');
-            
-            $store_info = $this->model_setting_store->getStore($customer_info['store_id']);
-            
-            if ($store_info):
-                $store_name = $store_info['name'];
-                $store_url = $store_info['url'] . 'account/login';
-            else:
-                $store_name = $this->config->get('config_name');
-                $store_url = $this->app['http.public'] . 'account/login';
-            endif;
+				WHERE customer_id = '" . (int)$customer_id . "'
+            ");
 
             $this->theme->notify('admin_customer_approve', array('customer_id' => $customer_id));
             $this->theme->trigger('admin_approve_customer', array('customer_id' => $customer_id));
@@ -631,22 +616,6 @@ class Customer extends Model {
                     date_added  = NOW()
             ");
             
-            $this->language->load('mail/customer');
-            
-            if ($customer_info['store_id']):
-                $this->theme->model('setting/store');
-                
-                $store_info = $this->model_setting_store->getStore($customer_info['store_id']);
-                
-                if ($store_info):
-                    $store_name = $store_info['name'];
-                else:
-                    $store_name = $this->config->get('config_name');
-                endif;
-            else:
-                $store_name = $this->config->get('config_name');
-            endif;
-
             $callback = array(
                 'customer_id' => $customer_id,
                 'credit'      => $this->currency->format($amount, $this->config->get('config_currency')),
@@ -969,22 +938,6 @@ class Customer extends Model {
 					description = '" . $this->db->escape($description) . "', 
 					date_added = NOW()
 			");
-            
-            $this->language->load('mail/customer');
-            
-            if ($order_id):
-                $this->theme->model('sale/order');
-                
-                $order_info = $this->model_sale_order->getOrder($order_id);
-                
-                if ($order_info):
-                    $store_name = $order_info['store_name'];
-                else:
-                    $store_name = $this->config->get('config_name');
-                endif;
-            else:
-                $store_name = $this->config->get('config_name');
-            endif;
             
             $callback = array(
                 'customer_id' => $customer_id,

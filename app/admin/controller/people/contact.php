@@ -71,16 +71,6 @@ class Contact extends Controller {
             endif;
             
             if (!$json):
-                $this->theme->model('setting/store');
-                
-                $store_info = $this->model_setting_store->getStore($this->request->post['store_id']);
-                
-                if ($store_info):
-                    $store_name = $store_info['name'];
-                else:
-                    $store_name = $this->config->get('config_name');
-                endif;
-                
                 $this->theme->model('people/customer');
                 $this->theme->model('people/customergroup');
                 $this->theme->model('sale/order');

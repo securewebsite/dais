@@ -16,7 +16,6 @@
 
 namespace Admin\Model\Sale;
 use Dais\Engine\Model;
-use Dais\Library\Language;
 use Dais\Library\Text;
 use Dais\Library\Template;
 

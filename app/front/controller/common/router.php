@@ -37,7 +37,7 @@ class Router extends Controller {
             
             // Slug Routes
             $routes = $this->get('routes');
-            //$this->theme->test($routes);
+            
             if (!isset($this->request->get['route'])):
                 foreach ($slugs as $slug):
                     $slug = strtolower($slug);
@@ -91,7 +91,7 @@ class Router extends Controller {
                     endforeach;
                 endforeach;
             endif;
-            //$this->theme->test($this->request->get['route']);
+            
             unset($slugs);
             
             // Native Routes

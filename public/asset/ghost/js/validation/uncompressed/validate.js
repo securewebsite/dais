@@ -27,7 +27,6 @@ if (typeof jQuery === 'undefined') {
 }(jQuery));
 
 (function($) {
-    // TODO: Remove backward compatibility in v0.7.0
     /**
      * Constructor
      *
@@ -2557,7 +2556,6 @@ if (typeof jQuery === 'undefined') {
          *
          * For more information see http://en.wikipedia.org/wiki/ISO_9362
          *
-         * @todo The 5 and 6 characters are an ISO 3166-1 country code, this could also be validated
          * @param {FormValidation.Base} validator The validator plugin instance
          * @param {jQuery} $field Field element
          * @param {Object} options Can consist of the following keys:
@@ -4469,7 +4467,6 @@ if (typeof jQuery === 'undefined') {
                 k     = parseInt(value.substr(12, 1), 10);
 
             // Validate date of birth
-            // FIXME: Validate the year of birth
             if (day > 31 || month > 12) {
                 return false;
             }

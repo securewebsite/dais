@@ -1048,7 +1048,9 @@ class Paypalexpress extends Controller {
 
             if ($affiliate_id && ($affiliate_id !== $this->customer->getId())):
                 $data['affiliate_id'] = $affiliate_id;
-                $data['commission']   = $this->model_account_affiliate->getAffiliateCommission($affiliate_id);
+                $percent              = $this->model_account_affiliate->getAffiliateCommission($affiliate_id);
+                $commission           = $subtotal * ($percent / 100);
+                $data['commission']   = number_format($commission, 2);
             else:
                 $data['affiliate_id'] = 0;
                 $data['commission']   = 0;

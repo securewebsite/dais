@@ -29,12 +29,12 @@ class Sidebarmenu extends Controller {
         
         $data['menu_blocks'] = array();
         
-        $path = false;
+        $path  = false;
         $bpath = false;
         
         if (isset($this->request->get['path'])):
             $parts = explode('_', (string)$this->request->get['path']);
-            $path = true;
+            $path  = true;
         elseif (isset($this->request->get['bpath'])):
             $parts = explode('_', (string)$this->request->get['bpath']);
             $bpath = true;
@@ -57,9 +57,9 @@ class Sidebarmenu extends Controller {
         if (isset($layout_id) && $layout_id !== $menu['layout_id']):
             continue;
         endif;
-        $block = array();
+        $block                      = array();
         $this->items[$menu['type']] = $menu['items'];
-        $block['menu_name'] = $menu['name'];
+        $block['menu_name']         = $menu['name'];
         
         /**
          * This is required to deliniate active links since
@@ -68,16 +68,16 @@ class Sidebarmenu extends Controller {
          * AND content category menu at the same time.
          */
         if ($menu['type'] === 'product_category' && $bpath === true):
-            $block['menu_item_id'] = 0;
+            $block['menu_item_id']  = 0;
             $block['menu_child_id'] = 0;
         elseif ($menu['type'] === 'content_category' && $path === true):
-            $block['menu_item_id'] = 0;
+            $block['menu_item_id']  = 0;
             $block['menu_child_id'] = 0;
         else:
-            $block['menu_item_id'] = $menu_item_id;
+            $block['menu_item_id']  = $menu_item_id;
             $block['menu_child_id'] = $child_id;
         endif;
-        $block['menu_items'] = $this->{$menu['type']}();
+        $block['menu_items']   = call_user_func(array(__CLASS__, $menu['type']));
         $data['menu_blocks'][] = $block;
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);

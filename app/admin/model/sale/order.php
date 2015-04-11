@@ -16,7 +16,6 @@
 
 namespace Admin\Model\Sale;
 use Dais\Engine\Model;
-use Dais\Library\Language;
 
 class Order extends Model {
     public function addOrder($data) {

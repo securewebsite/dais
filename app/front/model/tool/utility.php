@@ -81,15 +81,9 @@ class Utility extends Model {
             ");
             
             if ($country_query->num_rows):
-				$country        = $country_query->row['name'];
-				$iso_code_2     = $country_query->row['iso_code_2'];
-				$iso_code_3     = $country_query->row['iso_code_3'];
-				$address_format = $country_query->row['address_format'];
+				$country = $country_query->row['name'];
             else:
-				$country        = '';
-				$iso_code_2     = '';
-				$iso_code_3     = '';
-				$address_format = '';
+				$country = '';
             endif;
             
             $zone_query = $this->db->query("
@@ -99,11 +93,9 @@ class Utility extends Model {
             ");
             
             if ($zone_query->num_rows):
-				$zone      = $zone_query->row['name'];
-				$zone_code = $zone_query->row['code'];
+				$zone = $zone_query->row['name'];
             else:
-				$zone      = '';
-				$zone_code = '';
+				$zone = '';
             endif;
             
             $address_data = array(

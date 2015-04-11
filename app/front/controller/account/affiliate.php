@@ -120,7 +120,7 @@ class Affiliate extends Controller {
 		if ($this->request->server['REQUEST_METHOD'] != 'POST'):
 			$customer_info = $this->model_account_affiliate->getSettings();
 		endif;
-        //$this->theme->test($customer_info);
+        
 		$data['is_affiliate'] = $this->customer->isAffiliate();
 		$data['customer_id']  = $this->customer->getId();
 

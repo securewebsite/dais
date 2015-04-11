@@ -351,7 +351,7 @@ class Notification extends Controller {
             $this->error['email_slug'] = $this->language->get('lang_error_email_slug');
         endif;
 
-        if ($this->request->post['configurable'] == true && $this->encode->strlen($this->request->post['config_description']) < 3):
+        if ($this->request->post['configurable'] === true && $this->encode->strlen($this->request->post['config_description']) < 3):
             $this->error['description'] = $this->language->get('lang_error_description');
         endif;
         

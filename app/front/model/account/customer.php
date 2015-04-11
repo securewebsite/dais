@@ -150,8 +150,6 @@ class Customer extends Model {
                 customer_id = '" . (int)$customer_id . "', 
                 settings    = '" . $this->db->escape($notify) . "'
         ");
-        
-        $lang = $this->language->load('mail/customer');
 
         $callback = array(
             'customer_id' => $customer_id,
@@ -468,8 +466,6 @@ class Customer extends Model {
 
         $text = preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), "\n", trim(str_replace($find, $replace, $format)));
         $html = str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format))));
-
-        $search  = array('!customer_details!');
 
         foreach ($message as $key => $value):
             if ($key == 'html'):

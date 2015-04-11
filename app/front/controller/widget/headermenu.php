@@ -97,7 +97,7 @@ class Headermenu extends Controller {
         
         foreach ($menus as $menu):
             $this->items[$menu['type']] = $menu['items'];
-            $data['menu_items'] = array_merge($data['menu_items'], $this->{$menu['type']}());
+            $data['menu_items'] = array_merge($data['menu_items'], call_user_func(array(__CLASS__, $menu['type'])));
         endforeach;
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);

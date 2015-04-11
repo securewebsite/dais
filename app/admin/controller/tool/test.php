@@ -16,8 +16,6 @@
 
 namespace Admin\Controller\Tool;
 use Dais\Engine\Controller;
-use Dais\Library\Template;
-use Dais\Library\Text;
 
 class Test extends Controller {
     public function index() {
@@ -40,39 +38,5 @@ class Test extends Controller {
         $data = $this->theme->render_controllers($data);
         
         $this->response->setOutput($this->theme->view('tool/test', $data));
-    }
-
-    public function email_test($data, $message) {
-        //$this->theme->test($data);
-        $search = array(
-            '!return_id!',
-            '!status!',
-            '!link!',
-            '!comment!'
-        );
-
-        $replace = array(
-            $data['return_id'],
-            $data['status'],
-            $data['link'],
-            $data['comment']
-        );
-
-        $html_replace = array(
-            $data['return_id'],
-            $data['status'],
-            $data['link'],
-            nl2br($data['comment'])
-        );
-
-        foreach ($message as $key => $value):
-            if ($key == 'html'):
-                $message['html'] = str_replace($search, $html_replace, $value);
-            else:
-                $message[$key] = str_replace($search, $replace, $value);
-            endif;
-        endforeach;
-        //$this->theme->test($message);
-        return $message;
     }
 }

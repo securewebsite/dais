@@ -269,7 +269,7 @@ class Ups extends Model {
                 else:
                     $rated_shipments = $rating_service_selection_response->getElementsByTagName('RatedShipment');
                     
-                    foreach ($rated_shipments as $rated_shipment) {
+                    foreach ($rated_shipments as $rated_shipment):
                         $service       = $rated_shipment->getElementsByTagName('Service')->item(0);
                         $code          = $service->getElementsByTagName('Code')->item(0)->nodeValue;
                         $total_charges = $rated_shipment->getElementsByTagName('TotalCharges')->item(0);
