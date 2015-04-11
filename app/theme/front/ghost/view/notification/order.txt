@@ -1,0 +1,88 @@
+<?php if ($customer_id): ?>
+
+<?= $lang_text_link; ?> 
+<?= $link; ?> 
+
+<?php endif; ?>
+<?php if ($download): ?>
+
+<?= $lang_text_download; ?> 
+<?= $download; ?> 
+
+<?php endif; ?>
+<?php if (isset($order_id)): ?>
+<?= $lang_text_order_id; ?>: <?= $order_id; ?> 
+<?php endif; ?>
+<?php if (isset($invoice_no)): ?>
+<?= $lang_text_invoice_no; ?>: <?= $invoice_no; ?> 
+<?php endif; ?>
+<?= $lang_text_date_added; ?>: <?= $date_added; ?> 
+<?= $lang_text_order_status; ?>: <?= $order_status; ?> 
+<?= $lang_text_payment_method; ?>: <?= $payment_method; ?> 
+<?php if ($shipping_method): ?>
+<?= $lang_text_shipping_method; ?>: <?= $shipping_method; ?> 
+<?php endif; ?>
+<?= $lang_text_email; ?>: <?= $email; ?> 
+<?= $lang_text_telephone; ?>: <?= $telephone; ?> 
+-------------------------------- 
+
+
+<?= $lang_text_payment_address; ?> 
+-------------------------------- 
+<?= $text_payment_address; ?>
+
+
+
+<?php if ($text_shipping_address): ?>
+<?= $lang_text_shipping_address; ?> 
+-------------------------------- 
+<?= $text_shipping_address; ?> 
+<?php endif; ?>
+
+
+<?php if (!empty($products) || !empty($giftcards)): ?>
+Products 
+-------------------------------- 
+<?php foreach ($products as $product): ?>
+Name: <?= $product['name']; ?> 
+<?php if (!empty($product['url'])): ?>
+URL: <?= $product['url']; ?> 
+<?php endif; ?>	
+<?php if ($product['model']): ?>
+<?= $lang_text_model; ?>: <?= $product['model']; ?> 
+<?php endif; ?>
+<?php if ($product['hangout']): ?>
+<?= $lang_text_google; ?>: <?= $product['hangout']; ?> 
+<?php endif; ?>			
+<?php if (!empty($product['option'])): ?>
+Options:
+<?php foreach ($product['option'] as $option): ?>
+- <?= $option['name']; ?>: <?= $option['value']; ?> 
+<?php endforeach; ?>
+<?php endif; ?>
+
+<?= $product['quantity']; ?> x <?= $product['price']; ?> Total: <?= $product['total']; ?> 
+-------------------------------- 
+<?php endforeach; ?>
+<?php if (isset($giftcards)): ?>
+<?php foreach ($giftcards as $giftcard): ?>
+<?= $giftcard['description']; ?>: <?= $giftcard['amount']; ?> 
+<?php endforeach; ?>
+<?php endif; ?>
+<?php endif; // end products?>
+
+<?php if (!empty($totals)): ?>
+<?php foreach ($totals as $total): ?>
+<?= $total['title']; ?>: <?= $total['text']; ?> 
+<?php endforeach; ?>
+-------------------------------- 
+<?php endif; ?>
+<?php if($comment): ?>
+<?= $lang_text_comment; ?> 
+<?= $comment; ?>
+-------------------------------- 
+<?php endif; ?>
+<?php if ($has_hangout): ?>
+<?= $lang_text_hangout_alert; ?> 
+-------------------------------- 
+<?php endif; ?>

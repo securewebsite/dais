@@ -1,0 +1,112 @@
+@charset "UTF-8";
+.heading_title {
+	margin: 0px 0 20px 0 !important;
+	font-size: 24px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #bcc1c7;
+	min-height: 55px;
+	color: #ffffff;
+}
+.heading_title span {
+	padding: 5px 15px;
+	background-color: #5ba4e5;
+	position: relative;
+	display: block;
+	float: left;
+}
+.heading_title span:after {
+	display: block;
+	width: 10px;
+	height: 10px;
+	position: absolute;
+	bottom: -5px;
+	left: 15px;
+	transform: rotate(45deg);
+	-ms-transform: rotate(45deg); /* IE 9 */
+	-moz-transform: rotate(45deg); /* Firefox */
+	-webkit-transform: rotate(45deg); /* Safari and Chrome */
+	-o-transform: rotate(45deg); /* Opera */
+	background-color: #5ba4e5;
+	content:"";
+}
+
+.category-list .panel {
+	margin-bottom: 20px;
+	background-color: #fff;
+	border: 1px solid #efefef;
+	border-width: 0 1px;
+	border-radius: 4px;
+	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+	box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.blog .meta { font-size: 1.2rem; }
+.blog .meta a { color: #212425; }
+
+.blog select {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	text-indent: 1px;
+	text-overflow: '' !important;
+	margin: 0 2px 0 0;
+	min-width: 200px;
+	cursor: pointer;
+	display: inline-block;
+}
+.blog label.select { position: relative; font-weight: normal; vertical-align: -10px; }
+.blog label.select:after {
+	content: "\f0d7"; 
+	font-family: FontAwesome;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 16px;
+	color: #718087;
+	right: 12px; 
+	top: 7px;
+    padding: 0 0 2px;
+    position: absolute;
+    pointer-events: none;
+}
+.blog label.select:before {
+    content: '';
+    right: 12px; 
+	top: 0px;
+    width: 16px; 
+	height: 16px;
+    position: absolute;
+    pointer-events: none;
+    display: block;
+}
+.blog .checkbox-inline.pui-init {
+	min-width:  20px;
+}
+.widget .list-group-item img {
+	float: left;
+}
+.widget .list-group-item span {
+	display:inline-block;
+	margin: 6px 0 0 10px;
+}
+
+.panel-body.widget {
+	border-top: #bcc1c7 2px solid;
+	padding-top: 2px;
+}
+
+a.hot-topic {
+	font-size: 32px;
+	display: block;
+	color: #212425;
+}
+a.hot-topic.active {
+	background-color: #bcc1c7;	
+}
+.widget .topic img {
+	float: left;
+}
+.widget .topic a span {
+	display:inline-block;
+	margin: 6px 0 0 10px;
+	color: #212425;
+}

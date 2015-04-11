@@ -1,0 +1,37 @@
+<% 	event.date_start = new Date(parseInt(event.start));
+	event.date_end = new Date(parseInt(event.end)); 
+%>
+<div id= "event-meta">
+    <%  var start_apm, start_minutes, end_apm, end_minutes;
+    	start_apm = event.date_start.getHours() > 12 ? 'PM' : 'AM';
+    	start_minutes = event.date_start.getMinutes() == 0 ? '00' : event.date_start.getMinutes();
+    	end_apm = event.date_end.getHours() > 12 ? 'PM' : 'AM';
+    	end_minutes = event.date_end.getMinutes() == 0 ? '00' : event.date_end.getMinutes();
+    %>
+    <div class="col-xs-12">
+	    <div class="thumbnail col-xs-2">
+			<a href="<%= event.url %>"><img src="<%= event.image %>" class="img-responsive"></a>
+	    </div>
+	    <div class="col-xs-10">
+		    <span><b><%= event.title %></b></span><br>
+		    <%= event.description %><br>
+		</div>
+	</div>
+    <% if (event.location) { %>
+	Location: <%= event.location %><br>
+    <% } %>
+    <% if (event.telephone) { %>
+	Telephone: <%= event.telephone %><br>
+    <% } %>
+    <% if (!event.finished) { %>
+    <span>Starts on <%= calendar.locale["ms" + event.date_start.getMonth()] %>. <%= event.date_start.getDate() %>, <%= event.date_start.getFullYear() %>, at <%= calendar.locale["t" + event.date_start.getHours()] %>:<%= start_minutes %><%= start_apm %> <i class="fa fa-clock-o"></i></span><br />
+    <span>Ends on <%= calendar.locale["ms" + event.date_end.getMonth()] %>. <%= event.date_end.getDate() %>, <%= event.date_end.getFullYear() %> at <%= calendar.locale["t" + event.date_end.getHours()] %>:<%= end_minutes %><%= end_apm %> <i class="fa fa-clock-o"></i></span><br />
+    <% } else { %>
+        <span><%= event.finished %></span><br>
+    <% } %>
+</div>
+<% if (!event.finished) { %>
+<div style="margin: 10px 0">
+    <a href="<%= event.url %>" class="btn btn-primary"><i class="fa fa-calendar"></i> more info</a>
+</div>
+<% } %>

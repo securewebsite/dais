@@ -1,0 +1,15 @@
+/app/database/config/*
+/app/install/*.sql
+!/app/install/ocx.sql
+/app/storage/cache/*
+/app/storage/compiled/*
+/app/storage/logs/*
+/app/storage/session/admin/*
+/app/storage/session/front/*
+/app/storage/views/*
+/app/front/controller/tool/test.php
+# change this to /public/image/* once cloned
+/public/image/cache/*
+.DS_Store
+Thumbs.db
+!.gitkeep

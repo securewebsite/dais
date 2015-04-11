@@ -1,0 +1,42 @@
+body {
+    background: #fff;
+}
+body, td, th, input, select, textarea, option, optgroup {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    color: #000;
+}
+h1 {
+    text-transform: uppercase;
+    color: #ccc;
+    text-align: right;
+    font-size: 24px;
+    font-weight: normal;
+    padding-bottom: 5px;
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 5px;
+    border: 1px solid #ddd;
+}
+
+th {
+    background: #eee;
+    text-align: left;
+}
+
+th.right, td.right {
+    text-align: right;
+}
+
+.store td {
+    border: 0;
+}
