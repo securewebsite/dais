@@ -40,7 +40,7 @@ class Ups extends Model {
         
         $method_data = array();
         
-        if ($status) {
+        if ($status):
             $weight      = $this->weight->convert($this->cart->getWeight(), $this->config->get('config_weight_class_id'), $this->config->get('ups_weight_class_id'));
             $weight_code = strtoupper($this->weight->getUnit($this->config->get('ups_weight_class_id')));
             

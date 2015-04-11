@@ -26,7 +26,7 @@ class Queue extends Controller {
 		$this->theme->model('tool/utility');
 
 		// First let's delete all sent emails to ease the search query
-		//$this->model_tool_utility->pruneQueue();
+		// this -> model_tool_utility -> pruneQueue // future use
 
 		// Now we can just grab the first 50
 		$emails = $this->model_tool_utility->getQueue();
