@@ -63,9 +63,9 @@ class Footerblocks extends Controller {
         endswitch;
         
         $data['menu_blocks'] = array();
-        $menus = array();
-        $widgets = array();
-        $all_widgets = array();
+        $menus               = array();
+        $widgets             = array();
+        $all_widgets         = array();
         
         $all_widgets = $this->config->get('footerblocks_widget');
         
