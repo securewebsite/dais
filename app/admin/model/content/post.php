@@ -49,9 +49,24 @@ class Post extends Model {
 					name = '" . $this->db->escape($value['name']) . "', 
 					meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', 
 					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-					description = '" . $this->db->escape($value['description']) . "', 
-					tag = '" . $this->db->escape($value['tag']) . "'
+					description = '" . $this->db->escape($value['description']) . "'
 			");
+
+            // process tags
+            if (isset($value['tag'])):
+                $tags = explode(',', $value['tag']);
+                foreach ($tags as $tag):
+                    $tag = trim($tag);
+                    $this->db->query("
+                        INSERT INTO {$this->db->prefix}tag 
+                        SET 
+                            section     = 'post', 
+                            element_id  = '" . (int)$post_id . "', 
+                            language_id = '" . (int)$language_id . "', 
+                            tag         = '" . $this->db->escape($tag) . "'
+                    ");
+                endforeach;
+            endif;
         }
         
         if (isset($data['post_store'])) {
@@ -181,9 +196,31 @@ class Post extends Model {
 					name = '" . $this->db->escape($value['name']) . "', 
 					meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', 
 					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-					description = '" . $this->db->escape($value['description']) . "', 
-					tag = '" . $this->db->escape($value['tag']) . "'
+					description = '" . $this->db->escape($value['description']) . "'
 			");
+
+            $this->db->query("
+                DELETE FROM {$this->db->prefix}tag 
+                WHERE section   = 'post' 
+                AND element_id  = '" . (int)$post_id . "' 
+                AND language_id = '" . (int)$language_id . "'
+            ");
+
+            // process tags
+            if (isset($value['tag'])):
+                $tags = explode(',', $value['tag']);
+                foreach ($tags as $tag):
+                    $tag = trim($tag);
+                    $this->db->query("
+                        INSERT INTO {$this->db->prefix}tag 
+                        SET 
+                            section     = 'post', 
+                            element_id  = '" . (int)$post_id . "', 
+                            language_id = '" . (int)$language_id . "', 
+                            tag         = '" . $this->db->escape($tag) . "'
+                    ");
+                endforeach;
+            endif;
         }
         
         $this->db->query("
@@ -347,6 +384,11 @@ class Post extends Model {
         $this->db->query("
             DELETE FROM {$this->db->prefix}route 
             WHERE query = 'post_id:" . (int)$post_id . "'");
+
+        $this->db->query("
+            DELETE FROM {$this->db->prefix}tag 
+            WHERE section  = 'post' 
+            AND element_id = '" . (int)$post_id . "'");
         
         $this->cache->delete('post');
         $this->cache->delete('posts');
@@ -365,8 +407,30 @@ class Post extends Model {
 			WHERE p.post_id = '" . (int)$post_id . "' 
 			AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
 		");
+
+        $query->row['tag'] = $this->getPostTags($post_id);
         
         return $query->row;
+    }
+
+    public function getPostTags($post_id) {
+        $query = $this->db->query("
+            SELECT tag 
+            FROM {$this->db->prefix}tag 
+            WHERE section   = 'post' 
+            AND element_id  = '" . (int)$post_id . "' 
+            AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+        ");
+        
+        if ($query->num_rows):
+            $tags = array();
+            foreach($query->rows as $row):
+                $tags[] = $row['tag'];
+            endforeach;
+            return implode(', ', $tags);
+        else:
+            return false;
+        endif;
     }
     
     public function getPosts($data = array()) {
@@ -524,7 +588,7 @@ class Post extends Model {
                 'description'      => $result['description'], 
                 'meta_keyword'     => $result['meta_keyword'], 
                 'meta_description' => $result['meta_description'], 
-                'tag'              => $result['tag']
+                'tag'              => $this->getPostTags($post_id)
             );
         }
         

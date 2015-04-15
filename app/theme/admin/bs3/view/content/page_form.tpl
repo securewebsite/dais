@@ -68,6 +68,12 @@
 										<textarea name="page_description[<?= $language['language_id']; ?>][meta_keywords]" class="form-control" rows="5"><?= isset($page_description[$language['language_id']]) ? $page_description[$language['language_id']]['meta_keywords'] : ''; ?></textarea>
 									</div>
 								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2" for="tag<?= $language['language_id']; ?>"><?= $lang_entry_tag; ?></label>
+									<div class="col-sm-6">
+										<input type="text" name="page_description[<?= $language['language_id']; ?>][tag]" value="<?= isset($page_description[$language['language_id']]) ? $page_description[$language['language_id']]['tag'] : ''; ?>" class="form-control">
+									</div>
+								</div>
 							</div>
 							<?php } ?>
 						</div>

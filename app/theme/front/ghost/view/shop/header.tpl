@@ -12,6 +12,23 @@
 <?php if ($keywords): ?>
 <meta name="keywords" content="<?= $keywords; ?>">
 <?php endif; ?>
+<?php if ($og_image): ?>
+<meta property="og:image" content="<?= $og_image; ?>"> 
+<?php endif; ?><?php if ($og_type): ?>
+<meta property="og:type" content="<?= $og_type; ?>"> 
+<?php endif; ?><?php if ($og_site_name): ?>
+<meta property="og:site_name" content="<?= $og_site_name; ?>"> 
+<?php endif; ?><?php if ($og_title): ?>
+<meta property="og:title" content="<?= $og_title; ?>"> 
+<?php endif; ?><?php if ($og_url): ?>
+<meta property="og:url" content="<?= $og_url; ?>"> 
+<?php endif; ?>
+<?php if($og_description): ?>
+<meta property="og:description" content="<?= $og_description; ?>"> 
+<?php endif; ?>
+<?php if ($canonical): ?>
+<link rel="canonical" href="<?= $canonical; ?>">
+<?php endif; ?>
 <?php if ($icon): ?>
 <link rel="shortcut icon" href="<?= $icon; ?>">
 <?php endif; ?>

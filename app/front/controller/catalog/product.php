@@ -216,8 +216,22 @@ class Product extends Controller {
             $this->breadcrumb->add($product_info['name'], 'catalog/product', 'product_id=' . $this->request->get['product_id'] . $url);
             
             $this->theme->setTitle($product_info['name']);
-            $this->theme->setDescription($product_info['meta_description']);
-            $this->theme->setKeywords($product_info['meta_keyword']);
+            
+            if ($product_info['meta_description']):
+                $description = $product_info['meta_description'];
+            else:
+                $description = $this->keyword->getDescription($product_info['description']);
+            endif;
+
+            $this->theme->setDescription($description);
+            
+            if ($product_info['meta_keyword']):
+                $keywords = $product_info['meta_keyword'];
+            else:
+                $keywords = $this->keyword->getKeywords(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8'));
+            endif;
+
+            $this->theme->setKeywords($keywords);
             
             $this->theme->setOgType('product');
             $this->theme->setOgDescription(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8'));

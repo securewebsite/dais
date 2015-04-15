@@ -41,6 +41,7 @@ use Dais\Library\Event;
 use Dais\Library\Filter;
 use Dais\Library\Hook;
 use Dais\Library\Javascript;
+use Dais\Library\Keyword;
 use Dais\Library\Language;
 use Dais\Library\Length;
 use Dais\Library\Log;
@@ -608,6 +609,10 @@ class Application {
         // encryption
         $this->data['encryption'] = function ($data) {
             return new Encryption($data['config_encryption'], $data);
+        };
+
+        $this->data['keyword'] = function ($data) {
+            return new Keyword($data);
         };
     }
     

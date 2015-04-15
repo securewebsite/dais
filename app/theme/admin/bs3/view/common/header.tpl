@@ -12,7 +12,7 @@
 <script>
 var text_confirm='<?= $lang_text_confirm; ?>';
 </script>
-<link rel="shortcut icon" href="asset/bs3/img/setting.png">
+<link rel="shortcut icon" href="../asset/bs3/img/setting.png">
 </head>
 <body>
 <?php if ($logged) { ?>

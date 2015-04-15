@@ -34,6 +34,7 @@ $_['lang_entry_title']            = 'Page Title:';
 $_['lang_entry_description']      = 'Content:';
 $_['lang_entry_meta_keyword']     = 'Meta Keywords:';
 $_['lang_entry_meta_description'] = 'Meta Description:';
+$_['lang_entry_tag']              = 'Tags:';
 $_['lang_entry_store']            = 'Stores:';
 $_['lang_entry_slug']             = 'URL Slug:<br /><span class="help">Do not use spaces instead replace spaces with - and make sure the slug is globally unique.</span>';
 $_['lang_entry_bottom']           = 'Bottom:<br/><span class="help">Display in the bottom footer.</span>';

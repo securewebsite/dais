@@ -400,7 +400,7 @@ final class Theme {
     }
     
     public function setDescription($description) {
-        $this->description = $description;
+        $this->description = $this->rip_tags($description);
     }
     
     public function getDescription() {
@@ -541,7 +541,7 @@ final class Theme {
         return implode('\\', $class);
     }
     
-    private function rip_tags($string) {
+    public function rip_tags($string) {
         
         // ----- remove HTML TAGs -----
         $string = preg_replace('/<[^>]*>/', ' ', $string);

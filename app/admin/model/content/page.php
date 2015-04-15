@@ -41,6 +41,22 @@ class Page extends Model {
 					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
 					meta_keywords = '" . $this->db->escape($value['meta_keywords']) . "'
 			");
+
+            // process tags
+            if (isset($value['tag'])):
+                $tags = explode(',', $value['tag']);
+                foreach ($tags as $tag):
+                    $tag = trim($tag);
+                    $this->db->query("
+                        INSERT INTO {$this->db->prefix}tag 
+                        SET 
+                            section     = 'page', 
+                            element_id  = '" . (int)$page_id . "', 
+                            language_id = '" . (int)$language_id . "', 
+                            tag         = '" . $this->db->escape($tag) . "'
+                    ");
+                endforeach;
+            endif;
         }
         
         if (isset($data['page_store'])) {
@@ -109,6 +125,29 @@ class Page extends Model {
 					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
 					meta_keywords = '" . $this->db->escape($value['meta_keywords']) . "'
 			");
+
+            $this->db->query("
+                DELETE FROM {$this->db->prefix}tag 
+                WHERE section   = 'page' 
+                AND element_id  = '" . (int)$page_id . "' 
+                AND language_id = '" . (int)$language_id . "'
+            ");
+
+            // process tags
+            if (isset($value['tag'])):
+                $tags = explode(',', $value['tag']);
+                foreach ($tags as $tag):
+                    $tag = trim($tag);
+                    $this->db->query("
+                        INSERT INTO {$this->db->prefix}tag 
+                        SET 
+                            section     = 'page', 
+                            element_id  = '" . (int)$page_id . "', 
+                            language_id = '" . (int)$language_id . "', 
+                            tag         = '" . $this->db->escape($tag) . "'
+                    ");
+                endforeach;
+            endif;
         }
         
         $this->db->query("
@@ -183,6 +222,11 @@ class Page extends Model {
         $this->db->query("
             DELETE FROM {$this->db->prefix}route 
             WHERE query = 'page_id:" . (int)$page_id . "'");
+
+        $this->db->query("
+            DELETE FROM {$this->db->prefix}tag 
+            WHERE section  = 'page' 
+            AND element_id = '" . (int)$page_id . "'");
         
         $this->cache->delete('page');
         
@@ -198,8 +242,30 @@ class Page extends Model {
 			FROM {$this->db->prefix}page 
 			WHERE page_id = '" . (int)$page_id . "'
 		");
+
+        $query->row['tag'] = $this->getPageTags($page_id);
         
         return $query->row;
+    }
+
+    public function getPageTags($page_id) {
+        $query = $this->db->query("
+            SELECT tag 
+            FROM {$this->db->prefix}tag 
+            WHERE section   = 'page' 
+            AND element_id  = '" . (int)$page_id . "' 
+            AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+        ");
+        
+        if ($query->num_rows):
+            $tags = array();
+            foreach($query->rows as $row):
+                $tags[] = $row['tag'];
+            endforeach;
+            return implode(', ', $tags);
+        else:
+            return false;
+        endif;
     }
     
     public function getPages($data = array()) {
@@ -276,7 +342,8 @@ class Page extends Model {
                 'title'            => $result['title'], 
                 'description'      => $result['description'], 
                 'meta_description' => $result['meta_description'], 
-                'meta_keywords'    => $result['meta_keywords']
+                'meta_keywords'    => $result['meta_keywords'],
+                'tag'              => $this->getPageTags($page_id)
             );
         }
         
