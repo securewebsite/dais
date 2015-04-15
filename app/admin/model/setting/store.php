@@ -98,8 +98,8 @@ class Store extends Model {
         $query = $this->db->query("
 			SELECT COUNT(*) AS total 
 			FROM {$this->db->prefix}setting 
-			WHERE `key` = 'config_layout_id' 
-			AND `value` = '" . (int)$layout_id . "' 
+			WHERE item = 'config_layout_id' 
+			AND data = '" . (int)$layout_id . "' 
 			AND store_id != '0'
 		");
         
@@ -110,8 +110,8 @@ class Store extends Model {
         $query = $this->db->query("
 			SELECT COUNT(*) AS total 
 			FROM {$this->db->prefix}setting 
-			WHERE `key` = 'config_language' 
-			AND `value` = '" . $this->db->escape($language) . "' 
+			WHERE item = 'config_language' 
+			AND data = '" . $this->db->escape($language) . "' 
 			AND store_id != '0'
 		");
         
@@ -122,8 +122,8 @@ class Store extends Model {
         $query = $this->db->query("
 			SELECT COUNT(*) AS total 
 			FROM {$this->db->prefix}setting 
-			WHERE `key` = 'config_currency' 
-			AND `value` = '" . $this->db->escape($currency) . "' 
+			WHERE item = 'config_currency' 
+			AND data = '" . $this->db->escape($currency) . "' 
 			AND store_id != '0'
 		");
         
@@ -134,8 +134,8 @@ class Store extends Model {
         $query = $this->db->query("
 			SELECT COUNT(*) AS total 
 			FROM {$this->db->prefix}setting 
-			WHERE `key` = 'config_country_id' 
-			AND `value` = '" . (int)$country_id . "' 
+			WHERE item = 'config_country_id' 
+			AND data = '" . (int)$country_id . "' 
 			AND store_id != '0'
 		");
         
@@ -146,8 +146,8 @@ class Store extends Model {
         $query = $this->db->query("
 			SELECT COUNT(*) AS total 
 			FROM {$this->db->prefix}setting 
-			WHERE `key` = 'config_zone_id' 
-			AND `value` = '" . (int)$zone_id . "' 
+			WHERE item = 'config_zone_id' 
+			AND data = '" . (int)$zone_id . "' 
 			AND store_id != '0'
 		");
         
@@ -158,8 +158,8 @@ class Store extends Model {
         $query = $this->db->query("
 			SELECT COUNT(*) AS total 
 			FROM {$this->db->prefix}setting 
-			WHERE `key` = 'config_customer_group_id' 
-			AND `value` = '" . (int)$customer_group_id . "' 
+			WHERE item = 'config_customer_group_id' 
+			AND data = '" . (int)$customer_group_id . "' 
 			AND store_id != '0'
 		");
         
@@ -170,16 +170,16 @@ class Store extends Model {
         $account_query = $this->db->query("
 			SELECT COUNT(*) AS total 
 			FROM {$this->db->prefix}setting 
-			WHERE `key` = 'config_account_id' 
-			AND `value` = '" . (int)$page_id . "' 
+			WHERE item = 'config_account_id' 
+			AND data = '" . (int)$page_id . "' 
 			AND store_id != '0'
 		");
         
         $checkout_query = $this->db->query("
 			SELECT COUNT(*) AS total 
 			FROM {$this->db->prefix}setting 
-			WHERE `key` = 'config_checkout_id' 
-			AND `value` = '" . (int)$page_id . "' 
+			WHERE item = 'config_checkout_id' 
+			AND data = '" . (int)$page_id . "' 
 			AND store_id != '0'
 		");
         
@@ -190,8 +190,8 @@ class Store extends Model {
         $query = $this->db->query("
 			SELECT COUNT(*) AS total 
 			FROM {$this->db->prefix}setting 
-			WHERE `key` = 'config_order_status_id' 
-			AND `value` = '" . (int)$order_status_id . "' 
+			WHERE item = 'config_order_status_id' 
+			AND data = '" . (int)$order_status_id . "' 
 			AND store_id != '0'
 		");
         

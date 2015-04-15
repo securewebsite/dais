@@ -29,7 +29,7 @@ class Setting extends Model {
 				SELECT * 
 				FROM {$this->db->prefix}setting 
 				WHERE store_id = '" . (int)$store_id . "' 
-				AND `group` = '" . $this->db->escape($group) . "'
+				AND section = '" . $this->db->escape($group) . "'
 			");
             
             $rows = $query->rows;
@@ -38,9 +38,9 @@ class Setting extends Model {
         
         foreach ($rows as $result):
             if (!$result['serialized']):
-                $data[$result['key']] = $result['value'];
+                $data[$result['item']] = $result['data'];
             else:
-                $data[$result['key']] = unserialize($result['value']);
+                $data[$result['item']] = unserialize($result['data']);
             endif;
         endforeach;
         

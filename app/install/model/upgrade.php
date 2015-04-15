@@ -372,9 +372,9 @@ class Upgrade extends Model {
         
         foreach ($query->rows as $setting):
             if (!$setting['serialized']):
-                $settings[$setting['key']] = $setting['value'];
+                $settings[$setting['item']] = $setting['data'];
             else:
-                $settings[$setting['key']] = unserialize($setting['value']);
+                $settings[$setting['item']] = unserialize($setting['data']);
             endif;
         endforeach;
         
@@ -383,9 +383,9 @@ class Upgrade extends Model {
             $this->db->query("
                 INSERT INTO `{$this->db->prefix}setting` 
                 SET 
-                    `value` = '1', 
-                    `key` = 'config_giftcard_min', 
-                    `group` = 'config', 
+                    data = '1', 
+                    item = 'config_giftcard_min', 
+                    section = 'config', 
                     `store_id` = 0
             ");
         endif;
@@ -394,9 +394,9 @@ class Upgrade extends Model {
             $this->db->query("
                 INSERT INTO `{$this->db->prefix}setting` 
                 SET 
-                    `value` = '1000', 
-                    `key` = 'config_giftcard_max', 
-                    `group` = 'config', 
+                    data = '1000', 
+                    item = 'config_giftcard_max', 
+                    section = 'config', 
                     `store_id` = 0
             ");
         endif;

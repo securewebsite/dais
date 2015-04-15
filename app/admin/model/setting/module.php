@@ -47,13 +47,13 @@ class Module extends Model {
             foreach($query->rows as $key => $row):
                 $modules[$key] = $row;
                 $q = $this->db->query("
-                    SELECT `value` 
+                    SELECT data 
                     FROM {$this->db->prefix}setting 
-                    WHERE `group` = '" . $this->db->escape($row['code']) . "' 
-                    AND `key` = '" . $this->db->escape($row['code'] . '_status') . "'
+                    WHERE section = '" . $this->db->escape($row['code']) . "' 
+                    AND item = '" . $this->db->escape($row['code'] . '_status') . "'
                 ");
                 if ($q->num_rows):
-                    $modules[$key]['status'] = $q->row['value'];
+                    $modules[$key]['status'] = $q->row['data'];
                 else:
                     $modules[$key]['status'] = 0;
                 endif;

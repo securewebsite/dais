@@ -25,14 +25,14 @@ class Setting extends Model {
 			SELECT * 
 			FROM {$this->db->prefix}setting 
 			WHERE store_id = '" . (int)$store_id . "' 
-			AND `group` = '" . $this->db->escape($group) . "'
+			AND section = '" . $this->db->escape($group) . "'
 		");
         
         foreach ($query->rows as $result) {
             if (!$result['serialized']) {
-                $data[$result['key']] = $result['value'];
+                $data[$result['item']] = $result['data'];
             } else {
-                $data[$result['key']] = unserialize($result['value']);
+                $data[$result['item']] = unserialize($result['data']);
             }
         }
         
@@ -48,18 +48,18 @@ class Setting extends Model {
 					INSERT INTO {$this->db->prefix}setting 
 					SET 
 						store_id = '" . (int)$store_id . "', 
-						`group` = '" . $this->db->escape($group) . "', 
-						`key` = '" . $this->db->escape($key) . "', 
-						`value` = '" . $this->db->escape($value) . "'
+						section = '" . $this->db->escape($group) . "', 
+						item = '" . $this->db->escape($key) . "', 
+						data = '" . $this->db->escape($value) . "'
 				");
             else:
                 $this->db->query("
 					INSERT INTO {$this->db->prefix}setting 
 					SET 
 						store_id = '" . (int)$store_id . "', 
-						`group` = '" . $this->db->escape($group) . "', 
-						`key` = '" . $this->db->escape($key) . "', 
-						`value` = '" . $this->db->escape(serialize($value)) . "', 
+						section = '" . $this->db->escape($group) . "', 
+						item = '" . $this->db->escape($key) . "', 
+						data = '" . $this->db->escape(serialize($value)) . "', 
 						serialized = '1'
 				");
             endif;
@@ -72,7 +72,7 @@ class Setting extends Model {
         $this->db->query("
 			DELETE FROM {$this->db->prefix}setting 
 			WHERE store_id = '" . (int)$store_id . "' 
-			AND `group` = '" . $this->db->escape($group) . "'
+			AND section = '" . $this->db->escape($group) . "'
 		");
         
         $this->cache->delete('default');
@@ -80,10 +80,10 @@ class Setting extends Model {
     
     public function getSettingValue($group = '', $key = '', $value = '', $store_id = 0) {
         $query = $this->db->query("
-			SELECT `value` 
+			SELECT data 
 			FROM {$this->db->prefix}setting 
-			WHERE `group` = '" . $this->db->escape($group) . "' 
-			AND `key` = '" . $this->db->escape($key) . "' 
+			WHERE section = '" . $this->db->escape($group) . "' 
+			AND item = '" . $this->db->escape($key) . "' 
 			AND store_id = '" . (int)$store_id . "'");
         
         if ($query->num_rows):
@@ -98,18 +98,18 @@ class Setting extends Model {
             $this->db->query("
 				UPDATE {$this->db->prefix}setting 
 				SET 
-					`value` = '" . $this->db->escape($value) . "' 
-				WHERE `group` = '" . $this->db->escape($group) . "' 
-				AND `key` = '" . $this->db->escape($key) . "' 
+					data = '" . $this->db->escape($value) . "' 
+				WHERE section = '" . $this->db->escape($group) . "' 
+				AND item = '" . $this->db->escape($key) . "' 
 				AND store_id = '" . (int)$store_id . "'
 			");
         } else {
             $this->db->query("
 				UPDATE {$this->db->prefix}setting 
 				SET 
-					`value` = '" . $this->db->escape(serialize($value)) . "' 
-				WHERE `group` = '" . $this->db->escape($group) . "' 
-				AND `key` = '" . $this->db->escape($key) . "' 
+					data = '" . $this->db->escape(serialize($value)) . "' 
+				WHERE section = '" . $this->db->escape($group) . "' 
+				AND item = '" . $this->db->escape($key) . "' 
 				AND store_id = '" . (int)$store_id . "', 
 				serialized = '1'
 			");

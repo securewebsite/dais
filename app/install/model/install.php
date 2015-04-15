@@ -68,28 +68,28 @@ class Install extends Model {
             
             $db->query("
 				DELETE FROM {$data['db_prefix']}setting 
-				WHERE `key` = 'config_email'
+				WHERE item = 'config_email'
 			");
             
             $db->query("
 				INSERT INTO {$data['db_prefix']}setting 
 				SET 
-					`group` = 'config', 
-					`key` = 'config_email', 
-					value = '" . $db->escape($data['email']) . "'
+					section = 'config', 
+					item = 'config_email', 
+					data = '" . $db->escape($data['email']) . "'
 			");
             
             $db->query("
 				DELETE FROM {$data['db_prefix']}setting 
-				WHERE `key` = 'config_encryption'
+				WHERE item = 'config_encryption'
 			");
             
             $db->query("
 				INSERT INTO {$data['db_prefix']}setting 
 				SET 
-					`group` = 'config', 
-					`key` = 'config_encryption', 
-					value = '" . $db->escape(md5(mt_rand())) . "'
+					section = 'config', 
+					item = 'config_encryption', 
+					data = '" . $db->escape(md5(mt_rand())) . "'
 			");
             
             $db->query("

@@ -50,6 +50,7 @@ use Dais\Library\Pagination;
 use Dais\Library\Request;
 use Dais\Library\Response;
 use Dais\Library\Routes;
+use Dais\Library\Search;
 use Dais\Library\Session;
 use Dais\Library\Tax;
 use Dais\Library\Url;
@@ -269,9 +270,9 @@ class Application {
         
         foreach ($settings as $setting):
             if (!$setting['serialized']):
-                $configuration[$setting['key']] = $setting['value'];
+                $configuration[$setting['item']] = $setting['data'];
             else:
-                $configuration[$setting['key']] = unserialize($setting['value']);
+                $configuration[$setting['item']] = unserialize($setting['data']);
             endif;
         endforeach;
         
@@ -512,8 +513,14 @@ class Application {
             return new Filter($data);
         };
 
+        // validator
         $this->data['validator'] = function ($data) {
             return new Validation($data);
+        };
+
+        // search
+        $this->data['search'] = function ($data) {
+            return new Search($data);
         };
     }
     
