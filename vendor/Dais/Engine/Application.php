@@ -523,6 +523,11 @@ class Application {
         $this->data['search'] = function ($data) {
             return new Search($data);
         };
+
+        // keyword
+        $this->data['keyword'] = function ($data) {
+            return new Keyword($data);
+        };
     }
     
     protected function installClasses() {
@@ -609,10 +614,6 @@ class Application {
         // encryption
         $this->data['encryption'] = function ($data) {
             return new Encryption($data['config_encryption'], $data);
-        };
-
-        $this->data['keyword'] = function ($data) {
-            return new Keyword($data);
         };
     }
     

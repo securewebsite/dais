@@ -187,14 +187,16 @@ class Keyword extends LibraryService {
 	public function getDescription($string, $limit = 160, $break = " ", $pad = ".") {
 		// first decode the string
 		$string = html_entity_decode($string, ENT_QUOTES, 'UTF-8');
-		//parent::$app['theme']->test($string);
+		$string = htmlspecialchars_decode($string);
+		
+		$string = parent::$app['encode']->riptags($string);
+		
 		// return with no change if string is shorter than $limit
 		if (strlen ($string) <= $limit) return $string;
 		
 		// is $break present between $limit and the end of the string?
 		
 		if (false !== ($breakpoint = strpos($string, $break, $limit))):
-			//parent::$app['theme']->test((int)$breakpoint);
 			if ($breakpoint < strlen($string) - 1):
 				$string = substr($string, 0, $breakpoint) . $pad;
 			endif;

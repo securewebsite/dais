@@ -44,6 +44,19 @@ class Page extends Controller {
             $data['heading_title'] = $page_info['title'];
             
             $data['description'] = html_entity_decode($page_info['description'], ENT_QUOTES, 'UTF-8');
+
+            $data['tags'] = false;
+            
+            if (isset($page_info['tag'])):
+                $tags = explode(',', $page_info['tag']);
+                
+                foreach ($tags as $tag):
+                    $data['tags'][] = array(
+                        'name' => trim($tag), 
+                        'href' => $this->url->link('search/tag', 'tag=' . trim($tag))
+                    );
+                endforeach;
+            endif;
             
             $data['continue'] = $this->url->link('content/home');
             

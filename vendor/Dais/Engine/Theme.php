@@ -400,7 +400,7 @@ final class Theme {
     }
     
     public function setDescription($description) {
-        $this->description = $this->rip_tags($description);
+        $this->description = $this->app['encode']->riptags($description);
     }
     
     public function getDescription() {
@@ -456,7 +456,7 @@ final class Theme {
     }
     
     public function setOgDescription($description) {
-        $this->ogdescription = $this->rip_tags($description);
+        $this->ogdescription = $this->app['encode']->riptags($description);
     }
     
     public function getOgDescription() {
@@ -539,25 +539,6 @@ final class Theme {
         endforeach;
         
         return implode('\\', $class);
-    }
-    
-    public function rip_tags($string) {
-        
-        // ----- remove HTML TAGs -----
-        $string = preg_replace('/<[^>]*>/', ' ', $string);
-        
-        // ----- remove control characters -----
-        $string = str_replace("\r", '', $string);
-         // --- replace with empty space
-        $string = str_replace("\n", ' ', $string);
-         // --- replace with space
-        $string = str_replace("\t", ' ', $string);
-         // --- replace with space
-        
-        // ----- remove multiple spaces -----
-        $string = trim(preg_replace('/ {2,}/', ' ', $string));
-        
-        return $string;
     }
     
     // Test pattern

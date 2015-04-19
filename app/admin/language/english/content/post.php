@@ -39,19 +39,19 @@ $_['lang_column_action']          = 'Action';
 
 // Entry
 $_['lang_entry_name']             = 'Title:';
-$_['lang_entry_meta_keyword']     = 'Meta Tag Keywords:';
-$_['lang_entry_meta_description'] = 'Meta Tag Description:';
-$_['lang_entry_description']      = 'Description:';
+$_['lang_entry_meta_keyword']     = 'Meta Keywords:<br><span class="help">Once you\'ve filled in your content, click the generate button to generate keywords from your content.</span>';
+$_['lang_entry_meta_description'] = 'Meta Description:<br><span class="help">Once you\'ve filled in your content, click the generate button to generate a description from your content.</span>';
+$_['lang_entry_description']      = 'Article Content:';
 $_['lang_entry_store']            = 'Stores:';
 $_['lang_entry_author']           = 'Author:';
-$_['lang_entry_slug']             = 'URL Slug:<br /><span class="help">Do not use spaces instead replace spaces with - and make sure the slug is globally unique.</span>';
+$_['lang_entry_slug']             = 'URL Slug:<br><span class="help">Do not use spaces instead replace spaces with - and make sure the slug is globally unique.</span>';
 $_['lang_entry_date_available']   = 'Publish Date:<span class="help">Post will be active on/after this date.</span>';
 $_['lang_entry_image']            = 'Image:';
 $_['lang_entry_status']           = 'Status:';
 $_['lang_entry_sort_order']       = 'Sort Order:';
 $_['lang_entry_category']         = 'Categories:';
-$_['lang_entry_related']          = 'Related Posts:<br /><span class="help">(Autocomplete)</span>';
-$_['lang_entry_tag']              = 'Post Tags:<br /><span class="help">comma separated</span>';
+$_['lang_entry_related']          = 'Related Posts:<br><span class="help">(Autocomplete)</span>';
+$_['lang_entry_tag']              = 'Tags:<br><span class="help">Comma separated search tags.</span>';
 $_['lang_entry_layout']           = 'Layout Override:';
 $_['lang_entry_visibility']       = 'Visibility:';
 

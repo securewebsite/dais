@@ -23,5 +23,5 @@ $_['lang_text_views']             = '%s reads';
 $_['lang_text_all_posts']         = 'All Articles in';
 $_['lang_text_all_by']            = 'All Articles by';
 $_['lang_text_in']                = 'in';
+$_['lang_text_tag']               = 'Tags:';
 $_['lang_text_posted_categories'] = '<a href="%s">%s</a>';
-

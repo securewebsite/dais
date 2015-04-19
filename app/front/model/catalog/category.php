@@ -37,6 +37,7 @@ class Category extends Model {
 			");
             
             if ($query->num_rows):
+                $query->row['tag'] = $this->getProductCategoryTags($category_id);
                 $cachefile = $query->row;
                 $this->cache->set($key, $cachefile);
             else:
@@ -46,6 +47,26 @@ class Category extends Model {
         endif;
         
         return $cachefile;
+    }
+
+    public function getProductCategoryTags($category_id) {
+        $query = $this->db->query("
+            SELECT tag 
+            FROM {$this->db->prefix}tag 
+            WHERE section   = 'product_category' 
+            AND element_id  = '" . (int)$category_id . "' 
+            AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+        ");
+        
+        if ($query->num_rows):
+            $tags = array();
+            foreach($query->rows as $row):
+                $tags[] = $row['tag'];
+            endforeach;
+            return implode(', ', $tags);
+        else:
+            return false;
+        endif;
     }
     
     public function getCategories($parent_id = 0) {

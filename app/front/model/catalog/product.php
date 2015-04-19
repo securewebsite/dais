@@ -172,6 +172,9 @@ class Product extends Model {
             $cachefile = $this->cache->get($key);
             
             if (is_bool($cachefile)):
+                if (!empty($data['filter_tag'])):
+                    return $this->getProductsByTag($data['filter_tag']);
+                endif;
                 $sql = "
 					SELECT p.product_id, 
 						(SELECT AVG(rating) AS total 
@@ -248,7 +251,7 @@ class Product extends Model {
                     endif;
                 endif;
                 
-                if (!empty($data['filter_name']) || !empty($data['filter_tag'])):
+                if (!empty($data['filter_name'])):
                     $sql.= " AND (";
                     
                     if (!empty($data['filter_name'])):
@@ -267,14 +270,6 @@ class Product extends Model {
                         if (!empty($data['filter_description'])):
                             $sql.= " OR pd.description LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
                         endif;
-                    endif;
-                    
-                    if (!empty($data['filter_name']) && !empty($data['filter_tag'])):
-                        $sql.= " OR ";
-                    endif;
-                    
-                    if (!empty($data['filter_tag'])):
-                        $sql.= "pd.tag LIKE '%" . $this->db->escape($data['filter_tag']) . "%'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
@@ -959,12 +954,17 @@ class Product extends Model {
         else:
             $customer_group_id = $this->config->get('config_default_visibility');
         endif;
-        
+        //$this->theme->test($data);
         if (!empty($data)):
             $key = 'products.total.' . md5(serialize($data));
             $cachefile = $this->cache->get($key);
             
             if (is_bool($cachefile)):
+                
+                if (!empty($data['filter_tag'])):
+                    return $this->getTotalProductsByTag($data['filter_tag']);
+                endif;
+
                 $sql = "SELECT COUNT(DISTINCT p.product_id) AS total";
                 
                 if (!empty($data['filter_category_id'])):
@@ -1020,7 +1020,7 @@ class Product extends Model {
                     endif;
                 endif;
                 
-                if (!empty($data['filter_name']) || !empty($data['filter_tag'])):
+                if (!empty($data['filter_name'])):
                     $sql.= " AND (";
                     
                     if (!empty($data['filter_name'])):
@@ -1031,22 +1031,15 @@ class Product extends Model {
                         foreach ($words as $word) {
                             $implode[] = "pd.name LIKE '%" . $this->db->escape($word) . "%'";
                         }
-                        
+                        //$this->theme->test($words);
                         if ($implode):
-                            $sql.= " {implode(" && ", $implode}";
+                            $imp = implode(" && ", $implode);
+                            $sql.= " {$imp}";
                         endif;
                         
                         if (!empty($data['filter_description'])):
                             $sql.= " OR pd.description LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
                         endif;
-                    endif;
-                    
-                    if (!empty($data['filter_name']) && !empty($data['filter_tag'])):
-                        $sql.= " OR ";
-                    endif;
-                    
-                    if (!empty($data['filter_tag'])):
-                        $sql.= "pd.tag LIKE '%" . $this->db->escape($this->encode->strtolower($data['filter_tag'])) . "%'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
@@ -1116,6 +1109,36 @@ class Product extends Model {
         endif;
         
         return $cachefile;
+    }
+
+    public function getTotalProductsByTag($tag) {
+        $query = $this->db->query("
+            SELECT COUNT(tag_id) AS total, element_id 
+            FROM {$this->db->prefix}tag 
+            WHERE section = 'product' 
+            AND language_id = '" . (int)$this->config->get('config_language_id') . "' 
+            AND tag LIKE '%" . $this->db->escape($tag) . "%' GROUP BY element_id ASC");
+        
+        return $query->num_rows;
+    }
+
+    public function getProductsByTag($tag) {
+        $query = $this->db->query("
+            SELECT element_id 
+            FROM {$this->db->prefix}tag 
+            WHERE section = 'product' 
+            AND language_id = '" . (int)$this->config->get('config_language_id') . "' 
+            AND tag LIKE '%" . $this->db->escape($tag) . "%' GROUP BY element_id ASC");
+        
+        if ($query->num_rows):
+            $product_data = array();
+            foreach($query->rows as $row):
+                $product_data[] = $this->getProduct($row['element_id']);
+            endforeach;
+            return $product_data;
+        else:
+            return false;
+        endif;
     }
     
     public function getAllRecurring($product_id) {

@@ -26,6 +26,21 @@ class Router extends Controller {
             $parts = explode('/', $this->request->get['_route_']);
             $slugs = $parts;
             
+            // Search Routes
+            if (!isset($this->request->get['route'])):
+                if ($parts[0] == 'search'):
+                    // we do have a search 
+                    if (count($parts) > 2):
+                        // this is a tag
+                        $this->request->get['route'] = 'search/tag';
+                        $this->request->post['tag']  = $parts[2];
+                    else:
+                        $this->request->get['route']   = 'search/search';
+                        $this->request->post['search'] = end($parts);
+                    endif;
+                endif;
+            endif;
+
             // Custom Routes
             if (!isset($this->request->get['route'])):
                 foreach ($this->customRoutes() as $key => $value):

@@ -14,6 +14,14 @@
 |	
 */
 
-// Text
-$_['lang_text_error'] = 'Page Not Found.';
-$_['lang_text_tags']  = 'Tags: ';
+namespace Front\Controller\Search;
+use Dais\Engine\Controller;
+
+class Search extends Controller {
+
+	public function index() {
+		if (isset($this->request->post['search'])):
+			$this->theme->test($this->request->post['search']);
+		endif;
+	}
+}

@@ -50,4 +50,44 @@ $('input[name="author"]').typeahead({
 	this.select();
 });
 
+<?php foreach($languages as $language): ?>
+
+$('#meta-description<?= $language["language_id"]; ?>').bind('click', function(e) {
+	e.preventDefault();
+	$data = $('textarea[name="post_description[<?= $language["language_id"]; ?>][description]"]').code();
+	$.ajax({
+		url: 'index.php?route=content/post/description&token=<?= $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: {
+			description: $data
+		},
+		success: function (json) {
+			if (json['success']) {
+				$('textarea[name="post_description[<?= $language["language_id"]; ?>][meta_description]"]').html(json['success']);
+			}
+		} 
+	});
+});
+
+$('#meta-keyword<?= $language["language_id"]; ?>').bind('click', function(e) {
+	e.preventDefault();
+	$data = $('textarea[name="post_description[<?= $language["language_id"]; ?>][description]"]').code();
+	$.ajax({
+		url: 'index.php?route=content/post/keyword&token=<?= $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: {
+			keywords: $data
+		},
+		success: function (json) {
+			if (json['success']) {
+				$('textarea[name="post_description[<?= $language["language_id"]; ?>][meta_keyword]"]').html(json['success']);
+			}
+		} 
+	});
+});
+
+<?php endforeach; ?>
+
 </script>

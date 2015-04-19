@@ -35,6 +35,8 @@ class Page extends Model {
 				AND i2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
 				AND i.status = '1'
 			");
+
+            $query->row['tag'] = $this->getPageTags($page_id);
             
             if ($query->num_rows):
                 $cachefile = $query->row;
@@ -76,6 +78,26 @@ class Page extends Model {
         endif;
         
         return $cachefile;
+    }
+
+    public function getPageTags($page_id) {
+        $query = $this->db->query("
+            SELECT tag 
+            FROM {$this->db->prefix}tag 
+            WHERE section   = 'page' 
+            AND element_id  = '" . (int)$page_id . "' 
+            AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+        ");
+        
+        if ($query->num_rows):
+            $tags = array();
+            foreach($query->rows as $row):
+                $tags[] = $row['tag'];
+            endforeach;
+            return implode(', ', $tags);
+        else:
+            return false;
+        endif;
     }
     
     public function getPageLayoutId($page_id) {

@@ -49,24 +49,40 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="control-label col-sm-2"><b class="required">*</b> <?= $lang_entry_meta_description; ?></label>
-									<div class="control-field col-sm-6">
-										<textarea name="category_description[<?= $language['language_id']; ?>][meta_description]" class="form-control" rows="6"><?= isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['meta_description'] : ''; ?></textarea>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="control-label col-sm-2"><b class="required">*</b> <?= $lang_entry_meta_keyword; ?></label>
-									<div class="control-field col-sm-6">
-										<textarea name="category_description[<?= $language['language_id']; ?>][meta_keyword]" class="form-control" rows="6"><?= isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['meta_keyword'] : ''; ?></textarea>
-									</div>
-								</div>
-								<div class="form-group">
 									<label class="control-label col-sm-2"><b class="required">*</b> <?= $lang_entry_description; ?></label>
 									<div class="control-field col-sm-8">
 										<textarea name="category_description[<?= $language['language_id']; ?>][description]" class="summernote form-control" rows="10" spellcheck="false"><?= isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['description'] :''; ?></textarea>
 										<?php if (isset($error_description[$language['language_id']])): ?>
 										<span class="help-block error"><?= $error_description[$language['language_id']]; ?></span>
 										<?php endif; ?>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2"><?= $lang_entry_meta_description; ?></label>
+									<div class="control-field col-sm-6">
+										<textarea name="category_description[<?= $language['language_id']; ?>][meta_description]" class="form-control" rows="6"><?= isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['meta_description'] : ''; ?></textarea>
+									</div>
+									<div class="col-sm-2">
+										<button id="meta-description<?= $language['language_id']; ?>" class="btn btn-primary">
+											<?= $lang_button_generate; ?>
+										</button>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2"><?= $lang_entry_meta_keyword; ?></label>
+									<div class="control-field col-sm-6">
+										<textarea name="category_description[<?= $language['language_id']; ?>][meta_keyword]" class="form-control" rows="6"><?= isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['meta_keyword'] : ''; ?></textarea>
+									</div>
+									<div class="col-sm-2">
+										<button id="meta-keyword<?= $language['language_id']; ?>" class="btn btn-primary">
+											<?= $lang_button_generate; ?>
+										</button>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2" for="tag<?= $language['language_id']; ?>"><?= $lang_entry_tag; ?></label>
+									<div class="col-sm-6">
+										<input type="text" name="category_description[<?= $language['language_id']; ?>][tag]" class="form-control" id="tag<?= $language['language_id']; ?>" value="<?= isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['tag'] : ''; ?>" class="form-control">
 									</div>
 								</div>
 							</div>

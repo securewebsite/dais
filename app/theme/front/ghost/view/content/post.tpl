@@ -32,16 +32,25 @@
 			
 			<hr>
 			
-			<?php if ($tags): ?>
-			<p><span class="fa fa-tags"></span> <?= $lang_text_tags; ?> 
-			<?php foreach ($tags as $tag): ?>
-				<a href="<?= $tag['href']; ?>"><?= $tag['tag']; ?></a> 
-			<?php endforeach; ?>
-			</p>
+			<div class="row">
+				<?php if ($tags): ?>
+				<div class="col-sm-6">
+					<span class="fa fa-tags"></span><?= $lang_text_tags; ?> 
+				<?php foreach($tags as $tag): ?>
+					<a href="<?= $tag['href']; ?>" class="label label-info"><?= $tag['name']; ?></a> 
+				<?php endforeach; ?>
+				</div>
+				<div class="col-sm-6">
+				Social Bar
+				</div>
+				<?php else: ?>
+				<div class="col-sm-12">
+				Social Bar
+				</div>
+				<?php endif; ?>
+			</div>
+
 			<hr>
-			<?php endif; ?>
-			
-			<!-- Social Widget -->
 			
 			<!-- related posts -->
 			

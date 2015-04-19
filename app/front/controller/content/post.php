@@ -195,16 +195,30 @@ class Post extends Controller {
                     $rating = false;
                 }
                 
-                $data['posts'][] = array('post_id' => $result['post_id'], 'thumb' => $image, 'name' => $result['name'], 'short_description' => $this->encode->substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 80) . '..', 'rating' => $rating, 'reviews' => sprintf($this->language->get('lang_text_reviews'), (int)$result['reviews']), 'href' => $this->url->link('content/post', 'post_id=' . $result['post_id']),);
+                $data['posts'][] = array(
+                    'post_id'           => $result['post_id'], 
+                    'thumb'             => $image, 
+                    'name'              => $result['name'], 
+                    'short_description' => $this->encode->substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 80) . '..', 
+                    'rating'            => $rating, 
+                    'reviews'           => sprintf($this->language->get('lang_text_reviews'), (int)$result['reviews']), 
+                    'href'              => $this->url->link('content/post', 'post_id=' . $result['post_id'])
+                );
             }
             
-            $data['tags'] = array();
+            $data['tags'] = false;
             
-            $tags = explode(',', $post_info['tag']);
-            
-            foreach ($tags as $tag) {
-                $data['tags'][] = array('tag' => trim($tag), 'href' => $this->url->link('content/search', 'filter_tag=' . trim($tag)));
-            }
+            if (isset($post_info['tag'])):
+                $tags = explode(',', $post_info['tag']);
+                
+                foreach ($tags as $tag):
+                    $data['tags'][] = array(
+                        'name' => trim($tag), 
+                        'href' => $this->url->link('search/tag', 'tag=' . trim($tag))
+                    );
+                endforeach;
+
+            endif;
             
             if (isset($this->request->get['to_comments'])) {
                 $data['to_comments'] = true;

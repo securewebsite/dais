@@ -177,15 +177,11 @@
 				<?php endif; ?>
 				<?php endif; ?>
 				<?php if ($tags) { ?>
-					<br><?= $lang_text_tags; ?> 
-					<?php for ($i = 0; $i < count($tags); $i++) { ?>
-						<?php if ($i < (count($tags) - 1)) { ?>
-						<a href="<?= $tags[$i]['href']; ?>"><?= $tags[$i]['tag']; ?></a>,
-						<?php } else { ?>
-						<a href="<?= $tags[$i]['href']; ?>"><?= $tags[$i]['tag']; ?></a>
-						<?php } ?>
-					<?php } ?>
-					<br>
+					<p><span class="fa fa-tags"></span> <?= $lang_text_tags; ?> 
+					<?php foreach($tags as $tag): ?>
+						<a href="<?= $tag['href']; ?>" class="label label-info"><?= $tag['name']; ?></a> 
+					<?php endforeach; ?>
+					</p>
 				<?php } ?>
 			</form>
 			<hr>

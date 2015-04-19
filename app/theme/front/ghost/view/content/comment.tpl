@@ -38,6 +38,6 @@
 
 <?php else: ?>
 <div class="media">
-	<p class="text-center"><?= $lang_text_no_comments; ?></p>
+	<p class="text-center"><?= $text_no_comments; ?></p>
 </div>
 <?php endif; ?>

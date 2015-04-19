@@ -15,7 +15,14 @@
 			<?php if ($description): ?>
 			<?= $description; ?>
 			<?php endif; ?>
-			
+
+			<?php if ($tags): ?>
+			<p><span class="fa fa-tags"></span> <?= $lang_text_tag; ?>&nbsp;
+			<?php foreach($tags as $tag): ?>
+			<a href="<?= $tag['href']; ?>" class="label label-info"><?= $tag['name']; ?></a> 
+			<?php endforeach; ?>
+			</p>
+			<?php endif; ?>
 			<hr>
 			
 			<?php if ($categories): ?>

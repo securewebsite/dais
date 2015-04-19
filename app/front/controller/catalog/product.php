@@ -216,23 +216,8 @@ class Product extends Controller {
             $this->breadcrumb->add($product_info['name'], 'catalog/product', 'product_id=' . $this->request->get['product_id'] . $url);
             
             $this->theme->setTitle($product_info['name']);
-            
-            if ($product_info['meta_description']):
-                $description = $product_info['meta_description'];
-            else:
-                $description = $this->keyword->getDescription($product_info['description']);
-            endif;
-
-            $this->theme->setDescription($description);
-            
-            if ($product_info['meta_keyword']):
-                $keywords = $product_info['meta_keyword'];
-            else:
-                $keywords = $this->keyword->getKeywords(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8'));
-            endif;
-
-            $this->theme->setKeywords($keywords);
-            
+            $this->theme->setDescription($product_info['meta_description']);
+            $this->theme->setKeywords($product_info['meta_keyword']);
             $this->theme->setOgType('product');
             $this->theme->setOgDescription(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8'));
             
@@ -454,18 +439,31 @@ class Product extends Controller {
                     $rating = false;
                 }
                 
-                $data['products'][] = array('product_id' => $result['product_id'], 'event_id' => $result['event_id'], 'thumb' => $image, 'name' => $result['name'], 'price' => $price, 'special' => $special, 'rating' => $rating, 'reviews' => sprintf($this->language->get('lang_text_reviews'), (int)$result['reviews']), 'href' => $this->url->link('catalog/product', 'product_id=' . $result['product_id']));
+                $data['products'][] = array(
+                    'product_id' => $result['product_id'], 
+                    'event_id'   => $result['event_id'], 
+                    'thumb'      => $image, 
+                    'name'       => $result['name'], 
+                    'price'      => $price, 
+                    'special'    => $special, 
+                    'rating'     => $rating, 
+                    'reviews'    => sprintf($this->language->get('lang_text_reviews'), (int)$result['reviews']), 
+                    'href'       => $this->url->link('catalog/product', 'product_id=' . $result['product_id'])
+                );
             }
             
-            $data['tags'] = array();
+            $data['tags'] = false;
             
-            if ($product_info['tag']) {
+            if ($product_info['tag']):
                 $tags = explode(',', $product_info['tag']);
                 
-                foreach ($tags as $tag) {
-                    $data['tags'][] = array('tag' => trim($tag), 'href' => $this->url->link('catalog/search', 'tag=' . trim($tag)));
-                }
-            }
+                foreach ($tags as $tag):
+                    $data['tags'][] = array(
+                        'name' => trim($tag), 
+                        'href' => $this->url->link('search/tag', 'tag=' . trim($tag))
+                    );
+                endforeach;
+            endif;
             
             $data['social_href'] = $this->url->link('catalog/product', 'product_id=' . $product_info['product_id']);
             $data['social_desc'] = urlencode($product_info['name'] . "\n" . substr(strip_tags($data['description']), 0, 500) . "...");

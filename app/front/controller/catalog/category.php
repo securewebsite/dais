@@ -162,6 +162,19 @@ class Category extends Controller {
             if (isset($this->request->get['limit'])) {
                 $url.= '&limit=' . $this->request->get['limit'];
             }
+
+            $data['tags'] = false;
+
+            if (isset($category_info['tag'])):
+                $tags = explode(',', $category_info['tag']);
+                
+                foreach ($tags as $tag):
+                    $data['tags'][] = array(
+                        'name' => trim($tag), 
+                        'href' => $this->url->link('search/tag', 'tag=' . trim($tag))
+                    );
+                endforeach;
+            endif;
             
             $data['categories'] = array();
             

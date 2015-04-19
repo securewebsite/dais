@@ -32,9 +32,9 @@ $_['lang_column_action']          = 'Action';
 // Entry
 $_['lang_entry_title']            = 'Page Title:';
 $_['lang_entry_description']      = 'Content:';
-$_['lang_entry_meta_keyword']     = 'Meta Keywords:';
-$_['lang_entry_meta_description'] = 'Meta Description:';
-$_['lang_entry_tag']              = 'Tags:';
+$_['lang_entry_meta_keyword']     = 'Meta Keywords:<br><span class="help">Once you\'ve filled in your content, click the generate button to generate keywords from your content.</span>';
+$_['lang_entry_meta_description'] = 'Meta Description:<br><span class="help">Once you\'ve filled in your content, click the generate button to generate a description from your content.</span>';
+$_['lang_entry_tag']              = 'Tags:<br><span class="help">Comma separated search tags.</span>';
 $_['lang_entry_store']            = 'Stores:';
 $_['lang_entry_slug']             = 'URL Slug:<br /><span class="help">Do not use spaces instead replace spaces with - and make sure the slug is globally unique.</span>';
 $_['lang_entry_bottom']           = 'Bottom:<br/><span class="help">Display in the bottom footer.</span>';
@@ -48,7 +48,6 @@ $_['lang_error_warning']          = 'Warning: Please check the form carefully fo
 $_['lang_error_permission']       = 'Warning: You do not have permission to modify pages.';
 $_['lang_error_title']            = 'Page Title must be between 3 and 64 characters.';
 $_['lang_error_description']      = 'Content must be more than 3 characters.';
-$_['lang_error_meta_description'] = 'Meta description must be filled in for proper SEO.';
 $_['lang_error_account']          = 'Warning: This page cannot be deleted as it is currently assigned to the store account terms.';
 $_['lang_error_checkout']         = 'Warning: This page cannot be deleted as it is currently assigned to the store checkout terms.';
 $_['lang_error_affiliate']        = 'Warning: This page cannot be deleted as it is currently assigned to the store affiliate terms.';

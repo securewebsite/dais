@@ -391,6 +391,8 @@ class Page extends Controller {
         $this->theme->model('people/customergroup');
         
         $data['customer_groups'] = $this->model_people_customergroup->getCustomerGroups();
+
+        $this->theme->loadjs('javascript/content/page_form', $data);
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
@@ -411,10 +413,6 @@ class Page extends Controller {
             
             if ($this->encode->strlen($value['description']) < 3) {
                 $this->error['description'][$language_id] = $this->language->get('lang_error_description');
-            }
-            
-            if ($this->encode->strlen($value['meta_description']) < 1) {
-                $this->error['meta_description'][$language_id] = $this->language->get('lang_error_meta_description');
             }
         }
         
@@ -513,6 +511,27 @@ class Page extends Controller {
         
         $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
         
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function description() {
+        $json = array();
+
+        if (isset($this->request->post['description']))
+            $json['success'] = $this->keyword->getDescription($this->request->post['description']);
+
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function keyword() {
+        $json = array();
+
+        if (isset($this->request->post['keywords'])):
+            // let's clean up the data first
+            $keywords        = $this->keyword->getDescription($this->request->post['keywords']);
+            $json['success'] = $this->keyword->getKeywords($keywords);
+        endif;
+
         $this->response->setOutput(json_encode($json));
     }
 }

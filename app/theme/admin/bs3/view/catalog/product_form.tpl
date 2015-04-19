@@ -60,9 +60,20 @@
 											</div>
 										</div>
 										<div class="form-group">
+											<label class="control-label col-sm-2" for="description<?= $language['language_id']; ?>"><?= $lang_entry_description; ?></label>
+											<div class="col-sm-10">
+												<textarea name="product_description[<?= $language['language_id']; ?>][description]" class="summernote form-control" rows="10" spellcheck="false"><?= isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['description'] :''; ?></textarea>
+											</div>
+										</div>
+										<div class="form-group">
 											<label class="control-label col-sm-2" for="meta_description<?= $language['language_id']; ?>"><?= $lang_entry_meta_description; ?></label>
 											<div class="col-sm-6">
 												<textarea name="product_description[<?= $language['language_id']; ?>][meta_description]" class="form-control" rows="3" spellcheck="false" id="meta_description<?= $language['language_id']; ?>"><?= isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['meta_description'] : ''; ?></textarea>
+											</div>
+											<div class="col-sm-2">
+												<button id="meta-description<?= $language['language_id']; ?>" class="btn btn-primary">
+													<?= $lang_button_generate; ?>
+												</button>
 											</div>
 										</div>
 										<div class="form-group">
@@ -70,11 +81,10 @@
 											<div class="col-sm-6">
 												<textarea name="product_description[<?= $language['language_id']; ?>][meta_keyword]" class="form-control" rows="3" spellcheck="false" id="meta_keyword<?= $language['language_id']; ?>"><?= isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['meta_keyword'] : ''; ?></textarea>
 											</div>
-										</div>
-										<div class="form-group">
-											<label class="control-label col-sm-2" for="description<?= $language['language_id']; ?>"><?= $lang_entry_description; ?></label>
-											<div class="col-sm-10">
-												<textarea name="product_description[<?= $language['language_id']; ?>][description]" class="summernote form-control" rows="10" spellcheck="false"><?= isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['description'] :''; ?></textarea>
+											<div class="col-sm-2">
+												<button id="meta-keyword<?= $language['language_id']; ?>" class="btn btn-primary">
+													<?= $lang_button_generate; ?>
+												</button>
 											</div>
 										</div>
 										<div class="form-group">

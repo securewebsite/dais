@@ -62,7 +62,26 @@ class Post extends Model {
 			");
             
             if ($query->num_rows):
-                $post = array('post_id' => $query->row['post_id'], 'name' => $query->row['name'], 'description' => $query->row['description'], 'meta_description' => $query->row['meta_description'], 'meta_keyword' => $query->row['meta_keyword'], 'tag' => $query->row['tag'], 'image' => $query->row['image'], 'author_id' => $query->row['author_id'], 'author_name' => $this->model_content_author->getPostAuthor($query->row['author_id']), 'date_available' => $query->row['date_available'], 'rating' => round($query->row['rating']), 'comments' => $query->row['comments'], 'sort_order' => $query->row['sort_order'], 'status' => $query->row['status'], 'date_added' => $query->row['date_added'], 'date_modified' => $query->row['date_modified'], 'viewed' => $query->row['viewed'], 'visibility' => $query->row['visibility']);
+                $post = array(
+                    'post_id'          => $query->row['post_id'], 
+                    'name'             => $query->row['name'], 
+                    'description'      => $query->row['description'], 
+                    'meta_description' => $query->row['meta_description'], 
+                    'meta_keyword'     => $query->row['meta_keyword'], 
+                    'tag'              => $this->getPostTags($query->row['post_id']), 
+                    'image'            => $query->row['image'], 
+                    'author_id'        => $query->row['author_id'], 
+                    'author_name'      => $this->model_content_author->getPostAuthor($query->row['author_id']), 
+                    'date_available'   => $query->row['date_available'], 
+                    'rating'           => round($query->row['rating']), 
+                    'comments'         => $query->row['comments'], 
+                    'sort_order'       => $query->row['sort_order'], 
+                    'status'           => $query->row['status'], 
+                    'date_added'       => $query->row['date_added'], 
+                    'date_modified'    => $query->row['date_modified'], 
+                    'viewed'           => $query->row['viewed'], 
+                    'visibility'       => $query->row['visibility']
+                );
                 
                 $cachefile = $post;
                 $this->cache->set($key, $cachefile);
@@ -74,6 +93,26 @@ class Post extends Model {
         return $cachefile;
     }
     
+    public function getPostTags($post_id) {
+        $query = $this->db->query("
+            SELECT tag 
+            FROM {$this->db->prefix}tag 
+            WHERE section   = 'post' 
+            AND element_id  = '" . (int)$post_id . "' 
+            AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+        ");
+        
+        if ($query->num_rows):
+            $tags = array();
+            foreach($query->rows as $row):
+                $tags[] = $row['tag'];
+            endforeach;
+            return implode(', ', $tags);
+        else:
+            return false;
+        endif;
+    }
+
     public function getPosts($data = array()) {
         $key = 'posts.all.' . (int)$this->config->get('config_store_id');
         $cachefile = $this->cache->get($key);
@@ -103,7 +142,7 @@ class Post extends Model {
 					  AND p.date_available <= NOW() 
 					  AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
             
-            if (!empty($data['filter_name']) || !empty($data['filter_tag'])) {
+            if (!empty($data['filter_name'])) {
                 $sql.= " AND (";
                 
                 if (!empty($data['filter_name'])) {
@@ -115,14 +154,6 @@ class Post extends Model {
                     } else {
                         $sql.= "LCASE(pd.name) LIKE '%" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "%'";
                     }
-                }
-                
-                if (!empty($data['filter_name']) && !empty($data['filter_tag'])) {
-                    $sql.= " OR ";
-                }
-                
-                if (!empty($data['filter_tag'])) {
-                    $sql.= "LOWER(pd.tag) LIKE '%" . $this->db->escape($this->encode->strtolower($data['filter_tag'])) . "%'";
                 }
                 
                 $sql.= ")";
@@ -443,37 +474,6 @@ class Post extends Model {
         return $cachefile;
     }
     
-    public function getCumulusTags() {
-        $key = 'posts.tags.all.' . (int)$this->config->get('config_store_id');
-        $cachefile = $this->cache->get($key);
-        
-        if (is_bool($cachefile)):
-            $tags_data = array();
-            
-            $query = $this->db->query("
-				SELECT tag 
-				FROM {$this->db->prefix}blog_post_description 
-				WHERE language_id='" . (int)$this->config->get('config_language_id') . "'
-			");
-            
-            if ($query->num_rows):
-                foreach ($query->rows as $post_tags):
-                    $tags = explode(",", $post_tags['tag']);
-                    foreach ($tags as $tag):
-                        if (!in_array($tag, $tags_data)):
-                            $tags_data[] = $tag;
-                        endif;
-                    endforeach;
-                endforeach;
-            endif;
-            
-            $cachefile = $tags_data;
-            $this->cache->set($key, $cachefile);
-        endif;
-        
-        return $cachefile;
-    }
-    
     public function getTotalPosts($data = array()) {
         $key = 'posts.total.' . (int)$this->config->get('config_store_id');
         $cachefile = $this->cache->get($key);
@@ -497,7 +497,7 @@ class Post extends Model {
 					  AND p.date_available <= NOW() 
 					  AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
             
-            if (!empty($data['filter_name']) || !empty($data['filter_tag'])) {
+            if (!empty($data['filter_name'])) {
                 $sql.= " AND (";
                 
                 if (!empty($data['filter_name'])) {
@@ -509,14 +509,6 @@ class Post extends Model {
                     } else {
                         $sql.= "LCASE(pd.name) LIKE '%" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "%'";
                     }
-                }
-                
-                if (!empty($data['filter_name']) && !empty($data['filter_tag'])) {
-                    $sql.= " OR ";
-                }
-                
-                if (!empty($data['filter_tag'])) {
-                    $sql.= "MATCH(pd.tag) AGAINST('" . $this->db->escape($this->encode->strtolower($data['filter_tag'])) . "')";
                 }
                 
                 $sql.= ")";

@@ -32,9 +32,10 @@ $_['lang_column_action']          = 'Action';
 
 // Entry
 $_['lang_entry_name']             = 'Category Name:';
-$_['lang_entry_meta_keyword']     = 'Meta Tag Keywords:';
-$_['lang_entry_meta_description'] = 'Meta Tag Description:';
+$_['lang_entry_meta_keyword']     = 'Meta Keywords:<br><span class="help">Once you\'ve filled in your content, click the generate button to generate keywords from your description.</span>';
+$_['lang_entry_meta_description'] = 'Meta Description:<br><span class="help">Once you\'ve filled in your content, click the generate button to generate a meta description from your description.</span>';
 $_['lang_entry_description']      = 'Description:';
+$_['lang_entry_tag']              = 'Tags:<br><span class="help">Comma separated search tags.</span>';
 $_['lang_entry_parent']           = 'Parent Category:';
 $_['lang_entry_image']            = 'Image:';
 $_['lang_entry_store']            = 'Stores:';

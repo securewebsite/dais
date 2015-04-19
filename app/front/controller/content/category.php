@@ -112,23 +112,47 @@ class Category extends Controller {
             if (isset($this->request->get['limit'])) {
                 $url.= '&limit=' . $this->request->get['limit'];
             }
+
+            $data['tags'] = false;
+
+            if (isset($category_info['tag'])):
+                $tags = explode(',', $category_info['tag']);
+                
+                foreach ($tags as $tag):
+                    $data['tags'][] = array(
+                        'name'  => trim($tag), 
+                        'href' => $this->url->link('search/tag', 'tag=' . trim($tag))
+                    );
+                endforeach;
+            endif;
             
             $data['categories'] = array();
             
             $results = $this->model_content_category->getCategories($category_id);
             
             foreach ($results as $result) {
-                $filter = array('filter_category_id' => $result['category_id'], 'filter_sub_category' => true);
+                $filter = array(
+                    'filter_category_id'  => $result['category_id'], 
+                    'filter_sub_category' => true
+                );
                 
-                $post_total = $this->model_content_post->getTotalPosts($filter);
-                
+                $post_total = false;
+
+                if ($this->config->get('config_post_count')):
+                    $post_total = $this->model_content_post->getTotalPosts($filter);
+                endif;
+
                 if ($result['image']):
                     $img = $this->model_tool_image->resize($result['image'], 189, 142, 'h');
                 else:
                     $img = IMAGE_URL . 'placeholder.png';
                 endif;
                 
-                $data['categories'][] = array('name' => $result['name'] . ($this->config->get('config_post_count') ? ' (' . $post_total . ')' : ''), 'href' => $this->url->link('content/category', 'bpath=' . $this->request->get['bpath'] . '_' . $result['category_id'] . $url), 'pic' => $img);
+                $data['categories'][] = array(
+                    'name' => $result['name'] . ($post_total ? ' (' . $post_total . ')' : ''), 
+                    'href' => $this->url->link('content/category', 'bpath=' . $this->request->get['bpath'] . '_' . $result['category_id'] . $url), 
+                    'pic'  => $img
+                );
                 
                 unset($filter);
             }

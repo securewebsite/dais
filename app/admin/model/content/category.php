@@ -51,6 +51,22 @@ class Category extends Model {
 					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
 					description = '" . $this->db->escape($value['description']) . "'
 			");
+
+            // process tags
+            if (isset($value['tag'])):
+                $tags = explode(',', $value['tag']);
+                foreach ($tags as $tag):
+                    $tag = trim($tag);
+                    $this->db->query("
+                        INSERT INTO {$this->db->prefix}tag 
+                        SET 
+                            section     = 'blog_category', 
+                            element_id  = '" . (int)$category_id . "', 
+                            language_id = '" . (int)$language_id . "', 
+                            tag         = '" . $this->db->escape($tag) . "'
+                    ");
+                endforeach;
+            endif;
         }
         
         if (isset($data['category_store'])) {
@@ -128,6 +144,29 @@ class Category extends Model {
 					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
 					description = '" . $this->db->escape($value['description']) . "'
 			");
+
+            $this->db->query("
+                DELETE FROM {$this->db->prefix}tag 
+                WHERE section   = 'blog_category' 
+                AND element_id  = '" . (int)$category_id . "' 
+                AND language_id = '" . (int)$language_id . "'
+            ");
+
+            // process tags
+            if (isset($value['tag'])):
+                $tags = explode(',', $value['tag']);
+                foreach ($tags as $tag):
+                    $tag = trim($tag);
+                    $this->db->query("
+                        INSERT INTO {$this->db->prefix}tag 
+                        SET 
+                            section     = 'blog_category', 
+                            element_id  = '" . (int)$category_id . "', 
+                            language_id = '" . (int)$language_id . "', 
+                            tag         = '" . $this->db->escape($tag) . "'
+                    ");
+                endforeach;
+            endif;
         }
         
         $this->db->query("
@@ -213,6 +252,11 @@ class Category extends Model {
 			FROM {$this->db->prefix}blog_category 
 			WHERE parent_id = '" . (int)$category_id . "'
 		");
+
+        $this->db->query("
+            DELETE FROM {$this->db->prefix}tag 
+            WHERE section  = 'blog_category' 
+            AND element_id = '" . (int)$category_id . "'");
         
         foreach ($query->rows as $result) {
             $this->deleteCategory($result['category_id']);
@@ -231,8 +275,30 @@ class Category extends Model {
 			FROM {$this->db->prefix}blog_category 
 			WHERE category_id = '" . (int)$category_id . "'
 		");
+
+        $query->row['tag'] = $this->getBlogCategoryTags($category_id);
         
         return $query->row;
+    }
+
+    public function getBlogCategoryTags($category_id) {
+        $query = $this->db->query("
+            SELECT tag 
+            FROM {$this->db->prefix}tag 
+            WHERE section   = 'blog_category' 
+            AND element_id  = '" . (int)$category_id . "' 
+            AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+        ");
+        
+        if ($query->num_rows):
+            $tags = array();
+            foreach($query->rows as $row):
+                $tags[] = $row['tag'];
+            endforeach;
+            return implode(', ', $tags);
+        else:
+            return false;
+        endif;
     }
     
     public function getCategories($parent_id = 0) {
@@ -300,7 +366,8 @@ class Category extends Model {
                 'name'             => $result['name'], 
                 'meta_keyword'     => $result['meta_keyword'], 
                 'meta_description' => $result['meta_description'], 
-                'description'      => $result['description']
+                'description'      => $result['description'],
+                'tag'              => $this->getBlogCategoryTags($category_id)
             );
         }
         

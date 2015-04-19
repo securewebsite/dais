@@ -63,4 +63,20 @@ class Encode extends LibraryService {
     public function strtolower($string) {
         return $this->encode->utf8Strtolower($string);
     }
+
+    public function riptags($string) {
+        // html tags
+        $string = preg_replace('/<[^>]*>/', ' ', $string);
+        
+        // control characters
+        // replace with space 
+        $string = str_replace("\r", '', $string);
+        $string = str_replace("\n", ' ', $string);
+        $string = str_replace("\t", ' ', $string);
+        
+        // remove multiple spaces
+        $string = trim(preg_replace('/ {2,}/', ' ', $string));
+        
+        return $string;
+    }
 }

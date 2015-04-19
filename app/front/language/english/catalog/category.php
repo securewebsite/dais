@@ -41,3 +41,4 @@ $_['lang_text_rating_desc']  = 'Rating (Highest)';
 $_['lang_text_model_asc']    = 'Model (A - Z)';
 $_['lang_text_model_desc']   = 'Model (Z - A)';
 $_['lang_text_limit']        = 'Show:';
+$_['lang_text_tag']          = 'Tags:';

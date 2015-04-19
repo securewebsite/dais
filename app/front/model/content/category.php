@@ -37,6 +37,7 @@ class Category extends Model {
 			");
             
             if ($query->num_rows):
+                $query->row['tag'] = $this->getBlogCategoryTags($category_id);
                 $cachefile = $query->row;
                 $this->cache->set($key, $cachefile);
             else:
@@ -46,6 +47,26 @@ class Category extends Model {
         endif;
         
         return $cachefile;
+    }
+
+    public function getBlogCategoryTags($category_id) {
+        $query = $this->db->query("
+            SELECT tag 
+            FROM {$this->db->prefix}tag 
+            WHERE section   = 'blog_category' 
+            AND element_id  = '" . (int)$category_id . "' 
+            AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+        ");
+        
+        if ($query->num_rows):
+            $tags = array();
+            foreach($query->rows as $row):
+                $tags[] = $row['tag'];
+            endforeach;
+            return implode(', ', $tags);
+        else:
+            return false;
+        endif;
     }
     
     public function getCategories($parent_id = 0) {
@@ -149,7 +170,11 @@ class Category extends Model {
                             $path = $this->buildCategoryPath($category_info['category_id']);
                         endif;
                         
-                        $category_data[] = array('category_id' => $category_info['category_id'], 'name' => $category_info['name'], 'href' => $this->url->link('content/category', 'bpath=' . $path, 'SSL'));
+                        $category_data[] = array(
+                            'category_id' => $category_info['category_id'], 
+                            'name'        => $category_info['name'], 
+                            'href'        => $this->url->link('content/category', 'bpath=' . $path, 'SSL')
+                        );
                     endif;
                 endforeach;
                 

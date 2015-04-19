@@ -111,11 +111,9 @@ class Url extends LibraryService {
         endif;
         
         if (parent::$app['active.fascade'] === FRONT_FASCADE):
-            
             // Catalog access
             return $this->rewrite($url);
         elseif (parent::$app['active.fascade'] === INSTALL_FASCADE):
-            
             // Installer access
             return $this->install_rewrite($url);
         else:
@@ -152,7 +150,7 @@ class Url extends LibraryService {
                             // special case for return insert
                             if (isset($route['order_id']) && isset($route['product_id'])):
                                 $url.= '/' . $route['route'] . '&order_id=' . $route['order_id'] . '&product_id=' . $route['product_id'];
-                                unset($route[$key]);
+                                unset($route[$k]);
                                 unset($route['order_id']);
                                 unset($route['product_id']);
                                 unset($route['path']);
@@ -170,7 +168,20 @@ class Url extends LibraryService {
                     unset($route[$v]);
                 endif;
             endforeach;
+
             switch ($route['route']):
+                case 'search/tag' && $key === 'tag':
+                    $url .= '/' . $route['route'] . '/' . urlencode(trim($route['tag']));
+                    unset($route[$key]);
+                    unset($route['tag']);
+                    break;
+
+                case 'search/search' && $key === 'search':
+                    $url .= '/search/' . urlencode(trim($route['search']));
+                    unset($route[$key]);
+                    unset($route['search']);
+                    break;
+
                 case 'catalog/product' && $key === 'path':
                     $array = $slugs['catalog/category'];
                     $categories = explode('_', $value);

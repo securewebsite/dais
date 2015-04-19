@@ -98,9 +98,18 @@ class Category extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('content/category/update', 'token=' . $this->session->data['token'] . '&category_id=' . $result['category_id'], 'SSL'));
+            $action[] = array(
+                'text' => $this->language->get('lang_text_edit'), 
+                'href' => $this->url->link('content/category/update', 'token=' . $this->session->data['token'] . '&category_id=' . $result['category_id'], 'SSL')
+            );
             
-            $data['categories'][] = array('category_id' => $result['category_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'selected' => isset($this->request->post['selected']) && in_array($result['category_id'], $this->request->post['selected']), 'action' => $action);
+            $data['categories'][] = array(
+                'category_id' => $result['category_id'], 
+                'name'        => $result['name'], 
+                'sort_order'  => $result['sort_order'], 
+                'selected'    => isset($this->request->post['selected']) && in_array($result['category_id'], $this->request->post['selected']), 
+                'action'      => $action
+            );
         }
         
         if (isset($this->error['warning'])) {
@@ -172,6 +181,8 @@ class Category extends Controller {
         } else {
             $data['category_description'] = array();
         }
+
+        //$this->theme->test($category_info);
         
         $categories = $this->model_content_category->getCategories(0);
         
@@ -261,6 +272,8 @@ class Category extends Controller {
         $this->theme->model('design/layout');
         
         $data['layouts'] = $this->model_design_layout->getLayouts();
+
+        $this->theme->loadjs('javascript/content/category_form', $data);
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
@@ -351,6 +364,27 @@ class Category extends Controller {
         
         $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
         
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function description() {
+        $json = array();
+
+        if (isset($this->request->post['description']))
+            $json['success'] = $this->keyword->getDescription($this->request->post['description']);
+
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function keyword() {
+        $json = array();
+
+        if (isset($this->request->post['keywords'])):
+            // let's clean up the data first
+            $keywords        = $this->keyword->getDescription($this->request->post['keywords']);
+            $json['success'] = $this->keyword->getKeywords($keywords);
+        endif;
+
         $this->response->setOutput(json_encode($json));
     }
 }

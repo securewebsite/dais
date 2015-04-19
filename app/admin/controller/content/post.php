@@ -877,4 +877,25 @@ class Post extends Controller {
         
         $this->response->setOutput(json_encode($json));
     }
+
+    public function description() {
+        $json = array();
+
+        if (isset($this->request->post['description']))
+            $json['success'] = $this->keyword->getDescription($this->request->post['description']);
+
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function keyword() {
+        $json = array();
+
+        if (isset($this->request->post['keywords'])):
+            // let's clean up the data first
+            $keywords        = $this->keyword->getDescription($this->request->post['keywords']);
+            $json['success'] = $this->keyword->getKeywords($keywords);
+        endif;
+
+        $this->response->setOutput(json_encode($json));
+    }
 }

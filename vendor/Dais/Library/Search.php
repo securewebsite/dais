@@ -18,6 +18,14 @@ namespace Dais\Library;
 use Dais\Engine\Container;
 use Dais\Service\LibraryService;
 
+/**
+ * At present there are 4 types of searches.
+ * 1. Products
+ * 2. Posts
+ * 3. Pages
+ * 4. Customers
+ */
+
 class Search extends LibraryService {
 
 	private $results;
@@ -29,6 +37,32 @@ class Search extends LibraryService {
 	public function search_all ($data) {
 		$db = parent::$app['db'];
 
-		
+
 	}
+
+	public function tags ($tag) {
+		$results = array();
+
+		// products
+		// posts
+		// pages
+		// customers
+	}
+
+	protected function search_products($data) {
+
+	}
+
+	protected function search_posts($data) {
+
+	}
+
+	protected function search_pages($data) {
+
+	}
+
+	protected function search_customers($data) {
+
+	}
+	
 }

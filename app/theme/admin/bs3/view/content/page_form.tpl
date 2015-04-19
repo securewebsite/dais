@@ -54,18 +54,25 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="control-label col-sm-2"><b class="required">*</b> <?= $lang_entry_meta_description; ?></label>
+									<label class="control-label col-sm-2"><?= $lang_entry_meta_description; ?></label>
 									<div class="col-sm-6">
 										<textarea name="page_description[<?= $language['language_id']; ?>][meta_description]" class="form-control" rows="6"><?= isset($page_description[$language['language_id']]) ? $page_description[$language['language_id']]['meta_description'] : ''; ?></textarea>
-										<?php if (isset($error_meta_description[$language['language_id']])) { ?>
-										<span class="help-block error"><?= $error_meta_description[$language['language_id']]; ?></span>
-										<?php } ?>
+									</div>
+									<div class="col-sm-2">
+										<button id="meta-description<?= $language['language_id']; ?>" class="btn btn-primary">
+											<?= $lang_button_generate; ?>
+										</button>
 									</div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-sm-2"><?= $lang_entry_meta_keyword; ?></label>
 									<div class="col-sm-6">
 										<textarea name="page_description[<?= $language['language_id']; ?>][meta_keywords]" class="form-control" rows="5"><?= isset($page_description[$language['language_id']]) ? $page_description[$language['language_id']]['meta_keywords'] : ''; ?></textarea>
+									</div>
+									<div class="col-sm-2">
+										<button id="meta-keyword<?= $language['language_id']; ?>" class="btn btn-primary">
+											<?= $lang_button_generate; ?>
+										</button>
 									</div>
 								</div>
 								<div class="form-group">

@@ -6,7 +6,29 @@
 		<?= $breadcrumb; ?>
 		<?= $content_top; ?>
 		<div class="page-header"><h1><?= $heading_title; ?></h1></div>
-		<p><?= $description; ?></p>
+		<div class="row">
+			<div class="col-sm-12">
+				<?= $description; ?>
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<?php if ($tags): ?>
+			<div class="col-sm-6">
+				<span class="fa fa-tags"></span> <?= $lang_text_tags; ?> 
+			<?php foreach($tags as $tag): ?>
+				<a href="<?= $tag['href']; ?>" class="label label-info"><?= $tag['name']; ?></a> 
+			<?php endforeach; ?>
+			</div>
+			<div class="col-sm-6">
+			Social Bar
+			</div>
+			<?php else: ?>
+			<div class="col-sm-12">
+			Social Bar
+			</div>
+			<?php endif; ?>
+		</div>
 		<div class="form-actions">
 			<div class="form-actions-inner text-right">
 				<a href="<?= $continue; ?>" class="btn btn-primary"><?= $lang_button_continue; ?></a>
