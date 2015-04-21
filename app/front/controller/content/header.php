@@ -21,19 +21,18 @@ class Header extends Controller {
     public function index() {
         $data['title'] = $this->theme->getTitle();
         
-        if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+        if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))):
             $server = $this->config->get('config_ssl');
-        } else {
+        else:
             $server = $this->config->get('config_url');
-        }
+        endif;
         
-        if (isset($this->session->data['error']) && !empty($this->session->data['error'])) {
+        if (isset($this->session->data['error']) && !empty($this->session->data['error'])):
             $data['error'] = $this->session->data['error'];
-            
             unset($this->session->data['error']);
-        } else {
+        else:
             $data['error'] = '';
-        }
+        endif;
         
         $this->css->register('dais')
             ->register('plugin', 'dais')
@@ -49,17 +48,17 @@ class Header extends Controller {
         $data['direction']   = $this->language->get('lang_direction');
         $data['name']        = $this->config->get('config_name');
         
-        if ($this->config->get('config_icon') && file_exists($this->app['path.image'] . $this->config->get('config_icon'))) {
+        if ($this->config->get('config_icon') && file_exists($this->app['path.image'] . $this->config->get('config_icon'))):
             $data['icon'] = $server . 'image/' . $this->config->get('config_icon');
-        } else {
+        else:
             $data['icon'] = '';
-        }
+        endif;
         
-        if ($this->config->get('config_logo') && file_exists($this->app['path.image'] . $this->config->get('config_logo'))) {
+        if ($this->config->get('config_logo') && file_exists($this->app['path.image'] . $this->config->get('config_logo'))):
             $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
-        } else {
+        else:
             $data['logo'] = '';
-        }
+        endif;
         
         // add our social graph here
         // set open graph props dynamically
@@ -83,7 +82,7 @@ class Header extends Controller {
         
         // og:image should always be at least 200px by 200px
         if (!$this->theme->getOgImage()):
-            $this->theme->setOgImage($server . 'image/data/site-thumb.png');
+            $this->theme->setOgImage($server . 'image/data/site-thumb.jpg');
         endif;
         
         // og:description set to meta description if not present
@@ -92,30 +91,30 @@ class Header extends Controller {
         endif;
         
         // push these now to the header file
-        $data['canonical'] = $this->theme->getCanonical();
-        $data['og_image'] = $this->theme->getOgImage();
-        $data['og_type'] = $this->theme->getOgType();
-        $data['og_site_name'] = $this->theme->getOgSite();
-        $data['og_title'] = $this->theme->getOgTitle();
-        $data['og_url'] = $this->theme->getOgUrl();
+        $data['canonical']      = $this->theme->getCanonical();
+        $data['og_image']       = $this->theme->getOgImage();
+        $data['og_type']        = $this->theme->getOgType();
+        $data['og_site_name']   = $this->theme->getOgSite();
+        $data['og_title']       = $this->theme->getOgTitle();
+        $data['og_url']         = $this->theme->getOgUrl();
         $data['og_description'] = $this->theme->getOgDescription();
         
         $data = $this->theme->language('content/header', $data);
         
         $data['text_wishlist'] = sprintf($this->language->get('lang_text_wishlist'), (isset($this->session->data['wishlist']) ? count($this->session->data['wishlist']) : 0));
-        $data['text_welcome'] = sprintf($this->language->get('lang_text_welcome'), $this->url->link('account/login', '', 'SSL'), $this->url->link('account/register', '', 'SSL'));
-        $data['text_logged'] = sprintf($this->language->get('lang_text_logged'), $this->url->link('account/dashboard', '', 'SSL'), $this->customer->getFirstName(), $this->url->link('account/logout', '', 'SSL'));
+        $data['text_welcome']  = sprintf($this->language->get('lang_text_welcome'), $this->url->link('account/login', '', 'SSL'), $this->url->link('account/register', '', 'SSL'));
+        $data['text_logged']   = sprintf($this->language->get('lang_text_logged'), $this->url->link('account/dashboard', '', 'SSL'), $this->customer->getFirstName(), $this->url->link('account/logout', '', 'SSL'));
         
         if ($this->theme->style === 'shop'):
-            $data['home'] = $this->url->link('shop/home');
-            $data['alternate'] = $this->url->link('content/home');
+            $data['home']           = $this->url->link('shop/home');
+            $data['alternate']      = $this->url->link('content/home');
             $data['text_alternate'] = $this->language->get('lang_text_blog');
-            $data['text_nav'] = $this->language->get('lang_nav_blog');
+            $data['text_nav']       = $this->language->get('lang_nav_blog');
         else:
-            $data['home'] = $this->url->link('content/home');
-            $data['alternate'] = $this->url->link('shop/home');
+            $data['home']           = $this->url->link('content/home');
+            $data['alternate']      = $this->url->link('shop/home');
             $data['text_alternate'] = $this->language->get('lang_text_shop');
-            $data['text_nav'] = $this->language->get('lang_nav_shop');
+            $data['text_nav']       = $this->language->get('lang_nav_shop');
         endif;
         
         $data['blog_link'] = false;
@@ -135,56 +134,51 @@ class Header extends Controller {
             $data['schema_type'] = 'Website';
         endif;
         
-        $data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
-        $data['logged'] = $this->customer->isLogged();
-        $data['account'] = $this->url->link('account/dashboard', '', 'SSL');
+        $data['wishlist']      = $this->url->link('account/wishlist', '', 'SSL');
+        $data['logged']        = $this->customer->isLogged();
+        $data['account']       = $this->url->link('account/dashboard', '', 'SSL');
         $data['shopping_cart'] = $this->url->link('checkout/cart');
-        $data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
+        $data['checkout']      = $this->url->link('checkout/checkout', '', 'SSL');
         
         $status = true;
         
-        if (isset($this->request->server['HTTP_USER_AGENT'])) {
+        if (isset($this->request->server['HTTP_USER_AGENT'])):
             $robots = explode("\n", str_replace(array("\r\n", "\r"), "\n", trim($this->config->get('config_robots'))));
-            
-            foreach ($robots as $robot) {
-                if ($robot && strpos($this->request->server['HTTP_USER_AGENT'], trim($robot)) !== false) {
+            foreach ($robots as $robot):
+                if ($robot && strpos($this->request->server['HTTP_USER_AGENT'], trim($robot)) !== false):
                     $status = false;
-                    
                     break;
-                }
-            }
-        }
+                endif;
+            endforeach;
+        endif;
         
         // A dirty hack to try to set a cookie for the multi-store feature
         $this->theme->model('setting/store');
         
         $data['stores'] = array();
         
-        if ($this->config->get('config_shared') && $status) {
+        if ($this->config->get('config_shared') && $status):
             $data['stores'][] = $server . 'asset/' . strtolower($this->theme->name) . '/js/crossdomain.php?session_id=' . $this->session->getId();
-            
             $stores = $this->model_setting_store->getStores();
-            
-            foreach ($stores as $store) {
+            foreach ($stores as $store):
                 $data['stores'][] = $store['url'] . 'asset/' . strtolower($this->theme->name) . '/js/crossdomain.php?session_id=' . $this->session->getId();
-            }
-        }
+            endforeach;
+        endif;
         
         // Search
-        if (isset($this->request->get['search'])) {
+        if (isset($this->request->get['search'])):
             $data['search'] = $this->request->get['search'];
-        } else {
+        else:
             $data['search'] = '';
-        }
+        endif;
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
         $data['css_link'] = $this->url->link('common/css', '&css=' . $this->css->compile(), 'SSL');
-        
         $data['language'] = $this->theme->controller('widget/language');
         $data['currency'] = $this->theme->controller('widget/currency');
-        $data['cart'] = $this->theme->controller('shop/cart');
-        $data['menu'] = $this->theme->controller('widget/headermenu');
+        $data['cart']     = $this->theme->controller('shop/cart');
+        $data['menu']     = $this->theme->controller('widget/headermenu');
         
         return $this->theme->view('content/header', $data);
     }

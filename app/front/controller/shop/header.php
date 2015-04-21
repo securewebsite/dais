@@ -34,15 +34,18 @@ class Header extends Controller {
             $data['error'] = '';
         endif;
         
-        $this->css->register('dais')->register('plugin', 'dais')->register('calendar', 'plugin')->register('video', 'calendar', true);
+        $this->css->register('dais')
+            ->register('plugin', 'dais')
+            ->register('calendar', 'plugin')
+            ->register('video', 'calendar', true);
         
-        $data['base'] = $server;
+        $data['base']        = $server;
         $data['description'] = $this->theme->getDescription();
-        $data['keywords'] = $this->theme->getKeywords();
-        $data['links'] = $this->theme->getLinks();
-        $data['lang'] = $this->language->get('lang_code');
-        $data['direction'] = $this->language->get('lang_direction');
-        $data['name'] = $this->config->get('config_name');
+        $data['keywords']    = $this->theme->getKeywords();
+        $data['links']       = $this->theme->getLinks();
+        $data['lang']        = $this->language->get('lang_code');
+        $data['direction']   = $this->language->get('lang_direction');
+        $data['name']        = $this->config->get('config_name');
         
         if ($this->config->get('config_icon') && file_exists($this->app['path.image'] . $this->config->get('config_icon'))):
             $data['icon'] = $server . 'image/' . $this->config->get('config_icon');
@@ -78,7 +81,7 @@ class Header extends Controller {
         
         // og:image should always be at least 200px by 200px
         if (!$this->theme->getOgImage()):
-            $this->theme->setOgImage($server . 'image/data/site-thumb.png');
+            $this->theme->setOgImage($server . 'image/data/site-thumb.jpg');
         endif;
         
         // og:description set to meta description if not present
@@ -87,32 +90,30 @@ class Header extends Controller {
         endif;
         
         // push these now to the header file
-        $data['canonical'] = $this->theme->getCanonical();
-        $data['og_image'] = $this->theme->getOgImage();
-        $data['og_type'] = $this->theme->getOgType();
-        $data['og_site_name'] = $this->theme->getOgSite();
-        $data['og_title'] = $this->theme->getOgTitle();
-        $data['og_url'] = $this->theme->getOgUrl();
+        $data['canonical']      = $this->theme->getCanonical();
+        $data['og_image']       = $this->theme->getOgImage();
+        $data['og_type']        = $this->theme->getOgType();
+        $data['og_site_name']   = $this->theme->getOgSite();
+        $data['og_title']       = $this->theme->getOgTitle();
+        $data['og_url']         = $this->theme->getOgUrl();
         $data['og_description'] = $this->theme->getOgDescription();
         
         $data = $this->theme->language('shop/header', $data);
         
         $data['text_wishlist'] = sprintf($this->language->get('lang_text_wishlist'), (isset($this->session->data['wishlist']) ? count($this->session->data['wishlist']) : 0));
-        
-        $data['text_welcome'] = sprintf($this->language->get('lang_text_welcome'), $this->url->link('account/login', '', 'SSL'), $this->url->link('account/register', '', 'SSL'));
-        
-        $data['text_logged'] = sprintf($this->language->get('lang_text_logged'), $this->url->link('account/dashboard', '', 'SSL'), $this->customer->getUsername(), $this->url->link('account/logout', '', 'SSL'));
+        $data['text_welcome']  = sprintf($this->language->get('lang_text_welcome'), $this->url->link('account/login', '', 'SSL'), $this->url->link('account/register', '', 'SSL'));
+        $data['text_logged']   = sprintf($this->language->get('lang_text_logged'), $this->url->link('account/dashboard', '', 'SSL'), $this->customer->getUsername(), $this->url->link('account/logout', '', 'SSL'));
         
         if ($this->theme->style === 'shop'):
-            $data['home'] = $this->url->link('shop/home');
-            $data['alternate'] = $this->url->link('content/home');
+            $data['home']           = $this->url->link('shop/home');
+            $data['alternate']      = $this->url->link('content/home');
             $data['text_alternate'] = $this->language->get('lang_text_blog');
-            $data['text_nav'] = $this->language->get('lang_nav_blog');
+            $data['text_nav']       = $this->language->get('lang_nav_blog');
         else:
-            $data['home'] = $this->url->link('content/home');
-            $data['alternate'] = $this->url->link('shop/home');
+            $data['home']           = $this->url->link('content/home');
+            $data['alternate']      = $this->url->link('shop/home');
             $data['text_alternate'] = $this->language->get('lang_text_shop');
-            $data['text_nav'] = $this->language->get('lang_nav_shop');
+            $data['text_nav']       = $this->language->get('lang_nav_shop');
         endif;
         
         $data['blog_link'] = false;
@@ -121,11 +122,11 @@ class Header extends Controller {
             $data['blog_link'] = $this->url->link('content/blog');
         endif;
         
-        $data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
-        $data['logged'] = $this->customer->isLogged();
-        $data['account'] = $this->url->link('account/dashboard', '', 'SSL');
+        $data['wishlist']      = $this->url->link('account/wishlist', '', 'SSL');
+        $data['logged']        = $this->customer->isLogged();
+        $data['account']       = $this->url->link('account/dashboard', '', 'SSL');
         $data['shopping_cart'] = $this->url->link('checkout/cart');
-        $data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
+        $data['checkout']      = $this->url->link('checkout/checkout', '', 'SSL');
         
         $status = true;
         
@@ -161,11 +162,10 @@ class Header extends Controller {
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
         $data['css_link'] = $this->url->link('common/css', '&css=' . $this->css->compile(), 'SSL');
-        
         $data['language'] = $this->theme->controller('widget/language');
         $data['currency'] = $this->theme->controller('widget/currency');
-        $data['cart'] = $this->theme->controller('shop/cart');
-        $data['menu'] = $this->theme->controller('widget/headermenu');
+        $data['cart']     = $this->theme->controller('shop/cart');
+        $data['menu']     = $this->theme->controller('widget/headermenu');
         
         return $this->theme->view('shop/header', $data);
     }
