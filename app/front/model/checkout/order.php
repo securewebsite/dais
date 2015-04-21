@@ -790,7 +790,7 @@ class Order extends Model {
 		$data['products'] = array();
 		$products         = $call['query']['products'];
 
-        $has_hangout = false;
+        $has_link = false;
         
         foreach ($products as $product):
             $product_data = $this->model_catalog_product->getProduct($product['product_id']);
@@ -802,14 +802,14 @@ class Order extends Model {
             
             if ($product_data['event_id']):
                 $event = $this->model_catalog_product->getEvent($product_data['event_id']);
-                if ($event['hangout']):
-                    $has_hangout = true;
-                    $hangout = sprintf($language->get('text_hangout_link'), $event['hangout']);
+                if ($event['link']):
+                    $has_link = true;
+                    $link = sprintf($language->get('text_online_link'), $event['link']);
                 else:
-                    $hangout = '';
+                    $link = '';
                 endif;
             else:
-                $hangout = '';
+                $link = '';
             endif;
             
             $option_data = array();
@@ -832,7 +832,7 @@ class Order extends Model {
             $data['products'][] = array(
 				'image'            => $image, 
 				'order_product_id' => $product['order_product_id'], 
-				'hangout'          => $hangout, 
+				'link'             => $link, 
 				'product_id'       => $product['product_id'], 
 				'weight'           => $product_data['weight'], 
 				'weight_fvalue'    => $this->weight->format($product_data['weight'], $product_data['weight_class_id']), 
@@ -849,7 +849,7 @@ class Order extends Model {
             );
         endforeach;
         
-        $data['has_hangout'] = $has_hangout;
+        $data['has_link'] = $has_link;
         
         // Gift cards
 		$data['giftcards'] = array();

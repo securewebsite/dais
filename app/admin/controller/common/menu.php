@@ -43,6 +43,7 @@ class Menu extends Controller {
             $data['blog_post']                   = $this->url->link('content/post', 'token=' . $this->session->data['token'], 'SSL');
             $data['blog_comment']                = $this->url->link('content/comment', 'token=' . $this->session->data['token'], 'SSL');
             $data['category']                    = $this->url->link('catalog/category', 'token=' . $this->session->data['token'], 'SSL');
+            $data['calendar']                    = $this->url->link('calendar/category', 'token=' . $this->session->data['token'], 'SSL');
             $data['country']                     = $this->url->link('localization/country', 'token=' . $this->session->data['token'], 'SSL');
             $data['coupon']                      = $this->url->link('sale/coupon', 'token=' . $this->session->data['token'], 'SSL');
             $data['currency']                    = $this->url->link('localization/currency', 'token=' . $this->session->data['token'], 'SSL');
@@ -51,7 +52,7 @@ class Menu extends Controller {
             $data['customer_ban_ip']             = $this->url->link('people/customerbanip', 'token=' . $this->session->data['token'], 'SSL');
             $data['download']                    = $this->url->link('catalog/download', 'token=' . $this->session->data['token'], 'SSL');
             $data['error_log']                   = $this->url->link('tool/errorlog', 'token=' . $this->session->data['token'], 'SSL');
-            $data['event']                       = $this->url->link('catalog/event', 'token=' . $this->session->data['token'], 'SSL');
+            $data['event']                       = $this->url->link('calendar/event', 'token=' . $this->session->data['token'], 'SSL');
             $data['feed']                        = $this->url->link('module/feed', 'token=' . $this->session->data['token'], 'SSL');
             $data['filter']                      = $this->url->link('catalog/filter', 'token=' . $this->session->data['token'], 'SSL');
             $data['geo_zone']                    = $this->url->link('localization/geozone', 'token=' . $this->session->data['token'], 'SSL');

@@ -14,8 +14,8 @@
 				<li class="dropdown" id="catalog"><a class="dropdown-toggle" data-toggle="dropdown"><?= $lang_text_catalog; ?> <b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="<?= $category; ?>"><?= $lang_text_category; ?></a></li>
+						<li><a href="<?= $manufacturer; ?>"><?= $lang_text_manufacturer; ?></a></li>
 						<li><a href="<?= $product; ?>"><?= $lang_text_product; ?></a></li>
-						<li><a href="<?= $event; ?>"><?= $lang_text_event; ?></a></li>
 						<li><a href="<?= $recurring; ?>"><?= $lang_text_recurring; ?></a></li>
 						<li><a href="<?= $filter; ?>"><?= $lang_text_filter; ?></a></li>
 						<li class="dropdown-submenu"><a class="dropdown-toggle" data-toggle="dropdown"><?= $lang_text_attribute; ?> <b class="fa fa-caret-right"></b></a>
@@ -25,14 +25,19 @@
 							</ul>
 						</li>
 						<li><a href="<?= $option; ?>"><?= $lang_text_option; ?></a></li>
-						<li><a href="<?= $manufacturer; ?>"><?= $lang_text_manufacturer; ?></a></li>
+						
 						<li><a href="<?= $download; ?>"><?= $lang_text_download; ?></a></li>
 						<li><a href="<?= $review; ?>"><?= $lang_text_review; ?></a></li>
 					</ul>
 				</li>
 				<li class="dropdown" id="content"><a class="dropdown-toggle" data-toggle="dropdown"><?= $lang_text_content; ?> <b class="caret"></b></a>
 					<ul class="dropdown-menu">
+						<li class="dropdown-header"><?= $lang_text_page; ?></li>
 						<li><a href="<?= $page; ?>"><?= $lang_text_page; ?></a></li>
+						<div class="divider"></div>
+						<li class="dropdown-header"><?= $lang_text_calendar; ?></li>
+						<li><a href="<?= $calendar; ?>"><?= $lang_text_category; ?></a></li>
+						<li><a href="<?= $event; ?>"><?= $lang_text_event; ?></a></li>
 						<div class="divider"></div>
 						<li class="dropdown-header"><?= $lang_text_blog; ?></li>
 						<li><a href="<?= $blog_category; ?>"><?= $lang_text_blog_cats; ?></a></li>

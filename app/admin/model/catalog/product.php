@@ -905,7 +905,9 @@ class Product extends Model {
 			AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
 		");
 
-		$query->row['tag'] = $this->getProductTags($product_id);
+		if ($query->num_rows):
+			$query->row['tag'] = $this->getProductTags($product_id);
+		endif;
        
         return $query->row;
     }

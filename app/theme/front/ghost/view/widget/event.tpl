@@ -13,7 +13,7 @@
 				<?= $lang_text_starts; ?> <?= $event['start_time']; ?><br>
 				<?= $lang_text_days; ?> <?= $event['event_days']; ?><br>
 				<?php if ($event['online']): ?>
-				<?= $lang_text_location; ?> <a href="<?= $event['hangout']; ?>">Google Hangout</a>
+				<?= $lang_text_location; ?> <a href="<?= $event['link']; ?>"><?= $lang_text_online; ?></a>
 				<?php else: ?>
 				<?= $lang_text_location; ?> <?= $event['location']; ?><br>
 				<?php endif; ?>

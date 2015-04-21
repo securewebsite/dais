@@ -8,30 +8,34 @@
     	end_apm = event.date_end.getHours() > 12 ? 'PM' : 'AM';
     	end_minutes = event.date_end.getMinutes() == 0 ? '00' : event.date_end.getMinutes();
     %>
+    <% if (event.image) { %>
     <div class="col-xs-12">
-	    <div class="thumbnail col-xs-2">
+        <div class="thumbnail col-xs-2">
 			<a href="<%= event.url %>"><img src="<%= event.image %>" class="img-responsive"></a>
 	    </div>
 	    <div class="col-xs-10">
-		    <span><b><%= event.title %></b></span><br>
-		    <%= event.description %><br>
-		</div>
+            <span><b><%= event.title %></b></span><br>
+            <%= event.description %><br>
+        </div> 
 	</div>
+    <% } else { %>
+    <%= event.description %><br>
+    <% } %>   
     <% if (event.location) { %>
-	Location: <%= event.location %><br>
+	<b>Location:</b> <%= event.location %><br>
     <% } %>
     <% if (event.telephone) { %>
-	Telephone: <%= event.telephone %><br>
+	<b>Telephone:</b> <%= event.telephone %><br>
     <% } %>
     <% if (!event.finished) { %>
-    <span>Starts on <%= calendar.locale["ms" + event.date_start.getMonth()] %>. <%= event.date_start.getDate() %>, <%= event.date_start.getFullYear() %>, at <%= calendar.locale["t" + event.date_start.getHours()] %>:<%= start_minutes %><%= start_apm %> <i class="fa fa-clock-o"></i></span><br />
-    <span>Ends on <%= calendar.locale["ms" + event.date_end.getMonth()] %>. <%= event.date_end.getDate() %>, <%= event.date_end.getFullYear() %> at <%= calendar.locale["t" + event.date_end.getHours()] %>:<%= end_minutes %><%= end_apm %> <i class="fa fa-clock-o"></i></span><br />
+    <span><b>Starts on</b> <%= calendar.locale["ms" + event.date_start.getMonth()] %>. <%= event.date_start.getDate() %>, <%= event.date_start.getFullYear() %>, <b>at</b> <%= calendar.locale["t" + event.date_start.getHours()] %>:<%= start_minutes %><%= start_apm %> <i class="fa fa-clock-o"></i></span><br />
+    <span><b>Ends on</b> <%= calendar.locale["ms" + event.date_end.getMonth()] %>. <%= event.date_end.getDate() %>, <%= event.date_end.getFullYear() %> <b>at</b> <%= calendar.locale["t" + event.date_end.getHours()] %>:<%= end_minutes %><%= end_apm %> <i class="fa fa-clock-o"></i></span><br />
     <% } else { %>
-        <span><%= event.finished %></span><br>
+        <span><b><%= event.finished %></b></span><br>
     <% } %>
 </div>
-<% if (!event.finished) { %>
+<% if (!event.finished && event.url) { %>
 <div style="margin: 10px 0">
-    <a href="<%= event.url %>" class="btn btn-primary"><i class="fa fa-calendar"></i> more info</a>
+    <a href="<%= event.url %>" class="btn btn-primary"><i class="fa fa-calendar"></i> More Info:</a>
 </div>
 <% } %>

@@ -58,7 +58,7 @@ $_['lang_text_add_wait_subject']     = 'Event Wait List - %s';
 $_['lang_text_add_wait_message']     = 'You have been added to the wait list for the event, %s.  You will find the event details below:';
 $_['lang_text_default']              = 'Default';
 $_['lang_text_build']                = 'Build Slug';
-$_['lang_text_hangout']              = 'Google Hangout';
+$_['lang_text_link']                 = 'Google link';
 
 // Column
 $_['lang_column_event_name']         = 'Event Name';
@@ -79,7 +79,7 @@ $_['lang_column_date_added']         = 'Date Added';
 
 // Entry
 $_['lang_entry_name']                = 'Event Name:<br><span class="help">Enter a name for this event.</span>';
-$_['lang_entry_model']               = 'Model:<br><span class="help">Your event will also create a new product, a unique model is required for each product.</span>';
+$_['lang_entry_model']               = 'Model:<br><span class="help">If Create Product is checked a unique product model will be required.</span>';
 $_['lang_entry_sku']                 = 'SKU:<br><span class="help">(optional)</span>';
 $_['lang_entry_category']            = 'Category:<br><span class="help">Select any product categories your event should fall under.</span>';
 $_['lang_entry_store']               = 'Store:';
@@ -90,8 +90,8 @@ $_['lang_entry_event_days']          = 'Event Days:<br><span class="help">The da
 $_['lang_entry_event_date']          = 'Event Date:';
 $_['lang_entry_event_time']          = 'Event Start Time:';
 $_['lang_entry_location']            = 'Event Location:<br><span class="help">Enter the address of a live local event.</span>';
-$_['lang_entry_hangout']             = 'Hangout Link:<br><span class="help">If your event is a Google Hangout,<br>enter the link here.</span>';
-$_['lang_entry_online']              = 'Google Hangout:<br><span class="help">If your event is a Google Hangout,<br>select yes and enter the link below.</span>';
+$_['lang_entry_link']                = 'Event Link:<br><span class="help">If your event is an Online Event,<br>enter the URL here.</span>';
+$_['lang_entry_online']              = 'Online Event:<br><span class="help">If your event is an Online Event,<br>select yes and enter the link below.</span>';
 $_['lang_entry_cost']                = 'Event Cost:<br><span class="help">The cost for your event.<br>Enter 0 for FREE event.</span>';
 $_['lang_entry_seats']               = 'Maximum Seats:';
 $_['lang_entry_presenter_tab']       = 'Presenter Tab Name:<br><span class="help">This can be anything you like, Teacher, Host, Instructor. Default is Presenter.</span>';
@@ -104,6 +104,7 @@ $_['lang_entry_bio']                 = 'Presenter Bio:';
 $_['lang_entry_customers']           = 'Select an Attendee:<br><span class="help">(autocomplete)</span>';
 $_['lang_entry_status']              = 'Event Status:';
 $_['lang_entry_slug']                = 'Slug:<br /><span class="help">Do not use spaces instead replace spaces with - and make sure the slug is globally unique.</span>';
+$_['lang_entry_is_product']          = 'Create Product:<br><span class="help">Is this event a product? If yes is checked a product will be created.</span>';
 
 // Button
 $_['lang_button_presenters']         = 'Presenters';
@@ -126,7 +127,7 @@ $_['lang_error_event_length']        = 'Event Length must be between 1 and 40 ch
 $_['lang_error_event_date']          = 'You must select a event date and it must be a future date.';
 $_['lang_error_event_time']          = 'You must select a event time';
 $_['lang_error_location']            = 'Event Location must be between 1 and 200 characters';
-$_['lang_error_hangout']             = 'If your event is online, you must provide a Hangout URL.';
+$_['lang_error_link']                = 'If your event is online, you must provide an Event URL.';
 $_['lang_error_cost']                = 'You must enter a Event Cost';
 $_['lang_error_seats']               = 'You must enter the number of Event Seats';
 $_['lang_error_presenter']           = 'You must select a Event Presenter';
@@ -139,4 +140,3 @@ $_['lang_error_event_days']          = 'You must select at least one day for the
 $_['lang_error_slug']                = 'Warning: Slug is required for events.';
 $_['lang_error_slug_found']          = 'ERROR: The slug %s is already in use, please set a different one in the input field.';
 $_['lang_error_name_first']          = 'ERROR: Please enter a name for your event before attempting to build a slug.';
-

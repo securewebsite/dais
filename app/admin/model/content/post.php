@@ -408,8 +408,10 @@ class Post extends Model {
 			AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
 		");
 
-        $query->row['tag'] = $this->getPostTags($post_id);
-        
+        if ($query->num_rows):
+            $query->row['tag'] = $this->getPostTags($post_id);
+        endif;
+
         return $query->row;
     }
 

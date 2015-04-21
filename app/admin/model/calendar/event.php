@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Model\Catalog;
+namespace Admin\Model\Calendar;
 use Dais\Engine\Model;
 use Dais\Library\Template;
 use Dais\Library\Text;
@@ -41,7 +41,7 @@ class Event extends Model {
     
     public function addEvent($data) {
         $date_start = date('Y-m-d H:i:s', strtotime($data['event_date'] . ' ' . $data['event_time']));
-        $date_end = date('Y-m-d H:i:s', strtotime('+' . $data['event_length'] . ' hour', strtotime($date_start)));
+        $date_end   = date('Y-m-d H:i:s', strtotime('+' . $data['event_length'] . ' hour', strtotime($date_start)));
         
         $this->db->query("
 			INSERT INTO {$this->db->prefix}event_manager 
@@ -54,7 +54,7 @@ class Event extends Model {
 				event_days    = '" . $this->db->escape(serialize($data['event_days'])) . "', 
 				date_time     = '" . $this->db->escape($date_start) . "', 
 				online        = '" . (int)$data['online'] . "', 
-				hangout       = '" . $this->db->escape($data['hangout']) . "', 
+				link          = '" . $this->db->escape($data['link']) . "', 
 				location      = '" . $this->db->escape($data['location']) . "', 
 				telephone     = '" . $this->db->escape($data['telephone']) . "', 
 				cost          = '" . (float)$data['cost'] . "', 
@@ -67,77 +67,10 @@ class Event extends Model {
 		");
         
         $event_id = $this->db->getLastId();
-        
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}product 
-			SET 
-				model           = '" . $this->db->escape($data['model']) . "', 
-				sku             = '" . $this->db->escape($data['sku']) . "', 
-				location        = '" . $this->db->escape($data['location']) . "', 
-				visibility      = '" . (int)$data['visibility'] . "', 
-				quantity        = '" . (int)$data['seats'] . "', 
-				stock_status_id = '" . (int)$data['stock_status_id'] . "', 
-				price           = '" . (float)$data['cost'] . "', 
-				subtract        = '1', 
-				status          = '" . (int)$data['status'] . "', 
-				end_date        = '" . $this->db->escape($date_end) . "', 
-				event_id        = '" . (int)$event_id . "', 
-				shipping        = '0', 
-				weight_class_id = '" . (int)$this->config->get('config_weight_class_id') . "', 
-				length_class_id = '" . (int)$this->config->get('config_length_class_id') . "', 
-				date_available  = NOW(), 
-				date_added      = NOW(), 
-				date_modified   = NOW()");
-        
-        $product_id = $this->db->getLastId();
-        
-        // add event to routes as a product
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}route 
-			SET 
-				route = 'catalog/product', 
-				query = 'product_id:" . (int)$product_id . "', 
-				slug  = '" . $this->db->escape($data['slug']) . "'
-		");
-        
-        $languages = $this->db->query("
-			SELECT language_id 
-			FROM {$this->db->prefix}language");
-        
-        $this->db->query("
-			UPDATE {$this->db->prefix}event_manager 
-			SET product_id = '" . (int)$product_id . "' 
-			WHERE event_id = '" . (int)$event_id . "'");
-        
-        foreach ($languages->rows as $language) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}product_description 
-				SET 
-					product_id  = '" . (int)$product_id . "', 
-					language_id = '" . $language['language_id'] . "', 
-					name        = '" . $this->db->escape($data['name']) . "', 
-					description = '" . $this->db->escape($data['description']) . "'");
-        }
-        
-        if (isset($data['product_store'])) {
-            foreach ($data['product_store'] as $store_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_to_store 
-					SET 
-						product_id = '" . (int)$product_id . "', 
-						store_id   = '" . (int)$store_id . "'");
-            }
-        }
-        
-        if (isset($data['product_category'])) {
-            foreach ($data['product_category'] as $category_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_to_category 
-					SET 
-						product_id  = '" . (int)$product_id . "', 
-						category_id = '" . (int)$category_id . "'");
-            }
-        }
+        $this->theme->test($event_id);
+        if ($data['is_product']):
+        	$this->addEventProduct($event_id, $data, $date_end);
+        endif;
 
         $this->theme->trigger('admin_add_event', array('event_id' => $event_id));
         
@@ -146,7 +79,7 @@ class Event extends Model {
     
     public function editEvent($event_id, $data) {
         $date_start = date('Y-m-d H:i:s', strtotime($data['event_date'] . ' ' . $data['event_time']));
-        $date_end = date('Y-m-d H:i:s', strtotime('+' . $data['event_length'] . ' hour', strtotime($date_start)));
+        $date_end   = date('Y-m-d H:i:s', strtotime('+' . $data['event_length'] . ' hour', strtotime($date_start)));
         
         $this->db->query("
 			UPDATE {$this->db->prefix}event_manager 
@@ -159,7 +92,7 @@ class Event extends Model {
 				event_days    = '" . $this->db->escape(serialize($data['event_days'])) . "', 
 				date_time     = '" . $this->db->escape($date_start) . "', 
 				online        = '" . (int)$data['online'] . "', 
-				hangout       = '" . $this->db->escape($data['hangout']) . "', 
+				link          = '" . $this->db->escape($data['link']) . "', 
 				location      = '" . $this->db->escape($data['location']) . "', 
 				telephone     = '" . $this->db->escape($data['telephone']) . "', 
 				cost          = '" . (float)$data['cost'] . "', 
@@ -179,74 +112,26 @@ class Event extends Model {
         
         $quantity = (int)$data['seats'] - (int)$filled->row['filled'];
         
-        $this->db->query("
-			UPDATE {$this->db->prefix}product 
-			SET 
-				model           = '" . $this->db->escape($data['model']) . "', 
-				sku             = '" . $this->db->escape($data['sku']) . "', 
-				location        = '" . $this->db->escape($data['location']) . "', 
-				visibility      = '" . (int)$data['visibility'] . "', 
-				quantity        = '" . (int)$quantity . "', 
-				price           = '" . (float)$data['cost'] . "', 
-				stock_status_id = '" . (int)$data['stock_status_id'] . "', 
-				status          = '" . (int)$data['status'] . "', 
-				end_date        = '" . $this->db->escape($date_end) . "', 
-				date_modified   = NOW() 
-			WHERE product_id = '" . (int)$data['product_id'] . "'");
-        
-        $this->db->query("
-			DELETE FROM {$this->db->prefix}product_to_store 
-			WHERE product_id = '" . (int)$data['product_id'] . "'");
-        
-        if (isset($data['product_store'])) {
-            foreach ($data['product_store'] as $store_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_to_store 
-					SET 
-						product_id = '" . (int)$data['product_id'] . "', 
-						store_id   = '" . (int)$store_id . "'");
-            }
-        }
-        
-        $this->db->query("
-			DELETE FROM {$this->db->prefix}product_to_category 
-			WHERE product_id = '" . (int)$data['product_id'] . "'");
-        
-        if (isset($data['product_category'])) {
-            foreach ($data['product_category'] as $category_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_to_category 
-					SET 
-						product_id  = '" . (int)$data['product_id'] . "', 
-						category_id = '" . (int)$category_id . "'");
-            }
-        }
-        
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}route 
-        	WHERE query = 'product_id:" . (int)$data['product_id'] . "'");
-        
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}route 
-			SET 
-				route = 'catalog/product', 
-				query = 'product_id:" . (int)$data['product_id'] . "', 
-				slug  = '" . $this->db->escape($data['slug']) . "'
-		");
-        
-        $languages = $this->db->query("
-			SELECT language_id 
-			FROM {$this->db->prefix}language");
-        
-        foreach ($languages->rows as $language) {
-            $this->db->query("
-				UPDATE {$this->db->prefix}product_description 
-				SET 
-					name        = '" . $this->db->escape($data['name']) . "', 
-					description = '" . $this->db->escape($data['description']) . "' 
-				WHERE product_id = '" . (int)$data['product_id'] . "' 
-				AND language_id = '" . (int)$language['language_id'] . "'");
-        }
+        // Editing the event has conditions we need to define.
+        // 1. Has an existing product and is_product enabled : edit the product
+        // 2. Has no existing product and is_product enabled : add product
+        // 3. Has an existing product and is_product disabled : delete product
+        // 4. Has no existing product and is_product disabled : do nothing
+
+        if ($data['is_product']):
+        	// product required
+        	if ((int)$data['product_id'] > 0): // Condition 1 : edit product
+        		$this->editEventProduct($event_id, $data, $date_end);
+        	else:
+        		// Condition 2 : add product
+        		$this->addEventProduct($event_id, $data, $date_end);
+        	endif;
+        else:
+        	if ((int)$data['product_id'] > 0): // Condition 3 : delete product
+        		$this->deleteEventProduct($data['product_id']);
+        	endif;
+        	// Condition 4: do nothing
+        endif;
 
         $this->theme->trigger('admin_edit_event', array('event_id' => $event_id));
         
@@ -267,12 +152,164 @@ class Event extends Model {
 			DELETE FROM {$this->db->prefix}event_wait_list 
 			WHERE event_id = '" . (int)$event_id . "'");
         
-        $this->theme->model('catalog/product');
-        $this->model_catalog_product->deleteProduct($product_id->row['product_id']);
-
-         $this->theme->trigger('admin_delete_event', array('event_id' => $event_id));
+        if ($product_id->row['product_id'] > 0):
+        	$this->theme->model('catalog/product');
+        	$this->model_catalog_product->deleteProduct($product_id->row['product_id']);
+        endif;
+        
+        $this->theme->trigger('admin_delete_event', array('event_id' => $event_id));
         
         return;
+    }
+
+    protected function addEventProduct($event_id, $data, $date_end) {
+    	$this->db->query("
+			INSERT INTO {$this->db->prefix}product 
+			SET 
+				model           = '" . $this->db->escape($data['model']) . "', 
+				sku             = '" . $this->db->escape($data['sku']) . "', 
+				location        = '" . $this->db->escape($data['location']) . "', 
+				visibility      = '" . (int)$data['visibility'] . "', 
+				quantity        = '" . (int)$data['seats'] . "', 
+				stock_status_id = '" . (int)$data['stock_status_id'] . "', 
+				price           = '" . (float)$data['cost'] . "', 
+				subtract        = '1', 
+				status          = '" . (int)$data['status'] . "', 
+				end_date        = '" . $this->db->escape($date_end) . "', 
+				event_id        = '" . (int)$event_id . "', 
+				shipping        = '0', 
+				weight_class_id = '" . (int)$this->config->get('config_weight_class_id') . "', 
+				length_class_id = '" . (int)$this->config->get('config_length_class_id') . "', 
+				date_available  = NOW(), 
+				date_added      = NOW(), 
+				date_modified   = NOW()"
+		);
+        
+        $product_id = $this->db->getLastId();
+
+        // add event to routes as a product
+        $this->db->query("
+			INSERT INTO {$this->db->prefix}route 
+			SET 
+				route = 'catalog/product', 
+				query = 'product_id:" . (int)$product_id . "', 
+				slug  = '" . $this->db->escape($data['slug']) . "'
+		");
+        
+        $languages = $this->db->query("
+			SELECT language_id 
+			FROM {$this->db->prefix}language");
+        
+        $this->db->query("
+			UPDATE {$this->db->prefix}event_manager 
+			SET product_id = '" . (int)$product_id . "' 
+			WHERE event_id = '" . (int)$event_id . "'");
+        
+        foreach ($languages->rows as $language):
+            $this->db->query("
+				INSERT INTO {$this->db->prefix}product_description 
+				SET 
+					product_id  = '" . (int)$product_id . "', 
+					language_id = '" . $language['language_id'] . "', 
+					name        = '" . $this->db->escape($data['name']) . "', 
+					description = '" . $this->db->escape($data['description']) . "'");
+        endforeach;
+
+        if (isset($data['product_store'])):
+            foreach ($data['product_store'] as $store_id):
+                $this->db->query("
+					INSERT INTO {$this->db->prefix}product_to_store 
+					SET 
+						product_id = '" . (int)$product_id . "', 
+						store_id   = '" . (int)$store_id . "'");
+            endforeach;
+        endif;
+        
+        if (isset($data['product_category'])):
+            foreach ($data['product_category'] as $category_id):
+                $this->db->query("
+					INSERT INTO {$this->db->prefix}product_to_category 
+					SET 
+						product_id  = '" . (int)$product_id . "', 
+						category_id = '" . (int)$category_id . "'");
+            endforeach;
+        endif;
+    }
+
+    protected function editEventProduct($event_id, $data, $date_end) {
+    	$this->db->query("
+			UPDATE {$this->db->prefix}product 
+			SET 
+				model           = '" . $this->db->escape($data['model']) . "', 
+				sku             = '" . $this->db->escape($data['sku']) . "', 
+				location        = '" . $this->db->escape($data['location']) . "', 
+				visibility      = '" . (int)$data['visibility'] . "', 
+				quantity        = '" . (int)$quantity . "', 
+				price           = '" . (float)$data['cost'] . "', 
+				stock_status_id = '" . (int)$data['stock_status_id'] . "', 
+				status          = '" . (int)$data['status'] . "', 
+				end_date        = '" . $this->db->escape($date_end) . "', 
+				date_modified   = NOW() 
+			WHERE product_id    = '" . (int)$data['product_id'] . "'");
+        
+        $this->db->query("
+			DELETE FROM {$this->db->prefix}product_to_store 
+			WHERE product_id = '" . (int)$data['product_id'] . "'");
+        
+        if (isset($data['product_store'])):
+            foreach ($data['product_store'] as $store_id):
+                $this->db->query("
+					INSERT INTO {$this->db->prefix}product_to_store 
+					SET 
+						product_id = '" . (int)$data['product_id'] . "', 
+						store_id   = '" . (int)$store_id . "'");
+            endforeach;
+        endif;
+
+        $this->db->query("
+			DELETE FROM {$this->db->prefix}product_to_category 
+			WHERE product_id = '" . (int)$data['product_id'] . "'");
+        
+        if (isset($data['product_category'])):
+            foreach ($data['product_category'] as $category_id):
+                $this->db->query("
+					INSERT INTO {$this->db->prefix}product_to_category 
+					SET 
+						product_id  = '" . (int)$data['product_id'] . "', 
+						category_id = '" . (int)$category_id . "'");
+            endforeach;
+        endif;
+        
+        $this->db->query("
+        	DELETE FROM {$this->db->prefix}route 
+        	WHERE query = 'product_id:" . (int)$data['product_id'] . "'");
+        
+        $this->db->query("
+			INSERT INTO {$this->db->prefix}route 
+			SET 
+				route = 'catalog/product', 
+				query = 'product_id:" . (int)$data['product_id'] . "', 
+				slug  = '" . $this->db->escape($data['slug']) . "'
+		");
+        
+        $languages = $this->db->query("
+			SELECT language_id 
+			FROM {$this->db->prefix}language");
+        
+        foreach ($languages->rows as $language):
+            $this->db->query("
+				UPDATE {$this->db->prefix}product_description 
+				SET 
+					name         = '" . $this->db->escape($data['name']) . "', 
+					description  = '" . $this->db->escape($data['description']) . "' 
+				WHERE product_id = '" . (int)$data['product_id'] . "' 
+				AND language_id  = '" . (int)$language['language_id'] . "'");
+        endforeach;
+    }
+
+    protected function deleteEventProduct($product_id) {
+    	$this->theme->model('catalog/product');
+    	$this->model_catalog_product->deleteProduct($product_id);
     }
     
     public function getSlug($product_id) {

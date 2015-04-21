@@ -243,8 +243,10 @@ class Page extends Model {
 			WHERE page_id = '" . (int)$page_id . "'
 		");
 
-        $query->row['tag'] = $this->getPageTags($page_id);
-        
+        if ($query->num_rows):
+            $query->row['tag'] = $this->getPageTags($page_id);
+        endif;
+
         return $query->row;
     }
 

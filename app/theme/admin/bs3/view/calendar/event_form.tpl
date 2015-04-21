@@ -28,7 +28,7 @@
 				<div class="form-group">
 					<label class="control-label col-sm-2"><b class="required">*</b> <?= $lang_entry_name; ?></label>
 					<div class="control-field col-sm-4">
-						<input type="text" name="name" value="<?= $name; ?>" class="form-control" id="name" class="form-control">
+						<input type="text" name="name" value="<?= $name; ?>" class="form-control" id="name" class="form-control" autofocus>
 						<?php if ($error_name) { ?>
 						<div class="help-block error"><?= $error_name; ?></div>
 						<?php } ?>
@@ -45,6 +45,27 @@
 						</div>
 						<?php if ($error_slug): ?>
 						<span class="help-block error"><?= $error_slug; ?></span>
+						<?php endif; ?>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-sm-2"><b class="required">*</b> <?= $lang_entry_description; ?></label>
+					<div class="control-field col-sm-6">
+						<textarea name="description" class="form-control summernote"><?= $description; ?></textarea>
+						<?php if ($error_description) { ?>
+						<span class="help-block error"><?= $error_description; ?></span>
+						<?php } ?>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-sm-2"><b class="required">*</b> <?= $lang_entry_is_product; ?></label>
+					<div class="control-field col-sm-4">
+						<?php if ($is_product): ?>
+							<label class="checkbox-inline"><input type="radio" name="is_product" value="1" checked> <?= $lang_text_yes; ?></label>
+							<label class="checkbox-inline"><input type="radio" name="is_product" value="0"> <?= $lang_text_no; ?></label>
+						<?php else: ?>
+							<label class="checkbox-inline"><input type="radio" name="is_product" value="1"> <?= $lang_text_yes; ?></label>
+							<label class="checkbox-inline"><input type="radio" name="is_product" value="0" checked> <?= $lang_text_no; ?></label>
 						<?php endif; ?>
 					</div>
 				</div>
@@ -210,11 +231,11 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="control-label col-sm-2"><?= $lang_entry_hangout; ?></label>
+					<label class="control-label col-sm-2"><?= $lang_entry_link; ?></label>
 					<div class="control-field col-sm-4">
-						<input type="text" name="hangout" value="<?= $hangout; ?>" class="form-control">
-						<?php if ($error_hangout) { ?>
-						<span class="help-block error"><?= $error_hangout; ?></span>
+						<input type="text" name="link" value="<?= $link; ?>" class="form-control">
+						<?php if ($error_link) { ?>
+						<span class="help-block error"><?= $error_link; ?></span>
 						<?php } ?>
 					</div>
 				</div>
@@ -270,15 +291,6 @@
 						<?php } ?>
 						<?php } ?>
 						</select>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label col-sm-2"><b class="required">*</b> <?= $lang_entry_description; ?></label>
-					<div class="control-field col-sm-8">
-						<textarea name="description" class="form-control summernote"><?= $description; ?></textarea>
-						<?php if ($error_description) { ?>
-						<span class="help-block error"><?= $error_description; ?></span>
-						<?php } ?>
 					</div>
 				</div>
 				<div class="form-group">

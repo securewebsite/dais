@@ -111,9 +111,9 @@
 			<span><b><?= $lang_text_model; ?>:</b> <?= $product['model']; ?></span>
 			<?php endif; ?>
 
-			<?php if ($product['hangout']): ?>
+			<?php if ($product['link']): ?>
 			<br>
-			<span><b><?= $lang_text_google; ?>:</b> <?= $product['hangout']; ?></span>
+			<span><b><?= $lang_text_online; ?>:</b> <?= $product['link']; ?></span>
 			<?php endif; ?>
 					
 			<?php if (!empty($product['option'])): ?>
@@ -171,6 +171,6 @@
 	<?= $comment; ?>
 </p>
 <?php endif; ?>
-<?php if ($has_hangout): ?>
-<p><?= $lang_text_hangout_alert; ?><br><br></p>
+<?php if ($has_link): ?>
+<p><?= $lang_text_link_alert; ?><br><br></p>
 <?php endif; ?>

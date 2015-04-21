@@ -51,8 +51,8 @@ URL: <?= $product['url']; ?>
 <?php if ($product['model']): ?>
 <?= $lang_text_model; ?>: <?= $product['model']; ?> 
 <?php endif; ?>
-<?php if ($product['hangout']): ?>
-<?= $lang_text_google; ?>: <?= $product['hangout']; ?> 
+<?php if ($product['link']): ?>
+<?= $lang_text_online; ?>: <?= $product['link']; ?> 
 <?php endif; ?>			
 <?php if (!empty($product['option'])): ?>
 Options:
@@ -82,7 +82,7 @@ Options:
 <?= $comment; ?>
 -------------------------------- 
 <?php endif; ?>
-<?php if ($has_hangout): ?>
-<?= $lang_text_hangout_alert; ?> 
+<?php if ($has_link): ?>
+<?= $lang_text_link_alert; ?> 
 -------------------------------- 
 <?php endif; ?>

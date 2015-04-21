@@ -44,7 +44,17 @@ class Event extends Controller {
                     
                     $event_days = rtrim($event_days, ', ');
                     
-                    $data['events'][] = array('event_id' => $result['event_id'], 'name' => html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'), 'start_date' => date($this->language->get('lang_date_format_short'), strtotime($result['date_time'])), 'start_time' => date($this->language->get('lang_time_format'), strtotime($result['date_time'])), 'event_days' => $event_days, 'online' => $result['online'], 'hangout' => $this->url->link('content/hangout', '&event_id=' . $result['event_id'], 'SSL'), 'location' => nl2br($result['location']), 'telephone' => $result['telephone'] ? $result['telephone'] : 'N/A');
+                    $data['events'][] = array(
+                        'event_id'   => $result['event_id'], 
+                        'name'       => html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'), 
+                        'start_date' => date($this->language->get('lang_date_format_short'), strtotime($result['date_time'])), 
+                        'start_time' => date($this->language->get('lang_time_format'), strtotime($result['date_time'])), 
+                        'event_days' => $event_days, 
+                        'online'     => $result['online'], 
+                        'link'       => $this->url->link('content/hangout', '&event_id=' . $result['event_id'], 'SSL'), 
+                        'location'   => nl2br($result['location']), 
+                        'telephone'  => $result['telephone'] ? $result['telephone'] : 'N/A'
+                    );
                 endforeach;
             endif;
         endif;

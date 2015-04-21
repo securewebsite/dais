@@ -958,7 +958,7 @@ if(!String.prototype.formatTwelveHour) {
 							url:      buildEventsUrl(source, params),
 							dataType: 'json',
 							type:     'GET',
-							async:    false
+							async:    true
 						}).done(function(json) {
 							if(!json.success) {
 								$.error(json.error);
@@ -1007,7 +1007,7 @@ if(!String.prototype.formatTwelveHour) {
 			url:      self._templatePath(name),
 			dataType: 'html',
 			type:     'GET',
-			async:    false,
+			async:    true,
 			cache:    this.options.tmpl_cache
 		}).done(function(html) {
 			self.options.templates[name] = _.template(html);
@@ -1089,7 +1089,7 @@ if(!String.prototype.formatTwelveHour) {
 								break;
 
 							case "ajax":
-								$.ajax({url: url, dataType: "html", async: false, success: function(data) {
+								$.ajax({url: url, dataType: "html", async: true, success: function(data) {
 									modal_body.html(data);
 								}});
 								break;

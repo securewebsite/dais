@@ -26,3 +26,4 @@ $_['lang_text_starts']           = 'Starts:';
 $_['lang_text_days']             = 'Days:';
 $_['lang_text_location']         = 'Location:';
 $_['lang_text_telephone']        = 'Telephone:';
+$_['lang_text_online']           = 'Online Event';

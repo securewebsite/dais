@@ -26,6 +26,7 @@ $_['lang_text_blog']                        = 'Blog';
 $_['lang_text_blog_cats']                   = 'Categories';
 $_['lang_text_blog_post']                   = 'Posts';
 $_['lang_text_blog_comm']                   = 'Comments';
+$_['lang_text_calendar']                    = 'Calendar';
 $_['lang_text_catalog']                     = 'Catalog';
 $_['lang_text_category']                    = 'Categories';
 $_['lang_text_core_cart']                   = 'Cart Modules';

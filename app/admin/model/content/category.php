@@ -276,8 +276,10 @@ class Category extends Model {
 			WHERE category_id = '" . (int)$category_id . "'
 		");
 
-        $query->row['tag'] = $this->getBlogCategoryTags($category_id);
-        
+        if ($query->num_rows):
+            $query->row['tag'] = $this->getBlogCategoryTags($category_id);
+        endif;
+
         return $query->row;
     }
 

@@ -14,28 +14,28 @@
 |	
 */
 
-namespace Admin\Model\Catalog;
+namespace Admin\Model\Calendar;
 use Dais\Engine\Model;
 
 class Category extends Model {
     public function addCategory($data) {
         $this->db->query("
-			INSERT INTO {$this->db->prefix}category 
+			INSERT INTO {$this->db->prefix}calendar_category 
 			SET 
-				parent_id = '" . (int)$data['parent_id'] . "', 
-				top = '" . (isset($data['top']) ? (int)$data['top'] : 0) . "', 
-				columns = '" . (int)$data['column'] . "', 
-				sort_order = '" . (int)$data['sort_order'] . "', 
-				status = '" . (int)$data['status'] . "', 
-				date_modified = NOW(), 
-				date_added = NOW()
+                parent_id     = '" . (int)$data['parent_id'] . "', 
+                top           = '" . (isset($data['top']) ? (int)$data['top'] : 0) . "', 
+                columns       = '" . (int)$data['column'] . "', 
+                sort_order    = '" . (int)$data['sort_order'] . "', 
+                status        = '" . (int)$data['status'] . "', 
+                date_modified = NOW(), 
+                date_added    = NOW()
 		");
         
         $category_id = $this->db->getLastId();
         
         if (isset($data['image'])) {
             $this->db->query("
-				UPDATE {$this->db->prefix}category 
+				UPDATE {$this->db->prefix}calendar_category 
 				SET 
 					image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' 
 				WHERE category_id = '" . (int)$category_id . "'
@@ -44,14 +44,14 @@ class Category extends Model {
         
         foreach ($data['category_description'] as $language_id => $value) {
             $this->db->query("
-				INSERT INTO {$this->db->prefix}category_description 
+				INSERT INTO {$this->db->prefix}calendar_category_description 
 				SET 
-					category_id = '" . (int)$category_id . "', 
-					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($value['name']) . "', 
-					meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', 
-					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-					description = '" . $this->db->escape($value['description']) . "'
+                    category_id      = '" . (int)$category_id . "', 
+                    language_id      = '" . (int)$language_id . "', 
+                    name             = '" . $this->db->escape($value['name']) . "', 
+                    meta_keyword     = '" . $this->db->escape($value['meta_keyword']) . "', 
+                    meta_description = '" . $this->db->escape($value['meta_description']) . "', 
+                    description      = '" . $this->db->escape($value['description']) . "'
 			");
 
 			// process tags
@@ -62,7 +62,7 @@ class Category extends Model {
                     $this->db->query("
                         INSERT INTO {$this->db->prefix}tag 
                         SET 
-                            section     = 'product_category', 
+                            section     = 'calendar_category', 
                             element_id  = '" . (int)$category_id . "', 
                             language_id = '" . (int)$language_id . "', 
                             tag         = '" . $this->db->escape($tag) . "'
@@ -76,49 +76,38 @@ class Category extends Model {
         
         $query = $this->db->query("
 			SELECT * 
-			FROM {$this->db->prefix}category_path 
+			FROM {$this->db->prefix}calendar_category_path 
 			WHERE category_id = '" . (int)$data['parent_id'] . "' 
 			ORDER BY level ASC
 		");
         
         foreach ($query->rows as $result) {
             $this->db->query("
-				INSERT INTO `{$this->db->prefix}category_path` 
+				INSERT INTO `{$this->db->prefix}calendar_category_path` 
 				SET 
-					category_id = '" . (int)$category_id . "', 
-					path_id = '" . (int)$result['path_id'] . "', 
-					level = '" . (int)$level . "'
+                    category_id = '" . (int)$category_id . "', 
+                    path_id     = '" . (int)$result['path_id'] . "', 
+                    level       = '" . (int)$level . "'
 			");
             
             $level++;
         }
         
         $this->db->query("
-			INSERT INTO `{$this->db->prefix}category_path` 
+			INSERT INTO {$this->db->prefix}calendar_category_path 
 			SET 
-				category_id = '" . (int)$category_id . "', 
-				path_id = '" . (int)$category_id . "', 
-				level = '" . (int)$level . "'
+                category_id = '" . (int)$category_id . "', 
+                path_id     = '" . (int)$category_id . "', 
+                level       = '" . (int)$level . "'
 		");
-        
-        if (isset($data['category_filter'])) {
-            foreach ($data['category_filter'] as $filter_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}category_filter 
-					SET 
-						category_id = '" . (int)$category_id . "', 
-						filter_id = '" . (int)$filter_id . "'
-				");
-            }
-        }
         
         if (isset($data['category_store'])) {
             foreach ($data['category_store'] as $store_id) {
                 $this->db->query("
-					INSERT INTO {$this->db->prefix}category_to_store 
+					INSERT INTO {$this->db->prefix}calendar_category_to_store 
 					SET 
 						category_id = '" . (int)$category_id . "', 
-						store_id = '" . (int)$store_id . "'
+						store_id    = '" . (int)$store_id . "'
 				");
             }
         }
@@ -128,11 +117,11 @@ class Category extends Model {
             foreach ($data['category_layout'] as $store_id => $layout) {
                 if ($layout['layout_id']) {
                     $this->db->query("
-						INSERT INTO {$this->db->prefix}category_to_layout 
+						INSERT INTO {$this->db->prefix}calendar_category_to_layout 
 						SET 
-							category_id = '" . (int)$category_id . "', 
-							store_id = '" . (int)$store_id . "', 
-							layout_id = '" . (int)$layout['layout_id'] . "'
+                            category_id = '" . (int)$category_id . "', 
+                            store_id    = '" . (int)$store_id . "', 
+                            layout_id   = '" . (int)$layout['layout_id'] . "'
 					");
                 }
             }
@@ -142,56 +131,58 @@ class Category extends Model {
             $this->db->query("
 				INSERT INTO {$this->db->prefix}route 
 				SET 
-					route='catalog/category', 
+					route='calendar/category', 
 					query = 'category_id:" . (int)$category_id . "', 
-					slug = '" . $this->db->escape($data['slug']) . "'
+					slug  = '" . $this->db->escape($data['slug']) . "'
 			");
         }
         
-        $this->cache->delete('category');
+        $this->cache->delete('calendar_category');
         
-        $this->theme->trigger('admin_add_category', array('category_id' => $category_id));
+        $this->theme->trigger('admin_add_calendar_category', array('category_id' => $category_id));
     }
     
     public function editCategory($category_id, $data) {
         $this->db->query("
-			UPDATE {$this->db->prefix}category 
+			UPDATE {$this->db->prefix}calendar_category 
 			SET 
-				parent_id = '" . (int)$data['parent_id'] . "', 
-				top = '" . (isset($data['top']) ? (int)$data['top'] : 0) . "', 
-				columns = '" . (int)$data['column'] . "', 
-				sort_order = '" . (int)$data['sort_order'] . "', 
-				status = '" . (int)$data['status'] . "', 
-				date_modified = NOW() 
+                parent_id     = '" . (int)$data['parent_id'] . "', 
+                top           = '" . (isset($data['top']) ? (int)$data['top'] : 0) . "', 
+                columns       = '" . (int)$data['column'] . "', 
+                sort_order    = '" . (int)$data['sort_order'] . "', 
+                status        = '" . (int)$data['status'] . "', 
+                date_modified = NOW() 
 			WHERE category_id = '" . (int)$category_id . "'
 		");
         
         if (isset($data['image'])) {
             $this->db->query("
-				UPDATE {$this->db->prefix}category 
+				UPDATE {$this->db->prefix}calendar_category 
 				SET 
 					image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' 
 				WHERE category_id = '" . (int)$category_id . "'
 			");
         }
         
-        $this->db->query("DELETE FROM {$this->db->prefix}category_description WHERE category_id = '" . (int)$category_id . "'");
+        $this->db->query("
+            DELETE FROM {$this->db->prefix}calendar_category_description 
+            WHERE category_id = '" . (int)$category_id . "'");
         
         foreach ($data['category_description'] as $language_id => $value) {
             $this->db->query("
-				INSERT INTO {$this->db->prefix}category_description 
+				INSERT INTO {$this->db->prefix}calendar_category_description 
 				SET 
-					category_id = '" . (int)$category_id . "', 
-					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($value['name']) . "', 
-					meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', 
-					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-					description = '" . $this->db->escape($value['description']) . "'
+                    category_id      = '" . (int)$category_id . "', 
+                    language_id      = '" . (int)$language_id . "', 
+                    name             = '" . $this->db->escape($value['name']) . "', 
+                    meta_keyword     = '" . $this->db->escape($value['meta_keyword']) . "', 
+                    meta_description = '" . $this->db->escape($value['meta_description']) . "', 
+                    description      = '" . $this->db->escape($value['description']) . "'
 			");
 
 			$this->db->query("
                 DELETE FROM {$this->db->prefix}tag 
-                WHERE section   = 'product_category' 
+                WHERE section   = 'calendar_category' 
                 AND element_id  = '" . (int)$category_id . "' 
                 AND language_id = '" . (int)$language_id . "'
             ");
@@ -204,7 +195,7 @@ class Category extends Model {
                     $this->db->query("
                         INSERT INTO {$this->db->prefix}tag 
                         SET 
-                            section     = 'product_category', 
+                            section     = 'calendar_category', 
                             element_id  = '" . (int)$category_id . "', 
                             language_id = '" . (int)$language_id . "', 
                             tag         = '" . $this->db->escape($tag) . "'
@@ -216,7 +207,7 @@ class Category extends Model {
         // MySQL Hierarchical Data Closure Table Pattern
         $query = $this->db->query("
 			SELECT * 
-			FROM {$this->db->prefix}category_path 
+			FROM {$this->db->prefix}calendar_category_path 
 			WHERE path_id = '" . (int)$category_id . "' 
 			ORDER BY level ASC
 		");
@@ -226,7 +217,7 @@ class Category extends Model {
                 
                 // Delete the path below the current one
                 $this->db->query("
-					DELETE FROM `{$this->db->prefix}category_path` 
+					DELETE FROM `{$this->db->prefix}calendar_category_path` 
 					WHERE category_id = '" . (int)$category_path['category_id'] . "' 
 					AND level < '" . (int)$category_path['level'] . "'
 				");
@@ -236,7 +227,7 @@ class Category extends Model {
                 // Get the nodes new parents
                 $query = $this->db->query("
 					SELECT * 
-					FROM {$this->db->prefix}category_path 
+					FROM {$this->db->prefix}calendar_category_path 
 					WHERE category_id = '" . (int)$data['parent_id'] . "' 
 					ORDER BY level ASC
 				");
@@ -248,7 +239,7 @@ class Category extends Model {
                 // Get whats left of the nodes current path
                 $query = $this->db->query("
 					SELECT * 
-					FROM {$this->db->prefix}category_path 
+					FROM {$this->db->prefix}calendar_category_path 
 					WHERE category_id = '" . (int)$category_path['category_id'] . "' 
 					ORDER BY level ASC
 				");
@@ -262,11 +253,11 @@ class Category extends Model {
                 
                 foreach ($path as $path_id) {
                     $this->db->query("
-						REPLACE INTO `{$this->db->prefix}category_path` 
+						REPLACE INTO `{$this->db->prefix}calendar_category_path` 
 						SET 
-							category_id = '" . (int)$category_path['category_id'] . "', 
-							`path_id` = '" . (int)$path_id . "', 
-							level = '" . (int)$level . "'
+                            category_id = '" . (int)$category_path['category_id'] . "', 
+                            path_id     = '" . (int)$path_id . "', 
+                            level       = '" . (int)$level . "'
 					");
                     
                     $level++;
@@ -277,7 +268,7 @@ class Category extends Model {
             // Delete the path below the current one
             $this->db->query("
 				DELETE 
-				FROM {$this->db->prefix}category_path 
+				FROM {$this->db->prefix}calendar_category_path 
 				WHERE category_id = '" . (int)$category_id . "'
 			");
             
@@ -286,69 +277,52 @@ class Category extends Model {
             
             $query = $this->db->query("
 				SELECT * 
-				FROM {$this->db->prefix}category_path 
+				FROM {$this->db->prefix}calendar_category_path 
 				WHERE category_id = '" . (int)$data['parent_id'] . "' 
 				ORDER BY level ASC
 			");
             
             foreach ($query->rows as $result) {
                 $this->db->query("
-					INSERT INTO {$this->db->prefix}category_path 
+					INSERT INTO {$this->db->prefix}calendar_category_path 
 					SET 
-						category_id = '" . (int)$category_id . "', 
-						path_id = '" . (int)$result['path_id'] . "', 
-						level = '" . (int)$level . "'
+                        category_id = '" . (int)$category_id . "', 
+                        path_id     = '" . (int)$result['path_id'] . "', 
+                        level       = '" . (int)$level . "'
 				");
                 
                 $level++;
             }
             
             $this->db->query("
-				REPLACE INTO {$this->db->prefix}category_path 
+				REPLACE INTO {$this->db->prefix}calendar_category_path 
 				SET 
-					category_id = '" . (int)$category_id . "', 
-					path_id = '" . (int)$category_id . "', 
-					level = '" . (int)$level . "'
+                    category_id = '" . (int)$category_id . "', 
+                    path_id     = '" . (int)$category_id . "', 
+                    level       = '" . (int)$level . "'
 			");
         }
         
         $this->db->query("
 			DELETE 
-			FROM {$this->db->prefix}category_filter 
-			WHERE category_id = '" . (int)$category_id . "'
-		");
-        
-        if (isset($data['category_filter'])) {
-            foreach ($data['category_filter'] as $filter_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}category_filter 
-					SET 
-						category_id = '" . (int)$category_id . "', 
-						filter_id = '" . (int)$filter_id . "'
-				");
-            }
-        }
-        
-        $this->db->query("
-			DELETE 
-			FROM {$this->db->prefix}category_to_store 
+			FROM {$this->db->prefix}calendar_category_to_store 
 			WHERE category_id = '" . (int)$category_id . "'
 		");
         
         if (isset($data['category_store'])) {
             foreach ($data['category_store'] as $store_id) {
                 $this->db->query("
-					INSERT INTO {$this->db->prefix}category_to_store 
+					INSERT INTO {$this->db->prefix}calendar_category_to_store 
 					SET 
 						category_id = '" . (int)$category_id . "', 
-						store_id = '" . (int)$store_id . "'
+						store_id    = '" . (int)$store_id . "'
 				");
             }
         }
         
         $this->db->query("
 			DELETE 
-			FROM {$this->db->prefix}category_to_layout 
+			FROM {$this->db->prefix}calendar_category_to_layout 
 			WHERE category_id = '" . (int)$category_id . "'
 		");
         
@@ -356,11 +330,11 @@ class Category extends Model {
             foreach ($data['category_layout'] as $store_id => $layout) {
                 if ($layout['layout_id']) {
                     $this->db->query("
-						INSERT INTO {$this->db->prefix}category_to_layout 
+						INSERT INTO {$this->db->prefix}calendar_category_to_layout 
 						SET 
-							category_id = '" . (int)$category_id . "', 
-							store_id = '" . (int)$store_id . "', 
-							layout_id = '" . (int)$layout['layout_id'] . "'
+                            category_id = '" . (int)$category_id . "', 
+                            store_id    = '" . (int)$store_id . "', 
+                            layout_id   = '" . (int)$layout['layout_id'] . "'
 					");
                 }
             }
@@ -369,32 +343,33 @@ class Category extends Model {
         $this->db->query("
 			DELETE 
 			FROM {$this->db->prefix}route 
-			WHERE query = 'category_id:" . (int)$category_id . "'
+			WHERE route = 'calendar/category' 
+            AND query   = 'category_id:" . (int)$category_id . "'
 		");
         
         if ($data['slug']) {
             $this->db->query("
 				INSERT INTO {$this->db->prefix}route 
 				SET 
-					route='catalog/category', 
-					query = 'category_id:" . (int)$category_id . "', 
-					slug = '" . $this->db->escape($data['slug']) . "'
+                    route ='calendar/category', 
+                    query = 'category_id:" . (int)$category_id . "', 
+                    slug  = '" . $this->db->escape($data['slug']) . "'
 			");
         }
         
-        $this->cache->delete('category');
+        $this->cache->delete('calendar_category');
         
-        $this->theme->trigger('admin_edit_category', array('category_id' => $category_id));
+        $this->theme->trigger('admin_edit_calendar_category', array('category_id' => $category_id));
     }
     
     public function deleteCategory($category_id) {
         $this->db->query("
-        	DELETE FROM {$this->db->prefix}category_path 
+        	DELETE FROM {$this->db->prefix}calendar_category_path 
         	WHERE category_id = '" . (int)$category_id . "'
         ");
         
         $query = $this->db->query("
-        	SELECT * FROM {$this->db->prefix}category_path 
+        	SELECT * FROM {$this->db->prefix}calendar_category_path 
         	WHERE path_id = '" . (int)$category_id . "'
         ");
         
@@ -403,48 +378,45 @@ class Category extends Model {
         }
         
         $this->db->query("
-        	DELETE FROM {$this->db->prefix}category 
+        	DELETE FROM {$this->db->prefix}calendar_category 
         	WHERE category_id = '" . (int)$category_id . "'");
 
         $this->db->query("
-        	DELETE FROM {$this->db->prefix}category_description 
+        	DELETE FROM {$this->db->prefix}calendar_category_description 
         	WHERE category_id = '" . (int)$category_id . "'");
 
         $this->db->query("
-        	DELETE FROM {$this->db->prefix}category_filter 
+        	DELETE FROM {$this->db->prefix}calendar_category_to_store 
         	WHERE category_id = '" . (int)$category_id . "'");
 
         $this->db->query("
-        	DELETE FROM {$this->db->prefix}category_to_store 
+        	DELETE FROM {$this->db->prefix}calendar_category_to_layout 
         	WHERE category_id = '" . (int)$category_id . "'");
 
         $this->db->query("
-        	DELETE FROM {$this->db->prefix}category_to_layout 
-        	WHERE category_id = '" . (int)$category_id . "'");
-
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_to_category 
+        	DELETE FROM {$this->db->prefix}calendar_product_to_category 
         	WHERE category_id = '" . (int)$category_id . "'");
 
         $this->db->query("
         	DELETE FROM {$this->db->prefix}route 
-        	WHERE query = 'category_id:" . (int)$category_id . "'");
+        	WHERE route = 'calendar/category' 
+            AND query   = 'category_id:" . (int)$category_id . "'");
 
         $this->db->query("
             DELETE FROM {$this->db->prefix}tag 
-            WHERE section  = 'product_category' 
+            WHERE section  = 'calendar_category' 
             AND element_id = '" . (int)$category_id . "'");
         
-        $this->cache->delete('category');
+        $this->cache->delete('calendar_category');
         
-        $this->theme->trigger('admin_delete_category', array('category_id' => $category_id));
+        $this->theme->trigger('admin_delete_calendar_category', array('category_id' => $category_id));
     }
     
     // Function to repair any erroneous categories that are not in the category path table.
     public function repairCategories($parent_id = 0) {
         $query = $this->db->query("
 			SELECT * 
-			FROM {$this->db->prefix}category 
+			FROM {$this->db->prefix}calendar_category 
 			WHERE parent_id = '" . (int)$parent_id . "'
 		");
         
@@ -453,7 +425,7 @@ class Category extends Model {
             // Delete the path below the current one
             $this->db->query("
 				DELETE 
-				FROM {$this->db->prefix}category_path 
+				FROM {$this->db->prefix}calendar_category_path 
 				WHERE category_id = '" . (int)$category['category_id'] . "'
 			");
             
@@ -462,29 +434,29 @@ class Category extends Model {
             
             $query = $this->db->query("
 				SELECT * 
-				FROM {$this->db->prefix}category_path 
+				FROM {$this->db->prefix}calendar_category_path 
 				WHERE category_id = '" . (int)$parent_id . "' 
 				ORDER BY level ASC
 			");
             
             foreach ($query->rows as $result) {
                 $this->db->query("
-					INSERT INTO {$this->db->prefix}category_path 
+					INSERT INTO {$this->db->prefix}calendar_category_path 
 					SET 
-						category_id = '" . (int)$category['category_id'] . "', 
-						`path_id` = '" . (int)$result['path_id'] . "', 
-						level = '" . (int)$level . "'
+                        category_id = '" . (int)$category['category_id'] . "', 
+                        path_id     = '" . (int)$result['path_id'] . "', 
+                        level       = '" . (int)$level . "'
 				");
                 
                 $level++;
             }
             
             $this->db->query("
-				REPLACE INTO {$this->db->prefix}category_path 
+				REPLACE INTO {$this->db->prefix}calendar_category_path 
 				SET 
-					category_id = '" . (int)$category['category_id'] . "', 
-					path_id = '" . (int)$category['category_id'] . "', 
-					level = '" . (int)$level . "'
+                    category_id = '" . (int)$category['category_id'] . "', 
+                    path_id     = '" . (int)$category['category_id'] . "', 
+                    level       = '" . (int)$level . "'
 			");
             
             $this->repairCategories($category['category_id']);
@@ -495,17 +467,18 @@ class Category extends Model {
         $query = $this->db->query("
 			SELECT DISTINCT *, 
 			(SELECT GROUP_CONCAT(cd1.name ORDER BY level SEPARATOR ' &gt; ') 
-				FROM {$this->db->prefix}category_path cp 
-				LEFT JOIN {$this->db->prefix}category_description cd1 
+				FROM {$this->db->prefix}calendar_category_path cp 
+				LEFT JOIN {$this->db->prefix}calendar_category_description cd1 
 					ON (cp.path_id = cd1.category_id AND cp.category_id != cp.path_id) 
 				WHERE cp.category_id = c.category_id 
 				AND cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' 
 				GROUP BY cp.category_id) AS path, 
 			(SELECT slug 
 				FROM {$this->db->prefix}route 
-				WHERE query = 'category_id:" . (int)$category_id . "') AS slug 
-			FROM {$this->db->prefix}category c 
-			LEFT JOIN {$this->db->prefix}category_description cd2 
+				WHERE route = 'calendar/category' 
+                AND query   = 'category_id:" . (int)$category_id . "') AS slug 
+			FROM {$this->db->prefix}calendar_category c 
+			LEFT JOIN {$this->db->prefix}calendar_category_description cd2 
 				ON (c.category_id = cd2.category_id) 
 			WHERE c.category_id = '" . (int)$category_id . "' 
 			AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'
@@ -522,7 +495,7 @@ class Category extends Model {
         $query = $this->db->query("
             SELECT tag 
             FROM {$this->db->prefix}tag 
-            WHERE section   = 'product_category' 
+            WHERE section   = 'calendar_category' 
             AND element_id  = '" . (int)$category_id . "' 
             AND language_id = '" . (int)$this->config->get('config_language_id') . "'
         ");
@@ -544,12 +517,12 @@ class Category extends Model {
 			GROUP_CONCAT(cd1.name ORDER BY cp.level SEPARATOR ' &gt; ') AS name, 
 			c.parent_id, 
 			c.sort_order 
-			FROM {$this->db->prefix}category_path cp 
-			LEFT JOIN {$this->db->prefix}category c 
+			FROM {$this->db->prefix}calendar_category_path cp 
+			LEFT JOIN {$this->db->prefix}calendar_category c 
 				ON (cp.path_id = c.category_id) 
-			LEFT JOIN {$this->db->prefix}category_description cd1 
+			LEFT JOIN {$this->db->prefix}calendar_category_description cd1 
 				ON (c.category_id = cd1.category_id) 
-			LEFT JOIN {$this->db->prefix}category_description cd2 
+			LEFT JOIN {$this->db->prefix}calendar_category_description cd2 
 				ON (cp.category_id = cd2.category_id) 
 			WHERE cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' 
 			AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'";
@@ -582,7 +555,7 @@ class Category extends Model {
         
         $query = $this->db->query("
 			SELECT * 
-			FROM {$this->db->prefix}category_description 
+			FROM {$this->db->prefix}calendar_category_description 
 			WHERE category_id = '" . (int)$category_id . "'
 		");
         
@@ -599,28 +572,12 @@ class Category extends Model {
         return $category_description_data;
     }
     
-    public function getCategoryFilters($category_id) {
-        $category_filter_data = array();
-        
-        $query = $this->db->query("
-			SELECT * 
-			FROM {$this->db->prefix}category_filter 
-			WHERE category_id = '" . (int)$category_id . "'
-		");
-        
-        foreach ($query->rows as $result) {
-            $category_filter_data[] = $result['filter_id'];
-        }
-        
-        return $category_filter_data;
-    }
-    
     public function getCategoryStores($category_id) {
         $category_store_data = array();
         
         $query = $this->db->query("
 			SELECT * 
-			FROM {$this->db->prefix}category_to_store 
+			FROM {$this->db->prefix}calendar_category_to_store 
 			WHERE category_id = '" . (int)$category_id . "'
 		");
         
@@ -636,7 +593,7 @@ class Category extends Model {
         
         $query = $this->db->query("
 			SELECT * 
-			FROM {$this->db->prefix}category_to_layout 
+			FROM {$this->db->prefix}calendar_category_to_layout 
 			WHERE category_id = '" . (int)$category_id . "'
 		");
         
@@ -650,7 +607,7 @@ class Category extends Model {
     public function getTotalCategories() {
         $query = $this->db->query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}category");
+			FROM {$this->db->prefix}calendar_category");
         
         return $query->row['total'];
     }
@@ -658,7 +615,7 @@ class Category extends Model {
     public function getTotalCategoriesByImageId($image_id) {
         $query = $this->db->query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}category 
+			FROM {$this->db->prefix}calendar_category 
 			WHERE image_id = '" . (int)$image_id . "'
 		");
         
@@ -668,7 +625,7 @@ class Category extends Model {
     public function getTotalCategoriesByLayoutId($layout_id) {
         $query = $this->db->query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}category_to_layout 
+			FROM {$this->db->prefix}calendar_category_to_layout 
 			WHERE layout_id = '" . (int)$layout_id . "'
 		");
         
@@ -680,8 +637,8 @@ class Category extends Model {
 			SELECT 
 				c.category_id, 
 				cd.name 
-			FROM {$this->db->prefix}category c 
-			LEFT JOIN {$this->db->prefix}category_description cd 
+			FROM {$this->db->prefix}calendar_category c 
+			LEFT JOIN {$this->db->prefix}calendar_category_description cd 
 			ON (c.category_id = cd.category_id) 
 			WHERE c.parent_id = '" . (int)$parent_id . "'");
         
