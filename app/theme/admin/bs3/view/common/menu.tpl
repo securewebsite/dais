@@ -36,7 +36,6 @@
 						<li><a href="<?= $page; ?>"><?= $lang_text_page; ?></a></li>
 						<div class="divider"></div>
 						<li class="dropdown-header"><?= $lang_text_calendar; ?></li>
-						<li><a href="<?= $calendar; ?>"><?= $lang_text_category; ?></a></li>
 						<li><a href="<?= $event; ?>"><?= $lang_text_event; ?></a></li>
 						<div class="divider"></div>
 						<li class="dropdown-header"><?= $lang_text_blog; ?></li>

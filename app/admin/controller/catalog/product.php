@@ -1131,13 +1131,13 @@ class Product extends Controller {
             $query = $this->model_tool_utility->findSlugByName($this->request->post['slug']);
             
             if (isset($this->request->get['product_id'])):
-                if (isset($query)):
+                if ($query):
                     if ($query != 'product_id:' . $this->request->get['product_id']):
                         $this->error['slug'] = sprintf($this->language->get('lang_error_slug_found'), $this->request->post['slug']);
                     endif;
                 endif;
             else:
-                if (isset($query)):
+                if ($query):
                     $this->error['slug'] = sprintf($this->language->get('lang_error_slug_found'), $this->request->post['slug']);
                 endif;
             endif;
@@ -1159,9 +1159,19 @@ class Product extends Controller {
     }
     
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'catalog/product')) {
+        if (!$this->user->hasPermission('modify', 'catalog/product')):
             $this->error['warning'] = $this->language->get('lang_error_permission');
-        }
+        endif;
+
+        $this->theme->model('calendar/event');
+
+        foreach ($this->request->post['selected'] as $product_id):
+            $event_total = $this->model_calendar_event->getTotalEventsByProductId($product_id);
+
+            if ($event_total):
+                $this->error['warning'] = sprintf($this->language->get('lang_error_event'), $event_total);
+            endif;
+        endforeach;
         
         $this->theme->listen(__CLASS__, __FUNCTION__);
         

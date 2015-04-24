@@ -76,6 +76,9 @@ class Router extends Controller {
                                             $this->request->get['route'] = 'catalog/product';
                                         endif;
                                         $this->request->get[$url[0]] = $url[1];
+                                    elseif ($url[0] == 'event_page_id'):
+                                        $this->request->get['route'] = 'event/page';
+                                        $this->request->get[$url[0]] = $url[1];
                                     elseif ($url[0] == 'page_id'):
                                         if (isset($slugs[2]) && $slugs[2] == 'info'):
                                             $this->request->get['route'] = 'content/page/info';

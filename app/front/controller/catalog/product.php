@@ -237,9 +237,9 @@ class Product extends Controller {
             $data['points']        = $product_info['points'];
             
             if ($product_info['event_id'] > 0):
-                $data['event_id'] = $product_info['event_id'];
+                $data['event_id']    = $product_info['event_id'];
                 $data['unavailable'] = 0;
-                $data['registered'] = 0;
+                $data['registered']  = 0;
                 
                 if ($this->customer->isLogged()):
                     $registered = $this->model_catalog_product->getRoster($product_info['event_id'], $this->customer->getId());
@@ -281,17 +281,17 @@ class Product extends Controller {
                     $data['refundable'] = $this->language->get('lang_text_no');
                 endif;
                 
-                $data['telephone'] = $event_info['telephone'];
-                $data['location'] = nl2br($event_info['location']);
-                $data['presenter'] = '';
+                $data['telephone']     = $event_info['telephone'];
+                $data['location']      = nl2br($event_info['location']);
+                $data['presenter']     = '';
                 $data['presenter_bio'] = '';
                 $data['tab_presenter'] = '';
                 
                 if ($event_info['presenter_id']):
-                    $data['tab_presenter'] = $event_info['presenter_tab'] ? $event_info['presenter_tab'] : $this->language->get('lang_tab_presenter');
-                    $presenter = $this->model_catalog_product->getPresenterName($event_info['presenter_id']);
-                    $presenter_bio = $this->model_catalog_product->getPresenterBio($event_info['presenter_id']);
-                    $data['presenter'] = html_entity_decode($presenter, ENT_QUOTES, 'UTF-8');
+                    $data['tab_presenter'] = !empty($event_info['presenter_tab']) ? $event_info['presenter_tab'] : $this->language->get('lang_tab_presenter');
+                    $presenter             = $this->model_catalog_product->getPresenterName($event_info['presenter_id']);
+                    $presenter_bio         = $this->model_catalog_product->getPresenterBio($event_info['presenter_id']);
+                    $data['presenter']     = html_entity_decode($presenter, ENT_QUOTES, 'UTF-8');
                     $data['presenter_bio'] = html_entity_decode($presenter_bio, ENT_QUOTES, 'UTF-8');
                     if ($event_info['presenter_tab']):
                         $data['text_presenter_info'] = sprintf($this->language->get('lang_text_presenter_info'), $event_info['presenter_tab']);
@@ -317,7 +317,7 @@ class Product extends Controller {
             
             if ($product_info['image']) {
                 $data['popup'] = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height'));
-                $this->theme->setOgImage($this->model_tool_image->resize($product_info['image'], 200, 200, 'h'));
+                $this->theme->setOgImage($this->model_tool_image->resize($product_info['image'], 600, 600, 'h'));
             } else {
                 $data['popup'] = 'placeholder.png';
             }
@@ -404,10 +404,10 @@ class Product extends Controller {
                 endif;
             endif;
             
-            $data['review_status'] = $this->config->get('config_review_status');
-            $data['reviews'] = sprintf($this->language->get('lang_text_reviews'), (int)$product_info['reviews']);
-            $data['rating'] = (int)$product_info['rating'];
-            $data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
+            $data['review_status']    = $this->config->get('config_review_status');
+            $data['reviews']          = sprintf($this->language->get('lang_text_reviews'), (int)$product_info['reviews']);
+            $data['rating']           = (int)$product_info['rating'];
+            $data['description']      = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
             $data['attribute_groups'] = $this->model_catalog_product->getProductAttributes($this->request->get['product_id']);
             
             $data['products'] = array();
@@ -454,7 +454,7 @@ class Product extends Controller {
             
             $data['tags'] = false;
             
-            if ($product_info['tag']):
+            if (!empty($product_info['tag'])):
                 $tags = explode(',', $product_info['tag']);
                 
                 foreach ($tags as $tag):

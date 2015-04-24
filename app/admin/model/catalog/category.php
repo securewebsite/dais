@@ -22,13 +22,13 @@ class Category extends Model {
         $this->db->query("
 			INSERT INTO {$this->db->prefix}category 
 			SET 
-				parent_id = '" . (int)$data['parent_id'] . "', 
-				top = '" . (isset($data['top']) ? (int)$data['top'] : 0) . "', 
-				columns = '" . (int)$data['column'] . "', 
-				sort_order = '" . (int)$data['sort_order'] . "', 
-				status = '" . (int)$data['status'] . "', 
-				date_modified = NOW(), 
-				date_added = NOW()
+                parent_id     = '" . (int)$data['parent_id'] . "', 
+                top           = '" . (isset($data['top']) ? (int)$data['top'] : 0) . "', 
+                columns       = '" . (int)$data['columns'] . "', 
+                sort_order    = '" . (int)$data['sort_order'] . "', 
+                status        = '" . (int)$data['status'] . "', 
+                date_modified = NOW(), 
+                date_added    = NOW()
 		");
         
         $category_id = $this->db->getLastId();
@@ -46,12 +46,12 @@ class Category extends Model {
             $this->db->query("
 				INSERT INTO {$this->db->prefix}category_description 
 				SET 
-					category_id = '" . (int)$category_id . "', 
-					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($value['name']) . "', 
-					meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', 
-					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-					description = '" . $this->db->escape($value['description']) . "'
+                    category_id      = '" . (int)$category_id . "', 
+                    language_id      = '" . (int)$language_id . "', 
+                    name             = '" . $this->db->escape($value['name']) . "', 
+                    meta_keyword     = '" . $this->db->escape($value['meta_keyword']) . "', 
+                    meta_description = '" . $this->db->escape($value['meta_description']) . "', 
+                    description      = '" . $this->db->escape($value['description']) . "'
 			");
 
 			// process tags
@@ -85,9 +85,9 @@ class Category extends Model {
             $this->db->query("
 				INSERT INTO `{$this->db->prefix}category_path` 
 				SET 
-					category_id = '" . (int)$category_id . "', 
-					path_id = '" . (int)$result['path_id'] . "', 
-					level = '" . (int)$level . "'
+                    category_id = '" . (int)$category_id . "', 
+                    path_id     = '" . (int)$result['path_id'] . "', 
+                    level       = '" . (int)$level . "'
 			");
             
             $level++;
@@ -96,9 +96,9 @@ class Category extends Model {
         $this->db->query("
 			INSERT INTO `{$this->db->prefix}category_path` 
 			SET 
-				category_id = '" . (int)$category_id . "', 
-				path_id = '" . (int)$category_id . "', 
-				level = '" . (int)$level . "'
+                category_id = '" . (int)$category_id . "', 
+                path_id     = '" . (int)$category_id . "', 
+                level       = '" . (int)$level . "'
 		");
         
         if (isset($data['category_filter'])) {
@@ -107,7 +107,7 @@ class Category extends Model {
 					INSERT INTO {$this->db->prefix}category_filter 
 					SET 
 						category_id = '" . (int)$category_id . "', 
-						filter_id = '" . (int)$filter_id . "'
+						filter_id   = '" . (int)$filter_id . "'
 				");
             }
         }
@@ -118,7 +118,7 @@ class Category extends Model {
 					INSERT INTO {$this->db->prefix}category_to_store 
 					SET 
 						category_id = '" . (int)$category_id . "', 
-						store_id = '" . (int)$store_id . "'
+						store_id    = '" . (int)$store_id . "'
 				");
             }
         }
@@ -130,9 +130,9 @@ class Category extends Model {
                     $this->db->query("
 						INSERT INTO {$this->db->prefix}category_to_layout 
 						SET 
-							category_id = '" . (int)$category_id . "', 
-							store_id = '" . (int)$store_id . "', 
-							layout_id = '" . (int)$layout['layout_id'] . "'
+                            category_id = '" . (int)$category_id . "', 
+                            store_id    = '" . (int)$store_id . "', 
+                            layout_id   = '" . (int)$layout['layout_id'] . "'
 					");
                 }
             }
@@ -142,9 +142,9 @@ class Category extends Model {
             $this->db->query("
 				INSERT INTO {$this->db->prefix}route 
 				SET 
-					route='catalog/category', 
-					query = 'category_id:" . (int)$category_id . "', 
-					slug = '" . $this->db->escape($data['slug']) . "'
+                    route ='catalog/category', 
+                    query = 'category_id:" . (int)$category_id . "', 
+                    slug  = '" . $this->db->escape($data['slug']) . "'
 			");
         }
         
@@ -157,12 +157,12 @@ class Category extends Model {
         $this->db->query("
 			UPDATE {$this->db->prefix}category 
 			SET 
-				parent_id = '" . (int)$data['parent_id'] . "', 
-				top = '" . (isset($data['top']) ? (int)$data['top'] : 0) . "', 
-				columns = '" . (int)$data['column'] . "', 
-				sort_order = '" . (int)$data['sort_order'] . "', 
-				status = '" . (int)$data['status'] . "', 
-				date_modified = NOW() 
+                parent_id     = '" . (int)$data['parent_id'] . "', 
+                top           = '" . (isset($data['top']) ? (int)$data['top'] : 0) . "', 
+                columns       = '" . (int)$data['columns'] . "', 
+                sort_order    = '" . (int)$data['sort_order'] . "', 
+                status        = '" . (int)$data['status'] . "', 
+                date_modified = NOW() 
 			WHERE category_id = '" . (int)$category_id . "'
 		");
         
@@ -181,12 +181,12 @@ class Category extends Model {
             $this->db->query("
 				INSERT INTO {$this->db->prefix}category_description 
 				SET 
-					category_id = '" . (int)$category_id . "', 
-					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($value['name']) . "', 
-					meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', 
-					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-					description = '" . $this->db->escape($value['description']) . "'
+                    category_id      = '" . (int)$category_id . "', 
+                    language_id      = '" . (int)$language_id . "', 
+                    name             = '" . $this->db->escape($value['name']) . "', 
+                    meta_keyword     = '" . $this->db->escape($value['meta_keyword']) . "', 
+                    meta_description = '" . $this->db->escape($value['meta_description']) . "', 
+                    description      = '" . $this->db->escape($value['description']) . "'
 			");
 
 			$this->db->query("
@@ -264,9 +264,9 @@ class Category extends Model {
                     $this->db->query("
 						REPLACE INTO `{$this->db->prefix}category_path` 
 						SET 
-							category_id = '" . (int)$category_path['category_id'] . "', 
-							`path_id` = '" . (int)$path_id . "', 
-							level = '" . (int)$level . "'
+                            category_id = '" . (int)$category_path['category_id'] . "', 
+                            path_id     = '" . (int)$path_id . "', 
+                            level       = '" . (int)$level . "'
 					");
                     
                     $level++;
@@ -295,9 +295,9 @@ class Category extends Model {
                 $this->db->query("
 					INSERT INTO {$this->db->prefix}category_path 
 					SET 
-						category_id = '" . (int)$category_id . "', 
-						path_id = '" . (int)$result['path_id'] . "', 
-						level = '" . (int)$level . "'
+                        category_id = '" . (int)$category_id . "', 
+                        path_id     = '" . (int)$result['path_id'] . "', 
+                        level       = '" . (int)$level . "'
 				");
                 
                 $level++;
@@ -306,9 +306,9 @@ class Category extends Model {
             $this->db->query("
 				REPLACE INTO {$this->db->prefix}category_path 
 				SET 
-					category_id = '" . (int)$category_id . "', 
-					path_id = '" . (int)$category_id . "', 
-					level = '" . (int)$level . "'
+                    category_id = '" . (int)$category_id . "', 
+                    path_id     = '" . (int)$category_id . "', 
+                    level       = '" . (int)$level . "'
 			");
         }
         
@@ -324,7 +324,7 @@ class Category extends Model {
 					INSERT INTO {$this->db->prefix}category_filter 
 					SET 
 						category_id = '" . (int)$category_id . "', 
-						filter_id = '" . (int)$filter_id . "'
+						filter_id   = '" . (int)$filter_id . "'
 				");
             }
         }
@@ -341,7 +341,7 @@ class Category extends Model {
 					INSERT INTO {$this->db->prefix}category_to_store 
 					SET 
 						category_id = '" . (int)$category_id . "', 
-						store_id = '" . (int)$store_id . "'
+						store_id    = '" . (int)$store_id . "'
 				");
             }
         }
@@ -358,9 +358,9 @@ class Category extends Model {
                     $this->db->query("
 						INSERT INTO {$this->db->prefix}category_to_layout 
 						SET 
-							category_id = '" . (int)$category_id . "', 
-							store_id = '" . (int)$store_id . "', 
-							layout_id = '" . (int)$layout['layout_id'] . "'
+                            category_id = '" . (int)$category_id . "', 
+                            store_id    = '" . (int)$store_id . "', 
+                            layout_id   = '" . (int)$layout['layout_id'] . "'
 					");
                 }
             }
@@ -376,9 +376,9 @@ class Category extends Model {
             $this->db->query("
 				INSERT INTO {$this->db->prefix}route 
 				SET 
-					route='catalog/category', 
-					query = 'category_id:" . (int)$category_id . "', 
-					slug = '" . $this->db->escape($data['slug']) . "'
+                    route ='catalog/category', 
+                    query = 'category_id:" . (int)$category_id . "', 
+                    slug  = '" . $this->db->escape($data['slug']) . "'
 			");
         }
         
@@ -471,9 +471,9 @@ class Category extends Model {
                 $this->db->query("
 					INSERT INTO {$this->db->prefix}category_path 
 					SET 
-						category_id = '" . (int)$category['category_id'] . "', 
-						`path_id` = '" . (int)$result['path_id'] . "', 
-						level = '" . (int)$level . "'
+                        category_id = '" . (int)$category['category_id'] . "', 
+                        path_id     = '" . (int)$result['path_id'] . "', 
+                        level       = '" . (int)$level . "'
 				");
                 
                 $level++;
@@ -482,9 +482,9 @@ class Category extends Model {
             $this->db->query("
 				REPLACE INTO {$this->db->prefix}category_path 
 				SET 
-					category_id = '" . (int)$category['category_id'] . "', 
-					path_id = '" . (int)$category['category_id'] . "', 
-					level = '" . (int)$level . "'
+                    category_id = '" . (int)$category['category_id'] . "', 
+                    path_id     = '" . (int)$category['category_id'] . "', 
+                    level       = '" . (int)$level . "'
 			");
             
             $this->repairCategories($category['category_id']);

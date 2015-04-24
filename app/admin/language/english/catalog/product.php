@@ -117,6 +117,7 @@ $_['lang_error_warning']          = 'Warning: Please check the form carefully fo
 $_['lang_error_permission']       = 'Warning: You do not have permission to modify products.';
 $_['lang_error_name']             = 'Product Name must be greater than 3 and less than 255 characters.';
 $_['lang_error_model']            = 'Product Model must be greater than 3 and less than 64 characters.';
+$_['lang_error_event']            = 'Warning: This product cannot be deleted as it is currently being used by %s event(s).';
 $_['lang_error_slug']             = 'Warning: Slug is required for products.';
 $_['lang_error_slug_found']       = 'ERROR: The slug %s is already in use, please set a different one in the input field.';
 $_['lang_error_name_first']       = 'ERROR: Please enter a name for your product before attempting to build a slug.';

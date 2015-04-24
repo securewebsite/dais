@@ -42,6 +42,7 @@ $_['lang_entry_status']           = 'Status:';
 $_['lang_entry_sort_order']       = 'Sort Order:';
 $_['lang_entry_layout']           = 'Layout Override:';
 $_['lang_entry_visibility']       = 'Visibility';
+$_['lang_entry_event']            = 'Event:<br><span class="help">This page is linked to an event.</span>';
 
 // Error
 $_['lang_error_warning']          = 'Warning: Please check the form carefully for errors.';
@@ -51,7 +52,8 @@ $_['lang_error_description']      = 'Content must be more than 3 characters.';
 $_['lang_error_account']          = 'Warning: This page cannot be deleted as it is currently assigned to the store account terms.';
 $_['lang_error_checkout']         = 'Warning: This page cannot be deleted as it is currently assigned to the store checkout terms.';
 $_['lang_error_affiliate']        = 'Warning: This page cannot be deleted as it is currently assigned to the store affiliate terms.';
-$_['lang_error_store']            = 'Warning: This page cannot be deleted as it is currently being used by %s stores.';
+$_['lang_error_store']            = 'Warning: This page cannot be deleted as it is currently being used by %s store(s).';
+$_['lang_error_event']            = 'Warning: This page cannot be deleted as it is currently being used by %s event(s).';
 $_['lang_error_slug']             = 'Warning: Slug is required for pages.';
 $_['lang_error_slug_found']       = 'ERROR: The slug %s is already in use, please set a different one in the input field.';
 $_['lang_error_name_first']       = 'ERROR: Please enter a title for your page before attempting to build a slug.';

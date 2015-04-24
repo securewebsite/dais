@@ -245,7 +245,7 @@ class Event extends Controller {
         
         $data = $this->theme->render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('content/waitlist', $data));
+        $this->response->setOutput($this->theme->view('calendar/waitlist', $data));
     }
     
     public function add_to_event() {
@@ -439,8 +439,10 @@ class Event extends Controller {
         
         if (!isset($this->request->get['event_id'])) {
             $data['action'] = $this->url->link('calendar/event/insert', 'token=' . $this->session->data['token'], 'SSL');
+            $data['method'] = 'insert';
         } else {
             $data['action'] = $this->url->link('calendar/event/update', 'token=' . $this->session->data['token'] . '&event_id=' . $this->request->get['event_id'], 'SSL');
+            $data['method'] = 'edit';
         }
         
         $data['cancel'] = $this->url->link('calendar/event', 'token=' . $this->session->data['token'], 'SSL');
@@ -461,11 +463,13 @@ class Event extends Controller {
         );
         
         $this->theme->model('catalog/product');
+        $this->theme->model('content/page');
         
         $product_info = array();
         
         if (!empty($event_info)) {
             $product_info = $this->model_catalog_product->getProduct($event_info['product_id']);
+            $page_info    = $this->model_content_page->getEventPage($event_info['page_id']);
         }
         
         if (isset($this->request->post['name'])) {
@@ -484,6 +488,14 @@ class Event extends Controller {
             $data['product_id'] = 0;
         }
 
+        if (isset($this->request->post['page_id'])) {
+            $data['page_id'] = $this->request->post['page_id'];
+        } elseif (!empty($event_info)) {
+            $data['page_id'] = $event_info['page_id'];
+        } else {
+            $data['page_id'] = 0;
+        }
+
         if (isset($this->request->post['model'])) {
             $data['model'] = html_entity_decode($this->request->post['model']);
         } elseif (!empty($event_info)) {
@@ -495,7 +507,6 @@ class Event extends Controller {
         if (isset($this->request->post['sku'])) {
             $data['sku'] = html_entity_decode($this->request->post['sku']);
         } elseif (!empty($product_info)) {
-            $this->theme->test($product_info);
             $data['sku'] = html_entity_decode($product_info['sku']);
         } else {
             $data['sku'] = '';
@@ -507,12 +518,20 @@ class Event extends Controller {
         
         if (isset($this->request->post['product_store'])) {
             $data['product_store'] = $this->request->post['product_store'];
-        } elseif (!empty($event_info)) {
+        } elseif (!empty($event_info) && $event_info['product_id'] > 0) {
             $data['product_store'] = $this->model_catalog_product->getProductStores($data['product_id']);
         } else {
             $data['product_store'] = array(0);
         }
         
+        if (isset($this->request->post['page_store'])) {
+            $data['page_store'] = $this->request->post['page_store'];
+        } elseif (!empty($event_info) && $event_info['page_id'] > 0) {
+            $data['page_store'] = $this->model_content_page->getPageStores($data['page_id']);
+        } else {
+            $data['page_store'] = array(0);
+        }
+
         $this->theme->model('localization/stock_status');
         
         $data['stock_statuses'] = $this->model_localization_stock_status->getStockStatuses();
@@ -673,12 +692,22 @@ class Event extends Controller {
         
         if (isset($this->request->post['slug'])) {
             $data['slug'] = $this->request->post['slug'];
-        } elseif (!empty($product_info)) {
+        } elseif (!empty($product_info) && $event_info['product_id'] > 0) {
             $data['slug'] = $product_info['slug'];
+        } elseif (!empty($page_info) && $event_info['page_id'] > 0) {
+            $data['slug'] = $page_info['slug'];
         } else {
             $data['slug'] = '';
         }
-        
+
+        if (isset($this->request->post['page_status'])) {
+            $data['page_status'] = (int)$this->request->post['page_status'];
+        } elseif (!empty($page_info)) {
+            $data['page_status'] = (int)$page_info['status'];
+        } else {
+            $data['page_status'] = 1;
+        }
+ 
         if (isset($this->request->post['status'])) {
             $data['status'] = $this->request->post['status'];
         } elseif (!empty($product_info)) {
@@ -686,9 +715,38 @@ class Event extends Controller {
         } else {
             $data['status'] = 1;
         }
+
+        if (isset($this->request->post['event_class'])) {
+            $data['event_class'] = $this->request->post['event_class'];
+        } elseif (!empty($event_info)) {
+            $data['event_class'] = $event_info['event_class'];
+        } else {
+            $data['event_class'] = 'event';
+        }
+
+        $event_classes = array(
+            'event',
+            'event-important',
+            'event-info',
+            'event-warning',
+            'event-inverse',
+            'event-success',
+            'event-special'
+        );
+
+        $data['event_classes'] = array();
+
+        foreach ($event_classes as $class):
+            $data['event_classes'][] = array(
+                'event' => $class,
+                'name' => $this->language->get('lang_text_' . $class)
+            );
+        endforeach;
         
         $data['presenters'] = $this->model_calendar_event->getPresenters();
         
+        $this->theme->loadjs('javascript/calendar/event_form', $data);
+
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
         $data = $this->theme->render_controllers($data);
@@ -753,7 +811,7 @@ class Event extends Controller {
         
         $data = $this->theme->render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('content/presenter_list', $data));
+        $this->response->setOutput($this->theme->view('calendar/presenter_list', $data));
     }
     
     public function presenter_form() {
@@ -815,7 +873,7 @@ class Event extends Controller {
         
         $data = $this->theme->render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('content/presenter_form', $data));
+        $this->response->setOutput($this->theme->view('calendar/presenter_form', $data));
     }
     
     public function roster() {
@@ -875,11 +933,11 @@ class Event extends Controller {
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->loadjs('javascript/content/roster', $data);
+        $this->theme->loadjs('javascript/calendar/roster', $data);
         
         $data = $this->theme->render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('content/roster', $data));
+        $this->response->setOutput($this->theme->view('calendar/roster', $data));
     }
     
     public function autocomplete() {
@@ -930,6 +988,10 @@ class Event extends Controller {
             if (($this->encode->strlen($this->request->post['model']) < 1) || ($this->encode->strlen($this->request->post['model']) > 50)):
                 $this->error['model'] = $this->language->get('lang_error_model');
             endif;
+
+            if ($this->request->post['cost'] == ""):
+                $this->error['cost'] = $this->language->get('lang_error_cost');
+            endif;
         endif;
         
         if (($this->encode->strlen($this->request->post['event_length']) < 1) || ($this->encode->strlen($this->request->post['event_length']) > 40)) {
@@ -956,10 +1018,6 @@ class Event extends Controller {
         
         if (!isset($this->request->post['event_days'])) {
             $this->error['event_days'] = $this->language->get('lang_error_event_days');
-        }
-        
-        if ($this->request->post['cost'] == "") {
-            $this->error['cost'] = $this->language->get('lang_error_cost');
         }
         
         if ($this->request->post['seats'] == "") {
@@ -1014,41 +1072,5 @@ class Event extends Controller {
         }
         
         return !$this->error;
-    }
-    
-    public function slug() {
-        $this->language->load('catalog/product');
-        $this->theme->model('tool/utility');
-        
-        $json = array();
-        
-        if (!isset($this->request->get['name']) || $this->encode->strlen($this->request->get['name']) < 1):
-            $json['error'] = $this->language->get('lang_error_name_first');
-        else:
-            
-            // build slug
-            $slug = $this->url->build_slug($this->request->get['name']);
-            
-            // check that the slug is globally unique
-            $query = $this->model_tool_utility->findSlugByName($slug);
-            
-            if ($query):
-                if (isset($this->request->get['event_id'])):
-                    if ($query != 'product_id:' . $this->request->get['event_id']):
-                        $json['error'] = sprintf($this->language->get('lang_error_slug_found'), $slug);
-                    else:
-                        $json['slug'] = $slug;
-                    endif;
-                else:
-                    $json['error'] = sprintf($this->language->get('lang_error_slug_found'), $slug);
-                endif;
-            else:
-                $json['slug'] = $slug;
-            endif;
-        endif;
-        
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
-        
-        $this->response->setOutput(json_encode($json));
     }
 }

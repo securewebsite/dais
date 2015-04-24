@@ -47,29 +47,28 @@ class Event extends Model {
 			INSERT INTO {$this->db->prefix}event_manager 
 			SET 
 				event_name    = '" . $this->db->escape($data['name']) . "', 
-				model         = '" . $this->db->escape($data['model']) . "', 
-				sku           = '" . $this->db->escape($data['sku']) . "', 
 				visibility    = '" . (int)$data['visibility'] . "', 
 				event_length  = '" . $this->db->escape($data['event_length']) . "', 
 				event_days    = '" . $this->db->escape(serialize($data['event_days'])) . "', 
+				event_class   = '" . $this->db->escape($data['event_class']) . "', 
 				date_time     = '" . $this->db->escape($date_start) . "', 
 				online        = '" . (int)$data['online'] . "', 
 				link          = '" . $this->db->escape($data['link']) . "', 
 				location      = '" . $this->db->escape($data['location']) . "', 
 				telephone     = '" . $this->db->escape($data['telephone']) . "', 
-				cost          = '" . (float)$data['cost'] . "', 
 				seats         = '" . (int)$data['seats'] . "', 
 				presenter_tab = '" . $this->db->escape($data['presenter_tab']) . "', 
 				presenter_id  = '" . (int)$data['presenter'] . "', 
 				description   = '" . $this->db->escape($data['description']) . "', 
-				refundable    = '" . (int)$data['refundable'] . "', 
 				date_end      = '" . $this->db->escape($date_end) . "'
 		");
         
         $event_id = $this->db->getLastId();
-        $this->theme->test($event_id);
+        
         if ($data['is_product']):
         	$this->addEventProduct($event_id, $data, $date_end);
+        else:
+        	$this->addEventPage($event_id, $data);
         endif;
 
         $this->theme->trigger('admin_add_event', array('event_id' => $event_id));
@@ -90,6 +89,7 @@ class Event extends Model {
 				visibility    = '" . (int)$data['visibility'] . "', 
 				event_length  = '" . $this->db->escape($data['event_length']) . "', 
 				event_days    = '" . $this->db->escape(serialize($data['event_days'])) . "', 
+				event_class   = '" . $this->db->escape($data['event_class']) . "', 
 				date_time     = '" . $this->db->escape($date_start) . "', 
 				online        = '" . (int)$data['online'] . "', 
 				link          = '" . $this->db->escape($data['link']) . "', 
@@ -111,26 +111,15 @@ class Event extends Model {
 			WHERE event_id = '" . (int)$event_id . "'");
         
         $quantity = (int)$data['seats'] - (int)$filled->row['filled'];
-        
-        // Editing the event has conditions we need to define.
-        // 1. Has an existing product and is_product enabled : edit the product
-        // 2. Has no existing product and is_product enabled : add product
-        // 3. Has an existing product and is_product disabled : delete product
-        // 4. Has no existing product and is_product disabled : do nothing
 
         if ($data['is_product']):
-        	// product required
-        	if ((int)$data['product_id'] > 0): // Condition 1 : edit product
+        	if ((int)$data['product_id'] > 0):
         		$this->editEventProduct($event_id, $data, $date_end);
-        	else:
-        		// Condition 2 : add product
-        		$this->addEventProduct($event_id, $data, $date_end);
         	endif;
         else:
-        	if ((int)$data['product_id'] > 0): // Condition 3 : delete product
-        		$this->deleteEventProduct($data['product_id']);
+        	if ((int)$data['page_id'] > 0):
+        		$this->editEventPage($event_id, $data);
         	endif;
-        	// Condition 4: do nothing
         endif;
 
         $this->theme->trigger('admin_edit_event', array('event_id' => $event_id));
@@ -139,8 +128,8 @@ class Event extends Model {
     }
     
     public function deleteEvent($event_id) {
-        $product_id = $this->db->query("
-			SELECT product_id 
+        $query = $this->db->query("
+			SELECT product_id, page_id 
 			FROM {$this->db->prefix}event_manager 
 			WHERE event_id = '" . (int)$event_id . "'");
         
@@ -152,9 +141,14 @@ class Event extends Model {
 			DELETE FROM {$this->db->prefix}event_wait_list 
 			WHERE event_id = '" . (int)$event_id . "'");
         
-        if ($product_id->row['product_id'] > 0):
+        if ($query->row['product_id'] > 0):
         	$this->theme->model('catalog/product');
-        	$this->model_catalog_product->deleteProduct($product_id->row['product_id']);
+        	$this->model_catalog_product->deleteProduct($query->row['product_id']);
+        endif;
+
+        if ($query->row['page_id'] > 0):
+        	$this->theme->model('content/page');
+        	$this->model_content_page->deletePage($query->row['page_id']);
         endif;
         
         $this->theme->trigger('admin_delete_event', array('event_id' => $event_id));
@@ -187,7 +181,6 @@ class Event extends Model {
         
         $product_id = $this->db->getLastId();
 
-        // add event to routes as a product
         $this->db->query("
 			INSERT INTO {$this->db->prefix}route 
 			SET 
@@ -196,15 +189,20 @@ class Event extends Model {
 				slug  = '" . $this->db->escape($data['slug']) . "'
 		");
         
+        $this->db->query("
+			UPDATE {$this->db->prefix}event_manager 
+			SET 
+				model      = '" . $this->db->escape($data['model']) . "', 
+				sku        = '" . $this->db->escape($data['sku']) . "', 
+				cost       = '" . (float)$data['cost'] . "', 
+				refundable = '" . (int)$data['refundable'] . "', 
+				product_id = '" . (int)$product_id . "' 
+			WHERE event_id = '" . (int)$event_id . "'");
+        
         $languages = $this->db->query("
 			SELECT language_id 
 			FROM {$this->db->prefix}language");
-        
-        $this->db->query("
-			UPDATE {$this->db->prefix}event_manager 
-			SET product_id = '" . (int)$product_id . "' 
-			WHERE event_id = '" . (int)$event_id . "'");
-        
+
         foreach ($languages->rows as $language):
             $this->db->query("
 				INSERT INTO {$this->db->prefix}product_description 
@@ -234,6 +232,12 @@ class Event extends Model {
 						category_id = '" . (int)$category_id . "'");
             endforeach;
         endif;
+
+        $this->cache->delete('product');
+        $this->cache->delete('products.total');
+        $this->cache->delete('products.all');
+        
+        $this->theme->trigger('admin_add_product', array('product_id' => $product_id));
     }
 
     protected function editEventProduct($event_id, $data, $date_end) {
@@ -244,7 +248,7 @@ class Event extends Model {
 				sku             = '" . $this->db->escape($data['sku']) . "', 
 				location        = '" . $this->db->escape($data['location']) . "', 
 				visibility      = '" . (int)$data['visibility'] . "', 
-				quantity        = '" . (int)$quantity . "', 
+				quantity        = '" . (int)$data['seats'] . "', 
 				price           = '" . (float)$data['cost'] . "', 
 				stock_status_id = '" . (int)$data['stock_status_id'] . "', 
 				status          = '" . (int)$data['status'] . "', 
@@ -305,11 +309,132 @@ class Event extends Model {
 				WHERE product_id = '" . (int)$data['product_id'] . "' 
 				AND language_id  = '" . (int)$language['language_id'] . "'");
         endforeach;
+
+        $this->cache->delete('product');
+        $this->cache->delete('products.all');
+        
+        $this->theme->trigger('admin_edit_product', array('product_id' => $data['product_id']));
     }
 
-    protected function deleteEventProduct($product_id) {
-    	$this->theme->model('catalog/product');
-    	$this->model_catalog_product->deleteProduct($product_id);
+    protected function addEventPage($event_id, $data) {
+    	$this->db->query("
+			INSERT INTO {$this->db->prefix}page 
+			SET 
+				bottom     = '0', 
+				visibility = '" . (int)$data['visibility'] . "', 
+				status     = '" . (int)$data['page_status'] . "', 
+				event_id   = '" . (int)$event_id . "'
+		");
+        
+        $page_id = $this->db->getLastId();
+        
+        $languages = $this->db->query("
+			SELECT language_id 
+			FROM {$this->db->prefix}language");
+
+        foreach ($languages->rows as $language):
+        	$this->db->query("
+				INSERT INTO {$this->db->prefix}page_description 
+				SET 
+					page_id     = '" . (int)$page_id . "', 
+					language_id = '" . (int)$language['language_id'] . "', 
+					title       = '" . $this->db->escape($data['name']) . "', 
+					description = '" . $this->db->escape($data['description']) . "'
+			");
+        endforeach;
+
+		$this->db->query("
+			UPDATE {$this->db->prefix}event_manager 
+			SET page_id    = '" . (int)$page_id . "' 
+			WHERE event_id = '" . (int)$event_id . "'
+		");
+        
+        if (isset($data['page_store'])):
+            foreach ($data['page_store'] as $store_id):
+                $this->db->query("
+					INSERT INTO {$this->db->prefix}page_to_store 
+					SET 
+						page_id  = '" . (int)$page_id . "', 
+						store_id = '" . (int)$store_id . "'
+				");
+            endforeach;
+        endif;
+        
+        if ($data['slug']):
+            $this->db->query("
+				INSERT INTO {$this->db->prefix}route 
+				SET 
+					route ='event/page', 
+					query = 'event_page_id:" . (int)$page_id . "', 
+					slug  = '" . $this->db->escape($data['slug']) . "'
+			");
+        endif;
+        
+        $this->cache->delete('page');
+        
+        $this->theme->trigger('admin_add_page', array('page_id' => $page_id));
+    }
+
+    protected function editEventPage($event_id, $data) {
+    	$this->db->query("
+			UPDATE {$this->db->prefix}page 
+			SET 
+				visibility = '" . (int)$data['visibility'] . "', 
+				status     = '" . (int)$data['page_status'] . "' 
+			WHERE page_id  = '" . (int)$data['page_id'] . "'
+		");
+        
+        $this->db->query("
+            DELETE FROM {$this->db->prefix}page_description 
+            WHERE page_id = '" . (int)$data['page_id'] . "'");
+        
+        $languages = $this->db->query("
+			SELECT language_id 
+			FROM {$this->db->prefix}language");
+
+        foreach ($languages->rows as $language):
+        	$this->db->query("
+				INSERT INTO {$this->db->prefix}page_description 
+				SET 
+					page_id     = '" . (int)$data['page_id'] . "', 
+					language_id = '" . (int)$language['language_id'] . "', 
+					title       = '" . $this->db->escape($data['name']) . "', 
+					description = '" . $this->db->escape($data['description']) . "'
+			");
+        endforeach;
+        
+        $this->db->query("
+            DELETE FROM {$this->db->prefix}page_to_store 
+            WHERE page_id = '" . (int)$data['page_id'] . "'");
+        
+        if (isset($data['page_store'])):
+            foreach ($data['page_store'] as $store_id):
+                $this->db->query("
+					INSERT INTO {$this->db->prefix}page_to_store 
+					SET 
+						page_id  = '" . (int)$data['page_id'] . "', 
+						store_id = '" . (int)$store_id . "'
+				");
+            endforeach;
+        endif;
+        
+        $this->db->query("
+            DELETE FROM {$this->db->prefix}route 
+            WHERE query = 'event_page_id:" . (int)$data['page_id'] . "'");
+        
+        if ($data['slug']):
+            $this->db->query("
+				INSERT INTO {$this->db->prefix}route 
+				SET 
+					route = 'event/page', 
+					query = 'event_page_id:" . (int)$data['page_id'] . "', 
+					slug  = '" . $this->db->escape($data['slug']) . "'
+			");
+        endif;
+        
+        $this->cache->delete('page');
+        
+        $this->theme->trigger('admin_edit_page', array('page_id' => $data['page_id']));
     }
     
     public function getSlug($product_id) {
@@ -354,11 +479,11 @@ class Event extends Model {
 			FROM {$this->db->prefix}presenter 
 			WHERE presenter_id = '" . (int)$presenter_id . "'");
         
-        if ($query->num_rows) {
+        if ($query->num_rows):
             return $query->row['presenter_name'];
-        } else {
+        else:
             return;
-        }
+        endif;
     }
     
     public function addPresenter($data) {
@@ -397,15 +522,15 @@ class Event extends Model {
 			FROM {$this->db->prefix}event_manager 
 			WHERE event_id = '" . (int)$event_id . "'");
         
-        if (!empty($query->row['roster'])) {
-            foreach (unserialize($query->row['roster']) as $roster) {
+        if (!empty($query->row['roster'])):
+            foreach (unserialize($query->row['roster']) as $roster):
                 $return_data[] = array(
 					'attendee_id' => $roster['attendee_id'], 
 					'name'        => $this->getAttendeeName($roster['attendee_id']), 
 					'date_added'  => $roster['date_added']
                 );
-            }
-        }
+            endforeach;
+        endif;
         
         return $return_data;
     }
@@ -416,11 +541,11 @@ class Event extends Model {
 			FROM {$this->db->prefix}event_wait_list 
 			WHERE event_id = '" . (int)$event_id . "'");
         
-        if ($query->num_rows) {
+        if ($query->num_rows):
             return $query->row['total'];
-        } else {
+        else:
             return 0;
-        }
+        endif;
     }
     
     public function getWaitListAttendees($event_id) {
@@ -450,7 +575,8 @@ class Event extends Model {
 				UPDATE {$this->db->prefix}event_manager 
 				SET 
 					seats = '" . (int)$query->row['filled'] . "' 
-				WHERE event_id = '" . (int)$data['event_id'] . "'");
+				WHERE event_id = '" . (int)$data['event_id'] . "'
+			");
         endif;
         
         $this->db->query("
@@ -480,14 +606,14 @@ class Event extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}event_wait_list 
-			WHERE event_id = '" . (int)$data['event_id'] . "' 
+			WHERE event_id  = '" . (int)$data['event_id'] . "' 
 			AND customer_id = '" . (int)$data['attendee_id'] . "'");
         
-        if (!$query->num_rows) {
+        if (!$query->num_rows):
             $this->db->query("
 				INSERT INTO {$this->db->prefix}event_wait_list 
 				SET 
-					event_id = '" . (int)$data['event_id'] . "', 
+					event_id    = '" . (int)$data['event_id'] . "', 
 					customer_id = '" . (int)$data['attendee_id'] . "'");
             
             $event_info = $this->db->query("
@@ -507,9 +633,9 @@ class Event extends Model {
             $this->theme->notify('admin_event_waitlist', $callback);
 
             return true;
-        } else {
+        else:
             return false;
-        }
+        endif;
     }
     
     public function removeFromList($event_wait_list_id) {
@@ -575,11 +701,11 @@ class Event extends Model {
 			FROM {$this->db->prefix}customer 
 			WHERE customer_id = '" . (int)$attendee_id . "'");
         
-        if ($query->num_rows) {
+        if ($query->num_rows):
             return $query->row['name'] . ' (' . $query->row['username'] . ')';
-        } else {
+        else:
             return;
-        }
+        endif;
     }
     
     public function checkAttendee($data) {
@@ -590,14 +716,14 @@ class Event extends Model {
 			FROM {$this->db->prefix}event_manager 
 			WHERE event_id = '" . (int)$data['event_id'] . "'");
         
-        if (!empty($query->row['roster'])) {
-            foreach (unserialize($query->row['roster']) as $roster) {
-                if ($roster['attendee_id'] == $data['attendee_id']) {
+        if (!empty($query->row['roster'])):
+            foreach (unserialize($query->row['roster']) as $roster):
+                if ($roster['attendee_id'] == $data['attendee_id']):
                     $exists = true;
                     break;
-                }
-            }
-        }
+                endif;
+            endforeach;
+        endif;
         
         return $exists;
     }
@@ -610,27 +736,27 @@ class Event extends Model {
 			FROM {$this->db->prefix}event_manager 
 			WHERE event_id = '" . (int)$data['event_id'] . "'");
         
-        $filled = $query->row['filled'];
-        $seats = $query->row['seats'];
-        $product_id = $query->row['product_id'];
+		$filled     = $query->row['filled'];
+		$seats      = $query->row['seats'];
+		$product_id = $query->row['product_id'];
         
-        if (!empty($query->row['roster'])) {
-            foreach (unserialize($query->row['roster']) as $attendee) {
+        if (!empty($query->row['roster'])):
+            foreach (unserialize($query->row['roster']) as $attendee):
                 $new_array[] = array(
 					'attendee_id' => $attendee['attendee_id'], 
 					'date_added'  => $attendee['date_added']
                 );
-            }
-        }
+            endforeach;
+        endif;
         
         $new_array[] = array(
 			'attendee_id' => $data['attendee_id'], 
 			'date_added'  => time()
         );
         
-        if ($filled > $seats) {
+        if ($filled > $seats):
             $seats = $filled;
-        }
+        endif;
         
         $this->db->query("
 			UPDATE {$this->db->prefix}event_manager 
@@ -659,14 +785,14 @@ class Event extends Model {
         
         $product_id = $query->row['product_id'];
         
-        foreach (unserialize($query->row['roster']) as $roster) {
-            if ($attendee_id != $roster['attendee_id']) {
+        foreach (unserialize($query->row['roster']) as $roster):
+            if ($attendee_id != $roster['attendee_id']):
                 $new_array[] = array(
 					'attendee_id' => $roster['attendee_id'], 
 					'date_added'  => $roster['date_added']
                 );
-            }
-        }
+            endif;
+        endforeach;
         
         $this->db->query("
 			UPDATE {$this->db->prefix}event_manager 
@@ -683,17 +809,17 @@ class Event extends Model {
     }
     
     public function updateProductQuantity($product_id, $quantity = 0) {
-        if ($quantity) {
+        if ($quantity):
             $this->db->query("
 				UPDATE {$this->db->prefix}product 
 				SET quantity = (quantity - 1) 
 				WHERE product_id = '" . (int)$product_id . "'");
-        } else {
+        else:
             $this->db->query("
 				UPDATE {$this->db->prefix}product 
 				SET quantity = (quantity + 1) 
 				WHERE product_id = '" . (int)$product_id . "'");
-        }
+        endif;
     }
     
     public function getProductId($event_id) {
@@ -702,11 +828,31 @@ class Event extends Model {
 			FROM {$this->db->prefix}product 
 			WHERE event_id = '" . (int)$event_id . "'");
         
-        if ($query->num_rows) {
+        if ($query->num_rows):
             return $query->row['product_id'];
-        } else {
+        else:
             return 0;
-        }
+        endif;
+    }
+
+    public function getTotalEventsByPageId($page_id) {
+        $query = $this->db->query("
+			SELECT COUNT(*) AS total 
+			FROM {$this->db->prefix}event_manager 
+			WHERE page_id = '" . (int)$page_id . "' 
+		");
+        
+        return $query->row['total'];
+    }
+
+    public function getTotalEventsByProductId($product_id) {
+        $query = $this->db->query("
+			SELECT COUNT(*) AS total 
+			FROM {$this->db->prefix}event_manager 
+			WHERE product_id = '" . (int)$product_id . "' 
+		");
+        
+        return $query->row['total'];
     }
 
     /*

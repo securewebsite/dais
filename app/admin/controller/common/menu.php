@@ -43,7 +43,6 @@ class Menu extends Controller {
             $data['blog_post']                   = $this->url->link('content/post', 'token=' . $this->session->data['token'], 'SSL');
             $data['blog_comment']                = $this->url->link('content/comment', 'token=' . $this->session->data['token'], 'SSL');
             $data['category']                    = $this->url->link('catalog/category', 'token=' . $this->session->data['token'], 'SSL');
-            $data['calendar']                    = $this->url->link('calendar/category', 'token=' . $this->session->data['token'], 'SSL');
             $data['country']                     = $this->url->link('localization/country', 'token=' . $this->session->data['token'], 'SSL');
             $data['coupon']                      = $this->url->link('sale/coupon', 'token=' . $this->session->data['token'], 'SSL');
             $data['currency']                    = $this->url->link('localization/currency', 'token=' . $this->session->data['token'], 'SSL');

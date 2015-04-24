@@ -47,7 +47,7 @@ class Page extends Controller {
 
             $data['tags'] = false;
             
-            if (isset($page_info['tag'])):
+            if (!empty($page_info['tag'])):
                 $tags = explode(',', $page_info['tag']);
                 
                 foreach ($tags as $tag):

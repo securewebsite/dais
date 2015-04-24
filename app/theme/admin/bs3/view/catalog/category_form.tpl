@@ -174,7 +174,7 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_column; ?></label>
 						<div class="control-field col-sm-4">
-							<input type="text" name="column" value="<?= $column; ?>" class="form-control">
+							<input type="text" name="columns" value="<?= $columns; ?>" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">

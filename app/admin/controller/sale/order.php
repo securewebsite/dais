@@ -2081,7 +2081,7 @@ class Order extends Controller {
         $this->theme->model('setting/module');
         
         $modules = $this->model_setting_module->getAll('shipping');
-        $this->theme->test($modules);
+        
         foreach ($modules as $key => $value) {
             $theme_file = $this->theme->path . 'controller/shipping/' . $value . '.php';
             $core_file = $this->app['path.application'] . 'controller/shipping/' . $value . '.php';

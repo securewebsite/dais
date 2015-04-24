@@ -844,6 +844,61 @@ a.bg-warning:hover {
 a.bg-danger:hover {
     background-color: #e4b9b9;
 }
+.list-group-item.event {
+    background-color: #c3c3c3;
+}
+.list-group-item.event-important {
+    background-color: #ad2121;
+    color: #fff;
+}
+.list-group-item.event-info {
+    background-color: #1e90ff;
+    color: #fff;
+}
+.list-group-item.event-warning {
+    background-color: #e3bc08;
+    color: #fff;
+}
+.list-group-item.event-inverse {
+    background-color: #1b1b1b;
+    color: #fff;
+}
+.list-group-item.event-success {
+    background-color: #006400;
+    color: #fff;
+}
+.list-group-item.event-special {
+    background-color: #800080;
+    color: #fff;
+}
+.list-group-item.event:hover {
+    background-color: #c3c3c3 !important;
+    opacity: 0.8;
+}
+.list-group-item.event-important:hover {
+    background-color: #ad2121 !important;
+    opacity: 0.8;
+}
+.list-group-item.event-info:hover {
+    background-color: #1e90ff !important;
+    opacity: 0.8;
+}
+.list-group-item.event-warning:hover {
+    background-color: #e3bc08 !important;
+    opacity: 0.8;
+}
+.list-group-item.event-inverse:hover {
+    background-color: #1b1b1b !important;
+    opacity: 0.8;
+}
+.list-group-item.event-success:hover {
+    background-color: #006400 !important;
+    opacity: 0.8;
+}
+.list-group-item.event-special:hover {
+    background-color: #800080 !important;
+    opacity: 0.8;
+}
 .page-header {
     padding-bottom: 9px;
     margin: 40px 0 20px;

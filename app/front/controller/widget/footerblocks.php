@@ -153,12 +153,22 @@ class Footerblocks extends Controller {
             
             foreach ($children as $child):
                 if (in_array($child['category_id'], $this->items['product_category'])):
-                    $children_data[] = array('id' => $child['category_id'], 'name' => $child['name'], 'href' => $this->url->link('catalog/category', 'path=' . $category['category_id'] . '_' . $child['category_id']));
+                    $children_data[] = array(
+                        'id'   => $child['category_id'], 
+                        'name' => $child['name'], 
+                        'href' => $this->url->link('catalog/category', 'path=' . $category['category_id'] . '_' . $child['category_id'])
+                    );
                 endif;
             endforeach;
             
             if (in_array($category['category_id'], $this->items['product_category'])):
-                $menu_items[] = array('id' => $category['category_id'], 'name' => $category['name'], 'children' => $children_data, 'column' => $category['column'] ? $category['column'] : 1, 'href' => $this->url->link('catalog/category', 'path=' . $category['category_id']));
+                $menu_items[] = array(
+                    'id'       => $category['category_id'], 
+                    'name'     => $category['name'], 
+                    'children' => $children_data, 
+                    'column'   => $category['columns'] ? $category['columns'] : 1, 
+                    'href'     => $this->url->link('catalog/category', 'path=' . $category['category_id'])
+                );
             endif;
         endforeach;
         
@@ -179,12 +189,22 @@ class Footerblocks extends Controller {
             
             foreach ($children as $child):
                 if (in_array($child['category_id'], $this->items['content_category'])):
-                    $children_data[] = array('id' => $child['category_id'], 'name' => $child['name'], 'href' => $this->url->link('content/category', 'bpath=' . $category['category_id'] . '_' . $child['category_id']));
+                    $children_data[] = array(
+                        'id'   => $child['category_id'], 
+                        'name' => $child['name'], 
+                        'href' => $this->url->link('content/category', 'bpath=' . $category['category_id'] . '_' . $child['category_id'])
+                    );
                 endif;
             endforeach;
             
             if (in_array($category['category_id'], $this->items['content_category'])):
-                $menu_items[] = array('id' => $category['category_id'], 'name' => $category['name'], 'children' => $children_data, 'column' => $category['column'] ? $category['column'] : 1, 'href' => $this->url->link('content/category', 'bpath=' . $category['category_id']));
+                $menu_items[] = array(
+                    'id'       => $category['category_id'], 
+                    'name'     => $category['name'], 
+                    'children' => $children_data, 
+                    'column'   => $category['columns'] ? $category['columns'] : 1, 
+                    'href'     => $this->url->link('content/category', 'bpath=' . $category['category_id'])
+                );
             endif;
         endforeach;
         
@@ -200,7 +220,10 @@ class Footerblocks extends Controller {
         
         foreach ($pages as $page):
             if (in_array($page['page_id'], $this->items['page'])):
-                $menu_items[] = array('name' => $page['title'], 'href' => $this->url->link('content/page', 'page_id=' . $page['page_id']));
+                $menu_items[] = array(
+                    'name' => $page['title'], 
+                    'href' => $this->url->link('content/page', 'page_id=' . $page['page_id'])
+                );
             endif;
         endforeach;
         
@@ -216,7 +239,10 @@ class Footerblocks extends Controller {
         
         foreach ($posts as $post):
             if (in_array($post['post_id'], $this->items['post'])):
-                $menu_items[] = array('name' => $post['name'], 'href' => $this->url->link('content/post', 'post_id=' . $post['post_id']));
+                $menu_items[] = array(
+                    'name' => $post['name'], 
+                    'href' => $this->url->link('content/post', 'post_id=' . $post['post_id'])
+                );
             endif;
         endforeach;
         

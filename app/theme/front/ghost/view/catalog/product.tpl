@@ -255,7 +255,7 @@
 			<?php if (isset($event_name)): ?>
 				<?php if ($tab_presenter): ?>
 					<li class="active"><a href="#tab-event" data-toggle="tab"><?= $lang_tab_event; ?></a></li>
-					<li><a href="#tab-presenter" data-toggle="tab"><?= $lang_tab_presenter; ?></a></li>
+					<li><a href="#tab-presenter" data-toggle="tab"><?= $tab_presenter; ?></a></li>
 					<li><a href="#tab-description" data-toggle="tab"><?= $lang_tab_description; ?></a></li>
 				<?php else: ?>
 					<li class="active"><a href="#tab-event" data-toggle="tab"><?= $lang_tab_event; ?></a></li>

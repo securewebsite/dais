@@ -58,7 +58,18 @@ $_['lang_text_add_wait_subject']     = 'Event Wait List - %s';
 $_['lang_text_add_wait_message']     = 'You have been added to the wait list for the event, %s.  You will find the event details below:';
 $_['lang_text_default']              = 'Default';
 $_['lang_text_build']                = 'Build Slug';
-$_['lang_text_link']                 = 'Google link';
+$_['lang_text_link']                 = 'Online Event';
+$_['lang_text_posted']               = 'Posted';
+$_['lang_text_draft']                = 'Draft';
+$_['lang_text_instructions']         = '<p>Just some notes on Creating Events.</p><p>When you create a new event, you’ll need to choose between creating a product or page for your event.  The default is a page. You should only create a product if you are charging for the event.</p><p>Anyone wanting to register for an event, must have an account. Make sure you set your visibility properly or your visitors might not see your event. You can target specific customer groups via the visibility menu.</p><p>Once the event is created, you cannot switch from a product to a page or vice-versa. If you want to switch, you must delete the entire event and start over. Keep in mind that this will delete all data for the event including anyone who is already registered.</p>';
+$_['lang_text_event']                = 'Default';
+$_['lang_text_event-important']      = 'Important';
+$_['lang_text_event-info']           = 'Info';
+$_['lang_text_event-warning']        = 'Warning';
+$_['lang_text_event-inverse']        = 'Inverse';
+$_['lang_text_event-success']        = 'Success';
+$_['lang_text_event-special']        = 'Special';
+
 
 // Column
 $_['lang_column_event_name']         = 'Event Name';
@@ -103,8 +114,10 @@ $_['lang_entry_presenter_name']      = 'Presenter Name:';
 $_['lang_entry_bio']                 = 'Presenter Bio:';
 $_['lang_entry_customers']           = 'Select an Attendee:<br><span class="help">(autocomplete)</span>';
 $_['lang_entry_status']              = 'Event Status:';
+$_['lang_entry_page_status']         = 'Page Status:';
 $_['lang_entry_slug']                = 'Slug:<br /><span class="help">Do not use spaces instead replace spaces with - and make sure the slug is globally unique.</span>';
 $_['lang_entry_is_product']          = 'Create Product:<br><span class="help">Is this event a product? If yes is checked a product will be created.</span>';
+$_['lang_entry_event_class']         = 'Calendar Class:<br><span class="help">Select a color to represent this event on the calendar.</span>';
 
 // Button
 $_['lang_button_presenters']         = 'Presenters';

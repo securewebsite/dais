@@ -41,55 +41,28 @@ class Calendar extends Controller {
         $this->theme->model('catalog/product');
         $this->theme->model('tool/image');
         $events = $this->model_catalog_product->getEvents();
-        //$this->theme->test($events);
+        
         $json = array();
         
         if ($events):
             foreach ($events as $event):
                 $location  = $event['location'] ? html_entity_decode($event['location'], ENT_QUOTES, 'UTF-8') : false;
                 $telephone = $event['telephone'] ? $event['telephone'] : false;
-                $url       = $event['product_id'] ? $this->url->link('catalog/product', 'product_id=' . $event['product_id']) : false;
                 
+                $url   = false;
+                $image = false;
+
                 if ($event['product_id']):
-                    $this->theme->test($event['product_id']);
-                    // get the product image for the event
-                    //$image = $this->model_catalog_product->getEventImage($event['product_id']);
-                    //$image = $this->model_tool_image->resize($image, 100, 100, 'h');
-
-                    // !!REMOVE THIS!!!
-                    //$category = $this->model_catalog_product->buildEventPaths($event['product_id']);
-                    // switch ($category):
-                    //     case '66_65':
-                    //         $event_class = 'event-warning';
-                    //         break;
-
-                    //     case '66_67':
-                    //         $event_class = 'event-special';
-                    //         break;
-
-                    //     case '66_68':
-                    //         $event_class = 'event-important';
-                    //         break;
-
-                    //     case '69_63':
-                    //         $event_class = 'event-inverse';
-                    //         break;
-
-                    //     case '69_70':
-                    //         $event_class = 'event';
-                    //         break;
-
-                    //     case '69_60':
-                    //         $event_class = 'event-success';
-                    //         break;
-
-                    //     case '69_62':
-                    //         $event_class = 'event-info';
-                    //         break;
-                    // endswitch;
-
+                    $url   = $this->url->link('catalog/product', 'product_id=' . $event['product_id']);
+                    $image = $this->model_catalog_product->getEventImage($event['product_id']);
+                    $image = $this->model_tool_image->resize($image, 100, 100, 'h');
                 endif;
-                $event_class = 'event';
+
+                if ($event['page_id']):
+                    $url = $this->url->link('event/page', 'event_page_id=' . $event['page_id']);
+                endif;
+
+                $event_class = $event['event_class'];
                 $finished    = (strtotime($event['date_end']) < time()) ? $this->language->get('lang_text_finished') : false;
                 $days        = unserialize($event['event_days']);
                 $event_times = array();

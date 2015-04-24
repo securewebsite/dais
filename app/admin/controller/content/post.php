@@ -720,13 +720,13 @@ class Post extends Controller {
             $query = $this->model_tool_utility->findSlugByName($this->request->post['slug']);
             
             if (isset($this->request->get['post_id'])):
-                if (isset($query)):
+                if ($query):
                     if ($query != 'post_id:' . $this->request->get['post_id']):
                         $this->error['slug'] = sprintf($this->language->get('lang_error_slug_found'), $this->request->post['slug']);
                     endif;
                 endif;
             else:
-                if (isset($query)):
+                if ($query):
                     $this->error['slug'] = sprintf($this->language->get('lang_error_slug_found'), $this->request->post['slug']);
                 endif;
             endif;

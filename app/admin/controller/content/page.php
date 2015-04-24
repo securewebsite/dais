@@ -22,26 +22,19 @@ class Page extends Controller {
     
     public function index() {
         $this->language->load('content/page');
-        
         $this->theme->setTitle($this->language->get('lang_heading_title'));
-        
         $this->theme->model('content/page');
-        
         $this->theme->listen(__CLASS__, __FUNCTION__);
-        
         $this->getList();
     }
     
     public function insert() {
         $this->language->load('content/page');
-        
         $this->theme->setTitle($this->language->get('lang_heading_title'));
-        
         $this->theme->model('content/page');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_content_page->addPage($this->request->post);
-            
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
             $url = '';
@@ -68,15 +61,11 @@ class Page extends Controller {
     
     public function update() {
         $this->language->load('content/page');
-        
         $this->theme->setTitle($this->language->get('lang_heading_title'));
-        
         $this->theme->model('content/page');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            
             $this->model_content_page->editPage($this->request->get['page_id'], $this->request->post);
-            
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
             $url = '';
@@ -103,9 +92,7 @@ class Page extends Controller {
     
     public function delete() {
         $this->language->load('content/page');
-        
         $this->theme->setTitle($this->language->get('lang_heading_title'));
-        
         $this->theme->model('content/page');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
@@ -193,9 +180,18 @@ class Page extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('content/page/update', 'token=' . $this->session->data['token'] . '&page_id=' . $result['page_id'] . $url, 'SSL'));
+            $action[] = array(
+                'text' => $this->language->get('lang_text_edit'), 
+                'href' => $this->url->link('content/page/update', 'token=' . $this->session->data['token'] . '&page_id=' . $result['page_id'] . $url, 'SSL')
+            );
             
-            $data['pages'][] = array('page_id' => $result['page_id'], 'title' => $result['title'], 'sort_order' => $result['sort_order'], 'selected' => isset($this->request->post['selected']) && in_array($result['page_id'], $this->request->post['selected']), 'action' => $action);
+            $data['pages'][] = array(
+                'page_id'    => $result['page_id'], 
+                'title'      => $result['title'], 
+                'sort_order' => $result['sort_order'], 
+                'selected'   => isset($this->request->post['selected']) && in_array($result['page_id'], $this->request->post['selected']), 
+                'action'     => $action
+            );
         }
         
         if (isset($this->error['warning'])) {
@@ -224,7 +220,7 @@ class Page extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_title'] = $this->url->link('content/page', 'token=' . $this->session->data['token'] . '&sort=id.title' . $url, 'SSL');
+        $data['sort_title']      = $this->url->link('content/page', 'token=' . $this->session->data['token'] . '&sort=id.title' . $url, 'SSL');
         $data['sort_sort_order'] = $this->url->link('content/page', 'token=' . $this->session->data['token'] . '&sort=i.sort_order' . $url, 'SSL');
         
         $url = '';
@@ -237,13 +233,18 @@ class Page extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = $this->theme->paginate($page_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('content/page', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = $this->theme->paginate(
+            $page_total, 
+            $page, 
+            $this->config->get('config_admin_limit'), 
+            $this->language->get('lang_text_pagination'), 
+            $this->url->link('content/page', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
+        );
         
-        $data['sort'] = $sort;
+        $data['sort']  = $sort;
         $data['order'] = $order;
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-        
         $data = $this->theme->render_controllers($data);
         
         $this->response->setOutput($this->theme->view('content/page_list', $data));
@@ -338,8 +339,10 @@ class Page extends Controller {
         
         if (isset($this->request->post['slug'])) {
             $data['slug'] = $this->request->post['slug'];
-        } elseif (!empty($page_info)) {
+        } elseif (!empty($page_info) && $page_info['event_id'] == 0) {
             $data['slug'] = $page_info['slug'];
+        } elseif (!empty($page_info) && $page_info['event_id'] > 0) {
+            $data['slug'] = $this->model_content_page->getEventSlug($this->request->get['page_id']);
         } else {
             $data['slug'] = '';
         }
@@ -367,6 +370,26 @@ class Page extends Controller {
         } else {
             $data['sort_order'] = '';
         }
+
+        if (isset($this->request->post['event_id'])) {
+            $data['event_id'] = $this->request->post['event_id'];
+        } elseif (!empty($page_info)) {
+            $data['event_id'] = $page_info['event_id'];
+        } else {
+            $data['event_id'] = 0;
+        }
+
+        // If this is an event, let's get some additional info
+        // and change our slug.
+        
+        $data['event_name'] = false;
+        $data['event_url']  = false;
+
+        if ($data['event_id'] > 0):
+            $data['event_name'] = $this->model_content_page->getEventName($data['event_id']);
+            $data['event_url']  = $this->url->link('calendar/event/update', 'token=' . $this->session->data['token'] . '&event_id=' . $data['event_id'], 'SSL');
+            $data['slug']       = $this->model_content_page->getEventSlug($this->request->get['page_id']);
+        endif;
         
         if (isset($this->request->post['page_layout'])) {
             $data['page_layout'] = $this->request->post['page_layout'];
@@ -395,7 +418,6 @@ class Page extends Controller {
         $this->theme->loadjs('javascript/content/page_form', $data);
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-        
         $data = $this->theme->render_controllers($data);
         
         $this->response->setOutput($this->theme->view('content/page_form', $data));
@@ -421,13 +443,13 @@ class Page extends Controller {
             $query = $this->model_tool_utility->findSlugByName($this->request->post['slug']);
             
             if (isset($this->request->get['page_id'])):
-                if (isset($query)):
-                    if ($query != 'page_id:' . $this->request->get['page_id']):
+                if ($query):
+                    if (($query != 'page_id:' . $this->request->get['page_id']) && ($query != 'event_page_id:' . $this->request->get['page_id'])):
                         $this->error['slug'] = sprintf($this->language->get('lang_error_slug_found'), $this->request->post['slug']);
                     endif;
                 endif;
             else:
-                if (isset($query)):
+                if ($query):
                     $this->error['slug'] = sprintf($this->language->get('lang_error_slug_found'), $this->request->post['slug']);
                 endif;
             endif;
@@ -450,6 +472,7 @@ class Page extends Controller {
         }
         
         $this->theme->model('setting/store');
+        $this->theme->model('calendar/event');
         
         foreach ($this->request->post['selected'] as $page_id) {
             if ($this->config->get('config_account_id') == $page_id) {
@@ -471,6 +494,12 @@ class Page extends Controller {
             if ($store_total) {
                 $this->error['warning'] = sprintf($this->language->get('lang_error_store'), $store_total);
             }
+
+            $event_total = $this->model_calendar_event->getTotalEventsByPageId($page_id);
+
+            if ($event_total):
+                $this->error['warning'] = sprintf($this->language->get('lang_error_event'), $event_total);
+            endif;
         }
         
         $this->theme->listen(__CLASS__, __FUNCTION__);
@@ -496,7 +525,7 @@ class Page extends Controller {
             
             if ($query):
                 if (isset($this->request->get['page_id'])):
-                    if ($query != 'page_id:' . $this->request->get['page_id']):
+                    if (($query != 'page_id:' . $this->request->get['page_id']) && ($query != 'event_page_id:' . $this->request->get['page_id'])):
                         $json['error'] = sprintf($this->language->get('lang_error_slug_found'), $slug);
                     else:
                         $json['slug'] = $slug;

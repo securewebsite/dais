@@ -954,7 +954,7 @@ class Product extends Model {
         else:
             $customer_group_id = $this->config->get('config_default_visibility');
         endif;
-        //$this->theme->test($data);
+        
         if (!empty($data)):
             $key = 'products.total.' . md5(serialize($data));
             $cachefile = $this->cache->get($key);
@@ -1031,7 +1031,7 @@ class Product extends Model {
                         foreach ($words as $word) {
                             $implode[] = "pd.name LIKE '%" . $this->db->escape($word) . "%'";
                         }
-                        //$this->theme->test($words);
+                        
                         if ($implode):
                             $imp = implode(" && ", $implode);
                             $sql.= " {$imp}";
@@ -1291,8 +1291,16 @@ class Product extends Model {
     public function getEvents() {
         $query = $this->db->query("
 			SELECT * 
-			FROM {$this->db->prefix}event_manager 
-			WHERE visibility <= '" . (int)$this->customer->getGroupId() . "'");
+			FROM {$this->db->prefix}event_manager");
+        
+        return $query->rows;
+    }
+
+    public function getEventsByGroupId() {
+        $query = $this->db->query("
+            SELECT * 
+            FROM {$this->db->prefix}event_manager 
+            WHERE visibility <= '" . (int)$this->customer->getGroupId() . "'");
         
         return $query->rows;
     }

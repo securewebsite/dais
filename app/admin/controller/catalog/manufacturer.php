@@ -371,13 +371,13 @@ class Manufacturer extends Controller {
             $query = $this->model_tool_utility->findSlugByName($this->request->post['slug']);
             
             if (isset($this->request->get['manufacturer_id'])):
-                if (isset($query)):
+                if ($query):
                     if ($query != 'manufacturer_id:' . $this->request->get['manufacturer_id']):
                         $this->error['slug'] = sprintf($this->language->get('lang_error_slug_found'), $this->request->post['slug']);
                     endif;
                 endif;
             else:
-                if (isset($query)):
+                if ($query):
                     $this->error['slug'] = sprintf($this->language->get('lang_error_slug_found'), $this->request->post['slug']);
                 endif;
             endif;

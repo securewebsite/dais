@@ -97,7 +97,7 @@ class Post extends Controller {
                     $this->response->redirect($this->url->link('error/permission', '', 'SSL'));
                 endif;
             else:
-                if ($post_info['visibility'] > $this->config->get('config_free_customer')):
+                if ($post_info['visibility'] < $this->config->get('config_default_visibility')):
                     $this->response->redirect($this->url->link('error/permission', '', 'SSL'));
                 endif;
             endif;
@@ -208,7 +208,7 @@ class Post extends Controller {
             
             $data['tags'] = false;
             
-            if (isset($post_info['tag'])):
+            if (!empty($post_info['tag'])):
                 $tags = explode(',', $post_info['tag']);
                 
                 foreach ($tags as $tag):

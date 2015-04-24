@@ -126,6 +126,15 @@
 							<?php endif; ?>
 						</div>
 					</div>
+					<?php if ($event_id): ?>
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="event"><?= $lang_entry_event; ?></label>
+						<div class="control-field col-sm-4">
+							<input type="hidden" name="event_id" value="<?= $event_id; ?>">
+							<p class="form-control-static"><a href="<?= $event_url; ?>"><?= $event_name; ?></a></p>
+						</div>
+					</div>
+					<?php endif; ?>
 					<div class="form-group">
 						<label class="control-label col-sm-2" for="bottom"><?= $lang_entry_bottom; ?></label>
 						<div class="control-field col-sm-4">

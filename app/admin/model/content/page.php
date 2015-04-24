@@ -22,10 +22,10 @@ class Page extends Model {
         $this->db->query("
 			INSERT INTO {$this->db->prefix}page 
 			SET 
-				sort_order = '" . (int)$data['sort_order'] . "', 
-				bottom = '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', 
-				visibility = '" . (int)$data['visibility'] . "', 
-				status = '" . (int)$data['status'] . "'
+                sort_order = '" . (int)$data['sort_order'] . "', 
+                bottom     = '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', 
+                visibility = '" . (int)$data['visibility'] . "', 
+                status     = '" . (int)$data['status'] . "'
 		");
         
         $page_id = $this->db->getLastId();
@@ -34,12 +34,12 @@ class Page extends Model {
             $this->db->query("
 				INSERT INTO {$this->db->prefix}page_description 
 				SET 
-					page_id = '" . (int)$page_id . "', 
-					language_id = '" . (int)$language_id . "', 
-					title = '" . $this->db->escape($value['title']) . "', 
-					description = '" . $this->db->escape($value['description']) . "', 
-					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-					meta_keywords = '" . $this->db->escape($value['meta_keywords']) . "'
+                    page_id          = '" . (int)$page_id . "', 
+                    language_id      = '" . (int)$language_id . "', 
+                    title            = '" . $this->db->escape($value['title']) . "', 
+                    description      = '" . $this->db->escape($value['description']) . "', 
+                    meta_description = '" . $this->db->escape($value['meta_description']) . "', 
+                    meta_keywords    = '" . $this->db->escape($value['meta_keywords']) . "'
 			");
 
             // process tags
@@ -64,7 +64,7 @@ class Page extends Model {
                 $this->db->query("
 					INSERT INTO {$this->db->prefix}page_to_store 
 					SET 
-						page_id = '" . (int)$page_id . "', 
+						page_id  = '" . (int)$page_id . "', 
 						store_id = '" . (int)$store_id . "'
 				");
             }
@@ -76,9 +76,9 @@ class Page extends Model {
                     $this->db->query("
 						INSERT INTO {$this->db->prefix}page_to_layout 
 						SET 
-							page_id = '" . (int)$page_id . "', 
-							store_id = '" . (int)$store_id . "', 
-							layout_id = '" . (int)$layout['layout_id'] . "'
+                            page_id   = '" . (int)$page_id . "', 
+                            store_id  = '" . (int)$store_id . "', 
+                            layout_id = '" . (int)$layout['layout_id'] . "'
 					");
                 }
             }
@@ -88,9 +88,9 @@ class Page extends Model {
             $this->db->query("
 				INSERT INTO {$this->db->prefix}route 
 				SET 
-					route='content/page', 
-					query = 'page_id:" . (int)$page_id . "', 
-					slug = '" . $this->db->escape($data['slug']) . "'
+                    route ='content/page', 
+                    query = 'page_id:" . (int)$page_id . "', 
+                    slug  = '" . $this->db->escape($data['slug']) . "'
 			");
         }
         
@@ -103,12 +103,12 @@ class Page extends Model {
         $this->db->query("
 			UPDATE {$this->db->prefix}page 
 			SET 
-				sort_order = '" . (int)$data['sort_order'] . "', 
-				bottom = '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', 
-				visibility = '" . (int)$data['visibility'] . "', 
-				status = '" . (int)$data['status'] . "' 
-				WHERE page_id = '" . (int)$page_id . "'
-			");
+                sort_order = '" . (int)$data['sort_order'] . "', 
+                bottom     = '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', 
+                visibility = '" . (int)$data['visibility'] . "', 
+                status     = '" . (int)$data['status'] . "' 
+			WHERE page_id  = '" . (int)$page_id . "'
+		");
         
         $this->db->query("
             DELETE FROM {$this->db->prefix}page_description 
@@ -118,12 +118,12 @@ class Page extends Model {
             $this->db->query("
 				INSERT INTO {$this->db->prefix}page_description 
 				SET 
-					page_id = '" . (int)$page_id . "', 
-					language_id = '" . (int)$language_id . "', 
-					title = '" . $this->db->escape($value['title']) . "', 
-					description = '" . $this->db->escape($value['description']) . "', 
-					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-					meta_keywords = '" . $this->db->escape($value['meta_keywords']) . "'
+                    page_id          = '" . (int)$page_id . "', 
+                    language_id      = '" . (int)$language_id . "', 
+                    title            = '" . $this->db->escape($value['title']) . "', 
+                    description      = '" . $this->db->escape($value['description']) . "', 
+                    meta_description = '" . $this->db->escape($value['meta_description']) . "', 
+                    meta_keywords    = '" . $this->db->escape($value['meta_keywords']) . "'
 			");
 
             $this->db->query("
@@ -159,7 +159,7 @@ class Page extends Model {
                 $this->db->query("
 					INSERT INTO {$this->db->prefix}page_to_store 
 					SET 
-						page_id = '" . (int)$page_id . "', 
+						page_id  = '" . (int)$page_id . "', 
 						store_id = '" . (int)$store_id . "'
 				");
             }
@@ -175,27 +175,50 @@ class Page extends Model {
                     $this->db->query("
 						INSERT INTO {$this->db->prefix}page_to_layout 
 						SET 
-							page_id = '" . (int)$page_id . "', 
-							store_id = '" . (int)$store_id . "', 
-							layout_id = '" . (int)$layout['layout_id'] . "'
+                            page_id   = '" . (int)$page_id . "', 
+                            store_id  = '" . (int)$store_id . "', 
+                            layout_id = '" . (int)$layout['layout_id'] . "'
 					");
                 }
             }
         }
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}route 
-            WHERE query = 'page_id:" . (int)$page_id . "'");
+        /**
+         * We have different schema for event pages.
+         * This doesn't effect us when adding a page, because
+         * events create their own pages in the event model.
+         * But we edit those pages here in the page model. 
+         */
         
-        if ($data['slug']) {
+        if (isset($data['event_id'])):
             $this->db->query("
-				INSERT INTO {$this->db->prefix}route 
-				SET 
-					route = 'content/page', 
-					query = 'page_id:" . (int)$page_id . "', 
-					slug = '" . $this->db->escape($data['slug']) . "'
-				");
-        }
+                DELETE FROM {$this->db->prefix}route 
+                WHERE query = 'event_page_id:" . (int)$page_id . "'");
+            
+            if ($data['slug']):
+                $this->db->query("
+                    INSERT INTO {$this->db->prefix}route 
+                    SET 
+                        route = 'event/page', 
+                        query = 'event_page_id:" . (int)$page_id . "', 
+                        slug  = '" . $this->db->escape($data['slug']) . "'
+                ");
+            endif;
+        else:
+            $this->db->query("
+                DELETE FROM {$this->db->prefix}route 
+                WHERE query = 'page_id:" . (int)$page_id . "'");
+            
+            if ($data['slug']):
+                $this->db->query("
+    				INSERT INTO {$this->db->prefix}route 
+    				SET 
+                        route = 'content/page', 
+                        query = 'page_id:" . (int)$page_id . "', 
+                        slug  = '" . $this->db->escape($data['slug']) . "'
+    			");
+            endif;
+        endif;
         
         $this->cache->delete('page');
         
@@ -223,6 +246,11 @@ class Page extends Model {
             DELETE FROM {$this->db->prefix}route 
             WHERE query = 'page_id:" . (int)$page_id . "'");
 
+        // event page slugs
+        $this->db->query("
+            DELETE FROM {$this->db->prefix}route 
+            WHERE query = 'event_page_id:" . (int)$page_id . "'");
+
         $this->db->query("
             DELETE FROM {$this->db->prefix}tag 
             WHERE section  = 'page' 
@@ -242,6 +270,23 @@ class Page extends Model {
 			FROM {$this->db->prefix}page 
 			WHERE page_id = '" . (int)$page_id . "'
 		");
+
+        if ($query->num_rows):
+            $query->row['tag'] = $this->getPageTags($page_id);
+        endif;
+
+        return $query->row;
+    }
+
+    public function getEventPage($page_id) {
+        $query = $this->db->query("
+            SELECT DISTINCT *, 
+            (SELECT slug 
+                FROM {$this->db->prefix}route 
+                WHERE query = 'event_page_id:" . (int)$page_id . "') AS slug 
+            FROM {$this->db->prefix}page 
+            WHERE page_id = '" . (int)$page_id . "'
+        ");
 
         if ($query->num_rows):
             $query->row['tag'] = $this->getPageTags($page_id);
@@ -382,6 +427,27 @@ class Page extends Model {
         }
         
         return $page_layout_data;
+    }
+
+    public function getEventSlug($page_id) {
+        $query = $this->db->query("
+            SELECT slug 
+            FROM {$this->db->prefix}route 
+            WHERE route = 'event/page' 
+            AND query = 'event_page_id:" . (int)$page_id . "'
+        ");
+
+        return $query->row['slug'];
+    }
+
+    public function getEventName($event_id) {
+        $query = $this->db->query("
+            SELECT event_name 
+            FROM {$this->db->prefix}event_manager 
+            WHERE event_id = '" . (int)$event_id . "'
+        ");
+
+        return $query->row['event_name'];
     }
     
     public function getTotalPages() {

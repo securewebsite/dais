@@ -318,12 +318,12 @@ class Category extends Controller {
             $data['top'] = 0;
         }
         
-        if (isset($this->request->post['column'])) {
-            $data['column'] = $this->request->post['column'];
+        if (isset($this->request->post['columns'])) {
+            $data['columns'] = $this->request->post['columns'];
         } elseif (!empty($category_info)) {
-            $data['column'] = $category_info['column'];
+            $data['columns'] = $category_info['columns'];
         } else {
-            $data['column'] = 1;
+            $data['columns'] = 1;
         }
         
         if (isset($this->request->post['sort_order'])) {
@@ -379,13 +379,13 @@ class Category extends Controller {
             $query = $this->model_tool_utility->findSlugByName($this->request->post['slug']);
             
             if (isset($this->request->get['category_id'])):
-                if (isset($query)):
+                if ($query):
                     if ($query != 'category_id:' . $this->request->get['category_id']):
                         $this->error['slug'] = sprintf($this->language->get('lang_error_slug_found'), $this->request->post['slug']);
                     endif;
                 endif;
             else:
-                if (isset($query)):
+                if ($query):
                     $this->error['slug'] = sprintf($this->language->get('lang_error_slug_found'), $this->request->post['slug']);
                 endif;
             endif;

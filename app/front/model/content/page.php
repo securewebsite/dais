@@ -35,10 +35,10 @@ class Page extends Model {
 				AND i2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
 				AND i.status = '1'
 			");
-
-            $query->row['tag'] = $this->getPageTags($page_id);
             
             if ($query->num_rows):
+                $query->row['tag'] = $this->getPageTags($page_id);
+            
                 $cachefile = $query->row;
                 $this->cache->set($key, $cachefile);
             else:
@@ -65,6 +65,7 @@ class Page extends Model {
 				WHERE id.language_id = '" . (int)$this->config->get('config_language_id') . "' 
 				AND i2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
 				AND i.status = '1' 
+                AND i.event_id = '0' 
 				ORDER BY i.sort_order, LCASE(id.title) ASC
 			");
             
@@ -122,5 +123,26 @@ class Page extends Model {
         endif;
         
         return $cachefile;
+    }
+
+    public function getEventPage($page_id) {
+        $data     = array();
+        $page     = $this->getPage($page_id);
+        $event_id = $page['event_id'];
+
+        foreach ($page as $key => $value):
+            $data[$key] = $value;
+        endforeach;
+
+        $this->theme->model('catalog/product');
+        $event = $this->model_catalog_product->getEvent($event_id);
+
+        foreach($event as $key => $value):
+            if (!empty($value)):
+                $data[$key] = $value;
+            endif;
+        endforeach;
+        
+        return $data;        
     }
 }

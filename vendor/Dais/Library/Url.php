@@ -203,7 +203,7 @@ class Url extends LibraryService {
                     break;
 
                 case 'catalog/category' && $key === 'path':
-                    $array = $slugs['catalog/category'];
+                    $array      = $slugs['catalog/category'];
                     $categories = explode('_', $value);
                     foreach ($categories as $category):
                         $slug = 'category_id:' . $category;
@@ -224,7 +224,7 @@ class Url extends LibraryService {
 
                 case 'catalog/product' && $key === 'product_id':
                     $array = $slugs['catalog/product'];
-                    $slug = 'product_id:' . $value;
+                    $slug  = 'product_id:' . $value;
                     foreach ($array as $k => $v):
                         if (in_array($slug, $v)):
                             if ($ucfirst):
@@ -241,7 +241,24 @@ class Url extends LibraryService {
 
                 case ('catalog/manufacturer/info' || 'catalog/product') && $key === 'manufacturer_id':
                     $array = $slugs['catalog/manufacturer/info'];
-                    $slug = 'manufacturer_id:' . $value;
+                    $slug  = 'manufacturer_id:' . $value;
+                    foreach ($array as $k => $v):
+                        if (in_array($slug, $v)):
+                            if ($ucfirst):
+                                $url.= '/' . $this->cap_slug($v['slug']);
+                            else:
+                                $url.= '/' . $v['slug'];
+                            endif;
+                        endif;
+                    endforeach;
+                    unset($route[$key]);
+                    unset($slug);
+                    unset($array);
+                    break;
+
+                case 'event/page' && $key === 'event_page_id':
+                    $array = $slugs['event/page'];
+                    $slug  = 'event_page_id:' . $value;
                     foreach ($array as $k => $v):
                         if (in_array($slug, $v)):
                             if ($ucfirst):
@@ -258,7 +275,7 @@ class Url extends LibraryService {
 
                 case ('content/page' && $route['route'] !== 'content/page/info') && $key === 'page_id':
                     $array = $slugs['content/page'];
-                    $slug = 'page_id:' . $value;
+                    $slug  = 'page_id:' . $value;
                     foreach ($array as $k => $v):
                         if (in_array($slug, $v)):
                             if ($ucfirst):
@@ -275,7 +292,7 @@ class Url extends LibraryService {
 
                 case 'content/page/info' && $key === 'page_id':
                     $array = $slugs['content/page'];
-                    $slug = 'page_id:' . $value;
+                    $slug  = 'page_id:' . $value;
                     foreach ($array as $k => $v):
                         if (in_array($slug, $v)):
                             if ($ucfirst):
@@ -291,7 +308,7 @@ class Url extends LibraryService {
                     break;
 
                 case 'content/category' && $key == 'bpath':
-                    $array = $slugs['content/category'];
+                    $array      = $slugs['content/category'];
                     $categories = explode('_', $value);
                     foreach ($categories as $category):
                         $slug = 'blog_category_id:' . $category;
@@ -312,7 +329,7 @@ class Url extends LibraryService {
 
                 case 'content/post' && $key === 'post_id':
                     $array = $slugs['content/post'];
-                    $slug = 'post_id:' . $value;
+                    $slug  = 'post_id:' . $value;
                     foreach ($array as $k => $v):
                         if (in_array($slug, $v)):
                             if ($ucfirst):

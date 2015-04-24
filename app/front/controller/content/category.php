@@ -115,7 +115,7 @@ class Category extends Controller {
 
             $data['tags'] = false;
 
-            if (isset($category_info['tag'])):
+            if (!empty($category_info['tag'])):
                 $tags = explode(',', $category_info['tag']);
                 
                 foreach ($tags as $tag):
