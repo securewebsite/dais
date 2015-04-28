@@ -16,7 +16,7 @@
 
 namespace Dais\Driver\Cache;
 use Dais\Service\LibraryService;
-use Memcache;
+use Memcached;
 
 class Mem extends LibraryService {
     private $expire;
@@ -26,7 +26,7 @@ class Mem extends LibraryService {
         parent::__construct($app);
         
         $this->expire = $expire;
-        $this->cache = new Memcache;
+        $this->cache = new Memcached;
     }
     
     public function connect() {
@@ -66,7 +66,7 @@ class Mem extends LibraryService {
     }
     
     public function check() {
-        $test = new Memcache;
+        $test = new Memcached;
         return @$test->connect(parent::$app['cache.hostname'], parent::$app['cache.port']);
     }
 }
