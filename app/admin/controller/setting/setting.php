@@ -1242,7 +1242,7 @@ class Setting extends Controller {
             $caches[] = array('cache_type_id' => 'apc', 'name' => 'APC');
         endif;
         
-        if (extension_loaded('memcached')):
+        if (extension_loaded('memcache')):
             $test = new Mem($this->get('cache.time'), $this->app);
             if ($test->check()):
                 $caches[] = array('cache_type_id' => 'mem', 'name' => 'Memcached');
