@@ -14,8 +14,7 @@
 |	
 */
 
-
-define('Dais_START', microtime(true));
+define('DAIS_START', microtime(true));
 define('VERSION', '1.0.11');
 
 /*
