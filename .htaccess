@@ -10,5 +10,5 @@ Options -Indexes
 	RewriteRule ^asset/(.*)$ public/asset/$1 [L]
 	RewriteRule ^image/(.*)$ public/image/$1 [L]
 	RewriteCond %{REQUEST_URI} !.*\.(ico|gif|jpg|jpeg|png|txt)
-	RewriteRule ^([^?]*) public/index.php?_route_=$1 [L,QSA]
+	RewriteRule ^([^?]*) index.php?_route_=$1 [L,QSA]
 </IfModule> 

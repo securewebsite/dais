@@ -14,10 +14,21 @@
 |	
 */
 
-header('HTTP/1.1 302 Found');
+define('DAIS_START', microtime(true));
+define('VERSION', '1.0.11');
 
-if (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' || $_SERVER['SERVER_PORT'] == 443):
-	header('Location: https://' . $_SERVER['HTTP_HOST'] . rtrim(str_replace('\\', '/', dirname($_SERVER['PHP_SELF'])), '/') . '/public/index.php' . (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] ? "?$_SERVER[QUERY_STRING]" : ''));
-else:
-	header('Location: http://' . $_SERVER['HTTP_HOST'] . rtrim(str_replace('\\', '/', dirname($_SERVER['PHP_SELF'])), '/') . '/public/index.php' . (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] ? "?$_SERVER[QUERY_STRING]" : ''));
+/*
+|--------------------------------------------------------------------------
+|	Environment and Paths
+|--------------------------------------------------------------------------
+|
+|	Lets require our paths and configuration array so we can boot this baby
+|	up and change the world as we know it!
+|
+*/
+
+require dirname(__FILE__) . '/bootstrap/paths.php';
+
+if ($app = dirname(__FILE__) . '/' . PUBLIC_DIR . 'index.php'):
+    require $app;
 endif;

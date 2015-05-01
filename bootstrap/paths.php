@@ -70,7 +70,7 @@ define('STORAGE', APP_PATH . 'storage/');
 define('PUBLIC_DIR', 'public/');
 
 $base = array(
-	'cache.prefix'   => 'dais.' . str_replace('.', '', VERSION) ,
+	'cache.prefix'   => md5($_SERVER['SERVER_NAME'] . str_replace('.', '', VERSION)),
 	'cache.hostname' => 'localhost',
 	'cache.port'     => 11211,
 	'cache.time'     => 86400,

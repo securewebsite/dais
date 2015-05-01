@@ -12,24 +12,7 @@
 |	For the full copyright and license information, please view the LICENSE
 |	file that was distributed with this source code.
 |	
-*/
-
-define('DAIS_START', microtime(true));
-define('VERSION', '1.0.11');
-
-/*
-|--------------------------------------------------------------------------
-|	Environment and Paths
-|--------------------------------------------------------------------------
 |
-|	Lets require our paths and configuration array so we can boot this baby
-|	up and change the world as we know it!
-|
-*/
-
-require __DIR__ . '/paths.php';
-
-/*
 |--------------------------------------------------------------------------
 |	Register the Autoloader
 |--------------------------------------------------------------------------
