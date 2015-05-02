@@ -103,12 +103,8 @@ class Event extends Model {
 				refundable    = '" . (int)$data['refundable'] . "', 
 				date_end      = '" . $this->db->escape($date_end) . "', 
 				product_id    = '" . (int)$data['product_id'] . "' 
-			WHERE event_id = '" . (int)$event_id . "'");
-        
-        $filled = $this->db->query("
-			SELECT filled 
-			FROM {$this->db->prefix}event_manager 
-			WHERE event_id = '" . (int)$event_id . "'");
+			WHERE event_id = '" . (int)$event_id . "'
+		");
 
         if ($data['is_product']):
         	if ((int)$data['product_id'] > 0):
