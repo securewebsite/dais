@@ -156,4 +156,4 @@ Options -Indexes
 	RewriteRule ^image/(.*)$ public/image/$1 [L]
 	RewriteCond %{REQUEST_URI} !.*\.(ico|gif|jpg|jpeg|png|txt|html|woff|ttf|eot|svg)
 	RewriteRule ^([^?]*) index.php?_route_=$1 [L,QSA]
-</IfModule> 
+</IfModule>

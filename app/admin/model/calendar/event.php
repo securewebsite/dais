@@ -109,8 +109,6 @@ class Event extends Model {
 			SELECT filled 
 			FROM {$this->db->prefix}event_manager 
 			WHERE event_id = '" . (int)$event_id . "'");
-        
-        $quantity = (int)$data['seats'] - (int)$filled->row['filled'];
 
         if ($data['is_product']):
         	if ((int)$data['product_id'] > 0):
