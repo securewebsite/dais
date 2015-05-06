@@ -69,6 +69,7 @@ $_['lang_text_event-warning']        = 'Warning';
 $_['lang_text_event-inverse']        = 'Inverse';
 $_['lang_text_event-success']        = 'Success';
 $_['lang_text_event-special']        = 'Special';
+$_['lang_text_image_manager']        = 'Image Manager';
 
 
 // Column
@@ -84,6 +85,9 @@ $_['lang_column_waitlist']           = 'Wait List';
 $_['lang_column_presenter']          = 'Presenter';
 $_['lang_column_action']             = 'Action';
 $_['lang_column_name']               = 'Presenter Name';
+$_['lang_column_image']              = 'Presenter Image';
+$_['lang_column_facebook']           = 'Facebook';
+$_['lang_column_twitter']            = 'Twitter';
 $_['lang_column_bio']                = 'Bio';
 $_['lang_column_attendee']           = 'Attendee Name';
 $_['lang_column_date_added']         = 'Date Added';
@@ -111,6 +115,9 @@ $_['lang_entry_telephone']           = 'Contact Telephone:<br><span class="help"
 $_['lang_entry_description']         = 'Event Description:<br><span class="help">Give some details for your event.</span>';
 $_['lang_entry_refundable']          = 'Refundable:<br><span class="help">Is your event refundable?</span>';
 $_['lang_entry_presenter_name']      = 'Presenter Name:';
+$_['lang_entry_presenter_image']     = 'Presenter Image:';
+$_['lang_entry_presenter_facebook']  = 'Facebook URL:<br><span class="help">IE: http://www.facebook.com/<b>URL</b></span>';
+$_['lang_entry_presenter_twitter']   = 'Twitter Handle:<br><span class="help">IE: https://twitter.com/<b>HANDLE</b></span>';
 $_['lang_entry_bio']                 = 'Presenter Bio:';
 $_['lang_entry_customers']           = 'Select an Attendee:<br><span class="help">(autocomplete)</span>';
 $_['lang_entry_status']              = 'Event Status:';

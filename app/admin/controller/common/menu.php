@@ -52,6 +52,7 @@ class Menu extends Controller {
             $data['download']                    = $this->url->link('catalog/download', 'token=' . $this->session->data['token'], 'SSL');
             $data['error_log']                   = $this->url->link('tool/errorlog', 'token=' . $this->session->data['token'], 'SSL');
             $data['event']                       = $this->url->link('calendar/event', 'token=' . $this->session->data['token'], 'SSL');
+            $data['presenter']                   = $this->url->link('calendar/event/presenter_list', 'token=' . $this->session->data['token'], 'SSL');
             $data['feed']                        = $this->url->link('module/feed', 'token=' . $this->session->data['token'], 'SSL');
             $data['filter']                      = $this->url->link('catalog/filter', 'token=' . $this->session->data['token'], 'SSL');
             $data['geo_zone']                    = $this->url->link('localization/geozone', 'token=' . $this->session->data['token'], 'SSL');
@@ -62,6 +63,7 @@ class Menu extends Controller {
             $data['logout']                      = $this->url->link('common/logout', 'token=' . $this->session->data['token'], 'SSL');
             $data['contact']                     = $this->url->link('people/contact', 'token=' . $this->session->data['token'], 'SSL');
             $data['menubuilder']                 = $this->url->link('module/menu', 'token=' . $this->session->data['token'], 'SSL');
+            $data['share']                       = $this->url->link('module/share', 'token=' . $this->session->data['token'], 'SSL');
             $data['manufacturer']                = $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'], 'SSL');
             $data['notification']                = $this->url->link('module/notification', 'token=' . $this->session->data['token'], 'SSL');
             $data['widget']                      = $this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL');

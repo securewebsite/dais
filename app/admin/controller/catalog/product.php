@@ -340,12 +340,22 @@ class Product extends Controller {
         $this->breadcrumb->add('lang_heading_title', 'catalog/product', $url);
         
         $data['insert'] = $this->url->link('catalog/product/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['copy'] = $this->url->link('catalog/product/copy', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['copy']   = $this->url->link('catalog/product/copy', 'token=' . $this->session->data['token'] . $url, 'SSL');
         $data['delete'] = $this->url->link('catalog/product/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         $data['products'] = array();
         
-        $filter = array('filter_name' => $filter_name, 'filter_model' => $filter_model, 'filter_price' => $filter_price, 'filter_quantity' => $filter_quantity, 'filter_status' => $filter_status, 'sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
+        $filter = array(
+            'filter_name'     => $filter_name, 
+            'filter_model'    => $filter_model, 
+            'filter_price'    => $filter_price, 
+            'filter_quantity' => $filter_quantity, 
+            'filter_status'   => $filter_status, 
+            'sort'            => $sort, 
+            'order'           => $order, 
+            'start'           => ($page - 1) * $this->config->get('config_admin_limit'), 
+            'limit'           => $this->config->get('config_admin_limit')
+        );
         
         $this->theme->model('tool/image');
         
@@ -356,7 +366,10 @@ class Product extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'] . $url, 'SSL'));
+            $action[] = array(
+                'text' => $this->language->get('lang_text_edit'), 
+                'href' => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'] . $url, 'SSL')
+            );
             
             if ($result['image'] && file_exists($this->app['path.image'] . $result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], 40, 40);

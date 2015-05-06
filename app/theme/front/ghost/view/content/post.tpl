@@ -41,11 +41,11 @@
 				<?php endforeach; ?>
 				</div>
 				<div class="col-sm-6">
-				Social Bar
+				<?= $sharebar; ?>
 				</div>
 				<?php else: ?>
 				<div class="col-sm-12">
-				Social Bar
+				<?= $sharebar; ?>
 				</div>
 				<?php endif; ?>
 			</div>

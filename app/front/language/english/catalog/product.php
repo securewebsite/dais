@@ -57,6 +57,9 @@ $_['lang_text_event_date']                         = 'Event Date: ';
 $_['lang_text_event_time']                         = 'Event Time: ';
 $_['lang_text_event_days']                         = 'Event Days: ';
 $_['lang_text_event_length']                       = 'Event Length: ';
+$_['lang_text_event_hour']                         = 'hour';
+$_['lang_text_event_hours']                        = 'hours';
+$_['lang_text_event_each']                         = '%s each day';
 $_['lang_text_refundable']                         = 'Refundable: ';
 $_['lang_text_seats']                              = 'Seats: ';
 $_['lang_text_available']                          = 'Seats Available: ';
@@ -79,19 +82,6 @@ $_['lang_text_please_login']                       = 'Please log in to write a r
 
 // button
 $_['lang_button_waitlist']                         = 'Join Wait List';
-
-// Share
-$_['lang_share_facebook']                          = 'Share on Facebook';
-$_['lang_share_twitter']                           = 'Share on Twitter';
-$_['lang_share_google']                            = 'Share on Google+';
-$_['lang_share_linkedin']                          = 'Share on Linked In';
-$_['lang_share_pinterest']                         = 'Share on Pinterest';
-$_['lang_share_digg']                              = 'Share on Digg';
-$_['lang_share_stumble']                           = 'Share on Stumble Upon';
-$_['lang_share_reddit']                            = 'Share on Reddit';
-$_['lang_share_tumblr']                            = 'Share on Tumblr';
-$_['lang_share_flattr']                            = 'Share on Flattr';
-$_['lang_share_delicious']                         = 'Share on Delicious';
 
 // Entry
 $_['lang_entry_name']                              = 'Your Name';

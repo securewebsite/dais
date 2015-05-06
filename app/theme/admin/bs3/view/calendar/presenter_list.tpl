@@ -26,7 +26,10 @@
 				<thead>
 					<tr>
 						<th width="40" class="text-center"><input type="checkbox" data-toggle="selected"></th>
+						<th><?= $lang_column_image; ?></th>
 						<th><?= $lang_column_presenter; ?></th>
+						<th><?= $lang_column_facebook; ?></th>
+						<th><?= $lang_column_twitter; ?></th>
 						<th><?= $lang_column_bio; ?></th>
 						<th class="text-right"><?= $lang_column_action; ?></th>
 					</tr>
@@ -38,7 +41,10 @@
 						<td width="40" class="rowlink-skip text-center">
 							<input type="checkbox" name="selected[]" value="<?= $presenter['presenter_id']; ?>" />
 						</td>
-						<td><?= $presenter['presenter_name']; ?></td>
+						<td><img class="img-thumbnail" src="<?= $presenter['image']; ?>" alt="<?= $presenter['presenter_name']; ?>"></td>
+						<td nowrap><?= $presenter['presenter_name']; ?></td>
+						<td><?= $presenter['facebook']; ?></td>
+						<td><?= $presenter['twitter']; ?></td>
 						<td><?= $presenter['bio']; ?></td>
 						<td class="text-right">
 						<?php foreach ($presenter['action'] as $action) { ?>
@@ -50,7 +56,7 @@
 					<?php } ?>
 					<?php } else { ?>
 					<tr>
-						<td class="text-center" colspan="4"><?= $lang_text_no_presenters; ?></td>
+						<td class="text-center" colspan="7"><?= $lang_text_no_presenters; ?></td>
 					</tr>
 					<?php } ?>
 				</tbody>

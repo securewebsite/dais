@@ -141,7 +141,7 @@ class Post extends Controller {
             
             $data['tab_comment'] = sprintf($this->language->get('lang_tab_comment'), $this->model_content_comment->getTotalCommentsByPostId($this->request->get['post_id']));
             
-            $data['post_id'] = $this->request->get['post_id'];
+            $data['post_id']   = $this->request->get['post_id'];
             $data['author_id'] = $post_info['author_id'];
             
             $this->theme->model('tool/image');
@@ -158,7 +158,10 @@ class Post extends Controller {
             $results = $this->model_content_post->getPostImages($this->request->get['post_id']);
             
             foreach ($results as $result) {
-                $data['images'][] = array('popup' => $this->model_tool_image->resize($result['image'], $this->config->get('blog_image_popup_width'), $this->config->get('blog_image_popup_height')), 'thumb' => $this->model_tool_image->resize($result['image'], $this->config->get('blog_image_additional_width'), $this->config->get('blog_image_additional_height')));
+                $data['images'][] = array(
+                    'popup' => $this->model_tool_image->resize($result['image'], $this->config->get('blog_image_popup_width'), $this->config->get('blog_image_popup_height')), 
+                    'thumb' => $this->model_tool_image->resize($result['image'], $this->config->get('blog_image_additional_width'), $this->config->get('blog_image_additional_height'))
+                );
             }
             
             $data['comment_allowed'] = false;
@@ -174,9 +177,9 @@ class Post extends Controller {
             endif;
             
             $data['comment_status'] = $this->config->get('blog_comment_status');
-            $data['comments'] = sprintf($this->language->get('lang_text_comments'), (int)$post_info['comments']);
-            $data['rating'] = (int)$post_info['rating'];
-            $data['description'] = html_entity_decode($post_info['description'], ENT_QUOTES, 'UTF-8');
+            $data['comments']       = sprintf($this->language->get('lang_text_comments'), (int)$post_info['comments']);
+            $data['rating']         = (int)$post_info['rating'];
+            $data['description']    = html_entity_decode($post_info['description'], ENT_QUOTES, 'UTF-8');
             
             $data['posts'] = array();
             
@@ -263,9 +266,9 @@ class Post extends Controller {
             }
             
             $data['posted_in_categories'] = implode(", ", $posted_in);
-            $data['author_href'] = $this->url->link('content/search', 'filter_author_id=' . $post_info['author_id'], 'SSL');
-            $data['author_name'] = $post_info['author_name'];
-            $data['date_added'] = date($this->language->get('lang_post_date'), strtotime($post_info['date_added']));
+            $data['author_href']          = $this->url->link('content/search', 'filter_author_id=' . $post_info['author_id'], 'SSL');
+            $data['author_name']          = $post_info['author_name'];
+            $data['date_added']           = date($this->language->get('lang_post_date'), strtotime($post_info['date_added']));
             
             $comment_text = ($post_info['comments'] == 1) ? rtrim($this->language->get('lang_text_comments'), 's') : $this->language->get('lang_text_comments');
             
@@ -287,9 +290,9 @@ class Post extends Controller {
             
             $this->theme->loadjs('javascript/content/post', $data);
             
-            $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-            
-            $data = $this->theme->render_controllers($data);
+            $data             = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+            $data['sharebar'] = $this->theme->controller('common/sharebar', array('post', $data));
+            $data             = $this->theme->render_controllers($data);
             
             $this->response->setOutput($this->theme->view('content/post', $data));
         } else {

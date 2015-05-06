@@ -138,10 +138,16 @@ class Page extends Model {
         $event = $this->model_catalog_product->getEvent($event_id);
 
         foreach($event as $key => $value):
-            if (!empty($value)):
-                $data[$key] = $value;
-            endif;
+            $data[$key] = $value;
         endforeach;
+
+        $presenter = $this->db->query("
+            SELECT * 
+            FROM {$this->db->prefix}presenter 
+            WHERE presenter_id = '" . (int)$event['presenter_id'] . "'
+        ");
+        
+        $data['presenter'] = $presenter->row;
         
         return $data;        
     }

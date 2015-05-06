@@ -41,11 +41,10 @@ class Page extends Controller {
             
             $this->breadcrumb->add($page_info['title'], 'content/page', 'page_id=' . $page_id);
             
+            $data['page_id']       = $page_id;
             $data['heading_title'] = $page_info['title'];
-            
-            $data['description'] = html_entity_decode($page_info['description'], ENT_QUOTES, 'UTF-8');
-
-            $data['tags'] = false;
+            $data['description']   = html_entity_decode($page_info['description'], ENT_QUOTES, 'UTF-8');
+            $data['tags']          = false;
             
             if (!empty($page_info['tag'])):
                 $tags = explode(',', $page_info['tag']);
@@ -60,9 +59,9 @@ class Page extends Controller {
             
             $data['continue'] = $this->url->link('content/home');
             
-            $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-            
-            $data = $this->theme->render_controllers($data);
+            $data             = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+            $data['sharebar'] = $this->theme->controller('common/sharebar', array('page', $data));
+            $data             = $this->theme->render_controllers($data);
             
             $this->response->setOutput($this->theme->view('content/page', $data));
         } else {

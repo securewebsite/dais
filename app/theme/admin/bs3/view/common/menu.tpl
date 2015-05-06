@@ -37,6 +37,7 @@
 						<div class="divider"></div>
 						<li class="dropdown-header"><?= $lang_text_calendar; ?></li>
 						<li><a href="<?= $event; ?>"><?= $lang_text_event; ?></a></li>
+						<li><a href="<?= $presenter; ?>"><?= $lang_text_presenter; ?></a></li>
 						<div class="divider"></div>
 						<li class="dropdown-header"><?= $lang_text_blog; ?></li>
 						<li><a href="<?= $blog_category; ?>"><?= $lang_text_blog_cats; ?></a></li>
@@ -49,6 +50,7 @@
 						<li class="dropdown-header"><?= $lang_text_core_mods; ?></li>
 						<li><a href="<?= $menubuilder; ?>"><?= $lang_text_menubuilder; ?></a></li>
 						<li><a href="<?= $notification; ?>"><?= $lang_text_notification; ?></a></li>
+						<li><a href="<?= $share; ?>"><?= $lang_text_share; ?></a></li>
 						<div class="divider"></div>
 						<li class="dropdown-header"><?= $lang_text_core_cart; ?></li>
 						<li><a href="<?= $shipping; ?>"><?= $lang_text_shipping; ?></a></li>

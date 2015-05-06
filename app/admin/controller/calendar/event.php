@@ -781,6 +781,8 @@ class Event extends Controller {
         $filter = array();
         
         $results = $this->model_calendar_event->getPresenters($filter);
+
+        $this->theme->model('tool/image');
         
         $data['presenters'] = array();
         
@@ -792,10 +794,19 @@ class Event extends Controller {
                     'text' => $this->language->get('lang_text_edit'), 
                     'href' => $this->url->link('calendar/event/update_presenter', 'token=' . $this->session->data['token'] . '&presenter_id=' . $result['presenter_id'], 'SSL')
                 );
+
+                if ($result['image'] && file_exists($this->app['path.image'] . $result['image'])):
+                    $image = $this->model_tool_image->resize($result['image'], 100, 100);
+                else:
+                    $image = $this->model_tool_image->resize('placeholder.png', 100, 100);
+                endif;
                 
                 $data['presenters'][] = array(
                     'presenter_id'   => $result['presenter_id'], 
-                    'presenter_name' => $result['presenter_name'], 
+                    'presenter_name' => $result['presenter_name'],
+                    'image'          => $image,
+                    'facebook'       => $result['facebook'],
+                    'twitter'        => $result['twitter'], 
                     'bio'            => html_entity_decode($result['bio']), 
                     'action'         => $action
                 );
@@ -860,7 +871,41 @@ class Event extends Controller {
         } else {
             $data['presenter_name'] = '';
         }
+
+        if (isset($this->request->post['presenter_image'])) {
+            $data['presenter_image'] = $this->request->post['presenter_image'];
+        } elseif (!empty($event_info)) {
+            $data['presenter_image'] = $event_info['image'];
+        } else {
+            $data['presenter_image'] = '';
+        }
+
+        $this->theme->model('tool/image');
         
+        if (isset($event_info['image']) && file_exists($this->get('path.image') . $event_info['image'])):
+            $data['image'] = $this->model_tool_image->resize($event_info['image'], 100, 100);
+        else:
+            $data['image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+        endif;
+        
+        $data['no_image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+
+        if (isset($this->request->post['facebook'])) {
+            $data['facebook'] = $this->request->post['facebook'];
+        } elseif (!empty($event_info)) {
+            $data['facebook'] = $event_info['facebook'];
+        } else {
+            $data['facebook'] = '';
+        }
+
+        if (isset($this->request->post['twitter'])) {
+            $data['twitter'] = $this->request->post['twitter'];
+        } elseif (!empty($event_info)) {
+            $data['twitter'] = $event_info['twitter'];
+        } else {
+            $data['twitter'] = '';
+        }
+
         if (isset($this->request->post['bio'])) {
             $data['bio'] = $this->request->post['bio'];
         } elseif (!empty($event_info)) {

@@ -362,6 +362,19 @@ input, button, select, textarea {
 	SOCIAL SHARE BUTTONS
 	
 =================================================================== */
+.share-bar {
+    margin-top: 20px;
+    float: left !important;
+}
+@media (min-width:768px) {
+    .share-bar {
+        margin-top: 0;
+        float: right !important;
+    }
+    .share-bar.product {
+        float: left !important;
+    }
+}
 .social-share {
 	width: 38px;
 	height: 38px;
@@ -4490,7 +4503,7 @@ button.close {
     text-decoration: none;
     background-color: #212425;
     border-radius: 4px;
-	white-space: nowrap;
+	white-space: wrap;
 }
 .tooltip-arrow {
     position: absolute;

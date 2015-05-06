@@ -259,6 +259,18 @@ class Product extends Controller {
                 $data['event_length']          = $event_info['event_length'];
                 $data['seats']                 = $event_info['seats'];
                 $data['available']             = $event_info['seats'] - $event_info['filled'];
+
+                if ($event_info['event_length'] == 1):
+                    $plural = $this->language->get('lang_text_event_hour');
+                else:
+                    $plural = $this->language->get('lang_text_event_hours');
+                endif;
+
+                if (count($data['event_days']) > 1):
+                    $data['event_length_text'] = sprintf($this->language->get('lang_text_event_each'), $plural);
+                else:
+                    $data['event_length_text'] = $plural;
+                endif;
                 
                 $data['text_unavailable_info'] = '';
                 $data['button_waitlist']       = '';
@@ -282,7 +294,23 @@ class Product extends Controller {
                 endif;
                 
                 $data['telephone']     = $event_info['telephone'];
-                $data['location']      = nl2br($event_info['location']);
+                
+                /**
+                 * If this is an online event, we should have an empty location,
+                 * and a link should exist to the web event.
+                 * We'll override any existing location with the link for the
+                 * online event here.
+                 */
+                
+                $data['online'] = false;
+                
+                if ($event_info['online']):
+                    $data['online'] = true;
+                    $data['location'] = $event_info['link'];
+                else:
+                    $data['location'] = ($event_info['location']) ? nl2br($event_info['location']) : false;
+                endif;
+
                 $data['presenter']     = '';
                 $data['presenter_bio'] = '';
                 $data['tab_presenter'] = '';
@@ -465,11 +493,6 @@ class Product extends Controller {
                 endforeach;
             endif;
             
-            $data['social_href'] = $this->url->link('catalog/product', 'product_id=' . $product_info['product_id']);
-            $data['social_desc'] = urlencode($product_info['name'] . "\n" . substr(strip_tags($data['description']), 0, 500) . "...");
-            $data['social_buff'] = urlencode(substr(str_replace("\t", "", strip_tags($product_info['description'])), 0, 500) . " ... " . "\n" . $product_info['name']);
-            $data['social_site'] = $this->config->get('config_name');
-            
             $data['recurrings'] = $this->model_catalog_product->getAllRecurring($product_info['product_id']);
             
             $this->model_catalog_product->updateViewed($this->request->get['product_id']);
@@ -480,6 +503,8 @@ class Product extends Controller {
             
             $this->theme->set_controller('header', 'shop/header');
             $this->theme->set_controller('footer', 'shop/footer');
+
+            $data['sharebar'] = $this->theme->controller('common/sharebar', array('product', $data));
             
             $data = $this->theme->render_controllers($data);
             

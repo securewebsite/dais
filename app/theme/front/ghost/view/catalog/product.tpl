@@ -185,55 +185,7 @@
 				<?php } ?>
 			</form>
 			<hr>
-			<ul class="list-inline btn-social clearfix">
-				<li class="pull-left share-bar">
-					<a href="http://www.facebook.com/sharer.php?u=<?= $social_href; ?>" 
-						class="social-share facebook" 
-						data-width="550" 
-						data-height="275"><?= $lang_share_facebook; ?></a>
-					<a href="http://twitter.com/share?url=<?= $social_href; ?>&text=<?= $social_desc; ?>" 
-						class="social-share twitter" 
-						data-width="550" 
-						data-height="275"><?= $lang_share_twitter; ?></a>
-					<a href="https://plus.google.com/share?url=<?= $social_href; ?>" 
-						class="social-share google" 
-						data-width="550" 
-						data-height="275"><?= $lang_share_google; ?></a>
-					<a href="http://www.linkedin.com/shareArticle?mini=true&url=<?= $social_href; ?>" 
-						class="social-share linkedin" 
-						data-width="550" 
-						data-height="502"><?= $lang_share_linkedin; ?></a>
-					<a href="http://pinterest.com/pin/create/button/?url=<?= $social_href; ?>&media=<?= urlencode($popup); ?>&description=<?= $social_desc; ?>" 
-						
-							class="social-share pinterest" 
-							data-width="725" 
-							data-height="300"><?= $lang_share_pinterest; ?></a>
-					<a href="http://www.tumblr.com/share/link?url=<?= $social_href; ?>&name=<?= $heading_title; ?>" 
-						class="social-share tumblr" 
-						data-width="550" 
-						data-height="275"><?= $lang_share_tumblr; ?></a>
-					<!--<a href="http://reddit.com/submit?url=<?= $social_href; ?>&title=<?= $heading_title; ?>" 
-						class="social-share reddit" 
-						data-width="850" 
-						data-height="425"><?= $lang_share_reddit; ?></a>-->
-					<a href="http://www.digg.com/submit?url=<?= $social_href; ?>" 
-						class="social-share digg" 
-						data-width="760" 
-						data-height="315"><?= $lang_share_digg; ?></a>
-					<a href="http://www.stumbleupon.com/submit?url=<?= $social_href; ?>&title=<?= $heading_title; ?>" 
-						class="social-share stumble" 
-						data-width="845" 
-						data-height="550"><?= $lang_share_stumble; ?></a>
-					<a href="https://delicious.com/save?v=5&provider=<?= $social_site; ?>&noui&jump=close&url=<?= $social_href; ?>&title=<?= $heading_title; ?>" 
-						class="social-share delicious" 
-						data-width="550" 
-						data-height="550"><?= $lang_share_delicious; ?></a>
-					<!--<a href="https://flattr.com/submit/auto?user_id=vince.kronlein&url=<?= $social_href; ?>&title=<?= $heading_title; ?>" 
-						class="social-share flattr" 
-						data-width="960" 
-						data-height="425"><?= $lang_share_flattr; ?></a>-->
-				</li>
-			</ul>
+			<?= $sharebar; ?>
 			<?php if ($review_status) { ?>
 				<?php 
 					$href = urlencode($config_url . 'catalog/product&product_id=' . $product_id);
@@ -303,12 +255,20 @@
 						</tr>
 						<tr>
 							<td><?= $lang_text_event_length; ?></td>
-							<td><?= $event_length; ?></td>
+							<td><?= $event_length; ?> <?= $event_length_text; ?></td>
 						</tr>
+						<?php if ($location): ?>
 						<tr>
 							<td><?= $lang_text_location; ?></td>
-							<td><?= $location; ?></td>
+							<td>
+								<?php if ($online): ?>
+								<a href="<?= $location; ?>" target="_blank"><?= $location; ?></a>
+								<?php else: ?>
+								<?= $location; ?>
+								<?php endif; ?>
+							</td>
 						</tr>
+						<?php endif; ?>
 						<tr>
 							<td><?= $lang_text_seats; ?></td>
 							<td><?= $seats; ?></td>

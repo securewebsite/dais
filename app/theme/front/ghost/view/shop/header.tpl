@@ -58,7 +58,7 @@
 					<li id="nav-wishlist"><a href="<?= $wishlist; ?>" id="wishlist-total"><?= $text_wishlist; ?></a></li>
 					<li id="nav-account"><a href="<?= $account; ?>"><?= $lang_text_account; ?></a></li>
 					<li id="nav-cart"><a href="<?= $shopping_cart; ?>"><?= $lang_text_shopping_cart; ?></a></li>
-					<li id="nav-checkout"><a href="<?= $checkout; ?>"><?= $lang_text_checkout; ?></a></li>
+					<li id="nav-checkout" class="hidden-sm"><a href="<?= $checkout; ?>"><?= $lang_text_checkout; ?></a></li>
 				</ul>
 				<form id="search-navbar" class="navbar-form navbar-right">
 					<div class="form-group">

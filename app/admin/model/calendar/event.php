@@ -485,6 +485,9 @@ class Event extends Model {
 			INSERT INTO {$this->db->prefix}presenter 
 			SET 
 				presenter_name = '" . $this->db->escape($data['presenter_name']) . "', 
+				image          = '" . $this->db->escape($data['presenter_image']) . "', 
+				facebook       = '" . $this->db->escape($data['facebook']) . "', 
+				twitter        = '" . $this->db->escape($data['twitter']) . "', 
 				bio            = '" . $this->db->escape($data['bio']) . "'");
         return;
     }
@@ -494,6 +497,9 @@ class Event extends Model {
 			UPDATE {$this->db->prefix}presenter 
 			SET 
 				presenter_name = '" . $this->db->escape($data['presenter_name']) . "', 
+				image          = '" . $this->db->escape($data['presenter_image']) . "', 
+				facebook       = '" . $this->db->escape($data['facebook']) . "', 
+				twitter        = '" . $this->db->escape($data['twitter']) . "', 
 				bio            = '" . $this->db->escape($data['bio']) . "' 
 			WHERE presenter_id = '" . (int)$presenter_id . "'");
         
