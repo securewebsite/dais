@@ -173,8 +173,9 @@ class Header extends Controller {
         endif;
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $key  = $this->css->compile();
         
-        $data['css_link'] = $this->url->link('common/css', '&css=' . $this->css->compile(), 'SSL');
+        $data['css_link'] = $server . 'asset/' . $this->app['theme.name'] . '/compiled/' . $this->app['filecache']->get_key($key, 'css');
         $data['language'] = $this->theme->controller('widget/language');
         $data['currency'] = $this->theme->controller('widget/currency');
         $data['cart']     = $this->theme->controller('shop/cart');

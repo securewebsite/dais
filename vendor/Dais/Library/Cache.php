@@ -40,4 +40,23 @@ class Cache extends LibraryService {
     public function flush_cache() {
         return $this->cache->flush_cache();
     }
+
+    /**
+     * Asset driver specific
+     */
+    public function get_key($key, $type) {
+        return $this->cache->get_key($key, $type);
+    }
+
+    public function set_asset($key, $value, $type) {
+        return $this->cache->set($key, $value, $type);
+    }
+
+    public function get_asset($key, $type) {
+        return $this->cache->get($key, $type);
+    }
+
+    public function delete_asset($key, $type) {
+        return $this->cache->delete($key, $type);
+    }
 }

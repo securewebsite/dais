@@ -82,7 +82,6 @@ $base = array(
 	'path.plugin'    => APP_PATH . 'plugin/',
 	'path.storage'   => STORAGE,
 	'path.cache'     => STORAGE . 'cache/',
-	'path.filecache' => STORAGE . 'compiled/',
 	'path.logs'      => STORAGE . 'logs/',
 	'path.sessions'  => STORAGE . 'sessions/',
 	'path.views'     => STORAGE . 'views/',

@@ -25,12 +25,12 @@ class Asset extends LibraryService {
         
         $this->expire = $expire;
         
-        $files = glob($app['path.filecache'] . $app['cache.prefix'] . '*');
+        $files = glob($app['path.filecache'] . '*');
         
         if ($files):
             foreach ($files as $file):
-                $time = substr(strrchr($file, '.'), 1);
-                if ($time < time()):
+                $time = filemtime($file);
+                if (($time + $this->expire) < time()):
                     if (file_exists($file)):
                         unlink($file);
                     endif;
@@ -39,8 +39,8 @@ class Asset extends LibraryService {
         endif;
     }
     
-    public function get($key) {
-        $files = glob(parent::$app['path.filecache'] . parent::$app['cache.prefix'] . '.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.*');
+    public function get($key, $type) {
+        $files = glob(parent::$app['path.filecache'] . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.*.' . $type);
         
         if ($files):
             $file_handle = fopen($files[0], 'r');
@@ -54,12 +54,12 @@ class Asset extends LibraryService {
         return false;
     }
     
-    public function set($key, $value, $expire = 0) {
-        $this->delete($key);
+    public function set($key, $value, $type, $expire = 0) {
+        $this->delete($key, $type);
         
         $expires = ($expire) ? $expire : $this->expire;
         
-        $file = parent::$app['path.filecache'] . parent::$app['cache.prefix'] . '.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.' . (time() + $expires);
+        $file = parent::$app['path.filecache'] . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.' . $type;
         
         $data = (is_array($value)) ? serialize($value) : $value;
         
@@ -71,8 +71,8 @@ class Asset extends LibraryService {
         fclose($file_handle);
     }
     
-    public function delete($key) {
-        $files = glob(parent::$app['path.filecache'] . parent::$app['cache.prefix'] . '.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.*');
+    public function delete($key, $type) {
+        $files = glob(parent::$app['path.filecache'] . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.*.' . $type);
         
         if ($files):
             foreach ($files as $file):
@@ -84,12 +84,27 @@ class Asset extends LibraryService {
     }
     
     public function flush_cache() {
-        $files = glob(parent::$app['path.filecache'] . parent::$app['cache.prefix'] . '.*');
+        $files = glob(parent::$app['path.filecache'] . '.*');
         
         if ($files):
             foreach ($files as $file):
                 if (file_exists($file) && !is_dir($file)):
                     unlink($file);
+                endif;
+            endforeach;
+        endif;
+    }
+
+    public function get_key($key, $type) {
+        
+        $files = glob(parent::$app['path.filecache'] . '*.' . $type);
+
+        if ($files):
+            foreach ($files as $file):
+                $file = str_replace(parent::$app['path.filecache'], '', $file);
+                $data = explode('.', $file);
+                if ($data[0] == $key):
+                    return $file;
                 endif;
             endforeach;
         endif;

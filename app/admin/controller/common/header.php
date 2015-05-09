@@ -27,8 +27,8 @@ class Header extends Controller {
             $data['base'] = $this->app['http.server'];
         endif;
         
-        $data['links'] = $this->theme->getLinks();
-        $data['lang'] = $this->language->get('lang_code');
+        $data['links']     = $this->theme->getLinks();
+        $data['lang']      = $this->language->get('lang_code');
         $data['direction'] = $this->language->get('lang_direction');
         
         $this->css->register('dais.min')->register('editor.min', 'dais.min');
@@ -36,18 +36,17 @@ class Header extends Controller {
         $data = $this->theme->language('common/header', $data);
         
         if (!$this->user->isLogged() || !isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])):
-            
-            $data['logged'] = '';
+            $data['logged']    = '';
             $data['dashboard'] = $this->url->link('common/login', '', 'SSL');
         else:
             $data['logged'] = true;
         endif;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-        
-        $data['menu'] = $this->theme->controller('common/menu');
-        
-        $data['css_link'] = $this->url->link('common/css', '&css=' . $this->css->compile(), 'SSL');
+        $data             = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data['menu']     = $this->theme->controller('common/menu');
+
+        $key              = $this->css->compile();
+        $data['css_link'] = $this->app['https.public'] . 'asset/' . $this->app['theme.name'] . '/compiled/' . $this->app['filecache']->get_key($key, 'css');
         
         return $this->theme->view('common/header', $data);
     }

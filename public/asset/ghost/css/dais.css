@@ -302,7 +302,7 @@ body {
 	height: 100%;
 }
 .container.app {
-    background: #fff url(../asset/ghost/img/corner-bg-bottom.png) right bottom no-repeat;
+    background: #fff url(../img/corner-bg-bottom.png) right bottom no-repeat;
 	margin-top: 0;
 	padding: 20px 20px 40px;
 	margin-bottom: 25px;
@@ -382,7 +382,7 @@ input, button, select, textarea {
 	text-align: left;
 	text-indent: -9999px;
 	margin-bottom: 5px;
-	background-image: url(../asset/ghost/img/social-bar.png);
+	background-image: url(../img/social-bar.png);
 	backface-visibility: hidden;
 	-webkit-border-radius: 3px;
 	   -moz-border-radius: 3px;
@@ -3074,7 +3074,7 @@ textarea.input-group-sm>.form-control, textarea.input-group-sm>.input-group-addo
     margin-right: 20px;
     text-align: left;
     text-indent: -9999px;
-    background: url(../asset/ghost/img/logo.png) 2px 7px no-repeat;
+    background: url(../img/logo.png) 2px 7px no-repeat;
     width: 100px;
     height: 50px;
     background-size: 100px 40px;
@@ -5048,7 +5048,7 @@ button.close {
     border-radius: 6px;
 }
 .blueimp-gallery>.slides>.slide-loading {
-    background: url(../asset/ghost/img/loading.svg) center center no-repeat;
+    background: url(../img/loading.svg) center center no-repeat;
     background-size: 128px 128px;
     opacity: .2;
     filter: alpha(opacity=20);
@@ -5139,11 +5139,11 @@ button.close {
 /* Version 4.1.0 */
 @font-face {
   font-family: 'FontAwesome';
-  src: url('../asset/ghost/font/fontawesome-webfont.eot');
-  src: url('../asset/ghost/font/fontawesome-webfont.eot') format('embedded-opentype'), 
-  	   url('../asset/ghost/font/fontawesome-webfont.woff') format('woff'), 
-	   url('../asset/ghost/font/fontawesome-webfont.ttf') format('truetype'), 
-	   url('../asset/ghost/font/fontawesome-webfont.svg#fontawesomeregular') format('svg');
+  src: url('../font/fontawesome-webfont.eot');
+  src: url('../font/fontawesome-webfont.eot') format('embedded-opentype'), 
+  	   url('../font/fontawesome-webfont.woff') format('woff'), 
+	   url('../font/fontawesome-webfont.ttf') format('truetype'), 
+	   url('../font/fontawesome-webfont.svg#fontawesomeregular') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -6979,7 +6979,7 @@ label>.form-control {
     top: 50%;
     margin-top: -8px;
     background-repeat: no-repeat;
-    background-image: url(../asset/ghost/img/loading.svg);
+    background-image: url(../img/loading.svg);
     -webkit-animation: spin 1s infinite linear;
     -o-animation: spin 1s infinite linear;
     animation: spin 1s infinite linear;

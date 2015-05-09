@@ -57,9 +57,16 @@ class Footer extends Controller {
         endif;
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-        
-        $data['js_link'] = $this->url->link('common/javascript/render', '&js=' . $this->javascript->compile(), 'SSL');
-        $data['javascript'] = $this->theme->controller('common/javascript');
+
+        if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))):
+            $server = $this->config->get('config_ssl');
+        else:
+            $server = $this->config->get('config_url');
+        endif;
+
+        $key                   = $this->javascript->compile();
+        $data['js_link']       = $server . 'asset/' . $this->app['theme.name'] . '/compiled/' . $this->app['filecache']->get_key($key, 'js');
+        $data['javascript']    = $this->theme->controller('common/javascript');
         $data['footer_blocks'] = $this->theme->controller('widget/footerblocks');
         
         return $this->theme->view('content/footer', $data);

@@ -20,21 +20,22 @@ use Dais\Service\LibraryService;
 
 class Javascript extends LibraryService {
     
-    private $registered = array();
-    private $queued = array();
-    private $complete = array();
+    private $registered  = array();
+    private $queued      = array();
+    private $complete    = array();
     private $controllers = array();
     private $script_data = array();
     private $last_file;
     private $directory;
     private $script_directory;
-    public $cache_key;
+    public  $cache_key;
     
     public function __construct(Container $app) {
-        parent::__construct($app);
-        
-        $this->directory = $app['path.asset'] . $app['theme.name'] . '/js/';
+        $this->directory        = $app['path.asset'] . $app['theme.name'] . '/js/';
         $this->script_directory = $app['path.theme'] . $app['theme.name'] . '/view/';
+        $app['path.filecache']  = $app['path.asset'] . $app['theme.name'] . '/compiled/';
+        
+        parent::__construct($app);
     }
     
     public function register($name, $dep = null, $last = false) {
@@ -93,21 +94,20 @@ class Javascript extends LibraryService {
         endforeach;
         
         $prefix = parent::$app['active.fascade'];
-        $key = 'javascript.' . $prefix . '.' . md5(str_replace('.js', '', implode('|', $this->complete)));
+        $key    = 'javascript.' . $prefix . '.' . md5(str_replace('.js', '', implode('|', $this->complete)));
         
         $this->cache_key = md5($key);
         
-        $cachefile = $cache->get($this->cache_key);
+        $cachefile = $cache->get_asset($this->cache_key, 'js');
         
-        if (is_bool($cachefile) || !parent::$app['config_cache_status']):
+        if (is_bool($cachefile)):
             $cached = '';
-            
             foreach ($this->complete as $file):
-                $cached.= file_get_contents($this->directory . '/' . $file);
+                $cached .= file_get_contents($this->directory . '/' . $file);
             endforeach;
             
             $cachefile = $cached;
-            $cache->set($this->cache_key, $cachefile);
+            $cache->set_asset($this->cache_key, $cachefile, 'js');
         endif;
         
         unset($this->registered);

@@ -28,9 +28,10 @@ class Css extends LibraryService {
     public  $cache_key;
     
     public function __construct(Container $app) {
-        parent::__construct($app);
-        
         $this->directory = $app['path.asset'] . $app['theme.name'] . '/css/';
+        $app['path.filecache'] = $app['path.asset'] . $app['theme.name'] . '/compiled/';
+
+        parent::__construct($app);
     }
     
     public function register($name, $dep = null, $last = false) {
@@ -82,17 +83,17 @@ class Css extends LibraryService {
         
         $this->cache_key = md5($key);
         
-        $cachefile = $cache->get($this->cache_key);
+        $cachefile = $cache->get_asset($this->cache_key, 'css');
         
-        if (is_bool($cachefile) || !parent::$app['config_cache_status']):
+        if (is_bool($cachefile)):
             $cached = '';
             
             foreach ($this->complete as $file):
-                $cached.= file_get_contents($this->directory . $file);
+                $cached .= file_get_contents($this->directory . $file);
             endforeach;
             
             $cachefile = $cached;
-            $cache->set($this->cache_key, $cachefile);
+            $cache->set_asset($this->cache_key, $cachefile, 'css');
         endif;
         
         unset($this->registered);

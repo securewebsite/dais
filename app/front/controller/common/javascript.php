@@ -20,9 +20,8 @@ use Dais\Engine\Controller;
 class Javascript extends Controller {
     
     public function index() {
-        $scripts = $this->javascript->fetch();
-        $data    = $scripts['data'];
-        
+        $scripts         = $this->javascript->fetch();
+        $data            = $scripts['data'];
         $data['scripts'] = $scripts['files'];
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
@@ -46,13 +45,5 @@ class Javascript extends Controller {
             ->register('common.min', null, true);
         
         $this->theme->listen(__CLASS__, __FUNCTION__);
-    }
-    
-    public function render() {
-        $key  = $this->request->get['js'];
-        $file = $this->filecache->get($key);
-        
-        header('Content-Type: application/javascript');
-        echo $file;
     }
 }
