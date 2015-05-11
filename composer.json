@@ -1,0 +1,11 @@
+{
+    "name": "dais/dais",
+    "description": "Dais XMS Framework",
+    "require": {
+        "php": ">=5.5.0",
+        "raven/raven": "dev-master",
+        "filp/whoops": "~1.0",
+        "robmorgan/phinx": "*"
+    },
+    "minimum-stability": "dev"
+}

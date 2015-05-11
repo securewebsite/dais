@@ -1,6 +1,6 @@
 /app/database/config/*
 /app/install/*.sql
-!/app/install/ocx.sql
+!/app/install/dais.sql
 /app/storage/cache/*
 /app/storage/compiled/*
 /app/storage/logs/*
@@ -10,6 +10,8 @@
 /app/front/controller/tool/test.php
 # change this to /public/image/* once cloned
 /public/image/cache/*
+/vendor
+composer.lock
 .DS_Store
 Thumbs.db
 !.gitkeep

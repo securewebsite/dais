@@ -1,0 +1,91 @@
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `dais_route`
+--
+
+DROP TABLE IF EXISTS `dais_route`;
+CREATE TABLE IF NOT EXISTS `dais_route` (
+  `route_id` int(11) NOT NULL AUTO_INCREMENT,
+  `route` varchar(55) COLLATE utf8_unicode_ci NOT NULL,
+  `query` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`route_id`,`route`,`slug`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=973 ;
+
+--
+-- Dumping data for table `dais_route`
+--
+
+INSERT INTO `dais_route` (`route_id`, `route`, `query`, `slug`) VALUES
+(775, 'content/page', 'page_id:6', 'delivery-information'),
+(778, 'content/page', 'page_id:5', 'terms-and-conditions'),
+(785, 'content/page', 'page_id:3', 'privacy-policy'),
+(789, 'catalog/manufacturer/info', 'manufacturer_id:8', 'apple'),
+(790, 'catalog/manufacturer/info', 'manufacturer_id:9', 'canon'),
+(791, 'catalog/manufacturer/info', 'manufacturer_id:7', 'hewlett-packard'),
+(792, 'catalog/manufacturer/info', 'manufacturer_id:5', 'htc'),
+(793, 'catalog/manufacturer/info', 'manufacturer_id:6', 'palm'),
+(794, 'catalog/manufacturer/info', 'manufacturer_id:10', 'sony'),
+(819, 'catalog/category', 'category_id:25', 'components'),
+(820, 'catalog/category', 'category_id:29', 'mice-and-trackballs'),
+(821, 'catalog/category', 'category_id:28', 'monitors'),
+(822, 'catalog/category', 'category_id:35', 'test-1'),
+(823, 'catalog/category', 'category_id:36', 'test-2'),
+(825, 'catalog/category', 'category_id:57', 'tablets'),
+(826, 'catalog/category', 'category_id:17', 'software'),
+(827, 'catalog/category', 'category_id:24', 'phones-and-pdas'),
+(828, 'catalog/category', 'category_id:42', 'test-9'),
+(829, 'catalog/category', 'category_id:41', 'test-8'),
+(830, 'catalog/category', 'category_id:40', 'test-7'),
+(831, 'catalog/category', 'category_id:39', 'test-6'),
+(832, 'catalog/category', 'category_id:37', 'test-5'),
+(833, 'catalog/category', 'category_id:38', 'test-4'),
+(834, 'catalog/category', 'category_id:56', 'test-24'),
+(835, 'catalog/category', 'category_id:55', 'test-23'),
+(836, 'catalog/category', 'category_id:54', 'test-22'),
+(837, 'catalog/category', 'category_id:53', 'test-21'),
+(838, 'catalog/category', 'category_id:58', 'test-25'),
+(840, 'catalog/category', 'category_id:52', 'test-20'),
+(841, 'catalog/category', 'category_id:51', 'test-19'),
+(842, 'catalog/category', 'category_id:50', 'test-18'),
+(843, 'catalog/category', 'category_id:49', 'test-17'),
+(844, 'catalog/category', 'category_id:48', 'test-16'),
+(845, 'catalog/category', 'category_id:47', 'test-15'),
+(846, 'catalog/category', 'category_id:44', 'test-12'),
+(847, 'catalog/category', 'category_id:43', 'test-11'),
+(848, 'catalog/category', 'category_id:34', 'mp3-players'),
+(849, 'catalog/category', 'category_id:45', 'windows'),
+(850, 'catalog/category', 'category_id:46', 'macs'),
+(851, 'catalog/category', 'category_id:18', 'laptops-and-notebooks'),
+(852, 'catalog/category', 'category_id:26', 'pc'),
+(853, 'catalog/category', 'category_id:27', 'mac'),
+(855, 'catalog/category', 'category_id:32', 'web-cameras'),
+(856, 'catalog/category', 'category_id:31', 'scanners'),
+(857, 'catalog/category', 'category_id:30', 'printers'),
+(863, 'content/page', 'page_id:7', 'return-policy'),
+(864, 'content/page', 'page_id:8', 'affiliate-terms'),
+(885, 'catalog/product', 'product_id:47', 'hp-lp3065'),
+(887, 'catalog/product', 'product_id:41', 'imac'),
+(888, 'catalog/product', 'product_id:40', 'iphone'),
+(889, 'catalog/product', 'product_id:48', 'ipod-classic'),
+(890, 'catalog/product', 'product_id:36', 'ipod-nano'),
+(891, 'catalog/product', 'product_id:34', 'ipod-shuffle'),
+(892, 'catalog/product', 'product_id:32', 'ipod-touch'),
+(895, 'catalog/product', 'product_id:31', 'nikon-d300'),
+(896, 'catalog/product', 'product_id:29', 'palm-treo-pro'),
+(897, 'catalog/product', 'product_id:49', 'samsung-galaxy-tab-10-1'),
+(898, 'catalog/product', 'product_id:33', 'samsung-syncmaster-941bw'),
+(899, 'catalog/product', 'product_id:46', 'sony-vaio'),
+(902, 'content/page', 'page_id:4', 'about-us'),
+(924, 'catalog/product', 'product_id:28', 'htc-touch-hd'),
+(940, 'content/category', 'blog_category_id:1', 'general'),
+(949, 'catalog/category', 'category_id:20', 'desktops'),
+(963, 'catalog/product', 'product_id:30', 'canon-eos-5d'),
+(964, 'catalog/product', 'product_id:42', 'apple-cinema-30-inch'),
+(966, 'content/category', 'blog_category_id:2', 'latest-product-news'),
+(967, 'content/post', 'post_id:1', 'lorem-ipsum-test-post'),
+(968, 'catalog/category', 'category_id:33', 'cameras'),
+(969, 'catalog/product', 'product_id:45', 'macbook-pro'),
+(971, 'catalog/product', 'product_id:43', 'macbook'),
+(972, 'catalog/product', 'product_id:44', 'macbook-air');
