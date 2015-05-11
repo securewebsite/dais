@@ -24,7 +24,10 @@ class Filemanager extends Controller {
         
         $this->javascript->reset();
         
-        $this->javascript->register('jquery.min', null)->register('migrate.min', 'jquery.min')->register('bootstrap.min', 'migrate.min')->register('filemanager.min', 'bootstrap.min', true);
+        $this->javascript->register('jquery.min', null)
+            ->register('migrate.min', 'jquery.min')
+            ->register('bootstrap.min', 'migrate.min')
+            ->register('filemanager.min', 'bootstrap.min', true);
         
         $this->css->reset();
         $this->css->register('filemanager.min', null, true);
@@ -56,9 +59,12 @@ class Filemanager extends Controller {
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
         $data['javascript'] = $this->theme->controller('common/javascript');
+
+        $css_key = $this->css->compile();
+        $js_key  = $this->javascript->compile();
         
-        $data['css_link'] = $this->url->link('common/css', '&css=' . $this->css->compile(), 'SSL');
-        $data['js_link'] = $this->url->link('common/javascript/render', '&js=' . $this->javascript->compile(), 'SSL');
+        $data['css_link'] = $this->app['https.public'] . 'asset/' . $this->app['theme.name'] . '/compiled/' . $this->app['filecache']->get_key($css_key, 'css');
+        $data['js_link']  = $this->app['https.public'] . 'asset/' . $this->app['theme.name'] . '/compiled/' . $this->app['filecache']->get_key($js_key, 'js');
         
         $this->response->setOutput($this->theme->view('common/filemanager', $data));
     }

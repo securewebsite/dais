@@ -2,7 +2,6 @@
 /app/install/*.sql
 !/app/install/dais.sql
 /app/storage/cache/*
-/app/storage/compiled/*
 /app/storage/logs/*
 /app/storage/session/admin/*
 /app/storage/session/front/*
@@ -10,6 +9,7 @@
 /app/front/controller/tool/test.php
 # change this to /public/image/* once cloned
 /public/image/cache/*
+/public/asset/*/compiled/*
 /vendor
 composer.lock
 .DS_Store

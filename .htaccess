@@ -150,10 +150,10 @@ Options -Indexes
 	RewriteRule ^googlebase.xml$ public/index.php?route=feed/googlebase [L]
 	RewriteRule ^download/(.*) public/index.php?route=error/notfound [L]
 	RewriteRule ^(.*)/$ /$1 [L,R=301]
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteRule ^asset/(.*)$ public/asset/$1 [L,QSA]
 	RewriteRule ^image/(.*)$ public/image/$1 [L]
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond %{REQUEST_URI} !.*\.(ico|gif|jpg|jpeg|png|txt|html|woff|ttf|eot|svg|css|js)
 	RewriteRule ^([^?]*) index.php?_route_=$1 [L,QSA]
 </IfModule>
