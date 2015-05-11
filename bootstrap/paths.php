@@ -24,7 +24,7 @@
 */
 
 define('DATE_LOCALE', 'America/Phoenix');
-define('FRAMEWORK', dirname(__DIR__) . '/vendor/Dais/');
+define('FRAMEWORK', dirname(__DIR__) . '/src/Dais/');
 
 /*
 |--------------------------------------------------------------------------

@@ -5,7 +5,8 @@
         "php": ">=5.5.0",
         "raven/raven": "dev-master",
         "filp/whoops": "~1.0",
-        "robmorgan/phinx": "*"
+        "robmorgan/phinx": "*",
+        "swiftmailer/swiftmailer": "@stable"
     },
     "minimum-stability": "dev"
 }
