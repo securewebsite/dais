@@ -1,5 +1,5 @@
 {
-    "name": "dais/dais",
+    "name": "19peaches/dais",
     "description": "Dais XMS Framework",
     "require": {
         "php": ">=5.5.0",
