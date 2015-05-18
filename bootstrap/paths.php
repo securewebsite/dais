@@ -116,7 +116,7 @@ $environments = array(
 );
 
 $env = detectEnvironments($environments);
-var_dump($env);exit;
+
 define('ENV', $env['environment']);
 
 $base = array(
