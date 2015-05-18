@@ -16,6 +16,7 @@
 
 namespace Admin\Controller\Tool;
 use Dais\Engine\Controller;
+use Dais\Library\Migrate;
 
 class Test extends Controller {
     public function index() {
@@ -30,6 +31,11 @@ class Test extends Controller {
         else:
             $data['success'] = '';
         endif;
+
+        $migrate = new Migrate($this->app, 'install');
+        $migrate->find();
+
+        $this->theme->test($migrate);
         
         $this->breadcrumb->add('lang_heading_title', 'tool/test');
         

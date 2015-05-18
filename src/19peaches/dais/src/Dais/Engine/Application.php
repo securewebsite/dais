@@ -15,13 +15,6 @@
 */
 
 namespace Dais\Engine;
-use Dais\Engine\Container;
-use Dais\Engine\Action;
-use Dais\Service\ActionService;
-use Dais\Engine\Front;
-use Dais\Engine\Plugin;
-use Dais\Service\PluginServiceModel;
-use Dais\Engine\Theme;
 use Dais\Driver\Cache\Apc;
 use Dais\Driver\Cache\Asset;
 use Dais\Driver\Cache\File;
@@ -59,11 +52,14 @@ use Dais\Library\User;
 use Dais\Library\Validation;
 use Dais\Library\Vat;
 use Dais\Library\Weight;
+use Dais\Service\ActionService;
+use Dais\Service\PluginServiceModel;
 
 class Application {
     
-    public function __construct() {
+    public function __construct($config) {
         $this->data = new Container;
+        $this->data['db_config'] = $config;
     }
     
     public function buildConfigRequest(array $config) {
@@ -304,8 +300,21 @@ class Application {
     
     protected function buildDatabase() {
         $this->data['db'] = function ($data) {
-            $driver = 'Dais\Driver\Database\\' . DB_DRIVER;
-            return new Db(new $driver(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE, DB_PREFIX) , $data);
+            $db = $data['db_config'];
+            unset($data['db_config']);
+
+            $driver   = 'Dais\Driver\Database\\' . $db['driver'];
+            $database = new Db(new $driver(
+                $db['host'], 
+                $db['user'], 
+                $db['password'], 
+                $db['database'], 
+                $db['prefix']), 
+            $data);
+
+            unset($db);
+
+            return $database;
         };
     }
     

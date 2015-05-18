@@ -1,11 +1,24 @@
 {
     "name": "19peaches/dais",
-    "description": "Dais XMS Framework",
+    "type": "application",
+    "description": "Dais XMS Framework is a cross marketing platform that allows developers to easily create beautiful websites that include shopping, blogging, member and affiliate management without compromise.",
+    "keywords": ["19peaches", "dais", "platform", "shopping", "blogging", "member management", "affiliate management"],
+    "homepage": "http://dais.io",
+    "license": "MIT",
+    "authors": [{
+        "name": "Vince Kronlein",
+        "email": "vkronlein@icloud.com",
+        "homepage": "http://19peaches.com",
+        "role": "Lead Developer"
+    }, {
+        "name": "Gary Belvin",
+        "email": "garybelvin@yahoo.com",
+        "role": "Developer"
+    }],
     "require": {
         "php": ">=5.5.0",
         "raven/raven": "0.11.0",
         "filp/whoops": "~1.0",
-        "robmorgan/phinx": "*",
         "swiftmailer/swiftmailer": "@stable"
     },
     "minimum-stability": "dev"

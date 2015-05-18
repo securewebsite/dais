@@ -12,7 +12,23 @@
 |	For the full copyright and license information, please view the LICENSE
 |	file that was distributed with this source code.
 |	
+*/
+
+define('DAIS_START', microtime(true));
+
+/*
+|--------------------------------------------------------------------------
+|   Environment and Paths
+|--------------------------------------------------------------------------
 |
+|   Lets require our paths and configuration array so we can boot this baby
+|   up and change the world as we know it!
+|
+*/
+
+require __DIR__ . DIRECTORY_SEPARATOR . 'paths.php';
+
+/*
 |--------------------------------------------------------------------------
 |	Register the Autoloader
 |--------------------------------------------------------------------------
@@ -22,7 +38,7 @@
 |
 */
 
-if ($loader = dirname(FRAMEWORK) . '/autoload.php'):
+if ($loader = dirname(__DIR__) . SEP . 'src' . SEP . 'autoload.php'):
     require $loader;
 endif;
 
@@ -46,12 +62,15 @@ else:
      * 	We also need to redirect calls to the app when no db config
      * 	file exists.
      */
-    if (!is_readable($config['base']['path.database'] . 'config/db.php')):
+    if (!is_readable($config['base']['path.database'] . 'config' . SEP . 'db.php')):
         header('Location: ' . INSTALL_FASCADE);
     else:
-        require $config['base']['path.database'] . 'config/db.php';
+        $db_config = require $config['base']['path.database'] . 'config' . SEP . 'db.php';
+        $dbs       = $db_config['db'][ENV];
     endif;
 endif;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +81,6 @@ endif;
 |
 */
 
-$app = new Dais\Engine\Application;
+$app = new Dais\Engine\Application($dbs);
 
 return $app->buildConfigRequest($config);

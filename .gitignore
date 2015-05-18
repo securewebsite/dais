@@ -6,6 +6,7 @@
 /app/storage/session/admin/*
 /app/storage/session/front/*
 /app/storage/views/*
+/app/storage/migrations/*
 /app/front/controller/tool/test.php
 # change this to /public/image/* once cloned
 /public/image/cache/*
