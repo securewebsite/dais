@@ -14,12 +14,20 @@
 |	
 */
 
-// Environment detection helpers from Laravel
+// Environment detection helpers ported from Laravel
 
 function detectEnvironments($environments) {
 	foreach ($environments as $environment => $space):
 		foreach($space['developers'] as $developer => $workspace):
-			if (str_is($workspace['machine'], gethostname())):
+			if (isset($_SERVER['SERVER_NAME'])):
+				if (str_is($workspace['host'], $_SERVER['SERVER_NAME'])):
+					return array(
+						'environment' => $environment,
+						'developer'   => $developer,
+						'machine'     => $workspace['host']
+					);
+				endif;
+			elseif (str_is($workspace['machine'], gethostname())):
 				return array(
 					'environment' => $environment,
 					'developer'   => $developer,
