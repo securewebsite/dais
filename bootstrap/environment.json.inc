@@ -1,0 +1,10 @@
+{
+	"development": {
+		"developers": {
+			"": {
+				"machine": "",
+				"host": ""
+			}
+		}
+	}
+}

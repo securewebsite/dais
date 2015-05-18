@@ -8,6 +8,7 @@
 /app/storage/views/*
 /app/storage/migrations/*
 /app/front/controller/tool/test.php
+/bootstrap/*.json
 # change this to /public/image/* once cloned
 /public/image/cache/*
 /public/asset/*/compiled/*

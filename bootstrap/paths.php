@@ -88,33 +88,37 @@ define('PUBLIC_DIR', 'public' . SEP);
 
 require FRAMEWORK . 'environment.php';
 
-$environments = array(
-	'development' => array(
-		'developers' => array(
-			'Vince Kronlein' => array(
-				'machine' => 'iMac.local',
-				'host' => 'dais.local'
-			)
-		)
-	),
-	'staging' => array(
-		'developers' => array(
-			'Vince Kronlein' => array(
-				'machine' => 'dais.io',
-				'host' => 'ngx.dais.io'
-			)
-		)
-	),
-	'production' => array(
-		'developers' => array(
-			'Vince Kronlein' => array(
-				'machine' => 'dais.io',
-				'host' => '101.dais.io'
-			)
-		)
-	)
-);
+// $environments = array(
+// 	'development' => array(
+// 		'developers' => array(
+// 			'Vince Kronlein' => array(
+// 				'machine' => 'iMac.local',
+// 				'host' => 'dais.local'
+// 			)
+// 		)
+// 	),
+// 	'staging' => array(
+// 		'developers' => array(
+// 			'Vince Kronlein' => array(
+// 				'machine' => 'dais.io',
+// 				'host' => 'ngx.dais.io'
+// 			)
+// 		)
+// 	),
+// 	'production' => array(
+// 		'developers' => array(
+// 			'Vince Kronlein' => array(
+// 				'machine' => 'dais.io',
+// 				'host' => '101.dais.io'
+// 			)
+// 		)
+// 	)
+// );
 
+$environments = file_get_contents(__DIR__ . '/environment.json');
+$environments = json_decode($environments, true);
+
+//var_dump(json_decode($environments, true));exit;
 $env = detectEnvironments($environments);
 
 define('ENV', $env['environment']);
