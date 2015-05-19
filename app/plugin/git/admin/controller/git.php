@@ -178,33 +178,17 @@ class Git extends Plugin {
     }
     
     private function seek() {
-        $directories = array();
-        $dirs = explode('/', dirname(__FILE__));
-        
-        // remove empty first item
-        array_shift($dirs);
-        
-        // remove the top/home directory as we won't be able to read it anyway
-        $count = (count($dirs) - 1);
-        
-        for ($i = 0; $i < $count; $i++):
-            $directories[] = '/' . implode('/', $dirs);
-            array_pop($dirs);
-        endfor;
-        
-        $paths = array();
-        
-        foreach ($directories as $directory):
-            if (in_array('.git', scandir($directory))):
-                $paths['parent']    = dirname($directory);
-                $paths['directory'] = basename($directory);
-            endif;
-        endforeach;
-        
-        if (!empty($paths)):
-            return $paths;
-        else:
+        /**
+         * The git repo should be located in the user's home directory
+         * that's the only repo we want top pull from.
+         */
+
+        $directory = dirname(APP_PATH);
+
+        if (!in_array('.git', scandir($directory))):
             $this->error['warning'] = $this->language->get('lang_error_git_folder');
         endif;
+
+        return !$this->error;
     }
 }
