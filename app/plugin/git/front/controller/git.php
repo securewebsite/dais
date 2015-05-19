@@ -22,7 +22,6 @@ use Exception;
 ignore_user_abort(true);
 
 class Git extends Plugin {
-    private $alias;
     private $branch;
     protected $directory;
     protected $data;
@@ -44,11 +43,8 @@ class Git extends Plugin {
         endif;
         
         $this->branch    = $settings['git_branch'];
+        $this->directory = dirname(APP_PATH);
         
-        $paths           = $this->seek();
-        $this->directory = $paths['parent'];
-        $this->alias     = $paths['directory'];
-
         if(isset($this->request->post['payload'])):    
             $HTTP_RAW_POST_DATA = $this->request->post['payload'];
         else:
@@ -99,7 +95,7 @@ class Git extends Plugin {
     private function fetch() {
         
         // Change directory to execute
-        chdir($this->directory . '/' . $this->alias);
+        chdir($this->directory);
         
         // Fetch files for comparison
         exec("git fetch origin " . $this->branch . " 2>&1", $output);
@@ -110,7 +106,7 @@ class Git extends Plugin {
         
         if (!empty($files)):
             foreach ($files as $index => $file):
-                unlink($this->directory . '/' . $this->alias . '/' . $file);
+                unlink($this->directory . SEP . $file);
             endforeach;
         endif;
         unset($files);
@@ -131,32 +127,5 @@ class Git extends Plugin {
         exec("git pull origin " . $this->branch . " 2>&1", $result);
         
         return $result;
-    }
-    
-    private function seek() {
-        $directories = array();
-        $dirs = explode('/', dirname(__FILE__));
-        
-        // remove empty first item
-        array_shift($dirs);
-        
-        // remove the top/home directory as we won't be able to read it anyway
-        $count = (count($dirs) - 1);
-        
-        for ($i = 0; $i < $count; $i++):
-            $directories[] = '/' . implode('/', $dirs);
-            array_pop($dirs);
-        endfor;
-        
-        $paths = array();
-        
-        foreach ($directories as $directory):
-            if (in_array('.git', scandir($directory))):
-                $paths['parent']    = dirname($directory);
-                $paths['directory'] = basename($directory);
-            endif;
-        endforeach;
-        
-        return $paths;
     }
 }
