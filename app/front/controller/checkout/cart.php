@@ -223,6 +223,8 @@ class Cart extends Controller {
                     }
                 }
                 
+                $remove_url = $this->url->link('checkout/cart', 'remove=' . $product['key']);
+                
                 $data['products'][] = array(
                     'key'       => $product['key'], 
                     'thumb'     => $image, 
@@ -235,7 +237,7 @@ class Cart extends Controller {
                     'price'     => $price, 
                     'total'     => $total, 
                     'href'      => $this->url->link('catalog/product', 'product_id=' . $product['product_id']), 
-                    'remove'    => $this->url->link('checkout/cart', 'remove=' . $product['key']), 
+                    'remove'    => urldecode($remove_url), 
                     'recurring' => $recurring
                 );
             }
