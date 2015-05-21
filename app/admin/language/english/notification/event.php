@@ -14,7 +14,15 @@
 |	
 */
 
-$_['lang_column_event_name'] = 'Event Name:';
-$_['lang_column_date_time']  = 'Date and Time:';
-$_['lang_column_location']   = 'Location:';
-$_['lang_column_telephone']  = 'Telephone:';
+namespace Admin\Language\English\Notification;
+
+class Event {
+	public static function lang() {
+		$_['lang_column_event_name'] = 'Event Name:';
+		$_['lang_column_date_time']  = 'Date and Time:';
+		$_['lang_column_location']   = 'Location:';
+		$_['lang_column_telephone']  = 'Telephone:';
+
+		return $_;
+	}
+}

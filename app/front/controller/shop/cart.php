@@ -24,7 +24,7 @@ class Cart extends Controller {
         if (isset($this->request->get['remove'])) {
             $this->cart->remove($this->request->get['remove']);
             
-            unset($this->session->data['giftcards'][$this->request->get['remove']]);
+            unset($this->session->data['gift_cards'][$this->request->get['remove']]);
         }
         
         // Totals
@@ -65,7 +65,7 @@ class Cart extends Controller {
         
         $data['totals'] = $total_data;
         
-        $data['text_items'] = sprintf($this->language->get('lang_text_items'), $this->cart->countProducts() + (isset($this->session->data['giftcards']) ? count($this->session->data['giftcards']) : 0), $this->currency->format($total));
+        $data['text_items'] = sprintf($this->language->get('lang_text_items'), $this->cart->countProducts() + (isset($this->session->data['gift_cards']) ? count($this->session->data['gift_cards']) : 0), $this->currency->format($total));
         
         $this->theme->model('tool/image');
         
@@ -125,14 +125,14 @@ class Cart extends Controller {
         }
         
         // Gift card
-        $data['giftcards'] = array();
+        $data['gift_cards'] = array();
         
-        if (!empty($this->session->data['giftcards'])) {
-            foreach ($this->session->data['giftcards'] as $key => $giftcard) {
-                $data['giftcards'][] = array(
+        if (!empty($this->session->data['gift_cards'])) {
+            foreach ($this->session->data['gift_cards'] as $key => $gift_card) {
+                $data['gift_cards'][] = array(
                     'key'         => $key, 
-                    'description' => $giftcard['description'], 
-                    'amount'      => $this->currency->format($giftcard['amount'])
+                    'description' => $gift_card['description'], 
+                    'amount'      => $this->currency->format($gift_card['amount'])
                 );
             }
         }

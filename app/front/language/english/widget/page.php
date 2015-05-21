@@ -14,9 +14,17 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title'] = 'Information';
+namespace Front\Language\English\Widget;
 
-// Text
-$_['lang_text_contact']  = 'Contact Us';
-$_['lang_text_sitemap']  = 'Site Map';
+class Page {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title'] = 'Information';
+
+		// Text
+		$_['lang_text_contact']  = 'Contact Us';
+		$_['lang_text_site_map']  = 'Site Map';
+
+		return $_;
+	}
+}

@@ -67,13 +67,13 @@
 						<li><a href="<?= $order_recurring; ?>"><?= $lang_text_order_recurring; ?></a></li>
 						<li><a href="<?= $return; ?>"><?= $lang_text_return; ?></a></li>
 						<li><a href="<?= $coupon; ?>"><?= $lang_text_coupon; ?></a></li>
-						<li class="dropdown-submenu"><a class="dropdown-toggle" data-toggle="dropdown"><?= $lang_text_giftcard; ?> <b class="fa fa-caret-right"></b></a>
+						<li class="dropdown-submenu"><a class="dropdown-toggle" data-toggle="dropdown"><?= $lang_text_gift_card; ?> <b class="fa fa-caret-right"></b></a>
 							<ul class="dropdown-menu">
-								<li><a href="<?= $giftcard; ?>"><?= $lang_text_giftcard; ?></a></li>
-								<li><a href="<?= $giftcard_theme; ?>"><?= $lang_text_giftcard_theme; ?></a></li>
+								<li><a href="<?= $gift_card; ?>"><?= $lang_text_gift_card; ?></a></li>
+								<li><a href="<?= $gift_card_theme; ?>"><?= $lang_text_gift_card_theme; ?></a></li>
 							</ul>
 						</li>
-						<?php if ($paypalexpress_status) { ?>
+						<?php if ($paypal_express_status) { ?>
 							<li class="dropdown-submenu"><a class="dropdown-toggle" data-toggle="dropdown"><?= $lang_text_paypal_manage; ?> <b class="fa fa-caret-right"></b></a>
 								<ul class="dropdown-menu">
 									<li><a href="<?= $paypal_express; ?>"><?= $lang_text_paypal_manage; ?></a></li>

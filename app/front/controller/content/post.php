@@ -291,7 +291,7 @@ class Post extends Controller {
             $this->theme->loadjs('javascript/content/post', $data);
             
             $data             = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-            $data['sharebar'] = $this->theme->controller('common/sharebar', array('post', $data));
+            $data['share_bar'] = $this->theme->controller('common/share_bar', array('post', $data));
             $data             = $this->theme->render_controllers($data);
             
             $this->response->setOutput($this->theme->view('content/post', $data));
@@ -334,7 +334,7 @@ class Post extends Controller {
             
             $data = $this->theme->render_controllers($data);
             
-            $this->response->setOutput($this->theme->view('error/notfound', $data));
+            $this->response->setOutput($this->theme->view('error/not_found', $data));
         }
     }
     

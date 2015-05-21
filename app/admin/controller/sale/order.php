@@ -453,9 +453,9 @@ class Order extends Controller {
         $data['filter_date_added']      = $filter_date_added;
         $data['filter_date_modified']   = $filter_date_modified;
         
-        $this->theme->model('localization/orderstatus');
+        $this->theme->model('localization/order_status');
         
-        $data['order_statuses'] = $this->model_localization_orderstatus->getOrderStatuses();
+        $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
         
         $data['sort']  = $sort;
         $data['order'] = $order;
@@ -708,9 +708,9 @@ class Order extends Controller {
             $data['customer_group_id'] = '';
         }
         
-        $this->theme->model('people/customergroup');
+        $this->theme->model('people/customer_group');
         
-        $data['customer_groups'] = $this->model_people_customergroup->getCustomerGroups();
+        $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups();
         
         if (isset($this->request->post['firstname'])) {
             $data['firstname'] = $this->request->post['firstname'];
@@ -768,9 +768,9 @@ class Order extends Controller {
             $data['order_status_id'] = '';
         }
         
-        $this->theme->model('localization/orderstatus');
+        $this->theme->model('localization/order_status');
         
-        $data['order_statuses'] = $this->model_localization_orderstatus->getOrderStatuses();
+        $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
         
         if (isset($this->request->post['comment'])) {
             $data['comment'] = $this->request->post['comment'];
@@ -1036,17 +1036,17 @@ class Order extends Controller {
             );
         }
         
-        if (isset($this->request->post['order_giftcard'])) {
-            $data['order_giftcards'] = $this->request->post['order_giftcard'];
+        if (isset($this->request->post['order_gift_card'])) {
+            $data['order_gift_cards'] = $this->request->post['order_gift_card'];
         } elseif (isset($this->request->get['order_id'])) {
-            $data['order_giftcards'] = $this->model_sale_order->getOrderGiftcards($this->request->get['order_id']);
+            $data['order_gift_cards'] = $this->model_sale_order->getOrderGiftcards($this->request->get['order_id']);
         } else {
-            $data['order_giftcards'] = array();
+            $data['order_gift_cards'] = array();
         }
         
-        $this->theme->model('sale/giftcardtheme');
+        $this->theme->model('sale/gift_card_theme');
         
-        $data['giftcard_themes'] = $this->model_sale_giftcardtheme->getGiftcardThemes();
+        $data['gift_card_themes'] = $this->model_sale_gift_card_theme->getGiftcardThemes();
         
         if (isset($this->request->post['order_total'])) {
             $data['order_totals'] = $this->request->post['order_total'];
@@ -1313,9 +1313,9 @@ class Order extends Controller {
                 $data['customer'] = '';
             }
             
-            $this->theme->model('people/customergroup');
+            $this->theme->model('people/customer_group');
             
-            $customer_group_info = $this->model_people_customergroup->getCustomerGroup($order_info['customer_group_id']);
+            $customer_group_info = $this->model_people_customer_group->getCustomerGroup($order_info['customer_group_id']);
             
             if ($customer_group_info) {
                 $data['customer_group'] = $customer_group_info['name'];
@@ -1353,9 +1353,9 @@ class Order extends Controller {
             $data['commission']       = $this->currency->format($order_info['commission'], $order_info['currency_code'], $order_info['currency_value']);
             $data['commission_total'] = $this->model_people_customer->getTotalCommissionsByOrderId($this->request->get['order_id']);
             
-            $this->theme->model('localization/orderstatus');
+            $this->theme->model('localization/order_status');
             
-            $order_status_info = $this->model_localization_orderstatus->getOrderStatus($order_info['order_status_id']);
+            $order_status_info = $this->model_localization_order_status->getOrderStatus($order_info['order_status_id']);
             
             if ($order_status_info) {
                 $data['order_status'] = $order_status_info['name'];
@@ -1431,15 +1431,15 @@ class Order extends Controller {
                 );
             }
             
-            $data['giftcards'] = array();
+            $data['gift_cards'] = array();
             
-            $giftcards = $this->model_sale_order->getOrderGiftcards($this->request->get['order_id']);
+            $gift_cards = $this->model_sale_order->getOrderGiftcards($this->request->get['order_id']);
             
-            foreach ($giftcards as $giftcard) {
-                $data['giftcards'][] = array(
-                    'description' => $giftcard['description'], 
-                    'amount'      => $this->currency->format($giftcard['amount'], $order_info['currency_code'], $order_info['currency_value']), 
-                    'href'        => $this->url->link('sale/giftcard/update', 'token=' . $this->session->data['token'] . '&giftcard_id=' . $giftcard['giftcard_id'], 'SSL')
+            foreach ($gift_cards as $gift_card) {
+                $data['gift_cards'][] = array(
+                    'description' => $gift_card['description'], 
+                    'amount'      => $this->currency->format($gift_card['amount'], $order_info['currency_code'], $order_info['currency_value']), 
+                    'href'        => $this->url->link('sale/gift_card/update', 'token=' . $this->session->data['token'] . '&gift_card_id=' . $gift_card['gift_card_id'], 'SSL')
                 );
             }
             
@@ -1459,7 +1459,7 @@ class Order extends Controller {
                 }
             }
             
-            $data['order_statuses']  = $this->model_localization_orderstatus->getOrderStatuses();
+            $data['order_statuses']  = $this->model_localization_order_status->getOrderStatuses();
             $data['order_status_id'] = $order_info['order_status_id'];
             
             // Fraud
@@ -1683,7 +1683,7 @@ class Order extends Controller {
             
             $this->theme->setTitle($this->language->get('lang_heading_title'));
             
-            $this->breadcrumb->add('lang_heading_title', 'error/notfound');
+            $this->breadcrumb->add('lang_heading_title', 'error/not_found');
             
             $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
             
@@ -1997,7 +1997,7 @@ class Order extends Controller {
             
             $this->theme->setTitle($this->language->get('lang_heading_title'));
             
-            $this->breadcrumb->add('lang_heading_title', 'error/notfound');
+            $this->breadcrumb->add('lang_heading_title', 'error/not_found');
             
             $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
             
@@ -2246,14 +2246,14 @@ class Order extends Controller {
                     );
                 }
                 
-                $giftcard_data = array();
+                $gift_card_data = array();
                 
-                $giftcards = $this->model_sale_order->getOrderGiftcards($order_id);
+                $gift_cards = $this->model_sale_order->getOrderGiftcards($order_id);
                 
-                foreach ($giftcards as $giftcard) {
-                    $giftcard_data[] = array(
-                        'description' => $giftcard['description'], 
-                        'amount'      => $this->currency->format($giftcard['amount'], $order_info['currency_code'], $order_info['currency_value'])
+                foreach ($gift_cards as $gift_card) {
+                    $gift_card_data[] = array(
+                        'description' => $gift_card['description'], 
+                        'amount'      => $this->currency->format($gift_card['amount'], $order_info['currency_code'], $order_info['currency_value'])
                     );
                 }
                 
@@ -2277,7 +2277,7 @@ class Order extends Controller {
                     'payment_tax_id'     => $order_info['payment_tax_id'], 
                     'payment_method'     => $order_info['payment_method'], 
                     'product'            => $product_data, 
-                    'giftcard'           => $giftcard_data, 
+                    'gift_card'           => $gift_card_data, 
                     'total'              => $total_data, 
                     'comment'            => nl2br($order_info['comment'])
                 );

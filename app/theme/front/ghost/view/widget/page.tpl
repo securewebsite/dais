@@ -4,5 +4,5 @@
 		<a class="list-group-item" href="<?= $page['href']; ?>"><?= $page['title']; ?></a>
 	<?php } ?>
 	<a class="list-group-item" href="<?= $contact; ?>"><?= $lang_text_contact; ?></a>
-	<a class="list-group-item" href="<?= $sitemap; ?>"><?= $lang_text_sitemap; ?></a>
+	<a class="list-group-item" href="<?= $site_map; ?>"><?= $lang_text_site_map; ?></a>
 </div>

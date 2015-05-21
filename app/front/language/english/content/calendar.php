@@ -14,15 +14,23 @@
 |	
 */
 
-// heading
-$_['lang_heading_title'] = 'Event Calendar';
+namespace Front\Language\English\Content;
 
-$_['lang_text_prev']     = 'Prev';
-$_['lang_text_today']    = 'Today';
-$_['lang_text_next']     = 'Next';
-$_['lang_text_year']     = 'Year';
-$_['lang_text_month']    = 'Month';
-$_['lang_text_week']     = 'Week';
-$_['lang_text_day']      = 'Day';
+class Calendar {
+	public static function lang() {
+		// heading
+		$_['lang_heading_title'] = 'Event Calendar';
 
-$_['lang_text_finished'] = 'This event has already ended. Please check the calendar for our next event.';
+		$_['lang_text_prev']     = 'Prev';
+		$_['lang_text_today']    = 'Today';
+		$_['lang_text_next']     = 'Next';
+		$_['lang_text_year']     = 'Year';
+		$_['lang_text_month']    = 'Month';
+		$_['lang_text_week']     = 'Week';
+		$_['lang_text_day']      = 'Day';
+
+		$_['lang_text_finished'] = 'This event has already ended. Please check the calendar for our next event.';
+
+		return $_;
+	}
+}

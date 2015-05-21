@@ -14,7 +14,14 @@
 |	
 */
 
-// text
-$_['lang_text_new_reward'] = '%s reward points for order number: %s';
-$_['lang_text_new_commission'] = '%s commission for order number: %s';
+namespace Front\Language\English\Checkout;
 
+class Order {
+	public static function lang() {
+		// text
+		$_['lang_text_new_reward'] = '%s reward points for order number: %s';
+		$_['lang_text_new_commission'] = '%s commission for order number: %s';
+
+		return $_;
+	}
+}

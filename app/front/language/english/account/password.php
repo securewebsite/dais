@@ -14,18 +14,26 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']  = 'Change Password';
+namespace Front\Language\English\Account;
 
-// Text
-$_['lang_text_account']   = 'Dashboard';
-$_['lang_text_password']  = 'Your Password';
-$_['lang_text_success']   = 'Success: Your password has been successfully updated.';
+class Password {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']  = 'Change Password';
 
-// Entry
-$_['lang_entry_password'] = 'Password';
-$_['lang_entry_confirm']  = 'Password Confirm';
+		// Text
+		$_['lang_text_account']   = 'Dashboard';
+		$_['lang_text_password']  = 'Your Password';
+		$_['lang_text_success']   = 'Success: Your password has been successfully updated.';
 
-// Error
-$_['lang_error_password'] = 'Password must be between 4 and 20 characters.';
-$_['lang_error_confirm']  = 'Password confirmation does not match password.';
+		// Entry
+		$_['lang_entry_password'] = 'Password';
+		$_['lang_entry_confirm']  = 'Password Confirm';
+
+		// Error
+		$_['lang_error_password'] = 'Password must be between 4 and 20 characters.';
+		$_['lang_error_confirm']  = 'Password confirmation does not match password.';
+
+		return $_;
+	}
+}

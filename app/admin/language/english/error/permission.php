@@ -14,8 +14,16 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']   = 'Permission Denied.';
+namespace Admin\Language\English\Error;
 
-// Text
-$_['lang_text_permission'] = 'You do not have permission to access this page, please refer to your system administrator.';
+class Permission {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']   = 'Permission Denied.';
+
+		// Text
+		$_['lang_text_permission'] = 'You do not have permission to access this page, please refer to your system administrator.';
+
+		return $_;
+	}
+}

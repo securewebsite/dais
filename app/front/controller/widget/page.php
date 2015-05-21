@@ -30,7 +30,7 @@ class Page extends Controller {
         }
         
         $data['contact'] = $this->url->link('content/contact');
-        $data['sitemap'] = $this->url->link('content/sitemap');
+        $data['site_map'] = $this->url->link('content/site_map');
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         

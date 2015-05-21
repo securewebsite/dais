@@ -13,6 +13,14 @@
 |	file that was distributed with this source code.
 |	
 */
-$_['lang_heading_title']  = 'My Products';
 
-$_['lang_text_dashboard'] = 'Dashboard';
+namespace Front\Language\English\Account;
+
+class Product {
+	public static function lang() {
+		$_['lang_heading_title']  = 'My Products';
+		$_['lang_text_dashboard'] = 'Dashboard';
+
+		return $_;
+	}
+}

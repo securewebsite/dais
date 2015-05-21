@@ -13,5 +13,14 @@
 |	file that was distributed with this source code.
 |	
 */
-$_['lang_status'] = 'Status';
-$_['lang_option'] = 'Option';
+
+namespace Admin\Language\English\Module;
+
+class Default {
+	public static function lang() {
+		$_['lang_status'] = 'Status';
+		$_['lang_option'] = 'Option';
+
+		return $_;
+	}
+}

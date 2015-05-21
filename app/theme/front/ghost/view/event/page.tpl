@@ -117,11 +117,11 @@
 			<?php endforeach; ?>
 			</div>
 			<div class="col-sm-6">
-			<?= $sharebar; ?>
+			<?= $share_bar; ?>
 			</div>
 			<?php else: ?>
 			<div class="col-sm-12">
-			<?= $sharebar; ?>
+			<?= $share_bar; ?>
 			</div>
 			<?php endif; ?>
 		</div>

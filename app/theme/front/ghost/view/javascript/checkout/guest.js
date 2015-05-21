@@ -38,7 +38,7 @@ $('#button-guest').off().on('click',function(){
 				
 				if(shipping_address){
 					$.ajax({
-						url:'checkout/shippingmethod',
+						url:'checkout/shipping_method',
 						dataType:'html',
 						success:function(html){
 							$('#shipping-method .panel-collapse').html(html);
@@ -49,7 +49,7 @@ $('#button-guest').off().on('click',function(){
 							$('#shipping-address .panel-heading').append('<a class="close"><i class="fa fa-lg fa-angle-down"></i></a>');	
 							
 							$.ajax({
-								url:'checkout/guestshipping',
+								url:'checkout/guest_shipping',
 								dataType:'html',
 								success:function(html){
 									$('#shipping-address .panel-collapse').html(html);
@@ -60,7 +60,7 @@ $('#button-guest').off().on('click',function(){
 					});
 				}else{
 					$.ajax({
-						url:'checkout/guestshipping',
+						url:'checkout/guest_shipping',
 						dataType:'html',
 						success:function(html){
 							$('#shipping-address .panel-collapse').html(html);
@@ -78,7 +78,7 @@ $('#button-guest').off().on('click',function(){
 				}
 				<?php } else { ?>				
 				$.ajax({
-					url:'checkout/paymentmethod',
+					url:'checkout/payment_method',
 					dataType:'html',
 					success:function(html){
 						$('#payment-method .panel-collapse').html(html);

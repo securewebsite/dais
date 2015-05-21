@@ -14,20 +14,28 @@
 |	
 */
 
-// header
-$_['lang_heading_title']  = 'Reset your password';
+namespace Front\Language\English\Account;
 
-// Text
-$_['lang_text_reset']     = 'Reset your password.';
-$_['lang_text_password']  = 'Enter your new password choice.';
-$_['lang_text_success']   = 'Success: Your password was successfully updated.';
+class Reset {
+	public static function lang() {
+		// header
+		$_['lang_heading_title']  = 'Reset your password';
 
-// Entry
-$_['lang_entry_password'] = 'Password:';
-$_['lang_entry_confirm']  = 'Password Confirm:';
+		// Text
+		$_['lang_text_reset']     = 'Reset your password.';
+		$_['lang_text_password']  = 'Enter your new password choice.';
+		$_['lang_text_success']   = 'Success: Your password was successfully updated.';
 
-$_['lang_button_cancel']  = 'Cancel';
+		// Entry
+		$_['lang_entry_password'] = 'Password:';
+		$_['lang_entry_confirm']  = 'Password Confirm:';
 
-// Error
-$_['lang_error_password'] = 'Password must be between 5 and 20 characters.';
-$_['lang_error_confirm']  = 'Password and password confirmation do not match.';
+		$_['lang_button_cancel']  = 'Cancel';
+
+		// Error
+		$_['lang_error_password'] = 'Password must be between 5 and 20 characters.';
+		$_['lang_error_confirm']  = 'Password and password confirmation do not match.';
+
+		return $_;
+	}
+}

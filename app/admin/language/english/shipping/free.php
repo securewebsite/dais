@@ -14,18 +14,26 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']    = 'Free Shipping';
+namespace Admin\Language\English\Shipping;
 
-// Text
-$_['lang_text_shipping']    = 'Shipping';
-$_['lang_text_success']     = 'Success: You have modified free shipping.';
+class Free {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']    = 'Free Shipping';
 
-// Entry
-$_['lang_entry_total']      = 'Total:<br /><span class="help">Sub-Total amount needed before the free shipping widget becomes available.</span>';
-$_['lang_entry_geo_zone']   = 'Geo Zone:';
-$_['lang_entry_status']     = 'Status:';
-$_['lang_entry_sort_order'] = 'Sort Order:';
+		// Text
+		$_['lang_text_shipping']    = 'Shipping';
+		$_['lang_text_success']     = 'Success: You have modified free shipping.';
 
-// Error
-$_['lang_error_permission'] = 'Warning: You do not have permission to modify free shipping.';
+		// Entry
+		$_['lang_entry_total']      = 'Total:<br /><span class="help">Sub-Total amount needed before the free shipping widget becomes available.</span>';
+		$_['lang_entry_geo_zone']   = 'Geo Zone:';
+		$_['lang_entry_status']     = 'Status:';
+		$_['lang_entry_sort_order'] = 'Sort Order:';
+
+		// Error
+		$_['lang_error_permission'] = 'Warning: You do not have permission to modify free shipping.';
+
+		return $_;
+	}
+}

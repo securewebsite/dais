@@ -14,29 +14,37 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']          = 'Zones';
+namespace Admin\Language\English\Localization;
 
-// Text
-$_['lang_text_success']           = 'Success: You have modified zones.';
+class Zone {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']          = 'Zones';
 
-// Column
-$_['lang_column_name']            = 'Zone Name';
-$_['lang_column_code']            = 'Zone Code';
-$_['lang_column_country']         = 'Country';
-$_['lang_column_action']          = 'Action';
+		// Text
+		$_['lang_text_success']           = 'Success: You have modified zones.';
 
-// Entry
-$_['lang_entry_status']           = 'Zone Status:';
-$_['lang_entry_name']             = 'Zone Name:';
-$_['lang_entry_code']             = 'Zone Code:';
-$_['lang_entry_country']          = 'Country:';
+		// Column
+		$_['lang_column_name']            = 'Zone Name';
+		$_['lang_column_code']            = 'Zone Code';
+		$_['lang_column_country']         = 'Country';
+		$_['lang_column_action']          = 'Action';
 
-// Error
-$_['lang_error_permission']       = 'Warning: You do not have permission to modify zones.';
-$_['lang_error_name']             = 'Zone name must be between 3 and 128 characters.';
-$_['lang_error_default']          = 'Warning: This zone cannot be deleted as it is currently assigned as the default store zone.';
-$_['lang_error_store']            = 'Warning: This zone cannot be deleted as it is currently assigned to %s stores.';
-$_['lang_error_address']          = 'Warning: This zone cannot be deleted as it is currently assigned to %s address book entries.';
-$_['lang_error_affiliate']        = 'Warning: This zone cannot be deleted as it is currently assigned to %s affiliates.';
-$_['lang_error_zone_to_geo_zone'] = 'Warning: This zone cannot be deleted as it is currently assigned to %s zones to geo zones.';
+		// Entry
+		$_['lang_entry_status']           = 'Zone Status:';
+		$_['lang_entry_name']             = 'Zone Name:';
+		$_['lang_entry_code']             = 'Zone Code:';
+		$_['lang_entry_country']          = 'Country:';
+
+		// Error
+		$_['lang_error_permission']       = 'Warning: You do not have permission to modify zones.';
+		$_['lang_error_name']             = 'Zone name must be between 3 and 128 characters.';
+		$_['lang_error_default']          = 'Warning: This zone cannot be deleted as it is currently assigned as the default store zone.';
+		$_['lang_error_store']            = 'Warning: This zone cannot be deleted as it is currently assigned to %s stores.';
+		$_['lang_error_address']          = 'Warning: This zone cannot be deleted as it is currently assigned to %s address book entries.';
+		$_['lang_error_affiliate']        = 'Warning: This zone cannot be deleted as it is currently assigned to %s affiliates.';
+		$_['lang_error_zone_to_geo_zone'] = 'Warning: This zone cannot be deleted as it is currently assigned to %s zones to geo zones.';
+
+		return $_;
+	}
+}

@@ -79,7 +79,7 @@ class Masonry extends Controller {
             $data['widgets'] = $this->config->get('masonry_widget');
         }
         
-        $data['product_types'] = array('latest' => $this->language->get('lang_text_latest'), 'featured' => $this->language->get('lang_text_featured'), 'special' => $this->language->get('lang_text_special'), 'bestseller' => $this->language->get('lang_text_bestseller'));
+        $data['product_types'] = array('latest' => $this->language->get('lang_text_latest'), 'featured' => $this->language->get('lang_text_featured'), 'special' => $this->language->get('lang_text_special'), 'best_seller' => $this->language->get('lang_text_best_seller'));
         
         $this->theme->model('design/layout');
         

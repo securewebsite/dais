@@ -1,7 +1,7 @@
 <script>
 $(document).on('click','#button-guest-shipping',function(e){
 	$.ajax({
-		url:'checkout/guestshipping/validate',
+		url:'checkout/guest_shipping/validate',
 		type:'post',
 		data:$('#shipping-address input[type="text"], #shipping-address select'),
 		dataType:'json',
@@ -23,7 +23,7 @@ $(document).on('click','#button-guest-shipping',function(e){
 				});
 			}else{
 				$.ajax({
-					url:'checkout/shippingmethod',
+					url:'checkout/shipping_method',
 					dataType:'html',
 					success:function(html){
 						$('#shipping-method .panel-collapse').html(html);

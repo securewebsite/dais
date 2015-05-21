@@ -218,29 +218,29 @@ class Order extends Model {
             }
         }
         
-        if (isset($data['order_giftcard'])) {
-            foreach ($data['order_giftcard'] as $order_giftcard) {
+        if (isset($data['order_gift_card'])) {
+            foreach ($data['order_gift_card'] as $order_gift_card) {
                 $this->db->query("
-					INSERT INTO {$this->db->prefix}order_giftcard 
+					INSERT INTO {$this->db->prefix}order_gift_card 
 					SET 
 						order_id          = '" . (int)$order_id . "', 
-						giftcard_id       = '" . (int)$order_giftcard['giftcard_id'] . "', 
-						description       = '" . $this->db->escape($order_giftcard['description']) . "', 
-						code              = '" . $this->db->escape($order_giftcard['code']) . "', 
-						from_name         = '" . $this->db->escape($order_giftcard['from_name']) . "', 
-						from_email        = '" . $this->db->escape($order_giftcard['from_email']) . "', 
-						to_name           = '" . $this->db->escape($order_giftcard['to_name']) . "', 
-						to_email          = '" . $this->db->escape($order_giftcard['to_email']) . "', 
-						giftcard_theme_id = '" . (int)$order_giftcard['giftcard_theme_id'] . "', 
-						message           = '" . $this->db->escape($order_giftcard['message']) . "', 
-						amount            = '" . (float)$order_giftcard['amount'] . "'
+						gift_card_id       = '" . (int)$order_gift_card['gift_card_id'] . "', 
+						description       = '" . $this->db->escape($order_gift_card['description']) . "', 
+						code              = '" . $this->db->escape($order_gift_card['code']) . "', 
+						from_name         = '" . $this->db->escape($order_gift_card['from_name']) . "', 
+						from_email        = '" . $this->db->escape($order_gift_card['from_email']) . "', 
+						to_name           = '" . $this->db->escape($order_gift_card['to_name']) . "', 
+						to_email          = '" . $this->db->escape($order_gift_card['to_email']) . "', 
+						gift_card_theme_id = '" . (int)$order_gift_card['gift_card_theme_id'] . "', 
+						message           = '" . $this->db->escape($order_gift_card['message']) . "', 
+						amount            = '" . (float)$order_gift_card['amount'] . "'
 				");
                 
                 $this->db->query("
-					UPDATE {$this->db->prefix}giftcard 
+					UPDATE {$this->db->prefix}gift_card 
 					SET 
 						order_id = '" . (int)$order_id . "' 
-					WHERE giftcard_id = '" . (int)$order_giftcard['giftcard_id'] . "'
+					WHERE gift_card_id = '" . (int)$order_gift_card['gift_card_id'] . "'
 				");
             }
         }
@@ -492,32 +492,32 @@ class Order extends Model {
             }
         }
         
-        $this->db->query("DELETE FROM {$this->db->prefix}order_giftcard WHERE order_id = '" . (int)$order_id . "'");
+        $this->db->query("DELETE FROM {$this->db->prefix}order_gift_card WHERE order_id = '" . (int)$order_id . "'");
         
-        if (isset($data['order_giftcard'])) {
-            foreach ($data['order_giftcard'] as $order_giftcard) {
+        if (isset($data['order_gift_card'])) {
+            foreach ($data['order_gift_card'] as $order_gift_card) {
                 $this->db->query("
-					INSERT INTO {$this->db->prefix}order_giftcard 
+					INSERT INTO {$this->db->prefix}order_gift_card 
 					SET 
-						order_giftcard_id = '" . (int)$order_giftcard['order_giftcard_id'] . "', 
+						order_gift_card_id = '" . (int)$order_gift_card['order_gift_card_id'] . "', 
 						order_id          = '" . (int)$order_id . "', 
-						giftcard_id       = '" . (int)$order_giftcard['giftcard_id'] . "', 
-						description       = '" . $this->db->escape($order_giftcard['description']) . "', 
-						code              = '" . $this->db->escape($order_giftcard['code']) . "', 
-						from_name         = '" . $this->db->escape($order_giftcard['from_name']) . "', 
-						from_email        = '" . $this->db->escape($order_giftcard['from_email']) . "', 
-						to_name           = '" . $this->db->escape($order_giftcard['to_name']) . "', 
-						to_email          = '" . $this->db->escape($order_giftcard['to_email']) . "', 
-						giftcard_theme_id = '" . (int)$order_giftcard['giftcard_theme_id'] . "', 
-						message           = '" . $this->db->escape($order_giftcard['message']) . "', 
-						amount            = '" . (float)$order_giftcard['amount'] . "'
+						gift_card_id       = '" . (int)$order_gift_card['gift_card_id'] . "', 
+						description       = '" . $this->db->escape($order_gift_card['description']) . "', 
+						code              = '" . $this->db->escape($order_gift_card['code']) . "', 
+						from_name         = '" . $this->db->escape($order_gift_card['from_name']) . "', 
+						from_email        = '" . $this->db->escape($order_gift_card['from_email']) . "', 
+						to_name           = '" . $this->db->escape($order_gift_card['to_name']) . "', 
+						to_email          = '" . $this->db->escape($order_gift_card['to_email']) . "', 
+						gift_card_theme_id = '" . (int)$order_gift_card['gift_card_theme_id'] . "', 
+						message           = '" . $this->db->escape($order_gift_card['message']) . "', 
+						amount            = '" . (float)$order_gift_card['amount'] . "'
 				");
                 
                 $this->db->query("
-					UPDATE {$this->db->prefix}giftcard 
+					UPDATE {$this->db->prefix}gift_card 
 					SET 
 						order_id = '" . (int)$order_id . "' 
-					WHERE giftcard_id = '" . (int)$order_giftcard['giftcard_id'] . "'
+					WHERE gift_card_id = '" . (int)$order_gift_card['gift_card_id'] . "'
 				");
             }
         }
@@ -617,7 +617,7 @@ class Order extends Model {
         $this->db->query("DELETE FROM {$this->db->prefix}order_product WHERE order_id = '" . (int)$order_id . "'");
         $this->db->query("DELETE FROM {$this->db->prefix}order_option WHERE order_id = '" . (int)$order_id . "'");
         $this->db->query("DELETE FROM {$this->db->prefix}order_download WHERE order_id = '" . (int)$order_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}order_giftcard WHERE order_id = '" . (int)$order_id . "'");
+        $this->db->query("DELETE FROM {$this->db->prefix}order_gift_card WHERE order_id = '" . (int)$order_id . "'");
         $this->db->query("DELETE FROM {$this->db->prefix}order_total WHERE order_id = '" . (int)$order_id . "'");
         $this->db->query("DELETE FROM {$this->db->prefix}order_history WHERE order_id = '" . (int)$order_id . "'");
         $this->db->query("DELETE FROM {$this->db->prefix}order_fraud WHERE order_id = '" . (int)$order_id . "'");
@@ -953,18 +953,18 @@ class Order extends Model {
     public function getOrderGiftcards($order_id) {
         $query = $this->db->query("
 			SELECT * 
-			FROM {$this->db->prefix}order_giftcard 
+			FROM {$this->db->prefix}order_gift_card 
 			WHERE order_id = '" . (int)$order_id . "'
 		");
         
         return $query->rows;
     }
     
-    public function getOrderGiftcardByGiftcardId($giftcard_id) {
+    public function getOrderGiftcardByGiftcardId($gift_card_id) {
         $query = $this->db->query("
 			SELECT * 
-			FROM `{$this->db->prefix}order_giftcard` 
-			WHERE giftcard_id = '" . (int)$giftcard_id . "'
+			FROM `{$this->db->prefix}order_gift_card` 
+			WHERE gift_card_id = '" . (int)$gift_card_id . "'
 		");
         
         return $query->row;
@@ -1137,14 +1137,14 @@ class Order extends Model {
         
         $order_info = $this->getOrder($order_id);
         
-        // Send out any gift giftcard mails
+        // Send out any gift gift_card mails
         if ($this->config->get('config_complete_status_id') == $data['order_status_id']) {
-            $this->theme->model('sale/giftcard');
+            $this->theme->model('sale/gift_card');
             
             $results = $this->getOrderGiftcards($order_id);
             
             foreach ($results as $result) {
-                $this->model_sale_giftcard->sendGiftcard($result['giftcard_id']);
+                $this->model_sale_gift_card->sendGiftcard($result['gift_card_id']);
             }
         }
         

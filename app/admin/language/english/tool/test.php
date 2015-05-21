@@ -14,8 +14,16 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title'] = 'Testing Suite';
+namespace Admin\Language\English\Tool;
 
-// Text
-$_['lang_text_success']  = 'Success: %s.';
+class Test {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title'] = 'Testing Suite';
+
+		// Text
+		$_['lang_text_success']  = 'Success: %s.';
+
+		return $_;
+	}
+}

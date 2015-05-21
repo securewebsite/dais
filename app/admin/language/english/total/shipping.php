@@ -14,17 +14,25 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']    = 'Shipping';
+namespace Admin\Language\English\Total;
 
-// Text
-$_['lang_text_total']       = 'Order Totals';
-$_['lang_text_success']     = 'Success: You have modified shipping total.';
+class Shipping {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']    = 'Shipping';
 
-// Entry
-$_['lang_entry_estimator']  = 'Shipping Estimator:';
-$_['lang_entry_status']     = 'Status:';
-$_['lang_entry_sort_order'] = 'Sort Order:';
+		// Text
+		$_['lang_text_total']       = 'Order Totals';
+		$_['lang_text_success']     = 'Success: You have modified shipping total.';
 
-// Error
-$_['lang_error_permission'] = 'Warning: You do not have permission to modify shipping total.';
+		// Entry
+		$_['lang_entry_estimator']  = 'Shipping Estimator:';
+		$_['lang_entry_status']     = 'Status:';
+		$_['lang_entry_sort_order'] = 'Sort Order:';
+
+		// Error
+		$_['lang_error_permission'] = 'Warning: You do not have permission to modify shipping total.';
+
+		return $_;
+	}
+}

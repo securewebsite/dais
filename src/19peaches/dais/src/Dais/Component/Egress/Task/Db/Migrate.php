@@ -22,12 +22,13 @@
 |    
 */
 
-namespace Egress\Library\Task\Db;
+namespace Egress\Task\Db;
 use Egress\Library\Task\TaskBase;
 use Egress\Library\Task\TaskInterface;
 use Egress\Library\Utility\Migrator;
 use Egress\Library\Utility\Naming;
 use Egress\Library\EgressException;
+use Exception;
 
 define('STYLE_REGULAR', 1);
 define('STYLE_OFFSET', 2);
@@ -186,8 +187,6 @@ class Migrate extends TaskBase implements TaskInterface {
             $full_path = $this->_migratorDirs[$file['module']] . SEP . $file['file'];
             
             if (is_file($full_path) && is_readable($full_path)):
-                require_once $full_path;
-
                 $namespace = MIGRATION_NAMESPACE;
                 
                 $klass = Naming::class_from_migration_file($file['file']);

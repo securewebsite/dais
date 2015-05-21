@@ -14,18 +14,26 @@
 |	
 */
 
-// Heading
-$_['lang_heading_total']     = 'Order Totals';
+namespace Admin\Language\English\Module;
 
-// Text
-$_['lang_text_install']      = 'Install';
-$_['lang_text_uninstall']    = 'Uninstall';
+class Total {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_total']     = 'Order Totals';
 
-// Column
-$_['lang_column_name']       = 'Order Totals';
-$_['lang_column_status']     = 'Status';
-$_['lang_column_sort_order'] = 'Sort Order';
-$_['lang_column_action']     = 'Action';
+		// Text
+		$_['lang_text_install']      = 'Install';
+		$_['lang_text_uninstall']    = 'Uninstall';
 
-// Error
-$_['lang_error_permission']  = 'Warning: You do not have permission to modify totals.';
+		// Column
+		$_['lang_column_name']       = 'Order Totals';
+		$_['lang_column_status']     = 'Status';
+		$_['lang_column_sort_order'] = 'Sort Order';
+		$_['lang_column_action']     = 'Action';
+
+		// Error
+		$_['lang_error_permission']  = 'Warning: You do not have permission to modify totals.';
+
+		return $_;
+	}
+}

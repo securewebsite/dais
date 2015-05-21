@@ -57,9 +57,9 @@ class Item extends Controller {
             $data['item_tax_class_id'] = $this->config->get('item_tax_class_id');
         }
         
-        $this->theme->model('localization/taxclass');
+        $this->theme->model('localization/tax_class');
         
-        $data['tax_classes'] = $this->model_localization_taxclass->getTaxClasses();
+        $data['tax_classes'] = $this->model_localization_tax_class->getTaxClasses();
         
         if (isset($this->request->post['item_geo_zone_id'])) {
             $data['item_geo_zone_id'] = $this->request->post['item_geo_zone_id'];
@@ -67,9 +67,9 @@ class Item extends Controller {
             $data['item_geo_zone_id'] = $this->config->get('item_geo_zone_id');
         }
         
-        $this->theme->model('localization/geozone');
+        $this->theme->model('localization/geo_zone');
         
-        $data['geo_zones'] = $this->model_localization_geozone->getGeoZones();
+        $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
         
         if (isset($this->request->post['item_status'])) {
             $data['item_status'] = $this->request->post['item_status'];

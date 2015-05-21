@@ -99,9 +99,9 @@ class Moneybookers extends Controller {
             $data['moneybookers_chargeback_status_id'] = $this->config->get('moneybookers_chargeback_status_id');
         }
         
-        $this->theme->model('localization/orderstatus');
+        $this->theme->model('localization/order_status');
         
-        $data['order_statuses'] = $this->model_localization_orderstatus->getOrderStatuses();
+        $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
         
         if (isset($this->request->post['moneybookers_geo_zone_id'])) {
             $data['moneybookers_geo_zone_id'] = $this->request->post['moneybookers_geo_zone_id'];
@@ -109,9 +109,9 @@ class Moneybookers extends Controller {
             $data['moneybookers_geo_zone_id'] = $this->config->get('moneybookers_geo_zone_id');
         }
         
-        $this->theme->model('localization/geozone');
+        $this->theme->model('localization/geo_zone');
         
-        $data['geo_zones'] = $this->model_localization_geozone->getGeoZones();
+        $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
         
         if (isset($this->request->post['moneybookers_status'])) {
             $data['moneybookers_status'] = $this->request->post['moneybookers_status'];

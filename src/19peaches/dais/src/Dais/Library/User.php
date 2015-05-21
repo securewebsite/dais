@@ -63,7 +63,7 @@ class User extends LibraryService {
     			AND status = '1'
     		");
         endif;
-        //parent::$app['theme']->test($user_query->row['user_name']);
+        
         if ($user_query->num_rows):
             $session->data['user_id']          = $user_query->row['user_id'];
             $session->data['user_name']        = $user_query->row['user_name'];

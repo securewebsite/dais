@@ -17,6 +17,8 @@
 namespace Dais\Library;
 use Dais\Engine\Container;
 use Dais\Service\LibraryService;
+use Dais\Engine\Action;
+use Dais\Service\ActionService;
 
 class Shortcode extends LibraryService {
 	public $shortcode_tags = array();

@@ -13,4 +13,13 @@
 |	file that was distributed with this source code.
 |	
 */
-$_['lang_heading_title'] = 'Welcome to %s';
+
+namespace Front\Language\English\Widget;
+
+class Welcome {
+	public static function lang() {
+		$_['lang_heading_title'] = 'Welcome to %s';
+
+		return $_;
+	}
+}

@@ -14,5 +14,13 @@
 |	
 */
 
-// heading
-$_['lang_text_tax'] = 'Tax';
+namespace Front\Language\English\Total;
+
+class Tax {
+	public static function lang() {
+		// heading
+		$_['lang_text_tax'] = 'Tax';
+
+		return $_;
+	}
+}

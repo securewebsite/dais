@@ -672,7 +672,7 @@ class MySQLBase extends AdapterBase implements AdapterInterface {
             
             if ( $scale == null && array_key_exists('scale', $native_type)):
                 $scale = $native_type['scale'];
-            }
+            endif;
             
             if ($precision != null):
                 if (is_int($scale)):

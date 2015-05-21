@@ -89,14 +89,14 @@ class Order extends Controller {
         
         foreach ($results as $result) {
             $product_total  = $this->model_account_order->getTotalOrderProductsByOrderId($result['order_id']);
-            $giftcard_total = $this->model_account_order->getTotalOrderGiftcardsByOrderId($result['order_id']);
+            $gift_card_total = $this->model_account_order->getTotalOrderGiftcardsByOrderId($result['order_id']);
             
             $data['orders'][] = array(
                 'order_id'   => $result['order_id'], 
                 'name'       => $result['firstname'] . ' ' . $result['lastname'], 
                 'status'     => $result['status'], 
                 'date_added' => date($this->language->get('lang_date_format_short'), strtotime($result['date_added'])), 
-                'products'   => ($product_total + $giftcard_total), 
+                'products'   => ($product_total + $gift_card_total), 
                 'total'      => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']), 
                 'href'       => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'), 
                 'reorder'    => $this->url->link('account/order', 'order_id=' . $result['order_id'], 'SSL')
@@ -285,14 +285,14 @@ class Order extends Controller {
             }
             
             // Giftcard
-            $data['giftcards'] = array();
+            $data['gift_cards'] = array();
             
-            $giftcards = $this->model_account_order->getOrderGiftcards($this->request->get['order_id']);
+            $gift_cards = $this->model_account_order->getOrderGiftcards($this->request->get['order_id']);
             
-            foreach ($giftcards as $giftcard) {
-                $data['giftcards'][] = array(
-                    'description' => $giftcard['description'], 
-                    'amount'      => $this->currency->format($giftcard['amount'], $order_info['currency_code'], $order_info['currency_value'])
+            foreach ($gift_cards as $gift_card) {
+                $data['gift_cards'][] = array(
+                    'description' => $gift_card['description'], 
+                    'amount'      => $this->currency->format($gift_card['amount'], $order_info['currency_code'], $order_info['currency_value'])
                 );
             }
             
@@ -342,7 +342,7 @@ class Order extends Controller {
             
             $data = $this->theme->render_controllers($data);
             
-            $this->response->setOutput($this->theme->view('error/notfound', $data));
+            $this->response->setOutput($this->theme->view('error/not_found', $data));
         }
     }
 }

@@ -732,9 +732,9 @@ class Product extends Controller {
             $data['product_recurrings'] = array();
         }
         
-        $this->theme->model('localization/taxclass');
+        $this->theme->model('localization/tax_class');
         
-        $data['tax_classes'] = $this->model_localization_taxclass->getTaxClasses();
+        $data['tax_classes'] = $this->model_localization_tax_class->getTaxClasses();
         
         if (isset($this->request->post['tax_class_id'])) {
             $data['tax_class_id'] = $this->request->post['tax_class_id'];
@@ -784,9 +784,9 @@ class Product extends Controller {
             $data['sort_order'] = 1;
         }
         
-        $this->theme->model('localization/stockstatus');
+        $this->theme->model('localization/stock_status');
         
-        $data['stock_statuses'] = $this->model_localization_stockstatus->getStockStatuses();
+        $data['stock_statuses'] = $this->model_localization_stock_status->getStockStatuses();
         
         if (isset($this->request->post['stock_status_id'])) {
             $data['stock_status_id'] = $this->request->post['stock_status_id'];
@@ -820,9 +820,9 @@ class Product extends Controller {
             $data['weight'] = '';
         }
         
-        $this->theme->model('localization/weightclass');
+        $this->theme->model('localization/weight_class');
         
-        $data['weight_classes'] = $this->model_localization_weightclass->getWeightClasses();
+        $data['weight_classes'] = $this->model_localization_weight_class->getWeightClasses();
         
         if (isset($this->request->post['weight_class_id'])) {
             $data['weight_class_id'] = $this->request->post['weight_class_id'];
@@ -856,9 +856,9 @@ class Product extends Controller {
             $data['height'] = '';
         }
         
-        $this->theme->model('localization/lengthclass');
+        $this->theme->model('localization/length_class');
         
-        $data['length_classes'] = $this->model_localization_lengthclass->getLengthClasses();
+        $data['length_classes'] = $this->model_localization_length_class->getLengthClasses();
         
         if (isset($this->request->post['length_class_id'])) {
             $data['length_class_id'] = $this->request->post['length_class_id'];
@@ -992,9 +992,9 @@ class Product extends Controller {
             }
         }
         
-        $this->theme->model('people/customergroup');
+        $this->theme->model('people/customer_group');
         
-        $data['customer_groups'] = $this->model_people_customergroup->getCustomerGroups();
+        $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups();
         
         if (isset($this->request->post['product_discount'])) {
             $data['product_discounts'] = $this->request->post['product_discount'];

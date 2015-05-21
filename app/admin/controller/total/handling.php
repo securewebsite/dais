@@ -62,9 +62,9 @@ class Handling extends Controller {
             $data['handling_tax_class_id'] = $this->config->get('handling_tax_class_id');
         }
         
-        $this->theme->model('localization/taxclass');
+        $this->theme->model('localization/tax_class');
         
-        $data['tax_classes'] = $this->model_localization_taxclass->getTaxClasses();
+        $data['tax_classes'] = $this->model_localization_tax_class->getTaxClasses();
         
         if (isset($this->request->post['handling_status'])) {
             $data['handling_status'] = $this->request->post['handling_status'];

@@ -14,16 +14,24 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']    = 'Reward Points';
+namespace Admin\Language\English\Total;
 
-// Text
-$_['lang_text_total']       = 'Order Totals';
-$_['lang_text_success']     = 'Success: You have modified reward points total.';
+class Reward {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']    = 'Reward Points';
 
-// Entry
-$_['lang_entry_status']     = 'Status:';
-$_['lang_entry_sort_order'] = 'Sort Order:';
+		// Text
+		$_['lang_text_total']       = 'Order Totals';
+		$_['lang_text_success']     = 'Success: You have modified reward points total.';
 
-// Error
-$_['lang_error_permission'] = 'Warning: You do not have permission to modify reward points total.';
+		// Entry
+		$_['lang_entry_status']     = 'Status:';
+		$_['lang_entry_sort_order'] = 'Sort Order:';
+
+		// Error
+		$_['lang_error_permission'] = 'Warning: You do not have permission to modify reward points total.';
+
+		return $_;
+	}
+}

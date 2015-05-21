@@ -13,4 +13,13 @@
 |	file that was distributed with this source code.
 |	
 */
-$_['lang_text_handling'] = 'Handling Fee';
+
+namespace Front\Language\English\Total;
+
+class Handling {
+	public static function lang() {
+		$_['lang_text_handling'] = 'Handling Fee';
+
+		return $_;
+	}
+}

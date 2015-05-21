@@ -14,16 +14,24 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']      = 'Your Credits';
+namespace Front\Language\English\Account;
 
-// Column
-$_['lang_column_date_added']  = 'Date Added';
-$_['lang_column_description'] = 'Description';
-$_['lang_column_amount']      = 'Amount (%s)';
+class Credit {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']      = 'Your Credits';
 
-// Text
-$_['lang_text_account']       = 'Dashboard';
-$_['lang_text_transaction']   = 'Your Credits';
-$_['lang_text_total']         = 'Your current balance is:';
-$_['lang_text_empty']         = 'You do not have any credits.';
+		// Column
+		$_['lang_column_date_added']  = 'Date Added';
+		$_['lang_column_description'] = 'Description';
+		$_['lang_column_amount']      = 'Amount (%s)';
+
+		// Text
+		$_['lang_text_account']       = 'Dashboard';
+		$_['lang_text_transaction']   = 'Your Credits';
+		$_['lang_text_total']         = 'Your current balance is:';
+		$_['lang_text_empty']         = 'You do not have any credits.';
+
+		return $_;
+	}
+}

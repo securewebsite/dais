@@ -14,8 +14,16 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']  = 'Page Not Found.';
+namespace Admin\Language\English\Error;
 
-// Text
-$_['lang_text_not_found'] = 'The page you are looking for could not be found. Please contact your administrator if the problem persists.';
+class NotFound {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']  = 'Page Not Found.';
+
+		// Text
+		$_['lang_text_not_found'] = 'The page you are looking for could not be found. Please contact your administrator if the problem persists.';
+
+		return $_;
+	}
+}

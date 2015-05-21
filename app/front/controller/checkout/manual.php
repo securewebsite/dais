@@ -39,8 +39,8 @@ class Manual extends Controller {
             unset($this->session->data['payment_methods']);
             unset($this->session->data['coupon']);
             unset($this->session->data['reward']);
-            unset($this->session->data['giftcard']);
-            unset($this->session->data['giftcards']);
+            unset($this->session->data['gift_card']);
+            unset($this->session->data['gift_cards']);
             
             // Settings
             $this->theme->model('setting/setting');
@@ -198,94 +198,94 @@ class Manual extends Controller {
             }
             
             // Giftcard
-            $this->session->data['giftcards'] = array();
+            $this->session->data['gift_cards'] = array();
             
-            if (isset($this->request->post['order_giftcard'])) {
-                foreach ($this->request->post['order_giftcard'] as $giftcard) {
-                    $this->session->data['giftcards'][] = array(
-                        'giftcard_id'       => $giftcard['giftcard_id'], 
-                        'description'       => $giftcard['description'], 
+            if (isset($this->request->post['order_gift_card'])) {
+                foreach ($this->request->post['order_gift_card'] as $gift_card) {
+                    $this->session->data['gift_cards'][] = array(
+                        'gift_card_id'       => $gift_card['gift_card_id'], 
+                        'description'       => $gift_card['description'], 
                         'code'              => substr(md5(mt_rand()), 0, 10), 
-                        'from_name'         => $giftcard['from_name'], 
-                        'from_email'        => $giftcard['from_email'], 
-                        'to_name'           => $giftcard['to_name'], 
-                        'to_email'          => $giftcard['to_email'], 
-                        'giftcard_theme_id' => $giftcard['giftcard_theme_id'], 
-                        'message'           => $giftcard['message'], 
-                        'amount'            => number_format($giftcard['amount'], 2)
+                        'from_name'         => $gift_card['from_name'], 
+                        'from_email'        => $gift_card['from_email'], 
+                        'to_name'           => $gift_card['to_name'], 
+                        'to_email'          => $gift_card['to_email'], 
+                        'gift_card_theme_id' => $gift_card['gift_card_theme_id'], 
+                        'message'           => $gift_card['message'], 
+                        'amount'            => number_format($gift_card['amount'], 2)
                     );
                 }
             }
             
-            // Add a new giftcard if set
+            // Add a new gift_card if set
             if (isset($this->request->post['from_name']) && isset($this->request->post['from_email']) && isset($this->request->post['to_name']) && isset($this->request->post['to_email']) && isset($this->request->post['amount'])) {
                 if (($this->encode->strlen($this->request->post['from_name']) < 1) || ($this->encode->strlen($this->request->post['from_name']) > 64)) {
-                    $json['error']['giftcards']['from_name'] = $this->language->get('lang_error_from_name');
+                    $json['error']['gift_cards']['from_name'] = $this->language->get('lang_error_from_name');
                 }
                 
                 if (($this->encode->strlen($this->request->post['from_email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['from_email'])) {
-                    $json['error']['giftcards']['from_email'] = $this->language->get('lang_error_email');
+                    $json['error']['gift_cards']['from_email'] = $this->language->get('lang_error_email');
                 }
                 
                 if (($this->encode->strlen($this->request->post['to_name']) < 1) || ($this->encode->strlen($this->request->post['to_name']) > 64)) {
-                    $json['error']['giftcards']['to_name'] = $this->language->get('lang_error_to_name');
+                    $json['error']['gift_cards']['to_name'] = $this->language->get('lang_error_to_name');
                 }
                 
                 if (($this->encode->strlen($this->request->post['to_email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['to_email'])) {
-                    $json['error']['giftcards']['to_email'] = $this->language->get('lang_error_email');
+                    $json['error']['gift_cards']['to_email'] = $this->language->get('lang_error_email');
                 }
                 
                 if (($this->request->post['amount'] < 1) || ($this->request->post['amount'] > 1000)) {
-                    $json['error']['giftcards']['amount'] = sprintf($this->language->get('lang_error_amount'), $this->currency->format(1, false, 1), $this->currency->format(1000, false, 1) . ' ' . $this->config->get('config_currency'));
+                    $json['error']['gift_cards']['amount'] = sprintf($this->language->get('lang_error_amount'), $this->currency->format(1, false, 1), $this->currency->format(1000, false, 1) . ' ' . $this->config->get('config_currency'));
                 }
                 
-                if (!isset($json['error']['giftcards'])) {
-                    $giftcard_data = array(
+                if (!isset($json['error']['gift_cards'])) {
+                    $gift_card_data = array(
                         'order_id'          => 0, 
                         'code'              => substr(md5(mt_rand()), 0, 10), 
                         'from_name'         => $this->request->post['from_name'], 
                         'from_email'        => $this->request->post['from_email'], 
                         'to_name'           => $this->request->post['to_name'], 
                         'to_email'          => $this->request->post['to_email'], 
-                        'giftcard_theme_id' => $this->request->post['giftcard_theme_id'], 
+                        'gift_card_theme_id' => $this->request->post['gift_card_theme_id'], 
                         'message'           => $this->request->post['message'], 
                         'amount'            => $this->request->post['amount'], 
                         'status'            => true
                     );
                     
-                    $this->theme->model('checkout/giftcard');
+                    $this->theme->model('checkout/gift_card');
                     
-                    $giftcard_id = $this->model_checkout_giftcard->addGiftcard(0, $giftcard_data);
+                    $gift_card_id = $this->model_checkout_gift_card->addGiftcard(0, $gift_card_data);
                     
-                    $this->session->data['giftcards'][] = array(
-                        'giftcard_id'       => $giftcard_id, 
+                    $this->session->data['gift_cards'][] = array(
+                        'gift_card_id'       => $gift_card_id, 
                         'description'       => sprintf($this->language->get('lang_text_for'), $this->currency->format($this->request->post['amount'], $this->config->get('config_currency')), $this->request->post['to_name']), 
                         'code'              => substr(md5(mt_rand()), 0, 10), 
                         'from_name'         => $this->request->post['from_name'], 
                         'from_email'        => $this->request->post['from_email'], 
                         'to_name'           => $this->request->post['to_name'], 
                         'to_email'          => $this->request->post['to_email'], 
-                        'giftcard_theme_id' => $this->request->post['giftcard_theme_id'], 
+                        'gift_card_theme_id' => $this->request->post['gift_card_theme_id'], 
                         'message'           => $this->request->post['message'], 
                         'amount'            => $this->request->post['amount']
                     );
                 }
             }
             
-            $json['order_giftcard'] = array();
+            $json['order_gift_card'] = array();
             
-            foreach ($this->session->data['giftcards'] as $giftcard) {
-                $json['order_giftcard'][] = array(
-                    'giftcard_id'       => $giftcard['giftcard_id'], 
-                    'description'       => $giftcard['description'], 
-                    'code'              => $giftcard['code'], 
-                    'from_name'         => $giftcard['from_name'], 
-                    'from_email'        => $giftcard['from_email'], 
-                    'to_name'           => $giftcard['to_name'], 
-                    'to_email'          => $giftcard['to_email'], 
-                    'giftcard_theme_id' => $giftcard['giftcard_theme_id'], 
-                    'message'           => $giftcard['message'], 
-                    'amount'            => number_format($giftcard['amount'], 2)
+            foreach ($this->session->data['gift_cards'] as $gift_card) {
+                $json['order_gift_card'][] = array(
+                    'gift_card_id'       => $gift_card['gift_card_id'], 
+                    'description'       => $gift_card['description'], 
+                    'code'              => $gift_card['code'], 
+                    'from_name'         => $gift_card['from_name'], 
+                    'from_email'        => $gift_card['from_email'], 
+                    'to_name'           => $gift_card['to_name'], 
+                    'to_email'          => $gift_card['to_email'], 
+                    'gift_card_theme_id' => $gift_card['gift_card_theme_id'], 
+                    'message'           => $gift_card['message'], 
+                    'amount'            => number_format($gift_card['amount'], 2)
                 );
             }
             
@@ -419,15 +419,15 @@ class Manual extends Controller {
             }
             
             // Giftcard
-            if (!empty($this->request->post['giftcard'])) {
-                $this->theme->model('checkout/giftcard');
+            if (!empty($this->request->post['gift_card'])) {
+                $this->theme->model('checkout/gift_card');
                 
-                $giftcard_info = $this->model_checkout_giftcard->getGiftcard($this->request->post['giftcard']);
+                $gift_card_info = $this->model_checkout_gift_card->getGiftcard($this->request->post['gift_card']);
                 
-                if ($giftcard_info) {
-                    $this->session->data['giftcard'] = $this->request->post['giftcard'];
+                if ($gift_card_info) {
+                    $this->session->data['gift_card'] = $this->request->post['gift_card'];
                 } else {
-                    $json['error']['giftcard'] = $this->language->get('lang_error_giftcard');
+                    $json['error']['gift_card'] = $this->language->get('lang_error_gift_card');
                 }
             }
             
@@ -593,8 +593,8 @@ class Manual extends Controller {
             unset($this->session->data['payment_methods']);
             unset($this->session->data['coupon']);
             unset($this->session->data['reward']);
-            unset($this->session->data['giftcard']);
-            unset($this->session->data['giftcards']);
+            unset($this->session->data['gift_card']);
+            unset($this->session->data['gift_cards']);
         } else {
             $json['error']['warning'] = $this->language->get('lang_error_permission');
         }

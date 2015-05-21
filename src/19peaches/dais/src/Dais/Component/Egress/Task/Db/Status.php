@@ -22,7 +22,7 @@
 |    
 */
 
-namespace Egress\Library\Task\Db;
+namespace Egress\Task\Db;
 use Egress\Library\Task\TaskBase;
 use Egress\Library\Task\TaskInterface;
 use Egress\Library\Utility\Migrator;

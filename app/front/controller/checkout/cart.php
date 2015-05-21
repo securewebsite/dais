@@ -23,8 +23,8 @@ class Cart extends Controller {
     public function index() {
         $data = $this->theme->language('checkout/cart');
         
-        if (!isset($this->session->data['giftcards'])) {
-            $this->session->data['giftcards'] = array();
+        if (!isset($this->session->data['gift_cards'])) {
+            $this->session->data['gift_cards'] = array();
         }
         
         // Update
@@ -46,7 +46,7 @@ class Cart extends Controller {
         if (isset($this->request->get['remove'])) {
             $this->cart->remove($this->request->get['remove']);
             
-            unset($this->session->data['giftcards'][$this->request->get['remove']]);
+            unset($this->session->data['gift_cards'][$this->request->get['remove']]);
             
             $this->session->data['success'] = $this->language->get('lang_text_remove');
             
@@ -69,10 +69,10 @@ class Cart extends Controller {
         }
         
         // Gift card
-        if (isset($this->request->post['giftcard']) && $this->validateGiftcard()) {
-            $this->session->data['giftcard'] = $this->request->post['giftcard'];
+        if (isset($this->request->post['gift_card']) && $this->validateGiftcard()) {
+            $this->session->data['gift_card'] = $this->request->post['gift_card'];
             
-            $this->session->data['success'] = $this->language->get('lang_text_giftcard');
+            $this->session->data['success'] = $this->language->get('lang_text_gift_card');
             
             $this->response->redirect($this->url->link('checkout/cart'));
         }
@@ -101,7 +101,7 @@ class Cart extends Controller {
         
         $this->breadcrumb->add('lang_heading_title', 'checkout/cart');
         
-        if ($this->cart->hasProducts() || !empty($this->session->data['giftcards'])) {
+        if ($this->cart->hasProducts() || !empty($this->session->data['gift_cards'])) {
             $points = $this->customer->getRewardPoints();
             
             $points_total = 0;
@@ -243,14 +243,14 @@ class Cart extends Controller {
             }
             
             // Gift card
-            $data['giftcards'] = array();
+            $data['gift_cards'] = array();
             
-            if (!empty($this->session->data['giftcards'])) {
-                foreach ($this->session->data['giftcards'] as $key => $giftcard) {
-                    $data['giftcards'][] = array(
+            if (!empty($this->session->data['gift_cards'])) {
+                foreach ($this->session->data['gift_cards'] as $key => $gift_card) {
+                    $data['gift_cards'][] = array(
                         'key' => $key, 
-                        'description' => $giftcard['description'], 
-                        'amount' => $this->currency->format($giftcard['amount']), 
+                        'description' => $gift_card['description'], 
+                        'amount' => $this->currency->format($gift_card['amount']), 
                         'remove' => $this->url->link('checkout/cart', 'remove=' . $key)
                     );
                 }
@@ -272,14 +272,14 @@ class Cart extends Controller {
                 $data['coupon'] = '';
             }
             
-            $data['giftcard_status'] = $this->config->get('giftcard_status');
+            $data['gift_card_status'] = $this->config->get('gift_card_status');
             
-            if (isset($this->request->post['giftcard'])) {
-                $data['giftcard'] = $this->request->post['giftcard'];
-            } elseif (isset($this->session->data['giftcard'])) {
-                $data['giftcard'] = $this->session->data['giftcard'];
+            if (isset($this->request->post['gift_card'])) {
+                $data['gift_card'] = $this->request->post['gift_card'];
+            } elseif (isset($this->session->data['gift_card'])) {
+                $data['gift_card'] = $this->session->data['gift_card'];
             } else {
-                $data['giftcard'] = '';
+                $data['gift_card'] = '';
             }
             
             $data['reward_status'] = ($points && $points_total && $this->config->get('reward_status'));
@@ -406,7 +406,7 @@ class Cart extends Controller {
             
             $data = $this->theme->render_controllers($data);
             
-            $this->response->setOutput($this->theme->view('error/notfound', $data));
+            $this->response->setOutput($this->theme->view('error/not_found', $data));
         }
     }
     
@@ -425,12 +425,12 @@ class Cart extends Controller {
     }
     
     protected function validateGiftcard() {
-        $this->theme->model('checkout/giftcard');
+        $this->theme->model('checkout/gift_card');
         
-        $giftcard_info = $this->model_checkout_giftcard->getGiftcard($this->request->post['giftcard']);
+        $gift_card_info = $this->model_checkout_gift_card->getGiftcard($this->request->post['gift_card']);
         
-        if (!$giftcard_info) {
-            $this->error['warning'] = $this->language->get('lang_error_giftcard');
+        if (!$gift_card_info) {
+            $this->error['warning'] = $this->language->get('lang_error_gift_card');
         }
         
         $this->theme->listen(__CLASS__, __FUNCTION__);
@@ -594,7 +594,7 @@ class Cart extends Controller {
                     }
                 }
                 
-                $json['total'] = sprintf($this->language->get('lang_text_items'), $this->cart->countProducts() + (isset($this->session->data['giftcards']) ? count($this->session->data['giftcards']) : 0), $this->currency->format($total));
+                $json['total'] = sprintf($this->language->get('lang_text_items'), $this->cart->countProducts() + (isset($this->session->data['gift_cards']) ? count($this->session->data['gift_cards']) : 0), $this->currency->format($total));
             } else {
                 $json['redirect'] = str_replace('&amp;', '&', $this->url->link('catalog/product', 'product_id=' . $this->request->post['product_id']));
             }
@@ -614,7 +614,7 @@ class Cart extends Controller {
         if (isset($this->request->post['remove'])) {
             $this->cart->remove($this->request->post['remove']);
             
-            unset($this->session->data['giftcards'][$this->request->post['remove']]);
+            unset($this->session->data['gift_cards'][$this->request->post['remove']]);
             
             $this->session->data['success'] = $this->language->get('lang_text_remove');
             
@@ -660,7 +660,7 @@ class Cart extends Controller {
                 array_multisort($sort_order, SORT_ASC, $total_data);
             }
             
-            $json['total'] = sprintf($this->language->get('lang_text_items'), $this->cart->countProducts() + (isset($this->session->data['giftcards']) ? count($this->session->data['giftcards']) : 0), $this->currency->format($total));
+            $json['total'] = sprintf($this->language->get('lang_text_items'), $this->cart->countProducts() + (isset($this->session->data['gift_cards']) ? count($this->session->data['gift_cards']) : 0), $this->currency->format($total));
         }
         
         $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);

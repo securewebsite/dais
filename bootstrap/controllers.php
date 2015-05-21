@@ -35,13 +35,13 @@
 
 $front_controllers = array(
 	'header'         => 'content/header',
-	'post_header'    => 'common/postheader',
-	'column_left'    => 'common/columnleft',
-	'breadcrumb'     => 'common/breadcrumb',
-	'content_top'    => 'common/contenttop',
-	'content_bottom' => 'common/contentbottom',
-	'column_right'   => 'common/columnright',
-	'pre_footer'     => 'common/prefooter',
+	'post_header'    => 'common/post_header',
+	'column_left'    => 'common/column_left',
+	'breadcrumb'     => 'common/bread_crumb',
+	'content_top'    => 'common/content_top',
+	'content_bottom' => 'common/content_bottom',
+	'column_right'   => 'common/column_right',
+	'pre_footer'     => 'common/pre_footer',
 	'footer'         => 'content/footer',
 );
 
@@ -49,7 +49,7 @@ $config[FRONT_FASCADE]['pre_render'] = $front_controllers;
 
 $admin_controllers = array(
 	'header'     => 'common/header',
-	'breadcrumb' => 'common/breadcrumb',
+	'breadcrumb' => 'common/bread_crumb',
 	'footer'     => 'common/footer',
 );
 

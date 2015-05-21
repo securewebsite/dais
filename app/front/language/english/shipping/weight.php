@@ -14,6 +14,14 @@
 |	
 */
 
-// Text
-$_['lang_text_title']  = 'Weight Based Shipping';
-$_['lang_text_weight'] = 'Weight:';
+namespace Front\Language\English\Shipping;
+
+class Weight {
+	public static function lang() {
+		// Text
+		$_['lang_text_title']  = 'Weight Based Shipping';
+		$_['lang_text_weight'] = 'Weight:';
+
+		return $_;
+	}
+}

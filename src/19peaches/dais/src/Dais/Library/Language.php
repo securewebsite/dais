@@ -17,6 +17,7 @@
 namespace Dais\Library;
 use Dais\Engine\Container;
 use Dais\Service\LibraryService;
+use Dais\Library\Naming;
 
 class Language extends LibraryService {
     private $default = 'english';
@@ -41,7 +42,7 @@ class Language extends LibraryService {
     
     public function load($filename) {
         $_ = array();
-        
+
         /**
          * We need to work out whether we have a base language file for our current
          * fascade and theme.  If we do, we'll use this one, else we'll fallback
@@ -50,19 +51,21 @@ class Language extends LibraryService {
         
         switch (parent::$app['active.fascade']):
         case ADMIN_FASCADE:
-            $language_dir = parent::$app['path.theme'] . parent::$app['config_admin_theme'] . '/language/';
+            $language_dir = parent::$app['path.theme'] . parent::$app['config_admin_theme'] . SEP . 'language' . SEP;
             break;
 
         case FRONT_FASCADE:
-            $language_dir = parent::$app['path.theme'] . parent::$app['config_theme'] . '/language/';
+            $language_dir = parent::$app['path.theme'] . parent::$app['config_theme'] . SEP . 'language' . SEP;
             break;
         endswitch;
         
         // grab our base file
-        if (is_readable($file = $language_dir . $this->default . '/' . $filename . '.php')):
-            require $file;
+        if (is_readable($file = $language_dir . $this->default . SEP . $filename . '.php')):
+            $class = Naming::class_from_filename($file);
+            $_ = $class::lang();
         else:
-            require $this->base . $this->default . '/' . $filename . '.php';
+            $class = Naming::class_from_filename($this->base . $this->default . SEP . $filename . '.php');
+            $_ = $class::lang();
         endif;
         
         /**
@@ -70,14 +73,16 @@ class Language extends LibraryService {
          * first, then fallback to default.
          */
         
-        if (is_readable($file = $language_dir . $this->directory . '/' . $filename . '.php')):
-            require $file;
+        if (is_readable($file = $language_dir . $this->directory . SEP . $filename . '.php')):
+            $class = Naming::class_from_filename($file);
+            $_ = $class::lang();
         else:
-            require $this->base . $this->directory . '/' . $filename . '.php';
+            $class = Naming::class_from_filename($this->base . $this->directory . SEP . $filename . '.php');
+            $_   = $class::lang();
         endif;
         
         $this->data = array_merge($this->data, $_);
-        
+        //var_dump($this->data);exit;
         return $this->data;
     }
     

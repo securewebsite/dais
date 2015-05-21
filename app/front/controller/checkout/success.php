@@ -31,8 +31,8 @@ class Success extends Controller {
             unset($this->session->data['order_id']);
             unset($this->session->data['coupon']);
             unset($this->session->data['reward']);
-            unset($this->session->data['giftcard']);
-            unset($this->session->data['giftcards']);
+            unset($this->session->data['gift_card']);
+            unset($this->session->data['gift_cards']);
             unset($this->session->data['totals']);
             unset($this->session->data['paypal']);
         }

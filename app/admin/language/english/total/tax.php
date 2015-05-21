@@ -14,16 +14,24 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']    = 'Taxes';
+namespace Admin\Language\English\Total;
 
-// Text
-$_['lang_text_total']       = 'Order Totals';
-$_['lang_text_success']     = 'Success: You have modified taxes total.';
+class Tax {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']    = 'Taxes';
 
-// Entry
-$_['lang_entry_status']     = 'Status:';
-$_['lang_entry_sort_order'] = 'Sort Order:';
+		// Text
+		$_['lang_text_total']       = 'Order Totals';
+		$_['lang_text_success']     = 'Success: You have modified taxes total.';
 
-// Error
-$_['lang_error_permission'] = 'Warning: You do not have permission to modify taxes total.';
+		// Entry
+		$_['lang_entry_status']     = 'Status:';
+		$_['lang_entry_sort_order'] = 'Sort Order:';
+
+		// Error
+		$_['lang_error_permission'] = 'Warning: You do not have permission to modify taxes total.';
+
+		return $_;
+	}
+}

@@ -14,6 +14,14 @@
 |	
 */
 
-// Text
-$_['lang_text_title']       = 'Free Shipping';
-$_['lang_text_description'] = 'Free Shipping';
+namespace Front\Language\English\Shipping;
+
+class Free {
+	public static function lang() {
+		// Text
+		$_['lang_text_title']       = 'Free Shipping';
+		$_['lang_text_description'] = 'Free Shipping';
+
+		return $_;
+	}
+}

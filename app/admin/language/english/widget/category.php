@@ -14,18 +14,26 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']    = 'Category';
+namespace Admin\Language\English\Widget;
 
-// Text
-$_['lang_text_widget']      = 'Widgets';
-$_['lang_text_success']     = 'Success: You have modified widget category.';
+class Category {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']    = 'Category';
 
-// Entry
-$_['lang_entry_layout']     = 'Layout:';
-$_['lang_entry_position']   = 'Position:';
-$_['lang_entry_status']     = 'Status:';
-$_['lang_entry_sort_order'] = 'Sort Order:';
+		// Text
+		$_['lang_text_widget']      = 'Widgets';
+		$_['lang_text_success']     = 'Success: You have modified widget category.';
 
-// Error
-$_['lang_error_permission'] = 'Warning: You do not have permission to modify widget category.';
+		// Entry
+		$_['lang_entry_layout']     = 'Layout:';
+		$_['lang_entry_position']   = 'Position:';
+		$_['lang_entry_status']     = 'Status:';
+		$_['lang_entry_sort_order'] = 'Sort Order:';
+
+		// Error
+		$_['lang_error_permission'] = 'Warning: You do not have permission to modify widget category.';
+
+		return $_;
+	}
+}

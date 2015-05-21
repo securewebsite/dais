@@ -90,7 +90,7 @@ class Masonry extends Controller {
                     'start' => 0,
                     'limit' => $setting['limit']
                 ));
-            } elseif ($setting['product_type'] == 'bestseller') {
+            } elseif ($setting['product_type'] == 'best_seller') {
                 $results = $this->model_catalog_product->getBestSellerProducts($setting['limit']);
             } else {
                 $results = $this->model_catalog_product->getProducts(array(

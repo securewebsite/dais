@@ -14,21 +14,29 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']     = 'Products Purchased Report';
+namespace Admin\Language\English\Report;
 
-// Text
-$_['lang_text_all_status']   = 'Status (All)';
+class ProductPurchased {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']     = 'Products Purchased Report';
 
-// Column
-$_['lang_column_date_start'] = 'Date Start';
-$_['lang_column_date_end']   = 'Date End';
-$_['lang_column_name']       = 'Product Name';
-$_['lang_column_model']      = 'Model';
-$_['lang_column_quantity']   = 'Quantity';
-$_['lang_column_total']      = 'Total';
+		// Text
+		$_['lang_text_all_status']   = 'Status (All)';
 
-// Entry
-$_['lang_entry_date_start']  = 'Date Start:';
-$_['lang_entry_date_end']    = 'Date End:';
-$_['lang_entry_status']      = 'Order Status:';
+		// Column
+		$_['lang_column_date_start'] = 'Date Start';
+		$_['lang_column_date_end']   = 'Date End';
+		$_['lang_column_name']       = 'Product Name';
+		$_['lang_column_model']      = 'Model';
+		$_['lang_column_quantity']   = 'Quantity';
+		$_['lang_column_total']      = 'Total';
+
+		// Entry
+		$_['lang_entry_date_start']  = 'Date Start:';
+		$_['lang_entry_date_end']    = 'Date End:';
+		$_['lang_entry_status']      = 'Order Status:';
+
+		return $_;
+	}
+}

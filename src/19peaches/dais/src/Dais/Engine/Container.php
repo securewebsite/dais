@@ -49,6 +49,7 @@
 
 
 namespace Dais\Engine;
+use Dais\Interfaces\ServiceProviderInterface;
 
 /**
  * Container main class.

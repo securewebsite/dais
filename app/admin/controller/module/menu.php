@@ -175,7 +175,7 @@ class Menu extends Controller {
         
         $data = $this->theme->render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('module/menubuilder_list', $data));
+        $this->response->setOutput($this->theme->view('module/menu_builder_list', $data));
     }
     
     public function getForm() {
@@ -259,13 +259,13 @@ class Menu extends Controller {
         
         $data['menu_item'] = array();
         
-        $this->theme->loadjs('javascript/module/menubuilder_form', $data);
+        $this->theme->loadjs('javascript/module/menu_builder_form', $data);
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
         $data = $this->theme->render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('module/menubuilder_form', $data));
+        $this->response->setOutput($this->theme->view('module/menu_builder_form', $data));
     }
     
     private function validateForm() {
@@ -328,7 +328,7 @@ class Menu extends Controller {
         
         $data['categories'] = array();
         
-        $data['entry_category'] = $this->language->get('lang_entry_product_category');
+        $data['lang_entry_category'] = $this->language->get('lang_entry_product_category');
         
         $results = $this->model_catalog_category->getCategories();
         
@@ -368,7 +368,7 @@ class Menu extends Controller {
         
         $data['categories'] = array();
         
-        $data['entry_category'] = $this->language->get('lang_entry_content_category');
+        $data['lang_entry_category'] = $this->language->get('lang_entry_content_category');
         
         $results = $this->model_content_category->getCategories(0);
         

@@ -14,27 +14,35 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']    = 'Layouts';
+namespace Admin\Language\English\Design;
 
-// Text
-$_['lang_text_success']     = 'Success: You have modified layouts.';
-$_['lang_text_default']     = 'Default';
+class Layout {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']    = 'Layouts';
 
-// Column
-$_['lang_column_name']      = 'Layout Name';
-$_['lang_column_action']    = 'Action';
+		// Text
+		$_['lang_text_success']     = 'Success: You have modified layouts.';
+		$_['lang_text_default']     = 'Default';
 
-// Entry
-$_['lang_entry_name']       = 'Layout Name:';
-$_['lang_entry_store']      = 'Store:';
-$_['lang_entry_route']      = 'Route:';
+		// Column
+		$_['lang_column_name']      = 'Layout Name';
+		$_['lang_column_action']    = 'Action';
 
-// Error
-$_['lang_error_permission'] = 'Warning: You do not have permission to modify layouts.';
-$_['lang_error_name']       = 'Layout Name must be between 3 and 64 characters.';
-$_['lang_error_default']    = 'Warning: This layout cannot be deleted as it is currently assigned as the default store layout.';
-$_['lang_error_store']      = 'Warning: This layout cannot be deleted as it is currently assigned to %s stores.';
-$_['lang_error_product']    = 'Warning: This layout cannot be deleted as it is currently assigned to %s products.';
-$_['lang_error_category']   = 'Warning: This layout cannot be deleted as it is currently assigned to %s categories.';
-$_['lang_error_page']       = 'Warning: This layout cannot be deleted as it is currently assigned to %s pages.';
+		// Entry
+		$_['lang_entry_name']       = 'Layout Name:';
+		$_['lang_entry_store']      = 'Store:';
+		$_['lang_entry_route']      = 'Route:';
+
+		// Error
+		$_['lang_error_permission'] = 'Warning: You do not have permission to modify layouts.';
+		$_['lang_error_name']       = 'Layout Name must be between 3 and 64 characters.';
+		$_['lang_error_default']    = 'Warning: This layout cannot be deleted as it is currently assigned as the default store layout.';
+		$_['lang_error_store']      = 'Warning: This layout cannot be deleted as it is currently assigned to %s stores.';
+		$_['lang_error_product']    = 'Warning: This layout cannot be deleted as it is currently assigned to %s products.';
+		$_['lang_error_category']   = 'Warning: This layout cannot be deleted as it is currently assigned to %s categories.';
+		$_['lang_error_page']       = 'Warning: This layout cannot be deleted as it is currently assigned to %s pages.';
+
+		return $_;
+	}
+}

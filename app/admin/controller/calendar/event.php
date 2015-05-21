@@ -296,7 +296,7 @@ class Event extends Controller {
         
         $data['events'] = array();
         
-        $this->theme->model('people/customergroup');
+        $this->theme->model('people/customer_group');
         
         if ($results):
             foreach ($results as $result):
@@ -321,7 +321,7 @@ class Event extends Controller {
                 $data['events'][] = array(
                     'event_id'      => $result['event_id'], 
                     'event_name'    => html_entity_decode($result['event_name']), 
-                    'visibility'    => $this->model_people_customergroup->getCustomerGroupName($result['visibility']), 
+                    'visibility'    => $this->model_people_customer_group->getCustomerGroupName($result['visibility']), 
                     'date_time'     => date($this->language->get('lang_date_format_short') . ' ' . $this->language->get('lang_time_format'), strtotime($result['date_time'])), 
                     'location'      => $location, 
                     'cost'          => $this->currency->format($result['cost']), 
@@ -566,9 +566,9 @@ class Event extends Controller {
             $data['visibility'] = '';
         }
         
-        $this->theme->model('people/customergroup');
+        $this->theme->model('people/customer_group');
         
-        $data['customer_groups'] = $this->model_people_customergroup->getCustomerGroups();
+        $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups();
         
         if (isset($this->request->post['event_length'])) {
             $data['event_length'] = $this->request->post['event_length'];

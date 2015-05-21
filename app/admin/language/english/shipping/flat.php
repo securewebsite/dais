@@ -14,19 +14,27 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']    = 'Flat Rate';
+namespace Admin\Language\English\Shipping;
 
-// Text
-$_['lang_text_shipping']    = 'Shipping';
-$_['lang_text_success']     = 'Success: You have modified flat rate shipping.';
+class Flat {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']    = 'Flat Rate';
 
-// Entry
-$_['lang_entry_cost']       = 'Cost:';
-$_['lang_entry_tax_class']  = 'Tax Class:';
-$_['lang_entry_geo_zone']   = 'Geo Zone:';
-$_['lang_entry_status']     = 'Status:';
-$_['lang_entry_sort_order'] = 'Sort Order:';
+		// Text
+		$_['lang_text_shipping']    = 'Shipping';
+		$_['lang_text_success']     = 'Success: You have modified flat rate shipping.';
 
-// Error
-$_['lang_error_permission'] = 'Warning: You do not have permission to modify flat rate shipping.';
+		// Entry
+		$_['lang_entry_cost']       = 'Cost:';
+		$_['lang_entry_tax_class']  = 'Tax Class:';
+		$_['lang_entry_geo_zone']   = 'Geo Zone:';
+		$_['lang_entry_status']     = 'Status:';
+		$_['lang_entry_sort_order'] = 'Sort Order:';
+
+		// Error
+		$_['lang_error_permission'] = 'Warning: You do not have permission to modify flat rate shipping.';
+
+		return $_;
+	}
+}

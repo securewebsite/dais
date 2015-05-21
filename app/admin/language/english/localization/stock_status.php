@@ -14,20 +14,28 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']    = 'Stock Status';
+namespace Admin\Language\English\Localization;
 
-// Text
-$_['lang_text_success']     = 'Success: You have modified stock status.';
+class StockStatus {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']    = 'Stock Status';
 
-// Column
-$_['lang_column_name']      = 'Stock Status Name';
-$_['lang_column_action']    = 'Action';
+		// Text
+		$_['lang_text_success']     = 'Success: You have modified stock status.';
 
-// Entry
-$_['lang_entry_name']       = 'Stock Status Name:';
+		// Column
+		$_['lang_column_name']      = 'Stock Status Name';
+		$_['lang_column_action']    = 'Action';
 
-// Error
-$_['lang_error_permission'] = 'Warning: You do not have permission to modify stock status.';
-$_['lang_error_name']       = 'Stock status name must be between 3 and 32 characters.';
-$_['lang_error_product']    = 'Warning: This stock status cannot be deleted as it is currently assigned to %s products.';
+		// Entry
+		$_['lang_entry_name']       = 'Stock Status Name:';
+
+		// Error
+		$_['lang_error_permission'] = 'Warning: You do not have permission to modify stock status.';
+		$_['lang_error_name']       = 'Stock status name must be between 3 and 32 characters.';
+		$_['lang_error_product']    = 'Warning: This stock status cannot be deleted as it is currently assigned to %s products.';
+
+		return $_;
+	}
+}

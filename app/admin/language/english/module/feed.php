@@ -14,17 +14,25 @@
 |	
 */
 
-// Heading
-$_['lang_heading_feed']     = 'Product Feeds';
+namespace Admin\Language\English\Module;
 
-// Text
-$_['lang_text_install']     = 'Install';
-$_['lang_text_uninstall']   = 'Uninstall';
+class Feed {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_feed']     = 'Product Feeds';
 
-// Column
-$_['lang_column_name']      = 'Product Feed Name';
-$_['lang_column_status']    = 'Status';
-$_['lang_column_action']    = 'Action';
+		// Text
+		$_['lang_text_install']     = 'Install';
+		$_['lang_text_uninstall']   = 'Uninstall';
 
-// Error
-$_['lang_error_permission'] = 'Warning: You do not have permission to modify feeds.';
+		// Column
+		$_['lang_column_name']      = 'Product Feed Name';
+		$_['lang_column_status']    = 'Status';
+		$_['lang_column_action']    = 'Action';
+
+		// Error
+		$_['lang_error_permission'] = 'Warning: You do not have permission to modify feeds.';
+		
+		return $_;
+	}
+}

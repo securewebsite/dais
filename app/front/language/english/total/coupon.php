@@ -14,5 +14,13 @@
 |	
 */
 
-// Text
-$_['lang_text_coupon'] = 'Coupon(%s)';
+namespace Front\Language\English\Total;
+
+class Coupon {
+	public static function lang() {
+		// Text
+		$_['lang_text_coupon'] = 'Coupon(%s)';
+
+		return $_;
+	}
+}

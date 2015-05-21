@@ -14,5 +14,13 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title'] = 'Categories';
+namespace Front\Language\English\Widget;
+
+class Category {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title'] = 'Categories';
+
+		return $_;
+	}
+}

@@ -266,9 +266,9 @@ class Customer extends Controller {
         $data['filter_customer_group_id'] = $filter['filter_customer_group_id'];
         $data['filter_status']            = $filter['filter_status'];
         
-        $this->theme->model('people/customergroup');
+        $this->theme->model('people/customer_group');
         
-        $data['customer_groups'] = $this->model_people_customergroup->getCustomerGroups();
+        $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups();
         
         $this->theme->model('setting/store');
         
@@ -344,8 +344,8 @@ class Customer extends Controller {
             endif;
         endforeach;
         
-        $this->theme->model('people/customergroup');
-        $data['customer_groups'] = $this->model_people_customergroup->getCustomerGroups();
+        $this->theme->model('people/customer_group');
+        $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups();
 
         if (isset($this->request->post['affiliate'])):
             $data['affiliate'] = $this->request->post['affiliate'];
@@ -608,7 +608,7 @@ class Customer extends Controller {
         else:
             $data = $this->theme->language('error/not_found');
             $this->theme->setTitle($this->language->get('lang_heading_title'));
-            $this->breadcrumb->add('lang_heading_title', 'error/notfound');
+            $this->breadcrumb->add('lang_heading_title', 'error/not_found');
             $data = $this->theme->render_controllers($data);
             $this->response->setOutput($this->theme->view('error/not_found', $data));
         endif;

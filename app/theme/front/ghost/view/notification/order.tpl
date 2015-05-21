@@ -76,7 +76,7 @@
 <tr><td style="line-height: 0; font-size: 0;" height="15">&nbsp;</td></tr>
 </table>
 
-<?php if (!empty($products) || !empty($giftcards)): ?>
+<?php if (!empty($products) || !empty($gift_cards)): ?>
 <table cellpadding="0" cellspacing="0" width="100%">
 	<tr>
         <th width="50%" align="left" style="font-size:0.8em"><?= $lang_text_product; ?></th>
@@ -133,11 +133,11 @@
 		<td align="right" style="font-size:0.8em"><?= $product['total']; ?></td>
 	</tr>
 	<?php endforeach; ?>
-	<?php if (isset($giftcards)): ?>
-	<?php foreach ($giftcards as $giftcard): ?>
+	<?php if (isset($gift_cards)): ?>
+	<?php foreach ($gift_cards as $gift_card): ?>
 	<tr>
-        <td align="left" colspan="<?= $colspan; ?>" style="font-size:0.8em"><?= $giftcard['description']; ?></td>
-		<td align="right" style="font-size:0.8em"><?= $giftcard['amount']; ?></td>
+        <td align="left" colspan="<?= $colspan; ?>" style="font-size:0.8em"><?= $gift_card['description']; ?></td>
+		<td align="right" style="font-size:0.8em"><?= $gift_card['amount']; ?></td>
 	</tr>
 	<?php endforeach; ?>
 	<?php endif; ?>

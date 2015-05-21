@@ -14,6 +14,14 @@
 |	
 */
 
-// Text
-$_['lang_text_title']       = 'Flat Rate Shipping';
-$_['lang_text_description'] = 'Flat Rate';
+namespace Front\Language\English\Shipping;
+
+class Flat {
+	public static function lang() {
+		// Text
+		$_['lang_text_title']       = 'Flat Rate Shipping';
+		$_['lang_text_description'] = 'Flat Rate';
+
+		return $_;
+	}
+}

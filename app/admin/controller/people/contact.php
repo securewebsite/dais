@@ -38,9 +38,9 @@ class Contact extends Controller {
         
         $data['stores'] = $this->model_setting_store->getStores();
         
-        $this->theme->model('people/customergroup');
+        $this->theme->model('people/customer_group');
         
-        $data['customer_groups'] = $this->model_people_customergroup->getCustomerGroups(0);
+        $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups(0);
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         $data = $this->theme->render_controllers($data);
@@ -72,7 +72,7 @@ class Contact extends Controller {
             
             if (!$json):
                 $this->theme->model('people/customer');
-                $this->theme->model('people/customergroup');
+                $this->theme->model('people/customer_group');
                 $this->theme->model('sale/order');
                 
                 if (isset($this->request->get['page'])):

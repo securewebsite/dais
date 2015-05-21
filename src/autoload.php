@@ -26,7 +26,7 @@
 |
 */
 
-require __DIR__ . '/../vendor/autoload.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +39,7 @@ require __DIR__ . '/../vendor/autoload.php';
 */
 
 spl_autoload_register(function ($class) {
-    $file = dirname(FRAMEWORK) . '/' . str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
+    $file = dirname(FRAMEWORK) . '/' . str_replace('\\', SEP, $class) . '.php';
     
     if (!is_readable($file)):
         return;
@@ -80,8 +80,10 @@ spl_autoload_register(function ($class) {
 */
 
 spl_autoload_register(function ($class) {
-    $file = APP_PATH . str_replace('\\', DIRECTORY_SEPARATOR, strtolower($class)) . '.php';
-    
+    $class = \Dais\Library\Naming::file_from_classname($class);
+
+    $file = APP_PATH . str_replace('\\', SEP, $class) . '.php';
+    //var_dump($file);
     if (!is_readable($file)):
         return;
     else:

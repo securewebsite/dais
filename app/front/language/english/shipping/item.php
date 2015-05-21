@@ -14,6 +14,14 @@
 |	
 */
 
-// Text
-$_['lang_text_title']       = 'Per Item';
-$_['lang_text_description'] = 'Per Item Shipping Rate';
+namespace Front\Language\English\Shipping;
+
+class Item {
+	public static function lang() {
+		// Text
+		$_['lang_text_title']       = 'Per Item';
+		$_['lang_text_description'] = 'Per Item Shipping Rate';
+
+		return $_;
+	}
+}

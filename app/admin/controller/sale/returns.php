@@ -496,9 +496,9 @@ class Returns extends Controller {
         $data['filter_date_added']       = $filter_date_added;
         $data['filter_date_modified']    = $filter_date_modified;
         
-        $this->theme->model('localization/returnstatus');
+        $this->theme->model('localization/return_status');
         
-        $data['return_statuses'] = $this->model_localization_returnstatus->getReturnStatuses();
+        $data['return_statuses'] = $this->model_localization_return_status->getReturnStatuses();
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -735,9 +735,9 @@ class Returns extends Controller {
             $data['return_reason_id'] = '';
         }
         
-        $this->theme->model('localization/returnreason');
+        $this->theme->model('localization/return_reason');
         
-        $data['return_reasons'] = $this->model_localization_returnreason->getReturnReasons();
+        $data['return_reasons'] = $this->model_localization_return_reason->getReturnReasons();
         
         if (isset($this->request->post['return_action_id'])) {
             $data['return_action_id'] = $this->request->post['return_action_id'];
@@ -747,9 +747,9 @@ class Returns extends Controller {
             $data['return_action_id'] = '';
         }
         
-        $this->theme->model('localization/returnaction');
+        $this->theme->model('localization/return_action');
         
-        $data['return_actions'] = $this->model_localization_returnaction->getReturnActions();
+        $data['return_actions'] = $this->model_localization_return_action->getReturnActions();
         
         if (isset($this->request->post['comment'])) {
             $data['comment'] = $this->request->post['comment'];
@@ -767,9 +767,9 @@ class Returns extends Controller {
             $data['return_status_id'] = '';
         }
         
-        $this->theme->model('localization/returnstatus');
+        $this->theme->model('localization/return_status');
         
-        $data['return_statuses'] = $this->model_localization_returnstatus->getReturnStatuses();
+        $data['return_statuses'] = $this->model_localization_return_status->getReturnStatuses();
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
@@ -872,9 +872,9 @@ class Returns extends Controller {
             $data['email'] = $return_info['email'];
             $data['telephone'] = $return_info['telephone'];
             
-            $this->theme->model('localization/returnstatus');
+            $this->theme->model('localization/return_status');
             
-            $return_status_info = $this->model_localization_returnstatus->getReturnStatus($return_info['return_status_id']);
+            $return_status_info = $this->model_localization_return_status->getReturnStatus($return_info['return_status_id']);
             
             if ($return_status_info) {
                 $data['return_status'] = $return_status_info['name'];
@@ -888,9 +888,9 @@ class Returns extends Controller {
             $data['model'] = $return_info['model'];
             $data['quantity'] = $return_info['quantity'];
             
-            $this->theme->model('localization/returnreason');
+            $this->theme->model('localization/return_reason');
             
-            $return_reason_info = $this->model_localization_returnreason->getReturnReason($return_info['return_reason_id']);
+            $return_reason_info = $this->model_localization_return_reason->getReturnReason($return_info['return_reason_id']);
             
             if ($return_reason_info) {
                 $data['return_reason'] = $return_reason_info['name'];
@@ -901,13 +901,13 @@ class Returns extends Controller {
             $data['opened'] = $return_info['opened'] ? $this->language->get('lang_text_yes') : $this->language->get('lang_text_no');
             $data['comment'] = nl2br($return_info['comment']);
             
-            $this->theme->model('localization/returnaction');
+            $this->theme->model('localization/return_action');
             
-            $data['return_actions'] = $this->model_localization_returnaction->getReturnActions();
+            $data['return_actions'] = $this->model_localization_return_action->getReturnActions();
             
             $data['return_action_id'] = $return_info['return_action_id'];
             
-            $data['return_statuses'] = $this->model_localization_returnstatus->getReturnStatuses();
+            $data['return_statuses'] = $this->model_localization_return_status->getReturnStatuses();
             
             $data['return_status_id'] = $return_info['return_status_id'];
             
@@ -923,7 +923,7 @@ class Returns extends Controller {
             
             $this->theme->setTitle($this->language->get('lang_heading_title'));
             
-            $this->breadcrumb->add('lang_heading_title', 'error/notfound');
+            $this->breadcrumb->add('lang_heading_title', 'error/not_found');
             
             $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
             

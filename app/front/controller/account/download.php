@@ -95,7 +95,7 @@ class Download extends Controller {
             
             $data = $this->theme->render_controllers($data);
             
-            $this->response->setOutput($this->theme->view('error/notfound', $data));
+            $this->response->setOutput($this->theme->view('error/not_found', $data));
         }
     }
     

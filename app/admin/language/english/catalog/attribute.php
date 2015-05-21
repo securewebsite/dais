@@ -14,24 +14,32 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']          = 'Attributes';
+namespace Admin\Language\English\Catalog;
 
-// Text
-$_['lang_text_success']           = 'Success: You have modified attributes.';
+class Attribute {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']          = 'Attributes';
 
-// Column
-$_['lang_column_name']            = 'Attribute Name';
-$_['lang_column_attribute_group'] = 'Attribute Group';
-$_['lang_column_sort_order']      = 'Sort Order';
-$_['lang_column_action']          = 'Action';
+		// Text
+		$_['lang_text_success']           = 'Success: You have modified attributes.';
 
-// Entry
-$_['lang_entry_name']             = 'Attribute Name:';
-$_['lang_entry_attribute_group']  = 'Attribute Group:';
-$_['lang_entry_sort_order']       = 'Sort Order:';
+		// Column
+		$_['lang_column_name']            = 'Attribute Name';
+		$_['lang_column_attribute_group'] = 'Attribute Group';
+		$_['lang_column_sort_order']      = 'Sort Order';
+		$_['lang_column_action']          = 'Action';
 
-// Error
-$_['lang_error_permission']       = 'Warning: You do not have permission to modify attributes.';
-$_['lang_error_name']             = 'Attribute Name must be between 3 and 64 characters.';
-$_['lang_error_product']          = 'Warning: This attribute cannot be deleted as it is currently assigned to %s products.';
+		// Entry
+		$_['lang_entry_name']             = 'Attribute Name:';
+		$_['lang_entry_attribute_group']  = 'Attribute Group:';
+		$_['lang_entry_sort_order']       = 'Sort Order:';
+
+		// Error
+		$_['lang_error_permission']       = 'Warning: You do not have permission to modify attributes.';
+		$_['lang_error_name']             = 'Attribute Name must be between 3 and 64 characters.';
+		$_['lang_error_product']          = 'Warning: This attribute cannot be deleted as it is currently assigned to %s products.';
+
+		return $_;
+	}
+}

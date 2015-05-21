@@ -14,8 +14,16 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title'] = 'Specials';
+namespace Front\Language\English\Widget;
 
-// Text
-$_['lang_text_reviews']  = 'Based on %s reviews.';
+class Special {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title'] = 'Specials';
+
+		// Text
+		$_['lang_text_reviews']  = 'Based on %s reviews.';
+
+		return $_;
+	}
+}

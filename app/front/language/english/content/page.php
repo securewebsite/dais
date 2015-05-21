@@ -14,6 +14,14 @@
 |	
 */
 
-// Text
-$_['lang_text_error'] = 'Page Not Found.';
-$_['lang_text_tags']  = 'Tags: ';
+namespace Front\Language\English\Content;
+
+class Page {
+	public static function lang() {
+		// Text
+		$_['lang_text_error'] = 'Page Not Found.';
+		$_['lang_text_tags']  = 'Tags: ';
+
+		return $_;
+	}
+}

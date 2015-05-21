@@ -185,7 +185,7 @@
 				<?php } ?>
 			</form>
 			<hr>
-			<?= $sharebar; ?>
+			<?= $share_bar; ?>
 			<?php if ($review_status) { ?>
 				<?php 
 					$href = urlencode($config_url . 'catalog/product&product_id=' . $product_id);

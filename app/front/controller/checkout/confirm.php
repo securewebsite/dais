@@ -64,7 +64,7 @@ class Confirm extends Controller {
         endif;
         
         // Validate cart has products and has stock.
-        if ((!$this->cart->hasProducts() && empty($this->session->data['giftcards'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))):
+        if ((!$this->cart->hasProducts() && empty($this->session->data['gift_cards'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))):
             $redirect = $this->url->link('checkout/cart');
         endif;
         
@@ -269,26 +269,26 @@ class Confirm extends Controller {
             endforeach;
             
             // Gift card
-            $giftcard_data = array();
+            $gift_card_data = array();
             
-            if (!empty($this->session->data['giftcards'])):
-                foreach ($this->session->data['giftcards'] as $giftcard):
-                    $giftcard_data[] = array(
-                        'description'       => $giftcard['description'], 
+            if (!empty($this->session->data['gift_cards'])):
+                foreach ($this->session->data['gift_cards'] as $gift_card):
+                    $gift_card_data[] = array(
+                        'description'       => $gift_card['description'], 
                         'code'              => substr(md5(mt_rand()), 0, 10), 
-                        'to_name'           => $giftcard['to_name'], 
-                        'to_email'          => $giftcard['to_email'], 
-                        'from_name'         => $giftcard['from_name'], 
-                        'from_email'        => $giftcard['from_email'], 
-                        'giftcard_theme_id' => $giftcard['giftcard_theme_id'], 
-                        'message'           => $giftcard['message'], 
-                        'amount'            => $giftcard['amount']
+                        'to_name'           => $gift_card['to_name'], 
+                        'to_email'          => $gift_card['to_email'], 
+                        'from_name'         => $gift_card['from_name'], 
+                        'from_email'        => $gift_card['from_email'], 
+                        'gift_card_theme_id' => $gift_card['gift_card_theme_id'], 
+                        'message'           => $gift_card['message'], 
+                        'amount'            => $gift_card['amount']
                     );
                 endforeach;
             endif;
             
             $order['products']  = $product_data;
-            $order['giftcards'] = $giftcard_data;
+            $order['gift_cards'] = $gift_card_data;
             $order['totals']    = $total_data;
             $order['comment']   = $this->session->data['comment'];
             $order['total']     = $total;
@@ -301,9 +301,9 @@ class Confirm extends Controller {
              */
             
             /**
-             * We'll need our subtotal to calculate the commission
+             * We'll need our sub_total to calculate the commission
              */
-            $subtotal = $this->cart->getSubTotal();
+            $sub_total = $this->cart->getSubTotal();
 
             // Load model
             
@@ -340,7 +340,7 @@ class Confirm extends Controller {
             if ($affiliate_id && ($affiliate_id !== $this->customer->getId())):
                 $order['affiliate_id'] = $affiliate_id;
                 $percent               = $this->model_account_affiliate->getAffiliateCommission($affiliate_id);
-                $commission            = $subtotal * ($percent / 100);
+                $commission            = $sub_total * ($percent / 100);
                 $order['commission']   = number_format($commission, 2);
             else:
                 $order['affiliate_id'] = 0;
@@ -434,13 +434,13 @@ class Confirm extends Controller {
             endforeach;
             
             // Gift Giftcard
-            $data['giftcards'] = array();
+            $data['gift_cards'] = array();
             
-            if (!empty($this->session->data['giftcards'])):
-                foreach ($this->session->data['giftcards'] as $giftcard):
-                    $data['giftcards'][] = array(
-                        'description' => $giftcard['description'], 
-                        'amount'      => $this->currency->format($giftcard['amount'])
+            if (!empty($this->session->data['gift_cards'])):
+                foreach ($this->session->data['gift_cards'] as $gift_card):
+                    $data['gift_cards'][] = array(
+                        'description' => $gift_card['description'], 
+                        'amount'      => $this->currency->format($gift_card['amount'])
                     );
                 endforeach;
             endif;

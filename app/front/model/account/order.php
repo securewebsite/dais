@@ -141,7 +141,7 @@ class Order extends Model {
     public function getOrderGiftcards($order_id) {
         $query = $this->db->query("
 			SELECT * 
-			FROM `{$this->db->prefix}order_giftcard` 
+			FROM `{$this->db->prefix}order_gift_card` 
 			WHERE order_id = '" . (int)$order_id . "'
 		");
         
@@ -213,7 +213,7 @@ class Order extends Model {
     public function getTotalOrderGiftcardsByOrderId($order_id) {
         $query = $this->db->query("
 			SELECT COUNT(*) AS total 
-			FROM `{$this->db->prefix}order_giftcard` 
+			FROM `{$this->db->prefix}order_gift_card` 
 			WHERE order_id = '" . (int)$order_id . "'
 		");
         

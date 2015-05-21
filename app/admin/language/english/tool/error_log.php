@@ -14,8 +14,16 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title'] = 'Error Log';
+namespace Admin\Language\English\Tool;
 
-// Text
-$_['lang_text_success']  = 'Success: You have successfully cleared your error log.';
+class ErrorLog {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title'] = 'Error Log';
+
+		// Text
+		$_['lang_text_success']  = 'Success: You have successfully cleared your error log.';
+
+		return $_;
+	}
+}

@@ -634,7 +634,7 @@ class Product extends Model {
             $customer_group_id = $this->config->get('config_default_visibility');
         endif;
         
-        $key = 'products.bestseller.' . (int)$this->config->get('config_store_id');
+        $key = 'products.best_seller.' . (int)$this->config->get('config_store_id');
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):

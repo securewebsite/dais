@@ -710,12 +710,12 @@ class Application {
         
         switch ($this->data['active.fascade']):
             case FRONT_FASCADE:
-                $error          = new Action(new ActionService($this->data, 'error/notfound'));
+                $error          = new Action(new ActionService($this->data, 'error/not_found'));
                 $type           = $this->data['config_site_style'] . '/home';
                 $default_action = new Action(new ActionService($this->data, $type));
                 break;
             case ADMIN_FASCADE:
-                $error          = new Action(new ActionService($this->data, 'error/notfound'));
+                $error          = new Action(new ActionService($this->data, 'error/not_found'));
                 $default_action = new Action(new ActionService($this->data, 'common/dashboard'));
                 break;
         endswitch;

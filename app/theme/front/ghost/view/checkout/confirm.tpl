@@ -29,13 +29,13 @@
 				<td class="text-right"><?= $product['total']; ?></td>
 			</tr>
 			<?php } ?>
-			<?php foreach ($giftcards as $giftcard) { ?>
+			<?php foreach ($gift_cards as $gift_card) { ?>
 			<tr>
-				<td><?= $giftcard['description']; ?></td>
+				<td><?= $gift_card['description']; ?></td>
 				<td></td>
 				<td class="text-right">1</td>
-				<td class="text-right"><?= $giftcard['amount']; ?></td>
-				<td class="text-right"><?= $giftcard['amount']; ?></td>
+				<td class="text-right"><?= $gift_card['amount']; ?></td>
+				<td class="text-right"><?= $gift_card['amount']; ?></td>
 			</tr>
 			<?php } ?>
 		</tbody>

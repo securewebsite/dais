@@ -14,5 +14,13 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title'] = 'Administration';
+namespace Admin\Language\English\Common;
+
+class Header {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title'] = 'Administration';
+
+		return $_;
+	}
+}

@@ -137,7 +137,7 @@ class Router extends Controller {
             
             // No route found
             if (!isset($this->request->get['route'])):
-                $this->request->get['route'] = 'error/notfound';
+                $this->request->get['route'] = 'error/not_found';
             endif;
         endif;
         

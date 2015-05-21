@@ -14,16 +14,24 @@
 |	
 */
 
-// Heading
-$_['lang_heading_plugin']   = 'Plugins';
+namespace Admin\Language\English\Module;
 
-// Text
-$_['lang_text_install']     = 'Install';
-$_['lang_text_uninstall']   = 'Uninstall';
+class Plugin {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_plugin']   = 'Plugins';
 
-// Column
-$_['lang_column_name']      = 'Plugin Name';
-$_['lang_column_action']    = 'Action';
+		// Text
+		$_['lang_text_install']     = 'Install';
+		$_['lang_text_uninstall']   = 'Uninstall';
 
-// Error
-$_['lang_error_permission'] = 'Warning: You do not have permission to modify plugins.';
+		// Column
+		$_['lang_column_name']      = 'Plugin Name';
+		$_['lang_column_action']    = 'Action';
+
+		// Error
+		$_['lang_error_permission'] = 'Warning: You do not have permission to modify plugins.';
+
+		return $_;
+	}
+}

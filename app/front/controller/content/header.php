@@ -179,7 +179,7 @@ class Header extends Controller {
         $data['language'] = $this->theme->controller('widget/language');
         $data['currency'] = $this->theme->controller('widget/currency');
         $data['cart']     = $this->theme->controller('shop/cart');
-        $data['menu']     = $this->theme->controller('widget/headermenu');
+        $data['menu']     = $this->theme->controller('widget/header_menu');
         
         return $this->theme->view('content/header', $data);
     }

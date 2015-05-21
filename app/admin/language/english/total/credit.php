@@ -14,16 +14,24 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']    = 'Store Credit';
+namespace Admin\Language\English\Total;
 
-// Text
-$_['lang_text_total']       = 'Order Totals';
-$_['lang_text_success']     = 'Success: You have modified store credit total.';
+class Credit {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']    = 'Store Credit';
 
-// Entry
-$_['lang_entry_status']     = 'Status:';
-$_['lang_entry_sort_order'] = 'Sort Order:';
+		// Text
+		$_['lang_text_total']       = 'Order Totals';
+		$_['lang_text_success']     = 'Success: You have modified store credit total.';
 
-// Error
-$_['lang_error_permission'] = 'Warning: You do not have permission to modify store credit total.';
+		// Entry
+		$_['lang_entry_status']     = 'Status:';
+		$_['lang_entry_sort_order'] = 'Sort Order:';
+
+		// Error
+		$_['lang_error_permission'] = 'Warning: You do not have permission to modify store credit total.';
+
+		return $_;
+	}
+}

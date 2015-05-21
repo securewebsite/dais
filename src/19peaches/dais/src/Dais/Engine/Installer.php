@@ -16,11 +16,6 @@
 
 namespace Dais\Engine;
 
-use Dais\Engine\Container;
-use Dais\Engine\Action;
-use Dais\Service\ActionService;
-use Dais\Engine\Front;
-use Dais\Engine\Theme;
 use Dais\Library\Config;
 use Dais\Library\Encode;
 use Dais\Library\Error;
@@ -28,6 +23,7 @@ use Dais\Library\Log;
 use Dais\Library\Request;
 use Dais\Library\Response;
 use Dais\Library\Url;
+use Dais\Service\ActionService;
 
 class Installer {
     public function __construct() {
@@ -213,7 +209,7 @@ class Installer {
                 $lines = file($this->data['path.database'] . 'config/db.php');
                 foreach ($lines as $line):
                     if (strpos(strtoupper($line) , 'DB_') !== false):
-                        eval($line);
+                        // eval line removed
                     endif;
                 endforeach;
             endif;

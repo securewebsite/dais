@@ -32,10 +32,7 @@ class Test extends Controller {
             $data['success'] = '';
         endif;
 
-        $migrate = new Migrate($this->app, 'install');
-        $migrate->find();
-
-        $this->theme->test($migrate);
+        
         
         $this->breadcrumb->add('lang_heading_title', 'tool/test');
         

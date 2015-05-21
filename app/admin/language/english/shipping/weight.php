@@ -14,19 +14,27 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']    = 'Weight Based Shipping';
+namespace Admin\Language\English\Shipping;
 
-// Text
-$_['lang_text_shipping']    = 'Shipping';
-$_['lang_text_success']     = 'Success: You have modified weight based shipping.';
+class Weight {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']    = 'Weight Based Shipping';
 
-// Entry
-$_['lang_entry_rate']       = 'Rates:<br /><span class="help">Example: 5:10.00,7:12.00 Weight:Cost,Weight:Cost, etc..</span>';
-$_['lang_entry_tax_class']  = 'Tax Class:';
-$_['lang_entry_geo_zone']   = 'Geo Zone:';
-$_['lang_entry_status']     = 'Status:';
-$_['lang_entry_sort_order'] = 'Sort Order:';
+		// Text
+		$_['lang_text_shipping']    = 'Shipping';
+		$_['lang_text_success']     = 'Success: You have modified weight based shipping.';
 
-// Error
-$_['lang_error_permission'] = 'Warning: You do not have permission to modify weight based shipping.';
+		// Entry
+		$_['lang_entry_rate']       = 'Rates:<br /><span class="help">Example: 5:10.00,7:12.00 Weight:Cost,Weight:Cost, etc..</span>';
+		$_['lang_entry_tax_class']  = 'Tax Class:';
+		$_['lang_entry_geo_zone']   = 'Geo Zone:';
+		$_['lang_entry_status']     = 'Status:';
+		$_['lang_entry_sort_order'] = 'Sort Order:';
+
+		// Error
+		$_['lang_error_permission'] = 'Warning: You do not have permission to modify weight based shipping.';
+
+		return $_;
+	}
+}

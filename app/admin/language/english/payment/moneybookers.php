@@ -14,26 +14,34 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']           = 'Moneybookers';
+namespace Admin\Language\English\Payment;
 
-// Text
-$_['lang_text_payment']            = 'Payment';
-$_['lang_text_success']            = 'Success: You have modified the Moneybookers details.';
+class Moneybookers {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']           = 'Moneybookers';
 
-// Entry
-$_['lang_entry_email']             = 'E-Mail:';
-$_['lang_entry_secret']            = 'Secret:';
-$_['lang_entry_total']             = 'Total:<br /><span class="help">The checkout total the order must reach before this payment method becomes active.</span>';
-$_['lang_entry_order_status']      = 'Order Status:';
-$_['lang_entry_pending_status']    = 'Pending Status :';
-$_['lang_entry_canceled_status']   = 'Canceled Status:';
-$_['lang_entry_failed_status']     = 'Failed Status:';
-$_['lang_entry_chargeback_status'] = 'Charge Back Status:';
-$_['lang_entry_geo_zone']          = 'Geo Zone:';
-$_['lang_entry_status']            = 'Status:';
-$_['lang_entry_sort_order']        = 'Sort Order:';
+		// Text
+		$_['lang_text_payment']            = 'Payment';
+		$_['lang_text_success']            = 'Success: You have modified the Moneybookers details.';
 
-// Error
-$_['lang_error_permission']        = 'Warning: You do not have permission to modify Moneybookers.';
-$_['lang_error_email']             = 'E-Mail Required.';
+		// Entry
+		$_['lang_entry_email']             = 'E-Mail:';
+		$_['lang_entry_secret']            = 'Secret:';
+		$_['lang_entry_total']             = 'Total:<br /><span class="help">The checkout total the order must reach before this payment method becomes active.</span>';
+		$_['lang_entry_order_status']      = 'Order Status:';
+		$_['lang_entry_pending_status']    = 'Pending Status :';
+		$_['lang_entry_canceled_status']   = 'Canceled Status:';
+		$_['lang_entry_failed_status']     = 'Failed Status:';
+		$_['lang_entry_chargeback_status'] = 'Charge Back Status:';
+		$_['lang_entry_geo_zone']          = 'Geo Zone:';
+		$_['lang_entry_status']            = 'Status:';
+		$_['lang_entry_sort_order']        = 'Sort Order:';
+
+		// Error
+		$_['lang_error_permission']        = 'Warning: You do not have permission to modify Moneybookers.';
+		$_['lang_error_email']             = 'E-Mail Required.';
+
+		return $_;
+	}
+}

@@ -194,12 +194,12 @@ class Register extends Controller {
             $data['company'] = '';
         }
         
-        $this->theme->model('account/customergroup');
+        $this->theme->model('account/customer_group');
         
         $data['customer_groups'] = array();
         
         if (is_array($this->config->get('config_customer_group_display'))) {
-            $customer_groups = $this->model_account_customergroup->getCustomerGroups();
+            $customer_groups = $this->model_account_customer_group->getCustomerGroups();
             
             foreach ($customer_groups as $customer_group) {
                 if (in_array($customer_group['customer_group_id'], $this->config->get('config_customer_group_display'))) {
@@ -433,7 +433,7 @@ class Register extends Controller {
     
     protected function validate() {
         // Customer Group
-        $this->theme->model('account/customergroup');
+        $this->theme->model('account/customer_group');
 
         if (isset($this->request->post['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($this->request->post['customer_group_id'], $this->config->get('config_customer_group_display'))) {
             $customer_group_id = $this->request->post['customer_group_id'];
@@ -441,7 +441,7 @@ class Register extends Controller {
             $customer_group_id = $this->config->get('config_customer_group_id');
         }
 
-        $customer_group = $this->model_account_customergroup->getCustomerGroup($customer_group_id);
+        $customer_group = $this->model_account_customer_group->getCustomerGroup($customer_group_id);
 
         if ($customer_group) {  
             // Company ID

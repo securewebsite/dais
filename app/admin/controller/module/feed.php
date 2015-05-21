@@ -16,6 +16,7 @@
 
 namespace Admin\Controller\Module;
 use Dais\Engine\Controller;
+use Dais\Library\Naming;
 
 class Feed extends Controller {
     public function index() {
@@ -105,10 +106,13 @@ class Feed extends Controller {
             $this->model_people_user_group->addPermission($this->user->getId(), 'access', 'feed/' . $this->request->get['module']);
             $this->model_people_user_group->addPermission($this->user->getId(), 'modify', 'feed/' . $this->request->get['module']);
             
-            if (is_readable($this->theme->path . 'controller/feed/' . $this->request->get['module'] . '.php')):
-                $class = 'Theme\Admin\\' . $this->theme->name . '\Controller\Feed\\' . ucfirst($this->request->get['module']);
+            $base_path  = APP_PATH . $this->app['prefix.fascade'] . 'controller' . SEP . 'feed' . SEP;
+            $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'feed' . SEP;
+            
+            if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
+                $class = Naming::class_from_filename($file);
             else:
-                $class = 'Admin\Controller\Feed\\' . ucfirst($this->request->get['module']);
+                $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
             endif;
             
             $class = new $class($this->app);
@@ -139,10 +143,13 @@ class Feed extends Controller {
             $this->model_setting_module->uninstall('feed', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
-            if (is_readable($this->theme->path . 'controller/feed/' . $this->request->get['module'] . '.php')):
-                $class = 'Theme\Admin\\' . $this->theme->name . '\Controller\Feed\\' . ucfirst($this->request->get['module']);
+            $base_path  = APP_PATH . $this->app['prefix.fascade'] . 'controller' . SEP . 'feed' . SEP;
+            $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'feed' . SEP;
+            
+            if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
+                $class = Naming::class_from_filename($file);
             else:
-                $class = 'Admin\Controller\Feed\\' . ucfirst($this->request->get['module']);
+                $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
             endif;
             
             $class = new $class($this->app);

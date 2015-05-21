@@ -299,9 +299,9 @@ class Attribute extends Controller {
             $data['attribute_group_id'] = '';
         }
         
-        $this->theme->model('catalog/attributegroup');
+        $this->theme->model('catalog/attribute_group');
         
-        $data['attribute_groups'] = $this->model_catalog_attributegroup->getAttributeGroups();
+        $data['attribute_groups'] = $this->model_catalog_attribute_group->getAttributeGroups();
         
         if (isset($this->request->post['sort_order'])) {
             $data['sort_order'] = $this->request->post['sort_order'];

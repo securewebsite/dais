@@ -14,14 +14,22 @@
 |	
 */
 
-// Text
-$_['lang_text_refine']            = 'Refine Search';
-$_['lang_text_error']             = 'Category not found.';
-$_['lang_text_empty']             = 'There are no posts yet in this category.';
-$_['lang_text_comments']          = '%s comments';
-$_['lang_text_views']             = '%s reads';
-$_['lang_text_all_posts']         = 'All Articles in';
-$_['lang_text_all_by']            = 'All Articles by';
-$_['lang_text_in']                = 'in';
-$_['lang_text_tag']               = 'Tags:';
-$_['lang_text_posted_categories'] = '<a href="%s">%s</a>';
+namespace Front\Language\English\Content;
+
+class Category {
+	public static function lang() {
+		// Text
+		$_['lang_text_refine']            = 'Refine Search';
+		$_['lang_text_error']             = 'Category not found.';
+		$_['lang_text_empty']             = 'There are no posts yet in this category.';
+		$_['lang_text_comments']          = '%s comments';
+		$_['lang_text_views']             = '%s reads';
+		$_['lang_text_all_posts']         = 'All Articles in';
+		$_['lang_text_all_by']            = 'All Articles by';
+		$_['lang_text_in']                = 'in';
+		$_['lang_text_tag']               = 'Tags:';
+		$_['lang_text_posted_categories'] = '<a href="%s">%s</a>';
+
+		return $_;
+	}
+}

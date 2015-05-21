@@ -16,6 +16,7 @@
 
 namespace Admin\Controller\Module;
 use Dais\Engine\Controller;
+use Dais\Library\Naming;
 
 class Shipping extends Controller {
     public function index() {
@@ -119,10 +120,13 @@ class Shipping extends Controller {
             $this->model_people_user_group->addPermission($this->user->getId(), 'access', 'shipping/' . $this->request->get['module']);
             $this->model_people_user_group->addPermission($this->user->getId(), 'modify', 'shipping/' . $this->request->get['module']);
             
-            if (is_readable($this->theme->path . 'controller/shipping/' . $this->request->get['module'] . '.php')):
-                $class = 'Theme\Admin\\' . $this->theme->name . '\Controller\Shipping\\' . ucfirst($this->request->get['module']);
+            $base_path  = APP_PATH . $this->app['prefix.fascade'] . 'controller' . SEP . 'shipping' . SEP;
+            $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'shipping' . SEP;
+            
+            if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
+                $class = Naming::class_from_filename($file);
             else:
-                $class = 'Admin\Controller\Shipping\\' . ucfirst($this->request->get['module']);
+                $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
             endif;
             
             $class = new $class($this->app);
@@ -153,10 +157,13 @@ class Shipping extends Controller {
             $this->model_setting_module->uninstall('shipping', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
-            if (is_readable($this->theme->path . 'controller/shipping/' . $this->request->get['module'] . '.php')):
-                $class = 'Theme\Admin\\' . $this->theme->name . '\Controller\Shipping\\' . ucfirst($this->request->get['module']);
+            $base_path  = APP_PATH . $this->app['prefix.fascade'] . 'controller' . SEP . 'shipping' . SEP;
+            $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'shipping' . SEP;
+            
+            if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
+                $class = Naming::class_from_filename($file);
             else:
-                $class = 'Admin\Controller\Shipping\\' . ucfirst($this->request->get['module']);
+                $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
             endif;
             
             $class = new $class($this->app);

@@ -16,6 +16,7 @@
 
 namespace Admin\Controller\Module;
 use Dais\Engine\Controller;
+use Dais\Library\Naming;
 
 class Widget extends Controller {
     public function index() {
@@ -46,7 +47,7 @@ class Widget extends Controller {
         
         foreach ($modules as $key => $value) {
             $theme_file = $this->theme->path . 'controller/widget/' . $value . '.php';
-            $core_file = $this->app['path.application'] . 'controller/widget/' . $value . '.php';
+            $core_file  = $this->app['path.application'] . 'controller/widget/' . $value . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {
                 $this->model_setting_module->uninstall('widget', $value);
@@ -58,7 +59,7 @@ class Widget extends Controller {
         $data['modules'] = array();
         
         $files = $this->theme->getFiles('widget');
-        
+        //var_dump($files);exit;
         if ($files) {
             foreach ($files as $file) {
                 $module = strtolower(basename($file, '.php'));
@@ -68,11 +69,20 @@ class Widget extends Controller {
                 $action = array();
                 
                 if (!in_array($module, $modules)) {
-                    $action[] = array('text' => $this->language->get('lang_text_install'), 'href' => $this->url->link('module/widget/install', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
+                    $action[] = array(
+                        'text' => $this->language->get('lang_text_install'), 
+                        'href' => $this->url->link('module/widget/install', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL')
+                    );
                 } else {
-                    $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('widget/' . $module . '', 'token=' . $this->session->data['token'], 'SSL'));
+                    $action[] = array(
+                        'text' => $this->language->get('lang_text_edit'), 
+                        'href' => $this->url->link('widget/' . $module . '', 'token=' . $this->session->data['token'], 'SSL')
+                    );
                     
-                    $action[] = array('text' => $this->language->get('lang_text_uninstall'), 'href' => $this->url->link('module/widget/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
+                    $action[] = array(
+                        'text' => $this->language->get('lang_text_uninstall'), 
+                        'href' => $this->url->link('module/widget/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL')
+                    );
                 }
                 
                 $data['modules'][] = array('name' => $this->language->get('lang_heading_title'), 'action' => $action);
@@ -105,11 +115,15 @@ class Widget extends Controller {
             $this->model_people_user_group->addPermission($this->user->getId(), 'access', 'widget/' . $this->request->get['module']);
             $this->model_people_user_group->addPermission($this->user->getId(), 'modify', 'widget/' . $this->request->get['module']);
             
-            if (is_readable($this->theme->path . 'controller/widget/' . $this->request->get['module'] . '.php')):
-                $class = 'Theme\Admin\\' . $this->theme->name . '\Controller\Widget\\' . ucfirst($this->request->get['module']);
+            $base_path  = APP_PATH . $this->app['prefix.fascade'] . 'controller' . SEP . 'widget' . SEP;
+            $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'widget' . SEP;
+            
+            if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
+                $class = Naming::class_from_filename($file);
             else:
-                $class = 'Admin\Controller\Widget\\' . ucfirst($this->request->get['module']);
+                $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
             endif;
+            
             $class = new $class($this->app);
             
             if (method_exists($class, 'install')) {
@@ -138,10 +152,13 @@ class Widget extends Controller {
             $this->model_setting_module->uninstall('widget', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
-            if (is_readable($this->theme->path . 'controller/widget/' . $this->request->get['module'] . '.php')):
-                $class = 'Theme\Admin\\' . $this->theme->name . '\Controller\Widget\\' . ucfirst($this->request->get['module']);
+            $base_path  = APP_PATH . $this->app['prefix.fascade'] . 'controller' . SEP . 'widget' . SEP;
+            $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'widget' . SEP;
+            
+            if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
+                $class = Naming::class_from_filename($file);
             else:
-                $class = 'Admin\Controller\Widget\\' . ucfirst($this->request->get['module']);
+                $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
             endif;
             
             $class = new $class($this->app);

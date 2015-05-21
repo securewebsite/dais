@@ -36,7 +36,7 @@ class Share extends Controller {
         $this->theme->model('setting/setting');
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
-            $this->model_setting_setting->editSetting('sharebar', $this->request->post);
+            $this->model_setting_setting->editSetting('share_bar', $this->request->post);
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
             $this->response->redirect($this->url->link('module/share', 'token=' . $this->session->data['token'], 'SSL'));
@@ -48,7 +48,7 @@ class Share extends Controller {
             $data['error_warning'] = '';
         endif;
 
-        $settings = $this->model_setting_setting->getSetting('sharebar');
+        $settings = $this->model_setting_setting->getSetting('share_bar');
 
         if (isset($this->request->post['facebook_enabled'])):
         	$data['facebook_enabled'] = $this->request->post['facebook_enabled'];

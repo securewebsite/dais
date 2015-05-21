@@ -307,13 +307,13 @@
 								<td class="text-right"><?= $product['total']; ?></td>
 							</tr>
 							<?php } ?>
-							<?php foreach ($giftcards as $giftcard) { ?>
+							<?php foreach ($gift_cards as $gift_card) { ?>
 							<tr>
-								<td><a href="<?= $giftcard['href']; ?>"><?= $giftcard['description']; ?></a></td>
+								<td><a href="<?= $gift_card['href']; ?>"><?= $gift_card['description']; ?></a></td>
 								<td></td>
 								<td class="text-right">1</td>
-								<td class="text-right"><?= $giftcard['amount']; ?></td>
-								<td class="text-right"><?= $giftcard['amount']; ?></td>
+								<td class="text-right"><?= $gift_card['amount']; ?></td>
+								<td class="text-right"><?= $gift_card['amount']; ?></td>
 							</tr>
 							<?php } ?>
 							<?php foreach ($totals as $totals) { ?>

@@ -166,7 +166,7 @@ class Page extends Controller {
             $data['continue'] = $this->url->link('content/home');
             
             $data             = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-            $data['sharebar'] = $this->theme->controller('common/sharebar', array('event', $data));
+            $data['share_bar'] = $this->theme->controller('common/share_bar', array('event', $data));
             $data             = $this->theme->render_controllers($data);
             
             $this->response->setOutput($this->theme->view('event/page', $data));
@@ -182,7 +182,7 @@ class Page extends Controller {
             $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
             $data = $this->theme->render_controllers($data);
             
-            $this->response->setOutput($this->theme->view('error/notfound', $data));
+            $this->response->setOutput($this->theme->view('error/not_found', $data));
         endif;
     }
 }

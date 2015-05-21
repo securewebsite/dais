@@ -14,5 +14,13 @@
 |	
 */
 
-// Text
-$_['lang_text_currency'] = 'Currency';
+namespace Front\Language\English\Widget;
+
+class Currency {
+	public static function lang() {
+		// Text
+		$_['lang_text_currency'] = 'Currency';
+
+		return $_;
+	}
+}

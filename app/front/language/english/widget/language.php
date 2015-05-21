@@ -14,5 +14,13 @@
 |	
 */
 
-// Text
-$_['lang_text_language'] = 'Language';
+namespace Front\Language\English\Widget;
+
+class Language {
+	public static function lang() {
+		// Text
+		$_['lang_text_language'] = 'Language';
+
+		return $_;
+	}
+}

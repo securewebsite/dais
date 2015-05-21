@@ -22,7 +22,7 @@
 |    
 */
 
-namespace Egress\Library\Task\Db;
+namespace Egress\Task\Db;
 use Egress\Library\Task\TaskBase;
 use Egress\Library\Task\TaskInterface;
 use Egress\Library\Utility\Migrator;
@@ -81,7 +81,7 @@ class Generate extends TaskBase implements TaskInterface {
             throw new EgressException("This migration name is already used in the \"$re\" directory. Please, choose another name.", EgressException::INVALID_ARGUMENT);
         endif;
 
-        $file_name = $next_version . '_' . $class . '.php';
+        $file_name = $class . '_' . $next_version . '.php';
         
         //check to make sure our destination directory is writable
         if (!is_writable($migrations_dir)):
@@ -90,7 +90,7 @@ class Generate extends TaskBase implements TaskInterface {
 
         //write it out!
         $full_path    = $migrations_dir . $file_name;
-        $template_str = self::get_template($class);
+        $template_str = self::get_template($class . '_' . $next_version);
         $file_result  = file_put_contents($full_path, $template_str);
         
         if ($file_result === FALSE):
@@ -179,11 +179,20 @@ class $klass extends MigrationBase {
     private \$prefix = '$prefix';
 
     public function up() {
+        \$table = \$this->create_table("{\$this->prefix}table_name", array(
+            'id'      => false, 
+            'options' => 'Engine=InnoDB'
+        ));
 
+        // Start columns
+
+        // End columns
+        
+        \$table->finish();
     }
 
     public function down() {
-
+        \$this->drop_table("{\$this->prefix}table_name");
     }
 }
 

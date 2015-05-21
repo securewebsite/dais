@@ -14,18 +14,26 @@
 |	
 */
 
-// Heading
-$_['lang_heading_payment']   = 'Payment';
+namespace Admin\Language\English\Module;
 
-// Text
-$_['lang_text_install']      = 'Install';
-$_['lang_text_uninstall']    = 'Uninstall';
+class Payment {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_payment']   = 'Payment';
 
-// Column
-$_['lang_column_name']       = 'Payment Method';
-$_['lang_column_status']     = 'Status';
-$_['lang_column_sort_order'] = 'Sort Order';
-$_['lang_column_action']     = 'Action';
+		// Text
+		$_['lang_text_install']      = 'Install';
+		$_['lang_text_uninstall']    = 'Uninstall';
 
-// Error
-$_['lang_error_permission']  = 'Warning: You do not have permission to modify payments.';
+		// Column
+		$_['lang_column_name']       = 'Payment Method';
+		$_['lang_column_status']     = 'Status';
+		$_['lang_column_sort_order'] = 'Sort Order';
+		$_['lang_column_action']     = 'Action';
+
+		// Error
+		$_['lang_error_permission']  = 'Warning: You do not have permission to modify payments.';
+
+		return $_;
+	}
+}

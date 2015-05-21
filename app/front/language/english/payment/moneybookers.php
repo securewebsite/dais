@@ -14,5 +14,13 @@
 |	
 */
 
-// Text
-$_['lang_text_title'] = 'Credit Card / Debit Card (Moneybookers)';
+namespace Front\Language\English\Payment;
+
+class Moneybookers {
+	public static function lang() {
+		// Text
+		$_['lang_text_title'] = 'Credit Card / Debit Card (Moneybookers)';
+
+		return $_;
+	}
+}

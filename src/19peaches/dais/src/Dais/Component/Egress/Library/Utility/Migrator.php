@@ -152,7 +152,7 @@ class Migrator {
 
             if ($file_cnt > 0):
                 for ($i = 0; $i < $file_cnt; $i++):
-                    if (preg_match('/^(\d+)_(.*)\.php$/', $files[$i], $matches)):
+                    if (preg_match('/^(.*)_(\d+)\.php$/', $files[$i], $matches)):
                         if (count($matches) == 3):
                             $valid_files[] = array(
                                 'name'   =>  $files[$i],
@@ -163,13 +163,7 @@ class Migrator {
                 endfor;
             endif;
         endforeach;
-
-        usort($valid_files, array("\Egress\Library\Utility\Migrator", "migration_compare")); //sorts in place
         
-        if ($direction == 'down'):
-            $valid_files = array_reverse($valid_files);
-        endif;
-
         //user wants a nested structure
         $files = array();
         $cnt   = count($valid_files);
@@ -177,16 +171,22 @@ class Migrator {
         for ($i = 0; $i < $cnt; $i++):
             $migration = $valid_files[$i];
 
-            if (preg_match('/^(\d+)_(.*)\.php$/', $migration['name'], $matches)):
+            if (preg_match('/^(.*)_(\d+)\.php$/', $migration['name'], $matches)):
                 $files[] = array(
-                    'version' => $matches[1],
-                    'class'   => $matches[2],
+                    'version' => $matches[2],
+                    'class'   => $matches[1],
                     'file'    => $matches[0],
                     'module'  => $migration['module']
                 );
             endif;
         endfor;
 
+        usort($files, array("\Egress\Library\Utility\Migrator", "migration_compare")); //sorts in place
+        
+        if ($direction == 'down'):
+            $files = array_reverse($files);
+        endif;
+        
         return $files;
     }
 
@@ -203,7 +203,7 @@ class Migrator {
     }
 
     private static function migration_compare($a, $b) {
-        return strcmp($a["name"], $b["name"]);
+        return strcmp($a["version"], $b["version"]);
     }
 
     private function find_version_index($migrations, $version) {

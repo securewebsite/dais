@@ -504,7 +504,7 @@ class Product extends Controller {
             $this->theme->set_controller('header', 'shop/header');
             $this->theme->set_controller('footer', 'shop/footer');
 
-            $data['sharebar'] = $this->theme->controller('common/sharebar', array('product', $data));
+            $data['share_bar'] = $this->theme->controller('common/share_bar', array('product', $data));
             
             $data = $this->theme->render_controllers($data);
             
@@ -577,7 +577,7 @@ class Product extends Controller {
             
             $data = $this->theme->render_controllers($data);
             
-            $this->response->setOutput($this->theme->view('error/notfound', $data));
+            $this->response->setOutput($this->theme->view('error/not_found', $data));
         }
     }
     

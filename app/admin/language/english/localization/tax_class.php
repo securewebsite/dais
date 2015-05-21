@@ -14,29 +14,37 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']     = 'Tax Class';
+namespace Admin\Language\English\Localization;
 
-// Text
-$_['lang_text_shipping']     = 'Shipping Address';
-$_['lang_text_payment']      = 'Payment Address';
-$_['lang_text_store']        = 'Store Address';
-$_['lang_text_success']      = 'Success: You have modified tax classes.';
+class TaxClass {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']     = 'Tax Class';
 
-// Column
-$_['lang_column_title']      = 'Tax Class Title';
-$_['lang_column_action']     = 'Action';
+		// Text
+		$_['lang_text_shipping']     = 'Shipping Address';
+		$_['lang_text_payment']      = 'Payment Address';
+		$_['lang_text_store']        = 'Store Address';
+		$_['lang_text_success']      = 'Success: You have modified tax classes.';
 
-// Entry
-$_['lang_entry_title']       = 'Tax Class Title:';
-$_['lang_entry_description'] = 'Description:';
-$_['lang_entry_rate']        = 'Tax Rate:';
-$_['lang_entry_based']       = 'Based On:';
-$_['lang_entry_geo_zone']    = 'Geo Zone:';
-$_['lang_entry_priority']    = 'Priority:';
+		// Column
+		$_['lang_column_title']      = 'Tax Class Title';
+		$_['lang_column_action']     = 'Action';
 
-// Error
-$_['lang_error_permission']  = 'Warning: You do not have permission to modify tax classes.';
-$_['lang_error_title']       = 'Tax class title must be between 3 and 32 characters.';
-$_['lang_error_description'] = 'Description must be between 3 and 255 characters.';
-$_['lang_error_product']     = 'Warning: This tax class cannot be deleted as it is currently assigned to %s products.';
+		// Entry
+		$_['lang_entry_title']       = 'Tax Class Title:';
+		$_['lang_entry_description'] = 'Description:';
+		$_['lang_entry_rate']        = 'Tax Rate:';
+		$_['lang_entry_based']       = 'Based On:';
+		$_['lang_entry_geo_zone']    = 'Geo Zone:';
+		$_['lang_entry_priority']    = 'Priority:';
+
+		// Error
+		$_['lang_error_permission']  = 'Warning: You do not have permission to modify tax classes.';
+		$_['lang_error_title']       = 'Tax class title must be between 3 and 32 characters.';
+		$_['lang_error_description'] = 'Description must be between 3 and 255 characters.';
+		$_['lang_error_product']     = 'Warning: This tax class cannot be deleted as it is currently assigned to %s products.';
+
+		return $_;
+	}
+}

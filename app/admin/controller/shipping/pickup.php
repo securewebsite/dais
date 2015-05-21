@@ -51,9 +51,9 @@ class Pickup extends Controller {
             $data['pickup_geo_zone_id'] = $this->config->get('pickup_geo_zone_id');
         }
         
-        $this->theme->model('localization/geozone');
+        $this->theme->model('localization/geo_zone');
         
-        $data['geo_zones'] = $this->model_localization_geozone->getGeoZones();
+        $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
         
         if (isset($this->request->post['pickup_status'])) {
             $data['pickup_status'] = $this->request->post['pickup_status'];

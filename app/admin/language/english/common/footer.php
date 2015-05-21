@@ -14,5 +14,13 @@
 |	
 */
 
-// Text
-$_['lang_text_footer'] = '<a href="http://dais.io">Dais</a> &copy; ' . date('Y') . ' All Rights Reserved.<br />Version %s';
+namespace Admin\Language\English\Common;
+
+class Footer {
+	public static function lang() {
+		// Text
+		$_['lang_text_footer'] = '<a href="http://dais.io">Dais</a> &copy; ' . date('Y') . ' All Rights Reserved.<br />Version %s';
+
+		return $_;
+	}
+}

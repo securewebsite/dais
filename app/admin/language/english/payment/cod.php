@@ -14,19 +14,27 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']      = 'Cash On Delivery';
+namespace Admin\Language\English\Payment;
 
-// Text
-$_['lang_text_payment']       = 'Payment';
-$_['lang_text_success']       = 'Success: You have modified Cash On Delivery payment widget.';
+class Cod {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']      = 'Cash On Delivery';
 
-// Entry
-$_['lang_entry_total']        = 'Total:<br /><span class="help">The checkout total the order must reach before this payment method becomes active.</span>';
-$_['lang_entry_order_status'] = 'Order Status:';
-$_['lang_entry_geo_zone']     = 'Geo Zone:';
-$_['lang_entry_status']       = 'Status:';
-$_['lang_entry_sort_order']   = 'Sort Order:';
+		// Text
+		$_['lang_text_payment']       = 'Payment';
+		$_['lang_text_success']       = 'Success: You have modified Cash On Delivery payment widget.';
 
-// Error
-$_['lang_error_permission']   = 'Warning: You do not have permission to modify payment Cash On Delivery.';
+		// Entry
+		$_['lang_entry_total']        = 'Total:<br /><span class="help">The checkout total the order must reach before this payment method becomes active.</span>';
+		$_['lang_entry_order_status'] = 'Order Status:';
+		$_['lang_entry_geo_zone']     = 'Geo Zone:';
+		$_['lang_entry_status']       = 'Status:';
+		$_['lang_entry_sort_order']   = 'Sort Order:';
+
+		// Error
+		$_['lang_error_permission']   = 'Warning: You do not have permission to modify payment Cash On Delivery.';
+
+		return $_;
+	}
+}

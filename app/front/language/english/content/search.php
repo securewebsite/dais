@@ -14,24 +14,32 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']           = 'Blog Search';
+namespace Front\Language\English\Content;
 
-// Text
-$_['lang_text_search']             = 'Posts meeting the search criteria';
-$_['lang_text_search_placeholder'] = 'Type and hit Enter';
-$_['lang_text_keyword']            = 'Keywords';
-$_['lang_text_category']           = 'All Categories';
-$_['lang_text_sub_category']       = 'Search in subcategories';
-$_['lang_text_critea']             = 'Search Criteria';
-$_['lang_text_empty']              = 'There is no post that matches the search criteria.';
-$_['lang_text_comments']           = '%s comments';
-$_['lang_text_views']              = '%s reads';
-$_['lang_text_all_by']             = 'All Articles by';
-$_['lang_text_in']                 = 'in';
-$_['lang_text_posted_categories']  = '<a href="%s">%s</a>';
-$_['lang_text_search_results']     = 'Search Results';
+class Search {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']           = 'Blog Search';
 
-// Entry
-$_['lang_entry_search']            = 'Search';
-$_['lang_entry_description']       = 'Search in post description';
+		// Text
+		$_['lang_text_search']             = 'Posts meeting the search criteria';
+		$_['lang_text_search_placeholder'] = 'Type and hit Enter';
+		$_['lang_text_keyword']            = 'Keywords';
+		$_['lang_text_category']           = 'All Categories';
+		$_['lang_text_sub_category']       = 'Search in subcategories';
+		$_['lang_text_critea']             = 'Search Criteria';
+		$_['lang_text_empty']              = 'There is no post that matches the search criteria.';
+		$_['lang_text_comments']           = '%s comments';
+		$_['lang_text_views']              = '%s reads';
+		$_['lang_text_all_by']             = 'All Articles by';
+		$_['lang_text_in']                 = 'in';
+		$_['lang_text_posted_categories']  = '<a href="%s">%s</a>';
+		$_['lang_text_search_results']     = 'Search Results';
+
+		// Entry
+		$_['lang_entry_search']            = 'Search';
+		$_['lang_entry_description']       = 'Search in post description';
+
+		return $_;
+	}
+}

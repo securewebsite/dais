@@ -72,13 +72,13 @@
 			<td class="text-right"><?= $product['total']; ?></td>
 		</tr>
 		<?php } ?>
-		<?php foreach ($order['giftcard'] as $giftcard) { ?>
+		<?php foreach ($order['gift_card'] as $gift_card) { ?>
 		<tr>
-			<td><?= $giftcard['description']; ?></td>
+			<td><?= $gift_card['description']; ?></td>
 			<td></td>
 			<td class="text-right">1</td>
-			<td class="text-right"><?= $giftcard['amount']; ?></td>
-			<td class="text-right"><?= $giftcard['amount']; ?></td>
+			<td class="text-right"><?= $gift_card['amount']; ?></td>
+			<td class="text-right"><?= $gift_card['amount']; ?></td>
 		</tr>
 		<?php } ?>
 		<?php foreach ($order['total'] as $total) { ?>

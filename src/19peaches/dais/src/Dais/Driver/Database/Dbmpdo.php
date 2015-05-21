@@ -16,6 +16,7 @@
 
 namespace Dais\Driver\Database;
 use PDO;
+use PDOException;
 use stdClass;
 
 final class Dbmpdo {

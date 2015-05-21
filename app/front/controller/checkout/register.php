@@ -26,9 +26,9 @@ class Register extends Controller {
         $data['customer_groups'] = array();
         
         if (is_array($this->config->get('config_customer_group_display'))) {
-            $this->theme->model('account/customergroup');
+            $this->theme->model('account/customer_group');
             
-            $customer_groups = $this->model_account_customergroup->getCustomerGroups();
+            $customer_groups = $this->model_account_customer_group->getCustomerGroups();
             
             foreach ($customer_groups as $customer_group) {
                 if (in_array($customer_group['customer_group_id'], $this->config->get('config_customer_group_display'))) {
@@ -100,7 +100,7 @@ class Register extends Controller {
         }
         
         // Validate cart has products and has stock.
-        if ((!$this->cart->hasProducts() && empty($this->session->data['giftcards'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
+        if ((!$this->cart->hasProducts() && empty($this->session->data['gift_cards'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
             $json['redirect'] = $this->url->link('checkout/cart');
         }
         
@@ -153,7 +153,7 @@ class Register extends Controller {
             }
             
             // Customer Group
-            $this->theme->model('account/customergroup');
+            $this->theme->model('account/customer_group');
             
             if (isset($this->request->post['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($this->request->post['customer_group_id'], $this->config->get('config_customer_group_display'))) {
                 $customer_group_id = $this->request->post['customer_group_id'];
@@ -161,7 +161,7 @@ class Register extends Controller {
                 $customer_group_id = $this->config->get('config_customer_group_id');
             }
             
-            $customer_group = $this->model_account_customergroup->getCustomerGroup($customer_group_id);
+            $customer_group = $this->model_account_customer_group->getCustomerGroup($customer_group_id);
             
             if ($customer_group) {
                 

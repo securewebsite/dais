@@ -22,7 +22,7 @@
 |    
 */
 
-namespace Egress\Library\Task\Hello;
+namespace Egress\Task\Hello;
 use Egress\Library\Task\TaskBase;
 use Egress\Library\Task\TaskInterface;
 

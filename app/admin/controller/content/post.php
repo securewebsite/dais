@@ -609,9 +609,9 @@ class Post extends Controller {
             $data['visibility'] = 0;
         }
         
-        $this->theme->model('people/customergroup');
+        $this->theme->model('people/customer_group');
         
-        $data['customer_groups'] = $this->model_people_customergroup->getCustomerGroups();
+        $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups();
         
         if (isset($this->request->post['status'])) {
             $data['status'] = $this->request->post['status'];

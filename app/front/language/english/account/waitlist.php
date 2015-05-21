@@ -14,21 +14,29 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']     = 'Your Wait Lists';
+namespace Front\Language\English\Account;
 
-// Text
-$_['lang_text_no_waitlists'] = 'You are not on any wait lists.';
-$_['lang_text_waitlists']    = 'Wait Lists';
-$_['lang_text_dashboard']    = 'Dashboard';
-$_['lang_text_remove']       = 'Remove from Wait List';
+class Waitlist {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']     = 'Your Wait Lists';
 
-// Column
-$_['lang_column_event']      = 'Event Name';
-$_['lang_column_start_date'] = 'Event Date';
-$_['lang_column_location']   = 'Event Location';
-$_['lang_column_telephone']  = 'Telephone';
-$_['lang_column_action']     = 'Action';
+		// Text
+		$_['lang_text_no_waitlists'] = 'You are not on any wait lists.';
+		$_['lang_text_waitlists']    = 'Wait Lists';
+		$_['lang_text_dashboard']    = 'Dashboard';
+		$_['lang_text_remove']       = 'Remove from Wait List';
 
-// Button
-$_['lang_button_remove']     = 'Remove';
+		// Column
+		$_['lang_column_event']      = 'Event Name';
+		$_['lang_column_start_date'] = 'Event Date';
+		$_['lang_column_location']   = 'Event Location';
+		$_['lang_column_telephone']  = 'Telephone';
+		$_['lang_column_action']     = 'Action';
+
+		// Button
+		$_['lang_button_remove']     = 'Remove';
+
+		return $_;
+	}
+}

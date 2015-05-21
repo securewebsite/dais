@@ -50,7 +50,7 @@ class Login extends Controller {
             $json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
         }
         
-        if ((!$this->cart->hasProducts() && empty($this->session->data['giftcards'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
+        if ((!$this->cart->hasProducts() && empty($this->session->data['gift_cards'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
             $json['redirect'] = $this->url->link('checkout/cart');
         }
         

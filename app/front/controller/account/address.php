@@ -351,9 +351,9 @@ class Address extends Controller {
             $data['tax_id'] = '';
         }
         
-        $this->theme->model('account/customergroup');
+        $this->theme->model('account/customer_group');
         
-        $customer_group_info = $this->model_account_customergroup->getCustomerGroup($this->customer->getGroupId());
+        $customer_group_info = $this->model_account_customer_group->getCustomerGroup($this->customer->getGroupId());
         
         if ($customer_group_info) {
             $data['company_id_display'] = $customer_group_info['company_id_display'];

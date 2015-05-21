@@ -129,10 +129,10 @@ class Setting extends Controller {
             $data['error_blog_admin_group_id'] = '';
         }
         
-        if (isset($this->error['giftcard_min'])) {
-            $data['error_giftcard_min'] = $this->error['giftcard_min'];
+        if (isset($this->error['gift_card_min'])) {
+            $data['error_gift_card_min'] = $this->error['gift_card_min'];
         } else {
-            $data['error_giftcard_min'] = '';
+            $data['error_gift_card_min'] = '';
         }
 
         if (isset($this->error['affiliate_terms'])) {
@@ -147,10 +147,10 @@ class Setting extends Controller {
             $data['error_commission'] = '';
         }
         
-        if (isset($this->error['giftcard_max'])) {
-            $data['error_giftcard_max'] = $this->error['giftcard_max'];
+        if (isset($this->error['gift_card_max'])) {
+            $data['error_gift_card_max'] = $this->error['gift_card_max'];
         } else {
-            $data['error_giftcard_max'] = '';
+            $data['error_gift_card_max'] = '';
         }
         
         if (isset($this->error['ftp_host'])) {
@@ -480,9 +480,9 @@ class Setting extends Controller {
             $data['config_length_class_id'] = $this->config->get('config_length_class_id');
         }
         
-        $this->theme->model('localization/lengthclass');
+        $this->theme->model('localization/length_class');
         
-        $data['length_classes'] = $this->model_localization_lengthclass->getLengthClasses();
+        $data['length_classes'] = $this->model_localization_length_class->getLengthClasses();
         
         if (isset($this->request->post['config_weight_class_id'])) {
             $data['config_weight_class_id'] = $this->request->post['config_weight_class_id'];
@@ -490,9 +490,9 @@ class Setting extends Controller {
             $data['config_weight_class_id'] = $this->config->get('config_weight_class_id');
         }
         
-        $this->theme->model('localization/weightclass');
+        $this->theme->model('localization/weight_class');
         
-        $data['weight_classes'] = $this->model_localization_weightclass->getWeightClasses();
+        $data['weight_classes'] = $this->model_localization_weight_class->getWeightClasses();
         
         if (isset($this->request->post['config_catalog_limit'])) {
             $data['config_catalog_limit'] = $this->request->post['config_catalog_limit'];
@@ -530,16 +530,16 @@ class Setting extends Controller {
             $data['config_download'] = $this->config->get('config_download');
         }
         
-        if (isset($this->request->post['config_giftcard_min'])) {
-            $data['config_giftcard_min'] = $this->request->post['config_giftcard_min'];
+        if (isset($this->request->post['config_gift_card_min'])) {
+            $data['config_gift_card_min'] = $this->request->post['config_gift_card_min'];
         } else {
-            $data['config_giftcard_min'] = $this->config->get('config_giftcard_min');
+            $data['config_gift_card_min'] = $this->config->get('config_gift_card_min');
         }
         
-        if (isset($this->request->post['config_giftcard_max'])) {
-            $data['config_giftcard_max'] = $this->request->post['config_giftcard_max'];
+        if (isset($this->request->post['config_gift_card_max'])) {
+            $data['config_gift_card_max'] = $this->request->post['config_gift_card_max'];
         } else {
-            $data['config_giftcard_max'] = $this->config->get('config_giftcard_max');
+            $data['config_gift_card_max'] = $this->config->get('config_gift_card_max');
         }
         
         if (isset($this->request->post['config_tax'])) {
@@ -578,10 +578,10 @@ class Setting extends Controller {
             $data['config_customer_group_id'] = $this->config->get('config_customer_group_id');
         }
         
-        $this->theme->model('people/customergroup');
+        $this->theme->model('people/customer_group');
         
         // assign to local variable so we can use it later
-        $customer_groups = $this->model_people_customergroup->getCustomerGroups();
+        $customer_groups = $this->model_people_customer_group->getCustomerGroups();
         
         $data['customer_groups'] = $customer_groups;
         
@@ -755,9 +755,9 @@ class Setting extends Controller {
             $data['config_complete_status_id'] = $this->config->get('config_complete_status_id');
         }
         
-        $this->theme->model('localization/orderstatus');
+        $this->theme->model('localization/order_status');
         
-        $data['order_statuses'] = $this->model_localization_orderstatus->getOrderStatuses();
+        $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
         
         if (isset($this->request->post['config_stock_display'])) {
             $data['config_stock_display'] = $this->request->post['config_stock_display'];
@@ -783,9 +783,9 @@ class Setting extends Controller {
             $data['config_stock_status_id'] = $this->config->get('config_stock_status_id');
         }
         
-        $this->theme->model('localization/stockstatus');
+        $this->theme->model('localization/stock_status');
         
-        $data['stock_statuses'] = $this->model_localization_stockstatus->getStockStatuses();
+        $data['stock_statuses'] = $this->model_localization_stock_status->getStockStatuses();
         
         if (isset($this->request->post['config_affiliate_allowed'])) {
             $data['config_affiliate_allowed'] = $this->request->post['config_affiliate_allowed'];
@@ -819,9 +819,9 @@ class Setting extends Controller {
             $data['config_return_status_id'] = $this->config->get('config_return_status_id');
         }
         
-        $this->theme->model('localization/returnstatus');
+        $this->theme->model('localization/return_status');
         
-        $data['return_statuses'] = $this->model_localization_returnstatus->getReturnStatuses();
+        $data['return_statuses'] = $this->model_localization_return_status->getReturnStatuses();
         
         $this->theme->model('tool/image');
         
@@ -1317,12 +1317,12 @@ class Setting extends Controller {
             $this->error['customer_group_display'] = $this->language->get('lang_error_customer_group_display');
         }
         
-        if (!$this->request->post['config_giftcard_min']) {
-            $this->error['giftcard_min'] = $this->language->get('lang_error_giftcard_min');
+        if (!$this->request->post['config_gift_card_min']) {
+            $this->error['gift_card_min'] = $this->language->get('lang_error_gift_card_min');
         }
         
-        if (!$this->request->post['config_giftcard_max']) {
-            $this->error['giftcard_max'] = $this->language->get('lang_error_giftcard_max');
+        if (!$this->request->post['config_gift_card_max']) {
+            $this->error['gift_card_max'] = $this->language->get('lang_error_gift_card_max');
         }
         
         if (!$this->request->post['config_image_category_width'] || !$this->request->post['config_image_category_height']) {

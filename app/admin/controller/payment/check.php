@@ -69,9 +69,9 @@ class Check extends Controller {
             $data['check_order_status_id'] = $this->config->get('check_order_status_id');
         }
         
-        $this->theme->model('localization/orderstatus');
+        $this->theme->model('localization/order_status');
         
-        $data['order_statuses'] = $this->model_localization_orderstatus->getOrderStatuses();
+        $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
         
         if (isset($this->request->post['check_geo_zone_id'])) {
             $data['check_geo_zone_id'] = $this->request->post['check_geo_zone_id'];
@@ -79,9 +79,9 @@ class Check extends Controller {
             $data['check_geo_zone_id'] = $this->config->get('check_geo_zone_id');
         }
         
-        $this->theme->model('localization/geozone');
+        $this->theme->model('localization/geo_zone');
         
-        $data['geo_zones'] = $this->model_localization_geozone->getGeoZones();
+        $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
         
         if (isset($this->request->post['check_status'])) {
             $data['check_status'] = $this->request->post['check_status'];

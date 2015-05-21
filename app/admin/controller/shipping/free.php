@@ -57,9 +57,9 @@ class Free extends Controller {
             $data['free_geo_zone_id'] = $this->config->get('free_geo_zone_id');
         }
         
-        $this->theme->model('localization/geozone');
+        $this->theme->model('localization/geo_zone');
         
-        $data['geo_zones'] = $this->model_localization_geozone->getGeoZones();
+        $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
         
         if (isset($this->request->post['free_status'])) {
             $data['free_status'] = $this->request->post['free_status'];

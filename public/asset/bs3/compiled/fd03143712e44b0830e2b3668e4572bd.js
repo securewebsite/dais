@@ -154,7 +154,7 @@ $(document).ready(function(){
 		data.append("directory", 'content');
 		
 		$.ajax({
-			url:'index.php?route=common/filemanager/editor_upload&token=' + token,
+			url:'index.php?route=common/file_manager/editor_upload&token=' + token,
 			data: data,
 			cache: false,
 			contentType: false,
@@ -605,11 +605,11 @@ function attributeautocomplete(attribute_row){
 	});
 }
 function image_upload(field,thumb){
-	$('#modal .modal-body').html('<iframe src="index.php?route=common/filemanager&token='+token+'&field='+encodeURIComponent(field)+'" frameborder="no" scrolling="auto"></iframe>');
+	$('#modal .modal-body').html('<iframe src="index.php?route=common/file_manager&token='+token+'&field='+encodeURIComponent(field)+'" frameborder="no" scrolling="auto"></iframe>');
 	$('#modal').on('hidden.bs.modal',function(e){
 		if($('#'+field).val()){
 			$.ajax({
-				url:'index.php?route=common/filemanager/image&token='+token+'&image='+encodeURIComponent($('#'+field).val()),
+				url:'index.php?route=common/file_manager/image&token='+token+'&image='+encodeURIComponent($('#'+field).val()),
 				dataType:'text',
 				success:function(text){
 					$('#'+thumb).attr({'src':text,'id':thumb});
@@ -882,9 +882,9 @@ var alertMessage=function(state,msg){
 		$(this).remove();
 	});
 };
-function sendGiftcard(giftcard_id,b){
+function sendGiftcard(gift_card_id,b){
 	$.ajax({
-		url:'index.php?route=sale/giftcard/send&token='+token+'&giftcard_id='+giftcard_id,
+		url:'index.php?route=sale/gift_card/send&token='+token+'&gift_card_id='+gift_card_id,
 		type:'post',
 		dataType:'json',
 		beforeSend:function(){
@@ -1287,7 +1287,7 @@ $(function(){
 	}).click(function(){
 		this.select();
 	});
-	$('#button-product,#button-giftcard,#button-update').on('click',function(){
+	$('#button-product,#button-gift_card,#button-update').on('click',function(){
 		var a=$(this);
 		data='#tab-customer input[type="text"],#tab-customer input[type="hidden"],#tab-customer input[type="radio"]:checked,#tab-customer input[type="checkbox"]:checked,#tab-customer select,#tab-customer textarea,';
 		data+='#tab-payment input[type="text"],#tab-payment input[type="hidden"],#tab-payment input[type="radio"]:checked,#tab-payment input[type="checkbox"]:checked,#tab-payment select,#tab-payment textarea,';
@@ -1297,10 +1297,10 @@ $(function(){
 		}else{
 			data+='#product input[type="text"],#product input[type="hidden"],#product input[type="radio"]:checked,#product input[type="checkbox"]:checked,#product select,#product textarea,';
 		}
-		if (a.attr('id')=='button-giftcard'){
-			data+='#tab-giftcard input[type="text"],#tab-giftcard input[type="hidden"],#tab-giftcard input[type="radio"]:checked,#tab-giftcard input[type="checkbox"]:checked,#tab-giftcard select,#tab-giftcard textarea,';
+		if (a.attr('id')=='button-gift_card'){
+			data+='#tab-gift_card input[type="text"],#tab-gift_card input[type="hidden"],#tab-gift_card input[type="radio"]:checked,#tab-gift_card input[type="checkbox"]:checked,#tab-gift_card select,#tab-gift_card textarea,';
 		}else{
-			data+='#giftcard input[type="text"],#giftcard input[type="hidden"],#giftcard input[type="radio"]:checked,#giftcard input[type="checkbox"]:checked,#giftcard select,#giftcard textarea,';
+			data+='#gift_card input[type="text"],#gift_card input[type="hidden"],#gift_card input[type="radio"]:checked,#gift_card input[type="checkbox"]:checked,#gift_card select,#gift_card textarea,';
 		}
 		data+='#tab-total input[type="text"],#tab-total input[type="hidden"],#tab-total input[type="radio"]:checked,#tab-total input[type="checkbox"]:checked,#tab-total select,#tab-total textarea';
 		
@@ -1365,8 +1365,8 @@ $(function(){
 						$('#option .form-group').remove();		
 						$('input[name="quantity"]').val('1');		
 					}
-					if(json['error']['giftcards']){
-						$.each(json['error']['giftcards'],function(key,val){
+					if(json['error']['gift_cards']){
+						$.each(json['error']['gift_cards'],function(key,val){
 							$('input[name="'+key+'"]').after('<div class="help-block error">'+val+'</div>');
 						});
 					}else{
@@ -1383,8 +1383,8 @@ $(function(){
 					if(json['error']['coupon']){
 						alertMessage('danger',json['error']['coupon']);
 					}
-					if(json['error']['giftcard']){
-						alertMessage('danger',json['error']['giftcard']);
+					if(json['error']['gift_card']){
+						alertMessage('danger',json['error']['gift_card']);
 					}
 					if(json['error']['reward']){
 						alertMessage('danger',json['error']['reward']);
@@ -1453,38 +1453,38 @@ $(function(){
 				}else{
 					$('#product').html('<tr><td colspan="6" class="text-center">'+text_no_results+'</td></tr>');
 				}
-				if(json['order_giftcard']!=''){
-					var giftcard_row=0;
+				if(json['order_gift_card']!=''){
+					var gift_card_row=0;
 					html = '';
-					for(i in json['order_giftcard']){
-						giftcard=json['order_giftcard'][i];
-						html += '<tr id="giftcard-row'+giftcard_row+'">';
-						html += '<td class="text-center"><a title="'+button_remove+'" onclick="$("#giftcard-row'+giftcard_row+'").remove();$("#button-update").trigger("click");"><i class="fa fa-trash-o fa-lg"></i></a></td>';
-						html += '<td>'+giftcard['description'];
-						html += '<input type="hidden" name="order_giftcard['+giftcard_row+'][order_giftcard_id]" value="">';
-						html += '<input type="hidden" name="order_giftcard['+giftcard_row+'][giftcard_id]" value="'+giftcard['giftcard_id']+'">';
-						html += '<input type="hidden" name="order_giftcard['+giftcard_row+'][description]" value="'+giftcard['description']+'">';
-						html += '<input type="hidden" name="order_giftcard['+giftcard_row+'][code]" value="'+giftcard['code']+'">';
-						html += '<input type="hidden" name="order_giftcard['+giftcard_row+'][from_name]" value="'+giftcard['from_name']+'">';
-						html += '<input type="hidden" name="order_giftcard['+giftcard_row+'][from_email]" value="'+giftcard['from_email']+'">';
-						html += '<input type="hidden" name="order_giftcard['+giftcard_row+'][to_name]" value="'+giftcard['to_name']+'">';
-						html += '<input type="hidden" name="order_giftcard['+giftcard_row+'][to_email]" value="'+giftcard['to_email']+'">';
-						html += '<input type="hidden" name="order_giftcard['+giftcard_row+'][giftcard_theme_id]" value="'+giftcard['giftcard_theme_id']+'">';
-						html += '<input type="hidden" name="order_giftcard['+giftcard_row+'][message]" value="'+giftcard['message']+'">';
-						html += '<input type="hidden" name="order_giftcard['+giftcard_row+'][amount]" value="'+giftcard['amount']+'">';
+					for(i in json['order_gift_card']){
+						gift_card=json['order_gift_card'][i];
+						html += '<tr id="gift_card-row'+gift_card_row+'">';
+						html += '<td class="text-center"><a title="'+button_remove+'" onclick="$("#gift_card-row'+gift_card_row+'").remove();$("#button-update").trigger("click");"><i class="fa fa-trash-o fa-lg"></i></a></td>';
+						html += '<td>'+gift_card['description'];
+						html += '<input type="hidden" name="order_gift_card['+gift_card_row+'][order_gift_card_id]" value="">';
+						html += '<input type="hidden" name="order_gift_card['+gift_card_row+'][gift_card_id]" value="'+gift_card['gift_card_id']+'">';
+						html += '<input type="hidden" name="order_gift_card['+gift_card_row+'][description]" value="'+gift_card['description']+'">';
+						html += '<input type="hidden" name="order_gift_card['+gift_card_row+'][code]" value="'+gift_card['code']+'">';
+						html += '<input type="hidden" name="order_gift_card['+gift_card_row+'][from_name]" value="'+gift_card['from_name']+'">';
+						html += '<input type="hidden" name="order_gift_card['+gift_card_row+'][from_email]" value="'+gift_card['from_email']+'">';
+						html += '<input type="hidden" name="order_gift_card['+gift_card_row+'][to_name]" value="'+gift_card['to_name']+'">';
+						html += '<input type="hidden" name="order_gift_card['+gift_card_row+'][to_email]" value="'+gift_card['to_email']+'">';
+						html += '<input type="hidden" name="order_gift_card['+gift_card_row+'][gift_card_theme_id]" value="'+gift_card['gift_card_theme_id']+'">';
+						html += '<input type="hidden" name="order_gift_card['+gift_card_row+'][message]" value="'+gift_card['message']+'">';
+						html += '<input type="hidden" name="order_gift_card['+gift_card_row+'][amount]" value="'+gift_card['amount']+'">';
 						html += '</td>';
 						html += '<td></td>';
 						html += '<td class="text-right">1</td>';
-						html += '<td class="text-right">'+giftcard['amount']+'</td>';
-						html += '<td class="text-right">'+giftcard['amount']+'</td>';
+						html += '<td class="text-right">'+gift_card['amount']+'</td>';
+						html += '<td class="text-right">'+gift_card['amount']+'</td>';
 						html += '</tr>';
-						giftcard_row++;
+						gift_card_row++;
 					}
-					$('#giftcard').html(html);			
+					$('#gift_card').html(html);			
 				}else{
-					$('#giftcard').html('<tr><td colspan="6" class="text-center">'+text_no_results+'</td></tr>');
+					$('#gift_card').html('<tr><td colspan="6" class="text-center">'+text_no_results+'</td></tr>');
 				}
-				if(json['order_product']!=''||json['order_giftcard']!=''||json['order_total']!=''){
+				if(json['order_product']!=''||json['order_gift_card']!=''||json['order_total']!=''){
 					html = '';
 					if(json['order_product']!=''){
 						for(i=0;i<json['order_product'].length;i++){
@@ -1506,15 +1506,15 @@ $(function(){
 							html += '</tr>';
 						}			
 					}
-					if(json['order_giftcard']!=''){
-						for(i in json['order_giftcard']){
-							giftcard=json['order_giftcard'][i];
+					if(json['order_gift_card']!=''){
+						for(i in json['order_gift_card']){
+							gift_card=json['order_gift_card'][i];
 							html += '<tr>';
-							html += '<td>'+giftcard['description']+'</td>';
+							html += '<td>'+gift_card['description']+'</td>';
 							html += '<td></td>';
 							html += '<td class="text-right">1</td>';
-							html += '<td class="text-right">'+giftcard['amount']+'</td>';
-							html += '<td class="text-right">'+giftcard['amount']+'</td>';
+							html += '<td class="text-right">'+gift_card['amount']+'</td>';
+							html += '<td class="text-right">'+gift_card['amount']+'</td>';
 							html += '</tr>';
 						}
 					}

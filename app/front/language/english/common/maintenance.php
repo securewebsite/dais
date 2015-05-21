@@ -14,9 +14,17 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']    = 'Maintenance';
+namespace Front\Language\English\Common;
 
-// Text
-$_['lang_text_maintenance'] = 'Maintenance';
-$_['lang_text_message']     = '<h1 style="text-align:center;">We are currently performing some scheduled maintenance. <br/>We will be back as soon as possible. Please check back soon.</h1>';
+class Maintenance {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']    = 'Maintenance';
+
+		// Text
+		$_['lang_text_maintenance'] = 'Maintenance';
+		$_['lang_text_message']     = '<h1 style="text-align:center;">We are currently performing some scheduled maintenance. <br/>We will be back as soon as possible. Please check back soon.</h1>';
+		
+		return $_;
+	}
+}

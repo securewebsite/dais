@@ -14,7 +14,15 @@
 |	
 */
 
-// Text
-$_['lang_text_title']  = 'United States Postal Service';
-$_['lang_text_weight'] = 'Weight:';
-$_['lang_text_eta']    = 'Estimated Time:';
+namespace Front\Language\English\Shipping;
+
+class Usps {
+	public static function lang() {
+		// Text
+		$_['lang_text_title']  = 'United States Postal Service';
+		$_['lang_text_weight'] = 'Weight:';
+		$_['lang_text_eta']    = 'Estimated Time:';
+
+		return $_;
+	}
+}

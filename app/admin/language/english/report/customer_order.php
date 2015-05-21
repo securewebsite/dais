@@ -14,23 +14,31 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']         = 'Customer Orders Report';
+namespace Admin\Language\English\Report;
 
-// Text
-$_['lang_text_all_status']       = 'Status (All)';
+class CustomerOrder {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']         = 'Customer Orders Report';
 
-// Column
-$_['lang_column_customer']       = 'Customer Name';
-$_['lang_column_email']          = 'E-Mail';
-$_['lang_column_customer_group'] = 'Customer Group';
-$_['lang_column_status']         = 'Status';
-$_['lang_column_orders']         = 'No. Orders';
-$_['lang_column_products']       = 'No. Products';
-$_['lang_column_total']          = 'Total';
-$_['lang_column_action']         = 'Action';
+		// Text
+		$_['lang_text_all_status']       = 'Status (All)';
 
-// Entry
-$_['lang_entry_date_start']      = 'Date Start:';
-$_['lang_entry_date_end']        = 'Date End:';
-$_['lang_entry_status']          = 'Order Status:';
+		// Column
+		$_['lang_column_customer']       = 'Customer Name';
+		$_['lang_column_email']          = 'E-Mail';
+		$_['lang_column_customer_group'] = 'Customer Group';
+		$_['lang_column_status']         = 'Status';
+		$_['lang_column_orders']         = 'No. Orders';
+		$_['lang_column_products']       = 'No. Products';
+		$_['lang_column_total']          = 'Total';
+		$_['lang_column_action']         = 'Action';
+
+		// Entry
+		$_['lang_entry_date_start']      = 'Date Start:';
+		$_['lang_entry_date_end']        = 'Date End:';
+		$_['lang_entry_status']          = 'Order Status:';
+
+		return $_;
+	}
+}

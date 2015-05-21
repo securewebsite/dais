@@ -364,7 +364,7 @@ class Country extends Controller {
         $this->theme->model('setting/store');
         $this->theme->model('people/customer');
         $this->theme->model('localization/zone');
-        $this->theme->model('localization/geozone');
+        $this->theme->model('localization/geo_zone');
         
         foreach ($this->request->post['selected'] as $country_id) {
             if ($this->config->get('config_country_id') == $country_id) {
@@ -397,11 +397,11 @@ class Country extends Controller {
                 endforeach;
             }
             
-            $geo_zones = $this->model_localization_geozone->getGeoZonesByCountryId($country_id);
+            $geo_zones = $this->model_localization_geo_zone->getGeoZonesByCountryId($country_id);
             
             if (!empty($geo_zones) && !$this->error) {
                 foreach ($geo_zones as $geo_zone):
-                    $this->model_localization_geozone->deleteGeoZone($geo_zone['geo_zone_id']);
+                    $this->model_localization_geo_zone->deleteGeoZone($geo_zone['geo_zone_id']);
                 endforeach;
             }
         }

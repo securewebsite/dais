@@ -14,6 +14,14 @@
 |	
 */
 
-// Text
-$_['lang_text_reward']   = 'Reward Points(%s)';
-$_['lang_text_order_id'] = 'Order ID: #%s';
+namespace Front\Language\English\Total;
+
+class Reward {
+	public static function lang() {
+		// Text
+		$_['lang_text_reward']   = 'Reward Points(%s)';
+		$_['lang_text_order_id'] = 'Order ID: #%s';
+
+		return $_;
+	}
+}

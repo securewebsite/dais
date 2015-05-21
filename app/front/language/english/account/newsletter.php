@@ -14,13 +14,21 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']    = 'Newsletter Subscription';
+namespace Front\Language\English\Account;
 
-// Text
-$_['lang_text_account']     = 'Dashboard';
-$_['lang_text_newsletter']  = 'Newsletter';
-$_['lang_text_success']     = 'Success: Your newsletter subscription has been successfully updated.';
+class Newsletter {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']    = 'Newsletter Subscription';
 
-// Entry
-$_['lang_entry_newsletter'] = 'Subscribe';
+		// Text
+		$_['lang_text_account']     = 'Dashboard';
+		$_['lang_text_newsletter']  = 'Newsletter';
+		$_['lang_text_success']     = 'Success: Your newsletter subscription has been successfully updated.';
+
+		// Entry
+		$_['lang_entry_newsletter'] = 'Subscribe';
+
+		return $_;
+	}
+}

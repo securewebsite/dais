@@ -14,18 +14,26 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']    = 'Account';
+namespace Admin\Language\English\Widget;
 
-// Text
-$_['lang_text_widget']      = 'Widgets';
-$_['lang_text_success']     = 'Success: You have modified widget account.';
+class Account {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']    = 'Account';
 
-// Entry
-$_['lang_entry_layout']     = 'Layout:';
-$_['lang_entry_position']   = 'Position:';
-$_['lang_entry_status']     = 'Status:';
-$_['lang_entry_sort_order'] = 'Sort Order:';
+		// Text
+		$_['lang_text_widget']      = 'Widgets';
+		$_['lang_text_success']     = 'Success: You have modified widget account.';
 
-// Error
-$_['lang_error_permission'] = 'Warning: You do not have permission to modify widget account.';
+		// Entry
+		$_['lang_entry_layout']     = 'Layout:';
+		$_['lang_entry_position']   = 'Position:';
+		$_['lang_entry_status']     = 'Status:';
+		$_['lang_entry_sort_order'] = 'Sort Order:';
+
+		// Error
+		$_['lang_error_permission'] = 'Warning: You do not have permission to modify widget account.';
+		
+		return $_;
+	}
+}

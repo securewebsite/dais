@@ -27,7 +27,7 @@ use Egress\Library\EgressException;
 
 class Naming {
     
-    const CLASS_NS_PREFIX = '\Egress\Library\Task\\';
+    const CLASS_NS_PREFIX = '\Egress\Task\\';
 
     public static function task_from_class_name($klass) {
         if (! preg_match('/' . str_replace('\\', '\\\\', self::CLASS_NS_PREFIX) . '/', $klass)):
@@ -68,9 +68,9 @@ class Naming {
     public static function class_from_migration_file($file_name) {
         $className = false;
         
-        if (preg_match('/^(\d+)_(.*)\.php$/', $file_name, $matches)):
+        if (preg_match('/^(.*)_(\d+)\.php$/', $file_name, $matches)):
             if (count($matches) == 3):
-                $className = $matches[2];
+                $className = $matches[1] . '_' . $matches[2];
             endif;
         endif;
         

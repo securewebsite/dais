@@ -14,21 +14,29 @@
 |	
 */
 
-// header
-$_['lang_heading_title']   = 'Administration';
+namespace Admin\Language\English\Common;
 
-// Text
-$_['lang_text_heading']    = 'Administration';
-$_['lang_text_login']      = 'Please enter your login details.';
-$_['lang_text_forgotten']  = 'Forgotten Password';
+class Login {
+	public static function lang() {
+		// header
+		$_['lang_heading_title']   = 'Administration';
 
-// Entry
-$_['lang_entry_user_name'] = 'Username:';
-$_['lang_entry_password']  = 'Password:';
+		// Text
+		$_['lang_text_heading']    = 'Administration';
+		$_['lang_text_login']      = 'Please enter your login details.';
+		$_['lang_text_forgotten']  = 'Forgotten Password';
 
-// Button
-$_['lang_button_login']    = 'Login';
+		// Entry
+		$_['lang_entry_user_name'] = 'Username:';
+		$_['lang_entry_password']  = 'Password:';
 
-// Error
-$_['lang_error_login']     = 'No match for Username and/or Password.';
-$_['lang_error_token']     = 'Invalid token session. Please login again.';
+		// Button
+		$_['lang_button_login']    = 'Login';
+
+		// Error
+		$_['lang_error_login']     = 'No match for Username and/or Password.';
+		$_['lang_error_token']     = 'Invalid token session. Please login again.';
+
+		return $_;
+	}
+}

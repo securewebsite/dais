@@ -59,20 +59,20 @@
 						<td class="text-right"><?= $product['total']; ?></td>
 					</tr>
 					<?php } ?>
-					<?php foreach ($giftcards as $giftcards){ ?>
+					<?php foreach ($gift_cards as $gift_cards){ ?>
 					<tr>
 						<td class="hidden-xs text-center"><i class="fa fa-gift fa-2x"></i></td>
-						<td><?= $giftcards['description']; ?></td>
+						<td><?= $gift_cards['description']; ?></td>
 						<td class="hidden-xs"></td>
-						<td class="text-right"><a class="btn btn-danger" href="<?= $giftcards['remove']; ?>"><i class="fa fa-times" data-toggle="tooltip" title="<?= $lang_button_remove; ?>"></i></a></td>
-						<td class="text-right hidden-xs"><?= $giftcards['amount']; ?></td>
-						<td class="text-right"><?= $giftcards['amount']; ?></td>
+						<td class="text-right"><a class="btn btn-danger" href="<?= $gift_cards['remove']; ?>"><i class="fa fa-times" data-toggle="tooltip" title="<?= $lang_button_remove; ?>"></i></a></td>
+						<td class="text-right hidden-xs"><?= $gift_cards['amount']; ?></td>
+						<td class="text-right"><?= $gift_cards['amount']; ?></td>
 					</tr>
 					<?php } ?>
 				</tbody>
 			</table>
 		</form>
-		<?php if ($coupon_status || $giftcard_status || $reward_status || $shipping_status){ ?>
+		<?php if ($coupon_status || $gift_card_status || $reward_status || $shipping_status){ ?>
 			<fieldset>
 			<legend><?= $lang_text_next; ?></legend>
 			<p><?= $lang_text_next_choice; ?></p>
@@ -96,20 +96,20 @@
 						</div>
 					</div>
 				<?php } ?>
-				<?php if ($giftcard_status){ ?>
+				<?php if ($gift_card_status){ ?>
 					<div class="panel panel-default">
-						<div class="panel-heading panel-heading-collapse"><a data-toggle="collapse" data-parent="#next-container" href="#giftcard"><?= $lang_text_use_giftcard; ?></a></div>
-						<div id="giftcard" class="panel-collapse collapse<?= ($next == 'giftcard' ? ' in' : ''); ?>">
+						<div class="panel-heading panel-heading-collapse"><a data-toggle="collapse" data-parent="#next-container" href="#gift_card"><?= $lang_text_use_gift_card; ?></a></div>
+						<div id="gift_card" class="panel-collapse collapse<?= ($next == 'gift_card' ? ' in' : ''); ?>">
 							<div class="panel-body">
 								<form class="form-horizontal" action="<?= $action; ?>" method="post" enctype="multipart/form-data">
-									<label for="next_giftcard"><?= $lang_entry_giftcard; ?></label>
+									<label for="next_gift_card"><?= $lang_entry_gift_card; ?></label>
 									<div class="form-group">
 										<div class="col-sm-6">
-											<input type="text" name="giftcard" value="<?= $giftcard; ?>" class="form-control" placeholder="<?= $lang_entry_giftcard; ?>"  id="next_giftcard">
+											<input type="text" name="gift_card" value="<?= $gift_card; ?>" class="form-control" placeholder="<?= $lang_entry_gift_card; ?>"  id="next_gift_card">
 										</div>
 									</div>
-									<input type="hidden" name="next" value="giftcard">
-									<input type="submit" value="<?= $lang_button_giftcard; ?>" class="btn btn-primary">
+									<input type="hidden" name="next" value="gift_card">
+									<input type="submit" value="<?= $lang_button_gift_card; ?>" class="btn btn-primary">
 								</form>
 							</div>
 						</div>

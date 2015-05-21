@@ -266,7 +266,7 @@ class Dashboard extends Controller {
                 'common/logout',
                 'common/forgotten',
                 'common/reset',
-                'error/notfound',
+                'error/not_found',
                 'error/permission',
                 'common/breadcrumb',
                 'common/menu',
@@ -310,7 +310,7 @@ class Dashboard extends Controller {
                 'common/reset',
                 'common/breadcrumb',
                 'common/menu',
-                'error/notfound',
+                'error/not_found',
                 'error/permission',
                 'common/javascript',
                 'common/css'

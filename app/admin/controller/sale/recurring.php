@@ -16,6 +16,8 @@
 
 namespace Admin\Controller\Sale;
 use Dais\Engine\Controller;
+use Dais\Engine\Action;
+use Dais\Service\ActionService;
 
 class Recurring extends Controller {
     private $error = array();
@@ -369,7 +371,7 @@ class Recurring extends Controller {
             
             $this->response->setOutput($this->theme->view('sale/recurring_info', $data));
         } else {
-            return new Action(new ActionService($this->app, 'error/notfound'));
+            return new Action(new ActionService($this->app, 'error/not_found'));
         }
     }
 }

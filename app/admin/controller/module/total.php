@@ -16,6 +16,7 @@
 
 namespace Admin\Controller\Module;
 use Dais\Engine\Controller;
+use Dais\Library\Naming;
 
 class Total extends Controller {
     public function index() {
@@ -105,10 +106,13 @@ class Total extends Controller {
             $this->model_people_user_group->addPermission($this->user->getId(), 'access', 'total/' . $this->request->get['module']);
             $this->model_people_user_group->addPermission($this->user->getId(), 'modify', 'total/' . $this->request->get['module']);
             
-            if (is_readable($this->theme->path . 'controller/total/' . $this->request->get['module'] . '.php')):
-                $class = 'Theme\Admin\\' . $this->theme->name . '\Controller\Total\\' . ucfirst($this->request->get['module']);
+            $base_path  = APP_PATH . $this->app['prefix.fascade'] . 'controller' . SEP . 'total' . SEP;
+            $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'total' . SEP;
+            
+            if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
+                $class = Naming::class_from_filename($file);
             else:
-                $class = 'Admin\Controller\Total\\' . ucfirst($this->request->get['module']);
+                $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
             endif;
             
             $class = new $class($this->app);
@@ -139,10 +143,13 @@ class Total extends Controller {
             $this->model_setting_module->uninstall('total', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
-            if (is_readable($this->theme->path . 'controller/total/' . $this->request->get['module'] . '.php')):
-                $class = 'Theme\Admin\\' . $this->theme->name . '\Controller\Total\\' . ucfirst($this->request->get['module']);
+            $base_path  = APP_PATH . $this->app['prefix.fascade'] . 'controller' . SEP . 'total' . SEP;
+            $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'total' . SEP;
+            
+            if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
+                $class = Naming::class_from_filename($file);
             else:
-                $class = 'Admin\Controller\Total\\' . ucfirst($this->request->get['module']);
+                $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
             endif;
             
             $class = new $class($this->app);

@@ -14,14 +14,22 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']  = 'Products Viewed Report';
+namespace Admin\Language\English\Report;
 
-// Text
-$_['lang_text_success']   = 'Success: You have reset the product viewed report.';
+class ProductViewed {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']  = 'Products Viewed Report';
 
-// Column
-$_['lang_column_name']    = 'Product Name';
-$_['lang_column_model']   = 'Model';
-$_['lang_column_viewed']  = 'Viewed';
-$_['lang_column_percent'] = 'Percent';
+		// Text
+		$_['lang_text_success']   = 'Success: You have reset the product viewed report.';
+
+		// Column
+		$_['lang_column_name']    = 'Product Name';
+		$_['lang_column_model']   = 'Model';
+		$_['lang_column_viewed']  = 'Viewed';
+		$_['lang_column_percent'] = 'Percent';
+
+		return $_;
+	}
+}

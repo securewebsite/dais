@@ -144,7 +144,7 @@ $front = array(
 	'path.public'      => dirname(__DIR__) . SEP . PUBLIC_DIR,
 	'path.image'       => dirname(__DIR__) . SEP . PUBLIC_DIR . 'image' . SEP,
 	'path.asset'       => dirname(__DIR__) . SEP . PUBLIC_DIR . 'asset' . SEP,
-	'prefix.fascade'   => 'Front\\'
+	'prefix.fascade'   => 'front' . SEP
 );
 
 $config[FRONT_FASCADE] = $front;
@@ -159,21 +159,21 @@ $admin = array(
 	'path.theme'       => APP_PATH . 'theme' . SEP . 'admin' . SEP,
 	'path.image'       => dirname(__DIR__) . SEP . PUBLIC_DIR . 'image' . SEP,
 	'path.asset'       => dirname(__DIR__) . SEP . PUBLIC_DIR . 'asset' . SEP,
-	'prefix.fascade'   => 'Admin\\'
+	'prefix.fascade'   => 'admin' . SEP
 );
 
 $config[ADMIN_FASCADE] = $admin;
 
 $install = array(
-	'http.server'      => 'http://' . $env['machine'] . '/install/',
-	'https.server'     => 'http://' . $env['machine'] . '/install/',
+	'http.server'      => 'http://' . $env['machine'] . '/' . INSTALL_FASCADE . '/',
+	'https.server'     => 'http://' . $env['machine'] . '/' . INSTALL_FASCADE . '/',
 	'http.public'      => 'http://' . $env['machine'] . '/',
 	'path.application' => APP_PATH . 'install' . SEP,
 	'path.language'    => APP_PATH . 'install' . SEP . 'language' . SEP,
 	'path.theme'       => APP_PATH . 'theme' . SEP . 'install' . SEP,
 	'path.dais'        => dirname(__DIR__) . SEP,
 	'path.asset'       => dirname(__DIR__) . SEP . PUBLIC_DIR . 'asset' . SEP,
-	'prefix.fascade'   => 'Install\\'
+	'prefix.fascade'   => 'install' . SEP
 );
 
 $config[INSTALL_FASCADE] = $install;

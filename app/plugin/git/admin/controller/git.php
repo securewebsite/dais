@@ -151,7 +151,7 @@ class Git extends Plugin {
         $this->theme->loadjs('git', $data, $this->script_directory);
         
         $data['header']     = $this->theme->controller('common/header');
-        $data['breadcrumb'] = $this->theme->controller('common/breadcrumb');
+        $data['breadcrumb'] = $this->theme->controller('common/bread_crumb');
         $data['footer']     = $this->theme->controller('common/footer');
         
         $this->response->setOutput($this->view('git', $data));

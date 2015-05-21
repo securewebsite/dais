@@ -22,7 +22,7 @@
 		</div>
 	</div>
 	<div class="panel-body">
-		<ul class="nav nav-tabs"><li><a href="#tab-customer" data-toggle="tab"><?= $lang_tab_customer; ?></a></li><li><a href="#tab-payment" data-toggle="tab"><?= $lang_tab_payment; ?></a></li><li><a href="#tab-shipping" data-toggle="tab"><?= $lang_tab_shipping; ?></a></li><li><a href="#tab-product" data-toggle="tab"><?= $lang_tab_product; ?></a></li><li><a href="#tab-giftcard" data-toggle="tab"><?= $lang_tab_giftcard; ?></a></li><li><a href="#tab-total" data-toggle="tab"><?= $lang_tab_total; ?></a></li></ul>
+		<ul class="nav nav-tabs"><li><a href="#tab-customer" data-toggle="tab"><?= $lang_tab_customer; ?></a></li><li><a href="#tab-payment" data-toggle="tab"><?= $lang_tab_payment; ?></a></li><li><a href="#tab-shipping" data-toggle="tab"><?= $lang_tab_shipping; ?></a></li><li><a href="#tab-product" data-toggle="tab"><?= $lang_tab_product; ?></a></li><li><a href="#tab-gift_card" data-toggle="tab"><?= $lang_tab_gift_card; ?></a></li><li><a href="#tab-total" data-toggle="tab"><?= $lang_tab_total; ?></a></li></ul>
 		<form class="form-horizontal" action="<?= $action; ?>" method="post" enctype="multipart/form-data" id="form">
 		<div class="tab-content">
 			<div id="tab-customer" class="tab-pane">
@@ -390,7 +390,7 @@
 					</div>
 				</fieldset>
 			</div>
-			<div id="tab-giftcard" class="tab-pane">
+			<div id="tab-gift_card" class="tab-pane">
 				<table class="table table-bordered table-striped table-hover">
 					<thead>
 						<tr>
@@ -402,30 +402,30 @@
 							<th class="text-right"><?= $lang_column_total; ?></th>
 						</tr>
 					</thead>
-					<tbody id="giftcard">
-						<?php $giftcard_row = 0; ?>
-						<?php if ($order_giftcards) { ?>
-						<?php foreach ($order_giftcards as $order_giftcard) { ?>
-						<tr id="giftcard-row<?= $giftcard_row; ?>">
-							<td class="text-center"><a title="<?= $lang_button_remove; ?>" onclick="$('#giftcard-row<?= $giftcard_row; ?>').remove();$('#button-update').trigger('click');"><i class="fa fa-trash-o fa-lg"></i></a></td>
-							<td><?= $order_giftcard['description']; ?>
-								<input type="hidden" name="order_giftcard[<?= $giftcard_row; ?>][order_giftcard_id]" value="<?= $order_giftcard['order_giftcard_id']; ?>">
-								<input type="hidden" name="order_giftcard[<?= $giftcard_row; ?>][giftcard_id]" value="<?= $order_giftcard['giftcard_id']; ?>">
-								<input type="hidden" name="order_giftcard[<?= $giftcard_row; ?>][description]" value="<?= $order_giftcard['description']; ?>">
-								<input type="hidden" name="order_giftcard[<?= $giftcard_row; ?>][code]" value="<?= $order_giftcard['code']; ?>">
-								<input type="hidden" name="order_giftcard[<?= $giftcard_row; ?>][from_name]" value="<?= $order_giftcard['from_name']; ?>">
-								<input type="hidden" name="order_giftcard[<?= $giftcard_row; ?>][from_email]" value="<?= $order_giftcard['from_email']; ?>">
-								<input type="hidden" name="order_giftcard[<?= $giftcard_row; ?>][to_name]" value="<?= $order_giftcard['to_name']; ?>">
-								<input type="hidden" name="order_giftcard[<?= $giftcard_row; ?>][to_email]" value="<?= $order_giftcard['to_email']; ?>">
-								<input type="hidden" name="order_giftcard[<?= $giftcard_row; ?>][giftcard_theme_id]" value="<?= $order_giftcard['giftcard_theme_id']; ?>">
-								<input type="hidden" name="order_giftcard[<?= $giftcard_row; ?>][message]" value="<?= $order_giftcard['message']; ?>">
-								<input type="hidden" name="order_giftcard[<?= $giftcard_row; ?>][amount]" value="<?= $order_giftcard['amount']; ?>"></td>
+					<tbody id="gift_card">
+						<?php $gift_card_row = 0; ?>
+						<?php if ($order_gift_cards) { ?>
+						<?php foreach ($order_gift_cards as $order_gift_card) { ?>
+						<tr id="gift_card-row<?= $gift_card_row; ?>">
+							<td class="text-center"><a title="<?= $lang_button_remove; ?>" onclick="$('#gift_card-row<?= $gift_card_row; ?>').remove();$('#button-update').trigger('click');"><i class="fa fa-trash-o fa-lg"></i></a></td>
+							<td><?= $order_gift_card['description']; ?>
+								<input type="hidden" name="order_gift_card[<?= $gift_card_row; ?>][order_gift_card_id]" value="<?= $order_gift_card['order_gift_card_id']; ?>">
+								<input type="hidden" name="order_gift_card[<?= $gift_card_row; ?>][gift_card_id]" value="<?= $order_gift_card['gift_card_id']; ?>">
+								<input type="hidden" name="order_gift_card[<?= $gift_card_row; ?>][description]" value="<?= $order_gift_card['description']; ?>">
+								<input type="hidden" name="order_gift_card[<?= $gift_card_row; ?>][code]" value="<?= $order_gift_card['code']; ?>">
+								<input type="hidden" name="order_gift_card[<?= $gift_card_row; ?>][from_name]" value="<?= $order_gift_card['from_name']; ?>">
+								<input type="hidden" name="order_gift_card[<?= $gift_card_row; ?>][from_email]" value="<?= $order_gift_card['from_email']; ?>">
+								<input type="hidden" name="order_gift_card[<?= $gift_card_row; ?>][to_name]" value="<?= $order_gift_card['to_name']; ?>">
+								<input type="hidden" name="order_gift_card[<?= $gift_card_row; ?>][to_email]" value="<?= $order_gift_card['to_email']; ?>">
+								<input type="hidden" name="order_gift_card[<?= $gift_card_row; ?>][gift_card_theme_id]" value="<?= $order_gift_card['gift_card_theme_id']; ?>">
+								<input type="hidden" name="order_gift_card[<?= $gift_card_row; ?>][message]" value="<?= $order_gift_card['message']; ?>">
+								<input type="hidden" name="order_gift_card[<?= $gift_card_row; ?>][amount]" value="<?= $order_gift_card['amount']; ?>"></td>
 							<td></td>
 							<td class="text-right">1</td>
-							<td class="text-right"><?= number_format($order_giftcard['amount'], 2); ?></td>
-							<td class="text-right"><?= number_format($order_giftcard['amount'], 2); ?></td>
+							<td class="text-right"><?= number_format($order_gift_card['amount'], 2); ?></td>
+							<td class="text-right"><?= number_format($order_gift_card['amount'], 2); ?></td>
 						</tr>
-						<?php $giftcard_row++; ?>
+						<?php $gift_card_row++; ?>
 						<?php } ?>
 						<?php } else { ?>
 						<tr>
@@ -435,7 +435,7 @@
 					</tbody>
 				</table>
 				<fieldset>
-					<legend><?= $lang_text_giftcard; ?></legend>
+					<legend><?= $lang_text_gift_card; ?></legend>
 					<div class="form-group">
 						<label class="control-label col-sm-2"><b class="required">*</b> <?= $lang_entry_to_name; ?></label>
 						<div class="control-field col-sm-4"><input type="text" name="to_name" value="" class="form-control" class="form-control"></div>
@@ -455,9 +455,9 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><b class="required">*</b> <?= $lang_entry_theme; ?></label>
 						<div class="control-field col-sm-4">
-							<select name="giftcard_theme_id" class="form-control">
-								<?php foreach ($giftcard_themes as $giftcard_theme) { ?>
-									<option value="<?= $giftcard_theme['giftcard_theme_id']; ?>"><?= addslashes($giftcard_theme['name']); ?></option>
+							<select name="gift_card_theme_id" class="form-control">
+								<?php foreach ($gift_card_themes as $gift_card_theme) { ?>
+									<option value="<?= $gift_card_theme['gift_card_theme_id']; ?>"><?= addslashes($gift_card_theme['name']); ?></option>
 								<?php } ?>
 							</select>
 						</div>
@@ -472,7 +472,7 @@
 					</div>
 					<div class="form-group">
 						<div class="control-field col-sm-4 col-sm-offset-2">
-							<button type="button" id="button-giftcard" class="btn btn-info"><i class="fa fa-plus-circle"></i> <?= $lang_button_add_giftcard; ?></button>
+							<button type="button" id="button-gift_card" class="btn btn-info"><i class="fa fa-plus-circle"></i> <?= $lang_button_add_gift_card; ?></button>
 						</div>
 					</div>
 				</fieldset>
@@ -490,7 +490,7 @@
 					</thead>
 					<tbody id="total">
 						<?php $total_row = 0; ?>
-						<?php if ($order_products || $order_giftcards || $order_totals) { ?>
+						<?php if ($order_products || $order_gift_cards || $order_totals) { ?>
 						<?php foreach ($order_products as $order_product) { ?>
 						<tr>
 							<td><?= $order_product['name']; ?>
@@ -503,13 +503,13 @@
 							<td class="text-right"><?= $order_product['total']; ?></td>
 						</tr>
 						<?php } ?>
-						<?php foreach ($order_giftcards as $order_giftcard) { ?>
+						<?php foreach ($order_gift_cards as $order_gift_card) { ?>
 						<tr>
-							<td><?= $order_giftcard['description']; ?></td>
+							<td><?= $order_gift_card['description']; ?></td>
 							<td></td>
 							<td class="text-right">1</td>
-							<td class="text-right"><?= number_format($order_giftcard['amount'], 2); ?></td>
-							<td class="text-right"><?= number_format($order_giftcard['amount'], 2); ?></td>
+							<td class="text-right"><?= number_format($order_gift_card['amount'], 2); ?></td>
+							<td class="text-right"><?= number_format($order_gift_card['amount'], 2); ?></td>
 						</tr>
 						<?php } ?>
 						<?php foreach ($order_totals as $order_total) { ?>
@@ -573,9 +573,9 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-sm-2"><?= $lang_entry_giftcard; ?></label>
+						<label class="control-label col-sm-2"><?= $lang_entry_gift_card; ?></label>
 						<div class="control-field col-sm-4">
-							<input type="text" name="giftcard" value="" class="form-control" class="form-control">
+							<input type="text" name="gift_card" value="" class="form-control" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">

@@ -19,8 +19,10 @@ use Dais\Engine\Container;
 use Dais\Engine\Action;
 use Dais\Service\ActionService;
 use Dais\Engine\View;
+use Dais\Library\Naming;
 
 final class Theme {
+    private static $app;
     private $title;
     private $description;
     private $keywords;
@@ -35,14 +37,19 @@ final class Theme {
     private $links = array();
     private $controllers = array();
     
-    public $path;
-    public $name;
     public $style;
+    public $path;
     
     public function __construct(Container $app) {
-        $this->app  = $app;
-        $this->path = $app['path.theme'] . $app['theme.name'] . '/';
-        $this->name = ucfirst(basename($this->path));
+        /**
+         * Making the instance of our container static
+         * so that other classes can access it via static
+         * methods.
+         */
+        
+        self::$app  = $app;
+
+        $this->path = $app['path.theme'] . $app['theme.name'] . SEP;
         
         if ($app->offsetExists('config_site_style')):
             $this->style = $app['config_site_style'];
@@ -73,9 +80,9 @@ final class Theme {
         $args = func_get_args();
         array_shift($args);
         
-        $action = new Action(new ActionService($this->app, $route, $args));
+        $action = new Action(new ActionService(self::$app, $route, $args));
         
-        return $action->execute($this->app);
+        return $action->execute(self::$app);
     }
     
     public function render_controllers($data) {
@@ -87,34 +94,35 @@ final class Theme {
     }
     
     public function model($model) {
-        $items = $this->build_model($model);
-        $key   = $items['key'];
-        
-        if (!$this->app->offsetExists($key)):
-            $class = $items['class'];
-            
-            $this->app[$key] = function ($app) use ($class) {
+        $key = 'model_' . str_replace(SEP, '_', $model);
+
+        if (!self::$app->offsetExists($key)):
+            $class = Naming::class_for_model($model);    
+            self::$app[$key] = function ($app) use ($class) {
                 return new $class($app);
             };
         endif;
     }
+
+    public static function app($key) {
+        return self::$app[$key];
+    }
     
     public function view($template, $data = array()) {
-        $view = new View($this->path);
+        $view = new View(self::$app['path.theme'] . self::$app['theme.name'] . SEP);
         return $view->render($template, $data);
     }
     
     public function loadjs($file, $data, $path = '') {
-        $this->app['javascript']->load($file, $data, $path);
+        self::$app['javascript']->load($file, $data, $path);
     }
     
     public function listen($class, $method, $data = array()) {
-        
         // First let's fire any plugin hooks so that
         // our theme isn't changing any data that the plugin
         // might need to remain unchanged.
-        if ($this->app->offsetExists('plugin')):
-            $data = $this->app['plugin']->listen($class, $method, $data);
+        if (self::$app->offsetExists('plugin')):
+            $data = self::$app['plugin']->listen($class, $method, $data);
         endif;
         
         // Now let's push revised data to theme hooks.
@@ -130,22 +138,11 @@ final class Theme {
      * @return $data   data array passed back from hook
      */
     public function hook($route, $method, $data = array()) {
-        $file    = 'theme/' . $this->app['active.fascade'] . '/' . $this->app['theme.name'] . '/controller/' . $route . '.php';
-        $default = $this->app['active.fascade'] . '/controller/' . $route . '.php';
-        
-        if (is_readable($this->app['path.app_path'] . $file)):
-            $file = $file;
-        elseif (is_readable($this->app['path.app_path'] . $default)):
-            $file = $default;
-        else:
-            return $data;
-        endif;
-        
-        $class = $this->format_class($file);
-        $hook  = new $class($this->app);
+        $class = Naming::class_for_hook($route);
+        $hook  = new $class(self::$app);
         
         if (is_callable(array($hook, $method))):
-            $data = call_user_func_array(array($hook, $method), array($data));
+            return call_user_func_array(array($hook, $method), array($data));
         endif;
         
         return $data;
@@ -181,7 +178,7 @@ final class Theme {
             $order = false;
         endif;
 
-        $this->app['notify']->setOrderId($order_id);
+        self::$app['notify']->setOrderId($order_id);
 
         /**
          * ALL notifications require either a customer_id 
@@ -189,13 +186,13 @@ final class Theme {
          * parts required to send an email notification.
          */
         
-        $type = $this->app['notify']->getNotificationType($name);
+        $type = self::$app['notify']->getNotificationType($name);
 
         // Process receiver and get variables such as notification preferences.
         switch ($type['recipient']):
             case 1: // customer
                 if (array_key_exists('customer_id', $data)):
-                    $this->app['notify']->setCustomer($type['email_id'], $data['customer_id'], $order);
+                    self::$app['notify']->setCustomer($type['email_id'], $data['customer_id'], $order);
                     unset($data['customer_id']);
                 else:
                     return;
@@ -203,7 +200,7 @@ final class Theme {
                 break;
             case 2: // admin user
                 if (array_key_exists('user_id', $data)):
-                    $this->app['notify']->setUser($data['user_id']);
+                    self::$app['notify']->setUser($data['user_id']);
                     unset($data['user_id']);
                 else: 
                     return;
@@ -214,13 +211,13 @@ final class Theme {
         endswitch;
         
         // fetch our text/html email message
-        $message = $this->app['notify']->fetch($name);
+        $message = self::$app['notify']->fetch($name);
 
         // Let's grab our priority before we re-write the message
         $priority = $message['priority'];
 
         // Fetch the proper wrapper for this email priority
-        $this->app['notify']->fetchWrapper($priority);
+        self::$app['notify']->fetchWrapper($priority);
 
         /**
          * There's no need to pass in a callback unless you have
@@ -276,7 +273,7 @@ final class Theme {
             unset($data['callback']);
 
             // create a new object
-            $class = new $class($this->app);
+            $class = new $class(self::$app);
 
             if (is_callable(array($class, $method))):
                 /**
@@ -288,7 +285,7 @@ final class Theme {
             endif;
         endif;
 
-        $preference = $this->app['notify']->getPreference();
+        $preference = self::$app['notify']->getPreference();
 
         /**
          * Our next actions depend entirely on the $preference array.
@@ -299,7 +296,7 @@ final class Theme {
         if ($preference['internal']):
             switch ($type['recipient']):
                 case 1:
-                    $this->app['notify']->customerInternal($message);
+                    self::$app['notify']->customerInternal($message);
                     break;
                 case 2:
                     break;
@@ -313,23 +310,22 @@ final class Theme {
         
         if ($preference['email']):
             // Let's wrap and format the email message. 
-            $message = $this->app['notify']->formatEmail($message, $type['recipient']);
+            $message = self::$app['notify']->formatEmail($message, $type['recipient']);
 
             if ($priority == 1):
-                $this->app['notify']->send($message, $add);
+                self::$app['notify']->send($message, $add);
             else:
-                $this->app['notify']->addToEmailQueue($message);
+                self::$app['notify']->addToEmailQueue($message);
             endif;
         endif;
     }
     
     public function trigger($event, $data = array()) {
-        
         // First let's fire any plugin events so that
         // our theme isn't changing any data that the plugin
         // might need to remain unchanged.
-        if ($this->app->offsetExists('plugin')):
-            $data = $this->app['plugin']->trigger($event, $data);
+        if (self::$app->offsetExists('plugin')):
+            $data = self::$app['plugin']->trigger($event, $data);
         endif;
         
         // Now let's push our revised data to theme events.
@@ -337,11 +333,11 @@ final class Theme {
     }
     
     public function config($config) {
-        $this->app['config']->load($config);
+        self::$app['config']->load($config);
     }
     
     public function language($language, $data = array()) {
-        $lang = $this->app['language']->load($language);
+        $lang = self::$app['language']->load($language);
         
         if (!empty($data)):
             $lang = array_merge($data, $lang);
@@ -366,13 +362,13 @@ final class Theme {
         $filenames = array();
         $files     = array();
         
-        $core_files  = glob($this->app['path.application'] . 'controller/' . $directory . '/*.php');
-        $theme_files = glob($this->path . 'controller/' . $directory . '/*.php');
+        $core_files  = glob(self::$app['path.application'] . 'controller' . SEP . $directory . SEP . '*.php');
+        $theme_files = glob(self::$app['path.theme'] . self::$app['theme.name'] . SEP . 'controller' . SEP . $directory . SEP . '*.php');
         
         if (!empty($theme_files)):
             foreach ($theme_files as $file):
-                $file_data   = explode('/', dirname($file));
-                $filename    = end($file_data) . '/' . basename($file, '.php');
+                $file_data   = explode(SEP, dirname($file));
+                $filename    = end($file_data) . SEP . basename($file, '.php');
                 $filenames[] = $filename;
                 $files[]     = $file;
             endforeach;
@@ -380,8 +376,8 @@ final class Theme {
         
         if (!empty($core_files)):
             foreach ($core_files as $file):
-                $file_data = explode('/', dirname($file));
-                $filename  = end($file_data) . '/' . basename($file, '.php');
+                $file_data = explode(SEP, dirname($file));
+                $filename  = end($file_data) . SEP . basename($file, '.php');
                 if (!in_array($filename, $filenames)):
                     $files[] = $file;
                 endif;
@@ -400,7 +396,7 @@ final class Theme {
     }
     
     public function setDescription($description) {
-        $this->description = $this->app['encode']->riptags($description);
+        $this->description = self::$app['encode']->riptags($description);
     }
     
     public function getDescription() {
@@ -456,7 +452,7 @@ final class Theme {
     }
     
     public function setOgDescription($description) {
-        $this->ogdescription = $this->app['encode']->riptags($description);
+        $this->ogdescription = self::$app['encode']->riptags($description);
     }
     
     public function getOgDescription() {
@@ -480,7 +476,7 @@ final class Theme {
     }
     
     public function paginate($total, $page, $limit, $text, $url) {
-        $paging = $this->app['paginate'];
+        $paging = self::$app['paginate'];
         
         $paging->total = $total;
         $paging->page  = $page;
@@ -489,30 +485,6 @@ final class Theme {
         $paging->url   = $url;
         
         return $paging->render();
-    }
-    
-    private function build_model($model) {
-        $data = array();
-        $data['key'] = 'model_' . str_replace('/', '_', $model);
-        
-        $parts = explode('/', $model);
-        $path = '';
-        
-        foreach ($parts as $part):
-            $path.= ucfirst(str_replace('_', '', $part)) . '/';
-        endforeach;
-        
-        $path = str_replace('/', '\\', rtrim($path, '/'));
-        
-        if (is_readable($this->path . 'model/' . $model . '.php')):
-            $class = 'Theme\\' . $this->app['prefix.fascade'] . $this->name . '\Model\\' . $path;
-        else:
-            $class = $this->app['prefix.fascade'] . 'Model\\' . $path;
-        endif;
-        
-        $data['class'] = $class;
-        
-        return $data;
     }
     
     private function fire_theme_hooks($class, $method, $data = array()) {
@@ -527,28 +499,5 @@ final class Theme {
     public function fire_theme_events($event, $data = array()) {
         
         return $data;
-    }
-    
-    private function format_class($file) {
-        $file  = rtrim($file, '.php');
-        $paths = explode('/', $file);
-        $class = array();
-        
-        foreach ($paths as $path):
-            $class[] = ucfirst($path);
-        endforeach;
-        
-        return implode('\\', $class);
-    }
-    
-    // Test pattern
-    public function test($data, $quit = true) {
-        echo "<pre>";
-        print_r($data);
-        echo "</pre>";
-        
-        if ($quit):
-            exit;
-        endif;
     }
 }

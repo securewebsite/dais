@@ -67,7 +67,7 @@ class Footer extends Controller {
         $key                   = $this->javascript->compile();
         $data['js_link']       = $server . 'asset/' . $this->app['theme.name'] . '/compiled/' . $this->app['filecache']->get_key($key, 'js');
         $data['javascript']    = $this->theme->controller('common/javascript');
-        $data['footer_blocks'] = $this->theme->controller('widget/footerblocks');
+        $data['footer_blocks'] = $this->theme->controller('widget/footer_blocks');
         
         return $this->theme->view('content/footer', $data);
     }

@@ -14,19 +14,27 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']         = 'Customer Reward Points Report';
+namespace Admin\Language\English\Report;
 
-// Column
-$_['lang_column_customer']       = 'Customer Name';
-$_['lang_column_email']          = 'E-Mail';
-$_['lang_column_customer_group'] = 'Customer Group';
-$_['lang_column_status']         = 'Status';
-$_['lang_column_points']         = 'Reward Points';
-$_['lang_column_orders']         = 'No. Orders';
-$_['lang_column_total']          = 'Total';
-$_['lang_column_action']         = 'Action';
+class CustomerReward {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']         = 'Customer Reward Points Report';
 
-// Entry
-$_['lang_entry_date_start']      = 'Date Start:';
-$_['lang_entry_date_end']        = 'Date End:';
+		// Column
+		$_['lang_column_customer']       = 'Customer Name';
+		$_['lang_column_email']          = 'E-Mail';
+		$_['lang_column_customer_group'] = 'Customer Group';
+		$_['lang_column_status']         = 'Status';
+		$_['lang_column_points']         = 'Reward Points';
+		$_['lang_column_orders']         = 'No. Orders';
+		$_['lang_column_total']          = 'Total';
+		$_['lang_column_action']         = 'Action';
+
+		// Entry
+		$_['lang_entry_date_start']      = 'Date Start:';
+		$_['lang_entry_date_end']        = 'Date End:';
+
+		return $_;
+	}
+}

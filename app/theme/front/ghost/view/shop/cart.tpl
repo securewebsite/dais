@@ -2,7 +2,7 @@
 	<a class="btn btn-info" href="<?= $cart; ?>"><i class="fa fa-shopping-cart fa-fw"></i> <span id="cart-total" class="hidden-xs"><?= $text_items; ?></span></a>
 	<a class="btn btn-info dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
 	<ul id="cart" class="dropdown-menu dropdown-menu-right">
-		<?php if ($giftcards || $products) { ?>
+		<?php if ($gift_cards || $products) { ?>
 			<?php foreach ($products as $product) { ?>
 				<li class="media-cart">
 				<div class="media">
@@ -28,11 +28,11 @@
 				</div>
 				</li>
 			<?php } ?>
-			<?php if ($giftcards) { ?>
+			<?php if ($gift_cards) { ?>
 				<li class="divider"></li>
-				<?php foreach ($giftcards as $giftcard) { ?>
-					<li class="media-cart"><?= $giftcard['description']; ?>
-						<br><div class="help">1&nbsp;x&nbsp;<?= $giftcard['amount']; ?></div>
+				<?php foreach ($gift_cards as $gift_card) { ?>
+					<li class="media-cart"><?= $gift_card['description']; ?>
+						<br><div class="help">1&nbsp;x&nbsp;<?= $gift_card['amount']; ?></div>
 					</li>
 				<?php } ?>
 			<?php } ?>

@@ -43,8 +43,8 @@ class Logout extends Controller {
             unset($this->session->data['order_id']);
             unset($this->session->data['coupon']);
             unset($this->session->data['reward']);
-            unset($this->session->data['giftcard']);
-            unset($this->session->data['giftcards']);
+            unset($this->session->data['gift_card']);
+            unset($this->session->data['gift_cards']);
             
             $this->theme->trigger('front_customer_logout', array('customer_id' => $customer_id));
         }

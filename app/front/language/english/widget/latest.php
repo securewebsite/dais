@@ -14,8 +14,16 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title'] = 'Latest';
+namespace Front\Language\English\Widget;
 
-// Text
-$_['lang_text_reviews']  = 'Based on %s reviews.';
+class Latest {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title'] = 'Latest';
+
+		// Text
+		$_['lang_text_reviews']  = 'Based on %s reviews.';
+
+		return $_;
+	}
+}

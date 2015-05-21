@@ -13,5 +13,14 @@
 |	file that was distributed with this source code.
 |	
 */
-$_['lang_text_credit']   = 'Store Credit';
-$_['lang_text_order_id'] = 'Order ID: #%s';
+
+namespace Front\Language\English\Total;
+
+class Credit {
+	public static function lang() {
+		$_['lang_text_credit']   = 'Store Credit';
+		$_['lang_text_order_id'] = 'Order ID: #%s';
+
+		return $_;
+	}
+}

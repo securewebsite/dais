@@ -17,6 +17,7 @@
 namespace Dais\Service;
 use Dais\Engine\Container;
 use Dais\Interfaces\ActionServiceInterface;
+use Dais\Library\Naming;
 
 class ActionService implements ActionServiceInterface {
     
@@ -31,9 +32,19 @@ class ActionService implements ActionServiceInterface {
         if ($args):
             $this->args = $args;
         endif;
+
+        $this->method = Naming::method_from_route($app, $route);
+
+        // Method override via passed args (specific for single file routes)
+        if (isset($this->args['method'])):
+            $this->method = $this->args['method'];
+        endif;
         
-        $this->build_file($app, $route);
-        $this->class = $this->build_class();
+
+        $this->file  = Naming::file_from_route($app, $route);
+        $this->class = Naming::class_from_filename($this->file);
+
+        //var_dump($this->file);
         
         /**
          *  No pre-controller hooks for our installer.
@@ -45,57 +56,6 @@ class ActionService implements ActionServiceInterface {
     
     public function get($key) {
         return $this->{$key};
-    }
-    
-    protected function build_file(Container $app, $route) {
-        $path = '';
-        $plugin = '';
-        $parts = explode('/', str_replace('../', '', (string)$route));
-        
-        /**
-         * Plugin specific items because plugins work a bit differently
-         * than normal controllers.
-         */
-        if ($parts[0] === $app['prefix.plugin']):
-            $plugin = str_replace('_', '', strtolower($parts[1]));
-            array_shift($parts);
-            if ($parts[0] === $plugin && count($parts) > 1):
-                array_shift($parts);
-            endif;
-        endif;
-        
-        $this->fascade = (($app['active.fascade'] === ADMIN_FASCADE) && (ADMIN_FASCADE !== 'admin')) ? 'admin' : $app['active.fascade'];
-        
-        foreach ($parts as $key => $part):
-            if ($key < 2):
-                $path.= $part . '/';
-                array_shift($parts);
-            endif;
-            continue;
-        endforeach;
-        
-        $path = rtrim($path, '/');
-        
-        $method = array_shift($parts);
-        
-        if ($method):
-            $this->method = $method;
-        else:
-            $this->method = 'index';
-        endif;
-        
-        // Method override via passed args (specific for single file routes)
-        if (isset($this->args['method'])):
-            $this->method = $this->args['method'];
-        endif;
-        
-        if (is_readable($file = $app['path.theme'] . $app['theme.name'] . '/controller/' . str_replace(array('../', '..\\', '..') , '', $path) . '.php')):
-            $this->file = $file;
-        elseif (is_readable($file = $app['path.plugin'] . $plugin . '/' . $this->fascade . '/controller/' . str_replace(array('../', '..\\', '..') , '', $path) . '.php')):
-            $this->file = $file;
-        else:
-            $this->file = $app['path.application'] . 'controller/' . str_replace(array('../', '..\\', '..') , '', $path) . '.php';
-        endif;
     }
     
     protected function buildPrecontrollerHooks(Container $app) {
@@ -134,19 +94,5 @@ class ActionService implements ActionServiceInterface {
                 endif;
             endforeach;
         endif;
-    }
-    
-    // determine class name
-    protected function build_class() {
-        
-        $file  = str_replace(APP_PATH, '', str_replace('.php', '', $this->file));
-        $class = '';
-        
-        $parts = explode('/', $file);
-        foreach ($parts as $part):
-            $class.= ucfirst($part) . '\\';
-        endforeach;
-        
-        return rtrim($class, '\\');
     }
 }

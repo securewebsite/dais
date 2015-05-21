@@ -541,9 +541,9 @@ class Ups extends Controller {
             $data['ups_weight_class_id'] = $this->config->get('ups_weight_class_id');
         }
         
-        $this->theme->model('localization/weightclass');
+        $this->theme->model('localization/weight_class');
         
-        $data['weight_classes'] = $this->model_localization_weightclass->getWeightClasses();
+        $data['weight_classes'] = $this->model_localization_weight_class->getWeightClasses();
         
         if (isset($this->request->post['ups_length_code'])) {
             $data['ups_length_code'] = $this->request->post['ups_length_code'];
@@ -557,9 +557,9 @@ class Ups extends Controller {
             $data['ups_length_class_id'] = $this->config->get('ups_length_class_id');
         }
         
-        $this->theme->model('localization/lengthclass');
+        $this->theme->model('localization/length_class');
         
-        $data['length_classes'] = $this->model_localization_lengthclass->getLengthClasses();
+        $data['length_classes'] = $this->model_localization_length_class->getLengthClasses();
         
         if (isset($this->request->post['ups_length'])) {
             $data['ups_length'] = $this->request->post['ups_length'];
@@ -585,9 +585,9 @@ class Ups extends Controller {
             $data['ups_tax_class_id'] = $this->config->get('ups_tax_class_id');
         }
         
-        $this->theme->model('localization/taxclass');
+        $this->theme->model('localization/tax_class');
         
-        $data['tax_classes'] = $this->model_localization_taxclass->getTaxClasses();
+        $data['tax_classes'] = $this->model_localization_tax_class->getTaxClasses();
         
         if (isset($this->request->post['ups_geo_zone_id'])) {
             $data['ups_geo_zone_id'] = $this->request->post['ups_geo_zone_id'];
@@ -595,9 +595,9 @@ class Ups extends Controller {
             $data['ups_geo_zone_id'] = $this->config->get('ups_geo_zone_id');
         }
         
-        $this->theme->model('localization/geozone');
+        $this->theme->model('localization/geo_zone');
         
-        $data['geo_zones'] = $this->model_localization_geozone->getGeoZones();
+        $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
         
         if (isset($this->request->post['ups_status'])) {
             $data['ups_status'] = $this->request->post['ups_status'];

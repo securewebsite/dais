@@ -14,23 +14,31 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']                = 'Account Login';
+namespace Front\Language\English\Account;
 
-// Text
-$_['lang_text_account']                 = 'Dashboard';
-$_['lang_text_login']                   = 'Login';
-$_['lang_text_new_customer']            = 'New Customer';
-$_['lang_text_register']                = 'Register Account';
-$_['lang_text_register_account']        = 'By creating an account you can shop faster, stay up to date on an order\'s status, and keep track of your previous orders.';
-$_['lang_text_returning_customer']      = 'Returning Customer';
-$_['lang_text_i_am_returning_customer'] = 'I am a returning customer';
-$_['lang_text_forgotten']               = 'Forgotten Password';
+class Login {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']                = 'Account Login';
 
-// Entry
-$_['lang_entry_email']                  = 'Username/E-Mail';
-$_['lang_entry_password']               = 'Password';
+		// Text
+		$_['lang_text_account']                 = 'Dashboard';
+		$_['lang_text_login']                   = 'Login';
+		$_['lang_text_new_customer']            = 'New Customer';
+		$_['lang_text_register']                = 'Register Account';
+		$_['lang_text_register_account']        = 'By creating an account you can shop faster, stay up to date on an order\'s status, and keep track of your previous orders.';
+		$_['lang_text_returning_customer']      = 'Returning Customer';
+		$_['lang_text_i_am_returning_customer'] = 'I am a returning customer';
+		$_['lang_text_forgotten']               = 'Forgotten Password';
 
-// Error
-$_['lang_error_login']                  = 'Warning: No match for Username/E-Mail and/or Password.';
-$_['lang_error_approved']               = 'Warning: Your account requires approval before you can login.';
+		// Entry
+		$_['lang_entry_email']                  = 'Username/E-Mail';
+		$_['lang_entry_password']               = 'Password';
+
+		// Error
+		$_['lang_error_login']                  = 'Warning: No match for Username/E-Mail and/or Password.';
+		$_['lang_error_approved']               = 'Warning: Your account requires approval before you can login.';
+
+		return $_;
+	}
+}

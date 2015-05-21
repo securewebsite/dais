@@ -14,16 +14,24 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']     = 'Customers Online Report';
+namespace Admin\Language\English\Report;
 
-// Text
-$_['lang_text_guest']        = 'Guest';
+class CustomerOnline {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']     = 'Customers Online Report';
 
-// Column
-$_['lang_column_ip']         = 'IP';
-$_['lang_column_customer']   = 'Customer';
-$_['lang_column_url']        = 'Last Page Visited';
-$_['lang_column_referer']    = 'Referrer';
-$_['lang_column_date_added'] = 'Last Click';
-$_['lang_column_action']     = 'Action';
+		// Text
+		$_['lang_text_guest']        = 'Guest';
+
+		// Column
+		$_['lang_column_ip']         = 'IP';
+		$_['lang_column_customer']   = 'Customer';
+		$_['lang_column_url']        = 'Last Page Visited';
+		$_['lang_column_referer']    = 'Referrer';
+		$_['lang_column_date_added'] = 'Last Click';
+		$_['lang_column_action']     = 'Action';
+
+		return $_;
+	}
+}

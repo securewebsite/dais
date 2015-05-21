@@ -14,5 +14,13 @@
 |	
 */
 
-// Text
-$_['lang_text_title'] = 'Cash On Delivery';
+namespace Front\Language\English\Payment;
+
+class Cod {
+	public static function lang() {
+		// Text
+		$_['lang_text_title'] = 'Cash On Delivery';
+
+		return $_;
+	}
+}

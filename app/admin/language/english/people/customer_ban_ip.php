@@ -14,20 +14,28 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']    = 'Customer Ban IP';
+namespace Admin\Language\English\People;
 
-// Text
-$_['lang_text_success']     = 'Success: You have modified customer ban IP.';
+class CustomerBanIP {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']    = 'Customer Ban IP';
 
-// Column
-$_['lang_column_ip']        = 'IP';
-$_['lang_column_customer']  = 'Customers';
-$_['lang_column_action']    = 'Action';
+		// Text
+		$_['lang_text_success']     = 'Success: You have modified customer ban IP.';
 
-// Entry
-$_['lang_entry_ip']         = 'IP:';
+		// Column
+		$_['lang_column_ip']        = 'IP';
+		$_['lang_column_customer']  = 'Customers';
+		$_['lang_column_action']    = 'Action';
 
-// Error
-$_['lang_error_permission'] = 'Warning: You do not have permission to modify customer ban IP.';
-$_['lang_error_ip']         = 'IP must be between 1 and 15 characters.';
+		// Entry
+		$_['lang_entry_ip']         = 'IP:';
+
+		// Error
+		$_['lang_error_permission'] = 'Warning: You do not have permission to modify customer ban IP.';
+		$_['lang_error_ip']         = 'IP must be between 1 and 15 characters.';
+
+		return $_;
+	}
+}

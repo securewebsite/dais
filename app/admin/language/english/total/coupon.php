@@ -14,16 +14,24 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title']    = 'Coupon';
+namespace Admin\Language\English\Total;
 
-// Text
-$_['lang_text_total']       = 'Order Totals';
-$_['lang_text_success']     = 'Success: You have modified coupon total.';
+class Coupon {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title']    = 'Coupon';
 
-// Entry
-$_['lang_entry_status']     = 'Status:';
-$_['lang_entry_sort_order'] = 'Sort Order:';
+		// Text
+		$_['lang_text_total']       = 'Order Totals';
+		$_['lang_text_success']     = 'Success: You have modified coupon total.';
 
-// Error
-$_['lang_error_permission'] = 'Warning: You do not have permission to modify coupon total.';
+		// Entry
+		$_['lang_entry_status']     = 'Status:';
+		$_['lang_entry_sort_order'] = 'Sort Order:';
+
+		// Error
+		$_['lang_error_permission'] = 'Warning: You do not have permission to modify coupon total.';
+
+		return $_;
+	}
+}

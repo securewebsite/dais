@@ -112,8 +112,6 @@ class Manager {
                     continue;
                 endif;
                 
-                require_once $task_dir . SEP . $namespace . SEP . $file;
-                
                 $klass     = Naming::class_from_file_name($task_dir . SEP . $namespace . SEP . $file);
                 $task_name = Naming::task_from_class_name($klass);
 

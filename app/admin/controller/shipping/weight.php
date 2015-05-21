@@ -45,9 +45,9 @@ class Weight extends Controller {
         
         $data['cancel'] = $this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
         
-        $this->theme->model('localization/geozone');
+        $this->theme->model('localization/geo_zone');
         
-        $geo_zones = $this->model_localization_geozone->getGeoZones();
+        $geo_zones = $this->model_localization_geo_zone->getGeoZones();
         
         foreach ($geo_zones as $geo_zone) {
             if (isset($this->request->post['weight_' . $geo_zone['geo_zone_id'] . '_rate'])) {
@@ -71,9 +71,9 @@ class Weight extends Controller {
             $data['weight_tax_class_id'] = $this->config->get('weight_tax_class_id');
         }
         
-        $this->theme->model('localization/taxclass');
+        $this->theme->model('localization/tax_class');
         
-        $data['tax_classes'] = $this->model_localization_taxclass->getTaxClasses();
+        $data['tax_classes'] = $this->model_localization_tax_class->getTaxClasses();
         
         if (isset($this->request->post['weight_status'])) {
             $data['weight_status'] = $this->request->post['weight_status'];

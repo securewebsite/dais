@@ -14,18 +14,26 @@
 |	
 */
 
-// Heading
-$_['lang_heading_shipping']  = 'Shipping';
+namespace Admin\Language\English\Module;
 
-// Text
-$_['lang_text_install']      = 'Install';
-$_['lang_text_uninstall']    = 'Uninstall';
+class Shipping {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_shipping']  = 'Shipping';
 
-// Column
-$_['lang_column_name']       = 'Shipping Method';
-$_['lang_column_status']     = 'Status';
-$_['lang_column_sort_order'] = 'Sort Order';
-$_['lang_column_action']     = 'Action';
+		// Text
+		$_['lang_text_install']      = 'Install';
+		$_['lang_text_uninstall']    = 'Uninstall';
 
-// Error
-$_['lang_error_permission']  = 'Warning: You do not have permission to modify shipping.';
+		// Column
+		$_['lang_column_name']       = 'Shipping Method';
+		$_['lang_column_status']     = 'Status';
+		$_['lang_column_sort_order'] = 'Sort Order';
+		$_['lang_column_action']     = 'Action';
+
+		// Error
+		$_['lang_error_permission']  = 'Warning: You do not have permission to modify shipping.';
+
+		return $_;
+	}
+}

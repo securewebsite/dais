@@ -472,9 +472,9 @@ class Store extends Controller {
             $data['config_customer_group_id'] = '';
         }
         
-        $this->theme->model('people/customergroup');
+        $this->theme->model('people/customer_group');
         
-        $data['customer_groups'] = $this->model_people_customergroup->getCustomerGroups();
+        $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups();
         
         if (isset($this->request->post['config_customer_group_display'])) {
             $data['config_customer_group_display'] = $this->request->post['config_customer_group_display'];
@@ -536,9 +536,9 @@ class Store extends Controller {
             $data['config_order_status_id'] = '';
         }
         
-        $this->theme->model('localization/orderstatus');
+        $this->theme->model('localization/order_status');
         
-        $data['order_statuses'] = $this->model_localization_orderstatus->getOrderStatuses();
+        $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
         
         if (isset($this->request->post['config_stock_display'])) {
             $data['config_stock_display'] = $this->request->post['config_stock_display'];

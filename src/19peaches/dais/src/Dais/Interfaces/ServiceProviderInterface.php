@@ -48,6 +48,7 @@
  */
 
 namespace Dais\Interfaces;
+use Dais\Engine\Container;
 
 /**
  * Pimple service provider interface.

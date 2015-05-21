@@ -205,9 +205,9 @@ class Fedex extends Controller {
             $data['fedex_weight_class_id'] = $this->config->get('fedex_weight_class_id');
         }
         
-        $this->theme->model('localization/weightclass');
+        $this->theme->model('localization/weight_class');
         
-        $data['weight_classes'] = $this->model_localization_weightclass->getWeightClasses();
+        $data['weight_classes'] = $this->model_localization_weight_class->getWeightClasses();
         
         if (isset($this->request->post['fedex_tax_class_id'])) {
             $data['fedex_tax_class_id'] = $this->request->post['fedex_tax_class_id'];
@@ -215,9 +215,9 @@ class Fedex extends Controller {
             $data['fedex_tax_class_id'] = $this->config->get('fedex_tax_class_id');
         }
         
-        $this->theme->model('localization/taxclass');
+        $this->theme->model('localization/tax_class');
         
-        $data['tax_classes'] = $this->model_localization_taxclass->getTaxClasses();
+        $data['tax_classes'] = $this->model_localization_tax_class->getTaxClasses();
         
         if (isset($this->request->post['fedex_geo_zone_id'])) {
             $data['fedex_geo_zone_id'] = $this->request->post['fedex_geo_zone_id'];
@@ -225,9 +225,9 @@ class Fedex extends Controller {
             $data['fedex_geo_zone_id'] = $this->config->get('fedex_geo_zone_id');
         }
         
-        $this->theme->model('localization/geozone');
+        $this->theme->model('localization/geo_zone');
         
-        $data['geo_zones'] = $this->model_localization_geozone->getGeoZones();
+        $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
         
         if (isset($this->request->post['fedex_status'])) {
             $data['fedex_status'] = $this->request->post['fedex_status'];
