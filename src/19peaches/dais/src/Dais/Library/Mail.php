@@ -98,6 +98,5 @@ class Mail extends LibraryService {
 	public function send() {
 		$this->mailer->send($this->message);
 		unset($this->message);
-		//$this->logger->dump();
 	}
 }

@@ -33,7 +33,7 @@ class ActionService implements ActionServiceInterface {
             $this->args = $args;
         endif;
 
-        $this->method = Naming::method_from_route($app, $route);
+        $this->method = Naming::method_from_route($route);
 
         // Method override via passed args (specific for single file routes)
         if (isset($this->args['method'])):
@@ -43,8 +43,6 @@ class ActionService implements ActionServiceInterface {
 
         $this->file  = Naming::file_from_route($app, $route);
         $this->class = Naming::class_from_filename($this->file);
-
-        //var_dump($this->file);
         
         /**
          *  No pre-controller hooks for our installer.

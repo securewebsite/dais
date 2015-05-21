@@ -121,7 +121,7 @@ class Migrate extends TaskBase implements TaskInterface {
         $current_index = $this->_migrator_util->find_version($migrations, $current_version, true);
         $current_index = $current_index !== null ? $current_index : -1;
 
-        if ($this->_debug == true):
+        if ($this->_debug === true):
             $this->_return .= print_r($migrations, true);
             $this->_return .= "\ncurrent_index: " . $current_index . "\n";
             $this->_return .= "\ncurrent_version: " . $current_version . "\n";
@@ -144,7 +144,7 @@ class Migrate extends TaskBase implements TaskInterface {
 
         $target = end($available);
         
-        if ($this->_debug == true):
+        if ($this->_debug === true):
             $this->_return .= "\n------------- TARGET ------------------\n";
             $this->_return .= print_r($target, true);
         endif;
@@ -173,7 +173,7 @@ class Migrate extends TaskBase implements TaskInterface {
                 return;
             endif;
             
-            $result = $this->run_migrations($migrations, $direction, $destination);
+            $this->run_migrations($migrations, $direction, $destination);
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -212,7 +212,6 @@ class Migrate extends TaskBase implements TaskInterface {
                 $diff           = $this->diff_timer($start, $end);
                 $this->_return .= sprintf("========= %s ======== (%.2f)\n", $file['class'], $diff);
                 $last_version   = $file['version'];
-                $exec           = true;
             endif;
         endforeach;
 

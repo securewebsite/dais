@@ -67,17 +67,6 @@ class Decorator extends LibraryService {
 			$customer['points']	
 		);
 
-		/**
-		 * If we have an order ID, let's process it and push
-		 * our variables to our search and replace arrays.
-		 */
-		
-		if ($order_id > 0):
-			$order = $this->getOrder($order_id);
-
-
-		endif;
-
 		$this->baseDecorate();
 
 		return $this->parse($message);

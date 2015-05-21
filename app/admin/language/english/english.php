@@ -26,7 +26,9 @@ class English {
 		$_['lang_time_format']             = 'g:i A';
 		$_['lang_decimal_point']           = '.';
 		$_['lang_thousand_point']          = ',';
-
+		$_['lang_status']                  = 'Status';
+		$_['lang_option']                  = 'Option';
+		
 		// Text
 		$_['lang_text_yes']                = 'Yes';
 		$_['lang_text_no']                 = 'No';
@@ -54,7 +56,7 @@ class English {
 		$_['lang_text_pre_footer']         = 'Pre Footer';
 		$_['lang_text_column_left']        = 'Column Left';
 		$_['lang_text_column_right']       = 'Column Right';
-
+		
 		// Button
 		$_['lang_button_insert']           = 'Insert';
 		$_['lang_button_delete']           = 'Delete';
@@ -81,7 +83,7 @@ class English {
 		$_['lang_button_add_attribute']    = 'Add Attribute';
 		$_['lang_button_add_banner']       = 'Add Banner';
 		$_['lang_button_add_product']      = 'Add Product';
-		$_['lang_button_add_gift_card']     = 'Add Gift Card';
+		$_['lang_button_add_gift_card']    = 'Add Gift Card';
 		$_['lang_button_add_filter']       = 'Add Filter';
 		$_['lang_button_add_option']       = 'Add Option';
 		$_['lang_button_add_option_value'] = 'Add Option Value';
@@ -102,7 +104,7 @@ class English {
 		$_['lang_button_approve']          = 'Approve';
 		$_['lang_button_reset']            = 'Reset';
 		$_['lang_button_add_commission']   = 'Add Commission';
-
+		
 		// Tab
 		$_['lang_tab_address']             = 'Address';
 		$_['lang_tab_admin']               = 'Admin';
@@ -138,12 +140,12 @@ class English {
 		$_['lang_tab_shipping']            = 'Shipping Details';
 		$_['lang_tab_total']               = 'Totals';
 		$_['lang_tab_credit']              = 'Credits';
-		$_['lang_tab_gift_card']            = 'Gift Cards';
-		$_['lang_tab_gift_card_history']    = 'Gift Card History';
+		$_['lang_tab_gift_card']           = 'Gift Cards';
+		$_['lang_tab_gift_card_history']   = 'Gift Card History';
 		$_['lang_tab_price']               = 'Price';
 		$_['lang_tab_cache']               = 'Caches';
 		$_['lang_tab_blog']                = 'Blog';
-
+		
 		// Error
 		$_['lang_error_upload_1']          = 'Warning: The uploaded file exceeds the upload_max_filesize directive in php.ini.';
 		$_['lang_error_upload_2']          = 'Warning: The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.';

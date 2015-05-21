@@ -57,8 +57,6 @@ class Asset extends LibraryService {
     public function set($key, $value, $type, $expire = 0) {
         $this->delete($key, $type);
         
-        $expires = ($expire) ? $expire : $this->expire;
-        
         $file = parent::$app['path.filecache'] . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.' . $type;
         
         $data = (is_array($value)) ? serialize($value) : $value;

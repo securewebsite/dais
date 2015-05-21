@@ -58,7 +58,7 @@ class MySQLTables {
         $this->_table_def = new TableDefinition($this->_adapter, $this->_options);
 
         if (array_key_exists('id', $options)):
-            if (is_bool($options['id']) && $options['id'] == false):
+            if (is_bool($options['id']) && $options['id'] === false):
                 $this->_auto_generate_id = false;
             endif;
             //if its a string then we want to auto-generate an integer-based
@@ -73,26 +73,26 @@ class MySQLTables {
     public function column($column_name, $type, $options = array()) {
         //if there is already a column by the same name then silently fail
         //and continue
-        if ($this->_table_def->included($column_name) == true):
+        if ($this->_table_def->included($column_name) === true):
             return;
         endif;
 
         $column_options = array();
 
         if (array_key_exists('primary_key', $options)):
-            if ($options['primary_key'] == true):
+            if ($options['primary_key'] === true):
                 $this->_primary_keys[] = $column_name;
             endif;
         endif;
 
         if (array_key_exists('auto_increment', $options)):
-            if ($options['auto_increment'] == true):
+            if ($options['auto_increment'] === true):
                 $column_options['auto_increment'] = true;
             endif;
         endif;
 
         if (array_key_exists('null', $options)):
-            if ($options['null'] == true):
+            if ($options['null'] === true):
                 $column_options['null'] = true;
             endif;
         else:
@@ -118,7 +118,7 @@ class MySQLTables {
         endif;
 
         if (array_key_exists('unsigned', $options)):
-            if ($options['unsigned'] == false):
+            if ($options['unsigned'] === false):
                 $options['unsigned'] = false;
             endif;
         else:
@@ -174,7 +174,7 @@ class MySQLTables {
     }
 
     public function finish($wants_sql = false) {
-        if ($this->_initialized == false):
+        if ($this->_initialized === false):
             throw new EgressException(sprintf("Table Definition: '%s' has not been initialized", $this->_name), EgressException::INVALID_TABLE_DEFINITION);
         endif;
 
@@ -218,7 +218,6 @@ class MySQLTables {
     }
 
     private function columns_to_str() {
-        $str    = "";
         $fields = array();
         $len    = count($this->_columns);
 
@@ -232,7 +231,7 @@ class MySQLTables {
 
     private function init_sql($name, $options) {
         //are we forcing table creation? If so, drop it first
-        if (array_key_exists('force', $options) && $options['force'] == true):
+        if (array_key_exists('force', $options) && $options['force'] === true):
             try {
                 $this->_adapter->drop_table($name);
             } catch (EgressException $e) {

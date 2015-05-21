@@ -17,13 +17,11 @@
 namespace Dais\Library;
 
 class Image {
-    private $file;
     private $image;
     private $info;
     
     public function __construct($file) {
         if (file_exists($file)):
-            $this->file = $file;
             
             $info = getimagesize($file);
             

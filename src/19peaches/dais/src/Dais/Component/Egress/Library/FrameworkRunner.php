@@ -24,15 +24,12 @@
 
 namespace Egress\Library;
 use Egress\Library\Task\Manager;
-use Egress\Library\Adapter\MySQL\MySQLBase;
 use Egress\Library\Utility\Logger;
-use Egress\Library\Utility\Migrator;
 use Egress\Library\Utility\Naming;
 use Egress\Library\EgressException;
 
 class FrameworkRunner {
     
-    private $_db            = null;
     private $_active_db_config;
     private $_config        = array();
     private $_task_mgr      = null;
@@ -40,7 +37,6 @@ class FrameworkRunner {
     private $_cur_task_name = "";
     private $_task_options  = "";
     private $_env           = "";
-    private $_opt_map       = array();
     private $_showhelp      = false;
 
     public function __construct($config, $argv, Logger $log = null) {
@@ -49,7 +45,6 @@ class FrameworkRunner {
 
         // set environment
         $this->_env = ENVIRONMENT;
-        $this->_opt_map['env'] = ENVIRONMENT;
 
         //parse arguments
         $this->parse_args($argv);
@@ -109,7 +104,6 @@ class FrameworkRunner {
 
     public function init_tasks() {
         $this->_task_mgr = new Manager($this->_adapter, $this->_config);
-        //var_dump($this->_task_mgr);exit;
     }
 
     public function migrations_directory($key = '') {
@@ -135,14 +129,6 @@ class FrameworkRunner {
     }
 
     public function migrations_directories() {
-        $folder = $this->_config['db'][$this->_env]['database'];
-
-        if (array_key_exists('directory', $this->_config['db'][$this->_env])):
-            $folder = $this->_config['db'][$this->_env]['directory'];
-        endif;
-        
-        $result = array();
-        $result['default'] = $this->_config['migrations_dir'];
 
         return $this->_config['migrations_dir'];
     }
@@ -205,21 +191,12 @@ class FrameworkRunner {
 
         $this->_task_options = $options;
     }
-    
-    private function set_opt($key, $value) {
-        if (!$key):
-            return;
-        endif;
-
-        $this->_opt_map[$key] = $value;
-    }
 
     private function verify_db_config() {
         if ( !array_key_exists($this->_env, $this->_config['db'])):
             throw new EgressException(sprintf("Error: '%s' DB is not configured", $this->_env), EgressException::INVALID_CONFIG);
         endif;
 
-        $env                     = $this->_env;
         $this->_active_db_config = $this->_config['db'][$this->_env];
         
         if (!array_key_exists("type", $this->_active_db_config)):
@@ -296,8 +273,6 @@ class FrameworkRunner {
     private function load_all_adapters($adapter_dir) {
         if (!is_dir($adapter_dir)):
             throw new EgressException(sprintf("Adapter dir: %s does not exist", $adapter_dir), EgressException::INVALID_ADAPTER);
-
-            return false;
         endif;
 
         $files = scandir($adapter_dir);
@@ -317,7 +292,6 @@ class FrameworkRunner {
     }
 
     public function help() {
-        // TODO: dynamically list all available tasks
         $output =<<<USAGE
 
 \tUsage: php {$_SERVER['argv'][0]} <task> [help] [task parameters] [env=environment]

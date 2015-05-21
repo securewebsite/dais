@@ -82,7 +82,7 @@ class Language extends LibraryService {
         endif;
         
         $this->data = array_merge($this->data, $_);
-        //var_dump($this->data);exit;
+        
         return $this->data;
     }
     

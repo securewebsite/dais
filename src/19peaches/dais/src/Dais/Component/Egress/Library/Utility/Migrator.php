@@ -69,7 +69,7 @@ class Migrator {
 
     public function get_runnable_migrations($directories, $direction, $destination = null, $use_cache = true) {
         // cache migration lookups and early return if we've seen this requested set
-        if ($use_cache == true):
+        if ($use_cache === true):
             $key = $direction . '-' . $destination;
             if (array_key_exists($key, $this->_migrations)):
                 return($this->_migrations[$key]);
@@ -95,7 +95,7 @@ class Migrator {
         $runnable    = array_slice($migrations, $start, $item_length);
 
         //dont include first item if going down but not if going all the way to the bottom
-        if ($direction == 'down' && count($runnable) > 0 && $target != null):
+        if ($direction == 'down' && count($runnable) > 0 && $target !== null):
             array_pop($runnable);
         endif;
 
@@ -116,7 +116,7 @@ class Migrator {
             $to_execute[] = $migration;
         endforeach;
 
-        if ($use_cache == true):
+        if ($use_cache === true):
             $this->_migrations[$key] = $to_execute;
         endif;
 

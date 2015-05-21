@@ -30,14 +30,11 @@ use Egress\Library\EgressException;
 class TableDefinition {
     
     private $_columns = array();
-    private $_adapter;
-
+    
     public function __construct($adapter) {
         if (!($adapter instanceof AdapterBase)):
             throw new EgressException('Invalid Adapter instance.', EgressException::INVALID_ADAPTER);
         endif;
-
-        $this->_adapter = $adapter;
     }
 
     public function __call($name, $args) {

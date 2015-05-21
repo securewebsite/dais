@@ -81,13 +81,10 @@ spl_autoload_register(function ($class) {
 
 spl_autoload_register(function ($class) {
     $class = \Dais\Library\Naming::file_from_classname($class);
-
-    $file = APP_PATH . str_replace('\\', SEP, $class) . '.php';
-    //var_dump($file);
-    if (!is_readable($file)):
-        return;
-    else:
+    
+    if (is_readable($file = APP_PATH . str_replace('\\', SEP, $class) . '.php')):
         require $file;
-        return true;
+    else:
+        return;
     endif;
 });

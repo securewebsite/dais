@@ -95,7 +95,7 @@ class Naming {
 		endif;
 	}
 
-	public static function method_from_route($app, $route) {
+	public static function method_from_route($route) {
 		$segments = explode(SEP, $route);
 
 		if (count($segments) > 2):

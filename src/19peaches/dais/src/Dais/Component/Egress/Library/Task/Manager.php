@@ -74,14 +74,10 @@ class Manager {
     public function register_task($key, $obj) {
         if (array_key_exists($key, $this->_tasks)):
             throw new EgressException(sprintf("Task key '%s' is already defined!", $key), EgressException::INVALID_ARGUMENT);
-
-            return false;
         endif;
 
         if (!($obj instanceof TaskInterface)):
             throw new EgressException(sprintf('Task (' . $key . ') does not implement TaskInterface', $key), EgressException::INVALID_ARGUMENT);
-
-            return false;
         endif;
 
         $this->_tasks[$key] = $obj;
@@ -92,8 +88,6 @@ class Manager {
     private function load_all_tasks($task_dir) {
         if (!is_dir($task_dir)):
             throw new EgressException(sprintf("Task dir: %s does not exist", $task_dir), EgressException::INVALID_ARGUMENT);
-
-            return false;
         endif;
 
         $namespaces = scandir($task_dir);

@@ -30,12 +30,12 @@ use Egress\Library\Adapter\MySQL\MySQLTables;
 use Egress\Library\Utility\Naming;
 use Egress\Library\EgressException;
 use Mysqli;
+use Exception;
 
 define('MYSQL_MAX_IDENTIFIER_LENGTH', 64);
 
 class MySQLBase extends AdapterBase implements AdapterInterface {
     
-    private $_name          = "MySQL";
     private $_tables        = array();
     private $_tables_loaded = false;
     private $_version       = '1.0';
@@ -293,14 +293,14 @@ class MySQLBase extends AdapterBase implements AdapterInterface {
     }
 
     public function execute_ddl($ddl) {
-        $result = $this->query($ddl);
+        $this->query($ddl);
 
         return true;
     }
 
     public function drop_table($tbl) {
         $ddl    = sprintf("DROP TABLE IF EXISTS %s", $this->identifier($tbl));
-        $result = $this->query($ddl);
+        $this->query($ddl);
 
         return true;
     }
@@ -410,8 +410,6 @@ class MySQLBase extends AdapterBase implements AdapterInterface {
         if (empty($type)):
             throw new EgressException("Missing type parameter", EgressException::INVALID_ARGUMENT);
         endif;
-        
-        $column_info = $this->column_info($table_name, $column_name);
 
         if (!array_key_exists('limit', $options)):
             $options['limit'] = null;
@@ -609,8 +607,10 @@ class MySQLBase extends AdapterBase implements AdapterInterface {
                 continue;
             endif;
             
-            $cur_idx   = $row['Key_name'];
-            $indexes[] = array('name' => $row['Key_name'], 'unique' => (int) $row['Non_unique'] == 0 ? true : false);
+            $indexes[] = array(
+                'name'   => $row['Key_name'], 
+                'unique' => (int) $row['Non_unique'] == 0 ? true : false
+            );
         endforeach;
 
         return $indexes;
@@ -666,15 +666,15 @@ class MySQLBase extends AdapterBase implements AdapterInterface {
         
         if ($type == "decimal"):
             //ignore limit, use precison and scale
-            if ( $precision == null && array_key_exists('precision', $native_type)):
+            if ( $precision === null && array_key_exists('precision', $native_type)):
                 $precision = $native_type['precision'];
             endif;
             
-            if ( $scale == null && array_key_exists('scale', $native_type)):
+            if ( $scale === null && array_key_exists('scale', $native_type)):
                 $scale = $native_type['scale'];
             endif;
             
-            if ($precision != null):
+            if ($precision !== null):
                 if (is_int($scale)):
                     $column_type_sql .= sprintf("(%d, %d)", $precision, $scale);
                 else:
@@ -687,15 +687,15 @@ class MySQLBase extends AdapterBase implements AdapterInterface {
             endif;
         elseif ($type == "float"):
             //ignore limit, use precison and scale
-            if ($precision == null && array_key_exists('precision', $native_type)):
+            if ($precision === null && array_key_exists('precision', $native_type)):
                 $precision = $native_type['precision'];
             endif;
             
-            if ($scale == null && array_key_exists('scale', $native_type)):
+            if ($scale === null && array_key_exists('scale', $native_type)):
                 $scale = $native_type['scale'];
             endif;
             
-            if ($precision != null):
+            if ($precision !== null):
                 if (is_int($scale)):
                     $column_type_sql .= sprintf("(%d, %d)", $precision, $scale);
                 else:
@@ -714,7 +714,7 @@ class MySQLBase extends AdapterBase implements AdapterInterface {
             endif;
         else:
             //not a decimal column
-            if ($limit == null && array_key_exists('limit', $native_type)):
+            if ($limit === null && array_key_exists('limit', $native_type)):
                 $limit = $native_type['limit'];
             endif;
 
@@ -853,7 +853,7 @@ class MySQLBase extends AdapterBase implements AdapterInterface {
     }
 
     private function load_tables($reload = true) {
-        if ($this->_tables_loaded == false || $reload):
+        if ($this->_tables_loaded === false || $reload):
             $this->_tables = array(); //clear existing structure
             
             $query = "SHOW TABLES";
@@ -904,14 +904,6 @@ class MySQLBase extends AdapterBase implements AdapterInterface {
             default:
                 return SQL_UNKNOWN_QUERY_TYPE;
         endswitch;
-    }
-
-    private function is_select($query_type) {
-        if ($query_type == SQL_SELECT):
-            return true;
-        endif;
-
-        return false;
     }
 
     private function is_sql_method_call($str) {

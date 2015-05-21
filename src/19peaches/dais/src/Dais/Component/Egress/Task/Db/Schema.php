@@ -43,7 +43,7 @@ class Schema extends TaskBase implements TaskInterface {
 
         //write to disk
         $schema_file = $this->db_dir() . '/schema.txt';
-        $schema      = $this->_adapter->schema($schema_file);
+        $this->_adapter->schema($schema_file);
         
         $this->_return .= "\tSchema written to: $schema_file\n\n";
         $this->_return .= "\n\nFinished: " . date('Y-m-d g:ia T') . "\n\n";

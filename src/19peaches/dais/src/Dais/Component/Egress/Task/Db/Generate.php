@@ -30,12 +30,9 @@ use Egress\Library\Utility\Naming;
 use Egress\Library\EgressException;
 
 class Generate extends TaskBase implements TaskInterface {
-    
-    private $_adapter = null;
 
     public function __construct($adapter) {
         parent::__construct($adapter);
-        $this->_adapter = $adapter;
     }
 
     public function execute($args) {

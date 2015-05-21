@@ -59,7 +59,7 @@ class Widget extends Controller {
         $data['modules'] = array();
         
         $files = $this->theme->getFiles('widget');
-        //var_dump($files);exit;
+        
         if ($files) {
             foreach ($files as $file) {
                 $module = strtolower(basename($file, '.php'));

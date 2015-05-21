@@ -24,11 +24,24 @@
 namespace Database\Migration;
 use Egress\Library\Migration\MigrationBase;
 
-class EmptyDatabase_20150516073750 extends MigrationBase {
+class CreateTest_20150521180113 extends MigrationBase {
+
+    private $prefix = 'dais_';
 
     public function up() {
-        // this is a dummy migration to set the database back to empty if needed.
+        $table = $this->create_table("{$this->prefix}table_name", array(
+            'id'      => false, 
+            'options' => 'Engine=InnoDB'
+        ));
+
+        // Start columns
+
+        // End columns
+        
+        $table->finish();
     }
 
-    public function down() { }
+    public function down() {
+        $this->drop_table("{$this->prefix}table_name");
+    }
 }

@@ -134,7 +134,7 @@ class Shortcode extends LibraryService {
 			$attr = $that->shortcode_parse_atts($m[3]);
 
 			// let's get the class and method for our hook
-			$file   = new Action($that->shortcode_tags[$tag]);
+			$file   = new Action(new ActionService($that->shortcode_tags[$tag]));
 			$class  = $file->getClass();
 			$method = $file->getMethod();
 

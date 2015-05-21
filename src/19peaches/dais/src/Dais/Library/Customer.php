@@ -368,7 +368,7 @@ class Customer extends LibraryService {
     public function addCommission($customer_id, $order_id, $description, $amount) {
         $db = parent::$app['db'];
 
-        $query = $db->query("
+        $db->query("
             INSERT INTO {$db->prefix}customer_commission 
             SET 
                 customer_id = '" . (int)$customer_id . "', 

@@ -102,7 +102,7 @@ class Email extends LibraryService {
 
     public function send($message, $to, $name, $send = false, $add = array()) {
         
-        $mailer = parent::$app['mailer']->build(
+        parent::$app['mailer']->build(
             $message['subject'],
             $to,
             $name,

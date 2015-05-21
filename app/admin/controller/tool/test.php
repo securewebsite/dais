@@ -16,7 +16,6 @@
 
 namespace Admin\Controller\Tool;
 use Dais\Engine\Controller;
-use Dais\Library\Migrate;
 
 class Test extends Controller {
     public function index() {

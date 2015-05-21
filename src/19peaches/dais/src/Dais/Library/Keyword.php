@@ -21,14 +21,12 @@ use Dais\Service\LibraryService;
 class Keyword extends LibraryService {
 	public  $contents;
 	private $encoding;
-	private $keywords;
 	
 	private $wordLengthMin             = 5;
 	private $wordOccuredMin            = 2;
 	private $word2WordPhraseLengthMin  = 3;
 	private $word3WordPhraseLengthMin  = 3;
 	private $phrase2WordLengthMinOccur = 2;
-	private $phrase2WordLengthMin      = 10;
 	private $phrase3WordLengthMinOccur = 2;
 	private $phrase3WordLengthMin      = 10;
 
@@ -218,7 +216,6 @@ class Keyword extends LibraryService {
 		
 		$new_keywords = implode (', ', $keys);
 		
-		//return $new_keywords;
 		return rtrim ($new_keywords, ', ');
 	}
 }

@@ -91,7 +91,7 @@ require FRAMEWORK . 'environment.php';
 $environments = file_get_contents(__DIR__ . '/environment.json');
 $environments = json_decode($environments, true);
 
-$env = detectEnvironments($environments);
+$env = \Dais\Environment::detectEnvironments($environments);
 
 define('ENV', $env['environment']);
 
