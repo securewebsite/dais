@@ -599,7 +599,6 @@ class MySQLBase extends AdapterBase implements AdapterInterface {
         $sql     = sprintf("SHOW KEYS FROM %s", $this->identifier($table_name));
         $result  = $this->select_all($sql);
         $indexes = array();
-        $cur_idx = null;
 
         foreach ($result as $row):
             //skip primary

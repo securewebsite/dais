@@ -43,7 +43,6 @@ class Validate extends LibraryService {
     private $equal;
     private $errors;
     private $corrects;
-    private $fields;
 
     public function __construct(Container $app) {
         parent::__construct($app);

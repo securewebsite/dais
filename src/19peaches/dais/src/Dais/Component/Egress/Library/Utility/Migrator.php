@@ -206,23 +206,6 @@ class Migrator {
         return strcmp($a["version"], $b["version"]);
     }
 
-    private function find_version_index($migrations, $version) {
-        //edge case
-        if (is_null($version)):
-            return null;
-        endif;
-
-        $len = count($migrations);
-
-        for ($i = 0; $i < $len; $i++):
-            if ($migrations[$i]['version'] == $version):
-                return $i;
-            endif;
-        endfor;
-
-        return null;
-    }
-
     private function executed_migrations() {
         $query_sql = sprintf('SELECT version FROM %s', EGRESS_TS_SCHEMA_TBL_NAME);
         $versions  = $this->_adapter->select_all($query_sql);
