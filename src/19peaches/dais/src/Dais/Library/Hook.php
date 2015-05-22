@@ -117,8 +117,4 @@ class Hook extends LibraryService {
         
         return $data;
     }
-    
-    private function format($file) {
-        return ucfirst(str_replace('_', '', strtolower($file)));
-    }
 }
