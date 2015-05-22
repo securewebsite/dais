@@ -27,7 +27,7 @@ class View {
     
     public function render($template, $data = array()) {
         $this->data = $data;
-        $this->file = $this->directory . 'view/' . $template . '.tpl';
+        $this->file = $this->directory . 'view' . SEP . $template . '.tpl';
         
         return $this->output();
     }

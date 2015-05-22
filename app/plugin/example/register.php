@@ -32,7 +32,7 @@ class Register extends Plugin {
         // set all event handlers
         $model->setEventHandler('admin_edit_product', array(
             'plugin' => 'example',
-            'file'   => 'admin/events/adminevent',
+            'file'   => 'admin/events/admin_event',
             'method' => 'editProduct'
         ));
         
@@ -42,7 +42,7 @@ class Register extends Plugin {
             'method'   => 'index',
             'type'     => 'post',
             'plugin'   => 'example',
-            'file'     => 'admin/hooks/controllerhooks',
+            'file'     => 'admin/hooks/controller_hooks',
             'callback' => 'exampleHook',
             'args'     => array(
                 'heading_title' => 'Example Test Page',
@@ -55,7 +55,7 @@ class Register extends Plugin {
             'method'   => 'index',
             'type'     => 'pre',
             'plugin'   => 'example',
-            'file'     => 'admin/hooks/controllerhooks',
+            'file'     => 'admin/hooks/controller_hooks',
             'callback' => 'preHook'
         ));
     }
@@ -66,7 +66,7 @@ class Register extends Plugin {
         // remove all event handlers
         $model->removeEventHandler('admin_edit_product', array(
             'plugin' => 'example',
-            'file'   => 'admin/events/adminevent',
+            'file'   => 'admin/events/admin_event',
             'method' => 'editProduct'
         ));
         
@@ -76,7 +76,7 @@ class Register extends Plugin {
             'method'   => 'index',
             'type'     => 'post',
             'plugin'   => 'example',
-            'file'     => 'admin/hooks/controllerhooks',
+            'file'     => 'admin/hooks/controller_hooks',
             'callback' => 'exampleHook',
             'args'     => array(
                 'heading_title' => 'Example Test Page',
@@ -89,7 +89,7 @@ class Register extends Plugin {
             'method'   => 'index',
             'type'     => 'pre',
             'plugin'   => 'example',
-            'file'     => 'admin/hooks/controllerhooks',
+            'file'     => 'admin/hooks/controller_hooks',
             'callback' => 'preHook'
         ));
     }

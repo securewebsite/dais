@@ -14,8 +14,16 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title'] = 'Example Plugin';
+namespace Plugin\Example\Admin\Language\English;
 
-// Text
-$_['lang_text_plugin']   = 'Plugins';
+class Example {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title'] = 'Example Plugin';
+
+		// Text
+		$_['lang_text_plugin']   = 'Plugins';
+
+		return $_;
+	}
+}

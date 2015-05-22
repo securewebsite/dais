@@ -18,7 +18,7 @@ namespace Plugin\Example\Admin\Events;
 use Dais\Engine\Container;
 use Dais\Engine\Plugin;
 
-class Adminevent extends Plugin {
+class AdminEvent extends Plugin {
     public function __construct(Container $app) {
         parent::__construct($app);
         parent::setPlugin('example');

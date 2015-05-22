@@ -18,7 +18,7 @@ namespace Plugin\Example\Admin\Hooks;
 use Dais\Engine\Container;
 use Dais\Engine\Plugin;
 
-class Controllerhooks extends Plugin {
+class ControllerHooks extends Plugin {
     private $script_directory;
     
     public function __construct(Container $app) {

@@ -14,5 +14,13 @@
 |	
 */
 
-// Heading
-$_['lang_heading_title'] = 'Hook Overwritten Heading Title';
+namespace Plugin\Example\Admin\Language\English;
+
+class ExampleHook {
+	public static function lang() {
+		// Heading
+		$_['lang_heading_title'] = 'Hook Overwritten Heading Title';
+
+		return $_;
+	}
+}

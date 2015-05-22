@@ -18,6 +18,7 @@ namespace Dais\Engine;
 use Dais\Engine\Container;
 use Dais\Engine\Controller;
 use Dais\Engine\View;
+use Dais\Library\Naming;
 
 class Plugin extends Controller {
     private     $plugins = array();
@@ -30,7 +31,7 @@ class Plugin extends Controller {
     public function __construct(Container $app) {
         parent::__construct($app);
         
-        $this->locale = $app['active.fascade'] . '/';
+        $this->locale = $app['active.fascade'] . SEP;
         
         /**
          * We need to manage the path for plugins since
@@ -51,14 +52,15 @@ class Plugin extends Controller {
         
         unset($files);
         
-        $files = glob($this->directory . '*/*/controller/*.php');
+        $files = glob($this->directory . '*' . SEP . '*' . SEP . 'controller' . SEP . '*.php');
         
         foreach ($files as $key => $file):
-            $path  = str_replace($this->app['path.plugin'], '', rtrim($file, '.php'));
-            $slugs = explode('/', $path);
+            $path  = str_replace($this->app['path.app_path'], '', rtrim($file, '.php'));
+            
+            $slugs = explode(SEP, $path);
             
             if ($slugs[0] !== end($slugs)):
-                $this->controllers[] = $this->app['prefix.plugin'] . '/' . $slugs[0] . '/' . end($slugs);
+                $this->controllers[] = $this->app['prefix.plugin'] . SEP . $slugs[0] . SEP . end($slugs);
             endif;
         endforeach;
         
@@ -140,8 +142,11 @@ class Plugin extends Controller {
             $lang = array_merge($lang, $data);
         endif;
         
-        if (is_readable($file = $this->directory . $plugin_locale . '/' . $this->locale . 'language/' . $locale . '/' . $plugin . '.php')):
-            require $file;
+        $file = $this->directory . $plugin_locale . SEP . $this->locale . 'language' . SEP . $locale . SEP . $plugin . '.php';
+        
+        if (is_readable($file)):
+            $class = Naming::class_from_filename($file);
+            $_     = $class::lang();
         endif;
         
         foreach ($_ as $key => $value):
@@ -152,7 +157,7 @@ class Plugin extends Controller {
     }
     
     public function view($template, $data = array()) {
-        $dir  = $this->directory . $this->plugin_name . '/' . $this->locale;
+        $dir  = $this->directory . $this->plugin_name . SEP . $this->locale;
         $view = new View($dir);
         
         return $view->render($template, $data);

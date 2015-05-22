@@ -62,10 +62,10 @@ class Language extends LibraryService {
         // grab our base file
         if (is_readable($file = $language_dir . $this->default . SEP . $filename . '.php')):
             $class = Naming::class_from_filename($file);
-            $_ = $class::lang();
+            $_     = $class::lang();
         else:
             $class = Naming::class_from_filename($this->base . $this->default . SEP . $filename . '.php');
-            $_ = $class::lang();
+            $_     = $class::lang();
         endif;
         
         /**
@@ -75,10 +75,10 @@ class Language extends LibraryService {
         
         if (is_readable($file = $language_dir . $this->directory . SEP . $filename . '.php')):
             $class = Naming::class_from_filename($file);
-            $_ = $class::lang();
+            $_     = $class::lang();
         else:
             $class = Naming::class_from_filename($this->base . $this->directory . SEP . $filename . '.php');
-            $_   = $class::lang();
+            $_     = $class::lang();
         endif;
         
         $this->data = array_merge($this->data, $_);

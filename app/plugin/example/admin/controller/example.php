@@ -33,7 +33,7 @@ class Example extends Plugin {
         $this->breadcrumb->add('lang_heading_title', 'plugin/example');
         
         $data['header']     = $this->theme->controller('common/header');
-        $data['breadcrumb'] = $this->theme->controller('common/breadcrumb');
+        $data['breadcrumb'] = $this->theme->controller('common/bread_crumb');
         $data['footer']     = $this->theme->controller('common/footer');
         
         $this->response->setOutput($this->view('example', $data));
