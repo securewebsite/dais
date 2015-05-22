@@ -33,7 +33,6 @@ final class Theme {
     private $ogtype;
     private $ogurl;
     private $canonical;
-    private $engine;
     
     private $links = array();
     private $controllers = array();
