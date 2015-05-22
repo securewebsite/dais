@@ -30,7 +30,6 @@ final class Theme {
     private $ogtype;
     private $ogurl;
     private $canonical;
-    private $template;
     
     private $links = array();
     private $controllers = array();
@@ -48,11 +47,6 @@ final class Theme {
         self::$app  = $app;
 
         $this->path = $app['path.theme'] . $app['theme.name'] . SEP;
-
-        $this->template = \Foil\engine([
-            'ext' => 'tpl',
-            'folders' => [$this->path . 'view' . SEP]
-        ]);
         
         if ($app->offsetExists('config_site_style')):
             $this->style = $app['config_site_style'];
@@ -112,7 +106,11 @@ final class Theme {
     }
     
     public function view($template, $data = array()) {
-        return $this->template->render($template, $data);
+        // Use Foil template engine
+        $foil = self::$app['view'];
+        $foil->addFolder($this->path . 'view' . SEP);
+
+        return $foil->render($template, $data);
     }
     
     public function loadjs($file, $data, $path = '') {
