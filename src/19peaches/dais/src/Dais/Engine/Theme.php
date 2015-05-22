@@ -15,10 +15,7 @@
 */
 
 namespace Dais\Engine;
-use Dais\Engine\Container;
-use Dais\Engine\Action;
 use Dais\Service\ActionService;
-use Dais\Engine\View;
 use Dais\Library\Naming;
 
 final class Theme {
@@ -33,6 +30,7 @@ final class Theme {
     private $ogtype;
     private $ogurl;
     private $canonical;
+    private $template;
     
     private $links = array();
     private $controllers = array();
@@ -50,6 +48,11 @@ final class Theme {
         self::$app  = $app;
 
         $this->path = $app['path.theme'] . $app['theme.name'] . SEP;
+
+        $this->template = \Foil\engine([
+            'ext' => 'tpl',
+            'folders' => [$this->path . 'view' . SEP]
+        ]);
         
         if ($app->offsetExists('config_site_style')):
             $this->style = $app['config_site_style'];
@@ -109,8 +112,7 @@ final class Theme {
     }
     
     public function view($template, $data = array()) {
-        $view = new View(self::$app['path.theme'] . self::$app['theme.name'] . SEP);
-        return $view->render($template, $data);
+        return $this->template->render($template, $data);
     }
     
     public function loadjs($file, $data, $path = '') {

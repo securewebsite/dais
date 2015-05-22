@@ -50,9 +50,6 @@ class Event extends LibraryService {
         parent::$app['plugin_events'] = $this->events;
     }
     
-    /**
-     * TODO
-     */
     public function unregisterEvents() {
     }
     
@@ -62,27 +59,19 @@ class Event extends LibraryService {
         endif;
         
         foreach ($this->events[$event] as $handler):
-            $parts = explode('/', $handler);
-            $method = array_pop($parts);
+            $segments = explode(SEP, $handler);
+            $method   = array_pop($segments);
+            $class    = Naming::class_from_filename(parent::$app['prefix.plugin'] . SEP . implode(SEP, $segments));
             
-            foreach ($parts as $key => $part):
-                $parts[$key] = $this->format($part);
-            endforeach;
-            
-            $path = implode('\\', $parts);
-            
-            $class = 'Plugin\\' . $path;
+            $arguments = !empty($data) ? $data : null;
+
             $class = new $class(parent::$app);
             
             if (is_callable(array($class, $method))):
-                return call_user_func_array(array($class, $method), $data);
+                return call_user_func_array(array($class, $method), array($arguments));
             endif;
         endforeach;
         
         return true;
-    }
-    
-    private function format($file) {
-        return ucfirst(str_replace('_', '', strtolower($file)));
     }
 }

@@ -29,6 +29,8 @@ class ActionService implements ActionServiceInterface {
     
     public function __construct(Container $app, $route, $args = array()) {
         
+        $this->fascade = trim($app['prefix.fascade'], '/');
+
         if ($args):
             $this->args = $args;
         endif;
@@ -63,20 +65,20 @@ class ActionService implements ActionServiceInterface {
         
         $callable = false;
         $hook_key = $this->fascade . '_controller';
-        
         $hooks    = $app['plugin_hooks'];
         
         if (array_key_exists($hook_key, $hooks)):
             foreach ($hooks[$hook_key] as $hook):
                 if ($hook['class'] === $this->class && $hook['method'] === $this->method && $hook['type'] == 'pre'):
-                    
-                    $mthd = basename($hook['callback']);
-                    $cls  = rtrim(str_replace($mthd, '', $hook['callback']) , '/');
+                    $segments  = explode(SEP, $hook['callback']);
+                    $method    = array_pop($segments);
+                    $class     = Naming::class_from_filename(implode(SEP, $segments));
+                    $arguments = isset($hook['arguments']) ? $hook['arguments'] : null;
                     
                     $callback = array(
-                        'class'  => str_replace('/', '\\', $cls) ,
-                        'method' => $mthd,
-                        'args'   => $hook['arguments']
+                        'class'  => $class,
+                        'method' => $method,
+                        'args'   => $arguments
                     );
                     
                     $callable = function () use ($callback, $app) {

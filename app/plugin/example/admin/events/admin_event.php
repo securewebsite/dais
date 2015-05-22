@@ -29,6 +29,6 @@ class AdminEvent extends Plugin {
         
         // triggered on admin_edit_product
         
-        $this->response->redirect($this->url->link('tool/errorlog', 'token=' . $this->session->data['token'], 'SSL'));
+        $this->response->redirect($this->url->link('tool/error_log', 'token=' . $this->session->data['token'], 'SSL'));
     }
 }

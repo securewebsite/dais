@@ -30,8 +30,6 @@ class Test extends Controller {
         else:
             $data['success'] = '';
         endif;
-
-        
         
         $this->breadcrumb->add('lang_heading_title', 'tool/test');
         

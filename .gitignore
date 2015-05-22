@@ -13,7 +13,6 @@
 /public/image/cache/*
 /public/asset/*/compiled/*
 /vendor
-composer.lock
 .DS_Store
 Thumbs.db
 !.gitkeep
