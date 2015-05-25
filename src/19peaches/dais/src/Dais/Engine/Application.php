@@ -541,7 +541,8 @@ class Application {
         // template class
         $this->data['view'] = function ($data) {
             $engine = \Foil\engine([
-                'ext' => 'tpl'
+                'ext' => 'tpl',
+                'template_class' => 'Dais\\Engine\\View'
             ]);
 
             return $engine;
