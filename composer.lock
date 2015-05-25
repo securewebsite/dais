@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c6c6efec24c54d72bc392e4be70060be",
+    "hash": "13acff4ce34a6661461d0ea671bb3e2e",
     "packages": [
         {
             "name": "aura/html",
@@ -172,16 +172,16 @@
         },
         {
             "name": "foil/foil",
-            "version": "0.4.4",
+            "version": "0.5.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/19peaches/Foil.git",
-                "reference": "a696d9810bc69b418e8c4f651d7611b779b0eb1b"
+                "url": "https://github.com/Giuseppe-Mazzapica/Foil.git",
+                "reference": "41075aab599566da0e51b413192927e80172263b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/19peaches/Foil/zipball/a696d9810bc69b418e8c4f651d7611b779b0eb1b",
-                "reference": "a696d9810bc69b418e8c4f651d7611b779b0eb1b",
+                "url": "https://api.github.com/repos/Giuseppe-Mazzapica/Foil/zipball/41075aab599566da0e51b413192927e80172263b",
+                "reference": "41075aab599566da0e51b413192927e80172263b",
                 "shasum": ""
             },
             "require": {
@@ -210,11 +210,7 @@
                     "inc/functions.php"
                 ]
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Foil\\Tests\\": "tests/src/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -232,10 +228,7 @@
                 "template engine",
                 "templates"
             ],
-            "support": {
-                "source": "https://github.com/19peaches/Foil/tree/0.4.4"
-            },
-            "time": "2015-05-22 20:44:41"
+            "time": "2015-05-25 20:00:55"
         },
         {
             "name": "igorw/get-in",

@@ -7,7 +7,7 @@
     "license": "MIT",
     "authors": [{
         "name": "Vince Kronlein",
-        "email": "vkronlein@icloud.com",
+        "email": "vince@19peaches.com",
         "homepage": "http://19peaches.com",
         "role": "Lead Developer"
     }, {
@@ -15,15 +15,9 @@
         "email": "garybelvin@yahoo.com",
         "role": "Developer"
     }],
-    "repositories": [
-        {
-            "url": "https://github.com/19peaches/Foil.git",
-            "type": "vcs"
-        }
-    ],
     "require": {
         "php": ">=5.5.0",
-        "foil/foil": "0.4.4",
+        "foil/foil": "0.5.*",
         "raven/raven": "0.11.0",
         "filp/whoops": "~1.0",
         "swiftmailer/swiftmailer": "@stable"
