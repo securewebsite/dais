@@ -24,26 +24,25 @@
 namespace Database\Migration;
 use Egress\Library\Migration\MigrationBase;
 
-class CreateAffiliateRoute_20150517070031 extends MigrationBase {
+class CreateBlogPostImage_20150524063124 extends MigrationBase {
 
     private $prefix = 'dais_';
 
     public function up() {
-
-        $table = $this->create_table("{$this->prefix}affiliate_route", array(
+        $table = $this->create_table("{$this->prefix}blog_post_image", array(
             'id'      => false, 
             'options' => 'Engine=InnoDB'
         ));
 
-        $table->column('route_id', 'integer', array('primary_key' => true, 'unsigned' => true, 'auto_increment' => true));
-        $table->column('route', 'string', array('primary_key' => true, 'limit' => 55));
-        $table->column('query', 'string');
-        $table->column('slug', 'string', array('primary_key' => true));
-
+        $table->column('post_image_id', 'integer', array('unsigned' => true, 'primary_key' => true, 'auto_increment' => true));
+        $table->column('post_id', 'integer', array('unsigned' => true));
+        $table->column('image', 'string', array('null' => true));
+        $table->column('sort_order', 'integer', array('unsigned' => true, 'limit' => 3));
+        
         $table->finish();
     }
 
     public function down() {
-    	$this->drop_table("{$this->prefix}affiliate_route");
+        $this->drop_table("{$this->prefix}blog_post_image");
     }
 }

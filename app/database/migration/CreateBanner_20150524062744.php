@@ -24,26 +24,32 @@
 namespace Database\Migration;
 use Egress\Library\Migration\MigrationBase;
 
-class CreateAffiliateRoute_20150517070031 extends MigrationBase {
+class CreateBanner_20150524062744 extends MigrationBase {
 
     private $prefix = 'dais_';
 
     public function up() {
-
-        $table = $this->create_table("{$this->prefix}affiliate_route", array(
+        $table = $this->create_table("{$this->prefix}banner", array(
             'id'      => false, 
             'options' => 'Engine=InnoDB'
         ));
 
-        $table->column('route_id', 'integer', array('primary_key' => true, 'unsigned' => true, 'auto_increment' => true));
-        $table->column('route', 'string', array('primary_key' => true, 'limit' => 55));
-        $table->column('query', 'string');
-        $table->column('slug', 'string', array('primary_key' => true));
-
+        $table->column('banner_id', 'integer', array('unsigned' => true, 'primary_key' => true, 'auto_increment' => true));
+        $table->column('name', 'string', array('limit' => 64));
+        $table->column('status', 'tinyinteger', array('unsigned' => true, 'limit' => 1));
+        
         $table->finish();
+
+        $sql = "INSERT INTO `dais_banner` (`banner_id`, `name`, `status`) VALUES
+                (6, 'HP Products', 1),
+                (7, 'Samsung Tab', 1),
+                (8, 'Manufacturers', 1),
+                (9, 'Homepage', 1)";
+
+        $this->execute($sql);
     }
 
     public function down() {
-    	$this->drop_table("{$this->prefix}affiliate_route");
+        $this->drop_table("{$this->prefix}banner");
     }
 }

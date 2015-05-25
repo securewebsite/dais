@@ -24,26 +24,27 @@
 namespace Database\Migration;
 use Egress\Library\Migration\MigrationBase;
 
-class CreateAffiliateRoute_20150517070031 extends MigrationBase {
+class CreateCustomerCommission_20150524191259 extends MigrationBase {
 
     private $prefix = 'dais_';
 
     public function up() {
-
-        $table = $this->create_table("{$this->prefix}affiliate_route", array(
+        $table = $this->create_table("{$this->prefix}customer_commission", array(
             'id'      => false, 
             'options' => 'Engine=InnoDB'
         ));
 
-        $table->column('route_id', 'integer', array('primary_key' => true, 'unsigned' => true, 'auto_increment' => true));
-        $table->column('route', 'string', array('primary_key' => true, 'limit' => 55));
-        $table->column('query', 'string');
-        $table->column('slug', 'string', array('primary_key' => true));
-
+        $table->column('customer_commission_id', 'integer', array('unsigned' => true, 'primary_key' => true, 'auto_increment' => true));
+        $table->column('customer_id', 'integer', array('unsigned' => true));
+        $table->column('order_id', 'integer', array('unsigned' => true));
+        $table->column('description', 'text');
+        $table->column('amount', 'decimal', array('unsigned' => true, 'precision' => 15, 'scale' => 4));
+        $table->column('date_added', 'datetime', array('default' => '0000-00-00 00:00:00'));
+        
         $table->finish();
     }
 
     public function down() {
-    	$this->drop_table("{$this->prefix}affiliate_route");
+        $this->drop_table("{$this->prefix}customer_commission");
     }
 }

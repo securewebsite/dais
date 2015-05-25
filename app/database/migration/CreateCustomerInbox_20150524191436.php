@@ -24,26 +24,28 @@
 namespace Database\Migration;
 use Egress\Library\Migration\MigrationBase;
 
-class CreateAffiliateRoute_20150517070031 extends MigrationBase {
+class CreateCustomerInbox_20150524191436 extends MigrationBase {
 
     private $prefix = 'dais_';
 
     public function up() {
-
-        $table = $this->create_table("{$this->prefix}affiliate_route", array(
+        $table = $this->create_table("{$this->prefix}customer_inbox", array(
             'id'      => false, 
             'options' => 'Engine=InnoDB'
         ));
-
-        $table->column('route_id', 'integer', array('primary_key' => true, 'unsigned' => true, 'auto_increment' => true));
-        $table->column('route', 'string', array('primary_key' => true, 'limit' => 55));
-        $table->column('query', 'string');
-        $table->column('slug', 'string', array('primary_key' => true));
-
+        
+        $table->column('notification_id', 'integer', array('unsigned' => true, 'primary_key' => true, 'limit' => 13));
+        $table->column('customer_id', 'integer', array('unsigned' => true));
+        $table->column('subject', 'string', array('limit' => 64));
+        $table->column('message', 'text');
+        $table->column('is_read', 'tinyinteger', array('unsigned' => true, 'limit' => 1, 'default' => 0));
+        
         $table->finish();
+
+        $this->add_index("{$this->prefix}customer_inbox", "customer_id", array('name' => 'customer_id'));
     }
 
     public function down() {
-    	$this->drop_table("{$this->prefix}affiliate_route");
+        $this->drop_table("{$this->prefix}customer_inbox");
     }
 }

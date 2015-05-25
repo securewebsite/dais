@@ -468,6 +468,13 @@ class MySQLBase extends AdapterBase implements AdapterInterface {
         else:
             $unique = false;
         endif;
+
+        //fulltext index?
+        if (is_array($options) && array_key_exists('fulltext', $options) && $options['fulltext'] === true):
+            $fulltext = true;
+        else:
+            $fulltext = false;
+        endif;
         
         //did the user specify an index name?
         if (is_array($options) && array_key_exists('name', $options)):
@@ -495,9 +502,17 @@ class MySQLBase extends AdapterBase implements AdapterInterface {
         foreach ($column_names as $name):
             $cols[] = $this->identifier($name);
         endforeach;
+
+        if ($unique):
+            $type = "UNIQUE ";
+        elseif($fulltext):
+            $type = "FULLTEXT ";
+        else:
+            $type = false;
+        endif;
         
         $sql = sprintf("CREATE %sINDEX %s ON %s(%s)",
-                $unique ? "UNIQUE " : "",
+                $type ? $type : "",
                 $this->identifier($index_name),
                 $this->identifier($table_name),
                 join(", ", $cols));

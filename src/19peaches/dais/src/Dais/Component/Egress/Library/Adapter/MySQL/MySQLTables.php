@@ -105,48 +105,6 @@ class MySQLTables {
         $this->_columns[] = $column;
     }
 
-    public function integer($name, $limit = 11, $options = array()) {
-        // if limit is an array then is our options
-        if (is_array($limit)):
-            $options = $limit;
-            // if limit is boolean add primary key and autoincrement
-        elseif (is_bool($limit)):
-            $options['primary_key']    = true;
-            $options['auto_increment'] = true;
-        else:
-            $options['limit'] = $limit;
-        endif;
-
-        if (array_key_exists('unsigned', $options)):
-            if ($options['unsigned'] === false):
-                $options['unsigned'] = false;
-            endif;
-        else:
-            $options['unsigned'] = true;
-        endif;
-
-        if (array_key_exists('default', $options)):
-            $options['default'] = $options['default'];
-        endif;
-
-        $this->column($name, 'integer', $options);
-    }
-
-    public function string($name, $limit = 255, $options = array()) {
-        if (is_array($limit)):
-            $options = $limit;
-            $limit   = 255;
-        endif;
-
-        $options['limit'] = $limit;
-
-        if (array_key_exists('default', $options)):
-            $options['default'] = $options['default'];
-        endif;
-
-        $this->column($name, 'string', $options);
-    }
-
     public function timestamps($created_column_name = "created_at", $updated_column_name = "updated_at") {
         $this->column($created_column_name, "datetime");
         $this->column($updated_column_name, "timestamp", array(

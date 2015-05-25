@@ -24,24 +24,23 @@
 namespace Database\Migration;
 use Egress\Library\Migration\MigrationBase;
 
-class CreateTest_20150521180113 extends MigrationBase {
+class CreateCategoryFilter_20150524063245 extends MigrationBase {
 
     private $prefix = 'dais_';
 
     public function up() {
-        $table = $this->create_table("{$this->prefix}table_name", array(
+        $table = $this->create_table("{$this->prefix}category_filter", array(
             'id'      => false, 
             'options' => 'Engine=InnoDB'
         ));
 
-        // Start columns
-
-        // End columns
+        $table->column('category_id', 'integer', array('unsigned' => true, 'primary_key' => true));
+        $table->column('filter_id', 'integer', array('unsigned' => true, 'primary_key' => true));
         
         $table->finish();
     }
 
     public function down() {
-        $this->drop_table("{$this->prefix}table_name");
+        $this->drop_table("{$this->prefix}category_filter");
     }
 }

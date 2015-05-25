@@ -24,26 +24,32 @@
 namespace Database\Migration;
 use Egress\Library\Migration\MigrationBase;
 
-class CreateAffiliateRoute_20150517070031 extends MigrationBase {
+class CreateAttributeGroupDescription_20150524062459 extends MigrationBase {
 
     private $prefix = 'dais_';
 
     public function up() {
-
-        $table = $this->create_table("{$this->prefix}affiliate_route", array(
+        $table = $this->create_table("{$this->prefix}attribute_group_description", array(
             'id'      => false, 
             'options' => 'Engine=InnoDB'
         ));
 
-        $table->column('route_id', 'integer', array('primary_key' => true, 'unsigned' => true, 'auto_increment' => true));
-        $table->column('route', 'string', array('primary_key' => true, 'limit' => 55));
-        $table->column('query', 'string');
-        $table->column('slug', 'string', array('primary_key' => true));
-
+        $table->column('attribute_group_id', 'integer', array('primary_key' => true, 'unsigned' => true));
+        $table->column('language_id', 'integer', array('primary_key' => true, 'unsigned' => true));
+        $table->column('name', 'string', array('limit' => 64));
+        
         $table->finish();
+
+        $sql = "INSERT INTO `{$this->prefix}attribute_group_description` (`attribute_group_id`, `language_id`, `name`) VALUES
+                (3, 1, 'Memory'),
+                (4, 1, 'Technical'),
+                (5, 1, 'Motherboard'),
+                (6, 1, 'Processor')";
+
+        $this->execute($sql);
     }
 
     public function down() {
-    	$this->drop_table("{$this->prefix}affiliate_route");
+        $this->drop_table("{$this->prefix}attribute_group_description");
     }
 }

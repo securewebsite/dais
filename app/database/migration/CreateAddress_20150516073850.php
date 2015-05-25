@@ -35,19 +35,20 @@ class CreateAddress_20150516073850 extends MigrationBase {
             'options' => 'Engine=InnoDB'
         ));
 
-        $table->integer('address_id', true);
-        $table->integer('customer_id', 11);
-        $table->string('firstname', 32);
-        $table->string('lastname', 32);
-        $table->string('company', 32);
-        $table->string('company_id', 32);
-        $table->string('tax_id', 32);
-        $table->string('address_1', 128);
-        $table->string('address_2', 128);
-        $table->string('city', 128);
-        $table->string('postcode', 10);
-        $table->integer('country_id');
-        $table->integer('zone_id');
+        $table->column('address_id', 'integer', array('primary_key' => true, 'unsigned' => true, 'auto_increment' => true));
+        $table->column('customer_id', 'integer', array('unsigned' => true));
+        $table->column('firstname', 'string', array('limit' => 32));
+        $table->column('lastname', 'string', array('limit' => 32));
+        $table->column('company', 'string', array('limit' => 32));
+        $table->column('company_id', 'string', array('limit' => 32));
+        $table->column('tax_id', 'string', array('limit' => 32));
+        $table->column('address_1', 'string', array('limit' => 128));
+        $table->column('address_2', 'string', array('limit' => 128));
+        $table->column('city', 'string', array('limit' => 128));
+        $table->column('postcode', 'string', array('limit' => 10));
+        $table->column('country_id', 'integer', array('unsigned' => true));
+        $table->column('zone_id', 'integer', array('unsigned' => true));
+
         $table->finish();
 
         $this->add_index("{$this->prefix}address", "customer_id", array('name' => 'customer_id'));
