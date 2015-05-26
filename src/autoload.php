@@ -39,12 +39,8 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 */
 
 spl_autoload_register(function ($class) {
-    $file = dirname(FRAMEWORK) . '/' . str_replace('\\', SEP, $class) . '.php';
-    
-    if (!is_readable($file)):
-        return;
-    else:
-        
+    if (is_readable($file = dirname(FRAMEWORK) . SEP . str_replace('\\', SEP, $class) . '.php')):
+
         /*
         |--------------------------------------------------------------------------
         |   Override Framework Files
@@ -80,9 +76,9 @@ spl_autoload_register(function ($class) {
 */
 
 spl_autoload_register(function ($class) {
-    $class = \Dais\Library\Naming::file_from_classname($class);
+    $classname = \Dais\Library\Naming::file_from_classname($class);
     
-    if (is_readable($file = APP_PATH . str_replace('\\', SEP, $class) . '.php')):
+    if (is_readable($file = APP_PATH . str_replace('\\', SEP, $classname) . '.php')):
         require $file;
     else:
         return;

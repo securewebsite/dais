@@ -50,5 +50,22 @@ class Environment {
 
 		return (bool) preg_match('#^' . $pattern . '#', $value);
 	}
+
+	public static function get_mysql_version() {
+		ob_start(); 
+		
+		phpinfo(INFO_MODULES); 
+		$info = ob_get_contents();
+		
+		ob_end_clean(); 
+		
+		$info = stristr($info, 'Client API version'); 
+
+		preg_match('/[1-9].[0-9].[1-9][0-9]/', $info, $match); 
+		
+		$gd = $match[0];
+
+		return $gd;
+	}
 }
 

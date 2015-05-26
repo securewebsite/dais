@@ -14,11 +14,17 @@
 |   
 */
 
-namespace Dais\Engine;
+namespace Dais;
+
 use Dais\Driver\Cache\Apc;
 use Dais\Driver\Cache\Asset;
 use Dais\Driver\Cache\File;
 use Dais\Driver\Cache\Mem;
+use Dais\Engine\Action;
+use Dais\Engine\Container;
+use Dais\Engine\Front;
+use Dais\Engine\Plugin;
+use Dais\Engine\Theme;
 use Dais\Library\Breadcrumb;
 use Dais\Library\Cache;
 use Dais\Library\Cart;
@@ -56,7 +62,7 @@ use Dais\Service\ActionService;
 use Dais\Service\PluginServiceModel;
 
 class Application {
-    
+
     public function __construct($config) {
         $this->data = new Container;
         $this->data['db_config'] = $config;
@@ -541,7 +547,7 @@ class Application {
         // template class
         $this->data['view'] = function ($data) {
             $engine = \Foil\engine([
-                'ext' => 'tpl',
+                'ext'            => 'tpl',
                 'template_class' => 'Dais\\Engine\\View'
             ]);
 

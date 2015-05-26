@@ -57,8 +57,8 @@ define('USE_TWIG', false);
  * detect our server settings.
  */
 
-if ($start = FRAMEWORK . 'start.php'):
-	require $start;
+if ($file = FRAMEWORK . 'Start.php'):
+	require $file;
 endif;
 
 /*
@@ -86,7 +86,9 @@ define('PUBLIC_DIR', 'public' . SEP);
  * function properly.
  */
 
-require FRAMEWORK . 'environment.php';
+if ($file = FRAMEWORK . 'Environment.php'):
+	require $file;
+endif;
 
 $environments = file_get_contents(__DIR__ . '/environment.json');
 $environments = json_decode($environments, true);

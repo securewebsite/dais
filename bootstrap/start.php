@@ -81,6 +81,6 @@ endif;
 |
 */
 
-$app = new Dais\Engine\Application($dbs);
+$app = new Dais\Application($dbs);
 
 return $app->buildConfigRequest($config);
