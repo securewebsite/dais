@@ -49,7 +49,7 @@ else:
     $environment = ENV;
 endif;
 // override for development
-define('ENVIRONMENT', 'migration');
+define('ENVIRONMENT', $environment);
 
 /*
 |--------------------------------------------------------------------------

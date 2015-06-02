@@ -149,7 +149,13 @@ class FrameworkRunner {
         endif;
 
         $this->_adapter = new $adapter($db, $this->logger);
+        if (!$this->_adapter->conn->server_info >= (float)'5.6.4'):
+            $server = 'InnoDB';
+        else:
+            $server = 'MyISAM';
+        endif;
 
+        define('SERVER_VERSION', $server);
     }
 
     public function initialize_logger() {

@@ -1,5 +1,0 @@
-CREATE TABLE `dais_schema_migrations` (
-  `version` varchar(255) DEFAULT NULL,
-  UNIQUE KEY `idx_dais_schema_migrations_version` (`version`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-

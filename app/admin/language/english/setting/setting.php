@@ -40,8 +40,8 @@ class Setting {
 		$_['lang_text_payment']                       = 'Payment Address';
 		$_['lang_text_mail']                          = 'Mail';
 		$_['lang_text_smtp']                          = 'SMTP';
-		$_['lang_text_top_level']                     = 'Example: if you have a product that is normally linked as ' . parent::$app['http.public'] . '<b>mobile-phones/apple/iphone5</b>, with this setting enabled your link will now show as ' . parent::$app['http.public'] . '<b>iphone5</b>';
-		$_['lang_text_ucfirst']                       = 'Example: ' . parent::$app['http.public'] . '<b>mobile-phones/apple/iphone5</b> will become: ' . parent::$app['http.public'] . '<b>Mobile-Phones/Apple/Iphone5</b>';
+		$_['lang_text_top_level']                     = 'Example: if you have a product that is normally linked as http://example.com/<b>mobile-phones/apple/iphone5</b>, with this setting enabled your link will now show as http://example.com/<b>iphone5</b>';
+		$_['lang_text_ucfirst']                       = 'Example: http://example.com/<b>mobile-phones/apple/iphone5</b> will become: http://example.com/<b>Mobile-Phones/Apple/Iphone5</b>';
 		$_['lang_text_description']                   = 'Dais ships with 3 possible caching mechanisms for caching your queries.  Code caching is handled automatically by the Autoloader method to use either APC, Opcache for PHP 5.5 and above, or none if you have neither installed. However you\'ll need to select a caching class for your queries.  Memcache is highly recommended if you have a large number of products or high traffic or both.';
 		$_['lang_text_available']                     = 'Only your available choices will show in the menu below.  If you wish to use a different method, please install it on your server and it will become available here.';
 		$_['lang_text_style_shop']                    = 'Shop';

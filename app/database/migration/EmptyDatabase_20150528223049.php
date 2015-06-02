@@ -24,23 +24,11 @@
 namespace Database\Migration;
 use Egress\Library\Migration\MigrationBase;
 
-class CreateCategoryFilter_20150524063245 extends MigrationBase {
-
-    private $prefix = 'dais_';
+class EmptyDatabase_20150528223049 extends MigrationBase {
 
     public function up() {
-        $table = $this->create_table("{$this->prefix}category_filter", array(
-            'id'      => false, 
-            'options' => 'Engine=InnoDB'
-        ));
-
-        $table->column('category_id', 'integer', array('unsigned' => true, 'primary_key' => true));
-        $table->column('filter_id', 'integer', array('unsigned' => true, 'primary_key' => true));
-        
-        $table->finish();
+        // Empty migration to remove all tables and revert to empty database
     }
 
-    public function down() {
-        $this->drop_table("{$this->prefix}category_filter");
-    }
+    public function down() { }
 }
