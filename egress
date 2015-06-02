@@ -119,7 +119,7 @@ define('EGRESS_TS_SCHEMA_TBL_NAME', PREFIX . 'schema_migrations');
 */
 
 spl_autoload_register(function ($class) {
-    if ($file = dirname(EGRESS_BASE) . SEP . str_replace('\\', SEP, strtolower($class)) . '.php'):
+    if ($file = dirname(EGRESS_BASE) . SEP . str_replace('\\', SEP, $class) . '.php'):
         require $file;
     endif;
 });
