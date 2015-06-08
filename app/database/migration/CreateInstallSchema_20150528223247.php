@@ -256,7 +256,6 @@ class CreateInstallSchema_20150528223247 extends MigrationBase {
         $table->column('description', 'text');
         $table->column('meta_description', 'string');
         $table->column('meta_keyword', 'string');
-        $table->column('tag', 'text');
         
         $table->finish();
 
@@ -2113,22 +2112,23 @@ class CreateInstallSchema_20150528223247 extends MigrationBase {
         $table->finish();
 
         // add indexes
-        $this->add_index("{$this->prefix}address", "customer_id", array('name' => 'customer_id'));
-        $this->add_index("{$this->prefix}blog_category_description", "name", array('name' => 'name'));
-        $this->add_index("{$this->prefix}blog_comment", "post_id", array('name' => 'post_id'));
-        $this->add_index("{$this->prefix}blog_post_description", "name", array('name' => 'name'));
-        $this->add_index("{$this->prefix}blog_post_description", "description", array('name' => 'description', 'fulltext' => true));
-        $this->add_index("{$this->prefix}blog_post_description", "tag", array('name' => 'tag', 'fulltext' => true));
-        $this->add_index("{$this->prefix}category_description", "name", array('name' => 'name'));
-        $this->add_index("{$this->prefix}customer_ban_ip", "ip", array('name' => 'ip'));
-        $this->add_index("{$this->prefix}customer_inbox", "customer_id", array('name' => 'customer_id'));
-        $this->add_index("{$this->prefix}customer_ip", "ip", array('name' => 'ip'));
-        $this->add_index("{$this->prefix}language", "name", array('name' => 'name'));
-        $this->add_index("{$this->prefix}order_total", "order_id", array('name' => 'order_id'));
-        $this->add_index("{$this->prefix}product_description", "name", array('name' => 'name'));
-        $this->add_index("{$this->prefix}product_special", "product_id", array('name' => 'product_id'));
-        $this->add_index("{$this->prefix}review", "product_id", array('name' => 'product_id'));
-        $this->add_index("{$this->prefix}tag", "tag", array('name' => 'tag', 'fulltext' => true));
+        $this->add_index("{$this->prefix}address", "customer_id", array('name' => 'customer_id_idx'));
+        $this->add_index("{$this->prefix}blog_category_description", "name", array('name' => 'name_idx'));
+        $this->add_index("{$this->prefix}blog_comment", "post_id", array('name' => 'post_id_idx'));
+        $this->add_index("{$this->prefix}blog_post_description", "name", array('name' => 'name_idx'));
+        $this->add_index("{$this->prefix}blog_post_description", "description", array('name' => 'description_idx', 'fulltext' => true));
+        $this->add_index("{$this->prefix}category_description", "name", array('name' => 'name_idx'));
+        $this->add_index("{$this->prefix}category_description", "description", array('name' => 'description_idx', 'fulltext' => true));
+        $this->add_index("{$this->prefix}customer_ban_ip", "ip", array('name' => 'ip_idx'));
+        $this->add_index("{$this->prefix}customer_inbox", "customer_id", array('name' => 'customer_id_idx'));
+        $this->add_index("{$this->prefix}customer_ip", "ip", array('name' => 'ip_idx'));
+        $this->add_index("{$this->prefix}language", "name", array('name' => 'name_idx'));
+        $this->add_index("{$this->prefix}order_total", "order_id", array('name' => 'order_id_idx'));
+        $this->add_index("{$this->prefix}product_description", "name", array('name' => 'name_idx'));
+        $this->add_index("{$this->prefix}product_description", "description", array('name' => 'description_idx', 'fulltext' => true));
+        $this->add_index("{$this->prefix}product_special", "product_id", array('name' => 'product_id_idx'));
+        $this->add_index("{$this->prefix}review", "product_id", array('name' => 'product_id_idx'));
+        $this->add_index("{$this->prefix}tag", "tag", array('name' => 'tag_idx', 'fulltext' => true));
     }
 
     public function down() {

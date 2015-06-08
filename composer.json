@@ -17,7 +17,6 @@
     }],
     "require": {
         "php": ">=5.5.0",
-        "foil/foil": "0.5.*",
         "raven/raven": "0.11.0",
         "filp/whoops": "~1.0",
         "swiftmailer/swiftmailer": "@stable"

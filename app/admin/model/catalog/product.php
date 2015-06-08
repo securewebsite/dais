@@ -91,6 +91,9 @@ class Product extends Model {
 					");
 				endforeach;
 			endif;
+
+			$this->search->add($language_id, 'product', $product_id, $value['name']);
+			$this->search->add($language_id, 'product', $product_id, $value['description']);
         }
         
         if (isset($data['product_store'])) {
@@ -446,6 +449,11 @@ class Product extends Model {
 					");
 				endforeach;
 			endif;
+
+			$this->search->delete('product', $product_id);
+
+			$this->search->add($language_id, 'product', $product_id, $value['name']);
+			$this->search->add($language_id, 'product', $product_id, $value['description']);
         }
         
         $this->db->query("
@@ -883,6 +891,8 @@ class Product extends Model {
         	DELETE FROM {$this->db->prefix}tag 
 			WHERE section  = 'product' 
 			AND element_id = '" . (int)$product_id . "'");
+
+        $this->search->delete('product', $product_id);
         
         $this->cache->delete('product');
         $this->cache->delete('products.total');

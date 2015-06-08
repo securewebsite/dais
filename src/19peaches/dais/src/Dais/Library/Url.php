@@ -164,20 +164,14 @@ class Url extends LibraryService {
         // Rewrite our Slug Urls
         foreach ($route as $key => $value):
             foreach ($custom as $k => $v):
-                if ($route['route'] === $v):
+                if ($value === $v):
                     unset($route[$v]);
                 endif;
             endforeach;
-
+            
             switch ($route['route']):
-                case 'search/tag' && $key === 'tag':
-                    $url .= '/' . $route['route'] . '/' . urlencode(trim($route['tag']));
-                    unset($route[$key]);
-                    unset($route['tag']);
-                    break;
-
                 case 'search/search' && $key === 'search':
-                    $url .= '/search/' . urlencode(trim($route['search']));
+                    $url = '/search/' . urlencode(trim($route['search']));
                     unset($route[$key]);
                     unset($route['search']);
                     break;

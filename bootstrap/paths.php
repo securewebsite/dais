@@ -208,6 +208,7 @@ $custom_routes = array(
 	'register' => 'account/register',
 	'blog'     => 'content/home',
 	'shop'     => 'shop/home',
+	'search'   => 'search/search',
 	'queue'    => 'common/queue',
 	'calendar' => 'content/calendar'
 );

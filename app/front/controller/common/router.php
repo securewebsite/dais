@@ -30,12 +30,8 @@ class Router extends Controller {
             if (!isset($this->request->get['route'])):
                 if ($parts[0] == 'search'):
                     // we do have a search 
-                    if (count($parts) > 2):
-                        // this is a tag
-                        $this->request->get['route'] = 'search/tag';
-                        $this->request->post['tag']  = $parts[2];
-                    else:
-                        $this->request->get['route']   = 'search/search';
+                    $this->request->get['route']   = 'search/search';
+                    if (end($parts) !== 'search'):
                         $this->request->post['search'] = end($parts);
                     endif;
                 endif;

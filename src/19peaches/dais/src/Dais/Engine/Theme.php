@@ -106,11 +106,8 @@ final class Theme {
     }
     
     public function view($template, $data = array()) {
-        // Use Foil template engine
-        $foil = self::$app['view'];
-        $foil->addFolder($this->path . 'view' . SEP);
-
-        return $foil->render($template, $data);
+        $view = new View(self::$app['path.theme'] . self::$app['theme.name'] . SEP);
+        return $view->render($template, $data);
     }
     
     public function loadjs($file, $data, $path = '') {

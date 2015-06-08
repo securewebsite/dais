@@ -1557,7 +1557,7 @@ $(document).ready(function(){
 	}
 
 	trackingLink();
-	searchLink();
+	//searchLink();
 
 	$('#currency a').on('click',function(e){
 		e.preventDefault();
@@ -1567,10 +1567,11 @@ $(document).ready(function(){
 
 	$('form[id^="search-"]').submit(function(e){
 		e.preventDefault();
-		url=$('base').attr('href')+'catalog/search';
-		$.each($(this).serializeArray(),function(i,field){
+		url = $('base').attr('href') + 'search';
+		$.each($(this).serializeArray(), function(i, field){
 			if($.trim(field.value)!=0){
-				url+='&'+field.name+'='+encodeURIComponent(field.value);
+				var string = field.value.replace(/\s+/g, '+');
+				url += '/' + encodeURI(string);
 			}
 		});
 		location=url;

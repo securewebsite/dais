@@ -15,17 +15,38 @@
 */
 
 namespace Dais\Engine;
-use Foil\Template\Template;
 
-class View extends Template {
-	
-	protected function collect($path) {
-		ob_start();
-		extract($this->data());
-		require $path;
-		$this->last_buffer = $this->buffer;
-		$this->buffer = trim(ob_get_clean());
-
-		return $this->buffer;
-	}
+class View {
+    private $directory;
+    private $file;
+    private $data;
+    
+    public function __construct($directory) {
+        $this->setDirectory($directory);
+    }
+    
+    public function render($template, $data = array()) {
+        $this->data = $data;
+        $this->file = $this->directory . 'view' . SEP . $template . '.tpl';
+        
+        return $this->output();
+    }
+    
+    public function setDirectory($directory) {
+        $this->directory = $directory;
+    }
+    
+    private function output() {
+        if (is_readable($this->file)):
+            extract($this->data);
+            ob_start();
+            require $this->file;
+            $output = ob_get_contents();
+            ob_end_clean();
+            
+            return $output;
+        else:
+            trigger_error('Error: Could not load template ' . $this->file . '!');
+        endif;
+    }
 }

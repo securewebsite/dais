@@ -31,7 +31,8 @@ class Header extends Controller {
         $data['lang']      = $this->language->get('lang_code');
         $data['direction'] = $this->language->get('lang_direction');
         
-        $this->css->register('dais.min')->register('editor.min', 'dais.min');
+        $this->css->register('dais.min')
+            ->register('editor.min', 'dais.min');
         
         $data = $this->theme->language('common/header', $data);
         

@@ -57,6 +57,8 @@ class Manufacturer extends Model {
 					slug = '" . $this->db->escape($data['slug']) . "'
 			");
         }
+
+        $this->search->add($this->config->get('config_language_id'), 'manufacturer', $manufacturer_id, $data['name']);
         
         $this->cache->delete('manufacturer');
         
@@ -109,6 +111,12 @@ class Manufacturer extends Model {
 					slug = '" . $this->db->escape($data['slug']) . "'
 			");
         }
+
+        // delete
+        $this->search->delete('manufacturer', $manufacturer_id);
+
+        // insert
+        $this->search->add($this->config->get('config_language_id'), 'manufacturer', $manufacturer_id, $data['name']);
         
         $this->cache->delete('manufacturer');
         
@@ -128,6 +136,8 @@ class Manufacturer extends Model {
             DELETE FROM {$this->db->prefix}route 
             WHERE query = 'manufacturer_id:" . (int)$manufacturer_id . "'");
         
+        $this->search->delete('manufacturer', $manufacturer_id);
+
         $this->cache->delete('manufacturer');
         
         $this->theme->trigger('admin_delete_manufacturer', array('manufacturer_id' => $manufacturer_id));

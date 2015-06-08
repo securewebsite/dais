@@ -44,12 +44,12 @@ class Post extends Model {
             $this->db->query("
 				INSERT INTO {$this->db->prefix}blog_post_description 
 				SET 
-					post_id = '" . (int)$post_id . "', 
-					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($value['name']) . "', 
-					meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', 
-					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-					description = '" . $this->db->escape($value['description']) . "'
+                    post_id          = '" . (int)$post_id . "', 
+                    language_id      = '" . (int)$language_id . "', 
+                    name             = '" . $this->db->escape($value['name']) . "', 
+                    meta_keyword     = '" . $this->db->escape($value['meta_keyword']) . "', 
+                    meta_description = '" . $this->db->escape($value['meta_description']) . "', 
+                    description      = '" . $this->db->escape($value['description']) . "'
 			");
 
             // process tags
@@ -67,6 +67,9 @@ class Post extends Model {
                     ");
                 endforeach;
             endif;
+
+            $this->search->add($language_id, 'post', $post_id, $value['name']);
+            $this->search->add($language_id, 'post', $post_id, $value['description']);
         }
         
         if (isset($data['post_store'])) {
@@ -221,6 +224,11 @@ class Post extends Model {
                     ");
                 endforeach;
             endif;
+
+            $this->search->delete('post', $post_id);
+
+            $this->search->add($language_id, 'post', $post_id, $value['name']);
+            $this->search->add($language_id, 'post', $post_id, $value['description']);
         }
         
         $this->db->query("
@@ -389,6 +397,8 @@ class Post extends Model {
             DELETE FROM {$this->db->prefix}tag 
             WHERE section  = 'post' 
             AND element_id = '" . (int)$post_id . "'");
+        
+        $this->search->delete('post', $post_id);
         
         $this->cache->delete('post');
         $this->cache->delete('posts');

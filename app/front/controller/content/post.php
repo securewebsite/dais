@@ -217,7 +217,7 @@ class Post extends Controller {
                 foreach ($tags as $tag):
                     $data['tags'][] = array(
                         'name' => trim($tag), 
-                        'href' => $this->url->link('search/tag', 'tag=' . trim($tag))
+                        'href' => $this->url->link('search/search', 'search=' . trim($tag))
                     );
                 endforeach;
 

@@ -1,4 +1,7 @@
-<?php foreach ($scripts as $script): ?>
-<?php include($script); ?>
+<?php foreach($scripts as $script):
+		if (is_readable($script)):
+			require $script;
 
-<?php endforeach; ?>
+		endif;
+	endforeach; 
+?>

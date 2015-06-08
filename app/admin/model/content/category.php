@@ -44,12 +44,12 @@ class Category extends Model {
             $this->db->query("
 				INSERT INTO {$this->db->prefix}blog_category_description 
 				SET 
-					category_id = '" . (int)$category_id . "', 
-					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($value['name']) . "', 
-					meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', 
-					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-					description = '" . $this->db->escape($value['description']) . "'
+                    category_id      = '" . (int)$category_id . "', 
+                    language_id      = '" . (int)$language_id . "', 
+                    name             = '" . $this->db->escape($value['name']) . "', 
+                    meta_keyword     = '" . $this->db->escape($value['meta_keyword']) . "', 
+                    meta_description = '" . $this->db->escape($value['meta_description']) . "', 
+                    description      = '" . $this->db->escape($value['description']) . "'
 			");
 
             // process tags
@@ -67,6 +67,9 @@ class Category extends Model {
                     ");
                 endforeach;
             endif;
+
+            $this->search->add($language_id, 'blog_category', $category_id, $value['name']);
+            $this->search->add($language_id, 'blog_category', $category_id, $value['description']);
         }
         
         if (isset($data['category_store'])) {
@@ -137,12 +140,12 @@ class Category extends Model {
             $this->db->query("
 				INSERT INTO {$this->db->prefix}blog_category_description 
 				SET 
-					category_id = '" . (int)$category_id . "', 
-					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($value['name']) . "', 
-					meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', 
-					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-					description = '" . $this->db->escape($value['description']) . "'
+                    category_id      = '" . (int)$category_id . "', 
+                    language_id      = '" . (int)$language_id . "', 
+                    name             = '" . $this->db->escape($value['name']) . "', 
+                    meta_keyword     = '" . $this->db->escape($value['meta_keyword']) . "', 
+                    meta_description = '" . $this->db->escape($value['meta_description']) . "', 
+                    description      = '" . $this->db->escape($value['description']) . "'
 			");
 
             $this->db->query("
@@ -167,6 +170,11 @@ class Category extends Model {
                     ");
                 endforeach;
             endif;
+
+            $this->search->delete('blog_category', $category_id);
+
+            $this->search->add($language_id, 'blog_category', $category_id, $value['name']);
+            $this->search->add($language_id, 'blog_category', $category_id, $value['description']);
         }
         
         $this->db->query("
@@ -261,6 +269,8 @@ class Category extends Model {
         foreach ($query->rows as $result) {
             $this->deleteCategory($result['category_id']);
         }
+        
+        $this->search->delete('blog_category', $category_id);
         
         $this->cache->delete('post.category');
         $this->cache->delete('post.categories');
