@@ -50,6 +50,8 @@ class Search extends Controller {
         	$result = $this->search->execute($search);
         endif;
 
+        $data['pagination'] = null;
+
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
         $data = $this->theme->render_controllers($data);

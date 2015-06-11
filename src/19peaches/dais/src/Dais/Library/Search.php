@@ -29,7 +29,7 @@ use Dais\Service\LibraryService;
 
 class Search extends LibraryService {
 
-	private $results;
+	private static $results;
 
 	public function __construct(Container $app) {
 		parent::__construct($app);
@@ -68,13 +68,11 @@ class Search extends LibraryService {
 		 * to ensure we have visibility and status.
 		 */
 
-		$verified = array();
-
 		foreach($results as $type => $ids):
-
+			self::$type($ids);
 		endforeach;
 
-		var_dump($results);exit;
+		var_dump(self::$results);exit;
 	}
 
 	public function add($language, $type, $id, $text = false) {
@@ -107,28 +105,111 @@ class Search extends LibraryService {
 		");
 	}
 
-	private function category($ids) {
+	private static function category($ids) {
 		// status only
+		$db = parent::$app['db'];
+
+		foreach($ids as $id):
+			$query = $db->query("
+				SELECT * 
+				FROM {$db->prefix}category 
+				WHERE category_id = '" . (int)$id . "' 
+				AND status        = '1'
+			");
+
+			self::$results['categories'][] = $query->row;
+		endforeach;
 	}
 
-	private function manufacturer($ids) {
-		// no status no visibility
+	private static function manufacturer($ids) {
+		$db = parent::$app['db'];
+
+		foreach($ids as $id):
+			$query = $db->query("
+				SELECT * 
+				FROM {$db->prefix}manufacturer 
+				WHERE manufacturer_id = '" . (int)$id . "'
+			");
+
+			self::$results['manufacturers'][] = $query->row;
+		endforeach;
 	}
 
-	private function product($ids) {
-		// visibility status
+	private static function product($ids) {
+		$db         = parent::$app['db'];
+		$visibility = parent::$app['customer']->customer_group_id;
+
+		foreach($ids as $id):
+			$query = $db->query("
+				SELECT * 
+				FROM {$db->prefix}product 
+				WHERE product_id = '" . (int)$id . "' 
+				AND status       = '1' 
+				AND visibility   = '" . (int)$visibility . "'
+			");
+
+			self::$results['products'][] = $query->row;
+		endforeach;
 	}
 
-	private function page($ids) {
-		// visibility status
+	private static function page($ids) {
+		$db         = parent::$app['db'];
+		$visibility = parent::$app['customer']->customer_group_id;
+
+		foreach($ids as $id):
+			$query = $db->query("
+				SELECT * 
+				FROM {$db->prefix}page 
+				WHERE page_id  = '" . (int)$id . "' 
+				AND status     = '1' 
+				AND visibility = '" . (int)$visibility . "'
+			");
+
+			self::$results['pages'][] = $query->row;
+		endforeach;
 	}
 
-	private function blog_category($ids) {
-		// status only
+	private static function blog_category($ids) {
+		$db = parent::$app['db'];
+
+		foreach($ids as $id):
+			$query = $db->query("
+				SELECT c.category_id, cd.name, cd.description  
+				FROM {$db->prefix}blog_category c 
+				LEFT JOIN {$db->prefix}blog_category_description cd 
+				ON (c.category_id = cd.category_id) 
+				WHERE c.category_id = '" . (int)$id . "' 
+				AND c.status        = '1'
+			");
+
+			if ($query->num_rows):
+				$query->row['description'] = html_entity_decode($query->row['description'], ENT_QUOTES, 'UTF-8');
+			endif;
+
+			self::$results['blog_categories'][] = $query->row;
+		endforeach;
 	}
 
-	private function post($ids) {
-		// visibility status
+	private static function post($ids) {
+		$db         = parent::$app['db'];
+		$visibility = parent::$app['customer']->customer_group_id;
+
+		foreach($ids as $id):
+			$query = $db->query("
+				SELECT p.post_id, pd.name, pd.description 
+				FROM {$db->prefix}blog_post p 
+				LEFT JOIN {$db->prefix}blog_post_description pd 
+				ON (p.post_id = pd.post_id) 
+				WHERE p.post_id   = '" . (int)$id . "' 
+				AND p.status      = '1' 
+				AND p.visibility >= '" . (int)$visibility . "'
+			");
+
+			if ($query->num_rows):
+				$query->row['description'] = html_entity_decode($query->row['description'], ENT_QUOTES, 'UTF-8');
+			endif;
+
+			self::$results['posts'][] = $query->row;
+		endforeach;
 	}
-	
 }
