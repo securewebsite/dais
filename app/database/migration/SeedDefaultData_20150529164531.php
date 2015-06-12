@@ -461,7 +461,6 @@ class SeedDefaultData_20150529164531 extends MigrationBase {
         (531, 'plugin', 'git'),
         (533, 'total', 'handling'),
         (540, 'widget', 'blog_category'),
-        (541, 'widget', 'blog_search'),
         (542, 'widget', 'blog_featured'),
         (543, 'widget', 'blog_hot_topics'),
         (544, 'widget', 'blog_latest'),
@@ -472,7 +471,6 @@ class SeedDefaultData_20150529164531 extends MigrationBase {
         (549, 'payment', 'free_checkout'),
         (550, 'total', 'sub_total'),
         (552, 'feed', 'google_site_map'),
-        (553, 'feed', 'google_site_map'),
         (554, 'feed', 'google_base'),
         (556, 'plugin', 'example')";
 

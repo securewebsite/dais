@@ -1,38 +1,5 @@
 <?= $header; ?>
 <?= $post_header; ?>
-<style>
-#search-results {
-	font-family: arial,sans-serif;
-}
-#search-results div {
-	margin-bottom: 16px !important;
-}
-#search-results h3 {
-	font-size: 18px;
-	font-weight: normal;
-}
-#search-results h3 a {
-	color: #1a0dab;
-}
-#search-results h3 a:visited {
-	color:#609;
-}
-#search-results span {
-	font-size: 14px;
-}
-#search-results .search-url {
-	color: #006621;
-}
-#search-results .result-type {
-	color: #777;
-}
-#search-results p {
-	line-height: 1.4;
-	word-wrap: break-word;
-	color: #545454;
-	font-size: small;
-}
-</style>
 <div class="row">
 	<?= $column_left; ?>
 	<div class="col-sm-<?php $span = trim($column_left) ? 9 : 12; $span = trim($column_right) ? $span - 3 : $span; echo $span; ?>">
@@ -52,7 +19,7 @@
 			<?php foreach($results as $result): ?>
 			<div class="col-sm-12">
 			<h3><a href="<?= $result['url']; ?>"><?= $result['title']; ?></a></h3>
-			<span class="search-url"><?= $result['url']; ?></span> <span class="result-type"><span class="fa fa-caret-right"></span> <?= $result['type']; ?></span>
+			<span class="search-url"><?= $result['url']; ?></span>&nbsp; <span class="fa fa-caret-right"></span>&nbsp; <span><?= $result['type']; ?></span>
 			<p><?= $result['text']; ?></p>
 			</div>
 			<?php endforeach; ?>		

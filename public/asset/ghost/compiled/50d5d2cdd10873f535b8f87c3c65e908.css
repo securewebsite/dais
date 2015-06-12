@@ -7233,6 +7233,32 @@ select:focus:valid:focus,
 	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(159, 187, 88, .6);
 	   -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(159, 187, 88, .6);
 			box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(159, 187, 88, .6);
+}
+#search-results {
+    font-family: arial,sans-serif;
+}
+#search-results div {
+    margin-bottom: 16px !important;
+}
+#search-results h3 {
+    margin-bottom: 4px;
+    font-weight: normal;
+}
+#search-results h3 a:visited {
+    color:#609;
+}
+#search-results span {
+    font-size: 14px;
+    color: #777;
+}
+#search-results .search-url {
+    color: #006621;
+}
+#search-results p {
+    line-height: 1.4;
+    word-wrap: break-word;
+    color: #545454;
+    margin-top: 4px;
 }.checkbox,
 .radio,
 .input-group-addon.has-checkbox,

@@ -543,16 +543,6 @@ class Application {
         $this->data['keyword'] = function ($data) {
             return new Keyword($data);
         };
-
-        // template class
-        $this->data['view'] = function ($data) {
-            $engine = \Foil\engine([
-                'ext'            => 'tpl',
-                'template_class' => 'Dais\\Engine\\View'
-            ]);
-
-            return $engine;
-        };
     }
     
     protected function installClasses() {

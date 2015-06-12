@@ -7,7 +7,7 @@
 		<?= $content_top; ?>
 		<div class="page-header"><h1><?= $lang_heading_title; ?></h1></div>
 		<?php if ($categories) { ?>
-			<p><?= $lang_text_index; ?>
+			<p><?= $lang_text_index; ?> &nbsp; 
 			<?php foreach ($categories as $category) { ?>
 				<a class="btn btn-primary btn-xs" href="catalog/manufacturer#<?= $category['name']; ?>"><strong><?= $category['name']; ?></strong></a>
 			<?php } ?></p>

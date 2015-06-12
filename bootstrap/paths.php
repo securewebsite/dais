@@ -201,16 +201,20 @@ require __DIR__ . SEP . 'controllers.php';
 */
 
 $custom_routes = array(
-	'contact'  => 'content/contact',
-	'sitemap'  => 'content/sitemap',
-	'login'    => 'account/login',
-	'logout'   => 'account/logout',
-	'register' => 'account/register',
-	'blog'     => 'content/home',
-	'shop'     => 'shop/home',
-	'search'   => 'search/search',
-	'queue'    => 'common/queue',
-	'calendar' => 'content/calendar'
+	'contact'   => 'content/contact',
+	'site-map'  => 'content/site_map',
+	'login'     => 'account/login',
+	'logout'    => 'account/logout',
+	'gift-card' => 'account/gift_card',
+	'register'  => 'account/register',
+	'returns'   => 'account/returns/insert',
+	'blog'      => 'content/home',
+	'shop'      => 'shop/home',
+	'search'    => 'search/search',
+	'queue'     => 'common/queue',
+	'brands'    => 'catalog/manufacturer',
+	'specials'  => 'catalog/special',
+	'calendar'  => 'content/calendar'
 );
 
 $config[FRONT_FASCADE]['custom.routes'] = $custom_routes;

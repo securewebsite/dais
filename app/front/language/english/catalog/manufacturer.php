@@ -23,7 +23,7 @@ class Manufacturer {
 
 		// Text
 		$_['lang_text_brand']        = 'Brand';
-		$_['lang_text_index']        = 'Brand Index:';
+		$_['lang_text_index']        = 'Brand Index <span class="fa fa-caret-right"></span>';
 		$_['lang_text_error']        = 'Brand not found.';
 		$_['lang_text_empty']        = 'There are no products to list.';
 		$_['lang_text_quantity']     = 'Qty:';
