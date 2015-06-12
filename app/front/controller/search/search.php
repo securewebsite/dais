@@ -129,9 +129,20 @@ class Search extends Controller {
 
         endif;
 
+        $result_total = count($data['results']);
+
         //var_dump($data['results']);exit;
 
-        $data['pagination'] = null;
+        $data['pagination'] = $this->theme->paginate(
+            $result_total, 
+            $page, 
+            $this->config->get('config_catalog_limit'), 
+            $this->language->get('lang_text_pagination'), 
+            $this->url->link('search/search', 'page={page}')
+        );
+        
+
+        $this->theme->loadjs('javascript/search/search', $data);
 
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
@@ -139,4 +150,8 @@ class Search extends Controller {
         
         $this->response->setOutput($this->theme->view('search/search', $data));
 	}
+
+    public function fetch() {
+
+    }
 }

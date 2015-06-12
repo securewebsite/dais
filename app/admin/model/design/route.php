@@ -18,7 +18,23 @@ namespace Admin\Model\Design;
 use Dais\Engine\Model;
 
 class Route extends Model {
-	public function getRoutes($data = array()) {
+    public function editRoutes($data) {
+        $this->db->query("
+            DELETE FROM {$this->db->prefix}custom_route
+        ");
+
+        if (!empty($data['custom_route'])):
+            foreach($data['custom_route'] as $route):
+                $this->db->query("
+                    INSERT INTO {$this->db->prefix}custom_route 
+                    SET route = '" . $this->db->escape($route['route']) . "', 
+                    slug      = '" . $this->db->escape($route['slug']) . "'
+                ");
+            endforeach;
+        endif;
+    }
+
+    public function getCustomRoutes($data = array()) {
         $sql = "
             SELECT * 
             FROM {$this->db->prefix}custom_route ORDER BY route ASC";

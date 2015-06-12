@@ -24,7 +24,7 @@ class Pagination extends LibraryService {
     public $limit         = 20;
     public $num_links     = 10;
     public $url           = '';
-    public $text          = 'Showing {start} to {end} of {total} ({pages} Pages)';
+    public $text          = 'Showing {start} to {end} of {total} ({pages} {plural})';
     public $text_first    = '|&lt;';
     public $text_last     = '&gt;|';
     public $text_next     = '&gt;';
@@ -106,14 +106,16 @@ class Pagination extends LibraryService {
             '{start}',
             '{end}',
             '{total}',
-            '{pages}'
+            '{pages}',
+            '{plural}'
         );
         
         $replace = array(
             ($total) ? (($page - 1) * $limit) + 1 : 0,
-            ((($page - 1) * $limit) > ($total - $limit)) ? $total : ((($page - 1) * $limit) + $limit) ,
+            ((($page - 1) * $limit) > ($total - $limit)) ? $total : ((($page - 1) * $limit) + $limit),
             $total,
-            $num_pages
+            $num_pages,
+            ($num_pages === (float)1) ? 'Page' : 'Pages'
         );
         
         return ($output ? '<div class="' . $this->style_links . '">' . $output . '</div>' : '') . '<div class="' . $this->style_results . '">' . str_replace($find, $replace, $this->text) . '</div>';

@@ -23,22 +23,17 @@ class Route {
 		
 		// Text
 		$_['lang_text_success']     = 'Success: You have modified routes.';
-		$_['lang_text_default']     = 'Default';
 		
 		// Column
 		$_['lang_column_route']     = 'Route';
 		$_['lang_column_slug']      = 'Slug';
-		$_['lang_column_action']    = 'Action';
 		
 		// Entry
 		$_['lang_entry_slug']       = 'Slug:';
-		$_['lang_entry_store']      = 'Store:';
 		$_['lang_entry_route']      = 'Route:';
 		
 		// Error
 		$_['lang_error_permission'] = 'Warning: You do not have permission to modify custom routes.';
-		$_['lang_error_slug']       = 'Slug must be between 3 and 64 characters.';
-		$_['lang_error_layout']     = 'Warning: This slug cannot be deleted as it is currently assigned to %s pages.';
 		
 		return $_;
 	}

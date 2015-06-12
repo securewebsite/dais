@@ -28,12 +28,10 @@ class Search {
 		$_['lang_blog_category']     = 'Blog Category';
 		$_['lang_page']              = 'Page';
 		$_['lang_manufacturer']      = 'Manufacturer';
+		$_['lang_no_results']        = 'Sorry, no results for this search.';
 		
 		// Entry
 		$_['lang_entry_search']      = 'Search';
-		$_['lang_entry_description'] = 'Search in product descriptions';
-
-		
 
 		return $_;
 	}

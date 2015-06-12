@@ -41,7 +41,7 @@ class English {
 		$_['lang_text_all_zones']          = 'All Zones';
 		$_['lang_text_default']            = ' <b>(Default)</b>';
 		$_['lang_text_close']              = 'Close';
-		$_['lang_text_pagination']         = 'Showing {start} to {end} of {total} ({pages} Pages)';
+		$_['lang_text_pagination']         = 'Showing {start} to {end} of {total} ({pages} {plural})';
 		$_['lang_text_no_results']         = 'No results.';
 		$_['lang_text_separator']          = ' &gt; ';
 		$_['lang_text_edit']               = 'Edit';

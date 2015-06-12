@@ -33,16 +33,30 @@ class Route extends Controller {
         $this->getList();
 	}
 
-	public function insert() {
-		
-	}
-
-	public function update() {
-		
-	}
-
-	public function delete() {
-		
+	public function edit() {
+		$this->language->load('design/route');
+        
+        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        
+        $this->theme->model('design/route');
+        
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
+            $this->model_design_route->editRoutes($this->request->post);
+            
+            $this->session->data['success'] = $this->language->get('lang_text_success');
+            
+            $url = '';
+            
+            if (isset($this->request->get['page'])):
+                $url .= '&page=' . $this->request->get['page'];
+            endif;
+            
+            $this->response->redirect($this->url->link('design/route', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+        endif;
+        
+        $this->theme->listen(__CLASS__, __FUNCTION__);
+        
+        $this->getForm();
 	}
 
 	protected function getList() {
@@ -62,8 +76,7 @@ class Route extends Controller {
         
         $this->breadcrumb->add('lang_heading_title', 'design/route', $url);
         
-        $data['insert'] = $this->url->link('design/route/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('design/route/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['edit'] = $this->url->link('design/route/edit', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         $data['routes'] = array();
         
@@ -74,24 +87,15 @@ class Route extends Controller {
         
         $route_total = $this->model_design_route->getTotalRoutes();
         
-        $results = $this->model_design_route->getRoutes($filter);
+        $results = $this->model_design_route->getCustomRoutes($filter);
         
-        foreach ($results as $result) {
-            $action = array();
-            
-            $action[] = array(
-            	'text' => $this->language->get('lang_text_edit'), 
-            	'href' => $this->url->link('design/route/update', 'token=' . $this->session->data['token'] . '&route_id=' . $result['route_id'] . $url, 'SSL')
-            );
-            
+        foreach ($results as $result):
             $data['routes'][] = array(
 				'route_id' => $result['route_id'], 
 				'route'    => $result['route'],
-				'slug'     => $result['slug'], 
-				'selected' => isset($this->request->post['selected']) && in_array($result['route_id'], $this->request->post['selected']), 
-				'action'   => $action
+				'slug'     => $result['slug']
             );
-        }
+        endforeach;
         
         if (isset($this->error['warning'])):
             $data['error_warning'] = $this->error['warning'];
@@ -144,28 +148,13 @@ class Route extends Controller {
         
         $this->breadcrumb->add('lang_heading_title', 'design/route', $url);
         
-        if (!isset($this->request->get['route_id'])):
-            $data['action'] = $this->url->link('design/route/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        else:
-            $data['action'] = $this->url->link('design/route/update', 'token=' . $this->session->data['token'] . '&route_id=' . $this->request->get['route_id'] . $url, 'SSL');
-        endif;
-        
+        $data['action'] = $this->url->link('design/route/edit', 'token=' . $this->session->data['token'] . $url, 'SSL');
         $data['cancel'] = $this->url->link('design/route', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        
-        if (isset($this->request->get['route_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')):
-            $route_info = $this->model_design_route->getRoute($this->request->get['route_id']);
-        endif;
-        
-        $this->theme->model('setting/store');
-        
-        $data['stores'] = $this->model_setting_store->getStores();
         
         if (isset($this->request->post['custom_route'])):
             $data['custom_routes'] = $this->request->post['custom_route'];
-        elseif (isset($this->request->get['route_id'])):
-            $data['custom_routes'] = $this->model_design_route->getCustomRoutes($this->request->get['route_id']);
         else:
-            $data['custom_routes'] = array();
+            $data['custom_routes'] = $this->model_design_route->getCustomRoutes();
         endif;
         
         $this->theme->loadjs('javascript/design/route_form', $data);
@@ -178,10 +167,12 @@ class Route extends Controller {
 	}
 
 	protected function validateForm() {
-		
-	}
+		if (!$this->user->hasPermission('modify', 'design/route')):
+            $this->error['warning'] = $this->language->get('lang_error_permission');
+        endif;
 
-	protected function validateDelete() {
-		
+        $this->theme->listen(__CLASS__, __FUNCTION__);
+        
+        return !$this->error;
 	}
 }

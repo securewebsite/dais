@@ -162,18 +162,6 @@ class Application {
         endif;
         
         /**
-         * Let's find and remove our custom routes for the front fascade.
-         * Instead of settings those via the loop below, we'll remove them
-         * and give them a specific parameter name so we can accurately
-         * access them in our Routes class.
-         */
-        
-        if (is_array($config[FRONT_FASCADE]['custom.routes'])):
-            $this->data['custom.routes'] = $config[FRONT_FASCADE]['custom.routes'];
-            unset($config[FRONT_FASCADE]['custom.routes']);
-        endif;
-        
-        /**
          * Add remaining config to configuration array
          */
         

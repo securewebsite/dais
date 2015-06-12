@@ -90,6 +90,7 @@ class Menu extends Controller {
             $data['return_action']               = $this->url->link('localization/return_action', 'token=' . $this->session->data['token'], 'SSL');
             $data['return_reason']               = $this->url->link('localization/return_reason', 'token=' . $this->session->data['token'], 'SSL');
             $data['return_status']               = $this->url->link('localization/return_status', 'token=' . $this->session->data['token'], 'SSL');
+            $data['route']                       = $this->url->link('design/route', 'token=' . $this->session->data['token'], 'SSL');
             $data['shipping']                    = $this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
             $data['store']                       = $this->app['http.public'];
             $data['stock_status']                = $this->url->link('localization/stock_status', 'token=' . $this->session->data['token'], 'SSL');

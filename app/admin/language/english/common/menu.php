@@ -99,6 +99,7 @@ class Menu {
 		$_['lang_text_return_action']               = 'Return Actions';
 		$_['lang_text_return_reason']               = 'Return Reasons';
 		$_['lang_text_return_status']               = 'Return Status';
+		$_['lang_text_route']						= 'Custom Routes';
 		$_['lang_text_sale']                        = 'Sales';
 		$_['lang_text_setting']                     = 'Settings';
 		$_['lang_text_share']                       = 'Share Bar';

@@ -130,7 +130,7 @@ class Url extends LibraryService {
     private function rewrite($link) {
         $ucfirst = parent::$app['config_ucfirst'];
         $slugs   = parent::$app['routes'];
-        $custom  = parent::$app['custom_routes'];
+        $custom  = parent::$app['custom.routes'];
         
         $url_info = parse_url(str_replace('&amp;', '&', $link));
         $url      = '';

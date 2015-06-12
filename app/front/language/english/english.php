@@ -35,7 +35,7 @@ class English {
 		$_['lang_text_none']             = ' --- None --- ';
 		$_['lang_text_select']           = ' --- Please Select --- ';
 		$_['lang_text_all_zones']        = 'All Zones';
-		$_['lang_text_pagination']       = 'Showing {start} to {end} of {total} ({pages} Pages)';
+		$_['lang_text_pagination']       = 'Showing {start} to {end} of {total} ({pages} {plural})';
 		$_['lang_text_separator']        = ' &raquo; ';
 		$_['lang_text_read_more']        = 'Read More';
 		$_['lang_text_by']               = 'by';

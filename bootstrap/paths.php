@@ -190,31 +190,3 @@ $config[INSTALL_FASCADE] = $install;
 */
 
 require __DIR__ . SEP . 'controllers.php';
-
-/*
-|--------------------------------------------------------------------------
-|	Custom Routes
-|--------------------------------------------------------------------------
-|
-|	Set up your custom routes that you'd like implemented in the Routes
-|	class. 
-*/
-
-$custom_routes = array(
-	'contact'   => 'content/contact',
-	'site-map'  => 'content/site_map',
-	'login'     => 'account/login',
-	'logout'    => 'account/logout',
-	'gift-card' => 'account/gift_card',
-	'register'  => 'account/register',
-	'returns'   => 'account/returns/insert',
-	'blog'      => 'content/home',
-	'shop'      => 'shop/home',
-	'search'    => 'search/search',
-	'queue'     => 'common/queue',
-	'brands'    => 'catalog/manufacturer',
-	'specials'  => 'catalog/special',
-	'calendar'  => 'content/calendar'
-);
-
-$config[FRONT_FASCADE]['custom.routes'] = $custom_routes;

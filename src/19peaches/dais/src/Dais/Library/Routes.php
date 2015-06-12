@@ -124,16 +124,33 @@ class Routes extends LibraryService {
         endif;
         
         parent::$app['routes']        = $cachefile;
-        parent::$app['custom_routes'] = $this->custom_routes();
+        parent::$app['custom.routes'] = $this->custom_routes();
     }
     
     public function custom_routes() {
-        $routes = array();
+        $db        = parent::$app['db'];
+        $cache     = parent::$app['cache'];
+
+        $key       = 'custom.routes';
+        $cachefile = $cache->get($key);
+
+        if (is_bool($cachefile)):
+            $query = $db->query("
+                SELECT route, slug 
+                FROM {$db->prefix}custom_route
+            ");
+
+            $routes = array();
+
+            foreach($query->rows as $row):
+                $routes[$row['slug']] = $row['route'];
+            endforeach;
+
+            $cachefile = $routes;
+            $cache->set($key, $cachefile);
         
-        if (parent::$app->offsetExists('custom.routes')):
-            $routes = parent::$app['custom.routes'];
         endif;
-        
-        return $routes;
+
+        return $cachefile;
     }
 }

@@ -9,7 +9,12 @@
 		<div class="row">
 			<div class="form-group">
 				<div class="col-sm-8 col-sm-offset-2">
-					<input type="text" name="search-field" value="<?= $search; ?>" class="form-control" placeholder="<?= $lang_entry_search; ?>" id="search-field">
+					<div class="input-group">
+						<input type="text" name="search-field" value="<?= $search; ?>" class="form-control" placeholder="<?= $lang_entry_search; ?>">
+						<span class="input-group-btn">
+							<button class="btn btn-default" style="padding:5px 12px;margin-left:-2px;" id="search-button" type="button"><?= $lang_entry_search; ?></button>
+						</span>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -24,7 +29,7 @@
 			</div>
 			<?php endforeach; ?>		
 		<?php else: ?>
-			<p class="text-center">Sorry, no results for this search.</p>
+			<p class="text-center"><?= $lang_no_results; ?></p>
 		<?php endif; ?>
 		</div>
 

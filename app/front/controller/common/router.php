@@ -145,7 +145,8 @@ class Router extends Controller {
     }
     
     public function customRoutes() {
-        $routes = $this->get('custom_routes');
+        $routes = $this->get('custom.routes');
+        
         $routes = $this->theme->listen(__CLASS__, __FUNCTION__, $routes);
         
         return $routes;

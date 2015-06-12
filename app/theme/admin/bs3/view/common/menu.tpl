@@ -111,6 +111,7 @@
 						<li class="dropdown-submenu"><a class="dropdown-toggle" data-toggle="dropdown"><?= $lang_text_design; ?> <b class="fa fa-caret-right"></b></a>
 							<ul class="dropdown-menu">
 								<li><a href="<?= $layout; ?>"><?= $lang_text_layout; ?></a></li>
+								<li><a href="<?= $route; ?>"><?= $lang_text_route; ?></a></li>
 								<li><a href="<?= $banner; ?>"><?= $lang_text_banner; ?></a></li>
 							</ul>
 						</li>
