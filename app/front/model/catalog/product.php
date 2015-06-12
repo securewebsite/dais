@@ -199,6 +199,7 @@ class Product extends Model {
 							ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special";
                 
                 if (!empty($data['filter_category_id'])):
+                    
                     if (!empty($data['filter_sub_category'])):
                         $sql.= " FROM {$this->db->prefix}category_path cp 
 								  LEFT JOIN {$this->db->prefix}product_to_category p2c 

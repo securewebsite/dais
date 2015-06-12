@@ -19,20 +19,23 @@ use Dais\Engine\Container;
 use Dais\Service\LibraryService;
 
 /**
- * At present there are 5 types of searches.
+ * At present there are 6 types of searches.
  * 1. Products
- * 2. Posts
+ * 2. Categories
  * 3. Pages
- * 4. Customers
- * 5. Events
+ * 4. Blog Posts
+ * 5. Blog Categories
+ * 6. Manufacturers
  */
 
 class Search extends LibraryService {
 
 	private static $results;
+	private static $language_id;
 
 	public function __construct(Container $app) {
 		parent::__construct($app);
+		self::$language_id = $app['config_language_id'];
 	}
 
 	public function execute($query, $start = 0, $limit = 10) {
@@ -48,10 +51,10 @@ class Search extends LibraryService {
 			LIMIT " . (int)$start . ", " . (int)$limit . "
 		");
 
-		$results = array();
+		$terms = array();
 
 		foreach($query->rows as $row):
-			$results[$row['type']][] = (int)$row['object_id'];
+			$terms[$row['type']][] = (int)$row['object_id'];
 		endforeach;
 
 		/**
@@ -68,11 +71,11 @@ class Search extends LibraryService {
 		 * to ensure we have visibility and status.
 		 */
 
-		foreach($results as $type => $ids):
+		foreach($terms as $type => $ids):
 			self::$type($ids);
 		endforeach;
 
-		var_dump(self::$results);exit;
+		return self::$results;
 	}
 
 	public function add($language, $type, $id, $text = false) {
@@ -81,8 +84,7 @@ class Search extends LibraryService {
 		if (!$text):
 			return;
 		else:
-			$text = trim(strip_tags(htmlspecialchars_decode($text)));
-			$text = str_replace(array("\r\n", "\r", "\n", "\t"), "", $text);
+			$text = self::format($text);
 		endif;
 
 		$db->query("
@@ -106,18 +108,23 @@ class Search extends LibraryService {
 	}
 
 	private static function category($ids) {
-		// status only
 		$db = parent::$app['db'];
 
 		foreach($ids as $id):
 			$query = $db->query("
-				SELECT * 
-				FROM {$db->prefix}category 
-				WHERE category_id = '" . (int)$id . "' 
-				AND status        = '1'
+				SELECT c.category_id, c.parent_id, cd.name, cd.description 
+				FROM {$db->prefix}category c 
+				LEFT JOIN {$db->prefix}category_description cd 
+				ON (c.category_id = cd.category_id) 
+				WHERE c.category_id = '" . (int)$id . "' 
+				AND c.status        = '1' 
+				AND cd.language_id  = '" . (int)self::$language_id . "'
 			");
 
-			self::$results['categories'][] = $query->row;
+			if ($query->num_rows):
+				$query->row['description']     = self::format($query->row['description']);
+				self::$results['categories'][] = $query->row;
+			endif;
 		endforeach;
 	}
 
@@ -126,12 +133,14 @@ class Search extends LibraryService {
 
 		foreach($ids as $id):
 			$query = $db->query("
-				SELECT * 
+				SELECT manufacturer_id, name 
 				FROM {$db->prefix}manufacturer 
 				WHERE manufacturer_id = '" . (int)$id . "'
 			");
 
-			self::$results['manufacturers'][] = $query->row;
+			if ($query->num_rows):
+				self::$results['manufacturers'][] = $query->row;
+			endif;
 		endforeach;
 	}
 
@@ -141,14 +150,20 @@ class Search extends LibraryService {
 
 		foreach($ids as $id):
 			$query = $db->query("
-				SELECT * 
-				FROM {$db->prefix}product 
-				WHERE product_id = '" . (int)$id . "' 
-				AND status       = '1' 
-				AND visibility   = '" . (int)$visibility . "'
+				SELECT p.product_id, pd.name, pd.description 
+				FROM {$db->prefix}product p 
+				LEFT JOIN {$db->prefix}product_description pd 
+				ON (p.product_id = pd.product_id) 
+				WHERE p.product_id = '" . (int)$id . "' 
+				AND p.status       = '1' 
+				AND p.visibility   = '" . (int)$visibility . "' 
+				AND pd.language_id = '" . (int)self::$language_id . "'
 			");
 
-			self::$results['products'][] = $query->row;
+			if ($query->num_rows):
+				$query->row['description']   = self::format($query->row['description']);
+				self::$results['products'][] = $query->row;
+			endif;
 		endforeach;
 	}
 
@@ -158,14 +173,20 @@ class Search extends LibraryService {
 
 		foreach($ids as $id):
 			$query = $db->query("
-				SELECT * 
-				FROM {$db->prefix}page 
-				WHERE page_id  = '" . (int)$id . "' 
-				AND status     = '1' 
-				AND visibility = '" . (int)$visibility . "'
+				SELECT p.page_id, p.event_id, pd.title, pd.description 
+				FROM {$db->prefix}page p 
+				LEFT JOIN {$db->prefix}page_description pd 
+				ON (p.page_id = pd.page_id) 
+				WHERE p.page_id      = '" . (int)$id . "' 
+				AND p.status         = '1' 
+				AND p.visibility     = '" . (int)$visibility . "' 
+				AND pd.language_id = '" . (int)self::$language_id . "'
 			");
 
-			self::$results['pages'][] = $query->row;
+			if ($query->num_rows):
+				$query->row['description'] = self::format($query->row['description']);
+				self::$results['pages'][]  = $query->row;
+			endif;
 		endforeach;
 	}
 
@@ -174,19 +195,19 @@ class Search extends LibraryService {
 
 		foreach($ids as $id):
 			$query = $db->query("
-				SELECT c.category_id, cd.name, cd.description  
+				SELECT c.category_id, c.parent_id, cd.name, cd.description  
 				FROM {$db->prefix}blog_category c 
 				LEFT JOIN {$db->prefix}blog_category_description cd 
 				ON (c.category_id = cd.category_id) 
 				WHERE c.category_id = '" . (int)$id . "' 
-				AND c.status        = '1'
+				AND c.status        = '1' 
+				AND cd.language_id  = '" . (int)self::$language_id . "'
 			");
 
 			if ($query->num_rows):
-				$query->row['description'] = html_entity_decode($query->row['description'], ENT_QUOTES, 'UTF-8');
+				$query->row['description']          = self::format($query->row['description']);
+				self::$results['blog_categories'][] = $query->row;
 			endif;
-
-			self::$results['blog_categories'][] = $query->row;
 		endforeach;
 	}
 
@@ -200,16 +221,28 @@ class Search extends LibraryService {
 				FROM {$db->prefix}blog_post p 
 				LEFT JOIN {$db->prefix}blog_post_description pd 
 				ON (p.post_id = pd.post_id) 
-				WHERE p.post_id   = '" . (int)$id . "' 
-				AND p.status      = '1' 
-				AND p.visibility >= '" . (int)$visibility . "'
+				WHERE p.post_id    = '" . (int)$id . "' 
+				AND p.status       = '1' 
+				AND p.visibility  >= '" . (int)$visibility . "' 
+				AND pd.language_id = '" . (int)self::$language_id . "'
 			");
 
 			if ($query->num_rows):
-				$query->row['description'] = html_entity_decode($query->row['description'], ENT_QUOTES, 'UTF-8');
+				$query->row['description'] = self::format($query->row['description']);
+				self::$results['posts'][]  = $query->row;
 			endif;
-
-			self::$results['posts'][] = $query->row;
 		endforeach;
+	}
+
+	private static function format($text) {
+		$text = str_replace(array("\r\n", "\r", "\n", "\t"), "", trim(strip_tags(htmlspecialchars_decode($text))));
+
+		return self::truncate($text);
+	}
+
+	private static function truncate($text) {
+		$encode = parent::$app['encode'];
+
+		return $encode->substr($text, 0, 280) . ' ...';
 	}
 }
