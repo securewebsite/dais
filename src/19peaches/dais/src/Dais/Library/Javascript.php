@@ -93,7 +93,7 @@ class Javascript extends LibraryService {
             $this->complete[] = $script['file'];
         endforeach;
         
-        $prefix = parent::$app['active.fascade'];
+        $prefix = parent::$app['active.facade'];
         $key    = 'javascript.' . $prefix . '.' . md5(str_replace('.js', '', implode('|', $this->complete)));
         
         $this->cache_key = md5($key);

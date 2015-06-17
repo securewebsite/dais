@@ -31,15 +31,15 @@ class Plugin extends Controller {
     public function __construct(Container $app) {
         parent::__construct($app);
         
-        $this->locale = $app['active.fascade'] . SEP;
+        $this->locale = $app['active.facade'] . SEP;
         
         /**
          * We need to manage the path for plugins since
-         * our ADMIN_FASCADE may not be named "admin".
+         * our ADMIN_FACADE may not be named "admin".
          * Plugin admin areas should always be named "admin".
          */
-        if (($app['active.fascade'] === ADMIN_FASCADE) && (ADMIN_FASCADE !== 'admin')):
-            $this->locale = str_replace($app['active.fascade'], 'admin', $this->locale);
+        if (($app['active.facade'] === ADMIN_FACADE) && (ADMIN_FACADE !== 'admin')):
+            $this->locale = str_replace($app['active.facade'], 'admin', $this->locale);
         endif;
         
         $this->directory = $app['path.plugin'];
@@ -177,7 +177,7 @@ class Plugin extends Controller {
         $path = str_replace('/', '\\', rtrim($path, '/'));
         
         if (is_readable($this->directory . $this->plugin_name . '/' . $this->locale . 'model/' . $model . '.php')):
-            $class = 'Plugin\\' . ucfirst($this->plugin_name) . $this->app['prefix.fascade'] . 'Model\\' . $path;
+            $class = 'Plugin\\' . ucfirst($this->plugin_name) . $this->app['prefix.facade'] . 'Model\\' . $path;
         else:
             return $this->app['theme']->model($model);
         endif;

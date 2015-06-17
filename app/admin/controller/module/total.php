@@ -106,7 +106,7 @@ class Total extends Controller {
             $this->model_people_user_group->addPermission($this->user->getId(), 'access', 'total/' . $this->request->get['module']);
             $this->model_people_user_group->addPermission($this->user->getId(), 'modify', 'total/' . $this->request->get['module']);
             
-            $base_path  = APP_PATH . $this->app['prefix.fascade'] . 'controller' . SEP . 'total' . SEP;
+            $base_path  = APP_PATH . $this->app['prefix.facade'] . 'controller' . SEP . 'total' . SEP;
             $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'total' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
@@ -143,7 +143,7 @@ class Total extends Controller {
             $this->model_setting_module->uninstall('total', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
-            $base_path  = APP_PATH . $this->app['prefix.fascade'] . 'controller' . SEP . 'total' . SEP;
+            $base_path  = APP_PATH . $this->app['prefix.facade'] . 'controller' . SEP . 'total' . SEP;
             $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'total' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):

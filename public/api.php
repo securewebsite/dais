@@ -14,7 +14,7 @@
 |	
 |
 |--------------------------------------------------------------------------
-| 	Create The Application
+| 	Create Lumen API
 |--------------------------------------------------------------------------
 |
 | 	First we need to get an application instance. This creates an instance
@@ -23,7 +23,9 @@
 |
 */
 
-$app = require __DIR__.'/../bootstrap/app.php';
+if (is_readable($app = dirname(__DIR__) . '/api/bootstrap/app.php')):
+	require $app;
+endif;
 
 /*
 |--------------------------------------------------------------------------

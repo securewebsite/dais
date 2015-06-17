@@ -78,7 +78,7 @@ class Css extends LibraryService {
             $this->complete[] = $style['file'];
         endforeach;
         
-        $prefix = parent::$app['active.fascade'];
+        $prefix = parent::$app['active.facade'];
         $key = 'css.' . $prefix . '.' . md5(str_replace('.css', '', implode('|', $this->complete)));
         
         $this->cache_key = md5($key);

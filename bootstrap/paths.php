@@ -34,22 +34,22 @@ define('FRAMEWORK', dirname(__DIR__) . SEP . 'src' . SEP . '19peaches' . SEP . '
 
 /*
 |--------------------------------------------------------------------------
-|	Fascade Keys
+|	Facade Keys
 |--------------------------------------------------------------------------
 |
-|	Set your fascade keys here according to your path, these are used 
+|	Set your facade keys here according to your path, these are used 
 |	dynamically to determine what area of the application is to be routed.
 |	This is here mostly so you can rename your install and admin routes.
 |
 |	For instance if you want to change the route for install to "update",
 |	you'll need to rename your assets directory to "update" and change the
-|	install fascade key.
+|	install facade key.
 |
 */
 
-define('FRONT_FASCADE', 'front');
-define('ADMIN_FASCADE', 'manage');
-define('INSTALL_FASCADE', 'install');
+define('FRONT_FACADE', 'front');
+define('ADMIN_FACADE', 'manage');
+define('INSTALL_FACADE', 'install');
 define('USE_TWIG', false);
 
 /**
@@ -68,7 +68,7 @@ endif;
 |
 |	Build some base config settings that are standard across all sections 
 |	of the application, and set some base paths that don't depend on our 
-|	fascade. If you want to move directories around make sure you set
+|	facade. If you want to move directories around make sure you set
 |	these to follow the correct path.
 |
 */
@@ -104,6 +104,7 @@ $base = array(
 	'cache.time'     => 86400,
 	'path.app_path'  => APP_PATH,
 	'path.framework' => FRAMEWORK,
+	'path.api'       => dirname(APP_PATH) . SEP . 'api' . SEP,
 	'path.database'  => APP_PATH . 'database' . SEP,
 	'path.download'  => APP_PATH . 'download' . SEP,
 	'path.override'  => APP_PATH . 'override' . SEP,
@@ -120,13 +121,13 @@ $base = array(
 // used to implement the override functionality.
 define('OVERRIDE', dirname(APP_PATH) . SEP . basename($base['path.override']));
 
-$config['base'] = $base;
-
 // DO NOT CHANGE THE NAME OF THIS KEY
+
+$config['base'] = $base;
 
 /*
 |--------------------------------------------------------------------------
-|	Fascade Paths
+|	Facade Paths
 |--------------------------------------------------------------------------
 |
 |	This is where we set paths for our app which will be pulled into the 
@@ -146,39 +147,39 @@ $front = array(
 	'path.public'      => dirname(__DIR__) . SEP . PUBLIC_DIR,
 	'path.image'       => dirname(__DIR__) . SEP . PUBLIC_DIR . 'image' . SEP,
 	'path.asset'       => dirname(__DIR__) . SEP . PUBLIC_DIR . 'asset' . SEP,
-	'prefix.fascade'   => 'front' . SEP
+	'prefix.facade'    => 'front' . SEP
 );
 
-$config[FRONT_FASCADE] = $front;
+$config[FRONT_FACADE] = $front;
 
 $admin = array(
-	'http.server'      => 'http://' . $env['machine'] . '/' . ADMIN_FASCADE . '/',
+	'http.server'      => 'http://' . $env['machine'] . '/' . ADMIN_FACADE . '/',
 	'http.public'      => 'http://' . $env['machine'] . '/',
-	'https.server'     => 'http://' . $env['machine'] . '/' . ADMIN_FASCADE . '/',
+	'https.server'     => 'http://' . $env['machine'] . '/' . ADMIN_FACADE . '/',
 	'https.public'     => 'http://' . $env['machine'] . '/',
 	'path.application' => APP_PATH . 'admin' . SEP,
 	'path.language'    => APP_PATH . 'admin' . SEP . 'language' . SEP,
 	'path.theme'       => APP_PATH . 'theme' . SEP . 'admin' . SEP,
 	'path.image'       => dirname(__DIR__) . SEP . PUBLIC_DIR . 'image' . SEP,
 	'path.asset'       => dirname(__DIR__) . SEP . PUBLIC_DIR . 'asset' . SEP,
-	'prefix.fascade'   => 'admin' . SEP
+	'prefix.facade'    => 'admin' . SEP
 );
 
-$config[ADMIN_FASCADE] = $admin;
+$config[ADMIN_FACADE] = $admin;
 
 $install = array(
-	'http.server'      => 'http://' . $env['machine'] . '/' . INSTALL_FASCADE . '/',
-	'https.server'     => 'http://' . $env['machine'] . '/' . INSTALL_FASCADE . '/',
+	'http.server'      => 'http://' . $env['machine'] . '/' . INSTALL_FACADE . '/',
+	'https.server'     => 'http://' . $env['machine'] . '/' . INSTALL_FACADE . '/',
 	'http.public'      => 'http://' . $env['machine'] . '/',
 	'path.application' => APP_PATH . 'install' . SEP,
 	'path.language'    => APP_PATH . 'install' . SEP . 'language' . SEP,
 	'path.theme'       => APP_PATH . 'theme' . SEP . 'install' . SEP,
 	'path.dais'        => dirname(__DIR__) . SEP,
 	'path.asset'       => dirname(__DIR__) . SEP . PUBLIC_DIR . 'asset' . SEP,
-	'prefix.fascade'   => 'install' . SEP
+	'prefix.facade'    => 'install' . SEP
 );
 
-$config[INSTALL_FASCADE] = $install;
+$config[INSTALL_FACADE] = $install;
 
 /*
 |--------------------------------------------------------------------------

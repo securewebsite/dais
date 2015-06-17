@@ -47,13 +47,13 @@ endif;
 |	Installer??
 |--------------------------------------------------------------------------
 |
-|	If our install fascade is called let's make sure we stay within the
+|	If our install facade is called let's make sure we stay within the
 |	installer application.  We'll let the installer app work out whether
 |	we need to do an upgrade or new install.
 |
 */
 
-if (preg_match('/^\/(' . INSTALL_FASCADE . ')/', $_SERVER['REQUEST_URI'])):
+if (preg_match('/^\/(' . INSTALL_FACADE . ')/', $_SERVER['REQUEST_URI'])):
     $app = new Dais\Engine\Installer;
     return $app->buildConfigRequest($config);
 else:
@@ -63,7 +63,7 @@ else:
      * 	file exists.
      */
     if (!is_readable($config['base']['path.database'] . 'config' . SEP . 'db.php')):
-        header('Location: ' . INSTALL_FASCADE);
+        header('Location: ' . INSTALL_FACADE);
     else:
         $db_config = require $config['base']['path.database'] . 'config' . SEP . 'db.php';
         $dbs       = $db_config['db'][ENV];

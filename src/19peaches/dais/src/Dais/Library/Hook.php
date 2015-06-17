@@ -93,7 +93,7 @@ class Hook extends LibraryService {
     }
     
     public function listen($class, $method, $data = array()) {
-        $key = trim(parent::$app['prefix.fascade'], '/') . '_controller';
+        $key = trim(parent::$app['prefix.facade'], '/') . '_controller';
         
         if (array_key_exists($key, $this->hooks)):
             foreach ($this->hooks[$key] as $hook):

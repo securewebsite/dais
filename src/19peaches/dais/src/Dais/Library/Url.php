@@ -47,7 +47,7 @@ class Url extends LibraryService {
         $urlargs = array();
         
         if ($args):
-            if (parent::$app['active.fascade'] === FRONT_FASCADE):
+            if (parent::$app['active.facade'] === FRONT_FACADE):
                 
                 // Catalog access only
                 $cache = parent::$app['cache'];
@@ -110,10 +110,10 @@ class Url extends LibraryService {
             $url.= str_replace('&', '&amp;', '&' . ltrim($args, '&'));
         endif;
         
-        if (parent::$app['active.fascade'] === FRONT_FASCADE):
+        if (parent::$app['active.facade'] === FRONT_FACADE):
             // Catalog access
             return $this->rewrite($url);
-        elseif (parent::$app['active.fascade'] === INSTALL_FASCADE):
+        elseif (parent::$app['active.facade'] === INSTALL_FACADE):
             // Installer access
             return $this->install_rewrite($url);
         else:

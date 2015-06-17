@@ -19,6 +19,7 @@
     RewriteRule ^sitemap.xml$ feed/googlesitemap [L]
 	RewriteRule ^googlebase.xml$ feed/googlebase [L]
 	RewriteRule ^download/(.*) error/notfound [L]
+    RewriteRule ^api?/?(.*) api.php [L,QSA]
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond %{REQUEST_URI} !.*\.(ico|gif|jpg|jpeg|png|txt|html|woff|ttf|eot|svg|css|js)

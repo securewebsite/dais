@@ -33,7 +33,7 @@ require dirname(__DIR__) . '/bootstrap/start.php';
 |
 */
 
-if ($app->data['active.fascade'] !== INSTALL_FASCADE && !$app->data['config_cache_status']):
+if ($app->data['active.facade'] !== INSTALL_FACADE && !$app->data['config_cache_status']):
     $app->data['cache']->flush_cache();
 endif;
 

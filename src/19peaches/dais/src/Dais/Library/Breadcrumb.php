@@ -24,7 +24,7 @@ class Breadcrumb extends LibraryService {
     public function __construct($app) {
         parent::__construct($app);
         
-        if ($app['active.fascade'] === ADMIN_FASCADE):
+        if ($app['active.facade'] === ADMIN_FACADE):
             $query = (isset($app['session']->data['token'])) ? 'token=' . $app['session']->data['token'] : false;
             
             $this->breadcrumbs[] = array(
@@ -48,7 +48,7 @@ class Breadcrumb extends LibraryService {
             $separator = false;
         endif;
         
-        if (parent::$app['active.fascade'] === ADMIN_FASCADE):
+        if (parent::$app['active.facade'] === ADMIN_FACADE):
             $query  = (isset(parent::$app['session']->data['token'])) ? 'token=' . parent::$app['session']->data['token'] . $query : $query;
             $url    = parent::$app['url']->link($route, $query, 'SSL');
         else:

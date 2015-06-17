@@ -23,6 +23,17 @@
 |
 */
 
-$app->get('/', function() use ($app) {
-    return $app->welcome();
+$app->get('/api', 'App\Controllers\DefaultController@index');
+$app->get('/api/v1', 'App\Controllers\DefaultController@index');
+
+$app->group(['prefix' => 'api/v1','namespace' => 'App\Controllers'], function($app) {
+    // address
+    $app->get('address','Front\Account\AddressController@index');
+
+    // products
+    $app->get('product','Front\Catalog\ProductController@index');
+	$app->get('product/{id}','Front\Catalog\ProductController@getProduct');
+	$app->post('product','Front\Catalog\ProductController@createProduct');
+	$app->put('product/{id}','Front\Catalog\ProductController@updateProduct');
+	$app->delete('product/{id}','Front\Catalog\ProductController@deleteProduct');
 });

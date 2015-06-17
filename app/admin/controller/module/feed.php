@@ -106,7 +106,7 @@ class Feed extends Controller {
             $this->model_people_user_group->addPermission($this->user->getId(), 'access', 'feed/' . $this->request->get['module']);
             $this->model_people_user_group->addPermission($this->user->getId(), 'modify', 'feed/' . $this->request->get['module']);
             
-            $base_path  = APP_PATH . $this->app['prefix.fascade'] . 'controller' . SEP . 'feed' . SEP;
+            $base_path  = APP_PATH . $this->app['prefix.facade'] . 'controller' . SEP . 'feed' . SEP;
             $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'feed' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
@@ -143,7 +143,7 @@ class Feed extends Controller {
             $this->model_setting_module->uninstall('feed', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
-            $base_path  = APP_PATH . $this->app['prefix.fascade'] . 'controller' . SEP . 'feed' . SEP;
+            $base_path  = APP_PATH . $this->app['prefix.facade'] . 'controller' . SEP . 'feed' . SEP;
             $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'feed' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):

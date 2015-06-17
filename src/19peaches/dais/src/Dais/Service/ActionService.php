@@ -25,11 +25,11 @@ class ActionService implements ActionServiceInterface {
     protected $class;
     protected $method;
     protected $args = array();
-    protected $fascade;
+    protected $facade;
     
     public function __construct(Container $app, $route, $args = array()) {
         
-        $this->fascade = trim($app['prefix.fascade'], '/');
+        $this->facade = trim($app['prefix.facade'], '/');
 
         if ($args):
             $this->args = $args;
@@ -49,7 +49,7 @@ class ActionService implements ActionServiceInterface {
         /**
          *  No pre-controller hooks for our installer.
          */
-        if ($this->fascade !== INSTALL_FASCADE):
+        if ($this->facade !== INSTALL_FACADE):
             $this->buildPrecontrollerHooks($app);
         endif;
     }
@@ -64,7 +64,7 @@ class ActionService implements ActionServiceInterface {
         $app['hooks'];
         
         $callable = false;
-        $hook_key = $this->fascade . '_controller';
+        $hook_key = $this->facade . '_controller';
         $hooks    = $app['plugin_hooks'];
         
         if (array_key_exists($hook_key, $hooks)):

@@ -106,7 +106,7 @@ class Payment extends Controller {
             $this->model_people_user_group->addPermission($this->user->getId(), 'access', 'payment/' . $this->request->get['module']);
             $this->model_people_user_group->addPermission($this->user->getId(), 'modify', 'payment/' . $this->request->get['module']);
             
-            $base_path  = APP_PATH . $this->app['prefix.fascade'] . 'controller' . SEP . 'payment' . SEP;
+            $base_path  = APP_PATH . $this->app['prefix.facade'] . 'controller' . SEP . 'payment' . SEP;
             $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'payment' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
@@ -143,7 +143,7 @@ class Payment extends Controller {
             $this->model_setting_module->uninstall('payment', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
-            $base_path  = APP_PATH . $this->app['prefix.fascade'] . 'controller' . SEP . 'payment' . SEP;
+            $base_path  = APP_PATH . $this->app['prefix.facade'] . 'controller' . SEP . 'payment' . SEP;
             $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'payment' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):

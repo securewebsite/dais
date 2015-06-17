@@ -22,7 +22,7 @@
 |
 |	The controllers in the arrays below will automatically be rendered in
 |	the Theme class anytime a controller is instantiated in the given
-|	fascade.
+|	facade.
 |
 |	To change this array dynamically use the {get|set|unset}_controller
 |	method in the Theme class prior to setOutput().
@@ -45,7 +45,7 @@ $front_controllers = array(
 	'footer'         => 'content/footer',
 );
 
-$config[FRONT_FASCADE]['pre_render'] = $front_controllers;
+$config[FRONT_FACADE]['pre_render'] = $front_controllers;
 
 $admin_controllers = array(
 	'header'     => 'common/header',
@@ -53,21 +53,21 @@ $admin_controllers = array(
 	'footer'     => 'common/footer',
 );
 
-$config[ADMIN_FASCADE]['pre_render'] = $admin_controllers;
+$config[ADMIN_FACADE]['pre_render'] = $admin_controllers;
 
 $install_controllers = array(
     'header' => 'header',
     'footer' => 'footer',
 );
 
-$config[INSTALL_FASCADE]['pre_render'] = $install_controllers;
+$config[INSTALL_FACADE]['pre_render'] = $install_controllers;
 
 /*
 |--------------------------------------------------------------------------
 |	Front Pre-actions
 |--------------------------------------------------------------------------
 |
-|	Set controller pre-actions based on fascade. The actions will be run 
+|	Set controller pre-actions based on facade. The actions will be run 
 |	prior to the Front controller output.
 |
 */
@@ -78,7 +78,7 @@ $front_actions = array(
     'common/router'
 );
 
-$config[FRONT_FASCADE]['pre_actions'] = $front_actions;
+$config[FRONT_FACADE]['pre_actions'] = $front_actions;
 
 $admin_actions = array(
     'common/javascript/runner',
@@ -86,10 +86,10 @@ $admin_actions = array(
     'common/dashboard/permission'
 );
 
-$config[ADMIN_FASCADE]['pre_actions'] = $admin_actions;
+$config[ADMIN_FACADE]['pre_actions'] = $admin_actions;
 
 $install_actions = array(
     'router'
 );
 
-$config[INSTALL_FASCADE]['pre_actions'] = $install_actions;
+$config[INSTALL_FACADE]['pre_actions'] = $install_actions;

@@ -63,7 +63,7 @@ class Naming {
 
 	public static function file_from_route($app, $route) {
 		// build our paths
-		$base_path    = APP_PATH . $app['prefix.fascade'] . 'controller' . SEP;
+		$base_path    = APP_PATH . $app['prefix.facade'] . 'controller' . SEP;
 		$theme_path   = $app['path.theme'] . $app['theme.name'] . SEP . 'controller' . SEP;
 		$plugin_path  = APP_PATH . $app['prefix.plugin'] . SEP;
 		$plugin_theme = $theme_path . $app['prefix.plugin'] . SEP;
@@ -73,7 +73,7 @@ class Naming {
 
 		if ($segments[0] === $app['prefix.plugin']):
 			$plugin = $segments[1];
-			$plugin_path .= $plugin . SEP . $app['prefix.fascade'] . 'controller' . SEP;
+			$plugin_path .= $plugin . SEP . $app['prefix.facade'] . 'controller' . SEP;
 
 			if (is_readable($file = $plugin_theme . $plugin . '.php')):
 				return $file;
@@ -106,7 +106,7 @@ class Naming {
 	}
 
 	public static function class_for_model($model) {
-		$base_path  = APP_PATH . Theme::app('prefix.fascade') . 'model' . SEP;
+		$base_path  = APP_PATH . Theme::app('prefix.facade') . 'model' . SEP;
 		$theme_path = Theme::app('path.theme') . Theme::app('theme.name') . SEP . 'model' . SEP;
 
         if (is_readable($file = $theme_path . $model . '.php')):
@@ -117,7 +117,7 @@ class Naming {
 	}
 
 	public static function class_for_hook($route) {
-		$base_path  = APP_PATH . Theme::app('prefix.fascade') . 'controller' . SEP;
+		$base_path  = APP_PATH . Theme::app('prefix.facade') . 'controller' . SEP;
 		$theme_path = Theme::app('path.theme') . Theme::app('theme.name') . SEP . 'controller' . SEP;
         
         if (is_readable($file = $theme_path . $route . '.php')):

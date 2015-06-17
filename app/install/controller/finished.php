@@ -22,7 +22,7 @@ class Finished extends Controller {
         
         $this->theme->setTitle('Dais Install || Step 4 - Finished');
         
-        $data['manager'] = 'http://' . $this->request->server['SERVER_NAME'] . '/' . ADMIN_FASCADE;
+        $data['manager'] = 'http://' . $this->request->server['SERVER_NAME'] . '/' . ADMIN_FACADE;
         $data['home']    = 'http://' . $this->request->server['SERVER_NAME'];
         
         $name = date('m-d-Y-h.i.s', time()) . '.sql';

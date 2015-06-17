@@ -40,20 +40,20 @@ class Installer {
         unset($config['base']);
         
         /**
-         * Let's detect our app fascade according to our request variables;
+         * Let's detect our app facade according to our request variables;
          * We need to hard set a route for this $request so we can pass it
          * to our IoC Request object.
          */
         $request = new Request($this->data);
         $route = null;
-        $face = INSTALL_FASCADE;
+        $face = INSTALL_FACADE;
         
         if (isset($request->get['_route_'])):
             $paths = explode('/', $request->get['_route_']);
             
             /**
-             * The only fascade that should never exist in $paths
-             * is 'front', so our fascade should be easy to detect.
+             * The only facade that should never exist in $paths
+             * is 'front', so our facade should be easy to detect.
              */
             if (array_key_exists($paths[0], $config)):
                 $face = $paths[0];
@@ -71,11 +71,11 @@ class Installer {
             endif;
         endif;
         
-        // Add fascade to config
-        $configuration['active.fascade'] = $face;
+        // Add facade to config
+        $configuration['active.facade'] = $face;
         
         /**
-         * Let's adjust the request to adhere to our fascade.
+         * Let's adjust the request to adhere to our facade.
          */
         
         $request->server['SCRIPT_NAME'] = str_replace(PUBLIC_DIR, '', $request->server['SCRIPT_NAME']);
@@ -96,7 +96,7 @@ class Installer {
         endif;
         
         /**
-         * Let's find and remove our pre-render controllers for this fascade.
+         * Let's find and remove our pre-render controllers for this facade.
          * Instead of settings those via the loop below, we'll remove them
          * and give them a specific parameter name so we can accurately
          * access them in our Theme class.
@@ -108,7 +108,7 @@ class Installer {
         endif;
         
         /**
-         * Let's find and remove our pre-actions for this fascade.
+         * Let's find and remove our pre-actions for this facade.
          * Instead of settings those via the loop below, we'll remove them
          * and give them a specific parameter name so we can accurately
          * access them in our Front class.

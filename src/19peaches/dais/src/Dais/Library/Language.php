@@ -45,16 +45,16 @@ class Language extends LibraryService {
 
         /**
          * We need to work out whether we have a base language file for our current
-         * fascade and theme.  If we do, we'll use this one, else we'll fallback
+         * facade and theme.  If we do, we'll use this one, else we'll fallback
          * to the default base file.
          */
         
-        switch (parent::$app['active.fascade']):
-        case ADMIN_FASCADE:
+        switch (parent::$app['active.facade']):
+        case ADMIN_FACADE:
             $language_dir = parent::$app['path.theme'] . parent::$app['config_admin_theme'] . SEP . 'language' . SEP;
             break;
 
-        case FRONT_FASCADE:
+        case FRONT_FACADE:
             $language_dir = parent::$app['path.theme'] . parent::$app['config_theme'] . SEP . 'language' . SEP;
             break;
         endswitch;

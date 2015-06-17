@@ -78,20 +78,20 @@ class Application {
         unset($config['base']);
         
         /**
-         * Let's detect our app fascade according to our request variables;
+         * Let's detect our app facade according to our request variables;
          * We need to hard set a route for this $request so we can pass it
          * to our IoC Request object.
          */
         $request = new Request($this->data);
         $route   = null;
-        $face    = FRONT_FASCADE;
+        $face    = FRONT_FACADE;
         
         if (isset($request->get['_route_'])):
             $paths = explode('/', $request->get['_route_']);
             
             /**
-             * The only fascade that should never exist in $paths
-             * is 'front', so our fascade should be easy to detect.
+             * The only facade that should never exist in $paths
+             * is 'front', so our facade should be easy to detect.
              */
             if (array_key_exists($paths[0], $config)):
                 $face = $paths[0];
@@ -102,7 +102,7 @@ class Application {
                 array_shift($paths);
                 
                 if (!empty($paths)):
-                    if ($face === FRONT_FASCADE):
+                    if ($face === FRONT_FACADE):
                         $route = implode('/', $paths);
                     else:
                         $route = null;
@@ -113,11 +113,11 @@ class Application {
             endif;
         endif;
         
-        // Add fascade to config
-        $configuration['active.fascade'] = $face;
+        // Add facade to config
+        $configuration['active.facade'] = $face;
         
         /**
-         * Let's adjust the request to adhere to our fascade.
+         * Let's adjust the request to adhere to our facade.
          */
         
         $request->server['SCRIPT_NAME'] = str_replace(PUBLIC_DIR, '', $request->server['SCRIPT_NAME']);
@@ -138,7 +138,7 @@ class Application {
         endif;
         
         /**
-         * Let's find and remove our pre-render controllers for this fascade.
+         * Let's find and remove our pre-render controllers for this facade.
          * Instead of settings those via the loop below, we'll remove them
          * and give them a specific parameter name so we can accurately
          * access them in our Theme class.
@@ -150,7 +150,7 @@ class Application {
         endif;
         
         /**
-         * Let's find and remove our pre-actions for this fascade.
+         * Let's find and remove our pre-actions for this facade.
          * Instead of settings those via the loop below, we'll remove them
          * and give them a specific parameter name so we can accurately
          * access them in our Front class.
@@ -181,7 +181,7 @@ class Application {
         
         /**
          * Our configuration array now contains all of our base
-         * config settings and fascade specific settings.
+         * config settings and facade specific settings.
          * Let's pass it to the buildSettings method and add our
          * database configs and then push it to our session.
          */
@@ -192,14 +192,14 @@ class Application {
         
         /**
          * We'll alias all of our config settings with 'config_' and
-         * set them along with our fascade params into the container
+         * set them along with our facade params into the container
          * as parameters, then we'll add them to the session on the
-         * front fascade so they don't need to be queried again.
+         * front facade so they don't need to be queried again.
          */
         
         $db = $this->data['db'];
         
-        if ($configuration['active.fascade'] === FRONT_FASCADE):
+        if ($configuration['active.facade'] === FRONT_FACADE):
             if (isset($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] == 'on') || ($_SERVER['HTTPS'] == '1'))):
                 $store_query = $db->query("
                     SELECT * 
@@ -289,7 +289,7 @@ class Application {
             $this->data[$key] = $value;
         endforeach;
         
-        $this->setClasses($configuration['active.fascade']);
+        $this->setClasses($configuration['active.facade']);
     }
     
     protected function buildDatabase() {
@@ -312,19 +312,19 @@ class Application {
         };
     }
     
-    protected function setClasses($fascade) {
+    protected function setClasses($facade) {
         $this->baseClasses();
         
-        switch ($fascade):
-            case INSTALL_FASCADE:
+        switch ($facade):
+            case INSTALL_FACADE:
                 $this->installClasses();
                 break;
 
-            case ADMIN_FASCADE:
+            case ADMIN_FACADE:
                 $this->adminClasses();
                 break;
 
-            case FRONT_FASCADE:
+            case FRONT_FACADE:
                 $this->frontClasses();
                 break;
         endswitch;
@@ -395,12 +395,12 @@ class Application {
         // session
         $session = new Session($this->data);
         $this->data['session'] = function ($data) use ($session) {
-            switch ($data['active.fascade']):
-                case ADMIN_FASCADE:
+            switch ($data['active.facade']):
+                case ADMIN_FACADE:
                     $session->admin_session();
                     break;
 
-                case FRONT_FASCADE:
+                case FRONT_FACADE:
                     $session->front_session();
                     break;
             endswitch;
@@ -630,16 +630,16 @@ class Application {
     protected function buildTheme() {
         
         /**
-         * Grab our theme name by active.fascade
+         * Grab our theme name by active.facade
          */
-        switch ($this->data['active.fascade']):
-            case FRONT_FASCADE:
+        switch ($this->data['active.facade']):
+            case FRONT_FACADE:
                 $theme_name = $this->data['config_theme'];
                 break;
-            case ADMIN_FASCADE:
+            case ADMIN_FACADE:
                 $theme_name = $this->data['config_admin_theme'];
                 break;
-            case INSTALL_FASCADE:
+            case INSTALL_FACADE:
                 $theme_name = 'install';
                 break;
         endswitch;
@@ -702,13 +702,13 @@ class Application {
         
         $controller = new Front($this->data);
         
-        switch ($this->data['active.fascade']):
-            case FRONT_FASCADE:
+        switch ($this->data['active.facade']):
+            case FRONT_FACADE:
                 $error          = new Action(new ActionService($this->data, 'error/not_found'));
                 $type           = $this->data['config_site_style'] . '/home';
                 $default_action = new Action(new ActionService($this->data, $type));
                 break;
-            case ADMIN_FASCADE:
+            case ADMIN_FACADE:
                 $error          = new Action(new ActionService($this->data, 'error/not_found'));
                 $default_action = new Action(new ActionService($this->data, 'common/dashboard'));
                 break;
