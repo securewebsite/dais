@@ -50,6 +50,7 @@ define('FRAMEWORK', dirname(__DIR__) . SEP . 'src' . SEP . '19peaches' . SEP . '
 define('FRONT_FACADE', 'front');
 define('ADMIN_FACADE', 'manage');
 define('INSTALL_FACADE', 'install');
+define('API_FACADE', 'api');
 define('USE_TWIG', false);
 
 /**

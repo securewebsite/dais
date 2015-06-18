@@ -30,6 +30,24 @@ require __DIR__ . DIRECTORY_SEPARATOR . 'paths.php';
 
 /*
 |--------------------------------------------------------------------------
+|   API??
+|--------------------------------------------------------------------------
+|
+|   If our API is called we need to build the Lumen api application
+|   and return the api app only.
+|
+*/
+
+if (preg_match('/^\/(' . API_FACADE . ')/', $_SERVER['REQUEST_URI'])):
+    if (is_readable($app = dirname(__DIR__) . SEP . 'api' . SEP . 'bootstrap' . SEP . 'app.php')):
+        require $app;
+        $app->run();
+        exit;
+    endif;
+endif;
+
+/*
+|--------------------------------------------------------------------------
 |	Register the Autoloader
 |--------------------------------------------------------------------------
 |
@@ -69,8 +87,6 @@ else:
         $dbs       = $db_config['db'][ENV];
     endif;
 endif;
-
-
 
 /*
 |--------------------------------------------------------------------------
