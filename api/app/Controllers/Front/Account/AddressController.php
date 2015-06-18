@@ -2,7 +2,7 @@
 
 namespace App\Controllers\Front\Account;
  
-use App\Models\Address;
+use App\Models\AttributeGroup;
 use App\Controllers\Controller;
 use Illuminate\Http\Request;
  
