@@ -1,18 +1,16 @@
-/app/database/config/*
-/app/install/*.sql
-!/app/install/dais.sql
-/app/storage/cache/*
-/app/storage/logs/*
-/app/storage/session/admin/*
-/app/storage/session/front/*
-/app/storage/views/*
-/app/storage/migrations/*
+/storage/app/*
+/storage/logs/*
+/storage/framework/cache/*
+/storage/framework/sessions/admin/*
+/storage/framework/sessions/front/*
+/storage/framework/views/*
+/storage/search/*
 /app/front/controller/tool/test.php
-/bootstrap/*.json
-# change this to /public/image/* once cloned
+# change this to /public/image/* once installed
 /public/image/cache/*
 /public/asset/*/compiled/*
 /vendor
+.env
 .DS_Store
 Thumbs.db
 !.gitkeep
