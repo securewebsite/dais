@@ -80,7 +80,7 @@ endif;
 |
 */
 
-if ($loader = dirname(__DIR__) . SEP . 'src' . SEP . 'autoload.php'):
+if ($loader = dirname(FRAMEWORK) . SEP . 'autoload.php'):
     require $loader;
 endif;
 

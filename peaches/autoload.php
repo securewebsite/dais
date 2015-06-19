@@ -37,6 +37,13 @@ spl_autoload_register(function ($class) {
         |   All of our autoloaded framework classes are passed through this 
         |   statement so that they can be overriden by developers.
         |
+        |   To override a framework file simply place it in the override/Dais 
+        |   directory within it's parent directory.
+        |
+        |   Example: to override Dais\Engine\Front place your overidden file
+        |   in: override/Dais/Engine and this class will be loaded instead of
+        |   the framework file.
+        |
         */
 
         if (substr($file, 0, strlen(FRAMEWORK)) == FRAMEWORK):

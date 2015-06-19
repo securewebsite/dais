@@ -28,7 +28,7 @@ define('VERSION', '1.0.1');
 define('DATE_LOCALE', env('APP_TIMEZONE'));
 date_default_timezone_set(DATE_LOCALE);
 
-define('FRAMEWORK', dirname(__DIR__) . SEP . 'src' . SEP . '19peaches' . SEP . 'dais' . SEP . 'src' . SEP . 'Dais' . SEP);
+define('FRAMEWORK', dirname(__DIR__) . SEP . 'peaches' . SEP . 'Dais' . SEP);
 
 /*
 |--------------------------------------------------------------------------
