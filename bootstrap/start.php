@@ -6,15 +6,30 @@
 |--------------------------------------------------------------------------
 |
 |   This file is part of the Dais Framework package.
-|	
-|	(c) Vince Kronlein <vince@dais.io>
-|	
-|	For the full copyright and license information, please view the LICENSE
-|	file that was distributed with this source code.
-|	
+|   
+|   (c) Vince Kronlein <vince@dais.io>
+|   
+|   For the full copyright and license information, please view the LICENSE
+|   file that was distributed with this source code.
+|   
 */
 
+define('SEP', DIRECTORY_SEPARATOR);
 define('DAIS_START', microtime(true));
+
+/*
+|--------------------------------------------------------------------------
+|   Register The Composer Auto Loader
+|--------------------------------------------------------------------------
+|
+|   Composer provides a convenient, automatically generated class loader
+|   for our application. We just need to utilize it! We'll require it
+|   into the script here so that we do not have to worry about the
+|   loading of any our classes "manually". Feels great to relax.
+|
+*/
+
+require dirname(__DIR__) . SEP . 'vendor' . SEP . 'autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +41,16 @@ define('DAIS_START', microtime(true));
 |
 */
 
-require __DIR__ . DIRECTORY_SEPARATOR . 'paths.php';
+Dotenv::load(dirname(__DIR__) . SEP);
+
+// convert our global $_ENV to a more elegant array
+$env = array();
+
+foreach($_ENV as $key => $value):
+    $env[strtolower(str_replace('_', '.', $key))] = $value;
+endforeach;
+
+require __DIR__ . SEP . 'paths.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -39,20 +63,20 @@ require __DIR__ . DIRECTORY_SEPARATOR . 'paths.php';
 */
 
 if (preg_match('/^\/(' . API_FACADE . ')/', $_SERVER['REQUEST_URI'])):
-    if (is_readable($app = dirname(__DIR__) . SEP . 'api' . SEP . 'bootstrap' . SEP . 'app.php')):
-        require $app;
-        $app->run();
+    if (is_readable($api = __DIR__ . SEP . 'api.php')):
+        require $api;
+        $api->run();
         exit;
     endif;
 endif;
 
 /*
 |--------------------------------------------------------------------------
-|	Register the Autoloader
+|   Register the Dais Autoloader
 |--------------------------------------------------------------------------
 |
-| 	Let's make sure we can load up some classes or our users aren't gonna
-|	have much of an experience with our super cool application.
+|   Let's make sure we can load up some classes or our users aren't gonna
+|   have much of an experience with our super cool application.
 |
 */
 
@@ -62,12 +86,12 @@ endif;
 
 /*
 |--------------------------------------------------------------------------
-|	Installer??
+|   Installer??
 |--------------------------------------------------------------------------
 |
-|	If our install facade is called let's make sure we stay within the
-|	installer application.  We'll let the installer app work out whether
-|	we need to do an upgrade or new install.
+|   If our install facade is called let's make sure we stay within the
+|   installer application.  We'll let the installer app work out whether
+|   we need to do an upgrade or new install.
 |
 */
 
@@ -77,26 +101,24 @@ if (preg_match('/^\/(' . INSTALL_FACADE . ')/', $_SERVER['REQUEST_URI'])):
 else:
     
     /**
-     * 	We also need to redirect calls to the app when no db config
-     * 	file exists.
+     *  We also need to redirect calls to the app when no db config
+     *  file exists.
      */
-    if (!is_readable($config['base']['path.database'] . 'config' . SEP . 'db.php')):
+    if (!isset($env) || empty($env['db.database'])):
         header('Location: ' . INSTALL_FACADE);
-    else:
-        $db_config = require $config['base']['path.database'] . 'config' . SEP . 'db.php';
-        $dbs       = $db_config['db'][ENV];
+        //throw new \Exception('No database config is set in your environment.');
     endif;
 endif;
 
 /*
 |--------------------------------------------------------------------------
-|	Assemble Application
+|   Assemble Application
 |--------------------------------------------------------------------------
-|	Here we'll instantiate our application class and push through our 
-|	config array so that we can set it to the IoC container.
+|   Here we'll instantiate our application class and push through our 
+|   config array so that we can set it to the IoC container.
 |
 */
 
-$app = new Dais\Application($dbs);
+$app = new Dais\Application;
 
 return $app->buildConfigRequest($config);

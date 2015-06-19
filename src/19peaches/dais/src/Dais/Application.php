@@ -63,9 +63,8 @@ use Dais\Service\PluginServiceModel;
 
 class Application {
 
-    public function __construct($config) {
+    public function __construct() {
         $this->data = new Container;
-        $this->data['db_config'] = $config;
     }
     
     public function buildConfigRequest(array $config) {
@@ -294,19 +293,14 @@ class Application {
     
     protected function buildDatabase() {
         $this->data['db'] = function ($data) {
-            $db = $data['db_config'];
-            unset($data['db_config']);
-
-            $driver   = 'Dais\Driver\Database\\' . $db['driver'];
+            $driver   = 'Dais\Driver\Database\Db' . env('DB_DRIVER');
             $database = new Db(new $driver(
-                $db['host'], 
-                $db['user'], 
-                $db['password'], 
-                $db['database'], 
-                $db['prefix']), 
+                env('DB_HOST'), 
+                env('DB_USERNAME'), 
+                env('DB_PASSWORD'), 
+                env('DB_DATABASE'), 
+                env('DB_PREFIX')), 
             $data);
-
-            unset($db);
 
             return $database;
         };

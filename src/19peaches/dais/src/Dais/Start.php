@@ -18,8 +18,8 @@
 error_reporting(E_ALL);
 
 // Check Version
-if (version_compare(phpversion() , '5.4.0', '<') === true):
-    trigger_error('PHP5.4+ Required');
+if (version_compare(phpversion() , '5.5.0', '<') === true):
+    trigger_error('PHP5.5+ Required');
 endif;
 
 if (!ini_get('date.timezone')):

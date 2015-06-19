@@ -31,7 +31,7 @@ class Session extends LibraryService {
             ini_set('session.use_only_cookies', 'On');
             ini_set('session.use_trans_sid', 'Off');
             ini_set('session.cookie_httponly', 'On');
-            ini_set('session.save_path', parent::$app['path.storage'] . 'session/admin');
+            ini_set('session.save_path', parent::$app['path.sessions']);
             
             session_set_cookie_params(0, '/manage');
             session_start();
@@ -45,7 +45,7 @@ class Session extends LibraryService {
             ini_set('session.use_only_cookies', 'On');
             ini_set('session.use_trans_sid', 'Off');
             ini_set('session.cookie_httponly', 'On');
-            ini_set('session.save_path', parent::$app['path.storage'] . 'session/front');
+            ini_set('session.save_path', parent::$app['path.sessions']);
             
             session_set_cookie_params(0, '/');
             session_start();
