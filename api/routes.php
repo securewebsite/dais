@@ -23,6 +23,8 @@
 |
 */
 
+use Laravel\Lumen\Application as API;
+
 $api->get('/api', function(){
 	return view('welcome');
 });
@@ -31,7 +33,7 @@ $api->get('/api/v1', function(){
 	return view('welcome');
 });
 
-$api->group(['prefix' => 'api/v1','namespace' => 'Api\Controllers'], function($api) {
+$api->group(['prefix' => 'api/v1','namespace' => 'Api\Controllers'], function(Api $api) {
     // address
     $api->get('address','Front\Account\AddressController@index');
 

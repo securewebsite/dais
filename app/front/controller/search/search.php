@@ -131,8 +131,6 @@ class Search extends Controller {
 
         $result_total = count($data['results']);
 
-        //var_dump($data['results']);exit;
-
         $data['pagination'] = $this->theme->paginate(
             $result_total, 
             $page, 

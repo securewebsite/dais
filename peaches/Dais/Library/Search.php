@@ -41,11 +41,13 @@ class Search extends LibraryService {
 	public function execute($query, $start = 0, $limit = 10) {
 		$db = parent::$app['db'];
 
+		$items = $db->escape($query);
+		
 		$query = $db->query("
 			SELECT *, 
-			SUM(MATCH(text) AGAINST('" . $db->escape($query) . "' IN BOOLEAN MODE)) as score 
+			SUM(MATCH(text) AGAINST('{$items}' IN BOOLEAN MODE)) as score 
 			FROM {$db->prefix}search_index 
-			WHERE MATCH(text) AGAINST('" . $db->escape($query) . "' IN BOOLEAN MODE) 
+			WHERE MATCH(text) AGAINST('{$items}' IN BOOLEAN MODE) 
 			GROUP BY language_id, type, object_id 
 			ORDER BY score DESC 
 			LIMIT " . (int)$start . ", " . (int)$limit . "

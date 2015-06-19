@@ -68,17 +68,7 @@ $api->singleton(
 |
 */
 
-// $api->middleware([
-	//'Illuminate\Cookie\Middleware\EncryptCookies',
-	//'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
-	//'Illuminate\Session\Middleware\StartSession',
-	//'Illuminate\View\Middleware\ShareErrorsFromSession',
-	//'Laravel\Lumen\Http\Middleware\VerifyCsrfToken',
-// ]);
 
-// $api->routeMiddleware([
-
-// ]);
 
 /*
 |--------------------------------------------------------------------------
@@ -91,7 +81,7 @@ $api->singleton(
 |
 */
 
-// $api->register('Api\Providers\AppServiceProvider');
+
 
 /*
 |--------------------------------------------------------------------------

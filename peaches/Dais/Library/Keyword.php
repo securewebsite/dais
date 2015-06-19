@@ -177,7 +177,7 @@ class Keyword extends LibraryService {
 	protected function implode($glue, $array) {
 		$c = "";
 		foreach ($array as $key => $val):
-			@$c .= $key . $glue;
+			$c .= $key . $glue;
 		endforeach;
 		return $c;
 	}
