@@ -1,3 +1,8 @@
+/app/front/controller/tool/test.php
+/database/config
+# change this to /public/image/* once installed
+/public/image/cache/*
+/public/asset/*/compiled/*
 /storage/app/*
 /storage/logs/*
 /storage/framework/cache/*
@@ -5,10 +10,6 @@
 /storage/framework/sessions/front/*
 /storage/framework/views/*
 /storage/search/*
-/app/front/controller/tool/test.php
-# change this to /public/image/* once installed
-/public/image/cache/*
-/public/asset/*/compiled/*
 /vendor
 .env
 .DS_Store
