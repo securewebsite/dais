@@ -8,4 +8,4 @@ php:
 before_script:
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev
-  - php composer self-update
+  - php composer.phar self-update
