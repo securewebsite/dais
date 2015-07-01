@@ -32,51 +32,90 @@ class Search extends LibraryService {
 
 	private static $results;
 	private static $language_id;
+	public  static $count;
 
 	public function __construct(Container $app) {
 		parent::__construct($app);
 		self::$language_id = $app['config_language_id'];
 	}
 
-	public function execute($query, $start = 0, $limit = 10) {
+	public static function execute($string, $data = array()) {
 		$db = parent::$app['db'];
 
-		$items = $db->escape($query);
+		// Properly escape our query then use heredoc syntax in our query
+		$search = $db->escape($string);
+
+		// Sadly we'll need two queries because we need a total count
+		// for pagination. This will set our $count property.
 		
-		$query = $db->query("
-			SELECT *, 
-			SUM(MATCH(text) AGAINST('{$items}' IN BOOLEAN MODE)) as score 
-			FROM {$db->prefix}search_index 
-			WHERE MATCH(text) AGAINST('{$items}' IN BOOLEAN MODE) 
-			GROUP BY language_id, type, object_id 
-			ORDER BY score DESC 
-			LIMIT " . (int)$start . ", " . (int)$limit . "
-		");
+		self::fulltext($search);
+
+		// If we have a $count property process fulltext search.
+		if (self::$count):
+			$sql = "
+				SELECT *, 
+				SUM(MATCH(text) AGAINST('{$search}' IN BOOLEAN MODE)) as score 
+				FROM {$db->prefix}search_index 
+				WHERE MATCH(text) AGAINST('{$search}' IN BOOLEAN MODE) 
+				GROUP BY language_id, type, object_id 
+				ORDER BY score DESC
+			";
+
+			if (!empty($data['start']) || !empty($data['limit'])):
+				$sql .= " LIMIT " . (int)$data['start'] . ", " . (int)$data['limit'];
+			endif;
+			
+			$query = $db->query($sql);
+
+		else:
+			// No $count property was set by our ::fulltext method
+			// so let's move on to a keyword search.
+			self::keyword($search);
+
+			if (self::$count):
+				$sql = "
+					SELECT * 
+					FROM {$db->prefix}search_index 
+					WHERE text LIKE '%{$search}%' 
+					GROUP BY language_id, type, object_id 
+					ORDER BY id DESC
+				";
+
+				if (!empty($data['start']) || !empty($data['limit'])):
+					$sql .= " LIMIT " . (int)$data['start'] . ", " . (int)$data['limit'];
+				endif;
+
+				$query = $db->query($sql);
+			endif;
+
+		endif;
 
 		$terms = array();
+		
+		if ($query->num_rows):
+			foreach($query->rows as $row):
+				$terms[$row['type']][] = (int)$row['object_id'];
+			endforeach;
 
-		foreach($query->rows as $row):
-			$terms[$row['type']][] = (int)$row['object_id'];
-		endforeach;
-
-		/**
-		 * Our search_index table stores raw text info
-		 * to complete very fast searching. But we must now
-		 * verify that the search data found is ok to present
-		 * to our end user.
-		 *
-		 * Mainly we're checking for status, and visibility.
-		 * We don't want to show our users content they're not
-		 * authorized to see, or that's otherwise disabled.
-		 *
-		 * Pass each result type to the corresponding callback
-		 * to ensure we have visibility and status.
-		 */
-
-		foreach($terms as $type => $ids):
-			self::$type($ids);
-		endforeach;
-
+			/**
+			 * Our search_index table stores raw text info
+			 * to complete very fast searching. But we must now
+			 * verify that the search data found is ok to present
+			 * to our end user.
+			 *
+			 * Mainly we're checking for status, and visibility.
+			 * We don't want to show our users content they're not
+			 * authorized to see, or that's otherwise disabled.
+			 *
+			 * Pass each result type to the corresponding callback
+			 * to ensure we have visibility and status.
+			 */
+			
+			foreach($terms as $type => $ids):
+				self::$type($ids);
+			endforeach;
+		endif;
+		
 		return self::$results;
 	}
 
@@ -107,6 +146,10 @@ class Search extends LibraryService {
 			WHERE type    = '" . $db->escape($type) . "' 
 			AND object_id = '" . (int)$id . "'
 		");
+	}
+
+	public function total() {
+		return self::$count;
 	}
 
 	private static function category($ids) {
@@ -234,6 +277,36 @@ class Search extends LibraryService {
 				self::$results['posts'][]  = $query->row;
 			endif;
 		endforeach;
+	}
+
+	private static function fulltext($search) {
+		$db = parent::$app['db'];
+
+		$query = $db->query("
+			SELECT COUNT(id) 
+			FROM {$db->prefix}search_index 
+			WHERE MATCH(text) AGAINST('{$search}' IN BOOLEAN MODE) 
+			GROUP BY language_id, type, object_id
+		");
+
+		if ($query->num_rows):
+			self::$count = $query->num_rows;
+		endif;
+	}
+
+	private static function keyword($search) {
+		$db = parent::$app['db'];
+
+		$query = $db->query("
+			SELECT id 
+			FROM {$db->prefix}search_index 
+			WHERE text LIKE '%{$search}%' 
+			GROUP BY language_id, type, object_id
+		");
+
+		if ($query->num_rows):
+			self::$count = $query->num_rows;
+		endif;
 	}
 
 	private static function format($text) {

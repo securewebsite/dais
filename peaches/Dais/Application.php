@@ -63,8 +63,9 @@ use Dais\Service\PluginServiceModel;
 
 class Application {
 
-    public function __construct() {
+    public function __construct(array $config) {
         $this->data = new Container;
+        $this->buildConfigRequest($config);
     }
     
     public function buildConfigRequest(array $config) {

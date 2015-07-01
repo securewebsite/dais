@@ -6,6 +6,7 @@
 		<?= $breadcrumb; ?>
 		<?= $content_top; ?>
 		<div class="page-header"><h1><?= $heading_title; ?></h1></div>
+		<form class="form-horizontal" id="search-form" action="<?= $action; ?>" method="post" enctype="multipart/form-data">
 		<div class="row">
 			<div class="form-group">
 				<div class="col-sm-8 col-sm-offset-2">
@@ -18,6 +19,7 @@
 				</div>
 			</div>
 		</div>
+
 		<hr>
 		<div class="row" id="search-results">
 		<?php if ($results): ?>

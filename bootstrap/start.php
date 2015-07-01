@@ -119,6 +119,4 @@ endif;
 |
 */
 
-$app = new Dais\Application;
-
-return $app->buildConfigRequest($config);
+return $app = new Dais\Application($config);

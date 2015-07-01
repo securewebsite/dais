@@ -3652,6 +3652,9 @@ textarea.input-group-sm>.form-control, textarea.input-group-sm>.input-group-addo
     border: 2px solid #bcc1c7;
     margin-left: -1px;
 }
+.pagination .links>a {
+    border-left: 1px solid #bcc1c7 !important;
+}
 .pagination .links>a:first-child, .pagination .links>b:first-child {
     margin-left: 0;
     border-bottom-left-radius: 4px;
