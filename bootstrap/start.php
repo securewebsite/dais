@@ -16,6 +16,9 @@
 
 define('SEP', DIRECTORY_SEPARATOR);
 define('DAIS_START', microtime(true));
+define('FRONT_FACADE', 'front');
+define('ADMIN_FACADE', 'manage');
+define('API_FACADE',   'api');
 
 /*
 |--------------------------------------------------------------------------
@@ -43,14 +46,7 @@ require dirname(__DIR__) . SEP . 'vendor' . SEP . 'autoload.php';
 
 Dotenv::load(dirname(__DIR__) . SEP);
 
-// convert our global $_ENV to a more elegant array
-$env = array();
-
-foreach($_ENV as $key => $value):
-    $env[strtolower(str_replace('_', '.', $key))] = $value;
-endforeach;
-
-require __DIR__ . SEP . 'paths.php';
+//require __DIR__ . SEP . 'paths.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -80,35 +76,21 @@ endif;
 |
 */
 
-if ($loader = dirname(FRAMEWORK) . SEP . 'autoload.php'):
-    require $loader;
+// if ($loader = dirname(__DIR__) . SEP . 'peaches' . SEP . 'Dais' . SEP . 'autoload.php'):
+//     require $loader;
+// endif;
+
+$autoload = new Dais\Autoload;
+
+
+/**
+ *  We also need to redirect calls to the app when no db config
+ *  file exists.
+ */
+if (!isset($_ENV) || empty($_ENV['DB_DATABASE'])):
+    throw new \Exception('No database config is set in your environment.');
 endif;
 
-/*
-|--------------------------------------------------------------------------
-|   Installer??
-|--------------------------------------------------------------------------
-|
-|   If our install facade is called let's make sure we stay within the
-|   installer application.  We'll let the installer app work out whether
-|   we need to do an upgrade or new install.
-|
-*/
-
-if (preg_match('/^\/(' . INSTALL_FACADE . ')/', $_SERVER['REQUEST_URI'])):
-    $app = new Dais\Engine\Installer;
-    return $app->buildConfigRequest($config);
-else:
-    
-    /**
-     *  We also need to redirect calls to the app when no db config
-     *  file exists.
-     */
-    if (!isset($env) || empty($env['db.database'])):
-        header('Location: ' . INSTALL_FACADE);
-        //throw new \Exception('No database config is set in your environment.');
-    endif;
-endif;
 
 /*
 |--------------------------------------------------------------------------
@@ -117,6 +99,45 @@ endif;
 |   Here we'll instantiate our application class and push through our 
 |   config array so that we can set it to the IoC container.
 |
+|   Once we instantiate our application here we can now call it statically
+|   via it's Facade ie: App::someMethod();
+|
 */
 
-return $app = new Dais\Application($config);
+$app = new Dais\Application(
+    realpath(__DIR__ . '/../')
+);
+//var_dump($app);exit;
+/*
+|--------------------------------------------------------------------------
+|   Register Your Service Providers
+|--------------------------------------------------------------------------
+|
+|   Feel free to add your own service providers in the array below.
+|   This includes third party service providers from other vendors.
+|
+|   If you're creating a service to interact with native services, or
+|   you're overriding an existing service, ensure you place your services
+|   and providers in the override directory.
+|
+*/
+
+/**
+ * App::registerServiceProviders([
+ *    Dais\Services\MyCoolNewService::class,
+ * ]);
+*/
+
+/*
+|--------------------------------------------------------------------------
+|   Boot Up the App
+|--------------------------------------------------------------------------
+|
+|   Now that you've added any additional services we can boot the app and
+|   intantiate all of our services and facades.
+|   
+*/
+
+$app->boot();
+
+return $app;

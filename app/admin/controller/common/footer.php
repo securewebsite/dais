@@ -19,16 +19,16 @@ use Dais\Engine\Controller;
 
 class Footer extends Controller {
     public function index() {
-        $data = $this->theme->language('common/footer');
+        $data = Theme::language('common/footer');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data['javascript']  = $this->theme->controller('common/javascript');
-        $data['text_footer'] = sprintf($this->language->get('lang_text_footer'), VERSION);
+        $data['javascript']  = Theme::controller('common/javascript');
+        $data['text_footer'] = sprintf($this->language->get('lang_text_footer'), App::version());
 
-		$key             = $this->javascript->compile();
-		$data['js_link'] = $this->app['https.public'] . 'asset/' . $this->app['theme.name'] . '/compiled/' . $this->app['filecache']->get_key($key, 'js');
+		$key             = JS::compile();
+		$data['js_link'] = Config::get('https.public') . 'asset/' . Config::get('theme.name') . '/compiled/' . Filecache::get_key($key, 'js');
         
-        return $this->theme->view('common/footer', $data);
+        return Theme::view('common/footer', $data);
     }
 }

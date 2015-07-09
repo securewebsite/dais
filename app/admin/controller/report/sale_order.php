@@ -19,9 +19,9 @@ use Dais\Engine\Controller;
 
 class SaleOrder extends Controller {
     public function index() {
-        $data = $this->theme->language('report/sale_order');
+        $data = Theme::language('report/sale_order');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
@@ -77,23 +77,23 @@ class SaleOrder extends Controller {
         
         $this->breadcrumb->add('lang_heading_title', 'report/sale_order', $url);
         
-        $this->theme->model('report/sale');
+        Theme::model('report/sale');
         
         $data['orders'] = array();
         
-        $filter = array('filter_date_start' => $filter_date_start, 'filter_date_end' => $filter_date_end, 'filter_group' => $filter_group, 'filter_order_status_id' => $filter_order_status_id, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
+        $filter = array('filter_date_start' => $filter_date_start, 'filter_date_end' => $filter_date_end, 'filter_group' => $filter_group, 'filter_order_status_id' => $filter_order_status_id, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
         $order_total = $this->model_report_sale->getTotalOrders($filter);
         
         $results = $this->model_report_sale->getOrders($filter);
         
         foreach ($results as $result) {
-            $data['orders'][] = array('date_start' => date($this->language->get('lang_date_format_short'), strtotime($result['date_start'])), 'date_end' => date($this->language->get('lang_date_format_short'), strtotime($result['date_end'])), 'orders' => $result['orders'], 'products' => $result['products'], 'tax' => $this->currency->format($result['tax'], $this->config->get('config_currency')), 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')));
+            $data['orders'][] = array('date_start' => date($this->language->get('lang_date_format_short'), strtotime($result['date_start'])), 'date_end' => date($this->language->get('lang_date_format_short'), strtotime($result['date_end'])), 'orders' => $result['orders'], 'products' => $result['products'], 'tax' => $this->currency->format($result['tax'], Config::get('config_currency')), 'total' => $this->currency->format($result['total'], Config::get('config_currency')));
         }
         
         $data['token'] = $this->session->data['token'];
         
-        $this->theme->model('localization/order_status');
+        Theme::model('localization/order_status');
         
         $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
         
@@ -125,17 +125,17 @@ class SaleOrder extends Controller {
             $url.= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
         }
         
-        $data['pagination'] = $this->theme->paginate($order_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('report/sale_order', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($order_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('report/sale_order', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
         $data['filter_group'] = $filter_group;
         $data['filter_order_status_id'] = $filter_order_status_id;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('report/sale_order', $data));
+        Response::setOutput(Theme::view('report/sale_order', $data));
     }
 }

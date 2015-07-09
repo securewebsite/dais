@@ -26,7 +26,7 @@ class GoogleBase extends Controller {
             $output.= '<channel>';
             $output.= '<title>' . $this->config->get('config_name') . '</title>';
             $output.= '<description>' . $this->config->get('config_meta_description') . '</description>';
-            $output.= '<link>' . $this->get('http.server') . '</link>';
+            $output.= '<link>' . Config::get('http.server') . '</link>';
             
             $this->theme->model('catalog/category');
             $this->theme->model('catalog/product');

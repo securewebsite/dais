@@ -82,7 +82,7 @@ class GiftCardTheme extends Model {
 			LEFT JOIN {$this->db->prefix}gift_card_theme_description vtd 
 				ON (vt.gift_card_theme_id = vtd.gift_card_theme_id) 
 			WHERE vt.gift_card_theme_id = '" . (int)$gift_card_theme_id . "' 
-			AND vtd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND vtd.language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         return $query->row;
@@ -95,7 +95,7 @@ class GiftCardTheme extends Model {
 				FROM {$this->db->prefix}gift_card_theme vt 
 				LEFT JOIN {$this->db->prefix}gift_card_theme_description vtd 
 					ON (vt.gift_card_theme_id = vtd.gift_card_theme_id) 
-				WHERE vtd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+				WHERE vtd.language_id = '" . (int)Config::get('config_language_id') . "' 
 				ORDER BY vtd.name
 			";
             
@@ -126,7 +126,7 @@ class GiftCardTheme extends Model {
 				FROM {$this->db->prefix}gift_card_theme vt 
 				LEFT JOIN {$this->db->prefix}gift_card_theme_description vtd 
 					ON (vt.gift_card_theme_id = vtd.gift_card_theme_id) 
-				WHERE vtd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+				WHERE vtd.language_id = '" . (int)Config::get('config_language_id') . "' 
 				ORDER BY vtd.name
 			");
             

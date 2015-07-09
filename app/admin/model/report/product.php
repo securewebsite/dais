@@ -19,7 +19,7 @@ use Dais\Engine\Model;
 
 class Product extends Model {
     public function getProductsViewed($data = array()) {
-        $sql = "SELECT pd.name, p.model, p.viewed FROM {$this->db->prefix}product p LEFT JOIN {$this->db->prefix}product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.viewed > 0 ORDER BY p.viewed DESC";
+        $sql = "SELECT pd.name, p.model, p.viewed FROM {$this->db->prefix}product p LEFT JOIN {$this->db->prefix}product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "' AND p.viewed > 0 ORDER BY p.viewed DESC";
         
         if (isset($data['start']) || isset($data['limit'])) {
             if ($data['start'] < 0) {

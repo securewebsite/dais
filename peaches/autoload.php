@@ -14,68 +14,33 @@
 |   
 */
 
+namespace Dais;
 
+use Dais\Support\Naming;
 
-/*
-|--------------------------------------------------------------------------
-|   Dais Framework Autoloader
-|--------------------------------------------------------------------------
-|
-|   This autoloader loads all the Dais Framework classes and is written
-|   as a simple closure.  No need for a named function.
-|   
-*/
+class Autoload {
 
-spl_autoload_register(function ($class) {
-    if (is_readable($file = dirname(FRAMEWORK) . SEP . str_replace('\\', SEP, $class) . '.php')):
-
+    public static function register() {
         /*
         |--------------------------------------------------------------------------
-        |   Override Framework Files
+        |   Application Autoloader
         |--------------------------------------------------------------------------
         |
-        |   All of our autoloaded framework classes are passed through this 
-        |   statement so that they can be overriden by developers.
-        |
-        |   To override a framework file simply place it in the override/Dais 
-        |   directory within it's parent directory.
-        |
-        |   Example: to override Dais\Engine\Front place your overidden file
-        |   in: override/Dais/Engine and this class will be loaded instead of
-        |   the framework file.
-        |
+        |   This autoloader loads all of our classes from within the app directory.
+        |   Once again, no need for a named method, just use a simple closure.
+        |   
         */
 
-        if (substr($file, 0, strlen(FRAMEWORK)) == FRAMEWORK):
-            $override = OVERRIDE . substr($file, strlen(dirname(FRAMEWORK)));
-        endif;
+        spl_autoload_register(function ($class) {
+            $classname = Naming::file_from_classname($class);
+            
+            if (is_readable($file = APP_PATH . str_replace('\\', SEP, $classname) . '.php')):
+                require $file;
+            else:
+                return;
+            endif;
+        });
+    }
+}
 
-        if (is_readable($override)):
-            require $override;
-        else:
-            require $file;
-        endif;
-
-        return true;
-    endif;
-});
-
-/*
-|--------------------------------------------------------------------------
-|   Application Autoloader
-|--------------------------------------------------------------------------
-|
-|   This autoloader loads all of our classes from within the app directory.
-|   Once again, no need for a named method, just use a simple closure.
-|   
-*/
-
-spl_autoload_register(function ($class) {
-    $classname = \Dais\Library\Naming::file_from_classname($class);
-    
-    if (is_readable($file = APP_PATH . str_replace('\\', SEP, $classname) . '.php')):
-        require $file;
-    else:
-        return;
-    endif;
-});
+Autoload::register();

@@ -21,12 +21,12 @@ class PaypalExpress extends Controller {
     private $error = array();
     
     public function index() {
-        $data = $this->theme->language('payment/paypal_express');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        $data = Theme::language('payment/paypal_express');
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('setting/setting');
-        $this->theme->model('setting/module');
-        $this->theme->model('payment/paypal_express');
+        Theme::model('setting/setting');
+        Theme::model('setting/module');
+        Theme::model('payment/paypal_express');
         
         $this->error = array();
         
@@ -34,12 +34,12 @@ class PaypalExpress extends Controller {
             $this->model_setting_setting->editSetting('paypal_express', $this->request->post);
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
-            $this->response->redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
         } else {
             $data['error'] = $this->error;
         }
         
-        $data['text_ipn_url'] = $this->app['https.public'] . 'payment/paypal_express/ipn';
+        $data['text_ipn_url'] = Config::get('https.public') . 'payment/paypal_express/ipn';
         
         $this->breadcrumb->add('lang_text_payment', 'module/payment');
         $this->breadcrumb->add('lang_heading_title', 'payment/paypal_express');
@@ -54,148 +54,148 @@ class PaypalExpress extends Controller {
         if (isset($this->request->post['paypal_express_username'])) {
             $data['paypal_express_username'] = $this->request->post['paypal_express_username'];
         } else {
-            $data['paypal_express_username'] = $this->config->get('paypal_express_username');
+            $data['paypal_express_username'] = Config::get('paypal_express_username');
         }
         
         if (isset($this->request->post['paypal_express_password'])) {
             $data['paypal_express_password'] = $this->request->post['paypal_express_password'];
         } else {
-            $data['paypal_express_password'] = $this->config->get('paypal_express_password');
+            $data['paypal_express_password'] = Config::get('paypal_express_password');
         }
         
         if (isset($this->request->post['paypal_express_signature'])) {
             $data['paypal_express_signature'] = $this->request->post['paypal_express_signature'];
         } else {
-            $data['paypal_express_signature'] = $this->config->get('paypal_express_signature');
+            $data['paypal_express_signature'] = Config::get('paypal_express_signature');
         }
         
         if (isset($this->request->post['paypal_express_test'])) {
             $data['paypal_express_test'] = $this->request->post['paypal_express_test'];
         } else {
-            $data['paypal_express_test'] = $this->config->get('paypal_express_test');
+            $data['paypal_express_test'] = Config::get('paypal_express_test');
         }
         
         if (isset($this->request->post['paypal_express_method'])) {
             $data['paypal_express_method'] = $this->request->post['paypal_express_method'];
         } else {
-            $data['paypal_express_method'] = $this->config->get('paypal_express_method');
+            $data['paypal_express_method'] = Config::get('paypal_express_method');
         }
         
         if (isset($this->request->post['paypal_express_total'])) {
             $data['paypal_express_total'] = $this->request->post['paypal_express_total'];
         } else {
-            $data['paypal_express_total'] = $this->config->get('paypal_express_total');
+            $data['paypal_express_total'] = Config::get('paypal_express_total');
         }
         
         if (isset($this->request->post['paypal_express_debug'])) {
             $data['paypal_express_debug'] = $this->request->post['paypal_express_debug'];
         } else {
-            $data['paypal_express_debug'] = $this->config->get('paypal_express_debug');
+            $data['paypal_express_debug'] = Config::get('paypal_express_debug');
         }
         
         if (isset($this->request->post['paypal_express_currency'])) {
             $data['paypal_express_currency'] = $this->request->post['paypal_express_currency'];
         } else {
-            $data['paypal_express_currency'] = $this->config->get('paypal_express_currency');
+            $data['paypal_express_currency'] = Config::get('paypal_express_currency');
         }
         
         $data['currency_codes'] = $this->model_payment_paypal_express->currencyCodes();
         
-        $this->theme->model('localization/order_status');
+        Theme::model('localization/order_status');
         
         $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
         
         if (isset($this->request->post['paypal_express_canceled_reversal_status_id'])) {
             $data['paypal_express_canceled_reversal_status_id'] = $this->request->post['paypal_express_canceled_reversal_status_id'];
         } else {
-            $data['paypal_express_canceled_reversal_status_id'] = $this->config->get('paypal_express_canceled_reversal_status_id');
+            $data['paypal_express_canceled_reversal_status_id'] = Config::get('paypal_express_canceled_reversal_status_id');
         }
         
         if (isset($this->request->post['paypal_express_completed_status_id'])) {
             $data['paypal_express_completed_status_id'] = $this->request->post['paypal_express_completed_status_id'];
         } else {
-            $data['paypal_express_completed_status_id'] = $this->config->get('paypal_express_completed_status_id');
+            $data['paypal_express_completed_status_id'] = Config::get('paypal_express_completed_status_id');
         }
         
         if (isset($this->request->post['paypal_express_denied_status_id'])) {
             $data['paypal_express_denied_status_id'] = $this->request->post['paypal_express_denied_status_id'];
         } else {
-            $data['paypal_express_denied_status_id'] = $this->config->get('paypal_express_denied_status_id');
+            $data['paypal_express_denied_status_id'] = Config::get('paypal_express_denied_status_id');
         }
         
         if (isset($this->request->post['paypal_express_expired_status_id'])) {
             $data['paypal_express_expired_status_id'] = $this->request->post['paypal_express_expired_status_id'];
         } else {
-            $data['paypal_express_expired_status_id'] = $this->config->get('paypal_express_expired_status_id');
+            $data['paypal_express_expired_status_id'] = Config::get('paypal_express_expired_status_id');
         }
         
         if (isset($this->request->post['paypal_express_failed_status_id'])) {
             $data['paypal_express_failed_status_id'] = $this->request->post['paypal_express_failed_status_id'];
         } else {
-            $data['paypal_express_failed_status_id'] = $this->config->get('paypal_express_failed_status_id');
+            $data['paypal_express_failed_status_id'] = Config::get('paypal_express_failed_status_id');
         }
         
         if (isset($this->request->post['paypal_express_pending_status_id'])) {
             $data['paypal_express_pending_status_id'] = $this->request->post['paypal_express_pending_status_id'];
         } else {
-            $data['paypal_express_pending_status_id'] = $this->config->get('paypal_express_pending_status_id');
+            $data['paypal_express_pending_status_id'] = Config::get('paypal_express_pending_status_id');
         }
         
         if (isset($this->request->post['paypal_express_processed_status_id'])) {
             $data['paypal_express_processed_status_id'] = $this->request->post['paypal_express_processed_status_id'];
         } else {
-            $data['paypal_express_processed_status_id'] = $this->config->get('paypal_express_processed_status_id');
+            $data['paypal_express_processed_status_id'] = Config::get('paypal_express_processed_status_id');
         }
         
         if (isset($this->request->post['paypal_express_refunded_status_id'])) {
             $data['paypal_express_refunded_status_id'] = $this->request->post['paypal_express_refunded_status_id'];
         } else {
-            $data['paypal_express_refunded_status_id'] = $this->config->get('paypal_express_refunded_status_id');
+            $data['paypal_express_refunded_status_id'] = Config::get('paypal_express_refunded_status_id');
         }
         
         if (isset($this->request->post['paypal_express_reversed_status_id'])) {
             $data['paypal_express_reversed_status_id'] = $this->request->post['paypal_express_reversed_status_id'];
         } else {
-            $data['paypal_express_reversed_status_id'] = $this->config->get('paypal_express_reversed_status_id');
+            $data['paypal_express_reversed_status_id'] = Config::get('paypal_express_reversed_status_id');
         }
         
         if (isset($this->request->post['paypal_express_voided_status_id'])) {
             $data['paypal_express_voided_status_id'] = $this->request->post['paypal_express_voided_status_id'];
         } else {
-            $data['paypal_express_voided_status_id'] = $this->config->get('paypal_express_voided_status_id');
+            $data['paypal_express_voided_status_id'] = Config::get('paypal_express_voided_status_id');
         }
         
         if (isset($this->request->post['paypal_express_allow_note'])) {
             $data['paypal_express_allow_note'] = $this->request->post['paypal_express_allow_note'];
         } else {
-            $data['paypal_express_allow_note'] = $this->config->get('paypal_express_allow_note');
+            $data['paypal_express_allow_note'] = Config::get('paypal_express_allow_note');
         }
         
         if (isset($this->request->post['paypal_express_logo'])) {
             $data['paypal_express_logo'] = $this->request->post['paypal_express_logo'];
         } else {
-            $data['paypal_express_logo'] = $this->config->get('paypal_express_logo');
+            $data['paypal_express_logo'] = Config::get('paypal_express_logo');
         }
         
         if (isset($this->request->post['paypal_express_page_colour'])) {
             $data['paypal_express_page_colour'] = str_replace('#', '', $this->request->post['paypal_express_page_colour']);
         } else {
-            $data['paypal_express_page_colour'] = $this->config->get('paypal_express_page_colour');
+            $data['paypal_express_page_colour'] = Config::get('paypal_express_page_colour');
         }
         
         if (isset($this->request->post['paypal_express_recurring_cancel_status'])) {
             $data['paypal_express_recurring_cancel_status'] = $this->request->post['paypal_express_recurring_cancel_status'];
         } else {
-            $data['paypal_express_recurring_cancel_status'] = $this->config->get('paypal_express_recurring_cancel_status');
+            $data['paypal_express_recurring_cancel_status'] = Config::get('paypal_express_recurring_cancel_status');
         }
         
-        $this->theme->model('tool/image');
+        Theme::model('tool/image');
         
-        $logo = $this->config->get('paypal_express_logo');
+        $logo = Config::get('paypal_express_logo');
         
-        if (isset($this->request->post['paypal_express_logo']) && file_exists($this->app['path.image'] . $this->request->post['paypal_express_logo'])) {
+        if (isset($this->request->post['paypal_express_logo']) && file_exists(Config::get('path.image') . $this->request->post['paypal_express_logo'])) {
             $data['thumb'] = $this->model_tool_image->resize($this->request->post['paypal_express_logo'], 750, 90);
-        } elseif (($logo != '') && file_exists($this->app['path.image'] . $logo)) {
+        } elseif (($logo != '') && file_exists(Config::get('path.image') . $logo)) {
             $data['thumb'] = $this->model_tool_image->resize($logo, 750, 90);
         } else {
             $data['thumb'] = $this->model_tool_image->resize('placeholder.png', 750, 90);
@@ -206,44 +206,44 @@ class PaypalExpress extends Controller {
         if (isset($this->request->post['paypal_express_geo_zone_id'])) {
             $data['paypal_express_geo_zone_id'] = $this->request->post['paypal_express_geo_zone_id'];
         } else {
-            $data['paypal_express_geo_zone_id'] = $this->config->get('paypal_express_geo_zone_id');
+            $data['paypal_express_geo_zone_id'] = Config::get('paypal_express_geo_zone_id');
         }
         
-        $this->theme->model('localization/geo_zone');
+        Theme::model('localization/geo_zone');
         
         $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
         
         if (isset($this->request->post['paypal_express_status'])) {
             $data['paypal_express_status'] = $this->request->post['paypal_express_status'];
         } else {
-            $data['paypal_express_status'] = $this->config->get('paypal_express_status');
+            $data['paypal_express_status'] = Config::get('paypal_express_status');
         }
         
         if (isset($this->request->post['paypal_express_sort_order'])) {
             $data['paypal_express_sort_order'] = $this->request->post['paypal_express_sort_order'];
         } else {
-            $data['paypal_express_sort_order'] = $this->config->get('paypal_express_sort_order');
+            $data['paypal_express_sort_order'] = Config::get('paypal_express_sort_order');
         }
         
         $data['token'] = $this->session->data['token'];
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('payment/paypal_express', $data));
+        Response::setOutput(Theme::view('payment/paypal_express', $data));
     }
     
     public function imageLogo() {
-        $this->theme->model('tool/image');
+        Theme::model('tool/image');
         
         if (isset($this->request->get['image'])) {
-            $this->response->setOutput($this->model_tool_image->resize(html_entity_decode($this->request->get['image'], ENT_QUOTES, 'UTF-8'), 750, 90));
+            Response::setOutput($this->model_tool_image->resize(html_entity_decode($this->request->get['image'], ENT_QUOTES, 'UTF-8'), 750, 90));
         }
     }
     
     protected function validate() {
-        if (!$this->user->hasPermission('modify', 'payment/paypal_express')) {
+        if (!User::hasPermission('modify', 'payment/paypal_express')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
@@ -267,8 +267,8 @@ class PaypalExpress extends Controller {
     }
     
     public function resend() {
-        $this->theme->language('payment/paypal_express');
-        $this->theme->model('payment/paypal_express');
+        Theme::language('payment/paypal_express');
+        Theme::model('payment/paypal_express');
         
         $json = array();
         
@@ -339,12 +339,12 @@ class PaypalExpress extends Controller {
             $json['error'] = $this->language->get('lang_error_data');
         }
         
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
+        Response::addHeader('Content-Type: application/json');
+        Response::setOutput(json_encode($json));
     }
     
     public function capture() {
-        $this->theme->language('payment/paypal_express');
+        Theme::language('payment/paypal_express');
         
         /**
          * used to capture authorised payments
@@ -353,7 +353,7 @@ class PaypalExpress extends Controller {
          */
         if (isset($this->request->post['order_id']) && $this->request->post['amount'] > 0 && isset($this->request->post['order_id']) && isset($this->request->post['complete'])) {
             
-            $this->theme->model('payment/paypal_express');
+            Theme::model('payment/paypal_express');
             
             $paypal_order = $this->model_payment_paypal_express->getOrder($this->request->post['order_id']);
             
@@ -460,8 +460,8 @@ class PaypalExpress extends Controller {
             $json['msg'] = 'Missing data';
         }
         
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
+        Response::addHeader('Content-Type: application/json');
+        Response::setOutput(json_encode($json));
     }
     
     public function void() {
@@ -470,7 +470,7 @@ class PaypalExpress extends Controller {
          * used to void an authorized payment
          */
         if (isset($this->request->post['order_id']) && $this->request->post['order_id'] != '') {
-            $this->theme->model('payment/paypal_express');
+            Theme::model('payment/paypal_express');
             
             $paypal_order = $this->model_payment_paypal_express->getOrder($this->request->post['order_id']);
             
@@ -514,14 +514,14 @@ class PaypalExpress extends Controller {
             $json['msg'] = 'Missing data';
         }
         
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
+        Response::addHeader('Content-Type: application/json');
+        Response::setOutput(json_encode($json));
     }
     
     public function refund() {
-        $data = $this->theme->language('payment/paypal_express_refund');
+        $data = Theme::language('payment/paypal_express_refund');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
         $this->breadcrumb->add('lang_text_paypal_express', 'payment/paypal_express');
         $this->breadcrumb->add('lang_heading_title', 'payment/paypal_express/refund');
@@ -532,7 +532,7 @@ class PaypalExpress extends Controller {
         
         $data['transaction_id'] = $this->request->get['transaction_id'];
         
-        $this->theme->model('payment/paypal_express');
+        Theme::model('payment/paypal_express');
         $pp_transaction = $this->model_payment_paypal_express->getTransaction($this->request->get['transaction_id']);
         
         $data['amount_original'] = $pp_transaction['AMT'];
@@ -557,11 +557,11 @@ class PaypalExpress extends Controller {
             $data['error'] = '';
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('payment/paypal_express_refund', $data));
+        Response::setOutput(Theme::view('payment/paypal_express_refund', $data));
     }
     
     public function doRefund() {
@@ -573,8 +573,8 @@ class PaypalExpress extends Controller {
          */
         if (isset($this->request->post['transaction_id']) && isset($this->request->post['refund_full'])) {
             
-            $this->theme->model('payment/paypal_express');
-            $this->theme->language('payment/paypal_express_refund');
+            Theme::model('payment/paypal_express');
+            Theme::language('payment/paypal_express_refund');
             
             if ($this->request->post['refund_full'] == 0 && $this->request->post['amount'] == 0) {
                 $this->session->data['error'] = $this->language->get('lang_error_partial_amt');
@@ -619,7 +619,7 @@ class PaypalExpress extends Controller {
                     if ($result === false) {
                         $transaction['payment_status'] = 'Failed';
                         $this->model_payment_paypal_express->addTransaction($transaction, $call_data);
-                        $this->response->redirect($this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $paypal_order['order_id'], 'SSL'));
+                        Response::redirect($this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $paypal_order['order_id'], 'SSL'));
                     } else if ($result['ACK'] != 'Failure' && $result['ACK'] != 'FailureWithWarning') {
                         
                         $transaction['transaction_id'] = $result['REFUNDTRANSACTIONID'];
@@ -647,37 +647,37 @@ class PaypalExpress extends Controller {
                         }
                         
                         //redirect back to the order
-                        $this->response->redirect($this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $paypal_order['order_id'], 'SSL'));
+                        Response::redirect($this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $paypal_order['order_id'], 'SSL'));
                     } else {
                         $this->model_payment_paypal_express->log(json_encode($result));
                         $this->session->data['error'] = (isset($result['L_SHORTMESSAGE0']) ? $result['L_SHORTMESSAGE0'] : 'There was an error') . (isset($result['L_LONGMESSAGE0']) ? '<br />' . $result['L_LONGMESSAGE0'] : '');
-                        $this->response->redirect($this->url->link('payment/paypal_express/refund', 'token=' . $this->session->data['token'] . '&transaction_id=' . $this->request->post['transaction_id'], 'SSL'));
+                        Response::redirect($this->url->link('payment/paypal_express/refund', 'token=' . $this->session->data['token'] . '&transaction_id=' . $this->request->post['transaction_id'], 'SSL'));
                     }
                 } else {
                     $this->session->data['error'] = $this->language->get('lang_error_data_missing');
-                    $this->response->redirect($this->url->link('payment/paypal_express/refund', 'token=' . $this->session->data['token'] . '&transaction_id=' . $this->request->post['transaction_id'], 'SSL'));
+                    Response::redirect($this->url->link('payment/paypal_express/refund', 'token=' . $this->session->data['token'] . '&transaction_id=' . $this->request->post['transaction_id'], 'SSL'));
                 }
             }
         } else {
             $this->session->data['error'] = $this->language->get('lang_error_data');
-            $this->response->redirect($this->url->link('payment/paypal_express/refund', 'token=' . $this->session->data['token'] . '&transaction_id=' . $this->request->post['transaction_id'], 'SSL'));
+            Response::redirect($this->url->link('payment/paypal_express/refund', 'token=' . $this->session->data['token'] . '&transaction_id=' . $this->request->post['transaction_id'], 'SSL'));
         }
     }
     
     public function install() {
-        $this->theme->model('payment/paypal_express');
+        Theme::model('payment/paypal_express');
         $this->model_payment_paypal_express->install();
     }
     
     public function uninstall() {
-        $this->theme->model('payment/paypal_express');
+        Theme::model('payment/paypal_express');
         $this->model_payment_paypal_express->uninstall();
     }
     
     public function orderAction() {
-        if ($this->config->get('paypal_express_status')) {
-            $data = $this->theme->language('payment/paypal_express_order');
-            $this->theme->model('payment/paypal_express');
+        if (Config::get('paypal_express_status')) {
+            $data = Theme::language('payment/paypal_express_order');
+            Theme::model('payment/paypal_express');
             
             $paypal_order = $this->model_payment_paypal_express->getOrder($this->request->get['order_id']);
             
@@ -706,21 +706,21 @@ class PaypalExpress extends Controller {
                 $data['view_link']   = $this->url->link('payment/paypal_express/viewTransaction', 'token=' . $this->session->data['token'], 'SSL');
                 $data['resend_link'] = $this->url->link('payment/paypal_express/resend', 'token=' . $this->session->data['token'], 'SSL');
                 
-                $this->theme->listen(__CLASS__, __FUNCTION__);
+                Theme::listen(__CLASS__, __FUNCTION__);
                 
-                return $this->theme->view('payment/paypal_express_order', $data);
+                return Theme::view('payment/paypal_express_order', $data);
             }
         }
     }
     
     public function search() {
-        $data = $this->theme->language('payment/paypal_express_search');
-        $this->theme->model('payment/paypal_express');
+        $data = Theme::language('payment/paypal_express_search');
+        Theme::model('payment/paypal_express');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
         $data['currency_codes']   = $this->model_payment_paypal_express->currencyCodes();
-        $data['default_currency'] = $this->config->get('paypal_express_currency');
+        $data['default_currency'] = Config::get('paypal_express_currency');
         
         $this->breadcrumb->add('lang_text_paypal_express', 'payment/paypal_express');
         $this->breadcrumb->add('lang_heading_title', 'payment/paypal_express/search');
@@ -730,13 +730,13 @@ class PaypalExpress extends Controller {
         $data['date_end']   = date("Y-m-d");
         $data['view_link']  = $this->url->link('payment/paypal_express/viewTransaction', 'token=' . $this->session->data['token'], 'SSL');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->loadjs('javascript/payment/paypal_express_search', $data);
+        Theme::loadjs('javascript/payment/paypal_express_search', $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('payment/paypal_express_search', $data));
+        Response::setOutput(Theme::view('payment/paypal_express_search', $data));
     }
     
     public function doSearch() {
@@ -746,7 +746,7 @@ class PaypalExpress extends Controller {
          */
         if (isset($this->request->post['date_start'])) {
             
-            $this->theme->model('payment/paypal_express');
+            Theme::model('payment/paypal_express');
             
             $call_data = array();
             $call_data['METHOD'] = 'TransactionSearch';
@@ -827,21 +827,21 @@ class PaypalExpress extends Controller {
                 $response['error_msg'] = $result['L_LONGMESSAGE0'];
             }
             
-            $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode($response));
+            Response::addHeader('Content-Type: application/json');
+            Response::setOutput(json_encode($response));
         } else {
             $response['error']     = true;
             $response['error_msg'] = 'Enter a start date';
-            $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode($response));
+            Response::addHeader('Content-Type: application/json');
+            Response::setOutput(json_encode($response));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
     }
     
     public function viewTransaction() {
-        $data = $this->theme->language('payment/paypal_express_view');
-        $this->theme->model('payment/paypal_express');
+        $data = Theme::language('payment/paypal_express_view');
+        Theme::model('payment/paypal_express');
         
         $data['transaction'] = $this->model_payment_paypal_express->getTransaction($this->request->get['transaction_id']);
         $data['lines']       = $this->formatRows($data['transaction']);
@@ -849,16 +849,16 @@ class PaypalExpress extends Controller {
         $data['cancel']      = $this->url->link('payment/paypal_express/search', 'token=' . $this->session->data['token'], 'SSL');
         $data['token']       = $this->session->data['token'];
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
         $this->breadcrumb->add('lang_text_paypal_express', 'payment/paypal_express');
         $this->breadcrumb->add('lang_heading_title', 'payment/paypal_express/viewTransaction');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('payment/paypal_express_view', $data));
+        Response::setOutput(Theme::view('payment/paypal_express_view', $data));
     }
     
     private function formatRows($data) {
@@ -883,8 +883,8 @@ class PaypalExpress extends Controller {
         //cancel an active recurring
         $this->language->load('sale/recurring');
         
-        $this->theme->model('sale/recurring');
-        $this->theme->model('payment/paypal_express');
+        Theme::model('sale/recurring');
+        Theme::model('payment/paypal_express');
         
         $recurring = $this->model_sale_recurring->getRecurring($this->request->get['order_recurring_id']);
         
@@ -915,13 +915,13 @@ class PaypalExpress extends Controller {
             $this->session->data['error'] = $this->language->get('lang_error_not_found');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
-        $this->response->redirect($this->url->link('sale/recurring/info', 'order_recurring_id=' . $this->request->get['order_recurring_id'] . '&token=' . $this->request->get['token'], 'SSL'));
+        Response::redirect($this->url->link('sale/recurring/info', 'order_recurring_id=' . $this->request->get['order_recurring_id'] . '&token=' . $this->request->get['token'], 'SSL'));
     }
     
     public function recurringButtons() {
-        $this->theme->model('sale/recurring');
+        Theme::model('sale/recurring');
         
         $recurring = $this->model_sale_recurring->getRecurring($this->request->get['order_recurring_id']);
         
@@ -934,8 +934,8 @@ class PaypalExpress extends Controller {
             );
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
-        return $this->theme->view('common/buttons', $data);
+        return Theme::view('common/buttons', $data);
     }
 }

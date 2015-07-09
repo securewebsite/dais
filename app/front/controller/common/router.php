@@ -15,9 +15,9 @@
 */
 
 namespace Front\Controller\Common;
+
 use Dais\Engine\Controller;
 use Dais\Engine\Action;
-use Dais\Service\ActionService;
 
 class Router extends Controller {
     
@@ -39,7 +39,7 @@ class Router extends Controller {
 
             // Custom Routes
             if (!isset($this->request->get['route'])):
-                foreach ($this->customRoutes() as $key => $value):
+                foreach (Routes::getCustomRoutes() as $key => $value):
                     if ($this->request->get['_route_'] == $key):
                         $this->request->get['route'] = $value;
                     endif;
@@ -47,7 +47,7 @@ class Router extends Controller {
             endif;
             
             // Slug Routes
-            $routes = $this->get('routes');
+            $routes = Routes::getRoutes();
             
             if (!isset($this->request->get['route'])):
                 foreach ($slugs as $slug):
@@ -119,11 +119,11 @@ class Router extends Controller {
                 if (count($parts) > 1):
                     $seek = $parts[0] . '/' . $parts[1];
                     
-                    if (is_readable($this->app['path.plugin'] . $plugin . '/front/controller/' . $plugin . '.php')):
+                    if (is_readable(Config::get('path.plugin') . $plugin . '/front/controller/' . $plugin . '.php')):
                         $this->request->get['route'] = $this->request->get['_route_'];
-                    elseif (is_readable($this->app['path.theme'] . $this->app['theme.name'] . '/controller/' . $seek . '.php')):
+                    elseif (is_readable(Config::get('path.theme') . Config::get('theme.name') . '/controller/' . $seek . '.php')):
                         $this->request->get['route'] = implode('/', $parts);
-                    elseif (is_readable($this->app['path.application'] . 'controller/' . $seek . '.php')):
+                    elseif (is_readable(Config::get('path.application') . 'controller/' . $seek . '.php')):
                         $this->request->get['route'] = implode('/', $parts);
                     endif;
                 endif;
@@ -140,15 +140,7 @@ class Router extends Controller {
         $this->theme->listen(__CLASS__, __FUNCTION__);
         
         if (isset($this->request->get['route'])):
-            return new Action(new ActionService($this->app, $this->request->get['route']));
+            return new Action($this->request->get['route']);
         endif;
-    }
-    
-    public function customRoutes() {
-        $routes = $this->get('custom.routes');
-        
-        $routes = $this->theme->listen(__CLASS__, __FUNCTION__, $routes);
-        
-        return $routes;
     }
 }

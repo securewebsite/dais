@@ -15,23 +15,23 @@
 */
 
 namespace Admin\Controller\Sale;
+
 use Dais\Engine\Controller;
 use Dais\Engine\Action;
-use Dais\Service\ActionService;
 
 class Recurring extends Controller {
     private $error = array();
     
     public function index() {
-        $this->theme->language('sale/recurring');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('sale/recurring');
+        Theme::language('sale/recurring');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('sale/recurring');
         
         $this->getList();
     }
     
     protected function getList() {
-        $data = $this->theme->language('sale/recurring');
+        $data = Theme::language('sale/recurring');
         
         if (isset($this->request->get['filter_order_recurring_id'])) {
             $filter_order_recurring_id = $this->request->get['filter_order_recurring_id'];
@@ -127,7 +127,7 @@ class Recurring extends Controller {
         
         $this->breadcrumb->add('lang_heading_title', 'sale/recurring', $url);
         
-        $filter_data = array('filter_order_recurring_id' => $filter_order_recurring_id, 'filter_order_id' => $filter_order_id, 'filter_reference' => $filter_reference, 'filter_customer' => $filter_customer, 'filter_status' => $filter_status, 'filter_date_added' => $filter_date_added, 'order' => $order, 'sort' => $sort, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'),);
+        $filter_data = array('filter_order_recurring_id' => $filter_order_recurring_id, 'filter_order_id' => $filter_order_id, 'filter_reference' => $filter_reference, 'filter_customer' => $filter_customer, 'filter_status' => $filter_status, 'filter_date_added' => $filter_date_added, 'order' => $order, 'sort' => $sort, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'),);
         
         $recurrings_total = $this->model_sale_recurring->getTotalRecurrings($filter_data);
         $results = $this->model_sale_recurring->getRecurrings($filter_data);
@@ -233,7 +233,7 @@ class Recurring extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = $this->theme->paginate($recurrings_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('sale/recurring', 'token=' . $this->session->data['token'] . '&page={page}' . $url, 'SSL'));
+        $data['pagination'] = Theme::paginate($recurrings_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('sale/recurring', 'token=' . $this->session->data['token'] . '&page={page}' . $url, 'SSL'));
         
         $data['filter_order_recurring_id'] = $filter_order_recurring_id;
         $data['filter_order_id'] = $filter_order_id;
@@ -247,26 +247,26 @@ class Recurring extends Controller {
         $data['sort'] = $sort;
         $data['order'] = $order;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('sale/recurring_list', $data));
+        Response::setOutput(Theme::view('sale/recurring_list', $data));
     }
     
     public function info() {
-        $data = $this->theme->language('sale/recurring');
+        $data = Theme::language('sale/recurring');
         
-        $this->theme->model('sale/recurring');
-        $this->theme->model('sale/order');
-        $this->theme->model('catalog/product');
+        Theme::model('sale/recurring');
+        Theme::model('sale/order');
+        Theme::model('catalog/product');
         
         $order_recurring = $this->model_sale_recurring->getRecurring($this->request->get['order_recurring_id']);
         
         if ($order_recurring) {
             $order = $this->model_sale_order->getOrder($order_recurring['order_id']);
             
-            $this->theme->setTitle($this->language->get('lang_heading_title'));
+            Theme::setTitle($this->language->get('lang_heading_title'));
             
             $url = '';
             
@@ -363,15 +363,15 @@ class Recurring extends Controller {
             
             $data['token'] = $this->request->get['token'];
             
-            $data['buttons'] = $this->theme->controller('payment/' . $order['payment_code'] . '/recurringButtons');
+            $data['buttons'] = Theme::controller('payment/' . $order['payment_code'] . '/recurringButtons');
             
-            $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+            $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $data = $this->theme->render_controllers($data);
+            $data = Theme::render_controllers($data);
             
-            $this->response->setOutput($this->theme->view('sale/recurring_info', $data));
+            Response::setOutput(Theme::view('sale/recurring_info', $data));
         } else {
-            return new Action(new ActionService($this->app, 'error/not_found'));
+            return new Action('error/not_found');
         }
     }
 }

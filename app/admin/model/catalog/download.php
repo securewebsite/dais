@@ -38,7 +38,7 @@ class Download extends Model {
 					name = '" . $this->db->escape($value['name']) . "'");
         }
         
-        $this->theme->trigger('admin_add_download', array('download_id' => $download_id));
+        Theme::trigger('admin_add_download', array('download_id' => $download_id));
     }
     
     public function editDownload($download_id, $data) {
@@ -49,7 +49,7 @@ class Download extends Model {
                 
                 // delete the old file
                 if ($download_info['filename'] != $data['filename']):
-                    unlink($this->app['path.download'] . $download_info['filename']);
+                    unlink(Config::get('path.download') . $download_info['filename']);
                 endif;
                 
                 $this->db->query("
@@ -84,7 +84,7 @@ class Download extends Model {
 					name = '" . $this->db->escape($value['name']) . "'");
         }
         
-        $this->theme->trigger('admin_edit_download', array('download_id' => $download_id));
+        Theme::trigger('admin_edit_download', array('download_id' => $download_id));
     }
     
     public function deleteDownload($download_id) {
@@ -92,7 +92,7 @@ class Download extends Model {
         // delete the download file
         $download = $this->getDownload($download_id);
         
-        unlink($this->app['path.download'] . $download['filename']);
+        unlink(Config::get('path.download') . $download['filename']);
         
         $this->db->query("
 			DELETE FROM {$this->db->prefix}download 
@@ -102,7 +102,7 @@ class Download extends Model {
 			DELETE FROM {$this->db->prefix}download_description 
 			WHERE download_id = '" . (int)$download_id . "'");
         
-        $this->theme->trigger('admin_delete_download', array('download_id' => $download_id));
+        Theme::trigger('admin_delete_download', array('download_id' => $download_id));
     }
     
     public function getDownload($download_id) {
@@ -112,7 +112,7 @@ class Download extends Model {
 			LEFT JOIN {$this->db->prefix}download_description dd 
 				ON (d.download_id = dd.download_id) 
 			WHERE d.download_id = '" . (int)$download_id . "' 
-			AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+			AND dd.language_id = '" . (int)Config::get('config_language_id') . "'");
         
         return $query->row;
     }
@@ -123,7 +123,7 @@ class Download extends Model {
 			FROM {$this->db->prefix}download d 
 			LEFT JOIN {$this->db->prefix}download_description dd 
 				ON (d.download_id = dd.download_id) 
-			WHERE dd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+			WHERE dd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_name'])) {
             $sql.= " AND dd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";

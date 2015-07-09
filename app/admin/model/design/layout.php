@@ -36,7 +36,7 @@ class Layout extends Model {
             }
         }
         
-        $this->theme->trigger('admin_add_layout', array('layout_id' => $layout_id));
+        Theme::trigger('admin_add_layout', array('layout_id' => $layout_id));
     }
     
     public function editLayout($layout_id, $data) {
@@ -61,7 +61,7 @@ class Layout extends Model {
             }
         }
         
-        $this->theme->trigger('admin_edit_layout', array('layout_id' => $layout_id));
+        Theme::trigger('admin_edit_layout', array('layout_id' => $layout_id));
     }
     
     public function deleteLayout($layout_id) {
@@ -85,7 +85,7 @@ class Layout extends Model {
             DELETE FROM {$this->db->prefix}page_to_layout 
             WHERE layout_id = '" . (int)$layout_id . "'");
         
-        $this->theme->trigger('admin_delete_layout', array('layout_id' => $layout_id));
+        Theme::trigger('admin_delete_layout', array('layout_id' => $layout_id));
     }
     
     public function getLayout($layout_id) {

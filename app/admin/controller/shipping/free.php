@@ -21,15 +21,15 @@ class Free extends Controller {
     private $error = array();
     
     public function index() {
-        $data = $this->theme->language('shipping/free');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('setting/setting');
+        $data = Theme::language('shipping/free');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('free', $this->request->post);
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
-            $this->response->redirect($this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -48,44 +48,44 @@ class Free extends Controller {
         if (isset($this->request->post['free_total'])) {
             $data['free_total'] = $this->request->post['free_total'];
         } else {
-            $data['free_total'] = $this->config->get('free_total');
+            $data['free_total'] = Config::get('free_total');
         }
         
         if (isset($this->request->post['free_geo_zone_id'])) {
             $data['free_geo_zone_id'] = $this->request->post['free_geo_zone_id'];
         } else {
-            $data['free_geo_zone_id'] = $this->config->get('free_geo_zone_id');
+            $data['free_geo_zone_id'] = Config::get('free_geo_zone_id');
         }
         
-        $this->theme->model('localization/geo_zone');
+        Theme::model('localization/geo_zone');
         
         $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
         
         if (isset($this->request->post['free_status'])) {
             $data['free_status'] = $this->request->post['free_status'];
         } else {
-            $data['free_status'] = $this->config->get('free_status');
+            $data['free_status'] = Config::get('free_status');
         }
         
         if (isset($this->request->post['free_sort_order'])) {
             $data['free_sort_order'] = $this->request->post['free_sort_order'];
         } else {
-            $data['free_sort_order'] = $this->config->get('free_sort_order');
+            $data['free_sort_order'] = Config::get('free_sort_order');
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('shipping/free', $data));
+        Response::setOutput(Theme::view('shipping/free', $data));
     }
     
     protected function validate() {
-        if (!$this->user->hasPermission('modify', 'shipping/free')) {
+        if (!User::hasPermission('modify', 'shipping/free')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

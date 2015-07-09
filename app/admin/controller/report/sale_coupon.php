@@ -19,9 +19,9 @@ use Dais\Engine\Controller;
 
 class SaleCoupon extends Controller {
     public function index() {
-        $data = $this->theme->language('report/sale_coupon');
+        $data = Theme::language('report/sale_coupon');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
@@ -57,11 +57,11 @@ class SaleCoupon extends Controller {
         
         $this->breadcrumb->add('lang_heading_title', 'report/sale_coupon', $url);
         
-        $this->theme->model('report/coupon');
+        Theme::model('report/coupon');
         
         $data['coupons'] = array();
         
-        $filter = array('filter_date_start' => $filter_date_start, 'filter_date_end' => $filter_date_end, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
+        $filter = array('filter_date_start' => $filter_date_start, 'filter_date_end' => $filter_date_end, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
         $coupon_total = $this->model_report_coupon->getTotalCoupons($filter);
         
@@ -72,7 +72,7 @@ class SaleCoupon extends Controller {
             
             $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('sale/coupon/update', 'token=' . $this->session->data['token'] . '&coupon_id=' . $result['coupon_id'] . $url, 'SSL'));
             
-            $data['coupons'][] = array('name' => $result['name'], 'code' => $result['code'], 'orders' => $result['orders'], 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')), 'action' => $action);
+            $data['coupons'][] = array('name' => $result['name'], 'code' => $result['code'], 'orders' => $result['orders'], 'total' => $this->currency->format($result['total'], Config::get('config_currency')), 'action' => $action);
         }
         
         $data['token'] = $this->session->data['token'];
@@ -87,15 +87,15 @@ class SaleCoupon extends Controller {
             $url.= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
         
-        $data['pagination'] = $this->theme->paginate($coupon_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('report/sale_coupon', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($coupon_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('report/sale_coupon', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('report/sale_coupon', $data));
+        Response::setOutput(Theme::view('report/sale_coupon', $data));
     }
 }

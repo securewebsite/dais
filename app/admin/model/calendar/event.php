@@ -15,9 +15,10 @@
 */
 
 namespace Admin\Model\Calendar;
+
 use Dais\Engine\Model;
-use Dais\Library\Template;
-use Dais\Library\Text;
+use Dais\Support\Template;
+use Dais\Support\Text;
 
 class Event extends Model {
     
@@ -71,7 +72,7 @@ class Event extends Model {
         	$this->addEventPage($event_id, $data);
         endif;
 
-        $this->theme->trigger('admin_add_event', array('event_id' => $event_id));
+        Theme::trigger('admin_add_event', array('event_id' => $event_id));
         
         return;
     }
@@ -116,7 +117,7 @@ class Event extends Model {
         	endif;
         endif;
 
-        $this->theme->trigger('admin_edit_event', array('event_id' => $event_id));
+        Theme::trigger('admin_edit_event', array('event_id' => $event_id));
         
         return;
     }
@@ -136,16 +137,16 @@ class Event extends Model {
 			WHERE event_id = '" . (int)$event_id . "'");
         
         if ($query->row['product_id'] > 0):
-        	$this->theme->model('catalog/product');
+        	Theme::model('catalog/product');
         	$this->model_catalog_product->deleteProduct($query->row['product_id']);
         endif;
 
         if ($query->row['page_id'] > 0):
-        	$this->theme->model('content/page');
+        	Theme::model('content/page');
         	$this->model_content_page->deletePage($query->row['page_id']);
         endif;
         
-        $this->theme->trigger('admin_delete_event', array('event_id' => $event_id));
+        Theme::trigger('admin_delete_event', array('event_id' => $event_id));
         
         return;
     }
@@ -166,8 +167,8 @@ class Event extends Model {
 				end_date        = '" . $this->db->escape($date_end) . "', 
 				event_id        = '" . (int)$event_id . "', 
 				shipping        = '0', 
-				weight_class_id = '" . (int)$this->config->get('config_weight_class_id') . "', 
-				length_class_id = '" . (int)$this->config->get('config_length_class_id') . "', 
+				weight_class_id = '" . (int)Config::get('config_weight_class_id') . "', 
+				length_class_id = '" . (int)Config::get('config_length_class_id') . "', 
 				date_available  = NOW(), 
 				date_added      = NOW(), 
 				date_modified   = NOW()"
@@ -231,7 +232,7 @@ class Event extends Model {
         $this->cache->delete('products.total');
         $this->cache->delete('products.all');
         
-        $this->theme->trigger('admin_add_product', array('product_id' => $product_id));
+        Theme::trigger('admin_add_product', array('product_id' => $product_id));
     }
 
     protected function editEventProduct($event_id, $data, $date_end) {
@@ -307,7 +308,7 @@ class Event extends Model {
         $this->cache->delete('product');
         $this->cache->delete('products.all');
         
-        $this->theme->trigger('admin_edit_product', array('product_id' => $data['product_id']));
+        Theme::trigger('admin_edit_product', array('product_id' => $data['product_id']));
     }
 
     protected function addEventPage($event_id, $data) {
@@ -366,7 +367,7 @@ class Event extends Model {
         
         $this->cache->delete('page');
         
-        $this->theme->trigger('admin_add_page', array('page_id' => $page_id));
+        Theme::trigger('admin_add_page', array('page_id' => $page_id));
     }
 
     protected function editEventPage($event_id, $data) {
@@ -428,7 +429,7 @@ class Event extends Model {
         
         $this->cache->delete('page');
         
-        $this->theme->trigger('admin_edit_page', array('page_id' => $data['page_id']));
+        Theme::trigger('admin_edit_page', array('page_id' => $data['page_id']));
     }
     
     public function getSlug($product_id) {
@@ -593,7 +594,7 @@ class Event extends Model {
         	)
         );
 
-        $this->theme->notify('admin_event_add', $callback);
+        Theme::notify('admin_event_add', $callback);
         
         return;
     }
@@ -630,7 +631,7 @@ class Event extends Model {
             	)
             );
 
-            $this->theme->notify('admin_event_waitlist', $callback);
+            Theme::notify('admin_event_waitlist', $callback);
 
             return true;
         else:
@@ -867,7 +868,7 @@ class Event extends Model {
     	$call = $data['event'];
         unset($data);
 
-        $data = $this->theme->language('notification/event');
+        $data = Theme::language('notification/event');
 
         $data['event_name'] = $call['event_name'];
         $data['event_date'] = date($this->language->get('lang_date_format_short'), strtotime($call['date_time']));
@@ -884,8 +885,8 @@ class Event extends Model {
             $data['event_telephone'] = $call['telephone'];
         endif;
 
-        $html = new Template($this->app);
-        $text = new Text($this->app);
+        $html = new Template;
+        $text = new Text;
 
         $html->data = $data;
         $text->data = $data;
@@ -903,7 +904,7 @@ class Event extends Model {
     	$call = $data['event'];
         unset($data);
 
-        $data = $this->theme->language('notification/event');
+        $data = Theme::language('notification/event');
 
         $data['event_name'] = $call['event_name'];
         $data['event_date'] = date($this->language->get('lang_date_format_short'), strtotime($call['date_time']));
@@ -920,8 +921,8 @@ class Event extends Model {
             $data['event_telephone'] = $call['telephone'];
         endif;
 
-        $html = new Template($this->app);
-        $text = new Text($this->app);
+        $html = new Template;
+        $text = new Text;
 
         $html->data = $data;
         $text->data = $data;

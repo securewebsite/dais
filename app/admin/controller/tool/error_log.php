@@ -20,9 +20,9 @@ use Dais\Engine\Controller;
 class ErrorLog extends Controller {
     
     public function index() {
-        $data = $this->theme->language('tool/error_log');
+        $data = Theme::language('tool/error_log');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
@@ -36,7 +36,7 @@ class ErrorLog extends Controller {
         
         $data['clear'] = $this->url->link('tool/error_log/clear', 'token=' . $this->session->data['token'], 'SSL');
         
-        $file = $this->app['path.logs'] . $this->config->get('config_error_filename');
+        $file = Config::get('path.logs') . Config::get('config_error_filename');
         
         if (file_exists($file)) {
             $data['log'] = file_get_contents($file, FILE_USE_INCLUDE_PATH, null);
@@ -44,17 +44,17 @@ class ErrorLog extends Controller {
             $data['log'] = '';
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('tool/error_log', $data));
+        Response::setOutput(Theme::view('tool/error_log', $data));
     }
     
     public function clear() {
         $this->language->load('tool/error_log');
         
-        $file = $this->app['path.logs'] . $this->config->get('config_error_filename');
+        $file = Config::get('path.logs') . Config::get('config_error_filename');
         
         $handle = fopen($file, 'w+');
         
@@ -62,8 +62,8 @@ class ErrorLog extends Controller {
         
         $this->session->data['success'] = $this->language->get('lang_text_success');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
-        $this->response->redirect($this->url->link('tool/error_log', 'token=' . $this->session->data['token'], 'SSL'));
+        Response::redirect($this->url->link('tool/error_log', 'token=' . $this->session->data['token'], 'SSL'));
     }
 }

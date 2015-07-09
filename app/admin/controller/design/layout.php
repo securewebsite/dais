@@ -23,11 +23,11 @@ class Layout extends Controller {
     public function index() {
         $this->language->load('design/layout');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('design/layout');
+        Theme::model('design/layout');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
@@ -35,9 +35,9 @@ class Layout extends Controller {
     public function insert() {
         $this->language->load('design/layout');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('design/layout');
+        Theme::model('design/layout');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_design_layout->addLayout($this->request->post);
@@ -58,10 +58,10 @@ class Layout extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
@@ -69,9 +69,9 @@ class Layout extends Controller {
     public function update() {
         $this->language->load('design/layout');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('design/layout');
+        Theme::model('design/layout');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_design_layout->editLayout($this->request->get['layout_id'], $this->request->post);
@@ -92,10 +92,10 @@ class Layout extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
@@ -103,9 +103,9 @@ class Layout extends Controller {
     public function delete() {
         $this->language->load('design/layout');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('design/layout');
+        Theme::model('design/layout');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $layout_id) {
@@ -128,16 +128,16 @@ class Layout extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     protected function getList() {
-        $data = $this->theme->language('design/layout');
+        $data = Theme::language('design/layout');
         
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -178,7 +178,7 @@ class Layout extends Controller {
         
         $data['layouts'] = array();
         
-        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
+        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
         $layout_total = $this->model_design_layout->getTotalLayouts();
         
@@ -230,20 +230,20 @@ class Layout extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = $this->theme->paginate($layout_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($layout_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('design/layout_list', $data));
+        Response::setOutput(Theme::view('design/layout_list', $data));
     }
     
     protected function getForm() {
-        $data = $this->theme->language('design/layout');
+        $data = Theme::language('design/layout');
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -293,7 +293,7 @@ class Layout extends Controller {
             $data['name'] = '';
         }
         
-        $this->theme->model('setting/store');
+        Theme::model('setting/store');
         
         $data['stores'] = $this->model_setting_store->getStores();
         
@@ -305,41 +305,41 @@ class Layout extends Controller {
             $data['layout_routes'] = array();
         }
         
-        $this->theme->loadjs('javascript/design/layout_form', $data);
+        Theme::loadjs('javascript/design/layout_form', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('design/layout_form', $data));
+        Response::setOutput(Theme::view('design/layout_form', $data));
     }
     
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'design/layout')) {
+        if (!User::hasPermission('modify', 'design/layout')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        if (($this->encode->strlen($this->request->post['name']) < 3) || ($this->encode->strlen($this->request->post['name']) > 64)) {
+        if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 64)) {
             $this->error['name'] = $this->language->get('lang_error_name');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'design/layout')) {
+        if (!User::hasPermission('modify', 'design/layout')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->model('setting/store');
-        $this->theme->model('catalog/product');
-        $this->theme->model('catalog/category');
-        $this->theme->model('content/page');
+        Theme::model('setting/store');
+        Theme::model('catalog/product');
+        Theme::model('catalog/category');
+        Theme::model('content/page');
         
         foreach ($this->request->post['selected'] as $layout_id) {
-            if ($this->config->get('config_layout_id') == $layout_id) {
+            if (Config::get('config_layout_id') == $layout_id) {
                 $this->error['warning'] = $this->language->get('lang_error_default');
             }
             
@@ -368,7 +368,7 @@ class Layout extends Controller {
             }
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

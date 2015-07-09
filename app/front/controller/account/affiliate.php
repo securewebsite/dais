@@ -184,7 +184,7 @@ class Affiliate extends Controller {
             endif;
         endforeach;
 
-        $data['vanity_base'] = $this->app['http.server'];
+        $data['vanity_base'] = Config::get('http.server');
 
         if (!empty($customer_info)):
             $base_url = $this->url->link($this->theme->style . '/home', 'affiliate_id=' . $this->customer->getId());

@@ -864,11 +864,11 @@ class Order extends Model {
         
         $data['totals'] = $call['query']['totals'];
         
-        $html = new Template($this->app);
+        $html = new Template;
         $html->data = $data;
         $html = $html->fetch('notification/order');
 
-    	$text = new Text($this->app);
+    	$text = new Text;
         $text->data = $data;
         $text = $text->fetch('notification/order');
 

@@ -21,19 +21,19 @@ class Coupon extends Controller {
     private $error = array();
     
     public function index() {
-        $this->theme->language('sale/coupon');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('sale/coupon');
+        Theme::language('sale/coupon');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('sale/coupon');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     public function insert() {
-        $this->theme->language('sale/coupon');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('sale/coupon');
+        Theme::language('sale/coupon');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('sale/coupon');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_sale_coupon->addCoupon($this->request->post);
@@ -53,18 +53,18 @@ class Coupon extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('sale/coupon', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('sale/coupon', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function update() {
         $this->language->load('sale/coupon');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('sale/coupon');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('sale/coupon');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_sale_coupon->editCoupon($this->request->get['coupon_id'], $this->request->post);
@@ -84,18 +84,18 @@ class Coupon extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('sale/coupon', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('sale/coupon', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function delete() {
         $this->language->load('sale/coupon');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('sale/coupon');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('sale/coupon');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $coupon_id) {
@@ -118,16 +118,16 @@ class Coupon extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('sale/coupon', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('sale/coupon', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     protected function getList() {
-        $data = $this->theme->language('sale/coupon');
+        $data = Theme::language('sale/coupon');
         
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -168,7 +168,7 @@ class Coupon extends Controller {
         
         $data['coupons'] = array();
         
-        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
+        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
         $coupon_total = $this->model_sale_coupon->getTotalCoupons();
         
@@ -225,20 +225,20 @@ class Coupon extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = $this->theme->paginate($coupon_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('sale/coupon', 'token=' . $this->session->data['token'] . $url . '&page={page}'));
+        $data['pagination'] = Theme::paginate($coupon_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('sale/coupon', 'token=' . $this->session->data['token'] . $url . '&page={page}'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('sale/coupon_list', $data));
+        Response::setOutput(Theme::view('sale/coupon_list', $data));
     }
     
     protected function getForm() {
-        $data = $this->theme->language('sale/coupon');
+        $data = Theme::language('sale/coupon');
         
         $data['token'] = $this->session->data['token'];
         
@@ -370,7 +370,7 @@ class Coupon extends Controller {
             $products = array();
         }
         
-        $this->theme->model('catalog/product');
+        Theme::model('catalog/product');
         
         $data['coupon_product'] = array();
         
@@ -390,7 +390,7 @@ class Coupon extends Controller {
             $categories = array();
         }
         
-        $this->theme->model('catalog/category');
+        Theme::model('catalog/category');
         
         $data['coupon_category'] = array();
         
@@ -442,23 +442,23 @@ class Coupon extends Controller {
             $data['status'] = 1;
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('sale/coupon_form', $data));
+        Response::setOutput(Theme::view('sale/coupon_form', $data));
     }
     
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'sale/coupon')) {
+        if (!User::hasPermission('modify', 'sale/coupon')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        if (($this->encode->strlen($this->request->post['name']) < 3) || ($this->encode->strlen($this->request->post['name']) > 128)) {
+        if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 128)) {
             $this->error['name'] = $this->language->get('lang_error_name');
         }
         
-        if (($this->encode->strlen($this->request->post['code']) < 3) || ($this->encode->strlen($this->request->post['code']) > 10)) {
+        if ((Encode::strlen($this->request->post['code']) < 3) || (Encode::strlen($this->request->post['code']) > 10)) {
             $this->error['code'] = $this->language->get('lang_error_code');
         }
         
@@ -472,25 +472,25 @@ class Coupon extends Controller {
             }
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'sale/coupon')) {
+        if (!User::hasPermission('modify', 'sale/coupon')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     public function history() {
-        $data = $this->theme->language('sale/coupon');
+        $data = Theme::language('sale/coupon');
         
-        $this->theme->model('sale/coupon');
+        Theme::model('sale/coupon');
         
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
@@ -508,10 +508,10 @@ class Coupon extends Controller {
         
         $history_total = $this->model_sale_coupon->getTotalCouponHistories($this->request->get['coupon_id']);
         
-        $data['pagination'] = $this->theme->paginate($history_total, $page, 10, $this->language->get('lang_text_pagination'), $this->url->link('sale/coupon/history', 'token=' . $this->session->data['token'] . '&coupon_id=' . $this->request->get['coupon_id'] . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($history_total, $page, 10, $this->language->get('lang_text_pagination'), $this->url->link('sale/coupon/history', 'token=' . $this->session->data['token'] . '&coupon_id=' . $this->request->get['coupon_id'] . '&page={page}', 'SSL'));
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->response->setOutput($this->theme->view('sale/coupon_history', $data));
+        Response::setOutput(Theme::view('sale/coupon_history', $data));
     }
 }

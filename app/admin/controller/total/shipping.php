@@ -21,15 +21,15 @@ class Shipping extends Controller {
     private $error = array();
     
     public function index() {
-        $data = $this->theme->language('total/shipping');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('setting/setting');
+        $data = Theme::language('total/shipping');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('shipping', $this->request->post);
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
-            $this->response->redirect($this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -47,34 +47,34 @@ class Shipping extends Controller {
         if (isset($this->request->post['shipping_estimator'])) {
             $data['shipping_estimator'] = $this->request->post['shipping_estimator'];
         } else {
-            $data['shipping_estimator'] = $this->config->get('shipping_estimator');
+            $data['shipping_estimator'] = Config::get('shipping_estimator');
         }
         
         if (isset($this->request->post['shipping_status'])) {
             $data['shipping_status'] = $this->request->post['shipping_status'];
         } else {
-            $data['shipping_status'] = $this->config->get('shipping_status');
+            $data['shipping_status'] = Config::get('shipping_status');
         }
         
         if (isset($this->request->post['shipping_sort_order'])) {
             $data['shipping_sort_order'] = $this->request->post['shipping_sort_order'];
         } else {
-            $data['shipping_sort_order'] = $this->config->get('shipping_sort_order');
+            $data['shipping_sort_order'] = Config::get('shipping_sort_order');
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('total/shipping', $data));
+        Response::setOutput(Theme::view('total/shipping', $data));
     }
     
     protected function validate() {
-        if (!$this->user->hasPermission('modify', 'total/shipping')) {
+        if (!User::hasPermission('modify', 'total/shipping')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

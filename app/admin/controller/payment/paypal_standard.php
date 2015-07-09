@@ -21,15 +21,15 @@ class PaypalStandard extends Controller {
     private $error = array();
     
     public function index() {
-        $data = $this->theme->language('payment/paypal_standard');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('setting/setting');
+        $data = Theme::language('payment/paypal_standard');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('paypal_standard', $this->request->post);
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
-            $this->response->redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -54,128 +54,128 @@ class PaypalStandard extends Controller {
         if (isset($this->request->post['paypal_standard_email'])) {
             $data['paypal_standard_email'] = $this->request->post['paypal_standard_email'];
         } else {
-            $data['paypal_standard_email'] = $this->config->get('paypal_standard_email');
+            $data['paypal_standard_email'] = Config::get('paypal_standard_email');
         }
         
         if (isset($this->request->post['paypal_standard_test'])) {
             $data['paypal_standard_test'] = $this->request->post['paypal_standard_test'];
         } else {
-            $data['paypal_standard_test'] = $this->config->get('paypal_standard_test');
+            $data['paypal_standard_test'] = Config::get('paypal_standard_test');
         }
         
         if (isset($this->request->post['paypal_standard_transaction'])) {
             $data['paypal_standard_transaction'] = $this->request->post['paypal_standard_transaction'];
         } else {
-            $data['paypal_standard_transaction'] = $this->config->get('paypal_standard_transaction');
+            $data['paypal_standard_transaction'] = Config::get('paypal_standard_transaction');
         }
         
         if (isset($this->request->post['paypal_standard_debug'])) {
             $data['paypal_standard_debug'] = $this->request->post['paypal_standard_debug'];
         } else {
-            $data['paypal_standard_debug'] = $this->config->get('paypal_standard_debug');
+            $data['paypal_standard_debug'] = Config::get('paypal_standard_debug');
         }
         
         if (isset($this->request->post['paypal_standard_total'])) {
             $data['paypal_standard_total'] = $this->request->post['paypal_standard_total'];
         } else {
-            $data['paypal_standard_total'] = $this->config->get('paypal_standard_total');
+            $data['paypal_standard_total'] = Config::get('paypal_standard_total');
         }
         
         if (isset($this->request->post['paypal_standard_canceled_reversal_status_id'])) {
             $data['paypal_standard_canceled_reversal_status_id'] = $this->request->post['paypal_standard_canceled_reversal_status_id'];
         } else {
-            $data['paypal_standard_canceled_reversal_status_id'] = $this->config->get('paypal_standard_canceled_reversal_status_id');
+            $data['paypal_standard_canceled_reversal_status_id'] = Config::get('paypal_standard_canceled_reversal_status_id');
         }
         
         if (isset($this->request->post['paypal_standard_completed_status_id'])) {
             $data['paypal_standard_completed_status_id'] = $this->request->post['paypal_standard_completed_status_id'];
         } else {
-            $data['paypal_standard_completed_status_id'] = $this->config->get('paypal_standard_completed_status_id');
+            $data['paypal_standard_completed_status_id'] = Config::get('paypal_standard_completed_status_id');
         }
         
         if (isset($this->request->post['paypal_standard_denied_status_id'])) {
             $data['paypal_standard_denied_status_id'] = $this->request->post['paypal_standard_denied_status_id'];
         } else {
-            $data['paypal_standard_denied_status_id'] = $this->config->get('paypal_standard_denied_status_id');
+            $data['paypal_standard_denied_status_id'] = Config::get('paypal_standard_denied_status_id');
         }
         
         if (isset($this->request->post['paypal_standard_expired_status_id'])) {
             $data['paypal_standard_expired_status_id'] = $this->request->post['paypal_standard_expired_status_id'];
         } else {
-            $data['paypal_standard_expired_status_id'] = $this->config->get('paypal_standard_expired_status_id');
+            $data['paypal_standard_expired_status_id'] = Config::get('paypal_standard_expired_status_id');
         }
         
         if (isset($this->request->post['paypal_standard_failed_status_id'])) {
             $data['paypal_standard_failed_status_id'] = $this->request->post['paypal_standard_failed_status_id'];
         } else {
-            $data['paypal_standard_failed_status_id'] = $this->config->get('paypal_standard_failed_status_id');
+            $data['paypal_standard_failed_status_id'] = Config::get('paypal_standard_failed_status_id');
         }
         
         if (isset($this->request->post['paypal_standard_pending_status_id'])) {
             $data['paypal_standard_pending_status_id'] = $this->request->post['paypal_standard_pending_status_id'];
         } else {
-            $data['paypal_standard_pending_status_id'] = $this->config->get('paypal_standard_pending_status_id');
+            $data['paypal_standard_pending_status_id'] = Config::get('paypal_standard_pending_status_id');
         }
         
         if (isset($this->request->post['paypal_standard_processed_status_id'])) {
             $data['paypal_standard_processed_status_id'] = $this->request->post['paypal_standard_processed_status_id'];
         } else {
-            $data['paypal_standard_processed_status_id'] = $this->config->get('paypal_standard_processed_status_id');
+            $data['paypal_standard_processed_status_id'] = Config::get('paypal_standard_processed_status_id');
         }
         
         if (isset($this->request->post['paypal_standard_refunded_status_id'])) {
             $data['paypal_standard_refunded_status_id'] = $this->request->post['paypal_standard_refunded_status_id'];
         } else {
-            $data['paypal_standard_refunded_status_id'] = $this->config->get('paypal_standard_refunded_status_id');
+            $data['paypal_standard_refunded_status_id'] = Config::get('paypal_standard_refunded_status_id');
         }
         
         if (isset($this->request->post['paypal_standard_reversed_status_id'])) {
             $data['paypal_standard_reversed_status_id'] = $this->request->post['paypal_standard_reversed_status_id'];
         } else {
-            $data['paypal_standard_reversed_status_id'] = $this->config->get('paypal_standard_reversed_status_id');
+            $data['paypal_standard_reversed_status_id'] = Config::get('paypal_standard_reversed_status_id');
         }
         
         if (isset($this->request->post['paypal_standard_voided_status_id'])) {
             $data['paypal_standard_voided_status_id'] = $this->request->post['paypal_standard_voided_status_id'];
         } else {
-            $data['paypal_standard_voided_status_id'] = $this->config->get('paypal_standard_voided_status_id');
+            $data['paypal_standard_voided_status_id'] = Config::get('paypal_standard_voided_status_id');
         }
         
-        $this->theme->model('localization/order_status');
+        Theme::model('localization/order_status');
         
         $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
         
         if (isset($this->request->post['paypal_standard_geo_zone_id'])) {
             $data['paypal_standard_geo_zone_id'] = $this->request->post['paypal_standard_geo_zone_id'];
         } else {
-            $data['paypal_standard_geo_zone_id'] = $this->config->get('paypal_standard_geo_zone_id');
+            $data['paypal_standard_geo_zone_id'] = Config::get('paypal_standard_geo_zone_id');
         }
         
-        $this->theme->model('localization/geo_zone');
+        Theme::model('localization/geo_zone');
         
         $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
         
         if (isset($this->request->post['paypal_standard_status'])) {
             $data['paypal_standard_status'] = $this->request->post['paypal_standard_status'];
         } else {
-            $data['paypal_standard_status'] = $this->config->get('paypal_standard_status');
+            $data['paypal_standard_status'] = Config::get('paypal_standard_status');
         }
         
         if (isset($this->request->post['paypal_standard_sort_order'])) {
             $data['paypal_standard_sort_order'] = $this->request->post['paypal_standard_sort_order'];
         } else {
-            $data['paypal_standard_sort_order'] = $this->config->get('paypal_standard_sort_order');
+            $data['paypal_standard_sort_order'] = Config::get('paypal_standard_sort_order');
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('payment/paypal_standard', $data));
+        Response::setOutput(Theme::view('payment/paypal_standard', $data));
     }
     
     private function validate() {
-        if (!$this->user->hasPermission('modify', 'payment/paypal_standard')) {
+        if (!User::hasPermission('modify', 'payment/paypal_standard')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
@@ -183,7 +183,7 @@ class PaypalStandard extends Controller {
             $this->error['email'] = $this->language->get('lang_error_email');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

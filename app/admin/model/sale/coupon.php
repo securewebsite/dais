@@ -61,7 +61,7 @@ class Coupon extends Model {
             }
         }
         
-        $this->theme->trigger('admin_add_coupon', array('coupon_id' => $coupon_id));
+        Theme::trigger('admin_add_coupon', array('coupon_id' => $coupon_id));
     }
     
     public function editCoupon($coupon_id, $data) {
@@ -113,7 +113,7 @@ class Coupon extends Model {
             }
         }
         
-        $this->theme->trigger('admin_edit_coupon', array('coupon_id' => $coupon_id));
+        Theme::trigger('admin_edit_coupon', array('coupon_id' => $coupon_id));
     }
     
     public function deleteCoupon($coupon_id) {
@@ -133,7 +133,7 @@ class Coupon extends Model {
             DELETE FROM {$this->db->prefix}coupon_history 
             WHERE coupon_id = '" . (int)$coupon_id . "'");
         
-        $this->theme->trigger('admin_delete_coupon', array('coupon_id' => $coupon_id));
+        Theme::trigger('admin_delete_coupon', array('coupon_id' => $coupon_id));
     }
     
     public function getCoupon($coupon_id) {

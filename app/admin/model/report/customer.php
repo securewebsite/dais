@@ -48,7 +48,7 @@ class Customer extends Model {
                 LEFT JOIN {$this->db->prefix}customer_group_description cgd 
                 ON (c.customer_group_id = cgd.customer_group_id) 
                 WHERE o.customer_id > 0 
-                AND cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+                AND cgd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_order_status_id'])) {
             $sql.= " AND o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -126,7 +126,7 @@ class Customer extends Model {
                 ON (c.customer_group_id = cgd.customer_group_id) 
             LEFT JOIN `{$this->db->prefix}order` o 
                 ON (cr.order_id = o.order_id) 
-            WHERE cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+            WHERE cgd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_date_start'])) {
             $sql.= " AND DATE(cr.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
@@ -206,7 +206,7 @@ class Customer extends Model {
             ON (cc.customer_id = c.customer_id) 
             LEFT JOIN {$this->db->prefix}customer_group_description cgd 
             ON (c.customer_group_id = cgd.customer_group_id) 
-            WHERE cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+            WHERE cgd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_date_start'])) {
             $sql.= "DATE(cc.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";

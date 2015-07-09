@@ -23,11 +23,11 @@ class Filter extends Controller {
     public function index() {
         $this->language->load('catalog/filter');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/filter');
+        Theme::model('catalog/filter');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
@@ -35,9 +35,9 @@ class Filter extends Controller {
     public function insert() {
         $this->language->load('catalog/filter');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/filter');
+        Theme::model('catalog/filter');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_catalog_filter->addFilter($this->request->post);
@@ -58,10 +58,10 @@ class Filter extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('catalog/filter', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('catalog/filter', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
@@ -69,9 +69,9 @@ class Filter extends Controller {
     public function update() {
         $this->language->load('catalog/filter');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/filter');
+        Theme::model('catalog/filter');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_catalog_filter->editFilter($this->request->get['filter_group_id'], $this->request->post);
@@ -92,10 +92,10 @@ class Filter extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('catalog/filter', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('catalog/filter', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
@@ -103,9 +103,9 @@ class Filter extends Controller {
     public function delete() {
         $this->language->load('catalog/filter');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/filter');
+        Theme::model('catalog/filter');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $filter_group_id) {
@@ -128,16 +128,16 @@ class Filter extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('catalog/filter', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('catalog/filter', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     protected function getList() {
-        $data = $this->theme->language('catalog/filter');
+        $data = Theme::language('catalog/filter');
         
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -178,7 +178,7 @@ class Filter extends Controller {
         
         $data['filters'] = array();
         
-        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
+        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
         $filter_total = $this->model_catalog_filter->getTotalFilterGroups();
         
@@ -231,20 +231,20 @@ class Filter extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = $this->theme->paginate($filter_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('catalog/filter', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($filter_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('catalog/filter', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('catalog/filter_list', $data));
+        Response::setOutput(Theme::view('catalog/filter_list', $data));
     }
     
     protected function getForm() {
-        $data = $this->theme->language('catalog/filter');
+        $data = Theme::language('catalog/filter');
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -294,7 +294,7 @@ class Filter extends Controller {
         
         $data['token'] = $this->session->data['token'];
         
-        $this->theme->model('localization/language');
+        Theme::model('localization/language');
         
         $data['languages'] = $this->model_localization_language->getLanguages();
         
@@ -322,22 +322,22 @@ class Filter extends Controller {
             $data['filters'] = array();
         }
         
-        $this->theme->loadjs('javascript/catalog/filter_form', $data);
+        Theme::loadjs('javascript/catalog/filter_form', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('catalog/filter_form', $data));
+        Response::setOutput(Theme::view('catalog/filter_form', $data));
     }
     
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'catalog/filter')) {
+        if (!User::hasPermission('modify', 'catalog/filter')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
         foreach ($this->request->post['filter_group_description'] as $language_id => $value) {
-            if (($this->encode->strlen($value['name']) < 1) || ($this->encode->strlen($value['name']) > 64)) {
+            if ((Encode::strlen($value['name']) < 1) || (Encode::strlen($value['name']) > 64)) {
                 $this->error['group'][$language_id] = $this->language->get('lang_error_group');
             }
         }
@@ -345,24 +345,24 @@ class Filter extends Controller {
         if (isset($this->request->post['filter'])) {
             foreach ($this->request->post['filter'] as $filter_id => $filter) {
                 foreach ($filter['filter_description'] as $language_id => $filter_description) {
-                    if (($this->encode->strlen($filter_description['name']) < 1) || ($this->encode->strlen($filter_description['name']) > 64)) {
+                    if ((Encode::strlen($filter_description['name']) < 1) || (Encode::strlen($filter_description['name']) > 64)) {
                         $this->error['filter'][$filter_id][$language_id] = $this->language->get('lang_error_name');
                     }
                 }
             }
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'catalog/filter')) {
+        if (!User::hasPermission('modify', 'catalog/filter')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
@@ -371,7 +371,7 @@ class Filter extends Controller {
         $json = array();
         
         if (isset($this->request->get['filter_name'])) {
-            $this->theme->model('catalog/filter');
+            Theme::model('catalog/filter');
             
             $filter = array('filter_name' => $this->request->get['filter_name'], 'start' => 0, 'limit' => 20);
             
@@ -390,8 +390,8 @@ class Filter extends Controller {
         
         array_multisort($sort_order, SORT_ASC, $json);
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

@@ -64,7 +64,7 @@ class StockStatus extends Model {
 			SELECT * 
 			FROM {$this->db->prefix}stock_status 
 			WHERE stock_status_id = '" . (int)$stock_status_id . "' 
-			AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         return $query->row;
@@ -75,7 +75,7 @@ class StockStatus extends Model {
             $sql = "
 				SELECT * 
 				FROM {$this->db->prefix}stock_status 
-				WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'";
+				WHERE language_id = '" . (int)Config::get('config_language_id') . "'";
             
             $sql.= " ORDER BY name";
             
@@ -106,7 +106,7 @@ class StockStatus extends Model {
 					stock_status_id, 
 					name 
 				FROM {$this->db->prefix}stock_status 
-				WHERE language_id = '" . (int)$this->config->get('config_language_id') . "' 
+				WHERE language_id = '" . (int)Config::get('config_language_id') . "' 
 				ORDER BY name
 			");
             
@@ -133,7 +133,7 @@ class StockStatus extends Model {
         $query = $this->db->query("
 			SELECT COUNT(*) AS total 
 			FROM {$this->db->prefix}stock_status 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'");
         
         return $query->row['total'];
     }

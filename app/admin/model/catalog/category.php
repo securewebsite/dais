@@ -153,7 +153,7 @@ class Category extends Model {
         
         $this->cache->delete('category');
         
-        $this->theme->trigger('admin_add_category', array('category_id' => $category_id));
+        Theme::trigger('admin_add_category', array('category_id' => $category_id));
     }
     
     public function editCategory($category_id, $data) {
@@ -394,7 +394,7 @@ class Category extends Model {
         
         $this->cache->delete('category');
         
-        $this->theme->trigger('admin_edit_category', array('category_id' => $category_id));
+        Theme::trigger('admin_edit_category', array('category_id' => $category_id));
     }
     
     public function deleteCategory($category_id) {
@@ -449,7 +449,7 @@ class Category extends Model {
         
         $this->cache->delete('category');
         
-        $this->theme->trigger('admin_delete_category', array('category_id' => $category_id));
+        Theme::trigger('admin_delete_category', array('category_id' => $category_id));
     }
     
     // Function to repair any erroneous categories that are not in the category path table.
@@ -511,7 +511,7 @@ class Category extends Model {
 				LEFT JOIN {$this->db->prefix}category_description cd1 
 					ON (cp.path_id = cd1.category_id AND cp.category_id != cp.path_id) 
 				WHERE cp.category_id = c.category_id 
-				AND cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+				AND cd1.language_id = '" . (int)Config::get('config_language_id') . "' 
 				GROUP BY cp.category_id) AS path, 
 			(SELECT slug 
 				FROM {$this->db->prefix}route 
@@ -520,7 +520,7 @@ class Category extends Model {
 			LEFT JOIN {$this->db->prefix}category_description cd2 
 				ON (c.category_id = cd2.category_id) 
 			WHERE c.category_id = '" . (int)$category_id . "' 
-			AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND cd2.language_id = '" . (int)Config::get('config_language_id') . "'
 		");
 
 		if ($query->num_rows):
@@ -536,7 +536,7 @@ class Category extends Model {
             FROM {$this->db->prefix}tag 
             WHERE section   = 'product_category' 
             AND element_id  = '" . (int)$category_id . "' 
-            AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+            AND language_id = '" . (int)Config::get('config_language_id') . "'
         ");
         
         if ($query->num_rows):
@@ -563,8 +563,8 @@ class Category extends Model {
 				ON (c.category_id = cd1.category_id) 
 			LEFT JOIN {$this->db->prefix}category_description cd2 
 				ON (cp.category_id = cd2.category_id) 
-			WHERE cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' 
-			AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+			WHERE cd1.language_id = '" . (int)Config::get('config_language_id') . "' 
+			AND cd2.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_name'])) {
             $sql.= " AND cd2.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";

@@ -47,13 +47,13 @@ class Header extends Controller {
         $data['direction']   = $this->language->get('lang_direction');
         $data['name']        = $this->config->get('config_name');
         
-        if ($this->config->get('config_icon') && file_exists($this->app['path.image'] . $this->config->get('config_icon'))):
+        if ($this->config->get('config_icon') && file_exists(Config::get('path.image') . $this->config->get('config_icon'))):
             $data['icon'] = $server . 'image/' . $this->config->get('config_icon');
         else:
             $data['icon'] = '';
         endif;
         
-        if ($this->config->get('config_logo') && file_exists($this->app['path.image'] . $this->config->get('config_logo'))):
+        if ($this->config->get('config_logo') && file_exists(Config::get('path.image') . $this->config->get('config_logo'))):
             $data['logo'] = $server . 'image/' . $this->config->get('config_logo');
         else:
             $data['logo'] = '';
@@ -162,7 +162,7 @@ class Header extends Controller {
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         $key  = $this->css->compile();
         
-        $data['css_link'] = $server . 'asset/' . $this->app['theme.name'] . '/compiled/' . $this->app['filecache']->get_key($key, 'css');
+        $data['css_link'] = $server . 'asset/' . Config::get('theme.name') . '/compiled/' . Filecache::get_key($key, 'css');
         $data['language'] = $this->theme->controller('widget/language');
         $data['currency'] = $this->theme->controller('widget/currency');
         $data['cart']     = $this->theme->controller('shop/cart');

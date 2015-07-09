@@ -22,18 +22,18 @@ class CustomerBanIp extends Controller {
     
     public function index() {
         $this->language->load('people/customer_ban_ip');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('people/customer_ban_ip');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('people/customer_ban_ip');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     public function insert() {
         $this->language->load('people/customer_ban_ip');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('people/customer_ban_ip');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('people/customer_ban_ip');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_people_customer_ban_ip->addCustomerBanIp($this->request->post);
@@ -53,18 +53,18 @@ class CustomerBanIp extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function update() {
         $this->language->load('people/customer_ban_ip');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('people/customer_ban_ip');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('people/customer_ban_ip');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_people_customer_ban_ip->editCustomerBanIp($this->request->get['customer_ban_ip_id'], $this->request->post);
@@ -84,18 +84,18 @@ class CustomerBanIp extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function delete() {
         $this->language->load('people/customer_ban_ip');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('people/customer_ban_ip');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('people/customer_ban_ip');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $customer_ban_ip_id) {
@@ -118,16 +118,16 @@ class CustomerBanIp extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     protected function getList() {
-        $data = $this->theme->language('people/customer_ban_ip');
+        $data = Theme::language('people/customer_ban_ip');
         
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -168,7 +168,7 @@ class CustomerBanIp extends Controller {
         
         $data['customer_ban_ips'] = array();
         
-        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
+        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
         $customer_ban_ip_total = $this->model_people_customer_ban_ip->getTotalCustomerBanIps($filter);
         
@@ -220,20 +220,20 @@ class CustomerBanIp extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = $this->theme->paginate($customer_ban_ip_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($customer_ban_ip_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('people/customer_ban_ip_list', $data));
+        Response::setOutput(Theme::view('people/customer_ban_ip_list', $data));
     }
     
     protected function getForm() {
-        $data = $this->theme->language('people/customer_ban_ip');
+        $data = Theme::language('people/customer_ban_ip');
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -283,33 +283,33 @@ class CustomerBanIp extends Controller {
             $data['ip'] = '';
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('people/customer_ban_ip_form', $data));
+        Response::setOutput(Theme::view('people/customer_ban_ip_form', $data));
     }
     
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'people/customer_ban_ip')) {
+        if (!User::hasPermission('modify', 'people/customer_ban_ip')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        if (($this->encode->strlen($this->request->post['ip']) < 1) || ($this->encode->strlen($this->request->post['ip']) > 40)) {
+        if ((Encode::strlen($this->request->post['ip']) < 1) || (Encode::strlen($this->request->post['ip']) > 40)) {
             $this->error['ip'] = $this->language->get('lang_error_ip');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'people/customer_ban_ip')) {
+        if (!User::hasPermission('modify', 'people/customer_ban_ip')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

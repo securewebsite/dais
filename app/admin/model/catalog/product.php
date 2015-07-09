@@ -337,7 +337,7 @@ class Product extends Model {
         $this->cache->delete('products.total');
         $this->cache->delete('products.all');
         
-        $this->theme->trigger('admin_add_product', array('product_id' => $product_id));
+        Theme::trigger('admin_add_product', array('product_id' => $product_id));
     }
     
     public function editProduct($product_id, $data) {
@@ -754,7 +754,7 @@ class Product extends Model {
         $this->cache->delete('product');
         $this->cache->delete('products.all');
         
-        $this->theme->trigger('admin_edit_product', array('product_id' => $product_id));
+        Theme::trigger('admin_edit_product', array('product_id' => $product_id));
     }
     
     public function copyProduct($product_id) {
@@ -764,7 +764,7 @@ class Product extends Model {
 			LEFT JOIN {$this->db->prefix}product_description pd 
 				ON (p.product_id = pd.product_id) 
 			WHERE p.product_id = '" . (int)$product_id . "' 
-			AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND pd.language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         if ($query->num_rows) {
@@ -898,7 +898,7 @@ class Product extends Model {
         $this->cache->delete('products.total');
         $this->cache->delete('products.all');
         
-        $this->theme->trigger('admin_delete_product', array('product_id' => $product_id));
+        Theme::trigger('admin_delete_product', array('product_id' => $product_id));
     }
     
     public function getProduct($product_id) {
@@ -912,7 +912,7 @@ class Product extends Model {
 			LEFT JOIN {$this->db->prefix}product_description pd 
 				ON (p.product_id = pd.product_id) 
 			WHERE p.product_id = '" . (int)$product_id . "' 
-			AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND pd.language_id = '" . (int)Config::get('config_language_id') . "'
 		");
 
 		if ($query->num_rows):
@@ -928,7 +928,7 @@ class Product extends Model {
     		FROM {$this->db->prefix}tag 
 			WHERE section   = 'product' 
 			AND element_id  = '" . (int)$product_id . "' 
-			AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND language_id = '" . (int)Config::get('config_language_id') . "'
 		");
     	
     	if ($query->num_rows):
@@ -953,7 +953,7 @@ class Product extends Model {
             $sql.= " LEFT JOIN {$this->db->prefix}product_to_category p2c ON (p.product_id = p2c.product_id)";
         }
         
-        $sql.= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+        $sql.= " WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_name'])) {
             $sql.= " AND pd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
@@ -1016,7 +1016,7 @@ class Product extends Model {
 				ON (p.product_id = pd.product_id) 
 			LEFT JOIN {$this->db->prefix}product_to_category p2c 
 				ON (p.product_id = p2c.product_id) 
-			WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+			WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "' 
 			AND p2c.category_id = '" . (int)$category_id . "' 
 			ORDER BY pd.name ASC
 		");
@@ -1122,7 +1122,7 @@ class Product extends Model {
 			LEFT JOIN `{$this->db->prefix}option_description` od 
 			ON (o.option_id = od.option_id) 
 			WHERE po.product_id = '" . (int)$product_id . "' 
-			AND od.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND od.language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($product_option_query->rows as $product_option) {
@@ -1295,7 +1295,7 @@ class Product extends Model {
             $sql.= " LEFT JOIN {$this->db->prefix}product_to_category p2c ON (p.product_id = p2c.product_id)";
         }
         
-        $sql.= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+        $sql.= " WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_name'])) {
             $sql.= " AND pd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";

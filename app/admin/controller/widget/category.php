@@ -21,15 +21,15 @@ class Category extends Controller {
     private $error = array();
     
     public function index() {
-        $data = $this->theme->language('widget/category');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('setting/setting');
+        $data = Theme::language('widget/category');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('category', $this->request->post);
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
-            $this->response->redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -48,29 +48,29 @@ class Category extends Controller {
         
         if (isset($this->request->post['category_widget'])) {
             $data['widgets'] = $this->request->post['category_widget'];
-        } elseif ($this->config->get('category_widget')) {
-            $data['widgets'] = $this->config->get('category_widget');
+        } elseif (Config::get('category_widget')) {
+            $data['widgets'] = Config::get('category_widget');
         }
         
-        $this->theme->model('design/layout');
+        Theme::model('design/layout');
         
         $data['layouts'] = $this->model_design_layout->getLayouts();
         
-        $this->theme->loadjs('javascript/widget/category', $data);
+        Theme::loadjs('javascript/widget/category', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('widget/category', $data));
+        Response::setOutput(Theme::view('widget/category', $data));
     }
     
     protected function validate() {
-        if (!$this->user->hasPermission('modify', 'widget/category')) {
+        if (!User::hasPermission('modify', 'widget/category')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

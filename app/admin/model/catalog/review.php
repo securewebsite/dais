@@ -34,7 +34,7 @@ class Review extends Model {
         
         $this->cache->delete('reviews.product');
         
-        $this->theme->trigger('admin_add_review', array('review_id' => $review_id));
+        Theme::trigger('admin_add_review', array('review_id' => $review_id));
     }
     
     public function editReview($review_id, $data) {
@@ -52,7 +52,7 @@ class Review extends Model {
         
         $this->cache->delete('reviews.product');
         
-        $this->theme->trigger('admin_edit_review', array('review_id' => $review_id));
+        Theme::trigger('admin_edit_review', array('review_id' => $review_id));
     }
     
     public function deleteReview($review_id) {
@@ -60,7 +60,7 @@ class Review extends Model {
         
         $this->cache->delete('reviews.product');
         
-        $this->theme->trigger('admin_delete_review', array('review_id' => $review_id));
+        Theme::trigger('admin_delete_review', array('review_id' => $review_id));
     }
     
     public function getReview($review_id) {
@@ -69,7 +69,7 @@ class Review extends Model {
 			(SELECT pd.name 
 				FROM {$this->db->prefix}product_description pd 
 				WHERE pd.product_id = r.product_id 
-				AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS product 
+				AND pd.language_id = '" . (int)Config::get('config_language_id') . "') AS product 
 			FROM {$this->db->prefix}review r 
 			WHERE r.review_id = '" . (int)$review_id . "'
 		");
@@ -89,7 +89,7 @@ class Review extends Model {
 			FROM {$this->db->prefix}review r 
 			LEFT JOIN {$this->db->prefix}product_description pd 
 			ON (r.product_id = pd.product_id) 
-			WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "'
 		";
         
         if (isset($data['filter_status'])):

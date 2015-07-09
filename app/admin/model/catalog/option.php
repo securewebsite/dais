@@ -59,7 +59,7 @@ class Option extends Model {
             }
         }
         
-        $this->theme->trigger('admin_add_option', array('option_id' => $option_id));
+        Theme::trigger('admin_add_option', array('option_id' => $option_id));
     }
     
     public function editOption($option_id, $data) {
@@ -124,7 +124,7 @@ class Option extends Model {
             }
         }
         
-        $this->theme->trigger('admin_edit_option', array('option_id' => $option_id));
+        Theme::trigger('admin_edit_option', array('option_id' => $option_id));
     }
     
     public function deleteOption($option_id) {
@@ -144,7 +144,7 @@ class Option extends Model {
             DELETE FROM {$this->db->prefix}option_value_description 
             WHERE option_id = '" . (int)$option_id . "'");
         
-        $this->theme->trigger('admin_delete_option', array('option_id' => $option_id));
+        Theme::trigger('admin_delete_option', array('option_id' => $option_id));
     }
     
     public function getOption($option_id) {
@@ -154,7 +154,7 @@ class Option extends Model {
             LEFT JOIN {$this->db->prefix}option_description od 
             ON (o.option_id = od.option_id) 
             WHERE o.option_id = '" . (int)$option_id . "' 
-            AND od.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+            AND od.language_id = '" . (int)Config::get('config_language_id') . "'");
         
         return $query->row;
     }
@@ -165,7 +165,7 @@ class Option extends Model {
             FROM `{$this->db->prefix}option` o 
             LEFT JOIN {$this->db->prefix}option_description od 
             ON (o.option_id = od.option_id) 
-            WHERE od.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+            WHERE od.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
             $sql.= " AND od.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
@@ -224,7 +224,7 @@ class Option extends Model {
             LEFT JOIN {$this->db->prefix}option_value_description ovd 
             ON (ov.option_value_id = ovd.option_value_id) 
             WHERE ov.option_value_id = '" . (int)$option_value_id . "' 
-            AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+            AND ovd.language_id = '" . (int)Config::get('config_language_id') . "'");
         
         return $query->row;
     }
@@ -238,7 +238,7 @@ class Option extends Model {
             LEFT JOIN {$this->db->prefix}option_value_description ovd 
             ON (ov.option_value_id = ovd.option_value_id) 
             WHERE ov.option_id = '" . (int)$option_id . "' 
-            AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+            AND ovd.language_id = '" . (int)Config::get('config_language_id') . "' 
             ORDER BY ov.sort_order ASC");
         
         foreach ($option_value_query->rows as $option_value) {

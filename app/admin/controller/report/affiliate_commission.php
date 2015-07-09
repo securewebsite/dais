@@ -19,8 +19,8 @@ use Dais\Engine\Controller;
 
 class AffiliateCommission extends Controller {
     public function index() {
-        $data = $this->theme->language('report/affiliate_commission');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        $data = Theme::language('report/affiliate_commission');
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
@@ -55,15 +55,15 @@ class AffiliateCommission extends Controller {
         }
         
         $this->breadcrumb->add('lang_heading_title', 'report/affiliate_commission', $url);
-        $this->theme->model('report/affiliate');
+        Theme::model('report/affiliate');
         
         $data['affiliates'] = array();
         
         $filter = array(
             'filter_date_start' => $filter_date_start, 
             'filter_date_end'   => $filter_date_end, 
-            'start'             => ($page - 1) * $this->config->get('config_admin_limit'), 
-            'limit'             => $this->config->get('config_admin_limit')
+            'start'             => ($page - 1) * Config::get('config_admin_limit'), 
+            'limit'             => Config::get('config_admin_limit')
         );
         
         $affiliate_total = $this->model_report_affiliate->getTotalCommission($filter);
@@ -81,9 +81,9 @@ class AffiliateCommission extends Controller {
                 'affiliate'  => $result['affiliate'], 
                 'email'      => $result['email'], 
                 'status'     => ($result['status'] ? $this->language->get('lang_text_enabled') : $this->language->get('lang_text_disabled')), 
-                'commission' => $this->currency->format($result['commission'], $this->config->get('config_currency')), 
+                'commission' => $this->currency->format($result['commission'], Config::get('config_currency')), 
                 'orders'     => $result['orders'], 
-                'total'      => $this->currency->format($result['total'], $this->config->get('config_currency')), 
+                'total'      => $this->currency->format($result['total'], Config::get('config_currency')), 
                 'action'     => $action
             );
         }
@@ -100,10 +100,10 @@ class AffiliateCommission extends Controller {
             $url.= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
         
-        $data['pagination'] = $this->theme->paginate(
+        $data['pagination'] = Theme::paginate(
             $affiliate_total, 
             $page, 
-            $this->config->get('config_admin_limit'), 
+            Config::get('config_admin_limit'), 
             $this->language->get('lang_text_pagination'), 
             $this->url->link('report/affiliate_commission', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
         );
@@ -111,10 +111,10 @@ class AffiliateCommission extends Controller {
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end']   = $filter_date_end;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('report/affiliate_commission', $data));
+        Response::setOutput(Theme::view('report/affiliate_commission', $data));
     }
 }

@@ -377,7 +377,7 @@ class Register extends Controller {
                 $data['error_affiliate_agree'] = '';
             endif;
 
-            $data['vanity_base'] = $this->app['http.server'];
+            $data['vanity_base'] = Config::get('http.server');
 
             if (isset($this->request->post['affiliate'])):
                 $data['affiliate'] = $this->request->post['affiliate'];

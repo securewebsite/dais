@@ -106,7 +106,7 @@ class Returns extends Model {
                 (SELECT rs.name 
                     FROM {$this->db->prefix}return_status rs 
                     WHERE rs.return_status_id = r.return_status_id 
-                    AND rs.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status 
+                    AND rs.language_id = '" . (int)Config::get('config_language_id') . "') AS status 
             FROM `{$this->db->prefix}return` r";
         
         $implode = array();
@@ -293,7 +293,7 @@ class Returns extends Model {
             if ($return_info) {
                 
                 $status = $this->getStatusNameById($data['return_status_id']);
-                $link   = html_entity_decode($this->app['http.public'] . 'account/returns/info&return_id=' . $return_id, ENT_QUOTES, 'UTF-8');
+                $link   = html_entity_decode(Config::get('http.public') . 'account/returns/info&return_id=' . $return_id, ENT_QUOTES, 'UTF-8');
 
                 if ($data['comment']):
                     $comment = strip_tags(html_entity_decode($data['comment'], ENT_QUOTES, 'UTF-8'));
@@ -314,7 +314,7 @@ class Returns extends Model {
                     )
                 );
 
-                $this->theme->notify('admin_return_add_history', $callback);
+                Theme::notify('admin_return_add_history', $callback);
             }
         }
     }
@@ -338,7 +338,7 @@ class Returns extends Model {
             LEFT JOIN {$this->db->prefix}return_status rs 
             ON rh.return_status_id = rs.return_status_id 
             WHERE rh.return_id = '" . (int)$return_id . "' 
-            AND rs.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+            AND rs.language_id = '" . (int)Config::get('config_language_id') . "' 
             ORDER BY rh.date_added ASC 
             LIMIT " . (int)$start . "," . (int)$limit);
         

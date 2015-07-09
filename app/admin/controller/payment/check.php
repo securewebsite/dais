@@ -21,15 +21,15 @@ class Check extends Controller {
     private $error = array();
     
     public function index() {
-        $data = $this->theme->language('payment/check');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('setting/setting');
+        $data = Theme::language('payment/check');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('check', $this->request->post);
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
-            $this->response->redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -54,56 +54,56 @@ class Check extends Controller {
         if (isset($this->request->post['check_payable'])) {
             $data['check_payable'] = $this->request->post['check_payable'];
         } else {
-            $data['check_payable'] = $this->config->get('check_payable');
+            $data['check_payable'] = Config::get('check_payable');
         }
         
         if (isset($this->request->post['check_total'])) {
             $data['check_total'] = $this->request->post['check_total'];
         } else {
-            $data['check_total'] = $this->config->get('check_total');
+            $data['check_total'] = Config::get('check_total');
         }
         
         if (isset($this->request->post['check_order_status_id'])) {
             $data['check_order_status_id'] = $this->request->post['check_order_status_id'];
         } else {
-            $data['check_order_status_id'] = $this->config->get('check_order_status_id');
+            $data['check_order_status_id'] = Config::get('check_order_status_id');
         }
         
-        $this->theme->model('localization/order_status');
+        Theme::model('localization/order_status');
         
         $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
         
         if (isset($this->request->post['check_geo_zone_id'])) {
             $data['check_geo_zone_id'] = $this->request->post['check_geo_zone_id'];
         } else {
-            $data['check_geo_zone_id'] = $this->config->get('check_geo_zone_id');
+            $data['check_geo_zone_id'] = Config::get('check_geo_zone_id');
         }
         
-        $this->theme->model('localization/geo_zone');
+        Theme::model('localization/geo_zone');
         
         $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
         
         if (isset($this->request->post['check_status'])) {
             $data['check_status'] = $this->request->post['check_status'];
         } else {
-            $data['check_status'] = $this->config->get('check_status');
+            $data['check_status'] = Config::get('check_status');
         }
         
         if (isset($this->request->post['check_sort_order'])) {
             $data['check_sort_order'] = $this->request->post['check_sort_order'];
         } else {
-            $data['check_sort_order'] = $this->config->get('check_sort_order');
+            $data['check_sort_order'] = Config::get('check_sort_order');
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('payment/check', $data));
+        Response::setOutput(Theme::view('payment/check', $data));
     }
     
     protected function validate() {
-        if (!$this->user->hasPermission('modify', 'payment/check')) {
+        if (!User::hasPermission('modify', 'payment/check')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
@@ -111,7 +111,7 @@ class Check extends Controller {
             $this->error['payable'] = $this->language->get('lang_error_payable');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

@@ -15,9 +15,9 @@
 */
 
 namespace Admin\Controller\Common;
+
 use Dais\Engine\Controller;
 use Dais\Engine\Action;
-use Dais\Service\ActionService;
 
 class Dashboard extends Controller {
     private $error;
@@ -31,14 +31,14 @@ class Dashboard extends Controller {
     );
     
     public function index() {
-        $data = $this->theme->language('common/dashboard');
+        $data = Theme::language('common/dashboard');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->javascript->register('flot.min', 'summernote.min')
+        JS::register('flot.min', 'summernote.min')
             ->register('flot.resize.min', 'flot.min');
         
-        if (strtotime('-24 hours', time()) > $this->user->getLastAccess()):
+        if (strtotime('-24 hours', time()) > User::getLastAccess()):
             $this->checkFolders();
         endif;
         
@@ -66,18 +66,18 @@ class Dashboard extends Controller {
             $data['error_warning'] = '';
         endif;
         
-        $this->theme->model('sale/order');
+        Theme::model('sale/order');
         
-        $data['total_sale']      = $this->currency->format($this->model_sale_order->getTotalSales() , $this->config->get('config_currency'));
-        $data['total_sale_year'] = $this->currency->format($this->model_sale_order->getTotalSalesByYear(date('Y')) , $this->config->get('config_currency'));
+        $data['total_sale']      = $this->currency->format($this->model_sale_order->getTotalSales() , Config::get('config_currency'));
+        $data['total_sale_year'] = $this->currency->format($this->model_sale_order->getTotalSalesByYear(date('Y')) , Config::get('config_currency'));
         $data['total_order']     = $this->model_sale_order->getTotalOrders();
         
-        $this->theme->model('people/customer');
+        Theme::model('people/customer');
         
         $data['total_customer']          = $this->model_people_customer->getTotalCustomers();
         $data['total_customer_approval'] = $this->model_people_customer->getTotalCustomersAwaitingApproval();
         
-        $this->theme->model('catalog/review');
+        Theme::model('catalog/review');
         
         $data['total_review']          = $this->model_catalog_review->getTotalReviews();
         $data['total_review_approval'] = $this->model_catalog_review->getTotalReviewsAwaitingApproval();
@@ -111,27 +111,27 @@ class Dashboard extends Controller {
             );
         }
         
-        if ($this->config->get('config_currency_auto')) {
-            $this->theme->model('localization/currency');
+        if (Config::get('config_currency_auto')) {
+            Theme::model('localization/currency');
             
             $this->model_localization_currency->updateCurrencies();
         }
         
-        $this->theme->loadjs('javascript/common/dashboard', $data);
+        Theme::loadjs('javascript/common/dashboard', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('common/dashboard', $data));
+        Response::setOutput(Theme::view('common/dashboard', $data));
     }
     
     public function sale() {
-        $this->theme->language('common/dashboard');
+        Theme::language('common/dashboard');
         
         $json = array();
         
-        $this->theme->model('report/dashboard');
+        Theme::model('report/dashboard');
         
         $json['orders']            = array();
         $json['customers']         = array();
@@ -228,9 +228,9 @@ class Dashboard extends Controller {
                 break;
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function login() {
@@ -256,8 +256,8 @@ class Dashboard extends Controller {
             'common/css'
         );
         
-        if (!$this->user->isLogged() && !in_array($route, $ignore)) {
-            return new Action(new ActionService($this->app, 'common/login'));
+        if (!User::isLogged() && !in_array($route, $ignore)) {
+            return new Action('common/login');
         }
         
         if (isset($this->request->get['route'])) {
@@ -279,11 +279,11 @@ class Dashboard extends Controller {
             $ignore = array_merge($ignore, $config_ignore);
             
             if (!in_array($route, $ignore) && (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token']))) {
-                return new Action(new ActionService($this->app, 'common/login'));
+                return new Action('common/login');
             }
         } else {
             if (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])) {
-                return new Action(new ActionService($this->app, 'common/login'));
+                return new Action('common/login');
             }
         }
     }
@@ -316,88 +316,88 @@ class Dashboard extends Controller {
                 'common/css'
             );
             
-            if (!in_array($route, $ignore) && !$this->user->hasPermission('access', $route)) {
-                return new Action(new ActionService($this->app, 'error/permission'));
+            if (!in_array($route, $ignore) && !User::hasPermission('access', $route)) {
+                return new Action('error/permission');
             }
         }
     }
     
     public function checkFolders() {
-        $this->theme->language('common/dashboard');
+        Theme::language('common/dashboard');
         
         // Check image directory is writable
-        $file = $this->app['path.image'] . 'test';
+        $file = Config::get('path.image') . 'test';
         $handle = fopen($file, 'a+');
         
         fwrite($handle, '');
         fclose($handle);
         
         if (!is_readable($file)):
-            $this->error['image'] = sprintf($this->language->get('lang_error_image') , $this->app['path.image']);
+            $this->error['image'] = sprintf($this->language->get('lang_error_image') , Config::get('path.image'));
         else:
             $this->error['image'] = '';
             unlink($file);
         endif;
         
         // Check image cache directory is writable
-        $file = $this->app['path.image'] . 'cache/test';
+        $file = Config::get('path.image') . 'cache/test';
         $handle = fopen($file, 'a+');
         
         fwrite($handle, '');
         fclose($handle);
         
         if (!is_readable($file)):
-            $this->error['image_cache'] = sprintf($this->language->get('lang_error_image_cache') , $this->app['path.image'] . 'cache/');
+            $this->error['image_cache'] = sprintf($this->language->get('lang_error_image_cache') , Config::get('path.image') . 'cache/');
         else:
             $this->error['image_cache'] = '';
             unlink($file);
         endif;
         
         // Check cache directory is writable
-        $file = $this->app['path.cache'] . 'test';
+        $file = Config::get('path.cache') . 'test';
         $handle = fopen($file, 'a+');
         
         fwrite($handle, '');
         fclose($handle);
         
         if (!is_readable($file)):
-            $this->error['cache'] = sprintf($this->language->get('lang_error_image_cache') , $this->app['path.cache']);
+            $this->error['cache'] = sprintf($this->language->get('lang_error_image_cache') , Config::get('path.cache'));
         else:
             $this->error['cache'] = '';
             unlink($file);
         endif;
         
         // Check download directory is writable
-        $file = $this->app['path.download'] . 'test';
+        $file = Config::get('path.download') . 'test';
         $handle = fopen($file, 'a+');
         
         fwrite($handle, '');
         fclose($handle);
         
         if (!is_readable($file)):
-            $this->error['download'] = sprintf($this->language->get('lang_error_download') , $this->app['path.download']);
+            $this->error['download'] = sprintf($this->language->get('lang_error_download') , Config::get('path.download'));
         else:
             $this->error['download'] = '';
             unlink($file);
         endif;
         
         // Check logs directory is writable
-        $file = $this->app['path.logs'] . 'test';
+        $file = Config::get('path.logs') . 'test';
         $handle = fopen($file, 'a+');
         
         fwrite($handle, '');
         fclose($handle);
         
         if (!is_readable($file)):
-            $this->error['logs'] = sprintf($this->language->get('lang_error_logs') , $this->app['path.logs']);
+            $this->error['logs'] = sprintf($this->language->get('lang_error_logs') , Config::get('path.logs'));
         else:
             $this->error['logs'] = '';
             unlink($file);
         endif;
         
         if (!$this->error):
-            $this->theme->model('report/dashboard');
-            $this->model_report_dashboard->setLastAccess($this->user->getId());
+            Theme::model('report/dashboard');
+            $this->model_report_dashboard->setLastAccess(User::getId());
             $this->session->data['user_last_access'] = time();
         endif;
         

@@ -11,24 +11,9 @@
 |	
 |	For the full copyright and license information, please view the LICENSE
 |	file that was distributed with this source code.
-|	
-|
-|
-|--------------------------------------------------------------------------
-|	Environment Constants
-|--------------------------------------------------------------------------
-|
-|	Let's set a couple constants so that we don't always have to reference 
-|	the container. Just in case we want to implement something unexpected.
 |
 */
 
-define('VERSION', '1.0.1');
-
-define('DATE_LOCALE', env('APP_TIMEZONE'));
-date_default_timezone_set(DATE_LOCALE);
-
-define('FRAMEWORK', dirname(__DIR__) . SEP . 'peaches' . SEP . 'Dais' . SEP);
 
 /*
 |--------------------------------------------------------------------------
@@ -45,20 +30,7 @@ define('FRAMEWORK', dirname(__DIR__) . SEP . 'peaches' . SEP . 'Dais' . SEP);
 |
 */
 
-define('FRONT_FACADE', 'front');
-define('ADMIN_FACADE', 'manage');
-define('INSTALL_FACADE', 'install');
-define('API_FACADE', 'api');
-define('USE_TWIG', false);
 
-/**
- * Let's include our framework start file so we can properly
- * detect our server settings.
- */
-
-if ($file = FRAMEWORK . 'Start.php'):
-	require $file;
-endif;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,16 +49,22 @@ define('APP_PATH', HOME . 'app' . SEP);
 define('STORAGE', HOME . 'storage' . SEP);
 define('PUBLIC_DIR', 'public' . SEP);
 
+// convert our global $_ENV to a more elegant array for paths
+$env = array();
+
+foreach($_ENV as $key => $value):
+    $env[strtolower(str_replace('_', '.', $key))] = $value;
+endforeach;
+
 $base = array(
-	'cache.prefix'   => md5($env['app.env'] . str_replace('.', '', VERSION)),
+	'cache.prefix'   => md5($env['app.env'] . str_replace('.', '', static::VERSION)),
 	'cache.hostname' => 'localhost',
 	'cache.port'     => 11211,
 	'cache.time'     => 86400,
-	'path.app_path'  => APP_PATH,
-	'path.framework' => FRAMEWORK,
+	'path.app'  	 => APP_PATH,
 	'path.database'  => HOME . 'database' . SEP,
 	'path.download'  => APP_PATH . 'download' . SEP,
-	'path.override'  => HOME . 'override' . SEP,
+	'path.override'  => HOME . 'override',
 	'path.plugin'    => APP_PATH . 'plugin' . SEP,
 	'path.storage'   => STORAGE,
 	'path.cache'     => STORAGE . 'framework' . SEP . 'cache' . SEP,
@@ -94,10 +72,6 @@ $base = array(
 	'path.views'     => STORAGE . 'framework' . SEP . 'views' . SEP,
 	'prefix.plugin'  => 'plugin'
 );
-
-// Pushing this to a definition so it can be 
-// used to implement the override functionality.
-define('OVERRIDE', HOME . basename($base['path.override']));
 
 // DO NOT CHANGE THE NAME OF THIS KEY
 
@@ -146,20 +120,6 @@ $admin = array(
 );
 
 $config[ADMIN_FACADE] = $admin;
-
-$install = array(
-	'http.server'      => 'http://' . $env['app.env'] . '/' . INSTALL_FACADE . '/',
-	'https.server'     => 'http://' . $env['app.env'] . '/' . INSTALL_FACADE . '/',
-	'http.public'      => 'http://' . $env['app.env'] . '/',
-	'path.application' => APP_PATH . 'install' . SEP,
-	'path.language'    => APP_PATH . 'install' . SEP . 'language' . SEP,
-	'path.theme'       => APP_PATH . 'theme' . SEP . 'install' . SEP,
-	'path.dais'        => HOME,
-	'path.asset'       => HOME . PUBLIC_DIR . 'asset' . SEP,
-	'prefix.facade'    => 'install' . SEP
-);
-
-$config[INSTALL_FACADE] = $install;
 
 /*
 |--------------------------------------------------------------------------

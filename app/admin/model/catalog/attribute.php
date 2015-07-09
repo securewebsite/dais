@@ -36,7 +36,7 @@ class Attribute extends Model {
 					name = '" . $this->db->escape($value['name']) . "'");
         }
         
-        $this->theme->trigger('admin_add_attribute', array('attribute_id' => $attribute_id));
+        Theme::trigger('admin_add_attribute', array('attribute_id' => $attribute_id));
     }
     
     public function editAttribute($attribute_id, $data) {
@@ -60,7 +60,7 @@ class Attribute extends Model {
 					name = '" . $this->db->escape($value['name']) . "'");
         }
         
-        $this->theme->trigger('admin_edit_attribute', array('attribute_id' => $attribute_id));
+        Theme::trigger('admin_edit_attribute', array('attribute_id' => $attribute_id));
     }
     
     public function deleteAttribute($attribute_id) {
@@ -72,7 +72,7 @@ class Attribute extends Model {
 			DELETE FROM {$this->db->prefix}attribute_description 
 			WHERE attribute_id = '" . (int)$attribute_id . "'");
         
-        $this->theme->trigger('admin_delete_attribute', array('attribute_id' => $attribute_id));
+        Theme::trigger('admin_delete_attribute', array('attribute_id' => $attribute_id));
     }
     
     public function getAttribute($attribute_id) {
@@ -82,7 +82,7 @@ class Attribute extends Model {
 			LEFT JOIN {$this->db->prefix}attribute_description ad 
 			ON (a.attribute_id = ad.attribute_id) 
 			WHERE a.attribute_id = '" . (int)$attribute_id . "' 
-			AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+			AND ad.language_id = '" . (int)Config::get('config_language_id') . "'");
         
         return $query->row;
     }
@@ -93,11 +93,11 @@ class Attribute extends Model {
 			(SELECT agd.name 
 				FROM {$this->db->prefix}attribute_group_description agd 
 				WHERE agd.attribute_group_id = a.attribute_group_id 
-				AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS attribute_group 
+				AND agd.language_id = '" . (int)Config::get('config_language_id') . "') AS attribute_group 
 			FROM {$this->db->prefix}attribute a 
 			LEFT JOIN {$this->db->prefix}attribute_description ad 
 			ON (a.attribute_id = ad.attribute_id) 
-			WHERE ad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+			WHERE ad.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_name'])) {
             $sql.= " AND ad.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
@@ -159,11 +159,11 @@ class Attribute extends Model {
 			(SELECT agd.name 
 				FROM {$this->db->prefix}attribute_group_description agd 
 				WHERE agd.attribute_group_id = a.attribute_group_id 
-				AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS attribute_group 
+				AND agd.language_id = '" . (int)Config::get('config_language_id') . "') AS attribute_group 
 			FROM {$this->db->prefix}attribute a 
 			LEFT JOIN {$this->db->prefix}attribute_description ad 
 			ON (a.attribute_id = ad.attribute_id) 
-			WHERE ad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+			WHERE ad.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_name'])) {
             $sql.= " AND ad.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";

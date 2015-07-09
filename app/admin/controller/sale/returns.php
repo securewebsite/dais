@@ -23,11 +23,11 @@ class Returns extends Controller {
     public function index() {
         $this->language->load('sale/returns');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('sale/returns');
+        Theme::model('sale/returns');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
@@ -35,9 +35,9 @@ class Returns extends Controller {
     public function insert() {
         $this->language->load('sale/returns');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('sale/returns');
+        Theme::model('sale/returns');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_sale_returns->addReturn($this->request->post);
@@ -90,10 +90,10 @@ class Returns extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('sale/returns', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('sale/returns', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
@@ -101,9 +101,9 @@ class Returns extends Controller {
     public function update() {
         $this->language->load('sale/returns');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('sale/returns');
+        Theme::model('sale/returns');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_sale_returns->editReturn($this->request->get['return_id'], $this->request->post);
@@ -156,10 +156,10 @@ class Returns extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('sale/returns', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('sale/returns', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
@@ -167,9 +167,9 @@ class Returns extends Controller {
     public function delete() {
         $this->language->load('sale/returns');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('sale/returns');
+        Theme::model('sale/returns');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $return_id) {
@@ -224,16 +224,16 @@ class Returns extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('sale/returns', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('sale/returns', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     protected function getList() {
-        $data = $this->theme->language('sale/returns');
+        $data = Theme::language('sale/returns');
         
         if (isset($this->request->get['filter_return_id'])) {
             $filter_return_id = $this->request->get['filter_return_id'];
@@ -354,7 +354,7 @@ class Returns extends Controller {
         
         $data['returns'] = array();
         
-        $filter = array('filter_return_id' => $filter_return_id, 'filter_order_id' => $filter_order_id, 'filter_customer' => $filter_customer, 'filter_product' => $filter_product, 'filter_model' => $filter_model, 'filter_return_status_id' => $filter_return_status_id, 'filter_date_added' => $filter_date_added, 'filter_date_modified' => $filter_date_modified, 'sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
+        $filter = array('filter_return_id' => $filter_return_id, 'filter_order_id' => $filter_order_id, 'filter_customer' => $filter_customer, 'filter_product' => $filter_product, 'filter_model' => $filter_model, 'filter_return_status_id' => $filter_return_status_id, 'filter_date_added' => $filter_date_added, 'filter_date_modified' => $filter_date_modified, 'sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
         $return_total = $this->model_sale_returns->getTotalReturns($filter);
         
@@ -485,7 +485,7 @@ class Returns extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = $this->theme->paginate($return_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('sale/returns', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($return_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('sale/returns', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['filter_return_id']        = $filter_return_id;
         $data['filter_order_id']         = $filter_order_id;
@@ -496,22 +496,22 @@ class Returns extends Controller {
         $data['filter_date_added']       = $filter_date_added;
         $data['filter_date_modified']    = $filter_date_modified;
         
-        $this->theme->model('localization/return_status');
+        Theme::model('localization/return_status');
         
         $data['return_statuses'] = $this->model_localization_return_status->getReturnStatuses();
         
         $data['sort'] = $sort;
         $data['order'] = $order;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('sale/return_list', $data));
+        Response::setOutput(Theme::view('sale/return_list', $data));
     }
     
     protected function getForm() {
-        $data = $this->theme->language('sale/returns');
+        $data = Theme::language('sale/returns');
         
         $data['token'] = $this->session->data['token'];
         
@@ -735,7 +735,7 @@ class Returns extends Controller {
             $data['return_reason_id'] = '';
         }
         
-        $this->theme->model('localization/return_reason');
+        Theme::model('localization/return_reason');
         
         $data['return_reasons'] = $this->model_localization_return_reason->getReturnReasons();
         
@@ -747,7 +747,7 @@ class Returns extends Controller {
             $data['return_action_id'] = '';
         }
         
-        $this->theme->model('localization/return_action');
+        Theme::model('localization/return_action');
         
         $data['return_actions'] = $this->model_localization_return_action->getReturnActions();
         
@@ -767,19 +767,19 @@ class Returns extends Controller {
             $data['return_status_id'] = '';
         }
         
-        $this->theme->model('localization/return_status');
+        Theme::model('localization/return_status');
         
         $data['return_statuses'] = $this->model_localization_return_status->getReturnStatuses();
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('sale/return_form', $data));
+        Response::setOutput(Theme::view('sale/return_form', $data));
     }
     
     public function info() {
-        $this->theme->model('sale/returns');
+        Theme::model('sale/returns');
         
         if (isset($this->request->get['return_id'])) {
             $return_id = $this->request->get['return_id'];
@@ -790,9 +790,9 @@ class Returns extends Controller {
         $return_info = $this->model_sale_returns->getReturn($return_id);
         
         if ($return_info) {
-            $data = $this->theme->language('sale/returns');
+            $data = Theme::language('sale/returns');
             
-            $this->theme->setTitle($this->language->get('lang_heading_title'));
+            Theme::setTitle($this->language->get('lang_heading_title'));
             
             $url = '';
             
@@ -844,7 +844,7 @@ class Returns extends Controller {
             
             $data['cancel'] = $this->url->link('sale/returns', 'token=' . $this->session->data['token'] . $url, 'SSL');
             
-            $this->theme->model('sale/order');
+            Theme::model('sale/order');
             
             $order_info = $this->model_sale_order->getOrder($return_info['order_id']);
             
@@ -872,7 +872,7 @@ class Returns extends Controller {
             $data['email'] = $return_info['email'];
             $data['telephone'] = $return_info['telephone'];
             
-            $this->theme->model('localization/return_status');
+            Theme::model('localization/return_status');
             
             $return_status_info = $this->model_localization_return_status->getReturnStatus($return_info['return_status_id']);
             
@@ -888,7 +888,7 @@ class Returns extends Controller {
             $data['model'] = $return_info['model'];
             $data['quantity'] = $return_info['quantity'];
             
-            $this->theme->model('localization/return_reason');
+            Theme::model('localization/return_reason');
             
             $return_reason_info = $this->model_localization_return_reason->getReturnReason($return_info['return_reason_id']);
             
@@ -901,7 +901,7 @@ class Returns extends Controller {
             $data['opened'] = $return_info['opened'] ? $this->language->get('lang_text_yes') : $this->language->get('lang_text_no');
             $data['comment'] = nl2br($return_info['comment']);
             
-            $this->theme->model('localization/return_action');
+            Theme::model('localization/return_action');
             
             $data['return_actions'] = $this->model_localization_return_action->getReturnActions();
             
@@ -911,54 +911,54 @@ class Returns extends Controller {
             
             $data['return_status_id'] = $return_info['return_status_id'];
             
-            $this->theme->loadjs('javascript/sale/return_info', $data);
+            Theme::loadjs('javascript/sale/return_info', $data);
             
-            $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+            $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $data = $this->theme->render_controllers($data);
+            $data = Theme::render_controllers($data);
             
-            $this->response->setOutput($this->theme->view('sale/return_info', $data));
+            Response::setOutput(Theme::view('sale/return_info', $data));
         } else {
-            $data = $this->theme->language('error/not_found');
+            $data = Theme::language('error/not_found');
             
-            $this->theme->setTitle($this->language->get('lang_heading_title'));
+            Theme::setTitle($this->language->get('lang_heading_title'));
             
             $this->breadcrumb->add('lang_heading_title', 'error/not_found');
             
-            $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+            $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $data = $this->theme->render_controllers($data);
+            $data = Theme::render_controllers($data);
             
-            $this->response->setOutput($this->theme->view('error/not_found', $data));
+            Response::setOutput(Theme::view('error/not_found', $data));
         }
     }
     
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'sale/returns')) {
+        if (!User::hasPermission('modify', 'sale/returns')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        if (($this->encode->strlen($this->request->post['firstname']) < 1) || ($this->encode->strlen($this->request->post['firstname']) > 32)) {
+        if ((Encode::strlen($this->request->post['firstname']) < 1) || (Encode::strlen($this->request->post['firstname']) > 32)) {
             $this->error['firstname'] = $this->language->get('lang_error_firstname');
         }
         
-        if (($this->encode->strlen($this->request->post['lastname']) < 1) || ($this->encode->strlen($this->request->post['lastname']) > 32)) {
+        if ((Encode::strlen($this->request->post['lastname']) < 1) || (Encode::strlen($this->request->post['lastname']) > 32)) {
             $this->error['lastname'] = $this->language->get('lang_error_lastname');
         }
         
-        if (($this->encode->strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['email'])) {
+        if ((Encode::strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['email'])) {
             $this->error['email'] = $this->language->get('lang_error_email');
         }
         
-        if (($this->encode->strlen($this->request->post['telephone']) < 3) || ($this->encode->strlen($this->request->post['telephone']) > 32)) {
+        if ((Encode::strlen($this->request->post['telephone']) < 3) || (Encode::strlen($this->request->post['telephone']) > 32)) {
             $this->error['telephone'] = $this->language->get('lang_error_telephone');
         }
         
-        if (($this->encode->strlen($this->request->post['product']) < 1) || ($this->encode->strlen($this->request->post['product']) > 255)) {
+        if ((Encode::strlen($this->request->post['product']) < 1) || (Encode::strlen($this->request->post['product']) > 255)) {
             $this->error['product'] = $this->language->get('lang_error_product');
         }
         
-        if (($this->encode->strlen($this->request->post['model']) < 1) || ($this->encode->strlen($this->request->post['model']) > 64)) {
+        if ((Encode::strlen($this->request->post['model']) < 1) || (Encode::strlen($this->request->post['model']) > 64)) {
             $this->error['model'] = $this->language->get('lang_error_model');
         }
         
@@ -970,17 +970,17 @@ class Returns extends Controller {
             $this->error['warning'] = $this->language->get('lang_error_warning');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'sale/returns')) {
+        if (!User::hasPermission('modify', 'sale/returns')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
@@ -991,12 +991,12 @@ class Returns extends Controller {
         $json = array();
         
         if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-            if (!$this->user->hasPermission('modify', 'sale/returns')) {
+            if (!User::hasPermission('modify', 'sale/returns')) {
                 $json['error'] = $this->language->get('lang_error_permission');
             }
             
             if (!$json) {
-                $this->theme->model('sale/returns');
+                Theme::model('sale/returns');
                 
                 $json['success'] = $this->language->get('lang_text_success');
                 
@@ -1004,21 +1004,21 @@ class Returns extends Controller {
             }
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function history() {
-        $data = $this->theme->language('sale/returns');
+        $data = Theme::language('sale/returns');
         
         $data['error'] = '';
         $data['success'] = '';
         
-        $this->theme->model('sale/returns');
+        Theme::model('sale/returns');
         
         if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-            if (!$this->user->hasPermission('modify', 'sale/returns')) {
+            if (!User::hasPermission('modify', 'sale/returns')) {
                 $data['error'] = $this->language->get('lang_error_permission');
             }
             
@@ -1045,14 +1045,14 @@ class Returns extends Controller {
         
         $history_total = $this->model_sale_returns->getTotalReturnHistories($this->request->get['return_id']);
         
-        $data['pagination'] = $this->theme->paginate($history_total, $page, 10, $this->language->get('lang_text_pagination'), $this->url->link('sale/returns/history', 'token=' . $this->session->data['token'] . '&return_id=' . $this->request->get['return_id'] . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($history_total, $page, 10, $this->language->get('lang_text_pagination'), $this->url->link('sale/returns/history', 'token=' . $this->session->data['token'] . '&return_id=' . $this->request->get['return_id'] . '&page={page}', 'SSL'));
         
-        $this->theme->loadjs('javascript/sale/return_history', $data);
+        Theme::loadjs('javascript/sale/return_history', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data['javascript'] = $this->theme->controller('common/javascript');
+        $data['javascript'] = Theme::controller('common/javascript');
         
-        $this->response->setOutput($this->theme->view('sale/return_history', $data));
+        Response::setOutput(Theme::view('sale/return_history', $data));
     }
 }

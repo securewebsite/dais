@@ -21,15 +21,15 @@ class BlogFeatured extends Controller {
     private $error = array();
     
     public function index() {
-        $data = $this->theme->language('widget/blog_featured');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('setting/setting');
+        $data = Theme::language('widget/blog_featured');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('blog_featured', $this->request->post);
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
-            $this->response->redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -55,15 +55,15 @@ class BlogFeatured extends Controller {
         if (isset($this->request->post['blog_featured_post'])) {
             $data['blog_featured_post'] = $this->request->post['blog_featured_post'];
         } else {
-            $data['blog_featured_post'] = $this->config->get('blog_featured_post');
+            $data['blog_featured_post'] = Config::get('blog_featured_post');
         }
         
-        $this->theme->model('content/post');
+        Theme::model('content/post');
         
         if (isset($this->request->post['blog_featured_post'])) {
             $posts = explode(',', $this->request->post['blog_featured_post']);
         } else {
-            $posts = explode(',', $this->config->get('blog_featured_post'));
+            $posts = explode(',', Config::get('blog_featured_post'));
         }
         
         $data['posts'] = array();
@@ -80,25 +80,25 @@ class BlogFeatured extends Controller {
         
         if (isset($this->request->post['blog_featured_widget'])) {
             $data['widgets'] = $this->request->post['blog_featured_widget'];
-        } elseif ($this->config->get('blog_featured_widget')) {
-            $data['widgets'] = $this->config->get('blog_featured_widget');
+        } elseif (Config::get('blog_featured_widget')) {
+            $data['widgets'] = Config::get('blog_featured_widget');
         }
         
-        $this->theme->model('design/layout');
+        Theme::model('design/layout');
         
         $data['layouts'] = $this->model_design_layout->getLayouts();
         
-        $this->theme->loadjs('javascript/widget/blog_featured', $data);
+        Theme::loadjs('javascript/widget/blog_featured', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('widget/blog_featured', $data));
+        Response::setOutput(Theme::view('widget/blog_featured', $data));
     }
     
     private function validate() {
-        if (!$this->user->hasPermission('modify', 'widget/blog_featured')) {
+        if (!User::hasPermission('modify', 'widget/blog_featured')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
@@ -110,7 +110,7 @@ class BlogFeatured extends Controller {
             }
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

@@ -31,7 +31,7 @@ class Store extends Model {
         
         $this->cache->delete('stores');
         
-        $this->theme->trigger('admin_add_store', array('store_id' => $store_id));
+        Theme::trigger('admin_add_store', array('store_id' => $store_id));
         
         return $store_id;
     }
@@ -48,7 +48,7 @@ class Store extends Model {
         
         $this->cache->delete('stores');
         
-        $this->theme->trigger('admin_edit_store', array('store_id' => $store_id));
+        Theme::trigger('admin_edit_store', array('store_id' => $store_id));
     }
     
     public function deleteStore($store_id) {
@@ -56,7 +56,7 @@ class Store extends Model {
         
         $this->cache->delete('stores');
         
-        $this->theme->trigger('admin_delete_store', array('store_id' => $store_id));
+        Theme::trigger('admin_delete_store', array('store_id' => $store_id));
     }
     
     public function getStore($store_id) {

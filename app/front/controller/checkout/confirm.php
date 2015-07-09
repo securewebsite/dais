@@ -129,7 +129,7 @@ class Confirm extends Controller {
             if ($order['store_id']):
                 $order['store_url'] = $this->config->get('config_url');
             else:
-                $order['store_url'] = $this->get('http.server');
+                $order['store_url'] = Config::get('http.server');
             endif;
             
             if ($this->customer->isLogged()):

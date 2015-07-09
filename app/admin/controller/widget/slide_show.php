@@ -21,15 +21,15 @@ class SlideShow extends Controller {
     private $error = array();
     
     public function index() {
-        $data = $this->theme->language('widget/slide_show');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('setting/setting');
+        $data = Theme::language('widget/slide_show');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('slide_show', $this->request->post);
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
-            $this->response->redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -54,29 +54,29 @@ class SlideShow extends Controller {
         
         if (isset($this->request->post['slide_show_widget'])) {
             $data['widgets'] = $this->request->post['slide_show_widget'];
-        } elseif ($this->config->get('slide_show_widget')) {
-            $data['widgets'] = $this->config->get('slide_show_widget');
+        } elseif (Config::get('slide_show_widget')) {
+            $data['widgets'] = Config::get('slide_show_widget');
         }
         
-        $this->theme->model('design/layout');
+        Theme::model('design/layout');
         
         $data['layouts'] = $this->model_design_layout->getLayouts();
         
-        $this->theme->model('design/banner');
+        Theme::model('design/banner');
         
         $data['banners'] = $this->model_design_banner->getBanners();
         
-        $this->theme->loadjs('javascript/widget/slide_show', $data);
+        Theme::loadjs('javascript/widget/slide_show', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('widget/slide_show', $data));
+        Response::setOutput(Theme::view('widget/slide_show', $data));
     }
     
     protected function validate() {
-        if (!$this->user->hasPermission('modify', 'widget/slide_show')) {
+        if (!User::hasPermission('modify', 'widget/slide_show')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
@@ -88,7 +88,7 @@ class SlideShow extends Controller {
             }
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

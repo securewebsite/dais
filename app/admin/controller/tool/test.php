@@ -19,9 +19,9 @@ use Dais\Engine\Controller;
 
 class Test extends Controller {
     public function index() {
-        $data = $this->theme->language('tool/test');
+        $data = Theme::language('tool/test');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
         if (isset($this->session->data['success'])):
             $data['success'] = $this->session->data['success'];
@@ -32,11 +32,10 @@ class Test extends Controller {
         endif;
         
         $this->breadcrumb->add('lang_heading_title', 'tool/test');
+
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::render_controllers($data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-        
-        $data = $this->theme->render_controllers($data);
-        
-        $this->response->setOutput($this->theme->view('tool/test', $data));
+        Response::setOutput(Theme::view('tool/test', $data));
     }
 }

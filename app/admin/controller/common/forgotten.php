@@ -21,18 +21,18 @@ class Forgotten extends Controller {
     private $error = array();
     
     public function index() {
-        if ($this->user->isLogged()):
-            $this->response->redirect($this->url->link('common/dashboard', '', 'SSL'));
+        if (User::isLogged()):
+            Response::redirect($this->url->link('common/dashboard', '', 'SSL'));
         endif;
         
-        if (!$this->config->get('config_password')):
-            $this->response->redirect($this->url->link('common/login', '', 'SSL'));
+        if (!Config::get('config_password')):
+            Response::redirect($this->url->link('common/login', '', 'SSL'));
         endif;
         
-        $data = $this->theme->language('common/forgotten');
+        $data = Theme::language('common/forgotten');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('people/user');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('people/user');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
             $code    = sha1(uniqid(mt_rand(), true));
@@ -47,10 +47,10 @@ class Forgotten extends Controller {
                 )
             );
 
-            $this->theme->notify('admin_forgotten_email', $callback);
+            Theme::notify('admin_forgotten_email', $callback);
             
             $this->session->data['success'] = $this->language->get('lang_text_success');
-            $this->response->redirect($this->url->link('common/login', '', 'SSL'));
+            Response::redirect($this->url->link('common/login', '', 'SSL'));
         endif;
         
         $this->breadcrumb->add('lang_text_forgotten', 'common/forgotten');
@@ -70,10 +70,10 @@ class Forgotten extends Controller {
             $data['email'] = '';
         endif;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('common/forgotten', $data));
+        Response::setOutput(Theme::view('common/forgotten', $data));
     }
     
     protected function validate() {
@@ -83,7 +83,7 @@ class Forgotten extends Controller {
             $this->error['warning'] = $this->language->get('lang_error_email');
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

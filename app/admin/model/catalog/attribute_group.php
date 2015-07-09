@@ -34,7 +34,7 @@ class AttributeGroup extends Model {
 					name = '" . $this->db->escape($value['name']) . "'");
         }
         
-        $this->theme->trigger('admin_add_attribute_group', array('attribute_group_id' => $attribute_group_id));
+        Theme::trigger('admin_add_attribute_group', array('attribute_group_id' => $attribute_group_id));
     }
     
     public function editAttributeGroup($attribute_group_id, $data) {
@@ -57,7 +57,7 @@ class AttributeGroup extends Model {
 					name = '" . $this->db->escape($value['name']) . "'");
         }
         
-        $this->theme->trigger('admin_edit_attribute_group', array('attribute_group_id' => $attribute_group_id));
+        Theme::trigger('admin_edit_attribute_group', array('attribute_group_id' => $attribute_group_id));
     }
     
     public function deleteAttributeGroup($attribute_group_id) {
@@ -69,7 +69,7 @@ class AttributeGroup extends Model {
 			DELETE FROM {$this->db->prefix}attribute_group_description 
 			WHERE attribute_group_id = '" . (int)$attribute_group_id . "'");
         
-        $this->theme->trigger('admin_delete_attribute_group', array('attribute_group_id' => $attribute_group_id));
+        Theme::trigger('admin_delete_attribute_group', array('attribute_group_id' => $attribute_group_id));
     }
     
     public function getAttributeGroup($attribute_group_id) {
@@ -87,7 +87,7 @@ class AttributeGroup extends Model {
 			FROM {$this->db->prefix}attribute_group ag 
 			LEFT JOIN {$this->db->prefix}attribute_group_description agd 
 			ON (ag.attribute_group_id = agd.attribute_group_id) 
-			WHERE agd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+			WHERE agd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         $sort_data = array('agd.name', 'ag.sort_order');
         

@@ -21,15 +21,15 @@ class Cod extends Controller {
     private $error = array();
     
     public function index() {
-        $data = $this->theme->language('payment/cod');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('setting/setting');
+        $data = Theme::language('payment/cod');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('cod', $this->request->post);
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
-            $this->response->redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -48,54 +48,54 @@ class Cod extends Controller {
         if (isset($this->request->post['cod_total'])) {
             $data['cod_total'] = $this->request->post['cod_total'];
         } else {
-            $data['cod_total'] = $this->config->get('cod_total');
+            $data['cod_total'] = Config::get('cod_total');
         }
         
         if (isset($this->request->post['cod_order_status_id'])) {
             $data['cod_order_status_id'] = $this->request->post['cod_order_status_id'];
         } else {
-            $data['cod_order_status_id'] = $this->config->get('cod_order_status_id');
+            $data['cod_order_status_id'] = Config::get('cod_order_status_id');
         }
         
-        $this->theme->model('localization/order_status');
+        Theme::model('localization/order_status');
         
         $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
         
         if (isset($this->request->post['cod_geo_zone_id'])) {
             $data['cod_geo_zone_id'] = $this->request->post['cod_geo_zone_id'];
         } else {
-            $data['cod_geo_zone_id'] = $this->config->get('cod_geo_zone_id');
+            $data['cod_geo_zone_id'] = Config::get('cod_geo_zone_id');
         }
         
-        $this->theme->model('localization/geo_zone');
+        Theme::model('localization/geo_zone');
         
         $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
         
         if (isset($this->request->post['cod_status'])) {
             $data['cod_status'] = $this->request->post['cod_status'];
         } else {
-            $data['cod_status'] = $this->config->get('cod_status');
+            $data['cod_status'] = Config::get('cod_status');
         }
         
         if (isset($this->request->post['cod_sort_order'])) {
             $data['cod_sort_order'] = $this->request->post['cod_sort_order'];
         } else {
-            $data['cod_sort_order'] = $this->config->get('cod_sort_order');
+            $data['cod_sort_order'] = Config::get('cod_sort_order');
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('payment/cod', $data));
+        Response::setOutput(Theme::view('payment/cod', $data));
     }
     
     protected function validate() {
-        if (!$this->user->hasPermission('modify', 'payment/cod')) {
+        if (!User::hasPermission('modify', 'payment/cod')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

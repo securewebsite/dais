@@ -49,7 +49,7 @@ class PayflowIframe extends Model {
     }
     
     public function log($message) {
-        if ($this->config->get('payflow_iframe_debug')) {
+        if (Config::get('payflow_iframe_debug')) {
             $log = new Log('payflow-iframe.log');
             $log->write($message);
         }
@@ -110,11 +110,11 @@ class PayflowIframe extends Model {
     }
     
     public function call($data) {
-        $default_parameters = array('USER' => $this->config->get('payflow_iframe_user'), 'VENDOR' => $this->config->get('payflow_iframe_vendor'), 'PWD' => $this->config->get('payflow_iframe_password'), 'PARTNER' => $this->config->get('payflow_iframe_partner'), 'BUTTONSOURCE' => 'Dais_Cart_PFP',);
+        $default_parameters = array('USER' => Config::get('payflow_iframe_user'), 'VENDOR' => Config::get('payflow_iframe_vendor'), 'PWD' => Config::get('payflow_iframe_password'), 'PARTNER' => Config::get('payflow_iframe_partner'), 'BUTTONSOURCE' => 'Dais_Cart_PFP',);
         
         $call_parameters = array_merge($data, $default_parameters);
         
-        if ($this->config->get('payflow_iframe_test')) {
+        if (Config::get('payflow_iframe_test')) {
             $url = 'https://pilot-payflowpro.paypal.com';
         } else {
             $url = 'https://payflowpro.paypal.com';

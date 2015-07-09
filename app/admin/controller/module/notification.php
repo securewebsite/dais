@@ -22,17 +22,17 @@ class Notification extends Controller {
 
 	public function index() {
 		$this->language->load('module/notification');
-		$this->theme->setTitle($this->language->get('lang_heading_title'));
+		Theme::setTitle($this->language->get('lang_heading_title'));
 
-		$this->theme->listen(__CLASS__, __FUNCTION__);
+		Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
 	}
 
 	public function insert() {
 		$this->language->load('module/notification');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('module/notification');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('module/notification');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
             $this->model_module_notification->addNotification($this->request->post);
@@ -44,18 +44,18 @@ class Notification extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             endif;
             
-            $this->response->redirect($this->url->link('module/notification', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('module/notification', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
 	}
 
 	public function update() {
 		$this->language->load('module/notification');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('module/notification');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('module/notification');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
             $this->model_module_notification->editNotification($this->request->get['notification_id'], $this->request->post);
@@ -67,18 +67,18 @@ class Notification extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             endif;
             
-            $this->response->redirect($this->url->link('module/notification', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('module/notification', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
 	}
 
 	public function delete() {
 		$this->language->load('module/notification');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('module/notification');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('module/notification');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()):
             foreach ($this->request->post['selected'] as $notification_id):
@@ -93,17 +93,17 @@ class Notification extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             endif;
             
-            $this->response->redirect($this->url->link('module/notification', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('module/notification', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
 	}
 
 	public function getList() {
-		$data = $this->theme->language('module/notification');
-		$this->theme->model('module/notification');
+		$data = Theme::language('module/notification');
+		Theme::model('module/notification');
 
 		$url = '';
 
@@ -122,8 +122,8 @@ class Notification extends Controller {
         $data['notifications'] = array();
         
         $filter = array( 
-            'start' => ($page - 1) * $this->config->get('config_admin_limit'), 
-            'limit' => $this->config->get('config_admin_limit')
+            'start' => ($page - 1) * Config::get('config_admin_limit'), 
+            'limit' => Config::get('config_admin_limit')
         );
         
 		$total   = $this->model_module_notification->getTotalNotifications();
@@ -180,24 +180,24 @@ class Notification extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         endif;
 
-        $data['pagination'] = $this->theme->paginate(
+        $data['pagination'] = Theme::paginate(
         	$total, 
         	$page, 
-        	$this->config->get('config_admin_limit'), 
+        	Config::get('config_admin_limit'), 
         	$this->language->get('lang_text_pagination'), 
         	$this->url->link('module/notification', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
         );
 
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('module/notification_list', $data));
+        Response::setOutput(Theme::view('module/notification_list', $data));
 	}
 
 	public function getForm() {
-		$data = $this->theme->language('module/notification');
-		$this->theme->model('module/notification');
+		$data = Theme::language('module/notification');
+		Theme::model('module/notification');
 
 		if (isset($this->error['warning'])):
             $data['error_warning'] = $this->error['warning'];
@@ -257,7 +257,7 @@ class Notification extends Controller {
         
         $data['token'] = $this->session->data['token'];
         
-        $this->theme->model('localization/language');
+        Theme::model('localization/language');
         
         $data['languages'] = $this->model_localization_language->getLanguages();
         
@@ -318,40 +318,40 @@ class Notification extends Controller {
             $data['priority'] = 2;
         endif;
 
-        $this->theme->loadjs('javascript/module/notification_form', $data);
+        Theme::loadjs('javascript/module/notification_form', $data);
 
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('module/notification_form', $data));
+        Response::setOutput(Theme::view('module/notification_form', $data));
 
 	}
 
 	private function validateForm() {
-		if (!$this->user->hasPermission('modify', 'module/notification')):
+		if (!User::hasPermission('modify', 'module/notification')):
             $this->error['warning'] = $this->language->get('lang_error_permission');
         endif;
         
         foreach ($this->request->post['email_content'] as $language_id => $value):
-            if ($this->encode->strlen($value['text']) < 1):
+            if (Encode::strlen($value['text']) < 1):
                 $this->error['text'][$language_id] = $this->language->get('lang_error_text');
             endif;
             
-            if ($this->encode->strlen($value['html']) < 1):
+            if (Encode::strlen($value['html']) < 1):
                 $this->error['html'][$language_id] = $this->language->get('lang_error_html');
             endif;
 
-            if ($this->encode->strlen($value['subject']) < 1):
+            if (Encode::strlen($value['subject']) < 1):
                 $this->error['subject'][$language_id] = $this->language->get('lang_error_subject');
             endif;
         endforeach;
         
-        if (isset($this->request->post['email_slug']) && $this->encode->strlen($this->request->post['email_slug']) < 1):
+        if (isset($this->request->post['email_slug']) && Encode::strlen($this->request->post['email_slug']) < 1):
             $this->error['email_slug'] = $this->language->get('lang_error_email_slug');
         endif;
 
-        if ($this->request->post['configurable'] === true && $this->encode->strlen($this->request->post['config_description']) < 3):
+        if ($this->request->post['configurable'] === true && Encode::strlen($this->request->post['config_description']) < 3):
             $this->error['description'] = $this->language->get('lang_error_description');
         endif;
         
@@ -359,13 +359,13 @@ class Notification extends Controller {
             $this->error['warning'] = $this->language->get('lang_error_warning');
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
 	}
 
 	private function validateDelete() {
-		if (!$this->user->hasPermission('modify', 'module/notification')):
+		if (!User::hasPermission('modify', 'module/notification')):
             $this->error['warning'] = $this->language->get('lang_error_permission');
         endif;
 
@@ -382,7 +382,7 @@ class Notification extends Controller {
         	$this->error['warning'] = $this->language->get('lang_error_system');
         endif;
 
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
 	}

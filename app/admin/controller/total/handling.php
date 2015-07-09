@@ -21,15 +21,15 @@ class Handling extends Controller {
     private $error = array();
     
     public function index() {
-        $data = $this->theme->language('total/handling');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('setting/setting');
+        $data = Theme::language('total/handling');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('handling', $this->request->post);
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
-            $this->response->redirect($this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -47,50 +47,50 @@ class Handling extends Controller {
         if (isset($this->request->post['handling_total'])) {
             $data['handling_total'] = $this->request->post['handling_total'];
         } else {
-            $data['handling_total'] = $this->config->get('handling_total');
+            $data['handling_total'] = Config::get('handling_total');
         }
         
         if (isset($this->request->post['handling_fee'])) {
             $data['handling_fee'] = $this->request->post['handling_fee'];
         } else {
-            $data['handling_fee'] = $this->config->get('handling_fee');
+            $data['handling_fee'] = Config::get('handling_fee');
         }
         
         if (isset($this->request->post['handling_tax_class_id'])) {
             $data['handling_tax_class_id'] = $this->request->post['handling_tax_class_id'];
         } else {
-            $data['handling_tax_class_id'] = $this->config->get('handling_tax_class_id');
+            $data['handling_tax_class_id'] = Config::get('handling_tax_class_id');
         }
         
-        $this->theme->model('localization/tax_class');
+        Theme::model('localization/tax_class');
         
         $data['tax_classes'] = $this->model_localization_tax_class->getTaxClasses();
         
         if (isset($this->request->post['handling_status'])) {
             $data['handling_status'] = $this->request->post['handling_status'];
         } else {
-            $data['handling_status'] = $this->config->get('handling_status');
+            $data['handling_status'] = Config::get('handling_status');
         }
         
         if (isset($this->request->post['handling_sort_order'])) {
             $data['handling_sort_order'] = $this->request->post['handling_sort_order'];
         } else {
-            $data['handling_sort_order'] = $this->config->get('handling_sort_order');
+            $data['handling_sort_order'] = Config::get('handling_sort_order');
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('total/handling', $data));
+        Response::setOutput(Theme::view('total/handling', $data));
     }
     
     protected function validate() {
-        if (!$this->user->hasPermission('modify', 'total/handling')) {
+        if (!User::hasPermission('modify', 'total/handling')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

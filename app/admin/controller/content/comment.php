@@ -21,19 +21,19 @@ class Comment extends Controller {
     private $error = array();
     
     public function index() {
-        $this->theme->language('content/comment');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('content/comment');
+        Theme::language('content/comment');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('content/comment');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     public function insert() {
-        $this->theme->language('content/comment');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('content/comment');
+        Theme::language('content/comment');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('content/comment');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_content_comment->addComment($this->request->post);
@@ -53,18 +53,18 @@ class Comment extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('content/comment', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('content/comment', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function update() {
-        $this->theme->language('content/comment');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('content/comment');
+        Theme::language('content/comment');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('content/comment');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_content_comment->editComment($this->request->get['comment_id'], $this->request->post);
@@ -84,18 +84,18 @@ class Comment extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('content/comment', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('content/comment', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function delete() {
-        $this->theme->language('content/comment');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('content/comment');
+        Theme::language('content/comment');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('content/comment');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $comment_id) {
@@ -118,16 +118,16 @@ class Comment extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('content/comment', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('content/comment', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     private function getList() {
-        $data = $this->theme->language('content/comment');
+        $data = Theme::language('content/comment');
         
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -168,7 +168,7 @@ class Comment extends Controller {
         
         $data['comments'] = array();
         
-        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
+        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
         $comment_total = $this->model_content_comment->getTotalComments();
         $results = $this->model_content_comment->getComments($filter);
@@ -223,20 +223,20 @@ class Comment extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = $this->theme->paginate($comment_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('content/comment', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($comment_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('content/comment', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('content/comment_list', $data));
+        Response::setOutput(Theme::view('content/comment_list', $data));
     }
     
     private function getForm() {
-        $data = $this->theme->language('content/comment');
+        $data = Theme::language('content/comment');
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -298,7 +298,7 @@ class Comment extends Controller {
         
         $data['token'] = $this->session->data['token'];
         
-        $this->theme->model('content/post');
+        Theme::model('content/post');
         
         if (isset($this->request->post['post_id'])) {
             $data['post_id'] = $this->request->post['post_id'];
@@ -348,15 +348,15 @@ class Comment extends Controller {
             $data['status'] = '';
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('content/comment_form', $data));
+        Response::setOutput(Theme::view('content/comment_form', $data));
     }
     
     private function validateForm() {
-        if (!$this->user->hasPermission('modify', 'content/comment')) {
+        if (!User::hasPermission('modify', 'content/comment')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
@@ -364,11 +364,11 @@ class Comment extends Controller {
             $this->error['post'] = $this->language->get('lang_error_post');
         }
         
-        if (($this->encode->strlen($this->request->post['author']) < 3) || ($this->encode->strlen($this->request->post['author']) > 64)) {
+        if ((Encode::strlen($this->request->post['author']) < 3) || (Encode::strlen($this->request->post['author']) > 64)) {
             $this->error['author'] = $this->language->get('lang_error_author');
         }
         
-        if ($this->encode->strlen($this->request->post['text']) < 1) {
+        if (Encode::strlen($this->request->post['text']) < 1) {
             $this->error['text'] = $this->language->get('lang_error_text');
         }
         
@@ -376,17 +376,17 @@ class Comment extends Controller {
             $this->error['rating'] = $this->language->get('lang_error_rating');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     private function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'content/comment')) {
+        if (!User::hasPermission('modify', 'content/comment')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

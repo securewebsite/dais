@@ -58,11 +58,11 @@ class Manufacturer extends Model {
 			");
         }
 
-        $this->search->add($this->config->get('config_language_id'), 'manufacturer', $manufacturer_id, $data['name']);
+        $this->search->add(Config::get('config_language_id'), 'manufacturer', $manufacturer_id, $data['name']);
         
         $this->cache->delete('manufacturer');
         
-        $this->theme->trigger('admin_add_manufacturer', array('manufacturer_id' => $manufacturer_id));
+        Theme::trigger('admin_add_manufacturer', array('manufacturer_id' => $manufacturer_id));
     }
     
     public function editManufacturer($manufacturer_id, $data) {
@@ -116,11 +116,11 @@ class Manufacturer extends Model {
         $this->search->delete('manufacturer', $manufacturer_id);
 
         // insert
-        $this->search->add($this->config->get('config_language_id'), 'manufacturer', $manufacturer_id, $data['name']);
+        $this->search->add(Config::get('config_language_id'), 'manufacturer', $manufacturer_id, $data['name']);
         
         $this->cache->delete('manufacturer');
         
-        $this->theme->trigger('admin_edit_manufacturer', array('manufacturer_id' => $manufacturer_id));
+        Theme::trigger('admin_edit_manufacturer', array('manufacturer_id' => $manufacturer_id));
     }
     
     public function deleteManufacturer($manufacturer_id) {
@@ -140,7 +140,7 @@ class Manufacturer extends Model {
 
         $this->cache->delete('manufacturer');
         
-        $this->theme->trigger('admin_delete_manufacturer', array('manufacturer_id' => $manufacturer_id));
+        Theme::trigger('admin_delete_manufacturer', array('manufacturer_id' => $manufacturer_id));
     }
     
     public function getManufacturer($manufacturer_id) {

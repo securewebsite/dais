@@ -46,7 +46,7 @@ class Recurring extends Model {
                 ");
         }
         
-        $this->theme->trigger('admin_add_recurring', array('recurring_id' => $recurring_id));
+        Theme::trigger('admin_add_recurring', array('recurring_id' => $recurring_id));
         
         return $recurring_id;
     }
@@ -82,7 +82,7 @@ class Recurring extends Model {
                 ");
         }
         
-        $this->theme->trigger('admin_edit_recurring', array('recurring_id' => $recurring_id));
+        Theme::trigger('admin_edit_recurring', array('recurring_id' => $recurring_id));
     }
     
     public function copyRecurring($recurring_id) {
@@ -116,7 +116,7 @@ class Recurring extends Model {
 				recurring_id = '0' 
 			WHERE recurring_id = '" . (int)$recurring_id . "'");
         
-        $this->theme->trigger('admin_delete_recurring', array('recurring_id' => $recurring_id));
+        Theme::trigger('admin_delete_recurring', array('recurring_id' => $recurring_id));
     }
     
     public function getRecurring($recurring_id) {
@@ -149,7 +149,7 @@ class Recurring extends Model {
 			FROM {$this->db->prefix}recurring r 
 			LEFT JOIN {$this->db->prefix}recurring_description rd 
 			ON (r.recurring_id = rd.recurring_id) 
-			WHERE rd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+			WHERE rd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_name'])) {
             $sql.= " AND rd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";

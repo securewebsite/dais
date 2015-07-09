@@ -34,7 +34,7 @@ class Carousel extends Controller {
         $results = $this->model_design_banner->getBanner($setting['banner_id']);
         
         foreach ($results as $result) {
-            if (file_exists($this->app['path.image'] . $result['image'])) {
+            if (file_exists(Config::get('path.image') . $result['image'])) {
                 $result['link'] = ($this->config->get('config_ucfirst')) ? $this->url->cap_slug($result['link']) : $result['link'];
                 
                 $data['banners'][] = array('title' => $result['title'], 'link' => $result['link'], 'image' => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height']));

@@ -38,7 +38,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}attribute_description 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $attribute) {
@@ -55,7 +55,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}attribute_group_description 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $attribute_group) {
@@ -72,7 +72,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}banner_image_description 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $banner_image) {
@@ -90,7 +90,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}category_description 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $category) {
@@ -110,7 +110,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}customer_group_description 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $customer_group) {
@@ -128,7 +128,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}download_description 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $download) {
@@ -145,7 +145,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}filter_description 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $filter) {
@@ -163,7 +163,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}filter_group_description 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $filter_group) {
@@ -180,7 +180,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}page_description 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $page) {
@@ -198,7 +198,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}length_class_description 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $length) {
@@ -216,7 +216,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}option_description 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $option) {
@@ -233,7 +233,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}option_value_description 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $option_value) {
@@ -251,7 +251,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}order_status 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $order_status) {
@@ -268,7 +268,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}product_description 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $product) {
@@ -289,7 +289,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}product_attribute 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $product_attribute) {
@@ -307,7 +307,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}return_action 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $return_action) {
@@ -324,7 +324,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}return_reason 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $return_reason) {
@@ -341,7 +341,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}return_status 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $return_status) {
@@ -358,7 +358,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}stock_status 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $stock_status) {
@@ -375,7 +375,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}gift_card_theme_description 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $gift_card_theme) {
@@ -392,7 +392,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}weight_class_description 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $weight_class) {
@@ -410,7 +410,7 @@ class Language extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM {$this->db->prefix}recurring_description 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'");
         
         foreach ($query->rows as $recurring) {
             $this->db->query("

@@ -99,7 +99,7 @@ class Page extends Model {
         
         $this->cache->delete('page');
         
-        $this->theme->trigger('admin_add_page', array('page_id' => $page_id));
+        Theme::trigger('admin_add_page', array('page_id' => $page_id));
     }
     
     public function editPage($page_id, $data) {
@@ -230,7 +230,7 @@ class Page extends Model {
         
         $this->cache->delete('page');
         
-        $this->theme->trigger('admin_edit_page', array('page_id' => $page_id));
+        Theme::trigger('admin_edit_page', array('page_id' => $page_id));
     }
     
     public function deletePage($page_id) {
@@ -268,7 +268,7 @@ class Page extends Model {
         
         $this->cache->delete('page');
         
-        $this->theme->trigger('admin_delete_page', array('page_id' => $page_id));
+        Theme::trigger('admin_delete_page', array('page_id' => $page_id));
     }
     
     public function getPage($page_id) {
@@ -311,7 +311,7 @@ class Page extends Model {
             FROM {$this->db->prefix}tag 
             WHERE section   = 'page' 
             AND element_id  = '" . (int)$page_id . "' 
-            AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+            AND language_id = '" . (int)Config::get('config_language_id') . "'
         ");
         
         if ($query->num_rows):
@@ -332,7 +332,7 @@ class Page extends Model {
 				FROM {$this->db->prefix}page i 
 				LEFT JOIN {$this->db->prefix}page_description id 
 				ON (i.page_id = id.page_id) 
-				WHERE id.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+				WHERE id.language_id = '" . (int)Config::get('config_language_id') . "'";
             
             $sort_data = array('id.title', 'i.sort_order');
             
@@ -364,7 +364,7 @@ class Page extends Model {
             
             return $query->rows;
         } else {
-            $page_data = $this->cache->get('page.' . (int)$this->config->get('config_language_id'));
+            $page_data = $this->cache->get('page.' . (int)Config::get('config_language_id'));
             
             if (!$page_data) {
                 $query = $this->db->query("
@@ -372,13 +372,13 @@ class Page extends Model {
 					FROM {$this->db->prefix}page i 
 					LEFT JOIN {$this->db->prefix}page_description id 
 						ON (i.page_id = id.page_id) 
-					WHERE id.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+					WHERE id.language_id = '" . (int)Config::get('config_language_id') . "' 
 					ORDER BY id.title
 				");
                 
                 $page_data = $query->rows;
                 
-                $this->cache->set('page.' . (int)$this->config->get('config_language_id'), $page_data);
+                $this->cache->set('page.' . (int)Config::get('config_language_id'), $page_data);
             }
             
             return $page_data;

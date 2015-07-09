@@ -557,7 +557,11 @@ class Post extends Model {
             $category_id = $result->row['category_id'];
         endif;
         
-        $query = $this->db->query("SELECT parent_id FROM {$this->db->prefix}blog_category WHERE category_id = '" . (int)$category_id . " '");
+        $query = $this->db->query("
+            SELECT parent_id 
+            FROM {$this->db->prefix}blog_category 
+            WHERE category_id = '" . (int)$category_id . "'
+        ");
         
         if ($query->row['parent_id'] == 0):
             return $category_id;

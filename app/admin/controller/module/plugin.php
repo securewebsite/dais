@@ -19,8 +19,8 @@ use Dais\Engine\Controller;
 
 class Plugin extends Controller {
     public function index() {
-        $data = $this->theme->language('module/plugin');
-        $this->theme->setTitle($this->language->get('lang_heading_plugin'));
+        $data = Theme::language('module/plugin');
+        Theme::setTitle($this->language->get('lang_heading_plugin'));
         
         $this->breadcrumb->add('lang_heading_plugin', 'module/plugin');
         
@@ -40,12 +40,12 @@ class Plugin extends Controller {
             $data['error'] = '';
         }
         
-        $this->theme->model('setting/module');
+        Theme::model('setting/module');
         
         $modules = $this->model_setting_module->getInstalled('plugin');
         
         foreach ($modules as $key => $value) {
-            $file = $this->app['path.plugin'] . $value . '/register.php';
+            $file = Config::get('path.plugin') . $value . '/register.php';
             
             if (!is_readable($file)) {
                 $this->model_setting_module->uninstall('plugin', $value);
@@ -68,7 +68,7 @@ class Plugin extends Controller {
                 if (!in_array($module, $modules)) {
                     $action[] = array('text' => $this->language->get('lang_text_install'), 'href' => $this->url->link('module/plugin/install', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
                 } else {
-                    if (is_readable($this->app['path.plugin'] . $module . '/admin/controller/' . $module . '.php')):
+                    if (is_readable(Config::get('path.plugin') . $module . '/admin/controller/' . $module . '.php')):
                         $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('plugin/' . $module . '', 'token=' . $this->session->data['token'], 'SSL'));
                     endif;
                     
@@ -79,63 +79,63 @@ class Plugin extends Controller {
             }
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('module/plugin', $data));
+        Response::setOutput(Theme::view('module/plugin', $data));
     }
     
     public function install() {
         $this->language->load('module/plugin');
         
-        if (!$this->user->hasPermission('modify', 'module/plugin')) {
+        if (!User::hasPermission('modify', 'module/plugin')) {
             $this->session->data['error'] = $this->language->get('lang_error_permission');
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->redirect($this->url->link('module/plugin', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/plugin', 'token=' . $this->session->data['token'], 'SSL'));
         } else {
-            $this->theme->model('setting/module');
+            Theme::model('setting/module');
             
             $this->model_setting_module->install('plugin', $this->request->get['module']);
             
-            if (is_readable($this->app['path.plugin'] . $this->request->get['module'] . '/controller/' . $this->request->get['module'] . '.php')):
-                $this->theme->model('people/user_group');
+            if (is_readable(Config::get('path.plugin') . $this->request->get['module'] . '/controller/' . $this->request->get['module'] . '.php')):
+                Theme::model('people/user_group');
                 
-                $this->model_people_user_group->addPermission($this->user->getId(), 'access', 'plugin/' . $this->request->get['module']);
-                $this->model_people_user_group->addPermission($this->user->getId(), 'modify', 'plugin/' . $this->request->get['module']);
+                $this->model_people_user_group->addPermission(User::getId(), 'access', 'plugin/' . $this->request->get['module']);
+                $this->model_people_user_group->addPermission(User::getId(), 'modify', 'plugin/' . $this->request->get['module']);
             endif;
             
             $this->plugin->install($this->request->get['module']);
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->redirect($this->url->link('module/plugin', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/plugin', 'token=' . $this->session->data['token'], 'SSL'));
         }
     }
     
     public function uninstall() {
         $this->language->load('module/plugin');
         
-        if (!$this->user->hasPermission('modify', 'module/plugin')) {
+        if (!User::hasPermission('modify', 'module/plugin')) {
             $this->session->data['error'] = $this->language->get('lang_error_permission');
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->redirect($this->url->link('module/plugin', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/plugin', 'token=' . $this->session->data['token'], 'SSL'));
         } else {
-            $this->theme->model('setting/module');
-            $this->theme->model('setting/setting');
+            Theme::model('setting/module');
+            Theme::model('setting/setting');
             
             $this->model_setting_module->uninstall('plugin', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
             $this->plugin->uninstall($this->request->get['module']);
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->redirect($this->url->link('module/plugin', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/plugin', 'token=' . $this->session->data['token'], 'SSL'));
         }
     }
 }

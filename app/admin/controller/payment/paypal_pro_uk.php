@@ -21,18 +21,18 @@ class PaypalProUk extends Controller {
     private $error = array();
     
     public function index() {
-        $data = $this->theme->language('payment/paypal_pro_uk');
+        $data = Theme::language('payment/paypal_pro_uk');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('setting/setting');
+        Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('paypal_pro_uk', $this->request->post);
             
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
-            $this->response->redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -69,80 +69,80 @@ class PaypalProUk extends Controller {
         if (isset($this->request->post['paypal_pro_uk_username'])) {
             $data['paypal_pro_uk_username'] = $this->request->post['paypal_pro_uk_username'];
         } else {
-            $data['paypal_pro_uk_username'] = $this->config->get('paypal_pro_uk_username');
+            $data['paypal_pro_uk_username'] = Config::get('paypal_pro_uk_username');
         }
         
         if (isset($this->request->post['paypal_pro_uk_password'])) {
             $data['paypal_pro_uk_password'] = $this->request->post['paypal_pro_uk_password'];
         } else {
-            $data['paypal_pro_uk_password'] = $this->config->get('paypal_pro_uk_password');
+            $data['paypal_pro_uk_password'] = Config::get('paypal_pro_uk_password');
         }
         
         if (isset($this->request->post['paypal_pro_uk_signature'])) {
             $data['paypal_pro_uk_signature'] = $this->request->post['paypal_pro_uk_signature'];
         } else {
-            $data['paypal_pro_uk_signature'] = $this->config->get('paypal_pro_uk_signature');
+            $data['paypal_pro_uk_signature'] = Config::get('paypal_pro_uk_signature');
         }
         
         if (isset($this->request->post['paypal_pro_uk_test'])) {
             $data['paypal_pro_uk_test'] = $this->request->post['paypal_pro_uk_test'];
         } else {
-            $data['paypal_pro_uk_test'] = $this->config->get('paypal_pro_uk_test');
+            $data['paypal_pro_uk_test'] = Config::get('paypal_pro_uk_test');
         }
         
         if (isset($this->request->post['paypal_pro_uk_method'])) {
             $data['paypal_pro_uk_transaction'] = $this->request->post['paypal_pro_uk_transaction'];
         } else {
-            $data['paypal_pro_uk_transaction'] = $this->config->get('paypal_pro_uk_transaction');
+            $data['paypal_pro_uk_transaction'] = Config::get('paypal_pro_uk_transaction');
         }
         
         if (isset($this->request->post['paypal_pro_uk_total'])) {
             $data['paypal_pro_uk_total'] = $this->request->post['paypal_pro_uk_total'];
         } else {
-            $data['paypal_pro_uk_total'] = $this->config->get('paypal_pro_uk_total');
+            $data['paypal_pro_uk_total'] = Config::get('paypal_pro_uk_total');
         }
         
         if (isset($this->request->post['paypal_pro_uk_order_status_id'])) {
             $data['paypal_pro_uk_order_status_id'] = $this->request->post['paypal_pro_uk_order_status_id'];
         } else {
-            $data['paypal_pro_uk_order_status_id'] = $this->config->get('paypal_pro_uk_order_status_id');
+            $data['paypal_pro_uk_order_status_id'] = Config::get('paypal_pro_uk_order_status_id');
         }
         
-        $this->theme->model('localization/order_status');
+        Theme::model('localization/order_status');
         
         $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
         
         if (isset($this->request->post['paypal_pro_uk_geo_zone_id'])) {
             $data['paypal_pro_uk_geo_zone_id'] = $this->request->post['paypal_pro_uk_geo_zone_id'];
         } else {
-            $data['paypal_pro_uk_geo_zone_id'] = $this->config->get('paypal_pro_uk_geo_zone_id');
+            $data['paypal_pro_uk_geo_zone_id'] = Config::get('paypal_pro_uk_geo_zone_id');
         }
         
-        $this->theme->model('localization/geo_zone');
+        Theme::model('localization/geo_zone');
         
         $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
         
         if (isset($this->request->post['paypal_pro_uk_status'])) {
             $data['paypal_pro_uk_status'] = $this->request->post['paypal_pro_uk_status'];
         } else {
-            $data['paypal_pro_uk_status'] = $this->config->get('paypal_pro_uk_status');
+            $data['paypal_pro_uk_status'] = Config::get('paypal_pro_uk_status');
         }
         
         if (isset($this->request->post['paypal_pro_uk_sort_order'])) {
             $data['paypal_pro_uk_sort_order'] = $this->request->post['paypal_pro_uk_sort_order'];
         } else {
-            $data['paypal_pro_uk_sort_order'] = $this->config->get('paypal_pro_uk_sort_order');
+            $data['paypal_pro_uk_sort_order'] = Config::get('paypal_pro_uk_sort_order');
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('payment/paypal_pro_uk', $data));
+        Response::setOutput(Theme::view('payment/paypal_pro_uk', $data));
     }
     
     private function validate() {
-        if (!$this->user->hasPermission('modify', 'payment/paypal_pro_uk')) {
+        if (!User::hasPermission('modify', 'payment/paypal_pro_uk')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
@@ -158,7 +158,7 @@ class PaypalProUk extends Controller {
             $this->error['signature'] = $this->language->get('lang_error_signature');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

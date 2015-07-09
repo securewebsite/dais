@@ -22,18 +22,18 @@ class ReturnStatus extends Controller {
     
     public function index() {
         $this->language->load('localization/return_status');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('localization/return_status');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('localization/return_status');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     public function insert() {
         $this->language->load('localization/return_status');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('localization/return_status');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('localization/return_status');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_localization_return_status->addReturnStatus($this->request->post);
@@ -53,18 +53,18 @@ class ReturnStatus extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('localization/return_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('localization/return_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function update() {
         $this->language->load('localization/return_status');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('localization/return_status');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('localization/return_status');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_localization_return_status->editReturnStatus($this->request->get['return_status_id'], $this->request->post);
@@ -84,18 +84,18 @@ class ReturnStatus extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('localization/return_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('localization/return_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function delete() {
         $this->language->load('localization/return_status');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('localization/return_status');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('localization/return_status');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $return_status_id) {
@@ -118,16 +118,16 @@ class ReturnStatus extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('localization/return_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('localization/return_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     protected function getList() {
-        $data = $this->theme->language('localization/return_status');
+        $data = Theme::language('localization/return_status');
         
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -168,7 +168,7 @@ class ReturnStatus extends Controller {
         
         $data['return_statuses'] = array();
         
-        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
+        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
         $return_status_total = $this->model_localization_return_status->getTotalReturnStatuses();
         
@@ -179,7 +179,7 @@ class ReturnStatus extends Controller {
             
             $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('localization/return_status/update', 'token=' . $this->session->data['token'] . '&return_status_id=' . $result['return_status_id'] . $url, 'SSL'));
             
-            $data['return_statuses'][] = array('return_status_id' => $result['return_status_id'], 'name' => $result['name'] . (($result['return_status_id'] == $this->config->get('config_return_status_id')) ? $this->language->get('lang_text_default') : null), 'selected' => isset($this->request->post['selected']) && in_array($result['return_status_id'], $this->request->post['selected']), 'action' => $action);
+            $data['return_statuses'][] = array('return_status_id' => $result['return_status_id'], 'name' => $result['name'] . (($result['return_status_id'] == Config::get('config_return_status_id')) ? $this->language->get('lang_text_default') : null), 'selected' => isset($this->request->post['selected']) && in_array($result['return_status_id'], $this->request->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -220,20 +220,20 @@ class ReturnStatus extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = $this->theme->paginate($return_status_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('localization/return_status', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($return_status_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('localization/return_status', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('localization/return_status_list', $data));
+        Response::setOutput(Theme::view('localization/return_status_list', $data));
     }
     
     protected function getForm() {
-        $data = $this->theme->language('localization/return_status');
+        $data = Theme::language('localization/return_status');
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -271,7 +271,7 @@ class ReturnStatus extends Controller {
         
         $data['cancel'] = $this->url->link('localization/return_status', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
-        $this->theme->model('localization/language');
+        Theme::model('localization/language');
         
         $data['languages'] = $this->model_localization_language->getLanguages();
         
@@ -283,38 +283,38 @@ class ReturnStatus extends Controller {
             $data['return_status'] = array();
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('localization/return_status_form', $data));
+        Response::setOutput(Theme::view('localization/return_status_form', $data));
     }
     
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'localization/return_status')) {
+        if (!User::hasPermission('modify', 'localization/return_status')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
         foreach ($this->request->post['return_status'] as $language_id => $value) {
-            if (($this->encode->strlen($value['name']) < 3) || ($this->encode->strlen($value['name']) > 32)) {
+            if ((Encode::strlen($value['name']) < 3) || (Encode::strlen($value['name']) > 32)) {
                 $this->error['name'][$language_id] = $this->language->get('lang_error_name');
             }
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'localization/return_status')) {
+        if (!User::hasPermission('modify', 'localization/return_status')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->model('sale/returns');
+        Theme::model('sale/returns');
         
         foreach ($this->request->post['selected'] as $return_status_id) {
-            if ($this->config->get('config_return_status_id') == $return_status_id) {
+            if (Config::get('config_return_status_id') == $return_status_id) {
                 $this->error['warning'] = $this->language->get('lang_error_default');
             }
             
@@ -331,7 +331,7 @@ class ReturnStatus extends Controller {
             }
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

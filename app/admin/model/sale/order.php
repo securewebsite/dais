@@ -19,7 +19,7 @@ use Dais\Engine\Model;
 
 class Order extends Model {
     public function addOrder($data) {
-        $this->theme->model('setting/store');
+        Theme::model('setting/store');
         
         $store_info = $this->model_setting_store->getStore($data['store_id']);
         
@@ -27,23 +27,23 @@ class Order extends Model {
             $store_name = $store_info['name'];
             $store_url = $store_info['url'];
         } else {
-            $store_name = $this->config->get('config_name');
-            $store_url = $this->app['http.public'];
+            $store_name = Config::get('config_name');
+            $store_url = Config::get('http.public');
         }
         
-        $this->theme->model('setting/setting');
+        Theme::model('setting/setting');
         
         $setting_info = $this->model_setting_setting->getSetting('setting', $data['store_id']);
         
         if (isset($setting_info['invoice_prefix'])) {
             $invoice_prefix = $setting_info['invoice_prefix'];
         } else {
-            $invoice_prefix = $this->config->get('config_invoice_prefix');
+            $invoice_prefix = Config::get('config_invoice_prefix');
         }
         
-        $this->theme->model('localization/country');
+        Theme::model('localization/country');
         
-        $this->theme->model('localization/zone');
+        Theme::model('localization/zone');
         
         $country_info = $this->model_localization_country->getCountry($data['shipping_country_id']);
         
@@ -81,9 +81,9 @@ class Order extends Model {
             $payment_zone = '';
         }
         
-        $this->theme->model('localization/currency');
+        Theme::model('localization/currency');
         
-        $currency_info = $this->model_localization_currency->getCurrencyByCode($this->config->get('config_currency'));
+        $currency_info = $this->model_localization_currency->getCurrencyByCode(Config::get('config_currency'));
         
         if ($currency_info) {
             $currency_id = $currency_info['currency_id'];
@@ -91,7 +91,7 @@ class Order extends Model {
             $currency_value = $currency_info['value'];
         } else {
             $currency_id = 0;
-            $currency_code = $this->config->get('config_currency');
+            $currency_code = Config::get('config_currency');
             $currency_value = 1.00000;
         }
         
@@ -141,7 +141,7 @@ class Order extends Model {
 				comment                 = '" . $this->db->escape($data['comment']) . "', 
 				order_status_id         = '" . (int)$data['order_status_id'] . "', 
 				affiliate_id            = '" . (int)$data['affiliate_id'] . "', 
-				language_id             = '" . (int)$this->config->get('config_language_id') . "', 
+				language_id             = '" . (int)Config::get('config_language_id') . "', 
 				currency_id             = '" . (int)$currency_id . "', 
 				currency_code           = '" . $this->db->escape($currency_code) . "', 
 				currency_value          = '" . (float)$currency_value . "', 
@@ -270,7 +270,7 @@ class Order extends Model {
 		$commission   = 0;
         
         if (!empty($this->request->post['affiliate_id'])) {
-            $this->theme->model('people/customer');
+            Theme::model('people/customer');
             $affiliate_info = $this->model_people_customer->getCustomer($this->request->post['affiliate_id']);
             
             if ($affiliate_info) {
@@ -291,9 +291,9 @@ class Order extends Model {
     }
     
     public function editOrder($order_id, $data) {
-        $this->theme->model('localization/country');
+        Theme::model('localization/country');
         
-        $this->theme->model('localization/zone');
+        Theme::model('localization/zone');
         
         $country_info = $this->model_localization_country->getCountry($data['shipping_country_id']);
         
@@ -550,7 +550,7 @@ class Order extends Model {
 		$commission   = 0;
         
         if (!empty($this->request->post['affiliate_id'])) {
-            $this->theme->model('people/customer');
+            Theme::model('people/customer');
             
             $affiliate_info = $this->model_people_customer->getCustomer($this->request->post['affiliate_id']);
             
@@ -727,7 +727,7 @@ class Order extends Model {
                 $affiliate_id = 0;
             }
             
-            $this->theme->model('people/customer');
+            Theme::model('people/customer');
             $affiliate_info = $this->model_people_customer->getCustomer($affiliate_id);
             
             if ($affiliate_info) {
@@ -738,7 +738,7 @@ class Order extends Model {
 				$affiliate_lastname  = '';
             }
             
-            $this->theme->model('localization/language');
+            Theme::model('localization/language');
             
             $language_info = $this->model_localization_language->getLanguage($order_query->row['language_id']);
             
@@ -837,7 +837,7 @@ class Order extends Model {
 				(SELECT os.name 
 				FROM {$this->db->prefix}order_status os 
 				WHERE os.order_status_id = o.order_status_id 
-				AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status, 
+				AND os.language_id = '" . (int)Config::get('config_language_id') . "') AS status, 
 				o.total, 
 				o.currency_code, 
 				o.currency_value, 
@@ -1138,8 +1138,8 @@ class Order extends Model {
         $order_info = $this->getOrder($order_id);
         
         // Send out any gift gift_card mails
-        if ($this->config->get('config_complete_status_id') == $data['order_status_id']) {
-            $this->theme->model('sale/gift_card');
+        if (Config::get('config_complete_status_id') == $data['order_status_id']) {
+            Theme::model('sale/gift_card');
             
             $results = $this->getOrderGiftcards($order_id);
             
@@ -1178,7 +1178,7 @@ class Order extends Model {
             	)
             );
 
-            $this->theme->notify('admin_order_add_history', $callback);
+            Theme::notify('admin_order_add_history', $callback);
         }
     }
     
@@ -1201,7 +1201,7 @@ class Order extends Model {
 			LEFT JOIN {$this->db->prefix}order_status os 
 				ON oh.order_status_id = os.order_status_id 
 			WHERE oh.order_id = '" . (int)$order_id . "' 
-			AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+			AND os.language_id = '" . (int)Config::get('config_language_id') . "' 
 			ORDER BY oh.date_added ASC LIMIT " . (int)$start . "," . (int)$limit);
         
         return $query->rows;
@@ -1270,12 +1270,12 @@ class Order extends Model {
     public function getShippingModules() {
     	$modules = array();
 
-    	$this->theme->model('setting/module');
+    	Theme::model('setting/module');
     	$query = $this->model_setting_module->getAll('shipping');
 
     	foreach ($query as $module):
     		if ($module['status']):
-	    		$this->theme->language('shipping/' . $module['code']);
+	    		Theme::language('shipping/' . $module['code']);
 	    		$modules[] = array(
 	    			'code' => $module['code'],
 	    			'name' => $this->language->get('lang_heading_title')
@@ -1289,12 +1289,12 @@ class Order extends Model {
     public function getPaymentModules() {
     	$modules = array();
 
-    	$this->theme->model('setting/module');
+    	Theme::model('setting/module');
     	$query = $this->model_setting_module->getAll('payment');
 
     	foreach ($query as $module):
     		if ($module['status']):
-	    		$this->theme->language('payment/' . $module['code']);
+	    		Theme::language('payment/' . $module['code']);
 	    		$modules[] = array(
 	    			'code' => $module['code'],
 	    			'name' => $this->language->get('lang_heading_title')

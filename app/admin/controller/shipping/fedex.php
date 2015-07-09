@@ -21,15 +21,15 @@ class Fedex extends Controller {
     private $error = array();
     
     public function index() {
-        $data = $this->theme->language('shipping/fedex');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('setting/setting');
+        $data = Theme::language('shipping/fedex');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('fedex', $this->request->post);
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
-            $this->response->redirect($this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -78,43 +78,43 @@ class Fedex extends Controller {
         if (isset($this->request->post['fedex_key'])) {
             $data['fedex_key'] = $this->request->post['fedex_key'];
         } else {
-            $data['fedex_key'] = $this->config->get('fedex_key');
+            $data['fedex_key'] = Config::get('fedex_key');
         }
         
         if (isset($this->request->post['fedex_password'])) {
             $data['fedex_password'] = $this->request->post['fedex_password'];
         } else {
-            $data['fedex_password'] = $this->config->get('fedex_password');
+            $data['fedex_password'] = Config::get('fedex_password');
         }
         
         if (isset($this->request->post['fedex_account'])) {
             $data['fedex_account'] = $this->request->post['fedex_account'];
         } else {
-            $data['fedex_account'] = $this->config->get('fedex_account');
+            $data['fedex_account'] = Config::get('fedex_account');
         }
         
         if (isset($this->request->post['fedex_meter'])) {
             $data['fedex_meter'] = $this->request->post['fedex_meter'];
         } else {
-            $data['fedex_meter'] = $this->config->get('fedex_meter');
+            $data['fedex_meter'] = Config::get('fedex_meter');
         }
         
         if (isset($this->request->post['fedex_postcode'])) {
             $data['fedex_postcode'] = $this->request->post['fedex_postcode'];
         } else {
-            $data['fedex_postcode'] = $this->config->get('fedex_postcode');
+            $data['fedex_postcode'] = Config::get('fedex_postcode');
         }
         
         if (isset($this->request->post['fedex_test'])) {
             $data['fedex_test'] = $this->request->post['fedex_test'];
         } else {
-            $data['fedex_test'] = $this->config->get('fedex_test');
+            $data['fedex_test'] = Config::get('fedex_test');
         }
         
         if (isset($this->request->post['fedex_service'])) {
             $data['fedex_service'] = $this->request->post['fedex_service'];
         } elseif ($this->config->has('fedex_service')) {
-            $data['fedex_service'] = $this->config->get('fedex_service');
+            $data['fedex_service'] = Config::get('fedex_service');
         } else {
             $data['fedex_service'] = array();
         }
@@ -166,90 +166,90 @@ class Fedex extends Controller {
         if (isset($this->request->post['fedex_dropoff_type'])) {
             $data['fedex_dropoff_type'] = $this->request->post['fedex_dropoff_type'];
         } else {
-            $data['fedex_dropoff_type'] = $this->config->get('fedex_dropoff_type');
+            $data['fedex_dropoff_type'] = Config::get('fedex_dropoff_type');
         }
         
         if (isset($this->request->post['fedex_packaging_type'])) {
             $data['fedex_packaging_type'] = $this->request->post['fedex_packaging_type'];
         } else {
-            $data['fedex_packaging_type'] = $this->config->get('fedex_packaging_type');
+            $data['fedex_packaging_type'] = Config::get('fedex_packaging_type');
         }
         
         if (isset($this->request->post['fedex_rate_type'])) {
             $data['fedex_rate_type'] = $this->request->post['fedex_rate_type'];
         } else {
-            $data['fedex_rate_type'] = $this->config->get('fedex_rate_type');
+            $data['fedex_rate_type'] = Config::get('fedex_rate_type');
         }
         
         if (isset($this->request->post['fedex_destination_type'])) {
             $data['fedex_destination_type'] = $this->request->post['fedex_destination_type'];
         } else {
-            $data['fedex_destination_type'] = $this->config->get('fedex_destination_type');
+            $data['fedex_destination_type'] = Config::get('fedex_destination_type');
         }
         
         if (isset($this->request->post['fedex_display_time'])) {
             $data['fedex_display_time'] = $this->request->post['fedex_display_time'];
         } else {
-            $data['fedex_display_time'] = $this->config->get('fedex_display_time');
+            $data['fedex_display_time'] = Config::get('fedex_display_time');
         }
         
         if (isset($this->request->post['fedex_display_weight'])) {
             $data['fedex_display_weight'] = $this->request->post['fedex_display_weight'];
         } else {
-            $data['fedex_display_weight'] = $this->config->get('fedex_display_weight');
+            $data['fedex_display_weight'] = Config::get('fedex_display_weight');
         }
         
         if (isset($this->request->post['fedex_weight_class_id'])) {
             $data['fedex_weight_class_id'] = $this->request->post['fedex_weight_class_id'];
         } else {
-            $data['fedex_weight_class_id'] = $this->config->get('fedex_weight_class_id');
+            $data['fedex_weight_class_id'] = Config::get('fedex_weight_class_id');
         }
         
-        $this->theme->model('localization/weight_class');
+        Theme::model('localization/weight_class');
         
         $data['weight_classes'] = $this->model_localization_weight_class->getWeightClasses();
         
         if (isset($this->request->post['fedex_tax_class_id'])) {
             $data['fedex_tax_class_id'] = $this->request->post['fedex_tax_class_id'];
         } else {
-            $data['fedex_tax_class_id'] = $this->config->get('fedex_tax_class_id');
+            $data['fedex_tax_class_id'] = Config::get('fedex_tax_class_id');
         }
         
-        $this->theme->model('localization/tax_class');
+        Theme::model('localization/tax_class');
         
         $data['tax_classes'] = $this->model_localization_tax_class->getTaxClasses();
         
         if (isset($this->request->post['fedex_geo_zone_id'])) {
             $data['fedex_geo_zone_id'] = $this->request->post['fedex_geo_zone_id'];
         } else {
-            $data['fedex_geo_zone_id'] = $this->config->get('fedex_geo_zone_id');
+            $data['fedex_geo_zone_id'] = Config::get('fedex_geo_zone_id');
         }
         
-        $this->theme->model('localization/geo_zone');
+        Theme::model('localization/geo_zone');
         
         $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
         
         if (isset($this->request->post['fedex_status'])) {
             $data['fedex_status'] = $this->request->post['fedex_status'];
         } else {
-            $data['fedex_status'] = $this->config->get('fedex_status');
+            $data['fedex_status'] = Config::get('fedex_status');
         }
         
         if (isset($this->request->post['fedex_sort_order'])) {
             $data['fedex_sort_order'] = $this->request->post['fedex_sort_order'];
         } else {
-            $data['fedex_sort_order'] = $this->config->get('fedex_sort_order');
+            $data['fedex_sort_order'] = Config::get('fedex_sort_order');
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('shipping/fedex', $data));
+        Response::setOutput(Theme::view('shipping/fedex', $data));
     }
     
     protected function validate() {
-        if (!$this->user->hasPermission('modify', 'shipping/fedex')) {
+        if (!User::hasPermission('modify', 'shipping/fedex')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
@@ -273,7 +273,7 @@ class Fedex extends Controller {
             $this->error['postcode'] = $this->language->get('lang_error_postcode');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

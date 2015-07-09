@@ -73,7 +73,7 @@ class PaypalProIframe extends Controller {
             $data['error_connection'] = $this->language->get('lang_error_connection');
         }
         
-        if (file_exists($this->app['path.public'] . 'asset/' . $this->config->get('config_theme') . '/css/stylesheet.css')) {
+        if (file_exists(Config::get('path.public') . 'asset/' . $this->config->get('config_theme') . '/css/stylesheet.css')) {
             $data['stylesheet'] = '/asset/' . $this->config->get('config_theme') . '/css/stylesheet.css';
         } else {
             $data['stylesheet'] = '/asset/default/css/stylesheet.css';

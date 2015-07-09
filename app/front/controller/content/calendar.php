@@ -24,7 +24,7 @@ class Calendar extends Controller {
         $this->theme->setTitle($this->language->get('lang_heading_title'));
         $this->breadcrumb->add('lang_heading_title', 'content/calendar', null, true, 'SSL');
         
-        $data['template_path'] = 'asset/' . $this->app['theme.name'] . '/template/';
+        $data['template_path'] = 'asset/' . Config::get('theme.name') . '/template/';
         $data['today']         = date('Y-m-d', time());
         $data['continue']      = $this->url->link('content/home');
         

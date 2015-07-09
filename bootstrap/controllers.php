@@ -55,13 +55,6 @@ $admin_controllers = array(
 
 $config[ADMIN_FACADE]['pre_render'] = $admin_controllers;
 
-$install_controllers = array(
-    'header' => 'header',
-    'footer' => 'footer',
-);
-
-$config[INSTALL_FACADE]['pre_render'] = $install_controllers;
-
 /*
 |--------------------------------------------------------------------------
 |	Front Pre-actions
@@ -87,9 +80,3 @@ $admin_actions = array(
 );
 
 $config[ADMIN_FACADE]['pre_actions'] = $admin_actions;
-
-$install_actions = array(
-    'router'
-);
-
-$config[INSTALL_FACADE]['pre_actions'] = $install_actions;

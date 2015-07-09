@@ -20,31 +20,31 @@ use Dais\Engine\Controller;
 class FileManager extends Controller {
     
     public function index() {
-        $data = $this->theme->language('common/file_manager');
+        $data = Theme::language('common/file_manager');
         
-        $this->javascript->reset();
+        JS::reset();
         
-        $this->javascript->register('jquery.min', null)
+        JS::register('jquery.min', null)
             ->register('migrate.min', 'jquery.min')
             ->register('bootstrap.min', 'migrate.min')
             ->register('filemanager.min', 'bootstrap.min', true);
         
-        $this->css->reset();
-        $this->css->register('filemanager.min', null, true);
+        CSS::reset();
+        CSS::register('filemanager.min', null, true);
         
         $data['title'] = $this->language->get('lang_heading_title');
         
         if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
-            $data['base'] = $this->app['https.server'];
+            $data['base'] = Config::get('https.server');
         } else {
-            $data['base'] = $this->app['http.server'];
+            $data['base'] = Config::get('http.server');
         }
         
         $data['token'] = $this->session->data['token'];
         
-        $data['directory'] = $this->app['http.public'] . 'image/data/';
+        $data['directory'] = Config::get('http.public') . 'image/data/';
         
-        $this->theme->model('tool/image');
+        Theme::model('tool/image');
         
         $data['no_image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
         
@@ -54,43 +54,43 @@ class FileManager extends Controller {
             $data['field'] = '';
         }
         
-        $this->theme->loadjs('javascript/common/file_manager', $data);
+        Theme::loadjs('javascript/common/file_manager', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data['javascript'] = $this->theme->controller('common/javascript');
+        $data['javascript'] = Theme::controller('common/javascript');
 
-        $css_key = $this->css->compile();
-        $js_key  = $this->javascript->compile();
+        $css_key = CSS::compile();
+        $js_key  = JS::compile();
         
-        $data['css_link'] = $this->app['https.public'] . 'asset/' . $this->app['theme.name'] . '/compiled/' . $this->app['filecache']->get_key($css_key, 'css');
-        $data['js_link']  = $this->app['https.public'] . 'asset/' . $this->app['theme.name'] . '/compiled/' . $this->app['filecache']->get_key($js_key, 'js');
+        $data['css_link'] = Config::get('https.public') . 'asset/' . Config::get('theme.name') . '/compiled/' . Filecache::get_key($css_key, 'css');
+        $data['js_link']  = Config::get('https.public') . 'asset/' . Config::get('theme.name') . '/compiled/' . Filecache::get_key($js_key, 'js');
         
-        $this->response->setOutput($this->theme->view('common/file_manager', $data));
+        Response::setOutput(Theme::view('common/file_manager', $data));
     }
     
     public function image() {
-        $this->theme->model('tool/image');
+        Theme::model('tool/image');
         
         if (isset($this->request->get['image'])) {
-            $this->response->setOutput($this->model_tool_image->resize(html_entity_decode($this->request->get['image'], ENT_QUOTES, 'UTF-8'), 100, 100));
+            Response::setOutput($this->model_tool_image->resize(html_entity_decode($this->request->get['image'], ENT_QUOTES, 'UTF-8'), 100, 100));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
     }
     
     public function directory() {
         $json = array();
         
         if (isset($this->request->post['directory'])) {
-            $directories = glob(rtrim($this->app['path.image'] . 'data/' . str_replace('../', '', $this->request->post['directory']), '/') . '/*', GLOB_ONLYDIR);
+            $directories = glob(rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', $this->request->post['directory']), '/') . '/*', GLOB_ONLYDIR);
             
             if ($directories) {
                 $i = 0;
                 
                 foreach ($directories as $directory) {
                     $json[$i]['data'] = basename($directory);
-                    $json[$i]['attributes']['directory'] = $this->encode->substr($directory, strlen($this->app['path.image'] . 'data/'));
+                    $json[$i]['attributes']['directory'] = Encode::substr($directory, strlen(Config::get('path.image') . 'data/'));
                     
                     $children = glob(rtrim($directory, '/') . '/*', GLOB_ONLYDIR);
                     
@@ -103,18 +103,18 @@ class FileManager extends Controller {
             }
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function files() {
         $json = array();
         
         if (!empty($this->request->post['directory'])) {
-            $directory = $this->app['path.image'] . 'data/' . str_replace('../', '', $this->request->post['directory']);
+            $directory = Config::get('path.image') . 'data/' . str_replace('../', '', $this->request->post['directory']);
         } else {
-            $directory = $this->app['path.image'] . 'data/';
+            $directory = Config::get('path.image') . 'data/';
         }
         
         $allowed = array('.jpg', '.jpeg', '.png', '.gif');
@@ -141,14 +141,14 @@ class FileManager extends Controller {
                         $i++;
                     }
                     
-                    $json[] = array('filename' => basename($file), 'file' => $this->encode->substr($file, $this->encode->strlen($this->app['path.image'] . 'data/')), 'size' => round($this->encode->substr($size, 0, $this->encode->strpos($size, '.') + 4), 2) . $suffix[$i]);
+                    $json[] = array('filename' => basename($file), 'file' => Encode::substr($file, Encode::strlen(Config::get('path.image') . 'data/')), 'size' => round(Encode::substr($size, 0, Encode::strpos($size, '.') + 4), 2) . $suffix[$i]);
                 }
             }
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function create() {
@@ -158,7 +158,7 @@ class FileManager extends Controller {
         
         if (isset($this->request->post['directory'])) {
             if (isset($this->request->post['name']) || $this->request->post['name']) {
-                $directory = rtrim($this->app['path.image'] . 'data/' . str_replace('../', '', $this->request->post['directory']), '/');
+                $directory = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', $this->request->post['directory']), '/');
                 
                 if (!is_dir($directory)) {
                     $json['error'] = $this->language->get('lang_error_directory');
@@ -174,7 +174,7 @@ class FileManager extends Controller {
             $json['error'] = $this->language->get('lang_error_directory');
         }
         
-        if (!$this->user->hasPermission('modify', 'common/file_manager')) {
+        if (!User::hasPermission('modify', 'common/file_manager')) {
             $json['error'] = $this->language->get('lang_error_permission');
         }
         
@@ -184,9 +184,9 @@ class FileManager extends Controller {
             $json['success'] = $this->language->get('lang_text_create');
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function delete() {
@@ -195,20 +195,20 @@ class FileManager extends Controller {
         $json = array();
         
         if (isset($this->request->post['path'])) {
-            $path = rtrim($this->app['path.image'] . 'data/' . str_replace('../', '', html_entity_decode($this->request->post['path'], ENT_QUOTES, 'UTF-8')), '/');
+            $path = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', html_entity_decode($this->request->post['path'], ENT_QUOTES, 'UTF-8')), '/');
             
             if (!file_exists($path)) {
                 $json['error'] = $this->language->get('lang_error_select');
             }
             
-            if ($path == rtrim($this->app['path.image'] . 'data/', '/')) {
+            if ($path == rtrim(Config::get('path.image') . 'data/', '/')) {
                 $json['error'] = $this->language->get('lang_error_delete');
             }
         } else {
             $json['error'] = $this->language->get('lang_error_select');
         }
         
-        if (!$this->user->hasPermission('modify', 'common/file_manager')) {
+        if (!User::hasPermission('modify', 'common/file_manager')) {
             $json['error'] = $this->language->get('lang_error_permission');
         }
         
@@ -246,9 +246,9 @@ class FileManager extends Controller {
             $json['success'] = $this->language->get('lang_text_delete');
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function move() {
@@ -257,17 +257,17 @@ class FileManager extends Controller {
         $json = array();
         
         if (isset($this->request->post['from']) && isset($this->request->post['to'])) {
-            $from = rtrim($this->app['path.image'] . 'data/' . str_replace('../', '', html_entity_decode($this->request->post['from'], ENT_QUOTES, 'UTF-8')), '/');
+            $from = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', html_entity_decode($this->request->post['from'], ENT_QUOTES, 'UTF-8')), '/');
             
             if (!file_exists($from)) {
                 $json['error'] = $this->language->get('lang_error_missing');
             }
             
-            if ($from == $this->app['path.image'] . 'data') {
+            if ($from == Config::get('path.image') . 'data') {
                 $json['error'] = $this->language->get('lang_error_default');
             }
             
-            $to = rtrim($this->app['path.image'] . 'data/' . str_replace('../', '', html_entity_decode($this->request->post['to'], ENT_QUOTES, 'UTF-8')), '/');
+            $to = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', html_entity_decode($this->request->post['to'], ENT_QUOTES, 'UTF-8')), '/');
             
             if (!file_exists($to)) {
                 $json['error'] = $this->language->get('lang_error_move');
@@ -280,7 +280,7 @@ class FileManager extends Controller {
             $json['error'] = $this->language->get('lang_error_directory');
         }
         
-        if (!$this->user->hasPermission('modify', 'common/file_manager')) {
+        if (!User::hasPermission('modify', 'common/file_manager')) {
             $json['error'] = $this->language->get('lang_error_permission');
         }
         
@@ -290,9 +290,9 @@ class FileManager extends Controller {
             $json['success'] = $this->language->get('lang_text_move');
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function copy() {
@@ -301,13 +301,13 @@ class FileManager extends Controller {
         $json = array();
         
         if (isset($this->request->post['path']) && isset($this->request->post['name'])) {
-            if (($this->encode->strlen($this->request->post['name']) < 3) || ($this->encode->strlen($this->request->post['name']) > 255)) {
+            if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 255)) {
                 $json['error'] = $this->language->get('lang_error_filename');
             }
             
-            $old_name = rtrim($this->app['path.image'] . 'data/' . str_replace('../', '', html_entity_decode($this->request->post['path'], ENT_QUOTES, 'UTF-8')), '/');
+            $old_name = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', html_entity_decode($this->request->post['path'], ENT_QUOTES, 'UTF-8')), '/');
             
-            if (!file_exists($old_name) || $old_name == $this->app['path.image'] . 'data') {
+            if (!file_exists($old_name) || $old_name == Config::get('path.image') . 'data') {
                 $json['error'] = $this->language->get('lang_error_copy');
             }
             
@@ -326,7 +326,7 @@ class FileManager extends Controller {
             $json['error'] = $this->language->get('lang_error_select');
         }
         
-        if (!$this->user->hasPermission('modify', 'common/file_manager')) {
+        if (!User::hasPermission('modify', 'common/file_manager')) {
             $json['error'] = $this->language->get('lang_error_permission');
         }
         
@@ -340,9 +340,9 @@ class FileManager extends Controller {
             $json['success'] = $this->language->get('lang_text_copy');
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     function recursiveCopy($source, $destination) {
@@ -364,13 +364,13 @@ class FileManager extends Controller {
     }
     
     public function folders() {
-        $this->response->setOutput($this->recursiveFolders($this->app['path.image'] . 'data/'));
+        Response::setOutput($this->recursiveFolders(Config::get('path.image') . 'data/'));
     }
     
     protected function recursiveFolders($directory) {
         $output = '';
         
-        $output.= '<option value="' . $this->encode->substr($directory, strlen($this->app['path.image'] . 'data/')) . '">' . $this->encode->substr($directory, strlen($this->app['path.image'] . 'data/')) . '</option>';
+        $output.= '<option value="' . Encode::substr($directory, strlen(Config::get('path.image') . 'data/')) . '">' . Encode::substr($directory, strlen(Config::get('path.image') . 'data/')) . '</option>';
         
         $directories = glob(rtrim(str_replace('../', '', $directory), '/') . '/*', GLOB_ONLYDIR);
         
@@ -387,13 +387,13 @@ class FileManager extends Controller {
         $json = array();
         
         if (isset($this->request->post['path']) && isset($this->request->post['name'])) {
-            if (($this->encode->strlen($this->request->post['name']) < 3) || ($this->encode->strlen($this->request->post['name']) > 255)) {
+            if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 255)) {
                 $json['error'] = $this->language->get('lang_error_filename');
             }
             
-            $old_name = rtrim($this->app['path.image'] . 'data/' . str_replace('../', '', html_entity_decode($this->request->post['path'], ENT_QUOTES, 'UTF-8')), '/');
+            $old_name = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', html_entity_decode($this->request->post['path'], ENT_QUOTES, 'UTF-8')), '/');
             
-            if (!file_exists($old_name) || $old_name == $this->app['path.image'] . 'data') {
+            if (!file_exists($old_name) || $old_name == Config::get('path.image') . 'data') {
                 $json['error'] = $this->language->get('lang_error_rename');
             }
             
@@ -410,7 +410,7 @@ class FileManager extends Controller {
             }
         }
         
-        if (!$this->user->hasPermission('modify', 'common/file_manager')) {
+        if (!User::hasPermission('modify', 'common/file_manager')) {
             $json['error'] = $this->language->get('lang_error_permission');
         }
         
@@ -420,9 +420,9 @@ class FileManager extends Controller {
             $json['success'] = $this->language->get('lang_text_rename');
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function upload() {
@@ -438,7 +438,7 @@ class FileManager extends Controller {
                     $json['error'] = $this->language->get('lang_error_filename');
                 }
                 
-                $directory = rtrim($this->app['path.image'] . 'data/' . str_replace('../', '', $this->request->post['directory']), '/');
+                $directory = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', $this->request->post['directory']), '/');
                 
                 if (!is_dir($directory)) {
                     $json['error'] = $this->language->get('lang_error_directory');
@@ -477,7 +477,7 @@ class FileManager extends Controller {
             $json['error'] = $this->language->get('lang_error_directory');
         }
         
-        if (!$this->user->hasPermission('modify', 'common/file_manager')) {
+        if (!User::hasPermission('modify', 'common/file_manager')) {
             $json['error'] = $this->language->get('lang_error_permission');
         }
         
@@ -489,9 +489,9 @@ class FileManager extends Controller {
             }
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function editor_upload() {
@@ -507,7 +507,7 @@ class FileManager extends Controller {
                     $json['error'] = $this->language->get('lang_error_filename');
                 }
                 
-                $directory = rtrim($this->app['path.image'] . 'data/' . str_replace('../', '', $this->request->post['directory']), '/');
+                $directory = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', $this->request->post['directory']), '/');
                 
                 if (!is_dir($directory)) {
                     $json['error'] = $this->language->get('lang_error_directory');
@@ -546,7 +546,7 @@ class FileManager extends Controller {
             $json['error'] = $this->language->get('lang_error_directory');
         }
         
-        if (!$this->user->hasPermission('modify', 'common/file_manager')) {
+        if (!User::hasPermission('modify', 'common/file_manager')) {
             $json['error'] = $this->language->get('lang_error_permission');
         }
         
@@ -558,8 +558,8 @@ class FileManager extends Controller {
             }
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

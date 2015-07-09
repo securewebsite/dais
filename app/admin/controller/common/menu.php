@@ -21,17 +21,17 @@ class Menu extends Controller {
     
     public function index() {
         
-        $data = $this->theme->language('common/menu');
+        $data = Theme::language('common/menu');
         
         if (!isset($this->request->get['token']) || !isset($this->session->data['token']) && ($this->request->get['token'] != $this->session->data['token'])):
             
             $data['logged'] = false;
         else:
-            $data['paypal_express_status']        = ($this->config->get('paypal_express_status')) ? : false;
-            $data['logged']                      = sprintf($this->language->get('lang_text_logged'), $this->user->getUsername());
+            $data['paypal_express_status']        = (Config::get('paypal_express_status')) ? : false;
+            $data['logged']                      = sprintf($this->language->get('lang_text_logged'), User::getUsername());
             $data['dashboard']                   = $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL');
             $data['allowed'] = false;
-            if ($this->config->get('config_affiliate_allowed')):
+            if (Config::get('config_affiliate_allowed')):
                 $data['affiliate'] = $this->url->link('people/customer', 'token=' . $this->session->data['token'] . '&filter_affiliate=1', 'SSL');
                 $data['allowed']   = true;
             endif;
@@ -92,7 +92,7 @@ class Menu extends Controller {
             $data['return_status']               = $this->url->link('localization/return_status', 'token=' . $this->session->data['token'], 'SSL');
             $data['route']                       = $this->url->link('design/route', 'token=' . $this->session->data['token'], 'SSL');
             $data['shipping']                    = $this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
-            $data['store']                       = $this->app['http.public'];
+            $data['store']                       = Config::get('http.public');
             $data['stock_status']                = $this->url->link('localization/stock_status', 'token=' . $this->session->data['token'], 'SSL');
             $data['tax_class']                   = $this->url->link('localization/tax_class', 'token=' . $this->session->data['token'], 'SSL');
             $data['tax_rate']                    = $this->url->link('localization/tax_rate', 'token=' . $this->session->data['token'], 'SSL');
@@ -114,35 +114,35 @@ class Menu extends Controller {
             $data['order_recurring']             = $this->url->link('sale/recurring', 'token=' . $this->session->data['token'], 'SSL');
             
             // Orders
-            $this->theme->model('sale/order');
-            $this->theme->model('localization/order_status');
+            Theme::model('sale/order');
+            Theme::model('localization/order_status');
             
-            $order_status_total = $this->model_sale_order->getTotalOrders(array('filter_order_status_id' => $this->config->get('config_order_status_id')));
+            $order_status_total = $this->model_sale_order->getTotalOrders(array('filter_order_status_id' => Config::get('config_order_status_id')));
             
             $data['order_status_total'] = $order_status_total;
             
-            $data['alert_order_status'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status_id=' . $this->config->get('config_order_status_id'), 'SSL');
+            $data['alert_order_status'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status_id=' . Config::get('config_order_status_id'), 'SSL');
             
-            $data['text_pending_status'] = $this->model_localization_order_status->getMenuStatusDescription($this->config->get('config_order_status_id'));
+            $data['text_pending_status'] = $this->model_localization_order_status->getMenuStatusDescription(Config::get('config_order_status_id'));
             
-            $data['complete_status_total'] = $this->model_sale_order->getTotalOrders(array('filter_order_status_id' => $this->config->get('config_complete_status_id')));
+            $data['complete_status_total'] = $this->model_sale_order->getTotalOrders(array('filter_order_status_id' => Config::get('config_complete_status_id')));
             
-            $data['alert_complete_status'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status_id=' . $this->config->get('config_complete_status_id'), 'SSL');
+            $data['alert_complete_status'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status_id=' . Config::get('config_complete_status_id'), 'SSL');
             
-            $data['text_complete_status'] = $this->model_localization_order_status->getMenuStatusDescription($this->config->get('config_complete_status_id'));
+            $data['text_complete_status'] = $this->model_localization_order_status->getMenuStatusDescription(Config::get('config_complete_status_id'));
             
             // Returns
-            $this->theme->model('sale/returns');
+            Theme::model('sale/returns');
             
-            $return_total = $this->model_sale_returns->getTotalReturns(array('filter_return_status_id' => $this->config->get('config_return_status_id')));
+            $return_total = $this->model_sale_returns->getTotalReturns(array('filter_return_status_id' => Config::get('config_return_status_id')));
             
             $data['return_total'] = $return_total;
             
             $data['alert_return'] = $this->url->link('sale/returns', 'token=' . $this->session->data['token'], 'SSL');
             
             // Customers
-            if ($this->config->get('config_customer_online')):
-                $this->theme->model('report/dashboard');
+            if (Config::get('config_customer_online')):
+                Theme::model('report/dashboard');
                 
                 $data['online_total'] = $this->model_report_dashboard->getTotalCustomersOnline();
                 $data['alert_online'] = $this->url->link('report/customer_online', 'token=' . $this->session->data['token'], 'SSL');
@@ -151,7 +151,7 @@ class Menu extends Controller {
                 $data['alert_online'] = '';
             endif;
             
-            $this->theme->model('people/customer');
+            Theme::model('people/customer');
             
             $customer_total = $this->model_people_customer->getTotalCustomers(array('filter_approved' => false));
             
@@ -159,16 +159,16 @@ class Menu extends Controller {
             $data['alert_customer_approval'] = $this->url->link('people/customer', 'token=' . $this->session->data['token'] . '&filter_approved=0', 'SSL');
             
             // Products
-            $this->theme->model('catalog/product');
+            Theme::model('catalog/product');
             
             $product_total = $this->model_catalog_product->getTotalProductsOutOfStock();
             
             $data['product_total'] = $product_total;
             
-            $data['alert_product'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&filter_order_status_id=' . $this->config->get('config_complete_status_id'), 'SSL');
+            $data['alert_product'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'] . '&filter_order_status_id=' . Config::get('config_complete_status_id'), 'SSL');
             
             // Reviews
-            $this->theme->model('catalog/review');
+            Theme::model('catalog/review');
             
             $review_total = $this->model_catalog_review->getTotalReviewsAwaitingApproval();
             
@@ -181,7 +181,7 @@ class Menu extends Controller {
             // Online Stores
             $data['stores'] = array();
             
-            $this->theme->model('setting/store');
+            Theme::model('setting/store');
             
             $results = $this->model_setting_store->getStores();
             
@@ -198,8 +198,8 @@ class Menu extends Controller {
             endforeach;
         endif;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('common/menu', $data);
+        return Theme::view('common/menu', $data);
     }
 }

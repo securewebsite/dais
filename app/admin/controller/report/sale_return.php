@@ -19,9 +19,9 @@ use Dais\Engine\Controller;
 
 class SaleReturn extends Controller {
     public function index() {
-        $data = $this->theme->language('report/sale_return');
+        $data = Theme::language('report/sale_return');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
@@ -77,7 +77,7 @@ class SaleReturn extends Controller {
         
         $this->breadcrumb->add('lang_heading_title', 'report/sale_return', $url);
         
-        $this->theme->model('report/returns');
+        Theme::model('report/returns');
         
         $data['returns'] = array();
         
@@ -86,8 +86,8 @@ class SaleReturn extends Controller {
             'filter_date_end'         => $filter_date_end, 
             'filter_group'            => $filter_group, 
             'filter_return_status_id' => $filter_return_status_id, 
-            'start'                   => ($page - 1) * $this->config->get('config_admin_limit'), 
-            'limit'                   => $this->config->get('config_admin_limit')
+            'start'                   => ($page - 1) * Config::get('config_admin_limit'), 
+            'limit'                   => Config::get('config_admin_limit')
         );
         
         $return_total = $this->model_report_returns->getTotalReturns($filter);
@@ -104,7 +104,7 @@ class SaleReturn extends Controller {
         
         $data['token'] = $this->session->data['token'];
         
-        $this->theme->model('localization/return_status');
+        Theme::model('localization/return_status');
         
         $data['return_statuses'] = $this->model_localization_return_status->getReturnStatuses();
         
@@ -148,10 +148,10 @@ class SaleReturn extends Controller {
             $url.= '&filter_return_status_id=' . $this->request->get['filter_return_status_id'];
         }
         
-        $data['pagination'] = $this->theme->paginate(
+        $data['pagination'] = Theme::paginate(
             $return_total, 
             $page, 
-            $this->config->get('config_admin_limit'), 
+            Config::get('config_admin_limit'), 
             $this->language->get('lang_text_pagination'), 
             $this->url->link('report/sale_return', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
         );
@@ -161,10 +161,10 @@ class SaleReturn extends Controller {
         $data['filter_group']            = $filter_group;
         $data['filter_return_status_id'] = $filter_return_status_id;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('report/sale_return', $data));
+        Response::setOutput(Theme::view('report/sale_return', $data));
     }
 }

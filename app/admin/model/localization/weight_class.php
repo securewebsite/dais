@@ -78,7 +78,7 @@ class WeightClass extends Model {
 				FROM {$this->db->prefix}weight_class wc 
 				LEFT JOIN {$this->db->prefix}weight_class_description wcd 
 					ON (wc.weight_class_id = wcd.weight_class_id) 
-				WHERE wcd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+				WHERE wcd.language_id = '" . (int)Config::get('config_language_id') . "'";
             
             $sort_data = array('title', 'unit', 'value');
             
@@ -115,7 +115,7 @@ class WeightClass extends Model {
 				FROM {$this->db->prefix}weight_class wc 
 				LEFT JOIN {$this->db->prefix}weight_class_description wcd 
 					ON (wc.weight_class_id = wcd.weight_class_id) 
-				WHERE wcd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+				WHERE wcd.language_id = '" . (int)Config::get('config_language_id') . "'
 			");
             
             return $query->rows;
@@ -129,7 +129,7 @@ class WeightClass extends Model {
 			LEFT JOIN {$this->db->prefix}weight_class_description wcd 
 				ON (wc.weight_class_id = wcd.weight_class_id) 
 			WHERE wc.weight_class_id = '" . (int)$weight_class_id . "' 
-			AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND wcd.language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         return $query->row;
@@ -140,7 +140,7 @@ class WeightClass extends Model {
 			SELECT * 
 			FROM {$this->db->prefix}weight_class_description 
 			WHERE unit = '" . $this->db->escape($unit) . "' 
-			AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         return $query->row;

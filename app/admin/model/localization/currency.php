@@ -32,7 +32,7 @@ class Currency extends Model {
                 date_modified = NOW()
 		");
         
-        if ($this->config->get('config_currency_auto')):
+        if (Config::get('config_currency_auto')):
             $this->updateCurrencies(true);
         endif;
         
@@ -157,19 +157,19 @@ class Currency extends Model {
                 $query = $this->db->query("
 					SELECT * 
 					FROM {$this->db->prefix}currency 
-					WHERE code != '" . $this->db->escape($this->config->get('config_currency')) . "'
+					WHERE code != '" . $this->db->escape(Config::get('config_currency')) . "'
 				");
             else:
                 $query = $this->db->query("
 					SELECT * 
 					FROM {$this->db->prefix}currency 
-					WHERE code != '" . $this->db->escape($this->config->get('config_currency')) . "' 
+					WHERE code != '" . $this->db->escape(Config::get('config_currency')) . "' 
 					AND date_modified < '" . $this->db->escape(date('Y-m-d H:i:s', strtotime('-1 day'))) . "'
 				");
             endif;
             
             foreach ($query->rows as $result):
-                $data[] = $this->config->get('config_currency') . $result['code'] . '=X';
+                $data[] = Config::get('config_currency') . $result['code'] . '=X';
             endforeach;
             
             $curl = curl_init();
@@ -187,8 +187,8 @@ class Currency extends Model {
             $lines = explode("\n", trim($content));
             
             foreach ($lines as $line):
-                $currency = $this->encode->substr($line, 4, 3);
-                $value = $this->encode->substr($line, 11, 6);
+                $currency = Encode::substr($line, 4, 3);
+                $value = Encode::substr($line, 11, 6);
                 
                 if ((float)$value):
                     $this->db->query("
@@ -206,7 +206,7 @@ class Currency extends Model {
 				SET 
 					value = '1.00000', 
 					date_modified = '" . $this->db->escape(date('Y-m-d H:i:s')) . "' 
-				WHERE code = '" . $this->db->escape($this->config->get('config_currency')) . "'
+				WHERE code = '" . $this->db->escape(Config::get('config_currency')) . "'
 			");
             
             $this->cache->delete('currency');

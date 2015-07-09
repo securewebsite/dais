@@ -180,7 +180,7 @@ class GiftCard extends Model {
         
         $data = $this->theme->language('notification/gift_card');
 
-        $data['theme_image'] = $this->app['http.public'] . 'image/' . $call['image'];
+        $data['theme_image'] = Config::get('http.public') . 'image/' . $call['image'];
         $data['theme_name']  = $call['theme'];
         $data['store_name']  = $this->config->get('config_name');
         $data['to_name']     = $call['to_name'];
@@ -214,8 +214,8 @@ class GiftCard extends Model {
             $message[$key] = str_replace($search, $replace, $value);
         endforeach;
 
-        $html = new Template($this->app);
-        $text = new Text($this->app);
+        $html = new Template;
+        $text = new Text;
 
         $html->data = $data;
         $text->data = $data;

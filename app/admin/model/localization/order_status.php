@@ -64,7 +64,7 @@ class OrderStatus extends Model {
 			SELECT * 
 			FROM {$this->db->prefix}order_status 
 			WHERE order_status_id = '" . (int)$order_status_id . "' 
-			AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         return $query->row;
@@ -75,7 +75,7 @@ class OrderStatus extends Model {
             $sql = "
 				SELECT * 
 				FROM {$this->db->prefix}order_status 
-				WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+				WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 			";
             
             $sql.= " ORDER BY name";
@@ -107,7 +107,7 @@ class OrderStatus extends Model {
 					order_status_id, 
 					name 
 				FROM {$this->db->prefix}order_status 
-				WHERE language_id = '" . (int)$this->config->get('config_language_id') . "' 
+				WHERE language_id = '" . (int)Config::get('config_language_id') . "' 
 				ORDER BY name
 			");
             
@@ -137,7 +137,7 @@ class OrderStatus extends Model {
         $query = $this->db->query("
 			SELECT COUNT(*) AS total 
 			FROM {$this->db->prefix}order_status 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         return $query->row['total'];
@@ -147,7 +147,7 @@ class OrderStatus extends Model {
         $query = $this->db->query("
 			SELECT name 
 			FROM {$this->db->prefix}order_status 
-			WHERE language_id='" . (int)$this->config->get('config_language_id') . "' 
+			WHERE language_id='" . (int)Config::get('config_language_id') . "' 
 			AND order_status_id='" . (int)$order_status_id . "'
 		");
         

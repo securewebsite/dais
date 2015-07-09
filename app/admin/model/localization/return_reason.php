@@ -73,7 +73,7 @@ class ReturnReason extends Model {
 			SELECT * 
 			FROM {$this->db->prefix}return_reason 
 			WHERE return_reason_id = '" . (int)$return_reason_id . "' 
-			AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         return $query->row;
@@ -84,7 +84,7 @@ class ReturnReason extends Model {
             $sql = "
 				SELECT * 
 				FROM {$this->db->prefix}return_reason 
-				WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+				WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 			";
             
             $sql.= " ORDER BY name";
@@ -116,7 +116,7 @@ class ReturnReason extends Model {
 					return_reason_id, 
 					name 
 				FROM {$this->db->prefix}return_reason 
-				WHERE language_id = '" . (int)$this->config->get('config_language_id') . "' 
+				WHERE language_id = '" . (int)Config::get('config_language_id') . "' 
 				ORDER BY name
 			");
             
@@ -144,7 +144,7 @@ class ReturnReason extends Model {
         $query = $this->db->query("
 			SELECT COUNT(*) AS total 
 			FROM {$this->db->prefix}return_reason 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'");
         
         return $query->row['total'];
     }

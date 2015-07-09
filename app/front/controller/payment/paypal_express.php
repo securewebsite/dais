@@ -853,7 +853,7 @@ class PaypalExpress extends Controller {
             if ($data['store_id']) {
                 $data['store_url'] = $this->config->get('config_url');
             } else {
-                $data['store_url'] = $this->app['http.server'];
+                $data['store_url'] = Config::get('http.server');
             }
             
             if ($this->customer->isLogged() && isset($this->session->data['payment_address_id'])) {

@@ -36,10 +36,10 @@ class Comment extends Model {
         $this->cache->delete('posts.comment');
         $this->cache->delete('post.average');
         
-        $this->theme->trigger('admin_blog_add_comment', array('blog_comment_id' => $comment_id));
+        Theme::trigger('admin_blog_add_comment', array('blog_comment_id' => $comment_id));
         
         if ($data['status']):
-            $this->theme->trigger('admin_blog_comment_approved', array('blog_comment_id' => $comment_id));
+            Theme::trigger('admin_blog_comment_approved', array('blog_comment_id' => $comment_id));
         endif;
     }
     
@@ -60,10 +60,10 @@ class Comment extends Model {
         $this->cache->delete('posts.comment');
         $this->cache->delete('post.average');
         
-        $this->theme->trigger('admin_blog_edit_comment', array('blog_comment_id' => $comment_id));
+        Theme::trigger('admin_blog_edit_comment', array('blog_comment_id' => $comment_id));
         
         if ($data['status']):
-            $this->theme->trigger('admin_blog_comment_approved', array('blog_comment_id' => $comment_id));
+            Theme::trigger('admin_blog_comment_approved', array('blog_comment_id' => $comment_id));
         endif;
     }
     
@@ -76,7 +76,7 @@ class Comment extends Model {
         $this->cache->delete('posts.comment');
         $this->cache->delete('post.average');
         
-        $this->theme->trigger('admin_blog_delete_comment', array('blog_comment_id' => $comment_id));
+        Theme::trigger('admin_blog_delete_comment', array('blog_comment_id' => $comment_id));
     }
     
     public function getComment($comment_id) {
@@ -85,7 +85,7 @@ class Comment extends Model {
 			(SELECT pd.name 
 				FROM {$this->db->prefix}blog_post_description pd 
 				WHERE pd.post_id = c.post_id 
-				AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS post 
+				AND pd.language_id = '" . (int)Config::get('config_language_id') . "') AS post 
 			FROM {$this->db->prefix}blog_comment c 
 			WHERE c.comment_id = '" . (int)$comment_id . "'
 		");
@@ -99,7 +99,7 @@ class Comment extends Model {
 			FROM {$this->db->prefix}blog_comment c 
 			LEFT JOIN {$this->db->prefix}blog_post_description pd 
 				ON (c.post_id = pd.post_id) 
-			WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "'
 		";
         
         $sort_data = array('pd.name', 'c.author', 'c.rating', 'c.status', 'c.date_added');

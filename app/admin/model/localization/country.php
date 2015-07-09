@@ -51,7 +51,7 @@ class Country extends Model {
         $this->cache->delete('countries');
         
         // changes status of zones for this country
-        $this->theme->model('localization/zone');
+        Theme::model('localization/zone');
         
         $zones = $this->model_localization_zone->findZonesByCountryId($country_id);
         

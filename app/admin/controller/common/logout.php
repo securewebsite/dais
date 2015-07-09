@@ -19,12 +19,12 @@ use Dais\Engine\Controller;
 
 class Logout extends Controller {
     public function index() {
-        $this->user->logout();
+        User::logout();
         
         unset($this->session->data['token']);
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
-        $this->response->redirect($this->app['config_ssl']);
+        Response::redirect(Config::get('config_ssl'));
     }
 }

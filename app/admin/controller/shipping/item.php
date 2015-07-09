@@ -21,15 +21,15 @@ class Item extends Controller {
     private $error = array();
     
     public function index() {
-        $data = $this->theme->language('shipping/item');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('setting/setting');
+        $data = Theme::language('shipping/item');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('item', $this->request->post);
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
-            $this->response->redirect($this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -48,54 +48,54 @@ class Item extends Controller {
         if (isset($this->request->post['item_cost'])) {
             $data['item_cost'] = $this->request->post['item_cost'];
         } else {
-            $data['item_cost'] = $this->config->get('item_cost');
+            $data['item_cost'] = Config::get('item_cost');
         }
         
         if (isset($this->request->post['item_tax_class_id'])) {
             $data['item_tax_class_id'] = $this->request->post['item_tax_class_id'];
         } else {
-            $data['item_tax_class_id'] = $this->config->get('item_tax_class_id');
+            $data['item_tax_class_id'] = Config::get('item_tax_class_id');
         }
         
-        $this->theme->model('localization/tax_class');
+        Theme::model('localization/tax_class');
         
         $data['tax_classes'] = $this->model_localization_tax_class->getTaxClasses();
         
         if (isset($this->request->post['item_geo_zone_id'])) {
             $data['item_geo_zone_id'] = $this->request->post['item_geo_zone_id'];
         } else {
-            $data['item_geo_zone_id'] = $this->config->get('item_geo_zone_id');
+            $data['item_geo_zone_id'] = Config::get('item_geo_zone_id');
         }
         
-        $this->theme->model('localization/geo_zone');
+        Theme::model('localization/geo_zone');
         
         $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
         
         if (isset($this->request->post['item_status'])) {
             $data['item_status'] = $this->request->post['item_status'];
         } else {
-            $data['item_status'] = $this->config->get('item_status');
+            $data['item_status'] = Config::get('item_status');
         }
         
         if (isset($this->request->post['item_sort_order'])) {
             $data['item_sort_order'] = $this->request->post['item_sort_order'];
         } else {
-            $data['item_sort_order'] = $this->config->get('item_sort_order');
+            $data['item_sort_order'] = Config::get('item_sort_order');
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('shipping/item', $data));
+        Response::setOutput(Theme::view('shipping/item', $data));
     }
     
     protected function validate() {
-        if (!$this->user->hasPermission('modify', 'shipping/item')) {
+        if (!User::hasPermission('modify', 'shipping/item')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

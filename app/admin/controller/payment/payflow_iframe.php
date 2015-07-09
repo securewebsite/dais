@@ -15,23 +15,23 @@
 */
 
 namespace Admin\Controller\Payment;
+
 use Dais\Engine\Controller;
 use Dais\Engine\Action;
-use Dais\Service\ActionService;
 
 class PayflowIframe extends Controller {
     private $error = array();
     
     public function index() {
-        $data = $this->theme->language('payment/payflow_iframe');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('setting/setting');
+        $data = Theme::language('payment/payflow_iframe');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('payflow_iframe', $this->request->post);
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
-            $this->response->redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -74,123 +74,123 @@ class PayflowIframe extends Controller {
         if (isset($this->request->post['payflow_iframe_vendor'])) {
             $data['payflow_iframe_vendor'] = $this->request->post['payflow_iframe_vendor'];
         } else {
-            $data['payflow_iframe_vendor'] = $this->config->get('payflow_iframe_vendor');
+            $data['payflow_iframe_vendor'] = Config::get('payflow_iframe_vendor');
         }
         
         if (isset($this->request->post['payflow_iframe_user'])) {
             $data['payflow_iframe_user'] = $this->request->post['payflow_iframe_user'];
         } else {
-            $data['payflow_iframe_user'] = $this->config->get('payflow_iframe_user');
+            $data['payflow_iframe_user'] = Config::get('payflow_iframe_user');
         }
         
         if (isset($this->request->post['payflow_iframe_password'])) {
             $data['payflow_iframe_password'] = $this->request->post['payflow_iframe_password'];
         } else {
-            $data['payflow_iframe_password'] = $this->config->get('payflow_iframe_password');
+            $data['payflow_iframe_password'] = Config::get('payflow_iframe_password');
         }
         
         if (isset($this->request->post['payflow_iframe_partner'])) {
             $data['payflow_iframe_partner'] = $this->request->post['payflow_iframe_partner'];
         } else {
-            $data['payflow_iframe_partner'] = $this->config->get('payflow_iframe_partner');
+            $data['payflow_iframe_partner'] = Config::get('payflow_iframe_partner');
         }
         
         if (isset($this->request->post['payflow_iframe_transaction_method'])) {
             $data['payflow_iframe_transaction_method'] = $this->request->post['payflow_iframe_transaction_method'];
         } else {
-            $data['payflow_iframe_transaction_method'] = $this->config->get('payflow_iframe_transaction_method');
+            $data['payflow_iframe_transaction_method'] = Config::get('payflow_iframe_transaction_method');
         }
         
         if (isset($this->request->post['payflow_iframe_test'])) {
             $data['payflow_iframe_test'] = $this->request->post['payflow_iframe_test'];
         } else {
-            $data['payflow_iframe_test'] = $this->config->get('payflow_iframe_test');
+            $data['payflow_iframe_test'] = Config::get('payflow_iframe_test');
         }
         
         if (isset($this->request->post['payflow_iframe_total'])) {
             $data['payflow_iframe_total'] = $this->request->post['payflow_iframe_total'];
         } else {
-            $data['payflow_iframe_total'] = $this->config->get('payflow_iframe_total');
+            $data['payflow_iframe_total'] = Config::get('payflow_iframe_total');
         }
         
-        $this->theme->model('localization/order_status');
+        Theme::model('localization/order_status');
         $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
         
         if (isset($this->request->post['payflow_iframe_order_status_id'])) {
             $data['payflow_iframe_order_status_id'] = $this->request->post['payflow_iframe_order_status_id'];
         } else {
-            $data['payflow_iframe_order_status_id'] = $this->config->get('payflow_iframe_order_status_id');
+            $data['payflow_iframe_order_status_id'] = Config::get('payflow_iframe_order_status_id');
         }
         
         if (isset($this->request->post['payflow_iframe_geo_zone_id'])) {
             $data['payflow_iframe_geo_zone_id'] = $this->request->post['payflow_iframe_geo_zone_id'];
         } else {
-            $data['payflow_iframe_geo_zone_id'] = $this->config->get('payflow_iframe_geo_zone_id');
+            $data['payflow_iframe_geo_zone_id'] = Config::get('payflow_iframe_geo_zone_id');
         }
         
-        $this->theme->model('localization/geo_zone');
+        Theme::model('localization/geo_zone');
         
         $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
         
         if (isset($this->request->post['payflow_iframe_status'])) {
             $data['payflow_iframe_status'] = $this->request->post['payflow_iframe_status'];
         } else {
-            $data['payflow_iframe_status'] = $this->config->get('payflow_iframe_status');
+            $data['payflow_iframe_status'] = Config::get('payflow_iframe_status');
         }
         
         if (isset($this->request->post['payflow_iframe_sort_order'])) {
             $data['payflow_iframe_sort_order'] = $this->request->post['payflow_iframe_sort_order'];
         } else {
-            $data['payflow_iframe_sort_order'] = $this->config->get('payflow_iframe_sort_order');
+            $data['payflow_iframe_sort_order'] = Config::get('payflow_iframe_sort_order');
         }
         
         if (isset($this->request->post['payflow_iframe_checkout_method'])) {
             $data['payflow_iframe_checkout_method'] = $this->request->post['payflow_iframe_checkout_method'];
         } else {
-            $data['payflow_iframe_checkout_method'] = $this->config->get('payflow_iframe_checkout_method');
+            $data['payflow_iframe_checkout_method'] = Config::get('payflow_iframe_checkout_method');
         }
         
         if (isset($this->request->post['payflow_iframe_debug'])) {
             $data['payflow_iframe_debug'] = $this->request->post['payflow_iframe_debug'];
         } else {
-            $data['payflow_iframe_debug'] = $this->config->get('payflow_iframe_debug');
+            $data['payflow_iframe_debug'] = Config::get('payflow_iframe_debug');
         }
         
-        $data['cancel_url'] = $this->app['https.public'] . 'payment/payflow_iframe/pp_cancel';
-        $data['error_url'] = $this->app['https.public'] . 'payment/payflow_iframe/pp_error';
-        $data['return_url'] = $this->app['https.public'] . 'payment/payflow_iframe/pp_return';
-        $data['post_url'] = $this->app['https.public'] . 'payment/payflow_iframe/pp_post';
+        $data['cancel_url'] = Config::get('https.public') . 'payment/payflow_iframe/pp_cancel';
+        $data['error_url'] = Config::get('https.public') . 'payment/payflow_iframe/pp_error';
+        $data['return_url'] = Config::get('https.public') . 'payment/payflow_iframe/pp_return';
+        $data['post_url'] = Config::get('https.public') . 'payment/payflow_iframe/pp_post';
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('payment/payflow_iframe', $data));
+        Response::setOutput(Theme::view('payment/payflow_iframe', $data));
     }
     
     public function install() {
-        $this->theme->model('payment/payflow_iframe');
+        Theme::model('payment/payflow_iframe');
         $this->model_payment_payflow_iframe->install();
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
     }
     
     public function uninstall() {
-        $this->theme->model('payment/payflow_iframe');
+        Theme::model('payment/payflow_iframe');
         $this->model_payment_payflow_iframe->uninstall();
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
     }
     
     public function refund() {
-        $this->theme->model('payment/payflow_iframe');
-        $this->theme->model('sale/order');
-        $data = $this->theme->language('payment/payflow_iframe');
+        Theme::model('payment/payflow_iframe');
+        Theme::model('sale/order');
+        $data = Theme::language('payment/payflow_iframe');
         
         $transaction = $this->model_payment_payflow_iframe->getTransaction($this->request->get['transaction_reference']);
         
         if ($transaction) {
-            $this->theme->setTitle($this->language->get('lang_heading_refund'));
+            Theme::setTitle($this->language->get('lang_heading_refund'));
             
             $this->breadcrumb->add('lang_text_payment', 'module/payment');
             $this->breadcrumb->add('lang_heading_title', 'payment/payflow_iframe');
@@ -202,20 +202,20 @@ class PayflowIframe extends Controller {
             
             $data['token'] = $this->session->data['token'];
             
-            $this->theme->loadjs('javascript/payment/payflow_iframe_refund', $data);
+            Theme::loadjs('javascript/payment/payflow_iframe_refund', $data);
             
-            $data = $this->theme->render_controllers($data);
+            $data = Theme::render_controllers($data);
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->setOutput($this->theme->view('payment/payflow_iframe_refund', $data));
+            Response::setOutput(Theme::view('payment/payflow_iframe_refund', $data));
         } else {
-            return new Action(new ActionService($this->app, 'error/not_found'));
+            return new Action('error/not_found');
         }
     }
     
     public function do_refund() {
-        $this->theme->model('payment/payflow_iframe');
+        Theme::model('payment/payflow_iframe');
         $this->language->load('payment/payflow_iframe');
         $json = array();
         
@@ -244,14 +244,14 @@ class PayflowIframe extends Controller {
             $json['error'] = $this->language->get('lang_error_missing_data');
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function capture() {
-        $this->theme->model('payment/payflow_iframe');
-        $this->theme->model('sale/order');
+        Theme::model('payment/payflow_iframe');
+        Theme::model('sale/order');
         $this->language->load('payment/payflow_iframe');
         
         $json = array();
@@ -294,13 +294,13 @@ class PayflowIframe extends Controller {
             $json['error'] = $this->language->get('lang_error_missing_data');
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function void() {
-        $this->theme->model('payment/payflow_iframe');
+        Theme::model('payment/payflow_iframe');
         $this->language->load('payment/payflow_iframe');
         
         $json = array();
@@ -334,14 +334,14 @@ class PayflowIframe extends Controller {
             $json['error'] = $this->language->get('lang_error_missing_data');
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function orderAction() {
-        $this->theme->model('payment/payflow_iframe');
-        $data = $this->theme->language('payment/payflow_iframe');
+        Theme::model('payment/payflow_iframe');
+        $data = Theme::language('payment/payflow_iframe');
         
         $order_id = $this->request->get['order_id'];
         
@@ -394,18 +394,18 @@ class PayflowIframe extends Controller {
                 $data['transactions'][] = array('transaction_reference' => $transaction['transaction_reference'], 'transaction_type' => $transaction_type, 'time' => $transaction['time'], 'amount' => $transaction['amount'], 'actions' => $actions,);
             }
             
-            $this->theme->loadjs('javascript/payment/payflow_iframe_order', $data);
+            Theme::loadjs('javascript/payment/payflow_iframe_order', $data);
             
-            $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+            $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $data['javascript'] = $this->theme->controller('common/javascript');
+            $data['javascript'] = Theme::controller('common/javascript');
             
-            $this->response->setOutput($this->theme->view('payment/payflow_iframe_order', $data));
+            Response::setOutput(Theme::view('payment/payflow_iframe_order', $data));
         }
     }
     
     protected function validate() {
-        if (!$this->user->hasPermission('modify', 'payment/payflow_iframe')) {
+        if (!User::hasPermission('modify', 'payment/payflow_iframe')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
@@ -425,7 +425,7 @@ class PayflowIframe extends Controller {
             $this->error['partner'] = $this->language->get('lang_error_partner');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

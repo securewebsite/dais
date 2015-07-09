@@ -20,8 +20,8 @@ use Dais\Library\Naming;
 
 class Total extends Controller {
     public function index() {
-        $data = $this->theme->language('module/total');
-        $this->theme->setTitle($this->language->get('lang_heading_total'));
+        $data = Theme::language('module/total');
+        Theme::setTitle($this->language->get('lang_heading_total'));
         
         $this->breadcrumb->add('lang_heading_total', 'module/total');
         
@@ -41,13 +41,13 @@ class Total extends Controller {
             $data['error'] = '';
         }
         
-        $this->theme->model('setting/module');
+        Theme::model('setting/module');
         
         $modules = $this->model_setting_module->getInstalled('total');
         
         foreach ($modules as $key => $value) {
-            $theme_file = $this->theme->path . 'controller/total/' . $value . '.php';
-            $core_file = $this->app['path.application'] . 'controller/total/' . $value . '.php';
+            $theme_file = Theme::path . 'controller/total/' . $value . '.php';
+            $core_file = Config::get('path.application') . 'controller/total/' . $value . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {
                 $this->model_setting_module->uninstall('total', $value);
@@ -58,13 +58,13 @@ class Total extends Controller {
         
         $data['modules'] = array();
         
-        $files = $this->theme->getFiles('total');
+        $files = Theme::getFiles('total');
         
         if ($files) {
             foreach ($files as $file) {
                 $module = strtolower(basename($file, '.php'));
                 
-                $data = $this->theme->language('total/' . $module, $data);
+                $data = Theme::language('total/' . $module, $data);
                 
                 $action = array();
                 
@@ -76,38 +76,38 @@ class Total extends Controller {
                     $action[] = array('text' => $this->language->get('lang_text_uninstall'), 'href' => $this->url->link('module/total/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
                 }
                 
-                $data['modules'][] = array('name' => $this->language->get('lang_heading_title'), 'status' => $this->config->get($module . '_status') ? $this->language->get('lang_text_enabled') : $this->language->get('lang_text_disabled'), 'sort_order' => $this->config->get($module . '_sort_order'), 'action' => $action);
+                $data['modules'][] = array('name' => $this->language->get('lang_heading_title'), 'status' => Config::get($module . '_status') ? $this->language->get('lang_text_enabled') : $this->language->get('lang_text_disabled'), 'sort_order' => Config::get($module . '_sort_order'), 'action' => $action);
             }
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('module/total', $data));
+        Response::setOutput(Theme::view('module/total', $data));
     }
     
     public function install() {
         $this->language->load('module/total');
         
-        if (!$this->user->hasPermission('modify', 'module/total')) {
+        if (!User::hasPermission('modify', 'module/total')) {
             $this->session->data['error'] = $this->language->get('lang_error_permission');
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->redirect($this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
         } else {
-            $this->theme->model('setting/module');
+            Theme::model('setting/module');
             
             $this->model_setting_module->install('total', $this->request->get['module']);
             
-            $this->theme->model('people/user_group');
+            Theme::model('people/user_group');
             
-            $this->model_people_user_group->addPermission($this->user->getId(), 'access', 'total/' . $this->request->get['module']);
-            $this->model_people_user_group->addPermission($this->user->getId(), 'modify', 'total/' . $this->request->get['module']);
+            $this->model_people_user_group->addPermission(User::getId(), 'access', 'total/' . $this->request->get['module']);
+            $this->model_people_user_group->addPermission(User::getId(), 'modify', 'total/' . $this->request->get['module']);
             
-            $base_path  = APP_PATH . $this->app['prefix.facade'] . 'controller' . SEP . 'total' . SEP;
-            $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'total' . SEP;
+            $base_path  = APP_PATH . Config::get('prefix.facade') . 'controller' . SEP . 'total' . SEP;
+            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'total' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
                 $class = Naming::class_from_filename($file);
@@ -115,36 +115,36 @@ class Total extends Controller {
                 $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
             endif;
             
-            $class = new $class($this->app);
+            $class = new $class;
             
             if (method_exists($class, 'install')) {
                 $class->install();
             }
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->redirect($this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
         }
     }
     
     public function uninstall() {
         $this->language->load('module/total');
         
-        if (!$this->user->hasPermission('modify', 'module/total')) {
+        if (!User::hasPermission('modify', 'module/total')) {
             $this->session->data['error'] = $this->language->get('lang_error_permission');
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->redirect($this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
         } else {
-            $this->theme->model('setting/module');
-            $this->theme->model('setting/setting');
+            Theme::model('setting/module');
+            Theme::model('setting/setting');
             
             $this->model_setting_module->uninstall('total', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
-            $base_path  = APP_PATH . $this->app['prefix.facade'] . 'controller' . SEP . 'total' . SEP;
-            $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'total' . SEP;
+            $base_path  = APP_PATH . Config::get('prefix.facade') . 'controller' . SEP . 'total' . SEP;
+            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'total' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
                 $class = Naming::class_from_filename($file);
@@ -152,15 +152,15 @@ class Total extends Controller {
                 $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
             endif;
             
-            $class = new $class($this->app);
+            $class = new $class;
             
             if (method_exists($class, 'uninstall')) {
                 $class->uninstall();
             }
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->redirect($this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
         }
     }
 }

@@ -22,8 +22,8 @@ class BreadCrumb extends Controller {
         
         $data['breadcrumbs'] = $this->breadcrumb->fetch();
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('common/bread_crumb', $data);
+        return Theme::view('common/bread_crumb', $data);
     }
 }

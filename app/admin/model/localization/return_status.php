@@ -64,7 +64,7 @@ class ReturnStatus extends Model {
 			SELECT * 
 			FROM {$this->db->prefix}return_status 
 			WHERE return_status_id = '" . (int)$return_status_id . "' 
-			AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         return $query->row;
@@ -75,7 +75,7 @@ class ReturnStatus extends Model {
             $sql = "
 				SELECT * 
 				FROM {$this->db->prefix}return_status 
-				WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'";
+				WHERE language_id = '" . (int)Config::get('config_language_id') . "'";
             
             $sql.= " ORDER BY name";
             
@@ -106,7 +106,7 @@ class ReturnStatus extends Model {
 					return_status_id, 
 					name 
 				FROM {$this->db->prefix}return_status 
-				WHERE language_id = '" . (int)$this->config->get('config_language_id') . "' 
+				WHERE language_id = '" . (int)Config::get('config_language_id') . "' 
 				ORDER BY name
 			");
             
@@ -136,7 +136,7 @@ class ReturnStatus extends Model {
         $query = $this->db->query("
 			SELECT COUNT(*) AS total 
 			FROM {$this->db->prefix}return_status 
-			WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'");
+			WHERE language_id = '" . (int)Config::get('config_language_id') . "'");
         
         return $query->row['total'];
     }

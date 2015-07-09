@@ -22,18 +22,18 @@ class ReturnReason extends Controller {
     
     public function index() {
         $this->language->load('localization/return_reason');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('localization/return_reason');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('localization/return_reason');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     public function insert() {
         $this->language->load('localization/return_reason');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('localization/return_reason');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('localization/return_reason');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_localization_return_reason->addReturnReason($this->request->post);
@@ -53,18 +53,18 @@ class ReturnReason extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('localization/return_reason', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('localization/return_reason', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function update() {
         $this->language->load('localization/return_reason');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('localization/return_reason');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('localization/return_reason');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_localization_return_reason->editReturnReason($this->request->get['return_reason_id'], $this->request->post);
@@ -84,18 +84,18 @@ class ReturnReason extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('localization/return_reason', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('localization/return_reason', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function delete() {
         $this->language->load('localization/return_reason');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('localization/return_reason');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('localization/return_reason');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $return_reason_id) {
@@ -118,16 +118,16 @@ class ReturnReason extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('localization/return_reason', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('localization/return_reason', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     protected function getList() {
-        $data = $this->theme->language('localization/return_reason');
+        $data = Theme::language('localization/return_reason');
         
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -168,7 +168,7 @@ class ReturnReason extends Controller {
         
         $data['return_reasons'] = array();
         
-        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
+        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
         $return_reason_total = $this->model_localization_return_reason->getTotalReturnReasons();
         
@@ -220,20 +220,20 @@ class ReturnReason extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = $this->theme->paginate($return_reason_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('localization/return_reason', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($return_reason_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('localization/return_reason', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('localization/return_reason_list', $data));
+        Response::setOutput(Theme::view('localization/return_reason_list', $data));
     }
     
     protected function getForm() {
-        $data = $this->theme->language('localization/return_reason');
+        $data = Theme::language('localization/return_reason');
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -271,7 +271,7 @@ class ReturnReason extends Controller {
         
         $data['cancel'] = $this->url->link('localization/return_reason', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
-        $this->theme->model('localization/language');
+        Theme::model('localization/language');
         
         $data['languages'] = $this->model_localization_language->getLanguages();
         
@@ -283,35 +283,35 @@ class ReturnReason extends Controller {
             $data['return_reason'] = array();
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('localization/return_reason_form', $data));
+        Response::setOutput(Theme::view('localization/return_reason_form', $data));
     }
     
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'localization/return_reason')) {
+        if (!User::hasPermission('modify', 'localization/return_reason')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
         foreach ($this->request->post['return_reason'] as $language_id => $value) {
-            if (($this->encode->strlen($value['name']) < 3) || ($this->encode->strlen($value['name']) > 32)) {
+            if ((Encode::strlen($value['name']) < 3) || (Encode::strlen($value['name']) > 32)) {
                 $this->error['name'][$language_id] = $this->language->get('lang_error_name');
             }
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'localization/return_reason')) {
+        if (!User::hasPermission('modify', 'localization/return_reason')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->model('sale/returns');
+        Theme::model('sale/returns');
         
         foreach ($this->request->post['selected'] as $return_reason_id) {
             $return_total = $this->model_sale_returns->getTotalReturnsByReturnReasonId($return_reason_id);
@@ -321,7 +321,7 @@ class ReturnReason extends Controller {
             }
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

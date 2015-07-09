@@ -73,7 +73,7 @@ class Menu extends Model {
             endif;
             
             if ($data['limit'] < 1):
-                $data['limit'] = $this->config->get('config_admin_limit');
+                $data['limit'] = Config::get('config_admin_limit');
             endif;
             
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];

@@ -23,11 +23,11 @@ class Download extends Controller {
     public function index() {
         $this->language->load('catalog/download');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/download');
+        Theme::model('catalog/download');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
@@ -35,9 +35,9 @@ class Download extends Controller {
     public function insert() {
         $this->language->load('catalog/download');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/download');
+        Theme::model('catalog/download');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_catalog_download->addDownload($this->request->post);
@@ -58,10 +58,10 @@ class Download extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('catalog/download', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('catalog/download', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
@@ -69,9 +69,9 @@ class Download extends Controller {
     public function update() {
         $this->language->load('catalog/download');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/download');
+        Theme::model('catalog/download');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_catalog_download->editDownload($this->request->get['download_id'], $this->request->post);
@@ -92,10 +92,10 @@ class Download extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('catalog/download', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('catalog/download', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
@@ -103,9 +103,9 @@ class Download extends Controller {
     public function delete() {
         $this->language->load('catalog/download');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/download');
+        Theme::model('catalog/download');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $download_id) {
@@ -128,16 +128,16 @@ class Download extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('catalog/download', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('catalog/download', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     protected function getList() {
-        $data = $this->theme->language('catalog/download');
+        $data = Theme::language('catalog/download');
         
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -178,7 +178,7 @@ class Download extends Controller {
         
         $data['downloads'] = array();
         
-        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
+        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
         $download_total = $this->model_catalog_download->getTotalDownloads();
         
@@ -231,22 +231,22 @@ class Download extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = $this->theme->paginate($download_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('catalog/download', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($download_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('catalog/download', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('catalog/download_list', $data));
+        Response::setOutput(Theme::view('catalog/download_list', $data));
     }
     
     protected function getForm() {
-        $data = $this->theme->language('catalog/download');
+        $data = Theme::language('catalog/download');
         
-        $this->javascript->register('ajaxupload.min', 'typeahead.min');
+        JS::register('ajaxupload.min', 'typeahead.min');
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -296,7 +296,7 @@ class Download extends Controller {
         
         $data['cancel'] = $this->url->link('catalog/download', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
-        $this->theme->model('localization/language');
+        Theme::model('localization/language');
         
         $data['languages'] = $this->model_localization_language->getLanguages();
         
@@ -350,49 +350,49 @@ class Download extends Controller {
             $data['update'] = false;
         }
         
-        $this->theme->loadjs('javascript/catalog/download_form', $data);
+        Theme::loadjs('javascript/catalog/download_form', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('catalog/download_form', $data));
+        Response::setOutput(Theme::view('catalog/download_form', $data));
     }
     
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'catalog/download')) {
+        if (!User::hasPermission('modify', 'catalog/download')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
         foreach ($this->request->post['download_description'] as $language_id => $value) {
-            if (($this->encode->strlen($value['name']) < 3) || ($this->encode->strlen($value['name']) > 64)) {
+            if ((Encode::strlen($value['name']) < 3) || (Encode::strlen($value['name']) > 64)) {
                 $this->error['name'][$language_id] = $this->language->get('lang_error_name');
             }
         }
         
-        if (($this->encode->strlen($this->request->post['filename']) < 3) || ($this->encode->strlen($this->request->post['filename']) > 128)) {
+        if ((Encode::strlen($this->request->post['filename']) < 3) || (Encode::strlen($this->request->post['filename']) > 128)) {
             $this->error['filename'] = $this->language->get('lang_error_filename');
         }
         
-        if (!file_exists($this->app['path.download'] . $this->request->post['filename']) && !is_file($this->app['path.download'] . $this->request->post['filename'])) {
+        if (!file_exists(Config::get('path.download') . $this->request->post['filename']) && !is_file(Config::get('path.download') . $this->request->post['filename'])) {
             $this->error['filename'] = $this->language->get('lang_error_exists');
         }
         
-        if (($this->encode->strlen($this->request->post['mask']) < 3) || ($this->encode->strlen($this->request->post['mask']) > 128)) {
+        if ((Encode::strlen($this->request->post['mask']) < 3) || (Encode::strlen($this->request->post['mask']) > 128)) {
             $this->error['mask'] = $this->language->get('lang_error_mask');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'catalog/download')) {
+        if (!User::hasPermission('modify', 'catalog/download')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->model('catalog/product');
+        Theme::model('catalog/product');
         
         foreach ($this->request->post['selected'] as $download_id) {
             $product_total = $this->model_catalog_product->getTotalProductsByDownloadId($download_id);
@@ -402,7 +402,7 @@ class Download extends Controller {
             }
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
@@ -412,7 +412,7 @@ class Download extends Controller {
         
         $json = array();
         
-        if (!$this->user->hasPermission('modify', 'catalog/download')) {
+        if (!User::hasPermission('modify', 'catalog/download')) {
             $json['error'] = $this->language->get('lang_error_permission');
         }
         
@@ -420,14 +420,14 @@ class Download extends Controller {
             if (!empty($this->request->files['file']['name'])) {
                 $filename = basename(html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8'));
                 
-                if (($this->encode->strlen($filename) < 3) || ($this->encode->strlen($filename) > 128)) {
+                if ((Encode::strlen($filename) < 3) || (Encode::strlen($filename) > 128)) {
                     $json['error'] = $this->language->get('lang_error_filename');
                 }
                 
                 // Allowed file extension types
                 $allowed = array();
                 
-                $filetypes = explode("\n", str_replace(array("\r\n", "\r"), "\n", $this->config->get('config_file_extension_allowed')));
+                $filetypes = explode("\n", str_replace(array("\r\n", "\r"), "\n", Config::get('config_file_extension_allowed')));
                 
                 foreach ($filetypes as $filetype) {
                     $allowed[] = trim($filetype);
@@ -440,7 +440,7 @@ class Download extends Controller {
                 // Allowed file mime types
                 $allowed = array();
                 
-                $filetypes = explode("\n", str_replace(array("\r\n", "\r"), "\n", $this->config->get('config_file_mime_allowed')));
+                $filetypes = explode("\n", str_replace(array("\r\n", "\r"), "\n", Config::get('config_file_mime_allowed')));
                 
                 foreach ($filetypes as $filetype) {
                     $allowed[] = trim($filetype);
@@ -465,22 +465,22 @@ class Download extends Controller {
                 $json['filename'] = $filename . '.' . $ext;
                 $json['mask'] = $filename;
                 
-                move_uploaded_file($this->request->files['file']['tmp_name'], $this->app['path.download'] . $filename . '.' . $ext);
+                move_uploaded_file($this->request->files['file']['tmp_name'], Config::get('path.download') . $filename . '.' . $ext);
             }
             
             $json['success'] = $this->language->get('lang_text_upload');
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function autocomplete() {
         $json = array();
         
         if (isset($this->request->get['filter_name'])) {
-            $this->theme->model('catalog/download');
+            Theme::model('catalog/download');
             
             $filter = array('filter_name' => $this->request->get['filter_name'], 'start' => 0, 'limit' => 20);
             
@@ -499,8 +499,8 @@ class Download extends Controller {
         
         array_multisort($sort_order, SORT_ASC, $json);
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

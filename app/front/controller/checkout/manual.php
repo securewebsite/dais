@@ -15,8 +15,9 @@
 */
 
 namespace Front\Controller\Checkout;
+
 use Dais\Engine\Controller;
-use Dais\Library\User;
+use Dais\Services\Providers\User;
 
 class Manual extends Controller {
     public function index() {
@@ -24,7 +25,7 @@ class Manual extends Controller {
         
         $json = array();
         
-        $this->user = new User($this->app);
+        $this->user = new User;
         $this->user->login($this->config->get('config_admin_email_user'), '', true);
         
         if ($this->user->isLogged() && $this->user->hasPermission('modify', 'sale/order')) {

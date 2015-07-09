@@ -36,7 +36,7 @@ class Backup extends Model {
         $query = $this->db->query("SHOW TABLES FROM `" . DB_DATABASE . "`");
         
         foreach ($query->rows as $result) {
-            if ($this->encode->substr($result['Tables_in_' . DB_DATABASE], 0, strlen(DB_PREFIX)) == DB_PREFIX) {
+            if (Encode::substr($result['Tables_in_' . DB_DATABASE], 0, strlen(DB_PREFIX)) == DB_PREFIX) {
                 if (isset($result['Tables_in_' . DB_DATABASE])) {
                     $table_data[] = $result['Tables_in_' . DB_DATABASE];
                 }
@@ -93,7 +93,7 @@ class Backup extends Model {
             }
         }
         
-        $this->theme->trigger('admin_backup');
+        Theme::trigger('admin_backup');
         
         return $output;
     }

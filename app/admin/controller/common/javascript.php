@@ -20,17 +20,17 @@ use Dais\Engine\Controller;
 class Javascript extends Controller {
     
     public function index() {
-        $scripts         = $this->javascript->fetch();
+        $scripts         = JS::fetch();
         $data            = $scripts['data'];
         $data['scripts'] = $scripts['files'];
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('common/javascript', $data);
+        return Theme::view('common/javascript', $data);
     }
     
     public function runner() {
-        $this->javascript->register('jquery.min', null)
+        JS::register('jquery.min', null)
             ->register('migrate.min', 'jquery.min')
             ->register('bootstrap.min', 'migrate.min')
             ->register('datetimepicker.min', 'bootstrap.min')
@@ -50,6 +50,6 @@ class Javascript extends Controller {
             ->register('editor/summernote.min', 'format.min')
             ->register('common.min', null, true);
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
     }
 }

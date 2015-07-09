@@ -108,7 +108,7 @@ class CustomerGroup extends Model {
 			LEFT JOIN {$this->db->prefix}customer_group_description cgd 
 				ON (cg.customer_group_id = cgd.customer_group_id) 
 			WHERE cg.customer_group_id = '" . (int)$customer_group_id . "' 
-			AND cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND cgd.language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         return $query->row;
@@ -120,7 +120,7 @@ class CustomerGroup extends Model {
 			FROM {$this->db->prefix}customer_group cg 
 			LEFT JOIN {$this->db->prefix}customer_group_description cgd 
 				ON (cg.customer_group_id = cgd.customer_group_id) 
-			WHERE cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+			WHERE cgd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         $sort_data = array('cgd.name', 'cg.sort_order');
         

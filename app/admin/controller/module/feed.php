@@ -20,8 +20,8 @@ use Dais\Library\Naming;
 
 class Feed extends Controller {
     public function index() {
-        $data = $this->theme->language('module/feed');
-        $this->theme->setTitle($this->language->get('lang_heading_feed'));
+        $data = Theme::language('module/feed');
+        Theme::setTitle($this->language->get('lang_heading_feed'));
         
         $this->breadcrumb->add('lang_heading_feed', 'module/feed');
         
@@ -41,13 +41,13 @@ class Feed extends Controller {
             $data['error'] = '';
         }
         
-        $this->theme->model('setting/module');
+        Theme::model('setting/module');
         
         $modules = $this->model_setting_module->getInstalled('feed');
         
         foreach ($modules as $key => $value) {
-            $theme_file = $this->theme->path . 'controller/feed/' . $value . '.php';
-            $core_file = $this->app['path.application'] . 'controller/feed/' . $value . '.php';
+            $theme_file = Theme::path . 'controller/feed/' . $value . '.php';
+            $core_file = Config::get('path.application') . 'controller/feed/' . $value . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {
                 $this->model_setting_module->uninstall('feed', $value);
@@ -58,13 +58,13 @@ class Feed extends Controller {
         
         $data['modules'] = array();
         
-        $files = $this->theme->getFiles('feed');
+        $files = Theme::getFiles('feed');
         
         if ($files) {
             foreach ($files as $file) {
                 $module = strtolower(basename($file, '.php'));
                 
-                $data = $this->theme->language('feed/' . $module, $data);
+                $data = Theme::language('feed/' . $module, $data);
                 
                 $action = array();
                 
@@ -76,38 +76,38 @@ class Feed extends Controller {
                     $action[] = array('text' => $this->language->get('lang_text_uninstall'), 'href' => $this->url->link('module/feed/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
                 }
                 
-                $data['modules'][] = array('name' => $this->language->get('lang_heading_title'), 'status' => $this->config->get($module . '_status') ? $this->language->get('lang_text_enabled') : $this->language->get('lang_text_disabled'), 'action' => $action);
+                $data['modules'][] = array('name' => $this->language->get('lang_heading_title'), 'status' => Config::get($module . '_status') ? $this->language->get('lang_text_enabled') : $this->language->get('lang_text_disabled'), 'action' => $action);
             }
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('module/feed', $data));
+        Response::setOutput(Theme::view('module/feed', $data));
     }
     
     public function install() {
-        $this->theme->language('module/feed');
+        Theme::language('module/feed');
         
-        if (!$this->user->hasPermission('modify', 'module/feed')) {
+        if (!User::hasPermission('modify', 'module/feed')) {
             $this->session->data['error'] = $this->language->get('lang_error_permission');
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->redirect($this->url->link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
         } else {
-            $this->theme->model('setting/module');
+            Theme::model('setting/module');
             
             $this->model_setting_module->install('feed', $this->request->get['module']);
             
-            $this->theme->model('people/user_group');
+            Theme::model('people/user_group');
             
-            $this->model_people_user_group->addPermission($this->user->getId(), 'access', 'feed/' . $this->request->get['module']);
-            $this->model_people_user_group->addPermission($this->user->getId(), 'modify', 'feed/' . $this->request->get['module']);
+            $this->model_people_user_group->addPermission(User::getId(), 'access', 'feed/' . $this->request->get['module']);
+            $this->model_people_user_group->addPermission(User::getId(), 'modify', 'feed/' . $this->request->get['module']);
             
-            $base_path  = APP_PATH . $this->app['prefix.facade'] . 'controller' . SEP . 'feed' . SEP;
-            $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'feed' . SEP;
+            $base_path  = APP_PATH . Config::get('prefix.facade') . 'controller' . SEP . 'feed' . SEP;
+            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'feed' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
                 $class = Naming::class_from_filename($file);
@@ -115,36 +115,36 @@ class Feed extends Controller {
                 $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
             endif;
             
-            $class = new $class($this->app);
+            $class = new $class;
             
             if (method_exists($class, 'install')) {
                 $class->install();
             }
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->redirect($this->url->link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
         }
     }
     
     public function uninstall() {
-        $this->theme->language('module/feed');
+        Theme::language('module/feed');
         
-        if (!$this->user->hasPermission('modify', 'module/feed')) {
+        if (!User::hasPermission('modify', 'module/feed')) {
             $this->session->data['error'] = $this->language->get('lang_error_permission');
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->redirect($this->url->link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
         } else {
-            $this->theme->model('setting/module');
-            $this->theme->model('setting/setting');
+            Theme::model('setting/module');
+            Theme::model('setting/setting');
             
             $this->model_setting_module->uninstall('feed', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
-            $base_path  = APP_PATH . $this->app['prefix.facade'] . 'controller' . SEP . 'feed' . SEP;
-            $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'feed' . SEP;
+            $base_path  = APP_PATH . Config::get('prefix.facade') . 'controller' . SEP . 'feed' . SEP;
+            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'feed' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
                 $class = Naming::class_from_filename($file);
@@ -152,15 +152,15 @@ class Feed extends Controller {
                 $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
             endif;
             
-            $class = new $class($this->app);
+            $class = new $class;
             
             if (method_exists($class, 'uninstall')) {
                 $class->uninstall();
             }
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->redirect($this->url->link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
         }
     }
 }

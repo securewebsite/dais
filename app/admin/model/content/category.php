@@ -110,7 +110,7 @@ class Category extends Model {
         $this->cache->delete('post.category');
         $this->cache->delete('post.categories');
         
-        $this->theme->trigger('admin_blog_add_category', array('blog_category_id' => $category_id));
+        Theme::trigger('admin_blog_add_category', array('blog_category_id' => $category_id));
     }
     
     public function editCategory($category_id, $data) {
@@ -227,7 +227,7 @@ class Category extends Model {
         $this->cache->delete('post.category');
         $this->cache->delete('post.categories');
         
-        $this->theme->trigger('admin_blog_edit_category', array('blog_category_id' => $category_id));
+        Theme::trigger('admin_blog_edit_category', array('blog_category_id' => $category_id));
     }
     
     public function deleteCategory($category_id) {
@@ -275,7 +275,7 @@ class Category extends Model {
         $this->cache->delete('post.category');
         $this->cache->delete('post.categories');
         
-        $this->theme->trigger('admin_blog_delete_category', array('blog_category_id' => $category_id));
+        Theme::trigger('admin_blog_delete_category', array('blog_category_id' => $category_id));
     }
     
     public function getCategory($category_id) {
@@ -299,7 +299,7 @@ class Category extends Model {
             FROM {$this->db->prefix}tag 
             WHERE section   = 'blog_category' 
             AND element_id  = '" . (int)$category_id . "' 
-            AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+            AND language_id = '" . (int)Config::get('config_language_id') . "'
         ");
         
         if ($query->num_rows):
@@ -314,7 +314,7 @@ class Category extends Model {
     }
     
     public function getCategories($parent_id = 0) {
-        $category_data = $this->cache->get('blog_category.' . (int)$this->config->get('config_language_id') . '.' . (int)$parent_id);
+        $category_data = $this->cache->get('blog_category.' . (int)Config::get('config_language_id') . '.' . (int)$parent_id);
         
         if (!$category_data) {
             $category_data = array();
@@ -325,14 +325,14 @@ class Category extends Model {
 				LEFT JOIN {$this->db->prefix}blog_category_description cd 
 					ON (c.category_id = cd.category_id) 
 				WHERE c.parent_id = '" . (int)$parent_id . "' 
-				AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+				AND cd.language_id = '" . (int)Config::get('config_language_id') . "' 
 				ORDER BY c.sort_order, cd.name ASC
 			");
             
             foreach ($query->rows as $result) {
                 $category_data[] = array(
                     'category_id' => $result['category_id'], 
-                    'name'        => $this->getPath($result['category_id'], $this->config->get('config_language_id')), 
+                    'name'        => $this->getPath($result['category_id'], Config::get('config_language_id')), 
                     'status'      => $result['status'], 
                     'sort_order'  => $result['sort_order']
                 );
@@ -340,7 +340,7 @@ class Category extends Model {
                 $category_data = array_merge($category_data, $this->getCategories($result['category_id']));
             }
             
-            $this->cache->set('blog_category.' . (int)$this->config->get('config_language_id') . '.' . (int)$parent_id, $category_data);
+            $this->cache->set('blog_category.' . (int)Config::get('config_language_id') . '.' . (int)$parent_id, $category_data);
         }
         
         return $category_data;
@@ -353,12 +353,12 @@ class Category extends Model {
 			LEFT JOIN {$this->db->prefix}blog_category_description cd 
 				ON (c.category_id = cd.category_id) 
 			WHERE c.category_id = '" . (int)$category_id . "' 
-			AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+			AND cd.language_id = '" . (int)Config::get('config_language_id') . "' 
 			ORDER BY c.sort_order, cd.name ASC
 		");
         
         if ($query->row['parent_id']) {
-            return $this->getPath($query->row['parent_id'], $this->config->get('config_language_id')) . $this->language->get('lang_text_separator') . $query->row['name'];
+            return $this->getPath($query->row['parent_id'], Config::get('config_language_id')) . $this->language->get('lang_text_separator') . $query->row['name'];
         } else {
             return $query->row['name'];
         }

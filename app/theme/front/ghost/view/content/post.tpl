@@ -24,7 +24,7 @@
 			<hr>
 			
 			<?php if ($thumb): ?>
-			<img class="img-responsive" src="<?= $thumb; ?>" title="<?= $lang_heading_title; ?>" alt="<?= $lang_heading_title; ?>">
+			<img class="img-responsive" src="<?= $thumb; ?>" title="<?= $heading_title; ?>" alt="<?= $heading_title; ?>">
 			<hr>
 			<?php endif; ?>
 

@@ -44,7 +44,7 @@ class Notification extends Model {
 			");
 		endforeach;
 
-		$this->theme->trigger('admin_add_notification', array('notification_id' => $id));
+		Theme::trigger('admin_add_notification', array('notification_id' => $id));
 	}
 
 	public function editNotification($id, $data) {
@@ -76,7 +76,7 @@ class Notification extends Model {
 			");
         }
 
-        $this->theme->trigger('admin_edit_notification', array('notification_id' => $id));
+        Theme::trigger('admin_edit_notification', array('notification_id' => $id));
 	}
 
 	public function deleteNotification($id) {
@@ -88,7 +88,7 @@ class Notification extends Model {
         	DELETE FROM {$this->db->prefix}email_content 
         	WHERE email_id = '" . (int)$id . "'");
 
-        $this->theme->trigger('admin_delete_notification', array('notification_id' => $id));
+        Theme::trigger('admin_delete_notification', array('notification_id' => $id));
 	}
 
 	public function getTotalNotifications() {
@@ -105,7 +105,7 @@ class Notification extends Model {
 			FROM {$this->db->prefix}email e 
 			LEFT JOIN {$this->db->prefix}email_content ec 
 			ON (e.email_id = ec.email_id) 
-			WHERE ec.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+			WHERE ec.language_id = '" . (int)Config::get('config_language_id') . "'";
 
 		if (isset($data['start']) || isset($data['limit'])):
             if ($data['start'] < 0):
@@ -113,7 +113,7 @@ class Notification extends Model {
             endif;
             
             if ($data['limit'] < 1):
-                $data['limit'] = $this->config->get('config_admin_limit');
+                $data['limit'] = Config::get('config_admin_limit');
             endif;
             
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];

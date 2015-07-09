@@ -91,7 +91,7 @@ class Customer extends Model {
                 WHERE customer_id = '" . (int)$customer_id . "'");
         endif;
 
-        $this->theme->trigger('admin_add_customer', array('customer_id' => $customer_id));
+        Theme::trigger('admin_add_customer', array('customer_id' => $customer_id));
     }
     
     public function editCustomer($customer_id, $data) {
@@ -178,7 +178,7 @@ class Customer extends Model {
             endforeach;
         endif;
 
-        $this->theme->trigger('admin_edit_customer', array('customer_id' => $customer_id));
+        Theme::trigger('admin_edit_customer', array('customer_id' => $customer_id));
     }
     
     public function editToken($customer_id, $token) {
@@ -218,7 +218,7 @@ class Customer extends Model {
             DELETE FROM {$this->db->prefix}affiliate_route 
             WHERE query = 'affiliate_id:" . (int)$customer_id . "'");
 
-        $this->theme->trigger('admin_delete_customer', array('customer_id' => $customer_id));
+        Theme::trigger('admin_delete_customer', array('customer_id' => $customer_id));
     }
     
     public function getCustomer($customer_id) {
@@ -235,8 +235,8 @@ class Customer extends Model {
         $query = $this->db->query("
 			SELECT DISTINCT * 
 			FROM {$this->db->prefix}customer 
-			WHERE (LCASE(email) = '" . $this->db->escape($this->encode->strtolower($email)) . "') 
-			OR LCASE(username) = '" . $this->db->escape($this->encode->strtolower($username)) . "'");
+			WHERE (LCASE(email) = '" . $this->db->escape(Encode::strtolower($email)) . "') 
+			OR LCASE(username) = '" . $this->db->escape(Encode::strtolower($username)) . "'");
         
         return $query->row;
     }
@@ -249,7 +249,7 @@ class Customer extends Model {
 			FROM {$this->db->prefix}customer c 
 			LEFT JOIN {$this->db->prefix}customer_group_description cgd 
 				ON (c.customer_group_id = cgd.customer_group_id) 
-			WHERE cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			WHERE cgd.language_id = '" . (int)Config::get('config_language_id') . "'
 		";
         
         $implode = array();
@@ -375,8 +375,8 @@ class Customer extends Model {
 				WHERE customer_id = '" . (int)$customer_id . "'
             ");
 
-            $this->theme->notify('admin_customer_approve', array('customer_id' => $customer_id));
-            $this->theme->trigger('admin_approve_customer', array('customer_id' => $customer_id));
+            Theme::notify('admin_customer_approve', array('customer_id' => $customer_id));
+            Theme::trigger('admin_approve_customer', array('customer_id' => $customer_id));
         endif;
     }
     
@@ -571,7 +571,7 @@ class Customer extends Model {
 				comment = '" . $this->db->escape(strip_tags($comment)) . "', 
 				date_added = NOW()");
 
-        $this->theme->trigger('admin_add_history', array('customer_id' => $customer_id));
+        Theme::trigger('admin_add_history', array('customer_id' => $customer_id));
     }
     
     public function getHistories($customer_id, $start = 0, $limit = 10) {
@@ -618,16 +618,16 @@ class Customer extends Model {
             
             $callback = array(
                 'customer_id' => $customer_id,
-                'credit'      => $this->currency->format($amount, $this->config->get('config_currency')),
-                'total'       => $this->currency->format($this->getCreditTotal($customer_id), $this->config->get('config_currency')),
+                'credit'      => $this->currency->format($amount, Config::get('config_currency')),
+                'total'       => $this->currency->format($this->getCreditTotal($customer_id), Config::get('config_currency')),
                 'callback'    => array(
                     'class'  => __CLASS__,
                     'method' => 'admin_customer_add_credit'
                 )
             );
 
-            $this->theme->notify('admin_customer_add_credit', $callback);
-            $this->theme->trigger('admin_add_customer_credit', array('customer_id' => $customer_id));
+            Theme::notify('admin_customer_add_credit', $callback);
+            Theme::trigger('admin_add_customer_credit', array('customer_id' => $customer_id));
         endif;
     }
     
@@ -636,7 +636,7 @@ class Customer extends Model {
 			DELETE FROM {$this->db->prefix}customer_credit 
 			WHERE order_id = '" . (int)$order_id . "'");
 
-        $this->theme->trigger('admin_delete_customer_credit', array('order_id' => $order_id));
+        Theme::trigger('admin_delete_customer_credit', array('order_id' => $order_id));
     }
     
     public function getCredits($customer_id, $start = 0, $limit = 10) {
@@ -703,8 +703,8 @@ class Customer extends Model {
             
             $callback = array(
                 'customer_id' => $customer_id,
-                'commission'  => $this->currency->format($amount, $this->config->get('config_currency')),
-                'total'       => $this->currency->format($this->getCommissionTotal($customer_id), $this->config->get('config_currency')),
+                'commission'  => $this->currency->format($amount, Config::get('config_currency')),
+                'total'       => $this->currency->format($this->getCommissionTotal($customer_id), Config::get('config_currency')),
                 'days'        => '30',
                 'callback'    => array(
                     'class'  => __CLASS__,
@@ -712,8 +712,8 @@ class Customer extends Model {
                 )
             );
 
-            $this->theme->notify('admin_affiliate_add_commission', $callback);
-            $this->theme->trigger('admin_add_customer_commission', array('customer_commission_id' => $customer_commission_id));
+            Theme::notify('admin_affiliate_add_commission', $callback);
+            Theme::trigger('admin_add_customer_commission', array('customer_commission_id' => $customer_commission_id));
         endif;
     }
 
@@ -724,7 +724,7 @@ class Customer extends Model {
             DELETE FROM {$this->db->prefix}customer_commission 
             WHERE order_id = '" . (int)$order_id . "'");
         
-        $this->theme->trigger('admin_delete_customer_commission', array('customer_commission_id' => $customer_commission_id));
+        Theme::trigger('admin_delete_customer_commission', array('customer_commission_id' => $customer_commission_id));
     }
 
     public function getCommissions($customer_id, $start = 0, $limit = 10) {
@@ -817,7 +817,7 @@ class Customer extends Model {
         endif;
         
         if (!empty($data['filter_email'])):
-            $implode[] = "LCASE(email) = '" . $this->db->escape($this->encode->strtolower($data['filter_email'])) . "'";
+            $implode[] = "LCASE(email) = '" . $this->db->escape(Encode::strtolower($data['filter_email'])) . "'";
         endif;
         
         if (isset($data['filter_status']) && !is_null($data['filter_status'])):
@@ -861,7 +861,7 @@ class Customer extends Model {
         endif;
         
         if (!empty($data['filter_email'])):
-            $implode[] = "LCASE(c.email) = '" . $this->db->escape($this->encode->strtolower($data['filter_email'])) . "'";
+            $implode[] = "LCASE(c.email) = '" . $this->db->escape(Encode::strtolower($data['filter_email'])) . "'";
         endif;
         
         if (!empty($data['filter_code'])):
@@ -949,8 +949,8 @@ class Customer extends Model {
                 )
             );
 
-            $this->theme->notify('admin_customer_add_reward', $callback); 
-            $this->theme->trigger('admin_add_reward', array('customer_id' => $customer_id));
+            Theme::notify('admin_customer_add_reward', $callback); 
+            Theme::trigger('admin_add_reward', array('customer_id' => $customer_id));
         endif;
     }
     

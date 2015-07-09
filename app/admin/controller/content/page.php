@@ -22,16 +22,16 @@ class Page extends Controller {
     
     public function index() {
         $this->language->load('content/page');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('content/page');
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('content/page');
+        Theme::listen(__CLASS__, __FUNCTION__);
         $this->getList();
     }
     
     public function insert() {
         $this->language->load('content/page');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('content/page');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('content/page');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_content_page->addPage($this->request->post);
@@ -51,18 +51,18 @@ class Page extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('content/page', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('content/page', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function update() {
         $this->language->load('content/page');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('content/page');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('content/page');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_content_page->editPage($this->request->get['page_id'], $this->request->post);
@@ -82,18 +82,18 @@ class Page extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('content/page', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('content/page', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function delete() {
         $this->language->load('content/page');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('content/page');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('content/page');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $page_id) {
@@ -116,16 +116,16 @@ class Page extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('content/page', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('content/page', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     protected function getList() {
-        $data = $this->theme->language('content/page');
+        $data = Theme::language('content/page');
         
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -169,8 +169,8 @@ class Page extends Controller {
         $filter = array(
             'sort'  => $sort, 
             'order' => $order, 
-            'start' => ($page - 1) * $this->config->get('config_admin_limit'), 
-            'limit' => $this->config->get('config_admin_limit')
+            'start' => ($page - 1) * Config::get('config_admin_limit'), 
+            'limit' => Config::get('config_admin_limit')
         );
         
         $page_total = $this->model_content_page->getTotalPages();
@@ -233,10 +233,10 @@ class Page extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = $this->theme->paginate(
+        $data['pagination'] = Theme::paginate(
             $page_total, 
             $page, 
-            $this->config->get('config_admin_limit'), 
+            Config::get('config_admin_limit'), 
             $this->language->get('lang_text_pagination'), 
             $this->url->link('content/page', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
         );
@@ -244,14 +244,14 @@ class Page extends Controller {
         $data['sort']  = $sort;
         $data['order'] = $order;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('content/page_list', $data));
+        Response::setOutput(Theme::view('content/page_list', $data));
     }
     
     protected function getForm() {
-        $data = $this->theme->language('content/page');
+        $data = Theme::language('content/page');
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -313,7 +313,7 @@ class Page extends Controller {
         
         $data['token'] = $this->session->data['token'];
         
-        $this->theme->model('localization/language');
+        Theme::model('localization/language');
         
         $data['languages'] = $this->model_localization_language->getLanguages();
         
@@ -325,7 +325,7 @@ class Page extends Controller {
             $data['page_description'] = array();
         }
         
-        $this->theme->model('setting/store');
+        Theme::model('setting/store');
         
         $data['stores'] = $this->model_setting_store->getStores();
         
@@ -399,7 +399,7 @@ class Page extends Controller {
             $data['page_layout'] = array();
         }
         
-        $this->theme->model('design/layout');
+        Theme::model('design/layout');
         
         $data['layouts'] = $this->model_design_layout->getLayouts();
         
@@ -411,35 +411,35 @@ class Page extends Controller {
             $data['visibility'] = 0;
         }
         
-        $this->theme->model('people/customer_group');
+        Theme::model('people/customer_group');
         
         $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups();
 
-        $this->theme->loadjs('javascript/content/page_form', $data);
+        Theme::loadjs('javascript/content/page_form', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('content/page_form', $data));
+        Response::setOutput(Theme::view('content/page_form', $data));
     }
     
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'content/page')) {
+        if (!User::hasPermission('modify', 'content/page')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
         foreach ($this->request->post['page_description'] as $language_id => $value) {
-            if (($this->encode->strlen($value['title']) < 3) || ($this->encode->strlen($value['title']) > 64)) {
+            if ((Encode::strlen($value['title']) < 3) || (Encode::strlen($value['title']) > 64)) {
                 $this->error['title'][$language_id] = $this->language->get('lang_error_title');
             }
             
-            if ($this->encode->strlen($value['description']) < 3) {
+            if (Encode::strlen($value['description']) < 3) {
                 $this->error['description'][$language_id] = $this->language->get('lang_error_description');
             }
         }
         
-        if (isset($this->request->post['slug']) && $this->encode->strlen($this->request->post['slug']) > 0):
-            $this->theme->model('tool/utility');
+        if (isset($this->request->post['slug']) && Encode::strlen($this->request->post['slug']) > 0):
+            Theme::model('tool/utility');
             $query = $this->model_tool_utility->findSlugByName($this->request->post['slug']);
             
             if (isset($this->request->get['page_id'])):
@@ -461,30 +461,30 @@ class Page extends Controller {
             $this->error['warning'] = $this->language->get('lang_error_warning');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'content/page')) {
+        if (!User::hasPermission('modify', 'content/page')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->model('setting/store');
-        $this->theme->model('calendar/event');
+        Theme::model('setting/store');
+        Theme::model('calendar/event');
         
         foreach ($this->request->post['selected'] as $page_id) {
-            if ($this->config->get('config_account_id') == $page_id) {
+            if (Config::get('config_account_id') == $page_id) {
                 $this->error['warning'] = $this->language->get('lang_error_account');
             }
             
-            if ($this->config->get('config_checkout_id') == $page_id) {
+            if (Config::get('config_checkout_id') == $page_id) {
                 $this->error['warning'] = $this->language->get('lang_error_checkout');
             }
             
-            if ($this->config->get('config_affiliate_allowed')):
-                if ($this->config->get('config_affiliate_terms') == $page_id):
+            if (Config::get('config_affiliate_allowed')):
+                if (Config::get('config_affiliate_terms') == $page_id):
                     $this->error['warning'] = $this->language->get('lang_error_affiliate');
                 endif;
             endif;
@@ -502,18 +502,18 @@ class Page extends Controller {
             endif;
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     public function slug() {
         $this->language->load('content/page');
-        $this->theme->model('tool/utility');
+        Theme::model('tool/utility');
         
         $json = array();
         
-        if (!isset($this->request->get['name']) || $this->encode->strlen($this->request->get['name']) < 1):
+        if (!isset($this->request->get['name']) || Encode::strlen($this->request->get['name']) < 1):
             $json['error'] = $this->language->get('lang_error_name_first');
         else:
             
@@ -538,9 +538,9 @@ class Page extends Controller {
             endif;
         endif;
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 
     public function description() {
@@ -549,7 +549,7 @@ class Page extends Controller {
         if (isset($this->request->post['description']))
             $json['success'] = $this->keyword->getDescription($this->request->post['description']);
 
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 
     public function keyword() {
@@ -561,6 +561,6 @@ class Page extends Controller {
             $json['success'] = $this->keyword->getKeywords($keywords);
         endif;
 
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

@@ -82,7 +82,7 @@ class Dashboard extends Model {
 				COUNT(*) AS total, 
 				HOUR(date_added) AS hour 
 			FROM `{$this->db->prefix}order` 
-			WHERE order_status_id >= '" . (int)$this->config->get('config_order_status_id') . "' 
+			WHERE order_status_id >= '" . (int)Config::get('config_order_status_id') . "' 
 			AND DATE(date_added) = DATE(NOW()) 
 			GROUP BY HOUR(date_added) 
 			ORDER BY date_added ASC
@@ -111,7 +111,7 @@ class Dashboard extends Model {
 				COUNT(*) AS total, 
 				date_added 
 			FROM `{$this->db->prefix}order` 
-			WHERE order_status_id >= '" . (int)$this->config->get('config_order_status_id') . "' 
+			WHERE order_status_id >= '" . (int)Config::get('config_order_status_id') . "' 
 			AND DATE(date_added) >= DATE('" . $this->db->escape(date('Y-m-d', $date_start)) . "') 
 			GROUP BY DAYNAME(date_added)
 		");
@@ -139,7 +139,7 @@ class Dashboard extends Model {
 				COUNT(*) AS total, 
 				date_added 
 			FROM `{$this->db->prefix}order` 
-			WHERE order_status_id >= '" . (int)$this->config->get('config_order_status_id') . "' 
+			WHERE order_status_id >= '" . (int)Config::get('config_order_status_id') . "' 
 			AND DATE(date_added) >= '" . $this->db->escape(date('Y') . '-' . date('m') . '-1') . "' 
 			GROUP BY DATE(date_added)
 		");
@@ -163,7 +163,7 @@ class Dashboard extends Model {
 				COUNT(*) AS total, 
 				date_added 
 			FROM `{$this->db->prefix}order` 
-			WHERE order_status_id >= '" . (int)$this->config->get('config_order_status_id') . "' 
+			WHERE order_status_id >= '" . (int)Config::get('config_order_status_id') . "' 
 			AND YEAR(date_added) = YEAR(NOW()) 
 			GROUP BY MONTH(date_added)
 		");

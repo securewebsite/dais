@@ -161,8 +161,4 @@ class Search extends Controller {
         
         $this->response->setOutput($this->theme->view('search/search', $data));
 	}
-
-    public function fetch() {
-
-    }
 }

@@ -22,18 +22,18 @@ class Menu extends Controller {
     
     public function index() {
         $this->language->load('module/menu');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('module/menu');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('module/menu');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     public function insert() {
         $this->language->load('module/menu');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('module/menu');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('module/menu');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_module_menu->addMenu($this->request->post);
@@ -45,18 +45,18 @@ class Menu extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('module/menu', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('module/menu', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function update() {
         $this->language->load('module/menu');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('module/menu');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('module/menu');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_module_menu->editMenu($this->request->get['menu_id'], $this->request->post);
@@ -68,18 +68,18 @@ class Menu extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('module/menu', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('module/menu', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function delete() {
         $this->language->load('module/menu');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('module/menu');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('module/menu');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $menu_id) {
@@ -94,16 +94,16 @@ class Menu extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('module/menu', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('module/menu', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     public function getList() {
-        $data = $this->theme->language('module/menu');
+        $data = Theme::language('module/menu');
         
         if (isset($this->request->get['page'])):
             $page = $this->request->get['page'];
@@ -125,8 +125,8 @@ class Menu extends Controller {
         $data['menus'] = array();
         
         $filter = array(
-            'start' => ($page - 1) * $this->config->get('config_admin_limit'), 
-            'limit' => $this->config->get('config_admin_limit')
+            'start' => ($page - 1) * Config::get('config_admin_limit'), 
+            'limit' => Config::get('config_admin_limit')
         );
         
         $menu_total = $this->model_module_menu->getTotalMenus();
@@ -163,23 +163,23 @@ class Menu extends Controller {
             $data['success'] = '';
         endif;
         
-        $data['pagination'] = $this->theme->paginate(
+        $data['pagination'] = Theme::paginate(
             $menu_total, 
             $page, 
-            $this->config->get('config_admin_limit'), 
+            Config::get('config_admin_limit'), 
             $this->language->get('lang_text_pagination'), 
             $this->url->link('module/menu', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
         );
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('module/menu_builder_list', $data));
+        Response::setOutput(Theme::view('module/menu_builder_list', $data));
     }
     
     public function getForm() {
-        $data = $this->theme->language('module/menu');
+        $data = Theme::language('module/menu');
         
         $errors = array('warning', 'name', 'type', 'items');
         
@@ -259,21 +259,21 @@ class Menu extends Controller {
         
         $data['menu_item'] = array();
         
-        $this->theme->loadjs('javascript/module/menu_builder_form', $data);
+        Theme::loadjs('javascript/module/menu_builder_form', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('module/menu_builder_form', $data));
+        Response::setOutput(Theme::view('module/menu_builder_form', $data));
     }
     
     private function validateForm() {
-        if (!$this->user->hasPermission('modify', 'module/menu')):
+        if (!User::hasPermission('modify', 'module/menu')):
             $this->error['warning'] = $this->language->get('lang_error_permission');
         endif;
         
-        if (($this->encode->strlen($this->request->post['name']) < 3) || ($this->encode->strlen($this->request->post['name']) > 32)) {
+        if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 32)) {
             $this->error['name'] = $this->language->get('lang_error_name');
         }
         
@@ -289,26 +289,26 @@ class Menu extends Controller {
             $this->error['warning'] = $this->language->get('lang_error_warning');
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     private function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'module/menu')):
+        if (!User::hasPermission('modify', 'module/menu')):
             $this->error['warning'] = $this->language->get('lang_error_permission');
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     public function product_category() {
-        $data = $this->theme->language('module/menu');
+        $data = Theme::language('module/menu');
         
-        $this->theme->model('catalog/category');
-        $this->theme->model('module/menu');
+        Theme::model('catalog/category');
+        Theme::model('module/menu');
         
         $data['menu_items'] = array();
         
@@ -339,16 +339,16 @@ class Menu extends Controller {
             );
         endforeach;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->response->setOutput($this->theme->view('module/menu_category', $data));
+        Response::setOutput(Theme::view('module/menu_category', $data));
     }
     
     public function content_category() {
-        $data = $this->theme->language('module/menu');
+        $data = Theme::language('module/menu');
         
-        $this->theme->model('content/category');
-        $this->theme->model('module/menu');
+        Theme::model('content/category');
+        Theme::model('module/menu');
         
         $data['menu_items'] = array();
         
@@ -379,16 +379,16 @@ class Menu extends Controller {
             );
         endforeach;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->response->setOutput($this->theme->view('module/menu_category', $data));
+        Response::setOutput(Theme::view('module/menu_category', $data));
     }
     
     public function page() {
-        $data = $this->theme->language('module/menu');
+        $data = Theme::language('module/menu');
         
-        $this->theme->model('content/page');
-        $this->theme->model('module/menu');
+        Theme::model('content/page');
+        Theme::model('module/menu');
         
         $data['menu_items'] = array();
         
@@ -412,16 +412,16 @@ class Menu extends Controller {
             );
         endforeach;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->response->setOutput($this->theme->view('module/menu_single', $data));
+        Response::setOutput(Theme::view('module/menu_single', $data));
     }
     
     public function post() {
-        $data = $this->theme->language('module/menu');
+        $data = Theme::language('module/menu');
         
-        $this->theme->model('content/post');
-        $this->theme->model('module/menu');
+        Theme::model('content/post');
+        Theme::model('module/menu');
         
         $data['menu_items'] = array();
         
@@ -445,15 +445,15 @@ class Menu extends Controller {
             );
         endforeach;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->response->setOutput($this->theme->view('module/menu_single', $data));
+        Response::setOutput(Theme::view('module/menu_single', $data));
     }
     
     public function custom() {
-        $data = $this->theme->language('module/menu');
+        $data = Theme::language('module/menu');
         
-        $this->theme->model('module/menu');
+        Theme::model('module/menu');
         
         $data['menu_items'] = array();
         
@@ -471,12 +471,12 @@ class Menu extends Controller {
             $data['error_items'] = '';
         endif;
         
-        $this->theme->loadjs('javascript/module/menu_custom', $data);
+        Theme::loadjs('javascript/module/menu_custom', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data['javascript'] = $this->theme->controller('common/javascript');
+        $data['javascript'] = Theme::controller('common/javascript');
         
-        $this->response->setOutput($this->theme->view('module/menu_custom', $data));
+        Response::setOutput(Theme::view('module/menu_custom', $data));
     }
 }

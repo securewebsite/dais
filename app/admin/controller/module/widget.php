@@ -20,8 +20,8 @@ use Dais\Library\Naming;
 
 class Widget extends Controller {
     public function index() {
-        $data = $this->theme->language('module/widget');
-        $this->theme->setTitle($this->language->get('lang_heading_widget'));
+        $data = Theme::language('module/widget');
+        Theme::setTitle($this->language->get('lang_heading_widget'));
         
         $this->breadcrumb->add('lang_heading_widget', 'module/widget');
         
@@ -41,13 +41,13 @@ class Widget extends Controller {
             $data['error'] = '';
         }
         
-        $this->theme->model('setting/module');
+        Theme::model('setting/module');
         
         $modules = $this->model_setting_module->getInstalled('widget');
         
         foreach ($modules as $key => $value) {
-            $theme_file = $this->theme->path . 'controller/widget/' . $value . '.php';
-            $core_file  = $this->app['path.application'] . 'controller/widget/' . $value . '.php';
+            $theme_file = Theme::path . 'controller/widget/' . $value . '.php';
+            $core_file  = Config::get('path.application') . 'controller/widget/' . $value . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {
                 $this->model_setting_module->uninstall('widget', $value);
@@ -58,13 +58,13 @@ class Widget extends Controller {
         
         $data['modules'] = array();
         
-        $files = $this->theme->getFiles('widget');
+        $files = Theme::getFiles('widget');
         
         if ($files) {
             foreach ($files as $file) {
                 $module = strtolower(basename($file, '.php'));
                 
-                $data = $this->theme->language('widget/' . $module, $data);
+                $data = Theme::language('widget/' . $module, $data);
                 
                 $action = array();
                 
@@ -89,34 +89,34 @@ class Widget extends Controller {
             }
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('module/widget', $data));
+        Response::setOutput(Theme::view('module/widget', $data));
     }
     
     public function install() {
         $this->language->load('module/widget');
         
-        if (!$this->user->hasPermission('modify', 'module/widget')) {
+        if (!User::hasPermission('modify', 'module/widget')) {
             $this->session->data['error'] = $this->language->get('lang_error_permission');
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
         } else {
-            $this->theme->model('setting/module');
+            Theme::model('setting/module');
             
             $this->model_setting_module->install('widget', $this->request->get['module']);
             
-            $this->theme->model('people/user_group');
+            Theme::model('people/user_group');
             
-            $this->model_people_user_group->addPermission($this->user->getId(), 'access', 'widget/' . $this->request->get['module']);
-            $this->model_people_user_group->addPermission($this->user->getId(), 'modify', 'widget/' . $this->request->get['module']);
+            $this->model_people_user_group->addPermission(User::getId(), 'access', 'widget/' . $this->request->get['module']);
+            $this->model_people_user_group->addPermission(User::getId(), 'modify', 'widget/' . $this->request->get['module']);
             
-            $base_path  = APP_PATH . $this->app['prefix.facade'] . 'controller' . SEP . 'widget' . SEP;
-            $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'widget' . SEP;
+            $base_path  = APP_PATH . Config::get('prefix.facade') . 'controller' . SEP . 'widget' . SEP;
+            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'widget' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
                 $class = Naming::class_from_filename($file);
@@ -124,36 +124,36 @@ class Widget extends Controller {
                 $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
             endif;
             
-            $class = new $class($this->app);
+            $class = new $class;
             
             if (method_exists($class, 'install')) {
                 $class->install();
             }
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
         }
     }
     
     public function uninstall() {
         $this->language->load('module/widget');
         
-        if (!$this->user->hasPermission('modify', 'module/widget')) {
+        if (!User::hasPermission('modify', 'module/widget')) {
             $this->session->data['error'] = $this->language->get('lang_error_permission');
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
         } else {
-            $this->theme->model('setting/module');
-            $this->theme->model('setting/setting');
+            Theme::model('setting/module');
+            Theme::model('setting/setting');
             
             $this->model_setting_module->uninstall('widget', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
-            $base_path  = APP_PATH . $this->app['prefix.facade'] . 'controller' . SEP . 'widget' . SEP;
-            $theme_path = $this->app['path.theme'] . $this->app['theme.name'] . SEP . 'controller' . SEP . 'widget' . SEP;
+            $base_path  = APP_PATH . Config::get('prefix.facade') . 'controller' . SEP . 'widget' . SEP;
+            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'widget' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
                 $class = Naming::class_from_filename($file);
@@ -161,15 +161,15 @@ class Widget extends Controller {
                 $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
             endif;
             
-            $class = new $class($this->app);
+            $class = new $class;
             
             if (method_exists($class, 'uninstall')) {
                 $class->uninstall();
             }
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
         }
     }
 }

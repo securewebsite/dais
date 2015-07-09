@@ -15,8 +15,9 @@
 */
 
 namespace Front\Model\Tool;
+
 use Dais\Engine\Model;
-use Dais\Library\Image as LibraryImage;
+use Dais\Support\Image as LibraryImage;
 
 class Image extends Model {
     
@@ -32,10 +33,10 @@ class Image extends Model {
      *
      */
     public function resize($filename, $width, $height, $type = "") {
-        if (!file_exists($this->app['path.image'] . $filename) || !is_file($this->app['path.image'] . $filename)) {
+        if (!file_exists(Config::get('path.image') . $filename) || !is_file(Config::get('path.image') . $filename)) {
             return;
         }
-        
+    
         $info = pathinfo($filename);
         
         $extension = $info['extension'];
@@ -43,7 +44,7 @@ class Image extends Model {
         $old_image = $filename;
         $new_image = 'cache/' . $this->encode->substr($filename, 0, $this->encode->strrpos($filename, '.')) . '-' . $width . 'x' . $height . $type . '.' . $extension;
         
-        if (!file_exists($this->app['path.image'] . $new_image) || (filemtime($this->app['path.image'] . $old_image) > filemtime($this->app['path.image'] . $new_image))) {
+        if (!file_exists(Config::get('path.image') . $new_image) || (filemtime(Config::get('path.image') . $old_image) > filemtime(Config::get('path.image') . $new_image))) {
             $path = '';
             
             $directories = explode('/', dirname(str_replace('../', '', $new_image)));
@@ -51,15 +52,15 @@ class Image extends Model {
             foreach ($directories as $directory) {
                 $path = $path . '/' . $directory;
                 
-                if (!file_exists($this->app['path.image'] . $path)) {
-                    @mkdir($this->app['path.image'] . $path, 0777);
+                if (!file_exists(Config::get('path.image') . $path)) {
+                    @mkdir(Config::get('path.image') . $path, 0777);
                 }
             }
             
-            list($width_orig, $height_orig) = getimagesize($this->app['path.image'] . $old_image);
+            list($width_orig, $height_orig) = getimagesize(Config::get('path.image') . $old_image);
             
             if ($width_orig != $width || $height_orig != $height) {
-                $image = new LibraryImage($this->app['path.image'] . $old_image);
+                $image = new LibraryImage(Config::get('path.image') . $old_image);
                 if ($type == 'f'):
                     if ($width_orig > $height_orig):
                         $type = 'h';
@@ -70,9 +71,9 @@ class Image extends Model {
                     endif;
                 endif;
                 $image->resize($width, $height, $type);
-                $image->save($this->app['path.image'] . $new_image, 80, 9);
+                $image->save(Config::get('path.image') . $new_image, 80, 9);
             } else {
-                copy($this->app['path.image'] . $old_image, $this->app['path.image'] . $new_image);
+                copy(Config::get('path.image') . $old_image, Config::get('path.image') . $new_image);
             }
         }
         

@@ -26,7 +26,11 @@
             "database/"
         ],
         "psr-4": {
-            "Api\\": "api/"
+            "Api\\": "api/",
+            "Dais\\": [
+                "override/",
+                "peaches/"
+            ]
         }
     },
     "config": {

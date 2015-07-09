@@ -22,18 +22,18 @@ class Zone extends Controller {
     
     public function index() {
         $this->language->load('localization/zone');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('localization/zone');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('localization/zone');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     public function insert() {
         $this->language->load('localization/zone');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('localization/zone');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('localization/zone');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_localization_zone->addZone($this->request->post);
@@ -53,18 +53,18 @@ class Zone extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('localization/zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('localization/zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function update() {
         $this->language->load('localization/zone');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('localization/zone');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('localization/zone');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_localization_zone->editZone($this->request->get['zone_id'], $this->request->post);
@@ -84,18 +84,18 @@ class Zone extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('localization/zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('localization/zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function delete() {
         $this->language->load('localization/zone');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('localization/zone');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('localization/zone');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $zone_id) {
@@ -118,16 +118,16 @@ class Zone extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('localization/zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('localization/zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     protected function getList() {
-        $data = $this->theme->language('localization/zone');
+        $data = Theme::language('localization/zone');
         
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -168,7 +168,7 @@ class Zone extends Controller {
         
         $data['zones'] = array();
         
-        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
+        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
         $zone_total = $this->model_localization_zone->getTotalZones();
         
@@ -179,7 +179,7 @@ class Zone extends Controller {
             
             $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('localization/zone/update', 'token=' . $this->session->data['token'] . '&zone_id=' . $result['zone_id'] . $url, 'SSL'));
             
-            $data['zones'][] = array('zone_id' => $result['zone_id'], 'country' => $result['country'], 'name' => $result['name'] . (($result['zone_id'] == $this->config->get('config_zone_id')) ? $this->language->get('lang_text_default') : null), 'code' => $result['code'], 'selected' => isset($this->request->post['selected']) && in_array($result['zone_id'], $this->request->post['selected']), 'action' => $action);
+            $data['zones'][] = array('zone_id' => $result['zone_id'], 'country' => $result['country'], 'name' => $result['name'] . (($result['zone_id'] == Config::get('config_zone_id')) ? $this->language->get('lang_text_default') : null), 'code' => $result['code'], 'selected' => isset($this->request->post['selected']) && in_array($result['zone_id'], $this->request->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -222,20 +222,20 @@ class Zone extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = $this->theme->paginate($zone_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('localization/zone', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($zone_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('localization/zone', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('localization/zone_list', $data));
+        Response::setOutput(Theme::view('localization/zone_list', $data));
     }
     
     protected function getForm() {
-        $data = $this->theme->language('localization/zone');
+        $data = Theme::language('localization/zone');
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -309,42 +309,42 @@ class Zone extends Controller {
             $data['country_id'] = '';
         }
         
-        $this->theme->model('localization/country');
+        Theme::model('localization/country');
         
         $data['countries'] = $this->model_localization_country->getCountries();
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('localization/zone_form', $data));
+        Response::setOutput(Theme::view('localization/zone_form', $data));
     }
     
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'localization/zone')) {
+        if (!User::hasPermission('modify', 'localization/zone')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        if (($this->encode->strlen($this->request->post['name']) < 3) || ($this->encode->strlen($this->request->post['name']) > 64)) {
+        if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 64)) {
             $this->error['name'] = $this->language->get('lang_error_name');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'localization/zone')) {
+        if (!User::hasPermission('modify', 'localization/zone')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->model('setting/store');
-        $this->theme->model('people/customer');
-        $this->theme->model('localization/geo_zone');
+        Theme::model('setting/store');
+        Theme::model('people/customer');
+        Theme::model('localization/geo_zone');
         
         foreach ($this->request->post['selected'] as $zone_id) {
-            if ($this->config->get('config_zone_id') == $zone_id) {
+            if (Config::get('config_zone_id') == $zone_id) {
                 $this->error['warning'] = $this->language->get('lang_error_default');
             }
             
@@ -373,7 +373,7 @@ class Zone extends Controller {
             }
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

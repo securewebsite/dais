@@ -84,11 +84,11 @@ class PostWall extends Controller {
             $chars = $setting['span'] * 40;
             
             foreach ($results as $result) {
-                if ($result['image'] && file_exists($this->app['path.image'] . $result['image'])) {
+                if ($result['image'] && file_exists(Config::get('path.image') . $result['image'])) {
                     if ($setting['height'] !== false) {
                         $height = $setting['height'];
                     } else {
-                        $size = getimagesize($this->app['path.image'] . $result['image']);
+                        $size = getimagesize(Config::get('path.image') . $result['image']);
                         
                         $height = ceil(((int)$image_width / $size[0]) * $size[1]);
                     }

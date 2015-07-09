@@ -63,18 +63,18 @@ class Customer extends Controller {
     
     public function index() {
         $this->language->load('people/customer');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('people/customer');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('people/customer');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     public function insert() {
         $this->language->load('people/customer');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('people/customer');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('people/customer');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
             $this->model_people_customer->addCustomer($this->request->post);
@@ -82,18 +82,18 @@ class Customer extends Controller {
             
             $url = $this->filter->uri($this->filters);
             
-            $this->response->redirect($this->url->link('people/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('people/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function update() {
         $this->language->load('people/customer');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('people/customer');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('people/customer');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
             $this->model_people_customer->editCustomer($this->request->get['customer_id'], $this->request->post);
@@ -101,18 +101,18 @@ class Customer extends Controller {
             
             $url = $this->filter->uri($this->filters);
             
-            $this->response->redirect($this->url->link('people/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('people/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function delete() {
         $this->language->load('people/customer');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('people/customer');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('people/customer');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()):
             foreach ($this->request->post['selected'] as $customer_id):
@@ -123,10 +123,10 @@ class Customer extends Controller {
             
             $url = $this->filter->uri($this->filters);
             
-            $this->response->redirect($this->url->link('people/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('people/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
@@ -134,11 +134,11 @@ class Customer extends Controller {
     public function approve() {
         $this->language->load('people/customer');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('people/customer');
+        Theme::model('people/customer');
         
-        if (!$this->user->hasPermission('modify', 'people/customer')):
+        if (!User::hasPermission('modify', 'people/customer')):
             $this->error['warning'] = $this->language->get('lang_error_permission');
         elseif (isset($this->request->post['selected'])):
             $approved = 0;
@@ -156,16 +156,16 @@ class Customer extends Controller {
             
             $url = $this->filter->uri($this->filters);
             
-            $this->response->redirect($this->url->link('people/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('people/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     protected function getList() {
-        $data = $this->theme->language('people/customer');
+        $data = Theme::language('people/customer');
         
         $url = $this->filter->uri($this->filters);
 
@@ -185,8 +185,8 @@ class Customer extends Controller {
 
         $page = $filter['page'];
         
-        $filter['start'] = ($page - 1) * $this->config->get('config_admin_limit');
-        $filter['limit'] = $this->config->get('config_admin_limit');
+        $filter['start'] = ($page - 1) * Config::get('config_admin_limit');
+        $filter['limit'] = Config::get('config_admin_limit');
         
         $db_filter = $filter;
         unset ($db_filter['page']);
@@ -252,10 +252,10 @@ class Customer extends Controller {
         $paging = $this->filter->unpage($this->filters);
         $url    = $this->filter->uri($paging);
         
-        $data['pagination'] = $this->theme->paginate(
+        $data['pagination'] = Theme::paginate(
             $customer_total, 
             $page, 
-            $this->config->get('config_admin_limit'), 
+            Config::get('config_admin_limit'), 
             $this->language->get('lang_text_pagination'), 
             $this->url->link('people/customer', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
         );
@@ -266,28 +266,28 @@ class Customer extends Controller {
         $data['filter_customer_group_id'] = $filter['filter_customer_group_id'];
         $data['filter_status']            = $filter['filter_status'];
         
-        $this->theme->model('people/customer_group');
+        Theme::model('people/customer_group');
         
         $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups();
         
-        $this->theme->model('setting/store');
+        Theme::model('setting/store');
         
         $data['stores'] = $this->model_setting_store->getStores();
         
         $data['sort']   = $filter['sort'];
         $data['order']  = $filter['order'];
         
-        $this->theme->loadjs('javascript/people/customer_list', $data);
+        Theme::loadjs('javascript/people/customer_list', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('people/customer_list', $data));
+        Response::setOutput(Theme::view('people/customer_list', $data));
     }
     
     protected function getForm() {
-        $data = $this->theme->language('people/customer');
+        $data = Theme::language('people/customer');
         
         $data['token'] = $this->session->data['token'];
         
@@ -328,7 +328,7 @@ class Customer extends Controller {
             'email'             => '',
             'telephone'         => '',
             'newsletter'        => '',
-            'customer_group_id' => $this->config->get('config_customer_group_id'),
+            'customer_group_id' => Config::get('config_customer_group_id'),
             'is_affiliate'      => false,
             'status'            => 1,
             'address_id'        => ''
@@ -344,7 +344,7 @@ class Customer extends Controller {
             endif;
         endforeach;
         
-        $this->theme->model('people/customer_group');
+        Theme::model('people/customer_group');
         $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups();
 
         if (isset($this->request->post['affiliate'])):
@@ -367,7 +367,7 @@ class Customer extends Controller {
             $data['confirm'] = '';
         endif;
         
-        $this->theme->model('localization/country');
+        Theme::model('localization/country');
         
         $data['countries'] = $this->model_localization_country->getCountries(array('filter_status' => 1));
         
@@ -411,33 +411,33 @@ class Customer extends Controller {
             endforeach;
         endif;
         
-        $this->theme->loadjs('javascript/people/customer_form', $data);
+        Theme::loadjs('javascript/people/customer_form', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('people/customer_form', $data));
+        Response::setOutput(Theme::view('people/customer_form', $data));
     }
     
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'people/customer')):
+        if (!User::hasPermission('modify', 'people/customer')):
             $this->error['warning'] = $this->language->get('lang_error_permission');
         endif;
         
-        if (($this->encode->strlen($this->request->post['username']) < 3) || ($this->encode->strlen($this->request->post['username']) > 16)):
+        if ((Encode::strlen($this->request->post['username']) < 3) || (Encode::strlen($this->request->post['username']) > 16)):
             $this->error['username'] = $this->language->get('lang_error_username');
         endif;
         
-        if (($this->encode->strlen($this->request->post['firstname']) < 1) || ($this->encode->strlen($this->request->post['firstname']) > 32)):
+        if ((Encode::strlen($this->request->post['firstname']) < 1) || (Encode::strlen($this->request->post['firstname']) > 32)):
             $this->error['firstname'] = $this->language->get('lang_error_firstname');
         endif;
         
-        if (($this->encode->strlen($this->request->post['lastname']) < 1) || ($this->encode->strlen($this->request->post['lastname']) > 32)):
+        if ((Encode::strlen($this->request->post['lastname']) < 1) || (Encode::strlen($this->request->post['lastname']) > 32)):
             $this->error['lastname'] = $this->language->get('lang_error_lastname');
         endif;
         
-        if (($this->encode->strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['email'])):
+        if ((Encode::strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['email'])):
             $this->error['email'] = $this->language->get('lang_error_email');
         endif;
         
@@ -453,12 +453,12 @@ class Customer extends Controller {
             endif;
         endif;
         
-        if (($this->encode->strlen($this->request->post['telephone']) < 3) || ($this->encode->strlen($this->request->post['telephone']) > 32)):
+        if ((Encode::strlen($this->request->post['telephone']) < 3) || (Encode::strlen($this->request->post['telephone']) > 32)):
             $this->error['telephone'] = $this->language->get('lang_error_telephone');
         endif;
         
         if ($this->request->post['password'] || (!isset($this->request->get['customer_id']))):
-            if (($this->encode->strlen($this->request->post['password']) < 4) || ($this->encode->strlen($this->request->post['password']) > 20)):
+            if ((Encode::strlen($this->request->post['password']) < 4) || (Encode::strlen($this->request->post['password']) > 20)):
                 $this->error['password'] = $this->language->get('lang_error_password');
             endif;
             
@@ -471,32 +471,32 @@ class Customer extends Controller {
         
         if (isset($this->request->post['address']) && $address_required):
             foreach ($this->request->post['address'] as $key => $value):
-                if (($this->encode->strlen($value['firstname']) < 1) || ($this->encode->strlen($value['firstname']) > 32)):
+                if ((Encode::strlen($value['firstname']) < 1) || (Encode::strlen($value['firstname']) > 32)):
                     $this->error['address_firstname'][$key] = $this->language->get('lang_error_firstname');
                 endif;
                 
-                if (($this->encode->strlen($value['lastname']) < 1) || ($this->encode->strlen($value['lastname']) > 32)):
+                if ((Encode::strlen($value['lastname']) < 1) || (Encode::strlen($value['lastname']) > 32)):
                     $this->error['address_lastname'][$key] = $this->language->get('lang_error_lastname');
                 endif;
                 
-                if (($this->encode->strlen($value['address_1']) < 3) || ($this->encode->strlen($value['address_1']) > 128)):
+                if ((Encode::strlen($value['address_1']) < 3) || (Encode::strlen($value['address_1']) > 128)):
                     $this->error['address_address_1'][$key] = $this->language->get('lang_error_address_1');
                 endif;
                 
-                if (($this->encode->strlen($value['city']) < 2) || ($this->encode->strlen($value['city']) > 128)):
+                if ((Encode::strlen($value['city']) < 2) || (Encode::strlen($value['city']) > 128)):
                     $this->error['address_city'][$key] = $this->language->get('lang_error_city');
                 endif;
                 
-                $this->theme->model('localization/country');
+                Theme::model('localization/country');
                 
                 $country_info = $this->model_localization_country->getCountry($value['country_id']);
                 
                 if ($country_info):
-                    if ($country_info['postcode_required'] && ($this->encode->strlen($value['postcode']) < 2) || ($this->encode->strlen($value['postcode']) > 10)):
+                    if ($country_info['postcode_required'] && (Encode::strlen($value['postcode']) < 2) || (Encode::strlen($value['postcode']) > 10)):
                         $this->error['address_postcode'][$key] = $this->language->get('lang_error_postcode');
                     endif;
                     
-                    if ($this->config->get('config_vat') && $value['tax_id'] && ($this->vat->validate($country_info['iso_code_2'], $value['tax_id']) == 'invalid')):
+                    if (Config::get('config_vat') && $value['tax_id'] && ($this->vat->validate($country_info['iso_code_2'], $value['tax_id']) == 'invalid')):
                         $this->error['address_tax_id'][$key] = $this->language->get('lang_error_vat');
                     endif;
                 endif;
@@ -514,38 +514,38 @@ class Customer extends Controller {
         // check affiliate goodies
         if (isset($this->request->post['affiliate'])):
             // check all our parameters for validity
-            if ($this->encode->strlen($this->request->post['affiliate']['code']) < 1):
+            if (Encode::strlen($this->request->post['affiliate']['code']) < 1):
                 $this->error['code'] = $this->language->get('lang_error_code');
             endif;
             
-            if ($this->encode->strlen($this->request->post['affiliate']['commission']) < 1):
+            if (Encode::strlen($this->request->post['affiliate']['commission']) < 1):
                 $this->error['commission'] = $this->language->get('lang_error_commission');
             endif;
 
-            if ($this->encode->strlen($this->request->post['affiliate']['tax_id']) < 1):
+            if (Encode::strlen($this->request->post['affiliate']['tax_id']) < 1):
                 $this->error['tax_id'] = $this->language->get('lang_error_tax_id');
             endif;
 
             if (!$this->request->post['affiliate']['payment_method']):
                 $this->error['payment'] = $this->language->get('lang_error_payment');
             else:
-                if ($this->request->post['affiliate']['payment_method'] == 'cheque' && $this->encode->strlen($this->request->post['affiliate']['cheque']) < 1):
+                if ($this->request->post['affiliate']['payment_method'] == 'cheque' && Encode::strlen($this->request->post['affiliate']['cheque']) < 1):
                     $this->error['cheque'] = $this->language->get('lang_error_cheque');
                 endif;
 
-                if ($this->request->post['affiliate']['payment_method'] == 'paypal' && $this->encode->strlen($this->request->post['affiliate']['paypal']) < 1):
+                if ($this->request->post['affiliate']['payment_method'] == 'paypal' && Encode::strlen($this->request->post['affiliate']['paypal']) < 1):
                     $this->error['paypal'] = $this->language->get('lang_error_paypal');
                 endif;
 
-                if ($this->request->post['affiliate']['payment_method'] == 'bank' && $this->encode->strlen($this->request->post['affiliate']['bank_name']) < 1):
+                if ($this->request->post['affiliate']['payment_method'] == 'bank' && Encode::strlen($this->request->post['affiliate']['bank_name']) < 1):
                     $this->error['bank_name'] = $this->language->get('lang_error_bank_name');
                 endif;
 
-                if ($this->request->post['affiliate']['payment_method'] == 'bank' && $this->encode->strlen($this->request->post['affiliate']['bank_account_name']) < 1):
+                if ($this->request->post['affiliate']['payment_method'] == 'bank' && Encode::strlen($this->request->post['affiliate']['bank_account_name']) < 1):
                     $this->error['account_name'] = $this->language->get('lang_error_account_name');
                 endif;
 
-                if ($this->request->post['affiliate']['payment_method'] == 'bank' && $this->encode->strlen($this->request->post['affiliate']['bank_account_number']) < 1):
+                if ($this->request->post['affiliate']['payment_method'] == 'bank' && Encode::strlen($this->request->post['affiliate']['bank_account_number']) < 1):
                     $this->error['account_number'] = $this->language->get('lang_error_account_number');
                 endif;
             endif;
@@ -555,17 +555,17 @@ class Customer extends Controller {
             $this->error['warning'] = $this->language->get('lang_error_warning');
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'people/customer')):
+        if (!User::hasPermission('modify', 'people/customer')):
             $this->error['warning'] = $this->language->get('lang_error_permission');
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
@@ -579,7 +579,7 @@ class Customer extends Controller {
             $customer_id = 0;
         endif;
         
-        $this->theme->model('people/customer');
+        Theme::model('people/customer');
         
         $customer_info = $this->model_people_customer->getCustomer($customer_id);
         
@@ -594,39 +594,39 @@ class Customer extends Controller {
                 $store_id = 0;
             endif;
             
-            $this->theme->model('setting/store');
+            Theme::model('setting/store');
             
             $store_info = $this->model_setting_store->getStore($store_id);
             
             if ($store_info):
                 $json['redirect'] = $store_info['url'] . 'account/login&token=' . $token;
             else:
-                $json['redirect'] = $this->app['http.public'] . 'account/login&token=' . $token;
+                $json['redirect'] = Config::get('http.public') . 'account/login&token=' . $token;
             endif;
             
-            $this->response->setOutput(json_encode($json));
+            Response::setOutput(json_encode($json));
         else:
-            $data = $this->theme->language('error/not_found');
-            $this->theme->setTitle($this->language->get('lang_heading_title'));
+            $data = Theme::language('error/not_found');
+            Theme::setTitle($this->language->get('lang_heading_title'));
             $this->breadcrumb->add('lang_heading_title', 'error/not_found');
-            $data = $this->theme->render_controllers($data);
-            $this->response->setOutput($this->theme->view('error/not_found', $data));
+            $data = Theme::render_controllers($data);
+            Response::setOutput(Theme::view('error/not_found', $data));
         endif;
     }
     
     public function history() {
-        $data = $this->theme->language('people/customer');
+        $data = Theme::language('people/customer');
         
-        $this->theme->model('people/customer');
+        Theme::model('people/customer');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->user->hasPermission('modify', 'people/customer')):
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && User::hasPermission('modify', 'people/customer')):
             $this->model_people_customer->addHistory($this->request->get['customer_id'], $this->request->post['comment']);
             $data['success'] = $this->language->get('lang_text_success');
         else:
             $data['success'] = '';
         endif;
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !$this->user->hasPermission('modify', 'people/customer')):
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !User::hasPermission('modify', 'people/customer')):
             $data['error_warning'] = $this->language->get('lang_error_permission');
         else:
             $data['error_warning'] = '';
@@ -651,7 +651,7 @@ class Customer extends Controller {
         
         $history_total = $this->model_people_customer->getTotalHistories($this->request->get['customer_id']);
         
-        $data['pagination'] = $this->theme->paginate(
+        $data['pagination'] = Theme::paginate(
             $history_total, 
             $page, 
             10, 
@@ -659,24 +659,24 @@ class Customer extends Controller {
             $this->url->link('people/customer/history', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL')
         );
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->response->setOutput($this->theme->view('people/customer_history', $data));
+        Response::setOutput(Theme::view('people/customer_history', $data));
     }
     
     public function credit() {
-        $data = $this->theme->language('people/customer');
+        $data = Theme::language('people/customer');
         
-        $this->theme->model('people/customer');
+        Theme::model('people/customer');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->user->hasPermission('modify', 'people/customer')):
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && User::hasPermission('modify', 'people/customer')):
             $this->model_people_customer->addCredit($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['amount']);
             $data['success'] = $this->language->get('lang_text_credit_success');
         else:
             $data['success'] = '';
         endif;
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !$this->user->hasPermission('modify', 'people/customer')):
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !User::hasPermission('modify', 'people/customer')):
             $data['error_warning'] = $this->language->get('lang_error_permission');
         else:
             $data['error_warning'] = '';
@@ -694,17 +694,17 @@ class Customer extends Controller {
         
         foreach ($results as $result):
             $data['credits'][] = array(
-                'amount'      => $this->currency->format($result['amount'], $this->config->get('config_currency')), 
+                'amount'      => $this->currency->format($result['amount'], Config::get('config_currency')), 
                 'description' => $result['description'], 
                 'date_added'  => date($this->language->get('lang_date_format_short'), strtotime($result['date_added']))
             );
         endforeach;
         
-        $data['balance'] = $this->currency->format($this->model_people_customer->getCreditTotal($this->request->get['customer_id']), $this->config->get('config_currency'));
+        $data['balance'] = $this->currency->format($this->model_people_customer->getCreditTotal($this->request->get['customer_id']), Config::get('config_currency'));
         
         $credit_total = $this->model_people_customer->getTotalCredits($this->request->get['customer_id']);
         
-        $data['pagination'] = $this->theme->paginate(
+        $data['pagination'] = Theme::paginate(
             $credit_total, 
             $page, 
             10, 
@@ -712,28 +712,28 @@ class Customer extends Controller {
             $this->url->link('people/customer/credit', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL')
         );
         
-        $this->theme->loadjs('javascript/people/customer_alert', $data);
+        Theme::loadjs('javascript/people/customer_alert', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data['javascript'] = $this->theme->controller('common/javascript');
+        $data['javascript'] = Theme::controller('common/javascript');
         
-        $this->response->setOutput($this->theme->view('people/customer_credit', $data));
+        Response::setOutput(Theme::view('people/customer_credit', $data));
     }
 
     public function commission() {
-        $data = $this->theme->language('people/customer');
+        $data = Theme::language('people/customer');
         
-        $this->theme->model('people/customer');
+        Theme::model('people/customer');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->user->hasPermission('modify', 'people/customer')):
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && User::hasPermission('modify', 'people/customer')):
             $this->model_people_customer->addCommission($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['amount']);
             $data['success'] = $this->language->get('lang_text_commission_success');
         else:
             $data['success'] = '';
         endif;
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !$this->user->hasPermission('modify', 'people/customer')):
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !User::hasPermission('modify', 'people/customer')):
             $data['error_warning'] = $this->language->get('lang_error_permission');
         else:
             $data['error_warning'] = '';
@@ -751,46 +751,46 @@ class Customer extends Controller {
         
         foreach ($results as $result):
             $data['commissions'][] = array(
-                'amount'      => $this->currency->format($result['amount'], $this->config->get('config_currency')), 
+                'amount'      => $this->currency->format($result['amount'], Config::get('config_currency')), 
                 'description' => $result['description'], 
                 'date_added'  => date($this->language->get('lang_date_format_short'), strtotime($result['date_added']))
             );
         endforeach;
         
-        $data['balance'] = $this->currency->format($this->model_people_customer->getCommissionTotal($this->request->get['customer_id']), $this->config->get('config_currency'));
+        $data['balance'] = $this->currency->format($this->model_people_customer->getCommissionTotal($this->request->get['customer_id']), Config::get('config_currency'));
         
         $commission_total = $this->model_people_customer->getTotalCommissions($this->request->get['customer_id']);
         
-        $data['pagination'] = $this->theme->paginate(
+        $data['pagination'] = Theme::paginate(
             $commission_total, 
             $page, 
-            $this->config->get('config_admin_limit'), 
+            Config::get('config_admin_limit'), 
             $this->language->get('lang_text_pagination'), 
             $this->url->link('people/customer/commission', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL')
         );
         
-        $this->theme->loadjs('javascript/people/customer_alert', $data);
+        Theme::loadjs('javascript/people/customer_alert', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data['javascript'] = $this->theme->controller('common/javascript');
+        $data['javascript'] = Theme::controller('common/javascript');
         
-        $this->response->setOutput($this->theme->view('people/customer_commission', $data));
+        Response::setOutput(Theme::view('people/customer_commission', $data));
     }
     
     public function reward() {
-        $data = $this->theme->language('people/customer');
+        $data = Theme::language('people/customer');
         
-        $this->theme->model('people/customer');
+        Theme::model('people/customer');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->user->hasPermission('modify', 'people/customer')):
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && User::hasPermission('modify', 'people/customer')):
             $this->model_people_customer->addReward($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['points']);
             $data['success'] = $this->language->get('lang_text_reward_success');
         else:
             $data['success'] = '';
         endif;
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !$this->user->hasPermission('modify', 'people/customer')):
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !User::hasPermission('modify', 'people/customer')):
             $data['error_warning'] = $this->language->get('lang_error_permission');
         else:
             $data['error_warning'] = '';
@@ -818,7 +818,7 @@ class Customer extends Controller {
         
         $reward_total = $this->model_people_customer->getTotalRewards($this->request->get['customer_id']);
         
-        $data['pagination'] = $this->theme->paginate(
+        $data['pagination'] = Theme::paginate(
             $reward_total, 
             $page, 
             10, 
@@ -826,13 +826,13 @@ class Customer extends Controller {
             $this->url->link('people/customer/reward', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL')
         );
         
-        $this->theme->loadjs('javascript/people/customer_alert', $data);
+        Theme::loadjs('javascript/people/customer_alert', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data['javascript'] = $this->theme->controller('common/javascript');
+        $data['javascript'] = Theme::controller('common/javascript');
         
-        $this->response->setOutput($this->theme->view('people/customer_reward', $data));
+        Response::setOutput(Theme::view('people/customer_reward', $data));
     }
     
     public function addBanIP() {
@@ -841,10 +841,10 @@ class Customer extends Controller {
         $json = array();
         
         if (isset($this->request->post['ip'])):
-            if (!$this->user->hasPermission('modify', 'people/customer')):
+            if (!User::hasPermission('modify', 'people/customer')):
                 $json['error'] = $this->language->get('lang_error_permission');
             else:
-                $this->theme->model('people/customer');
+                Theme::model('people/customer');
                 
                 $this->model_people_customer->addBanIP($this->request->post['ip']);
                 
@@ -852,9 +852,9 @@ class Customer extends Controller {
             endif;
         endif;
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function removeBanIP() {
@@ -863,10 +863,10 @@ class Customer extends Controller {
         $json = array();
         
         if (isset($this->request->post['ip'])):
-            if (!$this->user->hasPermission('modify', 'people/customer')):
+            if (!User::hasPermission('modify', 'people/customer')):
                 $json['error'] = $this->language->get('lang_error_permission');
             else:
-                $this->theme->model('people/customer');
+                Theme::model('people/customer');
                 
                 $this->model_people_customer->removeBanIP($this->request->post['ip']);
                 
@@ -874,16 +874,16 @@ class Customer extends Controller {
             endif;
         endif;
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function autocomplete() {
         $json = array();
         
         if (isset($this->request->get['filter_username']) || isset($this->request->get['filter_name']) || isset($this->request->get['filter_email'])):
-            $this->theme->model('people/customer');
+            Theme::model('people/customer');
             
             $filter_username = (isset($this->request->get['filter_username'])) ? $this->request->get['filter_username'] : null;
             $filter_name     = (isset($this->request->get['filter_name'])) ? $this->request->get['filter_name'] : null;
@@ -923,20 +923,20 @@ class Customer extends Controller {
         
         array_multisort($sort_order, SORT_ASC, $json);
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function country() {
         $json = array();
         
-        $this->theme->model('localization/country');
+        Theme::model('localization/country');
         
         $country_info = $this->model_localization_country->getCountry($this->request->get['country_id']);
         
         if ($country_info):
-            $this->theme->model('localization/zone');
+            Theme::model('localization/zone');
             
             $json = array(
                 'country_id'        => $country_info['country_id'], 
@@ -950,21 +950,21 @@ class Customer extends Controller {
             );
         endif;
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function address() {
         $json = array();
         
         if (!empty($this->request->get['address_id'])):
-            $this->theme->model('people/customer');
+            Theme::model('people/customer');
             $json = $this->model_people_customer->getAddress($this->request->get['address_id']);
         endif;
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

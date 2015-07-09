@@ -19,8 +19,8 @@ use Dais\Engine\Controller;
 
 class CustomerCredit extends Controller {
     public function index() {
-        $data = $this->theme->language('report/customer_credit');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        $data = Theme::language('report/customer_credit');
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
@@ -56,15 +56,15 @@ class CustomerCredit extends Controller {
         
         $this->breadcrumb->add('lang_heading_title', 'report/customer_credit', $url);
         
-        $this->theme->model('report/customer');
+        Theme::model('report/customer');
         
         $data['customers'] = array();
         
         $filter = array(
             'filter_date_start' => $filter_date_start, 
             'filter_date_end'   => $filter_date_end, 
-            'start'             => ($page - 1) * $this->config->get('config_admin_limit'), 
-            'limit'             => $this->config->get('config_admin_limit')
+            'start'             => ($page - 1) * Config::get('config_admin_limit'), 
+            'limit'             => Config::get('config_admin_limit')
         );
         
         $customer_total = $this->model_report_customer->getTotalCredit($filter);
@@ -83,7 +83,7 @@ class CustomerCredit extends Controller {
                 'email'          => $result['email'], 
                 'customer_group' => $result['customer_group'], 
                 'status'         => ($result['status'] ? $this->language->get('lang_text_enabled') : $this->language->get('lang_text_disabled')), 
-                'total'          => $this->currency->format($result['total'], $this->config->get('config_currency')), 
+                'total'          => $this->currency->format($result['total'], Config::get('config_currency')), 
                 'action'         => $action
             );
         }
@@ -100,10 +100,10 @@ class CustomerCredit extends Controller {
             $url.= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
         
-        $data['pagination'] = $this->theme->paginate(
+        $data['pagination'] = Theme::paginate(
             $customer_total, 
             $page, 
-            $this->config->get('config_admin_limit'), 
+            Config::get('config_admin_limit'), 
             $this->language->get('lang_text_pagination'), 
             $this->url->link('report/customer_credit', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
         );
@@ -111,10 +111,10 @@ class CustomerCredit extends Controller {
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end']   = $filter_date_end;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('report/customer_credit', $data));
+        Response::setOutput(Theme::view('report/customer_credit', $data));
     }
 }

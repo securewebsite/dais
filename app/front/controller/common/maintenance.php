@@ -15,10 +15,10 @@
 */
 
 namespace Front\Controller\Common;
+
 use Dais\Engine\Controller;
 use Dais\Engine\Action;
-use Dais\Service\ActionService;
-use Dais\Library\User;
+use Dais\Services\Providers\User;
 
 class Maintenance extends Controller {
     public function index() {
@@ -34,12 +34,12 @@ class Maintenance extends Controller {
             }
             
             // Show site if logged in as admin
-            $this->user = new User($this->app);
+            $this->user = new User;
             
             $this->theme->listen(__CLASS__, __FUNCTION__);
             
             if (($route != 'payment') && !$this->user->isLogged()) {
-                return new Action(new ActionService($this->app, 'common/maintenance/info'));
+                return new Action('common/maintenance/info');
             }
         }
     }

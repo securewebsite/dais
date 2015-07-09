@@ -50,7 +50,7 @@ class Banner extends Model {
             }
         }
         
-        $this->theme->trigger('admin_add_banner', array('banner_id' => $banner_id));
+        Theme::trigger('admin_add_banner', array('banner_id' => $banner_id));
     }
     
     public function editBanner($banner_id, $data) {
@@ -92,7 +92,7 @@ class Banner extends Model {
             }
         }
         
-        $this->theme->trigger('admin_edit_banner', array('banner_id' => $banner_id));
+        Theme::trigger('admin_edit_banner', array('banner_id' => $banner_id));
     }
     
     public function deleteBanner($banner_id) {
@@ -108,7 +108,7 @@ class Banner extends Model {
             DELETE FROM {$this->db->prefix}banner_image_description 
             WHERE banner_id = '" . (int)$banner_id . "'");
         
-        $this->theme->trigger('admin_delete_banner', array('banner_id' => $banner_id));
+        Theme::trigger('admin_delete_banner', array('banner_id' => $banner_id));
     }
     
     public function getBanner($banner_id) {

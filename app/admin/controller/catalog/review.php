@@ -23,11 +23,11 @@ class Review extends Controller {
     public function index() {
         $this->language->load('catalog/review');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/review');
+        Theme::model('catalog/review');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
@@ -35,9 +35,9 @@ class Review extends Controller {
     public function insert() {
         $this->language->load('catalog/review');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/review');
+        Theme::model('catalog/review');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_catalog_review->addReview($this->request->post);
@@ -62,10 +62,10 @@ class Review extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('catalog/review', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('catalog/review', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
@@ -73,9 +73,9 @@ class Review extends Controller {
     public function update() {
         $this->language->load('catalog/review');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/review');
+        Theme::model('catalog/review');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_catalog_review->editReview($this->request->get['review_id'], $this->request->post);
@@ -100,10 +100,10 @@ class Review extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('catalog/review', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('catalog/review', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
@@ -111,9 +111,9 @@ class Review extends Controller {
     public function delete() {
         $this->language->load('catalog/review');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/review');
+        Theme::model('catalog/review');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $review_id) {
@@ -140,16 +140,16 @@ class Review extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('catalog/review', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('catalog/review', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     protected function getList() {
-        $data = $this->theme->language('catalog/review');
+        $data = Theme::language('catalog/review');
         
         if (isset($this->request->get['filter_status'])):
             $filter_status = $this->request->get['filter_status'];
@@ -200,7 +200,7 @@ class Review extends Controller {
         
         $data['reviews'] = array();
         
-        $filter = array('filter_status' => $filter_status, 'sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
+        $filter = array('filter_status' => $filter_status, 'sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
         $review_total = $this->model_catalog_review->getTotalReviews($filter);
         
@@ -264,21 +264,21 @@ class Review extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = $this->theme->paginate($review_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('catalog/review', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($review_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('catalog/review', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
         $data['filter_status'] = $filter_status;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('catalog/review_list', $data));
+        Response::setOutput(Theme::view('catalog/review_list', $data));
     }
     
     protected function getForm() {
-        $data = $this->theme->language('catalog/review');
+        $data = Theme::language('catalog/review');
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -344,7 +344,7 @@ class Review extends Controller {
         
         $data['token'] = $this->session->data['token'];
         
-        $this->theme->model('catalog/product');
+        Theme::model('catalog/product');
         
         if (isset($this->request->post['product_id'])) {
             $data['product_id'] = $this->request->post['product_id'];
@@ -394,15 +394,15 @@ class Review extends Controller {
             $data['status'] = '';
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('catalog/review_form', $data));
+        Response::setOutput(Theme::view('catalog/review_form', $data));
     }
     
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'catalog/review')) {
+        if (!User::hasPermission('modify', 'catalog/review')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
@@ -410,11 +410,11 @@ class Review extends Controller {
             $this->error['product'] = $this->language->get('lang_error_product');
         }
         
-        if (($this->encode->strlen($this->request->post['author']) < 3) || ($this->encode->strlen($this->request->post['author']) > 64)) {
+        if ((Encode::strlen($this->request->post['author']) < 3) || (Encode::strlen($this->request->post['author']) > 64)) {
             $this->error['author'] = $this->language->get('lang_error_author');
         }
         
-        if ($this->encode->strlen($this->request->post['text']) < 1) {
+        if (Encode::strlen($this->request->post['text']) < 1) {
             $this->error['text'] = $this->language->get('lang_error_text');
         }
         
@@ -422,17 +422,17 @@ class Review extends Controller {
             $this->error['rating'] = $this->language->get('lang_error_rating');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'catalog/review')) {
+        if (!User::hasPermission('modify', 'catalog/review')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

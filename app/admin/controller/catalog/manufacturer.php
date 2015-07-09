@@ -23,11 +23,11 @@ class Manufacturer extends Controller {
     public function index() {
         $this->language->load('catalog/manufacturer');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/manufacturer');
+        Theme::model('catalog/manufacturer');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
@@ -35,9 +35,9 @@ class Manufacturer extends Controller {
     public function insert() {
         $this->language->load('catalog/manufacturer');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/manufacturer');
+        Theme::model('catalog/manufacturer');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_catalog_manufacturer->addManufacturer($this->request->post);
@@ -58,10 +58,10 @@ class Manufacturer extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
@@ -69,9 +69,9 @@ class Manufacturer extends Controller {
     public function update() {
         $this->language->load('catalog/manufacturer');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/manufacturer');
+        Theme::model('catalog/manufacturer');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_catalog_manufacturer->editManufacturer($this->request->get['manufacturer_id'], $this->request->post);
@@ -92,10 +92,10 @@ class Manufacturer extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
@@ -103,9 +103,9 @@ class Manufacturer extends Controller {
     public function delete() {
         $this->language->load('catalog/manufacturer');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/manufacturer');
+        Theme::model('catalog/manufacturer');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $manufacturer_id) {
@@ -128,16 +128,16 @@ class Manufacturer extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     protected function getList() {
-        $data = $this->theme->language('catalog/manufacturer');
+        $data = Theme::language('catalog/manufacturer');
         
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -178,7 +178,7 @@ class Manufacturer extends Controller {
         
         $data['manufacturers'] = array();
         
-        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
+        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
         $manufacturer_total = $this->model_catalog_manufacturer->getTotalManufacturers();
         
@@ -231,20 +231,20 @@ class Manufacturer extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = $this->theme->paginate($manufacturer_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($manufacturer_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('catalog/manufacturer_list', $data));
+        Response::setOutput(Theme::view('catalog/manufacturer_list', $data));
     }
     
     protected function getForm() {
-        $data = $this->theme->language('catalog/manufacturer');
+        $data = Theme::language('catalog/manufacturer');
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -302,7 +302,7 @@ class Manufacturer extends Controller {
             $data['name'] = '';
         }
         
-        $this->theme->model('setting/store');
+        Theme::model('setting/store');
         
         $data['stores'] = $this->model_setting_store->getStores();
         
@@ -330,11 +330,11 @@ class Manufacturer extends Controller {
             $data['image'] = '';
         }
         
-        $this->theme->model('tool/image');
+        Theme::model('tool/image');
         
-        if (isset($this->request->post['image']) && file_exists($this->app['path.image'] . $this->request->post['image'])) {
+        if (isset($this->request->post['image']) && file_exists(Config::get('path.image') . $this->request->post['image'])) {
             $data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
-        } elseif (!empty($manufacturer_info) && $manufacturer_info['image'] && file_exists($this->app['path.image'] . $manufacturer_info['image'])) {
+        } elseif (!empty($manufacturer_info) && $manufacturer_info['image'] && file_exists(Config::get('path.image') . $manufacturer_info['image'])) {
             $data['thumb'] = $this->model_tool_image->resize($manufacturer_info['image'], 100, 100);
         } else {
             $data['thumb'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
@@ -350,24 +350,24 @@ class Manufacturer extends Controller {
             $data['sort_order'] = '';
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('catalog/manufacturer_form', $data));
+        Response::setOutput(Theme::view('catalog/manufacturer_form', $data));
     }
     
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'catalog/manufacturer')) {
+        if (!User::hasPermission('modify', 'catalog/manufacturer')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        if (($this->encode->strlen($this->request->post['name']) < 3) || ($this->encode->strlen($this->request->post['name']) > 64)) {
+        if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 64)) {
             $this->error['name'] = $this->language->get('lang_error_name');
         }
         
-        if (isset($this->request->post['slug']) && $this->encode->strlen($this->request->post['slug']) > 0):
-            $this->theme->model('tool/utility');
+        if (isset($this->request->post['slug']) && Encode::strlen($this->request->post['slug']) > 0):
+            Theme::model('tool/utility');
             $query = $this->model_tool_utility->findSlugByName($this->request->post['slug']);
             
             if (isset($this->request->get['manufacturer_id'])):
@@ -385,17 +385,17 @@ class Manufacturer extends Controller {
             $this->error['slug'] = $this->language->get('lang_error_slug');
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'catalog/manufacturer')) {
+        if (!User::hasPermission('modify', 'catalog/manufacturer')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->model('catalog/product');
+        Theme::model('catalog/product');
         
         foreach ($this->request->post['selected'] as $manufacturer_id) {
             $product_total = $this->model_catalog_product->getTotalProductsByManufacturerId($manufacturer_id);
@@ -405,7 +405,7 @@ class Manufacturer extends Controller {
             }
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
@@ -414,7 +414,7 @@ class Manufacturer extends Controller {
         $json = array();
         
         if (isset($this->request->get['filter_name'])) {
-            $this->theme->model('catalog/manufacturer');
+            Theme::model('catalog/manufacturer');
             
             $filter = array('filter_name' => $this->request->get['filter_name'], 'start' => 0, 'limit' => 20);
             
@@ -433,18 +433,18 @@ class Manufacturer extends Controller {
         
         array_multisort($sort_order, SORT_ASC, $json);
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function slug() {
         $this->language->load('catalog/manufacturer');
-        $this->theme->model('tool/utility');
+        Theme::model('tool/utility');
         
         $json = array();
         
-        if (!isset($this->request->get['name']) || $this->encode->strlen($this->request->get['name']) < 1):
+        if (!isset($this->request->get['name']) || Encode::strlen($this->request->get['name']) < 1):
             $json['error'] = $this->language->get('lang_error_name_first');
         else:
             
@@ -469,8 +469,8 @@ class Manufacturer extends Controller {
             endif;
         endif;
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

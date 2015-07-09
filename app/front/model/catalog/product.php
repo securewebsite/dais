@@ -1423,8 +1423,8 @@ class Product extends Model {
             $data['event_telephone'] = $call['telephone'];
         endif;
 
-        $html = new Template($this->app);
-        $text = new Text($this->app);
+        $html = new Template;
+        $text = new Text;
 
         $html->data = $data;
         $text->data = $data;

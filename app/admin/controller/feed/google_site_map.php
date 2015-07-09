@@ -21,18 +21,18 @@ class GoogleSiteMap extends Controller {
     private $error = array();
     
     public function index() {
-        $data = $this->theme->language('feed/google_site_map');
+        $data = Theme::language('feed/google_site_map');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('setting/setting');
+        Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('google_site_map', $this->request->post);
             
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
-            $this->response->redirect($this->url->link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -51,24 +51,24 @@ class GoogleSiteMap extends Controller {
         if (isset($this->request->post['google_site_map_status'])) {
             $data['google_site_map_status'] = $this->request->post['google_site_map_status'];
         } else {
-            $data['google_site_map_status'] = $this->config->get('google_site_map_status');
+            $data['google_site_map_status'] = Config::get('google_site_map_status');
         }
         
-        $data['data_feed'] = $this->app['http.public'] . 'feed/google_site_map';
+        $data['data_feed'] = Config::get('http.public') . 'feed/google_site_map';
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('feed/google_site_map', $data));
+        Response::setOutput(Theme::view('feed/google_site_map', $data));
     }
     
     protected function validate() {
-        if (!$this->user->hasPermission('modify', 'feed/google_site_map')) {
+        if (!User::hasPermission('modify', 'feed/google_site_map')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

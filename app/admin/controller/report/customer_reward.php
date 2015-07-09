@@ -19,8 +19,8 @@ use Dais\Engine\Controller;
 
 class CustomerReward extends Controller {
     public function index() {
-        $data = $this->theme->language('report/customer_reward');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        $data = Theme::language('report/customer_reward');
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
@@ -56,11 +56,11 @@ class CustomerReward extends Controller {
         
         $this->breadcrumb->add('lang_heading_title', 'report/customer_reward', $url);
         
-        $this->theme->model('report/customer');
+        Theme::model('report/customer');
         
         $data['customers'] = array();
         
-        $filter = array('filter_date_start' => $filter_date_start, 'filter_date_end' => $filter_date_end, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
+        $filter = array('filter_date_start' => $filter_date_start, 'filter_date_end' => $filter_date_end, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
         $customer_total = $this->model_report_customer->getTotalRewardPoints($filter);
         
@@ -71,7 +71,7 @@ class CustomerReward extends Controller {
             
             $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('people/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'));
             
-            $data['customers'][] = array('customer' => $result['customer'], 'email' => $result['email'], 'customer_group' => $result['customer_group'], 'status' => ($result['status'] ? $this->language->get('lang_text_enabled') : $this->language->get('lang_text_disabled')), 'points' => $result['points'], 'orders' => $result['orders'], 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')), 'action' => $action);
+            $data['customers'][] = array('customer' => $result['customer'], 'email' => $result['email'], 'customer_group' => $result['customer_group'], 'status' => ($result['status'] ? $this->language->get('lang_text_enabled') : $this->language->get('lang_text_disabled')), 'points' => $result['points'], 'orders' => $result['orders'], 'total' => $this->currency->format($result['total'], Config::get('config_currency')), 'action' => $action);
         }
         
         $data['token'] = $this->session->data['token'];
@@ -86,15 +86,15 @@ class CustomerReward extends Controller {
             $url.= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
         
-        $data['pagination'] = $this->theme->paginate($customer_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('report/customer_reward', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($customer_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('report/customer_reward', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('report/customer_reward', $data));
+        Response::setOutput(Theme::view('report/customer_reward', $data));
     }
 }

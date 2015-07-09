@@ -41,7 +41,7 @@ class Home extends Controller {
                 
                 $this->breadcrumb->add($page_info['title'], 'content/page', 'page_id=' . $page_id);
                 
-                $this->app['config_layout_id'] = 11;
+                Config::set('config_layout_id', 11);
                 
                 $data['heading_title'] = $page_info['title'];
                 

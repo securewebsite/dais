@@ -21,15 +21,15 @@ class Weight extends Controller {
     private $error = array();
     
     public function index() {
-        $data = $this->theme->language('shipping/weight');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('setting/setting');
+        $data = Theme::language('shipping/weight');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('weight', $this->request->post);
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
-            $this->response->redirect($this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -45,7 +45,7 @@ class Weight extends Controller {
         
         $data['cancel'] = $this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
         
-        $this->theme->model('localization/geo_zone');
+        Theme::model('localization/geo_zone');
         
         $geo_zones = $this->model_localization_geo_zone->getGeoZones();
         
@@ -53,13 +53,13 @@ class Weight extends Controller {
             if (isset($this->request->post['weight_' . $geo_zone['geo_zone_id'] . '_rate'])) {
                 $data['weight_' . $geo_zone['geo_zone_id'] . '_rate'] = $this->request->post['weight_' . $geo_zone['geo_zone_id'] . '_rate'];
             } else {
-                $data['weight_' . $geo_zone['geo_zone_id'] . '_rate'] = $this->config->get('weight_' . $geo_zone['geo_zone_id'] . '_rate');
+                $data['weight_' . $geo_zone['geo_zone_id'] . '_rate'] = Config::get('weight_' . $geo_zone['geo_zone_id'] . '_rate');
             }
             
             if (isset($this->request->post['weight_' . $geo_zone['geo_zone_id'] . '_status'])) {
                 $data['weight_' . $geo_zone['geo_zone_id'] . '_status'] = $this->request->post['weight_' . $geo_zone['geo_zone_id'] . '_status'];
             } else {
-                $data['weight_' . $geo_zone['geo_zone_id'] . '_status'] = $this->config->get('weight_' . $geo_zone['geo_zone_id'] . '_status');
+                $data['weight_' . $geo_zone['geo_zone_id'] . '_status'] = Config::get('weight_' . $geo_zone['geo_zone_id'] . '_status');
             }
         }
         
@@ -68,38 +68,38 @@ class Weight extends Controller {
         if (isset($this->request->post['weight_tax_class_id'])) {
             $data['weight_tax_class_id'] = $this->request->post['weight_tax_class_id'];
         } else {
-            $data['weight_tax_class_id'] = $this->config->get('weight_tax_class_id');
+            $data['weight_tax_class_id'] = Config::get('weight_tax_class_id');
         }
         
-        $this->theme->model('localization/tax_class');
+        Theme::model('localization/tax_class');
         
         $data['tax_classes'] = $this->model_localization_tax_class->getTaxClasses();
         
         if (isset($this->request->post['weight_status'])) {
             $data['weight_status'] = $this->request->post['weight_status'];
         } else {
-            $data['weight_status'] = $this->config->get('weight_status');
+            $data['weight_status'] = Config::get('weight_status');
         }
         
         if (isset($this->request->post['weight_sort_order'])) {
             $data['weight_sort_order'] = $this->request->post['weight_sort_order'];
         } else {
-            $data['weight_sort_order'] = $this->config->get('weight_sort_order');
+            $data['weight_sort_order'] = Config::get('weight_sort_order');
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('shipping/weight', $data));
+        Response::setOutput(Theme::view('shipping/weight', $data));
     }
     
     protected function validate() {
-        if (!$this->user->hasPermission('modify', 'shipping/weight')) {
+        if (!User::hasPermission('modify', 'shipping/weight')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

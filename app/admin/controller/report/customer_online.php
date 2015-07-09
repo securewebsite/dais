@@ -19,8 +19,8 @@ use Dais\Engine\Controller;
 
 class CustomerOnline extends Controller {
     public function index() {
-        $data = $this->theme->language('report/customer_online');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        $data = Theme::language('report/customer_online');
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
         if (isset($this->request->get['filter_ip'])) {
             $filter_ip = $this->request->get['filter_ip'];
@@ -56,8 +56,8 @@ class CustomerOnline extends Controller {
         
         $this->breadcrumb->add('lang_heading_title', 'report/customer_online', $url);
         
-        $this->theme->model('report/online');
-        $this->theme->model('people/customer');
+        Theme::model('report/online');
+        Theme::model('people/customer');
         
         $data['customers'] = array();
         
@@ -97,15 +97,15 @@ class CustomerOnline extends Controller {
             $url.= '&filter_ip=' . $this->request->get['filter_ip'];
         }
         
-        $data['pagination'] = $this->theme->paginate($customer_total, $page, 20, $this->language->get('lang_text_pagination'), $this->url->link('report/customer_online', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($customer_total, $page, 20, $this->language->get('lang_text_pagination'), $this->url->link('report/customer_online', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['filter_customer'] = $filter_customer;
         $data['filter_ip'] = $filter_ip;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('report/customer_online', $data));
+        Response::setOutput(Theme::view('report/customer_online', $data));
     }
 }

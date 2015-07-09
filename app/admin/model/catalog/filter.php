@@ -56,7 +56,7 @@ class Filter extends Model {
             }
         }
         
-        $this->theme->trigger('admin_add_filter', array('filter_id' => $filter_id));
+        Theme::trigger('admin_add_filter', array('filter_id' => $filter_id));
     }
     
     public function editFilter($filter_group_id, $data) {
@@ -117,7 +117,7 @@ class Filter extends Model {
             }
         }
         
-        $this->theme->trigger('admin_edit_filter', array('filter_id' => $filter_id));
+        Theme::trigger('admin_edit_filter', array('filter_id' => $filter_id));
     }
     
     public function deleteFilter($filter_group_id) {
@@ -137,7 +137,7 @@ class Filter extends Model {
             DELETE FROM `{$this->db->prefix}filter_description` 
             WHERE filter_group_id = '" . (int)$filter_group_id . "'");
         
-        $this->theme->trigger('admin_delete_filter');
+        Theme::trigger('admin_delete_filter');
     }
     
     public function getFilterGroup($filter_group_id) {
@@ -147,7 +147,7 @@ class Filter extends Model {
             LEFT JOIN {$this->db->prefix}filter_group_description fgd 
             ON (fg.filter_group_id = fgd.filter_group_id) 
             WHERE fg.filter_group_id = '" . (int)$filter_group_id . "' 
-            AND fgd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+            AND fgd.language_id = '" . (int)Config::get('config_language_id') . "'");
         
         return $query->row;
     }
@@ -158,7 +158,7 @@ class Filter extends Model {
             FROM `{$this->db->prefix}filter_group` fg 
             LEFT JOIN {$this->db->prefix}filter_group_description fgd 
             ON (fg.filter_group_id = fgd.filter_group_id) 
-            WHERE fgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+            WHERE fgd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         $sort_data = array('fgd.name', 'fg.sort_order');
         
@@ -212,12 +212,12 @@ class Filter extends Model {
             (SELECT name 
                 FROM {$this->db->prefix}filter_group_description fgd 
                 WHERE f.filter_group_id = fgd.filter_group_id 
-                AND fgd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS `group` 
+                AND fgd.language_id = '" . (int)Config::get('config_language_id') . "') AS `group` 
             FROM {$this->db->prefix}filter f 
             LEFT JOIN {$this->db->prefix}filter_description fd 
             ON (f.filter_id = fd.filter_id) 
             WHERE f.filter_id = '" . (int)$filter_id . "' 
-            AND fd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+            AND fd.language_id = '" . (int)Config::get('config_language_id') . "'");
         
         return $query->row;
     }
@@ -228,11 +228,11 @@ class Filter extends Model {
             (SELECT name 
                 FROM {$this->db->prefix}filter_group_description fgd 
                 WHERE f.filter_group_id = fgd.filter_group_id 
-                AND fgd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS `group` 
+                AND fgd.language_id = '" . (int)Config::get('config_language_id') . "') AS `group` 
             FROM {$this->db->prefix}filter f 
             LEFT JOIN {$this->db->prefix}filter_description fd 
             ON (f.filter_id = fd.filter_id) 
-            WHERE fd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+            WHERE fd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_name'])) {
             $sql.= " AND fd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";

@@ -77,7 +77,7 @@ class LengthClass extends Model {
 				FROM {$this->db->prefix}length_class lc 
 				LEFT JOIN {$this->db->prefix}length_class_description lcd 
 					ON (lc.length_class_id = lcd.length_class_id) 
-				WHERE lcd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+				WHERE lcd.language_id = '" . (int)Config::get('config_language_id') . "'";
             
             $sort_data = array('title', 'unit', 'value');
             
@@ -115,7 +115,7 @@ class LengthClass extends Model {
 				FROM {$this->db->prefix}length_class lc 
 				LEFT JOIN {$this->db->prefix}length_class_description lcd 
 					ON (lc.length_class_id = lcd.length_class_id) 
-				WHERE lcd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+				WHERE lcd.language_id = '" . (int)Config::get('config_language_id') . "'
 			");
             
             $length_class_data = $query->rows;
@@ -131,7 +131,7 @@ class LengthClass extends Model {
 			LEFT JOIN {$this->db->prefix}length_class_description lcd 
 				ON (lc.length_class_id = lcd.length_class_id) 
 			WHERE lc.length_class_id = '" . (int)$length_class_id . "' 
-			AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND lcd.language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         return $query->row;
@@ -142,7 +142,7 @@ class LengthClass extends Model {
 			SELECT * 
 			FROM {$this->db->prefix}length_class_description 
 			WHERE unit = '" . $this->db->escape($unit) . "' 
-			AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         return $query->row;

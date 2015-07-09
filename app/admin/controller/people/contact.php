@@ -20,8 +20,8 @@ use Dais\Engine\Controller;
 class Contact extends Controller {
     
     public function index() {
-        $data = $this->theme->language('people/contact');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        $data = Theme::language('people/contact');
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
         $data['token'] = $this->session->data['token'];
         
@@ -34,18 +34,18 @@ class Contact extends Controller {
         
         $data['cancel'] = $this->url->link('people/contact', 'token=' . $this->session->data['token'], 'SSL');
         
-        $this->theme->model('setting/store');
+        Theme::model('setting/store');
         
         $data['stores'] = $this->model_setting_store->getStores();
         
-        $this->theme->model('people/customer_group');
+        Theme::model('people/customer_group');
         
         $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups(0);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('people/contact', $data));
+        Response::setOutput(Theme::view('people/contact', $data));
     }
     
     public function send() {
@@ -54,7 +54,7 @@ class Contact extends Controller {
         $json = array();
         
         if ($this->request->server['REQUEST_METHOD'] == 'POST'):
-            if (!$this->user->hasPermission('modify', 'people/contact')):
+            if (!User::hasPermission('modify', 'people/contact')):
                 $json['error']['warning'] = $this->language->get('lang_error_permission');
             endif;
             
@@ -71,9 +71,9 @@ class Contact extends Controller {
             endif;
             
             if (!$json):
-                $this->theme->model('people/customer');
-                $this->theme->model('people/customer_group');
-                $this->theme->model('sale/order');
+                Theme::model('people/customer');
+                Theme::model('people/customer_group');
+                Theme::model('sale/order');
                 
                 if (isset($this->request->get['page'])):
                     $page = $this->request->get['page'];
@@ -212,15 +212,15 @@ class Contact extends Controller {
                             )
                         );
 
-                        $this->theme->notify('admin_people_contact', $callback);
+                        Theme::notify('admin_people_contact', $callback);
                     endforeach;
                 endif;
             endif;
         endif;
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 
     public function admin_people_contact($data, $message) {

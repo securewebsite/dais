@@ -21,15 +21,15 @@ class Moneybookers extends Controller {
     private $error = array();
     
     public function index() {
-        $data = $this->theme->language('payment/moneybookers');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('setting/setting');
+        $data = Theme::language('payment/moneybookers');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('moneybookers', $this->request->post);
             $this->session->data['success'] = $this->language->get('lang_text_success');
             
-            $this->response->redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -54,98 +54,98 @@ class Moneybookers extends Controller {
         if (isset($this->request->post['moneybookers_email'])) {
             $data['moneybookers_email'] = $this->request->post['moneybookers_email'];
         } else {
-            $data['moneybookers_email'] = $this->config->get('moneybookers_email');
+            $data['moneybookers_email'] = Config::get('moneybookers_email');
         }
         
         if (isset($this->request->post['moneybookers_secret'])) {
             $data['moneybookers_secret'] = $this->request->post['moneybookers_secret'];
         } else {
-            $data['moneybookers_secret'] = $this->config->get('moneybookers_secret');
+            $data['moneybookers_secret'] = Config::get('moneybookers_secret');
         }
         
         if (isset($this->request->post['moneybookers_total'])) {
             $data['moneybookers_total'] = $this->request->post['moneybookers_total'];
         } else {
-            $data['moneybookers_total'] = $this->config->get('moneybookers_total');
+            $data['moneybookers_total'] = Config::get('moneybookers_total');
         }
         
         if (isset($this->request->post['moneybookers_order_status_id'])) {
             $data['moneybookers_order_status_id'] = $this->request->post['moneybookers_order_status_id'];
         } else {
-            $data['moneybookers_order_status_id'] = $this->config->get('moneybookers_order_status_id');
+            $data['moneybookers_order_status_id'] = Config::get('moneybookers_order_status_id');
         }
         
         if (isset($this->request->post['moneybookers_pending_status_id'])) {
             $data['moneybookers_pending_status_id'] = $this->request->post['moneybookers_pending_status_id'];
         } else {
-            $data['moneybookers_pending_status_id'] = $this->config->get('moneybookers_pending_status_id');
+            $data['moneybookers_pending_status_id'] = Config::get('moneybookers_pending_status_id');
         }
         
         if (isset($this->request->post['moneybookers_canceled_status_id'])) {
             $data['moneybookers_canceled_status_id'] = $this->request->post['moneybookers_canceled_status_id'];
         } else {
-            $data['moneybookers_canceled_status_id'] = $this->config->get('moneybookers_canceled_status_id');
+            $data['moneybookers_canceled_status_id'] = Config::get('moneybookers_canceled_status_id');
         }
         
         if (isset($this->request->post['moneybookers_failed_status_id'])) {
             $data['moneybookers_failed_status_id'] = $this->request->post['moneybookers_failed_status_id'];
         } else {
-            $data['moneybookers_failed_status_id'] = $this->config->get('moneybookers_failed_status_id');
+            $data['moneybookers_failed_status_id'] = Config::get('moneybookers_failed_status_id');
         }
         
         if (isset($this->request->post['moneybookers_chargeback_status_id'])) {
             $data['moneybookers_chargeback_status_id'] = $this->request->post['moneybookers_chargeback_status_id'];
         } else {
-            $data['moneybookers_chargeback_status_id'] = $this->config->get('moneybookers_chargeback_status_id');
+            $data['moneybookers_chargeback_status_id'] = Config::get('moneybookers_chargeback_status_id');
         }
         
-        $this->theme->model('localization/order_status');
+        Theme::model('localization/order_status');
         
         $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
         
         if (isset($this->request->post['moneybookers_geo_zone_id'])) {
             $data['moneybookers_geo_zone_id'] = $this->request->post['moneybookers_geo_zone_id'];
         } else {
-            $data['moneybookers_geo_zone_id'] = $this->config->get('moneybookers_geo_zone_id');
+            $data['moneybookers_geo_zone_id'] = Config::get('moneybookers_geo_zone_id');
         }
         
-        $this->theme->model('localization/geo_zone');
+        Theme::model('localization/geo_zone');
         
         $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
         
         if (isset($this->request->post['moneybookers_status'])) {
             $data['moneybookers_status'] = $this->request->post['moneybookers_status'];
         } else {
-            $data['moneybookers_status'] = $this->config->get('moneybookers_status');
+            $data['moneybookers_status'] = Config::get('moneybookers_status');
         }
         
         if (isset($this->request->post['moneybookers_sort_order'])) {
             $data['moneybookers_sort_order'] = $this->request->post['moneybookers_sort_order'];
         } else {
-            $data['moneybookers_sort_order'] = $this->config->get('moneybookers_sort_order');
+            $data['moneybookers_sort_order'] = Config::get('moneybookers_sort_order');
         }
         
         if (isset($this->request->post['moneybookers_rid'])) {
             $data['moneybookers_rid'] = $this->request->post['moneybookers_rid'];
         } else {
-            $data['moneybookers_rid'] = $this->config->get('moneybookers_rid');
+            $data['moneybookers_rid'] = Config::get('moneybookers_rid');
         }
         
         if (isset($this->request->post['moneybookers_custnote'])) {
             $data['moneybookers_custnote'] = $this->request->post['moneybookers_custnote'];
         } else {
-            $data['moneybookers_custnote'] = $this->config->get('moneybookers_custnote');
+            $data['moneybookers_custnote'] = Config::get('moneybookers_custnote');
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('payment/moneybookers', $data));
+        Response::setOutput(Theme::view('payment/moneybookers', $data));
     }
     
     protected function validate() {
-        if (!$this->user->hasPermission('modify', 'payment/moneybookers')) {
+        if (!User::hasPermission('modify', 'payment/moneybookers')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
@@ -153,7 +153,7 @@ class Moneybookers extends Controller {
             $this->error['email'] = $this->language->get('lang_error_email');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

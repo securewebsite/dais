@@ -23,12 +23,12 @@ class Reset extends Controller {
     private $error = array();
     
     public function index() {
-        if ($this->user->isLogged()):
-            $this->response->redirect($this->url->link('common/dashboard', '', 'SSL'));
+        if (User::isLogged()):
+            Response::redirect($this->url->link('common/dashboard', '', 'SSL'));
         endif;
         
-        if (!$this->config->get('config_password')):
-            $this->response->redirect($this->url->link('common/login', '', 'SSL'));
+        if (!Config::get('config_password')):
+            Response::redirect($this->url->link('common/login', '', 'SSL'));
         endif;
         
         if (isset($this->request->get['code'])):
@@ -37,17 +37,17 @@ class Reset extends Controller {
             $code = '';
         endif;
         
-        $this->theme->model('people/user');
+        Theme::model('people/user');
         
         $user_info = $this->model_people_user->getUserByCode($code);
         
         if ($user_info):
-            $data = $this->theme->language('common/reset');
+            $data = Theme::language('common/reset');
             
             if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
                 $this->model_people_user->editPassword($user_info['user_id'], $this->request->post['password']);
                 $this->session->data['success'] = $this->language->get('lang_text_success');
-                $this->response->redirect($this->url->link('common/login', '', 'SSL'));
+                Response::redirect($this->url->link('common/login', '', 'SSL'));
             endif;
             
             $this->breadcrumb->add('lang_text_reset', 'common/reset');
@@ -92,22 +92,22 @@ class Reset extends Controller {
                 $data['confirm'] = '';
             endif;
             
-            $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-            $data = $this->theme->render_controllers($data);
+            $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
+            $data = Theme::render_controllers($data);
             
-            $this->response->setOutput($this->theme->view('common/reset', $data));
+            Response::setOutput(Theme::view('common/reset', $data));
         else:
-            $this->theme->model('setting/setting');
+            Theme::model('setting/setting');
             $this->model_setting_setting->editSettingValue('config', 'config_password', '0');
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            return new Action(new ActionService($this->app, 'common/login'));
+            return new Action('common/login');
         endif;
     }
     
     protected function validate() {
-        if (($this->encode->strlen($this->request->post['password']) < 4) || ($this->encode->strlen($this->request->post['password']) > 20)):
+        if ((Encode::strlen($this->request->post['password']) < 4) || (Encode::strlen($this->request->post['password']) > 20)):
             $this->error['password'] = $this->language->get('lang_error_password');
         endif;
         
@@ -115,7 +115,7 @@ class Reset extends Controller {
             $this->error['confirm'] = $this->language->get('lang_error_confirm');
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

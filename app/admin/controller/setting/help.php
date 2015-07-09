@@ -20,16 +20,16 @@ use Dais\Engine\Controller;
 class Help extends Controller {
 
 	public function index() {
-		$data = $this->theme->language('setting/help');
+		$data = Theme::language('setting/help');
 
-		$this->theme->setTitle($this->language->get('lang_heading_title'));
+		Theme::setTitle($this->language->get('lang_heading_title'));
 
 		$this->breadcrumb->add('lang_heading_title', 'setting/help');
 
-		$data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+		$data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('setting/help', $data));
+        Response::setOutput(Theme::view('setting/help', $data));
 	}
 }

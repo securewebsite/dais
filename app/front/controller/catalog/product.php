@@ -789,7 +789,7 @@ class Product extends Controller {
             // Hide the uploaded file name so people can not link to it directly.
             $json['file'] = $this->encryption->encrypt($file);
             
-            move_uploaded_file($this->request->files['file']['tmp_name'], $this->app['path.download'] . $file);
+            move_uploaded_file($this->request->files['file']['tmp_name'], Config::get('path.download') . $file);
             
             $json['success'] = $this->language->get('lang_text_upload');
         }

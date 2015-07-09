@@ -22,18 +22,18 @@ class Language extends Controller {
     
     public function index() {
         $this->language->load('localization/language');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('localization/language');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('localization/language');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     public function insert() {
         $this->language->load('localization/language');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('localization/language');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('localization/language');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_localization_language->addLanguage($this->request->post);
@@ -53,18 +53,18 @@ class Language extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('localization/language', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('localization/language', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function update() {
         $this->language->load('localization/language');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('localization/language');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('localization/language');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_localization_language->editLanguage($this->request->get['language_id'], $this->request->post);
@@ -84,18 +84,18 @@ class Language extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('localization/language', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('localization/language', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function delete() {
         $this->language->load('localization/language');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('localization/language');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('localization/language');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $language_id) {
@@ -118,16 +118,16 @@ class Language extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('localization/language', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('localization/language', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     protected function getList() {
-        $data = $this->theme->language('localization/language');
+        $data = Theme::language('localization/language');
         
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -168,7 +168,7 @@ class Language extends Controller {
         
         $data['languages'] = array();
         
-        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
+        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
         $language_total = $this->model_localization_language->getTotalLanguages();
         
@@ -179,7 +179,7 @@ class Language extends Controller {
             
             $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('localization/language/update', 'token=' . $this->session->data['token'] . '&language_id=' . $result['language_id'] . $url, 'SSL'));
             
-            $data['languages'][] = array('language_id' => $result['language_id'], 'name' => $result['name'] . (($result['code'] == $this->config->get('config_language')) ? $this->language->get('lang_text_default') : null), 'code' => $result['code'], 'sort_order' => $result['sort_order'], 'selected' => isset($this->request->post['selected']) && in_array($result['language_id'], $this->request->post['selected']), 'action' => $action);
+            $data['languages'][] = array('language_id' => $result['language_id'], 'name' => $result['name'] . (($result['code'] == Config::get('config_language')) ? $this->language->get('lang_text_default') : null), 'code' => $result['code'], 'sort_order' => $result['sort_order'], 'selected' => isset($this->request->post['selected']) && in_array($result['language_id'], $this->request->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -222,20 +222,20 @@ class Language extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = $this->theme->paginate($language_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('localization/language', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($language_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('localization/language', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('localization/language_list', $data));
+        Response::setOutput(Theme::view('localization/language_list', $data));
     }
     
     protected function getForm() {
-        $data = $this->theme->language('localization/language');
+        $data = Theme::language('localization/language');
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -371,23 +371,23 @@ class Language extends Controller {
             $data['status'] = 1;
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('localization/language_form', $data));
+        Response::setOutput(Theme::view('localization/language_form', $data));
     }
     
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'localization/language')) {
+        if (!User::hasPermission('modify', 'localization/language')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        if (($this->encode->strlen($this->request->post['name']) < 3) || ($this->encode->strlen($this->request->post['name']) > 32)) {
+        if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 32)) {
             $this->error['name'] = $this->language->get('lang_error_name');
         }
         
-        if ($this->encode->strlen($this->request->post['code']) < 2) {
+        if (Encode::strlen($this->request->post['code']) < 2) {
             $this->error['code'] = $this->language->get('lang_error_code');
         }
         
@@ -403,32 +403,32 @@ class Language extends Controller {
             $this->error['filename'] = $this->language->get('lang_error_filename');
         }
         
-        if (($this->encode->strlen($this->request->post['image']) < 3) || ($this->encode->strlen($this->request->post['image']) > 32)) {
+        if ((Encode::strlen($this->request->post['image']) < 3) || (Encode::strlen($this->request->post['image']) > 32)) {
             $this->error['image'] = $this->language->get('lang_error_image');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'localization/language')) {
+        if (!User::hasPermission('modify', 'localization/language')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->model('setting/store');
-        $this->theme->model('sale/order');
+        Theme::model('setting/store');
+        Theme::model('sale/order');
         
         foreach ($this->request->post['selected'] as $language_id) {
             $language_info = $this->model_localization_language->getLanguage($language_id);
             
             if ($language_info) {
-                if ($this->config->get('config_language') == $language_info['code']) {
+                if (Config::get('config_language') == $language_info['code']) {
                     $this->error['warning'] = $this->language->get('lang_error_default');
                 }
                 
-                if ($this->config->get('config_admin_language') == $language_info['code']) {
+                if (Config::get('config_admin_language') == $language_info['code']) {
                     $this->error['warning'] = $this->language->get('lang_error_admin');
                 }
                 
@@ -446,7 +446,7 @@ class Language extends Controller {
             }
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

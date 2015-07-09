@@ -21,19 +21,19 @@ class Post extends Controller {
     private $error = array();
     
     public function index() {
-        $this->theme->language('content/post');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('content/post');
+        Theme::language('content/post');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('content/post');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     public function insert() {
-        $this->theme->language('content/post');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('content/post');
+        Theme::language('content/post');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('content/post');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_content_post->addPost($this->request->post);
@@ -61,18 +61,18 @@ class Post extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('content/post', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('content/post', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function update() {
-        $this->theme->language('content/post');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('content/post');
+        Theme::language('content/post');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('content/post');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_content_post->editPost($this->request->get['post_id'], $this->request->post);
@@ -100,18 +100,18 @@ class Post extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('content/post', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('content/post', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function delete() {
-        $this->theme->language('content/post');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('content/post');
+        Theme::language('content/post');
+        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::model('content/post');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $post_id) {
@@ -142,16 +142,16 @@ class Post extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('content/post', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('content/post', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     private function getList() {
-        $data = $this->theme->language('content/post');
+        $data = Theme::language('content/post');
         
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
@@ -262,11 +262,11 @@ class Post extends Controller {
             'filter_date_modified' => $filter_date_modified, 
             'sort'                 => $sort, 
             'order'                => $order, 
-            'start'                => ($page - 1) * $this->config->get('config_admin_limit'), 
-            'limit'                => $this->config->get('config_admin_limit')
+            'start'                => ($page - 1) * Config::get('config_admin_limit'), 
+            'limit'                => Config::get('config_admin_limit')
         );
         
-        $this->theme->model('tool/image');
+        Theme::model('tool/image');
         
         $post_total = $this->model_content_post->getTotalPosts($filter);
         $results    = $this->model_content_post->getPosts($filter);
@@ -279,7 +279,7 @@ class Post extends Controller {
                 'href' => $this->url->link('content/post/update', 'token=' . $this->session->data['token'] . '&post_id=' . $result['post_id'] . $url, 'SSL')
             );
             
-            if ($result['image'] && file_exists($this->app['path.image'] . $result['image'])) {
+            if ($result['image'] && file_exists(Config::get('path.image') . $result['image'])) {
                 $image = $this->model_tool_image->resize($result['image'], 40, 40);
             } else {
                 $image = $this->model_tool_image->resize('placeholder.png', 40, 40);
@@ -403,12 +403,12 @@ class Post extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
 
-        $data['posted_by'] = $this->config->get('blog_posted_by');
+        $data['posted_by'] = Config::get('blog_posted_by');
         
-        $data['pagination'] = $this->theme->paginate(
+        $data['pagination'] = Theme::paginate(
             $post_total, 
             $page, 
-            $this->config->get('config_admin_limit'), 
+            Config::get('config_admin_limit'), 
             $this->language->get('lang_text_pagination'), 
             $this->url->link('content/post', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
         );
@@ -422,24 +422,24 @@ class Post extends Controller {
         
         $data['authors'] = $this->model_content_post->getAuthors();
         
-        $this->theme->model('content/category');
+        Theme::model('content/category');
         
         $data['categories'] = $this->model_content_category->getCategories();
         
         $data['sort']  = $sort;
         $data['order'] = $order;
 
-        $this->theme->loadjs('javascript/content/post_list', $data);
+        Theme::loadjs('javascript/content/post_list', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('content/post_list', $data));
+        Response::setOutput(Theme::view('content/post_list', $data));
     }
     
     private function getForm() {
-        $data = $this->theme->language('content/post');
+        $data = Theme::language('content/post');
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -515,7 +515,7 @@ class Post extends Controller {
         
         $data['token'] = $this->session->data['token'];
         
-        $this->theme->model('localization/language');
+        Theme::model('localization/language');
         
         $data['languages'] = $this->model_localization_language->getLanguages();
         
@@ -527,7 +527,7 @@ class Post extends Controller {
             $data['post_description'] = array();
         }
         
-        $this->theme->model('setting/store');
+        Theme::model('setting/store');
         
         $data['stores'] = $this->model_setting_store->getStores();
         
@@ -552,12 +552,12 @@ class Post extends Controller {
         } elseif (!empty($post_info)) {
             $data['author_id'] = $post_info['author_id'];
         } else {
-            $data['author_id'] = $this->config->get('blog_default_author');
+            $data['author_id'] = Config::get('blog_default_author');
         }
         
         $authors = $this->model_content_post->getAuthors();
 
-        $data['posted_by'] = $this->config->get('blog_posted_by');
+        $data['posted_by'] = Config::get('blog_posted_by');
         
         foreach ($authors as $author):
             if ($author['author_id'] === $data['author_id']):
@@ -575,11 +575,11 @@ class Post extends Controller {
             $data['image'] = '';
         }
         
-        $this->theme->model('tool/image');
+        Theme::model('tool/image');
         
-        if (isset($this->request->post['image']) && file_exists($this->app['path.image'] . $this->request->post['image'])) {
+        if (isset($this->request->post['image']) && file_exists(Config::get('path.image') . $this->request->post['image'])) {
             $data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
-        } elseif (!empty($post_info) && $post_info['image'] && file_exists($this->app['path.image'] . $post_info['image'])) {
+        } elseif (!empty($post_info) && $post_info['image'] && file_exists(Config::get('path.image') . $post_info['image'])) {
             $data['thumb'] = $this->model_tool_image->resize($post_info['image'], 100, 100);
         } else {
             $data['thumb'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
@@ -609,7 +609,7 @@ class Post extends Controller {
             $data['visibility'] = 0;
         }
         
-        $this->theme->model('people/customer_group');
+        Theme::model('people/customer_group');
         
         $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups();
         
@@ -632,7 +632,7 @@ class Post extends Controller {
         $data['post_images'] = array();
         
         foreach ($post_images as $post_image) {
-            if ($post_image['image'] && file_exists($this->app['path.image'] . $post_image['image'])) {
+            if ($post_image['image'] && file_exists(Config::get('path.image') . $post_image['image'])) {
                 $image = $post_image['image'];
             } else {
                 $image = 'placeholder.png';
@@ -643,7 +643,7 @@ class Post extends Controller {
         
         $data['no_image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
         
-        $this->theme->model('content/category');
+        Theme::model('content/category');
         
         $data['categories'] = $this->model_content_category->getCategories(0);
         
@@ -673,7 +673,7 @@ class Post extends Controller {
             }
         }
         
-        if ($this->user->getGroupId() == $this->config->get('blog_admin_group_id')) {
+        if (User::getGroupId() == Config::get('blog_admin_group_id')) {
             $data['is_admin_group'] = true;
         } else {
             $data['is_admin_group'] = false;
@@ -687,36 +687,36 @@ class Post extends Controller {
             $data['post_layout'] = array();
         }
         
-        $this->theme->loadjs('javascript/content/post_form', $data);
+        Theme::loadjs('javascript/content/post_form', $data);
         
-        $this->theme->model('design/layout');
+        Theme::model('design/layout');
         
         $data['layouts'] = $this->model_design_layout->getLayouts();
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('content/post_form', $data));
+        Response::setOutput(Theme::view('content/post_form', $data));
     }
     
     private function validateForm() {
-        if (!$this->user->hasPermission('modify', 'content/post')) {
+        if (!User::hasPermission('modify', 'content/post')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
         foreach ($this->request->post['post_description'] as $language_id => $value) {
-            if (($this->encode->strlen($value['name']) < 1) || ($this->encode->strlen($value['name']) > 255)) {
+            if ((Encode::strlen($value['name']) < 1) || (Encode::strlen($value['name']) > 255)) {
                 $this->error['name'][$language_id] = $this->language->get('lang_error_name');
             }
             
-            if (($this->encode->strlen($value['description']) < 5)) {
+            if ((Encode::strlen($value['description']) < 5)) {
                 $this->error['description'][$language_id] = $this->language->get('lang_error_description');
             }
         }
         
-        if (isset($this->request->post['slug']) && $this->encode->strlen($this->request->post['slug']) > 0):
-            $this->theme->model('tool/utility');
+        if (isset($this->request->post['slug']) && Encode::strlen($this->request->post['slug']) > 0):
+            Theme::model('tool/utility');
             $query = $this->model_tool_utility->findSlugByName($this->request->post['slug']);
             
             if (isset($this->request->get['post_id'])):
@@ -738,17 +738,17 @@ class Post extends Controller {
             $this->error['warning'] = $this->language->get('lang_error_warning');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     private function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'content/post')) {
+        if (!User::hasPermission('modify', 'content/post')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
@@ -757,7 +757,7 @@ class Post extends Controller {
         $json = array();
         
         if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_category_id'])) {
-            $this->theme->model('content/post');
+            Theme::model('content/post');
             
             if (isset($this->request->get['filter_name'])) {
                 $filter_name = $this->request->get['filter_name'];
@@ -793,9 +793,9 @@ class Post extends Controller {
             }
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function autoauthor() {
@@ -807,7 +807,7 @@ class Post extends Controller {
         );
         
         if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_user_name'])):
-            $this->theme->model('people/user');
+            Theme::model('people/user');
             
             if (isset($this->request->get['filter_name'])) $filter['filter_name'] = $this->request->get['filter_name']; 
             if (isset($this->request->get['filter_user_name'])) $filter['filter_user_name'] = $this->request->get['filter_user_name'];
@@ -815,7 +815,7 @@ class Post extends Controller {
             $results = $this->model_people_user->getUsers($filter);
             
             foreach ($results as $result):
-                if ($this->config->get('blog_posted_by') == 'lastname firstname'):
+                if (Config::get('blog_posted_by') == 'lastname firstname'):
                     $name = $result['lastname'] . ' ' . $result['firstname'];
                 else:
                     $name = $result['firstname'] . ' ' . $result['lastname'];
@@ -837,18 +837,18 @@ class Post extends Controller {
         
         array_multisort($sort_order, SORT_ASC, $json);
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function slug() {
         $this->language->load('content/post');
-        $this->theme->model('tool/utility');
+        Theme::model('tool/utility');
         
         $json = array();
         
-        if (!isset($this->request->get['name']) || $this->encode->strlen($this->request->get['name']) < 1):
+        if (!isset($this->request->get['name']) || Encode::strlen($this->request->get['name']) < 1):
             $json['error'] = $this->language->get('lang_error_name_first');
         else:
             
@@ -873,9 +873,9 @@ class Post extends Controller {
             endif;
         endif;
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 
     public function description() {
@@ -884,7 +884,7 @@ class Post extends Controller {
         if (isset($this->request->post['description']))
             $json['success'] = $this->keyword->getDescription($this->request->post['description']);
 
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 
     public function keyword() {
@@ -896,6 +896,6 @@ class Post extends Controller {
             $json['success'] = $this->keyword->getKeywords($keywords);
         endif;
 
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

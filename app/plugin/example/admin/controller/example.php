@@ -19,8 +19,7 @@ use Dais\Engine\Container;
 use Dais\Engine\Plugin;
 
 class Example extends Plugin {
-    public function __construct(Container $app) {
-        parent::__construct($app);
+    public function __construct() {
         parent::setPlugin('example');
     }
     

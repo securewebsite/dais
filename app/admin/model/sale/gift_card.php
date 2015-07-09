@@ -15,9 +15,10 @@
 */
 
 namespace Admin\Model\Sale;
+
 use Dais\Engine\Model;
-use Dais\Library\Text;
-use Dais\Library\Template;
+use Dais\Support\Text;
+use Dais\Support\Template;
 
 class GiftCard extends Model {
     public function addGiftcard($data) {
@@ -96,7 +97,7 @@ class GiftCard extends Model {
             (SELECT vtd.name 
                 FROM {$this->db->prefix}gift_card_theme_description vtd 
                 WHERE vtd.gift_card_theme_id = v.gift_card_theme_id 
-                AND vtd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS theme, 
+                AND vtd.language_id = '" . (int)Config::get('config_language_id') . "') AS theme, 
             v.amount, 
             v.status, 
             v.date_added 
@@ -147,7 +148,7 @@ class GiftCard extends Model {
         $gift_card_info = $this->getGiftcard($gift_card_id);
         
         if ($gift_card_info):
-            $this->theme->model('sale/gift_card_theme');
+            Theme::model('sale/gift_card_theme');
             $gift_card_theme_info = $this->model_sale_gift_card_theme->getGiftcardTheme($gift_card_info['gift_card_theme_id']);
 
             $card = array(
@@ -245,11 +246,11 @@ class GiftCard extends Model {
         $call = $data;
         unset($data);
 
-        $data = $this->theme->language('notification/gift_card');
+        $data = Theme::language('notification/gift_card');
 
-        $data['theme_image'] = $this->app['http.public'] . 'image/' . $call['image'];
+        $data['theme_image'] = Config::get('http.public') . 'image/' . $call['image'];
         $data['theme_name']  = $call['theme'];
-        $data['store_name']  = $this->config->get('config_name');
+        $data['store_name']  = Config::get('config_name');
         $data['to_name']     = $call['to_name'];
         $data['code']        = $call['code'];
 
@@ -281,8 +282,8 @@ class GiftCard extends Model {
             $message[$key] = str_replace($search, $replace, $value);
         endforeach;
 
-        $html = new Template($this->app);
-        $text = new Text($this->app);
+        $html = new Template;
+        $text = new Text;
 
         $html->data = $data;
         $text->data = $data;

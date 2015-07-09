@@ -162,7 +162,7 @@ class Post extends Model {
         $this->cache->delete('posts');
         $this->cache->delete('author');
         
-        $this->theme->trigger('admin_blog_add_post', array('blog_post_id' => $post_id));
+        Theme::trigger('admin_blog_add_post', array('blog_post_id' => $post_id));
     }
     
     public function editPost($post_id, $data) {
@@ -349,7 +349,7 @@ class Post extends Model {
         $this->cache->delete('posts');
         $this->cache->delete('author');
         
-        $this->theme->trigger('admin_blog_edit_post', array('blog_post_id' => $post_id));
+        Theme::trigger('admin_blog_edit_post', array('blog_post_id' => $post_id));
     }
     
     public function deletePost($post_id) {
@@ -404,7 +404,7 @@ class Post extends Model {
         $this->cache->delete('posts');
         $this->cache->delete('author');
         
-        $this->theme->trigger('admin_blog_delete_post', array('blog_post_id' => $post_id));
+        Theme::trigger('admin_blog_delete_post', array('blog_post_id' => $post_id));
     }
     
     public function getPost($post_id) {
@@ -415,7 +415,7 @@ class Post extends Model {
 			LEFT JOIN {$this->db->prefix}blog_post_description pd 
 				ON (p.post_id = pd.post_id) 
 			WHERE p.post_id = '" . (int)$post_id . "' 
-			AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND pd.language_id = '" . (int)Config::get('config_language_id') . "'
 		");
 
         if ($query->num_rows):
@@ -431,7 +431,7 @@ class Post extends Model {
             FROM {$this->db->prefix}tag 
             WHERE section   = 'post' 
             AND element_id  = '" . (int)$post_id . "' 
-            AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+            AND language_id = '" . (int)Config::get('config_language_id') . "'
         ");
         
         if ($query->num_rows):
@@ -457,10 +457,10 @@ class Post extends Model {
                 $sql.= " LEFT JOIN {$this->db->prefix}blog_post_to_category p2c ON (p.post_id = p2c.post_id)";
             }
             
-            $sql.= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+            $sql.= " WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "'";
             
             if (!empty($data['filter_name'])) {
-                $sql.= " AND LCASE(pd.name) LIKE '" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "%'";
+                $sql.= " AND LCASE(pd.name) LIKE '" . $this->db->escape(Encode::strtolower($data['filter_name'])) . "%'";
             }
             
             if (!empty($data['filter_author_id'])) {
@@ -493,7 +493,7 @@ class Post extends Model {
                     
                     $implode_data[] = "category_id = '" . (int)$data['filter_category_id'] . "'";
                     
-                    $this->theme->model('content/category');
+                    Theme::model('content/category');
                     
                     $categories = $this->model_content_category->getCategories($data['filter_category_id']);
                     
@@ -507,8 +507,8 @@ class Post extends Model {
                 }
             }
             
-            if ($this->user->getGroupId() != $this->config->get('blog_admin_group_id')) {
-                $sql.= " AND p.author_id ='" . (int)$this->user->getId() . "'";
+            if (User::getGroupId() != Config::get('blog_admin_group_id')) {
+                $sql.= " AND p.author_id ='" . (int)User::getId() . "'";
             }
             
             $sql.= " GROUP BY p.post_id";
@@ -543,17 +543,17 @@ class Post extends Model {
             
             return $query->rows;
         } else {
-            $post_data = $this->cache->get('post.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id'));
+            $post_data = $this->cache->get('post.' . (int)Config::get('config_language_id') . '.' . (int)Config::get('config_store_id'));
             
             if (!$post_data) {
                 $sql = "
 						SELECT * FROM {$this->db->prefix}blog_post p 
 						 LEFT JOIN {$this->db->prefix}blog_post_description pd 
 						 	ON (p.post_id = pd.post_id) 
-						 WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+						 WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "'";
                 
-                if ($this->user->getGroupId() != $this->config->get('blog_admin_group_id')) {
-                    $sql.= " AND p.author_id ='" . (int)$this->user->getId() . "'";
+                if (User::getGroupId() != Config::get('blog_admin_group_id')) {
+                    $sql.= " AND p.author_id ='" . (int)User::getId() . "'";
                 }
                 
                 $sql.= " ORDER BY pd.name ASC";
@@ -562,7 +562,7 @@ class Post extends Model {
                 
                 $post_data = $query->rows;
                 
-                $this->cache->set('post.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id'), $post_data);
+                $this->cache->set('post.' . (int)Config::get('config_language_id') . '.' . (int)Config::get('config_store_id'), $post_data);
             }
             
             return $post_data;
@@ -577,7 +577,7 @@ class Post extends Model {
 				ON (p.post_id = pd.post_id) 
 			LEFT JOIN {$this->db->prefix}blog_post_to_category p2c 
 				ON (p.post_id = p2c.post_id) 
-			WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+			WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "' 
 			AND p2c.category_id = '" . (int)$category_id . "' 
 			ORDER BY pd.name ASC
 		");
@@ -608,7 +608,7 @@ class Post extends Model {
     }
     
     public function getPostAuthor($author_id) {
-        $this->theme->model('people/user');
+        Theme::model('people/user');
         
         $user_info = $this->model_people_user->getUser($author_id);
         
@@ -618,7 +618,7 @@ class Post extends Model {
     public function getAuthors() {
         $authors_data = array();
         
-        $this->theme->model('people/user');
+        Theme::model('people/user');
         
         $authors = $this->model_people_user->getUsers();
         
@@ -641,11 +641,11 @@ class Post extends Model {
         
         $posted_by = $user_info['firstname'] . ' ' . $user_info['lastname'];
         
-        if ($this->config->get('blog_posted_by') == 'firstname lastname') {
+        if (Config::get('blog_posted_by') == 'firstname lastname') {
             $posted_by = $user_info['firstname'] . ' ' . $user_info['lastname'];
-        } elseif ($this->config->get('blog_posted_by') == 'lastname firstname') {
+        } elseif (Config::get('blog_posted_by') == 'lastname firstname') {
             $posted_by = $user_info['lastname'] . ' ' . $user_info['firstname'];
-        } elseif ($this->config->get('blog_posted_by') == 'user_name') {
+        } elseif (Config::get('blog_posted_by') == 'user_name') {
             $posted_by = $user_info['user_name'];
         }
         
@@ -719,7 +719,7 @@ class Post extends Model {
 			LEFT JOIN {$this->db->prefix}blog_category_description cd 
 				ON (p2c.category_id = cd.category_id) 
 			WHERE p2c.post_id = '" . (int)$post_id . "' 
-			AND cd.language_id='" . (int)$this->config->get('config_language_id') . "'
+			AND cd.language_id='" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $result) {
@@ -757,10 +757,10 @@ class Post extends Model {
             $sql.= " LEFT JOIN {$this->db->prefix}blog_post_to_category p2c ON (p.post_id = p2c.post_id)";
         }
         
-        $sql.= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+        $sql.= " WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_name'])) {
-            $sql.= " AND LCASE(pd.name) LIKE '" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "%'";
+            $sql.= " AND LCASE(pd.name) LIKE '" . $this->db->escape(Encode::strtolower($data['filter_name'])) . "%'";
         }
         
         if (!empty($data['filter_author_id'])) {
@@ -793,7 +793,7 @@ class Post extends Model {
                 
                 $implode_data[] = "p2c.category_id = '" . (int)$data['filter_category_id'] . "'";
                 
-                $this->theme->model('content/category');
+                Theme::model('content/category');
                 
                 $categories = $this->model_content_category->getCategories($data['filter_category_id']);
                 
@@ -807,8 +807,8 @@ class Post extends Model {
             }
         }
         
-        if ($this->user->getGroupId() != $this->config->get('blog_admin_group_id')) {
-            $sql.= " AND p.author_id ='" . (int)$this->user->getId() . "'";
+        if (User::getGroupId() != Config::get('blog_admin_group_id')) {
+            $sql.= " AND p.author_id ='" . (int)User::getId() . "'";
         }
         
         $query = $this->db->query($sql);

@@ -19,36 +19,36 @@ use Dais\Engine\Controller;
 
 class Header extends Controller {
     public function index() {
-        $data['title'] = $this->theme->getTitle();
+        $data['title'] = Theme::getTitle();
         
         if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))):
-            $data['base'] = $this->app['https.server'];
+            $data['base'] = Config::get('https.server');
         else:
-            $data['base'] = $this->app['http.server'];
+            $data['base'] = Config::get('http.server');
         endif;
         
-        $data['links']     = $this->theme->getLinks();
+        $data['links']     = Theme::getLinks();
         $data['lang']      = $this->language->get('lang_code');
         $data['direction'] = $this->language->get('lang_direction');
         
-        $this->css->register('dais.min')
+        CSS::register('dais.min')
             ->register('editor.min', 'dais.min');
         
-        $data = $this->theme->language('common/header', $data);
+        $data = Theme::language('common/header', $data);
         
-        if (!$this->user->isLogged() || !isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])):
+        if (!User::isLogged() || !isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])):
             $data['logged']    = '';
             $data['dashboard'] = $this->url->link('common/login', '', 'SSL');
         else:
             $data['logged'] = true;
         endif;
         
-        $data             = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-        $data['menu']     = $this->theme->controller('common/menu');
+        $data             = Theme::listen(__CLASS__, __FUNCTION__, $data);
+        $data['menu']     = Theme::controller('common/menu');
 
-        $key              = $this->css->compile();
-        $data['css_link'] = $this->app['https.public'] . 'asset/' . $this->app['theme.name'] . '/compiled/' . $this->app['filecache']->get_key($key, 'css');
+        $key              = CSS::compile();
+        $data['css_link'] = Config::get('https.public') . 'asset/' . Config::get('theme.name') . '/compiled/' . Filecache::get_key($key, 'css');
         
-        return $this->theme->view('common/header', $data);
+        return Theme::view('common/header', $data);
     }
 }

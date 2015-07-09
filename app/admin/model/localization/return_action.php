@@ -74,7 +74,7 @@ class ReturnAction extends Model {
             SELECT * 
             FROM {$this->db->prefix}return_action 
             WHERE return_action_id = '" . (int)$return_action_id . "' 
-            AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+            AND language_id = '" . (int)Config::get('config_language_id') . "'
         ");
         
         return $query->row;
@@ -85,7 +85,7 @@ class ReturnAction extends Model {
             $sql = "
                 SELECT * 
                 FROM {$this->db->prefix}return_action 
-                WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'";
+                WHERE language_id = '" . (int)Config::get('config_language_id') . "'";
             
             $sql.= " ORDER BY name";
             
@@ -111,7 +111,7 @@ class ReturnAction extends Model {
             
             return $query->rows;
         else:
-            $return_action_data = $this->cache->get('return_action.' . (int)$this->config->get('config_language_id'));
+            $return_action_data = $this->cache->get('return_action.' . (int)Config::get('config_language_id'));
             
             if (!$return_action_data):
                 $query = $this->db->query("
@@ -119,13 +119,13 @@ class ReturnAction extends Model {
                         return_action_id, 
                         name 
                     FROM {$this->db->prefix}return_action 
-                    WHERE language_id = '" . (int)$this->config->get('config_language_id') . "' 
+                    WHERE language_id = '" . (int)Config::get('config_language_id') . "' 
                     ORDER BY name
                 ");
                 
                 $return_action_data = $query->rows;
                 
-                $this->cache->set('return_action.' . (int)$this->config->get('config_language_id'), $return_action_data);
+                $this->cache->set('return_action.' . (int)Config::get('config_language_id'), $return_action_data);
             endif;
             
             return $return_action_data;
@@ -152,7 +152,7 @@ class ReturnAction extends Model {
         $query = $this->db->query("
             SELECT COUNT(*) AS total 
             FROM {$this->db->prefix}return_action 
-            WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+            WHERE language_id = '" . (int)Config::get('config_language_id') . "'
         ");
         
         return $query->row['total'];

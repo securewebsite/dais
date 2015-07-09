@@ -205,7 +205,7 @@ class User extends Model {
         $query = $this->db->query("
             SELECT COUNT(*) AS total 
             FROM `{$this->db->prefix}user` 
-            WHERE LCASE(email) = '" . $this->db->escape($this->encode->strtolower($email)) . "'");
+            WHERE LCASE(email) = '" . $this->db->escape(Encode::strtolower($email)) . "'");
         
         return $query->row['total'];
     }

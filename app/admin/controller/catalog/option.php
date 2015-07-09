@@ -23,11 +23,11 @@ class Option extends Controller {
     public function index() {
         $this->language->load('catalog/option');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/option');
+        Theme::model('catalog/option');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
@@ -35,9 +35,9 @@ class Option extends Controller {
     public function insert() {
         $this->language->load('catalog/option');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/option');
+        Theme::model('catalog/option');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_catalog_option->addOption($this->request->post);
@@ -58,10 +58,10 @@ class Option extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('catalog/option', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('catalog/option', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
@@ -69,9 +69,9 @@ class Option extends Controller {
     public function update() {
         $this->language->load('catalog/option');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/option');
+        Theme::model('catalog/option');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_catalog_option->editOption($this->request->get['option_id'], $this->request->post);
@@ -92,10 +92,10 @@ class Option extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('catalog/option', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('catalog/option', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
@@ -103,9 +103,9 @@ class Option extends Controller {
     public function delete() {
         $this->language->load('catalog/option');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->theme->model('catalog/option');
+        Theme::model('catalog/option');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $option_id) {
@@ -128,16 +128,16 @@ class Option extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->response->redirect($this->url->link('catalog/option', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect($this->url->link('catalog/option', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     protected function getList() {
-        $data = $this->theme->language('catalog/option');
+        $data = Theme::language('catalog/option');
         
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -178,7 +178,7 @@ class Option extends Controller {
         
         $data['options'] = array();
         
-        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
+        $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
         $option_total = $this->model_catalog_option->getTotalOptions();
         
@@ -231,20 +231,20 @@ class Option extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = $this->theme->paginate($option_total, $page, $this->config->get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('catalog/option', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($option_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('catalog/option', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('catalog/option_list', $data));
+        Response::setOutput(Theme::view('catalog/option_list', $data));
     }
     
     protected function getForm() {
-        $data = $this->theme->language('catalog/option');
+        $data = Theme::language('catalog/option');
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -294,7 +294,7 @@ class Option extends Controller {
         
         $data['token'] = $this->session->data['token'];
         
-        $this->theme->model('localization/language');
+        Theme::model('localization/language');
         
         $data['languages'] = $this->model_localization_language->getLanguages();
         
@@ -330,12 +330,12 @@ class Option extends Controller {
             $option_values = array();
         }
         
-        $this->theme->model('tool/image');
+        Theme::model('tool/image');
         
         $data['option_values'] = array();
         
         foreach ($option_values as $option_value) {
-            if ($option_value['image'] && file_exists($this->app['path.image'] . $option_value['image'])) {
+            if ($option_value['image'] && file_exists(Config::get('path.image') . $option_value['image'])) {
                 $image = $option_value['image'];
             } else {
                 $image = 'placeholder.png';
@@ -346,22 +346,22 @@ class Option extends Controller {
         
         $data['no_image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
         
-        $this->theme->loadjs('javascript/catalog/option_form', $data);
+        Theme::loadjs('javascript/catalog/option_form', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = Theme::render_controllers($data);
         
-        $this->response->setOutput($this->theme->view('catalog/option_form', $data));
+        Response::setOutput(Theme::view('catalog/option_form', $data));
     }
     
     protected function validateForm() {
-        if (!$this->user->hasPermission('modify', 'catalog/option')) {
+        if (!User::hasPermission('modify', 'catalog/option')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
         foreach ($this->request->post['option_description'] as $language_id => $value) {
-            if (($this->encode->strlen($value['name']) < 1) || ($this->encode->strlen($value['name']) > 128)) {
+            if ((Encode::strlen($value['name']) < 1) || (Encode::strlen($value['name']) > 128)) {
                 $this->error['name'][$language_id] = $this->language->get('lang_error_name');
             }
         }
@@ -373,24 +373,24 @@ class Option extends Controller {
         if (isset($this->request->post['option_value'])) {
             foreach ($this->request->post['option_value'] as $option_value_id => $option_value) {
                 foreach ($option_value['option_value_description'] as $language_id => $option_value_description) {
-                    if (($this->encode->strlen($option_value_description['name']) < 1) || ($this->encode->strlen($option_value_description['name']) > 128)) {
+                    if ((Encode::strlen($option_value_description['name']) < 1) || (Encode::strlen($option_value_description['name']) > 128)) {
                         $this->error['option_value'][$option_value_id][$language_id] = $this->language->get('lang_error_option_value');
                     }
                 }
             }
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     protected function validateDelete() {
-        if (!$this->user->hasPermission('modify', 'catalog/option')) {
+        if (!User::hasPermission('modify', 'catalog/option')) {
             $this->error['warning'] = $this->language->get('lang_error_permission');
         }
         
-        $this->theme->model('catalog/product');
+        Theme::model('catalog/product');
         
         foreach ($this->request->post['selected'] as $option_id) {
             $product_total = $this->model_catalog_product->getTotalProductsByOptionId($option_id);
@@ -400,7 +400,7 @@ class Option extends Controller {
             }
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
@@ -411,9 +411,9 @@ class Option extends Controller {
         if (isset($this->request->get['filter_name'])) {
             $this->language->load('catalog/option');
             
-            $this->theme->model('catalog/option');
+            Theme::model('catalog/option');
             
-            $this->theme->model('tool/image');
+            Theme::model('tool/image');
             
             $filter = array('filter_name' => $this->request->get['filter_name'], 'start' => 0, 'limit' => 20);
             
@@ -426,7 +426,7 @@ class Option extends Controller {
                     $option_values = $this->model_catalog_option->getOptionValues($option['option_id']);
                     
                     foreach ($option_values as $option_value) {
-                        if ($option_value['image'] && file_exists($this->app['path.image'] . $option_value['image'])) {
+                        if ($option_value['image'] && file_exists(Config::get('path.image') . $option_value['image'])) {
                             $image = $this->model_tool_image->resize($option_value['image'], 50, 50);
                         } else {
                             $image = '';
@@ -474,8 +474,8 @@ class Option extends Controller {
         
         array_multisort($sort_order, SORT_ASC, $json);
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }
