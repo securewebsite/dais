@@ -21,7 +21,7 @@ class Contact extends Controller {
     
     public function index() {
         $data = Theme::language('people/contact');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         $data['token'] = $this->session->data['token'];
         
@@ -30,9 +30,9 @@ class Contact extends Controller {
             unset($this->session->data['success']);
         endif;
         
-        $this->breadcrumb->add('lang_heading_title', 'people/contact');
+        Breadcrumb::add('lang_heading_title', 'people/contact');
         
-        $data['cancel'] = $this->url->link('people/contact', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('people/contact', 'token=' . $this->session->data['token'], 'SSL');
         
         Theme::model('setting/store');
         
@@ -49,25 +49,25 @@ class Contact extends Controller {
     }
     
     public function send() {
-        $this->language->load('people/contact');
+        Lang::load('people/contact');
         
         $json = array();
         
         if ($this->request->server['REQUEST_METHOD'] == 'POST'):
             if (!User::hasPermission('modify', 'people/contact')):
-                $json['error']['warning'] = $this->language->get('lang_error_permission');
+                $json['error']['warning'] = Lang::get('lang_error_permission');
             endif;
             
             if (!$this->request->post['subject']):
-                $json['error']['subject'] = $this->language->get('lang_error_subject');
+                $json['error']['subject'] = Lang::get('lang_error_subject');
             endif;
             
             if (!$this->request->post['contact_text']):
-                $json['error']['text'] = $this->language->get('lang_error_text');
+                $json['error']['text'] = Lang::get('lang_error_text');
             endif;
 
             if (!$this->request->post['contact_html']):
-                $json['error']['html'] = $this->language->get('lang_error_html');
+                $json['error']['html'] = Lang::get('lang_error_html');
             endif;
             
             if (!$json):
@@ -178,13 +178,13 @@ class Contact extends Controller {
                     $end   = $start + 10;
                     
                     if ($end < $email_total):
-                        $json['success'] = sprintf($this->language->get('lang_text_sent'), $start, $email_total);
+                        $json['success'] = sprintf(Lang::get('lang_text_sent'), $start, $email_total);
                     else:
-                        $json['success'] = $this->language->get('lang_text_success');
+                        $json['success'] = Lang::get('lang_text_success');
                     endif;
                     
                     if ($end < $email_total):
-                        $json['next'] = str_replace('&amp;', '&', $this->url->link('people/contact/send', 'token=' . $this->session->data['token'] . '&page=' . ($page + 1), 'SSL'));
+                        $json['next'] = str_replace('&amp;', '&', Url::link('people/contact/send', 'token=' . $this->session->data['token'] . '&page=' . ($page + 1), 'SSL'));
                     else:
                         $json['next'] = '';
                     endif;
@@ -192,8 +192,8 @@ class Contact extends Controller {
                     if ($end < $email_total):
                         $json['redirect'] = '';
                     else:
-                        $json['redirect'] = str_replace('&amp;', '&', $this->url->link('people/contact', 'token=' . $this->session->data['token'], 'SSL'));
-                        $this->session->data['success'] = $this->language->get('lang_text_success');
+                        $json['redirect'] = str_replace('&amp;', '&', Url::link('people/contact', 'token=' . $this->session->data['token'], 'SSL'));
+                        $this->session->data['success'] = Lang::get('lang_text_success');
                     endif;
 
                     $content = array(

@@ -21,8 +21,8 @@ class TaxRate extends Controller {
     private $error = array();
     
     public function index() {
-        $this->language->load('localization/tax_rate');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('localization/tax_rate');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('localization/tax_rate');
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -31,13 +31,13 @@ class TaxRate extends Controller {
     }
     
     public function insert() {
-        $this->language->load('localization/tax_rate');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('localization/tax_rate');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('localization/tax_rate');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_localization_tax_rate->addTaxRate($this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -53,7 +53,7 @@ class TaxRate extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('localization/tax_rate', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('localization/tax_rate', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -62,13 +62,13 @@ class TaxRate extends Controller {
     }
     
     public function update() {
-        $this->language->load('localization/tax_rate');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('localization/tax_rate');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('localization/tax_rate');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_localization_tax_rate->editTaxRate($this->request->get['tax_rate_id'], $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -84,7 +84,7 @@ class TaxRate extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('localization/tax_rate', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('localization/tax_rate', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -93,8 +93,8 @@ class TaxRate extends Controller {
     }
     
     public function delete() {
-        $this->language->load('localization/tax_rate');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('localization/tax_rate');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('localization/tax_rate');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
@@ -102,7 +102,7 @@ class TaxRate extends Controller {
                 $this->model_localization_tax_rate->deleteTaxRate($tax_rate_id);
             }
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -118,7 +118,7 @@ class TaxRate extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('localization/tax_rate', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('localization/tax_rate', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -161,10 +161,10 @@ class TaxRate extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'localization/tax_rate', $url);
+        Breadcrumb::add('lang_heading_title', 'localization/tax_rate', $url);
         
-        $data['insert'] = $this->url->link('localization/tax_rate/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('localization/tax_rate/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('localization/tax_rate/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = Url::link('localization/tax_rate/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         $data['tax_rates'] = array();
         
@@ -177,9 +177,9 @@ class TaxRate extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('localization/tax_rate/update', 'token=' . $this->session->data['token'] . '&tax_rate_id=' . $result['tax_rate_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('localization/tax_rate/update', 'token=' . $this->session->data['token'] . '&tax_rate_id=' . $result['tax_rate_id'] . $url, 'SSL'));
             
-            $data['tax_rates'][] = array('tax_rate_id' => $result['tax_rate_id'], 'name' => $result['name'], 'rate' => $result['rate'], 'type' => ($result['type'] == 'F' ? $this->language->get('lang_text_amount') : $this->language->get('lang_text_percent')), 'geo_zone' => $result['geo_zone'], 'date_added' => date($this->language->get('lang_date_format_short'), strtotime($result['date_added'])), 'date_modified' => date($this->language->get('lang_date_format_short'), strtotime($result['date_modified'])), 'selected' => isset($this->request->post['selected']) && in_array($result['tax_rate_id'], $this->request->post['selected']), 'action' => $action);
+            $data['tax_rates'][] = array('tax_rate_id' => $result['tax_rate_id'], 'name' => $result['name'], 'rate' => $result['rate'], 'type' => ($result['type'] == 'F' ? Lang::get('lang_text_amount') : Lang::get('lang_text_percent')), 'geo_zone' => $result['geo_zone'], 'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 'date_modified' => date(Lang::get('lang_date_format_short'), strtotime($result['date_modified'])), 'selected' => isset($this->request->post['selected']) && in_array($result['tax_rate_id'], $this->request->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -208,12 +208,12 @@ class TaxRate extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_name'] = $this->url->link('localization/tax_rate', 'token=' . $this->session->data['token'] . '&sort=tr.name' . $url, 'SSL');
-        $data['sort_rate'] = $this->url->link('localization/tax_rate', 'token=' . $this->session->data['token'] . '&sort=tr.rate' . $url, 'SSL');
-        $data['sort_type'] = $this->url->link('localization/tax_rate', 'token=' . $this->session->data['token'] . '&sort=tr.type' . $url, 'SSL');
-        $data['sort_geo_zone'] = $this->url->link('localization/tax_rate', 'token=' . $this->session->data['token'] . '&sort=gz.name' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('localization/tax_rate', 'token=' . $this->session->data['token'] . '&sort=tr.date_added' . $url, 'SSL');
-        $data['sort_date_modified'] = $this->url->link('localization/tax_rate', 'token=' . $this->session->data['token'] . '&sort=tr.date_modified' . $url, 'SSL');
+        $data['sort_name'] = Url::link('localization/tax_rate', 'token=' . $this->session->data['token'] . '&sort=tr.name' . $url, 'SSL');
+        $data['sort_rate'] = Url::link('localization/tax_rate', 'token=' . $this->session->data['token'] . '&sort=tr.rate' . $url, 'SSL');
+        $data['sort_type'] = Url::link('localization/tax_rate', 'token=' . $this->session->data['token'] . '&sort=tr.type' . $url, 'SSL');
+        $data['sort_geo_zone'] = Url::link('localization/tax_rate', 'token=' . $this->session->data['token'] . '&sort=gz.name' . $url, 'SSL');
+        $data['sort_date_added'] = Url::link('localization/tax_rate', 'token=' . $this->session->data['token'] . '&sort=tr.date_added' . $url, 'SSL');
+        $data['sort_date_modified'] = Url::link('localization/tax_rate', 'token=' . $this->session->data['token'] . '&sort=tr.date_modified' . $url, 'SSL');
         
         $url = '';
         
@@ -225,7 +225,7 @@ class TaxRate extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($tax_rate_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('localization/tax_rate', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($tax_rate_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('localization/tax_rate', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -272,15 +272,15 @@ class TaxRate extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'localization/tax_rate', $url);
+        Breadcrumb::add('lang_heading_title', 'localization/tax_rate', $url);
         
         if (!isset($this->request->get['tax_rate_id'])) {
-            $data['action'] = $this->url->link('localization/tax_rate/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('localization/tax_rate/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('localization/tax_rate/update', 'token=' . $this->session->data['token'] . '&tax_rate_id=' . $this->request->get['tax_rate_id'] . $url, 'SSL');
+            $data['action'] = Url::link('localization/tax_rate/update', 'token=' . $this->session->data['token'] . '&tax_rate_id=' . $this->request->get['tax_rate_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = $this->url->link('localization/tax_rate', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('localization/tax_rate', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         if (isset($this->request->get['tax_rate_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
             $tax_rate_info = $this->model_localization_tax_rate->getTaxRate($this->request->get['tax_rate_id']);
@@ -343,15 +343,15 @@ class TaxRate extends Controller {
     
     protected function validateForm() {
         if (!User::hasPermission('modify', 'localization/tax_rate')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 32)) {
-            $this->error['name'] = $this->language->get('lang_error_name');
+            $this->error['name'] = Lang::get('lang_error_name');
         }
         
         if (!$this->request->post['rate']) {
-            $this->error['rate'] = $this->language->get('lang_error_rate');
+            $this->error['rate'] = Lang::get('lang_error_rate');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -361,7 +361,7 @@ class TaxRate extends Controller {
     
     protected function validateDelete() {
         if (!User::hasPermission('modify', 'localization/tax_rate')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::model('localization/tax_class');
@@ -370,7 +370,7 @@ class TaxRate extends Controller {
             $tax_rule_total = $this->model_localization_tax_class->getTotalTaxRulesByTaxRateId($tax_rate_id);
             
             if ($tax_rule_total) {
-                $this->error['warning'] = sprintf($this->language->get('lang_error_tax_rule'), $tax_rule_total);
+                $this->error['warning'] = sprintf(Lang::get('lang_error_tax_rule'), $tax_rule_total);
             }
         }
         

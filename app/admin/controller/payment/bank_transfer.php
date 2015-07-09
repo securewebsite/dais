@@ -22,14 +22,14 @@ class BankTransfer extends Controller {
     
     public function index() {
         $data = Theme::language('payment/bank_transfer');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('bank_transfer', $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -50,12 +50,12 @@ class BankTransfer extends Controller {
             }
         }
         
-        $this->breadcrumb->add('lang_text_payment', 'module/payment');
-        $this->breadcrumb->add('lang_heading_title', 'payment/bank_transfer');
+        Breadcrumb::add('lang_text_payment', 'module/payment');
+        Breadcrumb::add('lang_heading_title', 'payment/bank_transfer');
         
-        $data['action'] = $this->url->link('payment/bank_transfer', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('payment/bank_transfer', 'token=' . $this->session->data['token'], 'SSL');
         
-        $data['cancel'] = $this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
         
         Theme::model('localization/language');
         
@@ -116,7 +116,7 @@ class BankTransfer extends Controller {
     
     protected function validate() {
         if (!User::hasPermission('modify', 'payment/bank_transfer')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::model('localization/language');
@@ -125,7 +125,7 @@ class BankTransfer extends Controller {
         
         foreach ($languages as $language) {
             if (!$this->request->post['bank_transfer_bank_' . $language['language_id']]) {
-                $this->error['bank_' . $language['language_id']] = $this->language->get('lang_error_bank');
+                $this->error['bank_' . $language['language_id']] = Lang::get('lang_error_bank');
             }
         }
         

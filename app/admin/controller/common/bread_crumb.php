@@ -20,7 +20,7 @@ use Dais\Engine\Controller;
 class BreadCrumb extends Controller {
     public function index() {
         
-        $data['breadcrumbs'] = $this->breadcrumb->fetch();
+        $data['breadcrumbs'] = \Breadcrumb::fetch();
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         

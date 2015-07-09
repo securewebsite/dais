@@ -20,7 +20,7 @@ use Dais\Engine\Controller;
 class AffiliateCommission extends Controller {
     public function index() {
         $data = Theme::language('report/affiliate_commission');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
@@ -54,7 +54,7 @@ class AffiliateCommission extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'report/affiliate_commission', $url);
+        Breadcrumb::add('lang_heading_title', 'report/affiliate_commission', $url);
         Theme::model('report/affiliate');
         
         $data['affiliates'] = array();
@@ -73,17 +73,17 @@ class AffiliateCommission extends Controller {
             $action = array();
             
             $action[] = array(
-                'text' => $this->language->get('lang_text_edit'), 
-                'href' => $this->url->link('people/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL')
+                'text' => Lang::get('lang_text_edit'), 
+                'href' => Url::link('people/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL')
             );
             
             $data['affiliates'][] = array(
                 'affiliate'  => $result['affiliate'], 
                 'email'      => $result['email'], 
-                'status'     => ($result['status'] ? $this->language->get('lang_text_enabled') : $this->language->get('lang_text_disabled')), 
-                'commission' => $this->currency->format($result['commission'], Config::get('config_currency')), 
+                'status'     => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 
+                'commission' => Currency::format($result['commission'], Config::get('config_currency')), 
                 'orders'     => $result['orders'], 
-                'total'      => $this->currency->format($result['total'], Config::get('config_currency')), 
+                'total'      => Currency::format($result['total'], Config::get('config_currency')), 
                 'action'     => $action
             );
         }
@@ -104,8 +104,8 @@ class AffiliateCommission extends Controller {
             $affiliate_total, 
             $page, 
             Config::get('config_admin_limit'), 
-            $this->language->get('lang_text_pagination'), 
-            $this->url->link('report/affiliate_commission', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
+            Lang::get('lang_text_pagination'), 
+            Url::link('report/affiliate_commission', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
         );
         
         $data['filter_date_start'] = $filter_date_start;

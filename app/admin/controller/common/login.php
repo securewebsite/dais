@@ -23,10 +23,10 @@ class Login extends Controller {
     public function index() {
         $data = Theme::language('common/login');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         if (User::isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token'])) {
-            Response::redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
@@ -35,12 +35,12 @@ class Login extends Controller {
             if (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], Config::get('http.server')) === 0 || strpos($this->request->post['redirect'], Config::get('https.server')) === 0)) {
                 Response::redirect($this->request->post['redirect'] . '&token=' . $this->session->data['token']);
             } else {
-                Response::redirect($this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
+                Response::redirect(Url::link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
             }
         }
         
         if ((isset($this->session->data['token']) && !isset($this->request->get['token'])) || ((isset($this->request->get['token']) && (isset($this->session->data['token']) && ($this->request->get['token'] != $this->session->data['token']))))) {
-            $this->error['warning'] = $this->language->get('lang_error_token');
+            $this->error['warning'] = Lang::get('lang_error_token');
         }
         
         if (isset($this->error['warning'])) {
@@ -57,7 +57,7 @@ class Login extends Controller {
             $data['success'] = '';
         }
         
-        $data['action'] = $this->url->link('common/login', '', 'SSL');
+        $data['action'] = Url::link('common/login', '', 'SSL');
         
         if (isset($this->request->post['user_name'])) {
             $data['user_name'] = $this->request->post['user_name'];
@@ -86,13 +86,13 @@ class Login extends Controller {
                 $url.= http_build_query($this->request->get);
             }
             
-            $data['redirect'] = $this->url->link($route, $url, 'SSL');
+            $data['redirect'] = Url::link($route, $url, 'SSL');
         } else {
             $data['redirect'] = '';
         }
         
         if (Config::get('config_password')) {
-            $data['forgotten'] = $this->url->link('common/forgotten', '', 'SSL');
+            $data['forgotten'] = Url::link('common/forgotten', '', 'SSL');
         } else {
             $data['forgotten'] = '';
         }
@@ -108,7 +108,7 @@ class Login extends Controller {
     
     protected function validate() {
         if (!isset($this->request->post['user_name']) || !isset($this->request->post['password']) || !User::login($this->request->post['user_name'], $this->request->post['password'])) {
-            $this->error['warning'] = $this->language->get('lang_error_login');
+            $this->error['warning'] = Lang::get('lang_error_login');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

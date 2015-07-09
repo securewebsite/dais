@@ -23,16 +23,16 @@ class PaypalProUk extends Controller {
     public function index() {
         $data = Theme::language('payment/paypal_pro_uk');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('paypal_pro_uk', $this->request->post);
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -59,12 +59,12 @@ class PaypalProUk extends Controller {
             $data['error_signature'] = '';
         }
         
-        $this->breadcrumb->add('lang_text_payment', 'module/payment');
-        $this->breadcrumb->add('lang_heading_title', 'payment/paypal_pro_uk');
+        Breadcrumb::add('lang_text_payment', 'module/payment');
+        Breadcrumb::add('lang_heading_title', 'payment/paypal_pro_uk');
         
-        $data['action'] = $this->url->link('payment/paypal_pro_uk', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('payment/paypal_pro_uk', 'token=' . $this->session->data['token'], 'SSL');
         
-        $data['cancel'] = $this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
         
         if (isset($this->request->post['paypal_pro_uk_username'])) {
             $data['paypal_pro_uk_username'] = $this->request->post['paypal_pro_uk_username'];
@@ -143,19 +143,19 @@ class PaypalProUk extends Controller {
     
     private function validate() {
         if (!User::hasPermission('modify', 'payment/paypal_pro_uk')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         if (!$this->request->post['paypal_pro_uk_username']) {
-            $this->error['username'] = $this->language->get('lang_error_username');
+            $this->error['username'] = Lang::get('lang_error_username');
         }
         
         if (!$this->request->post['paypal_pro_uk_password']) {
-            $this->error['password'] = $this->language->get('lang_error_password');
+            $this->error['password'] = Lang::get('lang_error_password');
         }
         
         if (!$this->request->post['paypal_pro_uk_signature']) {
-            $this->error['signature'] = $this->language->get('lang_error_signature');
+            $this->error['signature'] = Lang::get('lang_error_signature');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

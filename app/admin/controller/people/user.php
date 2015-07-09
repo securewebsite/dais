@@ -21,8 +21,8 @@ class User extends Controller {
     private $error = array();
     
     public function index() {
-        $this->language->load('people/user');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('people/user');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/user');
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -31,13 +31,13 @@ class User extends Controller {
     }
     
     public function insert() {
-        $this->language->load('people/user');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('people/user');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/user');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_people_user->addUser($this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -53,7 +53,7 @@ class User extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('people/user', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('people/user', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -62,13 +62,13 @@ class User extends Controller {
     }
     
     public function update() {
-        $this->language->load('people/user');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('people/user');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/user');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_people_user->editUser($this->request->get['user_id'], $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -84,7 +84,7 @@ class User extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('people/user', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('people/user', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -93,8 +93,8 @@ class User extends Controller {
     }
     
     public function delete() {
-        $this->language->load('people/user');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('people/user');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/user');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
@@ -102,7 +102,7 @@ class User extends Controller {
                 $this->model_people_user->deleteUser($user_id);
             }
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -118,7 +118,7 @@ class User extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('people/user', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('people/user', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -161,10 +161,10 @@ class User extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'people/user', $url);
+        Breadcrumb::add('lang_heading_title', 'people/user', $url);
         
-        $data['insert'] = $this->url->link('people/user/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('people/user/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('people/user/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = Url::link('people/user/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         $data['users'] = array();
         
@@ -183,15 +183,15 @@ class User extends Controller {
             $action = array();
             
             $action[] = array(
-                'text' => $this->language->get('lang_text_edit'), 
-                'href' => $this->url->link('people/user/update', 'token=' . $this->session->data['token'] . '&user_id=' . $result['user_id'] . $url, 'SSL')
+                'text' => Lang::get('lang_text_edit'), 
+                'href' => Url::link('people/user/update', 'token=' . $this->session->data['token'] . '&user_id=' . $result['user_id'] . $url, 'SSL')
             );
             
             $data['users'][] = array(
                 'user_id'    => $result['user_id'], 
                 'user_name'  => $result['user_name'], 
-                'status'     => ($result['status'] ? $this->language->get('lang_text_enabled') : $this->language->get('lang_text_disabled')), 
-                'date_added' => date($this->language->get('lang_date_format_short'), strtotime($result['date_added'])), 
+                'status'     => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 
+                'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 
                 'selected'   => isset($this->request->post['selected']) && in_array($result['user_id'], $this->request->post['selected']), 
                 'action'     => $action
             );
@@ -223,9 +223,9 @@ class User extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_user_name']  = $this->url->link('people/user', 'token=' . $this->session->data['token'] . '&sort=user_name' . $url, 'SSL');
-        $data['sort_status']     = $this->url->link('people/user', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
-        $data['sort_date_added'] = $this->url->link('people/user', 'token=' . $this->session->data['token'] . '&sort=date_added' . $url, 'SSL');
+        $data['sort_user_name']  = Url::link('people/user', 'token=' . $this->session->data['token'] . '&sort=user_name' . $url, 'SSL');
+        $data['sort_status']     = Url::link('people/user', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
+        $data['sort_date_added'] = Url::link('people/user', 'token=' . $this->session->data['token'] . '&sort=date_added' . $url, 'SSL');
         
         $url = '';
         
@@ -241,8 +241,8 @@ class User extends Controller {
             $user_total, 
             $page, 
             Config::get('config_admin_limit'), 
-            $this->language->get('lang_text_pagination'), 
-            $this->url->link('people/user', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
+            Lang::get('lang_text_pagination'), 
+            Url::link('people/user', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
         );
         
         $data['sort']  = $sort;
@@ -314,15 +314,15 @@ class User extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'people/user', $url);
+        Breadcrumb::add('lang_heading_title', 'people/user', $url);
         
         if (!isset($this->request->get['user_id'])) {
-            $data['action'] = $this->url->link('people/user/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('people/user/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('people/user/update', 'token=' . $this->session->data['token'] . '&user_id=' . $this->request->get['user_id'] . $url, 'SSL');
+            $data['action'] = Url::link('people/user/update', 'token=' . $this->session->data['token'] . '&user_id=' . $this->request->get['user_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = $this->url->link('people/user', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('people/user', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         if (isset($this->request->get['user_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
             $user_info = $this->model_people_user->getUser($this->request->get['user_id']);
@@ -401,44 +401,44 @@ class User extends Controller {
     
     protected function validateForm() {
         if (!User::hasPermission('modify', 'people/user')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         if ((Encode::strlen($this->request->post['user_name']) < 3) || (Encode::strlen($this->request->post['user_name']) > 20)) {
-            $this->error['user_name'] = $this->language->get('lang_error_user_name');
+            $this->error['user_name'] = Lang::get('lang_error_user_name');
         }
         
         $user_info = $this->model_people_user->getUserByUsername($this->request->post['user_name']);
         
         if (!isset($this->request->get['user_id'])) {
             if ($user_info) {
-                $this->error['warning'] = $this->language->get('lang_error_exists');
+                $this->error['warning'] = Lang::get('lang_error_exists');
             }
         } else {
             if ($user_info && ($this->request->get['user_id'] != $user_info['user_id'])) {
-                $this->error['warning'] = $this->language->get('lang_error_exists');
+                $this->error['warning'] = Lang::get('lang_error_exists');
             }
         }
         
         if ((Encode::strlen($this->request->post['firstname']) < 1) || (Encode::strlen($this->request->post['firstname']) > 32)) {
-            $this->error['firstname'] = $this->language->get('lang_error_firstname');
+            $this->error['firstname'] = Lang::get('lang_error_firstname');
         }
         
         if ((Encode::strlen($this->request->post['lastname']) < 1) || (Encode::strlen($this->request->post['lastname']) > 32)) {
-            $this->error['lastname'] = $this->language->get('lang_error_lastname');
+            $this->error['lastname'] = Lang::get('lang_error_lastname');
         }
 
         if ((Encode::strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['email'])):
-            $this->error['email'] = $this->language->get('lang_error_email');
+            $this->error['email'] = Lang::get('lang_error_email');
         endif;
         
         if ($this->request->post['password'] || (!isset($this->request->get['user_id']))) {
             if ((Encode::strlen($this->request->post['password']) < 4) || (Encode::strlen($this->request->post['password']) > 20)) {
-                $this->error['password'] = $this->language->get('lang_error_password');
+                $this->error['password'] = Lang::get('lang_error_password');
             }
             
             if ($this->request->post['password'] != $this->request->post['confirm']) {
-                $this->error['confirm'] = $this->language->get('lang_error_confirm');
+                $this->error['confirm'] = Lang::get('lang_error_confirm');
             }
         }
         
@@ -449,12 +449,12 @@ class User extends Controller {
     
     protected function validateDelete() {
         if (!User::hasPermission('modify', 'people/user')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         foreach ($this->request->post['selected'] as $user_id) {
             if (User::getId() == $user_id) {
-                $this->error['warning'] = $this->language->get('lang_error_account');
+                $this->error['warning'] = Lang::get('lang_error_account');
             }
         }
         

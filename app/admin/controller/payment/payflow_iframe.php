@@ -24,14 +24,14 @@ class PayflowIframe extends Controller {
     
     public function index() {
         $data = Theme::language('payment/payflow_iframe');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('payflow_iframe', $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -64,12 +64,12 @@ class PayflowIframe extends Controller {
             $data['error_partner'] = '';
         }
         
-        $this->breadcrumb->add('lang_text_payment', 'module/payment');
-        $this->breadcrumb->add('lang_heading_title', 'payment/payflow_iframe');
+        Breadcrumb::add('lang_text_payment', 'module/payment');
+        Breadcrumb::add('lang_heading_title', 'payment/payflow_iframe');
         
-        $data['action'] = $this->url->link('payment/payflow_iframe', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('payment/payflow_iframe', 'token=' . $this->session->data['token'], 'SSL');
         
-        $data['cancel'] = $this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
         
         if (isset($this->request->post['payflow_iframe_vendor'])) {
             $data['payflow_iframe_vendor'] = $this->request->post['payflow_iframe_vendor'];
@@ -190,15 +190,15 @@ class PayflowIframe extends Controller {
         $transaction = $this->model_payment_payflow_iframe->getTransaction($this->request->get['transaction_reference']);
         
         if ($transaction) {
-            Theme::setTitle($this->language->get('lang_heading_refund'));
+            Theme::setTitle(Lang::get('lang_heading_refund'));
             
-            $this->breadcrumb->add('lang_text_payment', 'module/payment');
-            $this->breadcrumb->add('lang_heading_title', 'payment/payflow_iframe');
-            $this->breadcrumb->add('lang_heading_refund', 'payment/payflow_iframe/refund', 'transaction_reference=' . $this->request->get['transaction_reference']);
+            Breadcrumb::add('lang_text_payment', 'module/payment');
+            Breadcrumb::add('lang_heading_title', 'payment/payflow_iframe');
+            Breadcrumb::add('lang_heading_refund', 'payment/payflow_iframe/refund', 'transaction_reference=' . $this->request->get['transaction_reference']);
             
             $data['transaction_reference'] = $transaction['transaction_reference'];
             $data['transaction_amount'] = number_format($transaction['amount'], 2);
-            $data['cancel'] = $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $transaction['order_id'], 'SSL');
+            $data['cancel'] = Url::link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $transaction['order_id'], 'SSL');
             
             $data['token'] = $this->session->data['token'];
             
@@ -216,7 +216,7 @@ class PayflowIframe extends Controller {
     
     public function do_refund() {
         Theme::model('payment/payflow_iframe');
-        $this->language->load('payment/payflow_iframe');
+        Lang::load('payment/payflow_iframe');
         $json = array();
         
         if (isset($this->request->post['transaction_reference']) && isset($this->request->post['amount'])) {
@@ -229,7 +229,7 @@ class PayflowIframe extends Controller {
                 $result = $this->model_payment_payflow_iframe->call($call_data);
                 
                 if ($result['RESULT'] == 0) {
-                    $json['success'] = $this->language->get('lang_text_refund_issued');
+                    $json['success'] = Lang::get('lang_text_refund_issued');
                     
                     $filter = array('order_id' => $transaction['order_id'], 'type' => 'C', 'transaction_reference' => $result['PNREF'], 'amount' => $this->request->post['amount'],);
                     
@@ -238,10 +238,10 @@ class PayflowIframe extends Controller {
                     $json['error'] = $result['RESPMSG'];
                 }
             } else {
-                $json['error'] = $this->language->get('lang_error_missing_order');
+                $json['error'] = Lang::get('lang_error_missing_order');
             }
         } else {
-            $json['error'] = $this->language->get('lang_error_missing_data');
+            $json['error'] = Lang::get('lang_error_missing_data');
         }
         
         $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
@@ -252,7 +252,7 @@ class PayflowIframe extends Controller {
     public function capture() {
         Theme::model('payment/payflow_iframe');
         Theme::model('sale/order');
-        $this->language->load('payment/payflow_iframe');
+        Lang::load('payment/payflow_iframe');
         
         $json = array();
         
@@ -281,17 +281,17 @@ class PayflowIframe extends Controller {
                     
                     $actions = array();
                     
-                    $actions[] = array('title' => $this->language->get('lang_text_capture'), 'href' => $this->url->link('payment/payflow_iframe/refund', 'transaction_reference=' . $result['PNREF'] . '&token=' . $this->session->data['token']),);
+                    $actions[] = array('title' => Lang::get('lang_text_capture'), 'href' => Url::link('payment/payflow_iframe/refund', 'transaction_reference=' . $result['PNREF'] . '&token=' . $this->session->data['token']),);
                     
-                    $json['success'] = array('transaction_type' => $this->language->get('lang_text_capture'), 'transaction_reference' => $result['PNREF'], 'time' => date('Y-m-d H:i:s'), 'amount' => number_format($this->request->post['amount'], 2), 'actions' => $actions,);
+                    $json['success'] = array('transaction_type' => Lang::get('lang_text_capture'), 'transaction_reference' => $result['PNREF'], 'time' => date('Y-m-d H:i:s'), 'amount' => number_format($this->request->post['amount'], 2), 'actions' => $actions,);
                 } else {
                     $json['error'] = $result['RESPMSG'];
                 }
             } else {
-                $json['error'] = $this->language->get('lang_error_missing_order');
+                $json['error'] = Lang::get('lang_error_missing_order');
             }
         } else {
-            $json['error'] = $this->language->get('lang_error_missing_data');
+            $json['error'] = Lang::get('lang_error_missing_data');
         }
         
         $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
@@ -301,7 +301,7 @@ class PayflowIframe extends Controller {
     
     public function void() {
         Theme::model('payment/payflow_iframe');
-        $this->language->load('payment/payflow_iframe');
+        Lang::load('payment/payflow_iframe');
         
         $json = array();
         
@@ -315,7 +315,7 @@ class PayflowIframe extends Controller {
                 $result = $this->model_payment_payflow_iframe->call($call_data);
                 
                 if ($result['RESULT'] == 0) {
-                    $json['success'] = $this->language->get('lang_text_void_success');
+                    $json['success'] = Lang::get('lang_text_void_success');
                     $this->model_payment_payflow_iframe->updateOrderStatus($order_id, 1);
                     
                     $filter = array('order_id' => $order_id, 'type' => 'V', 'transaction_reference' => $result['PNREF'], 'amount' => '',);
@@ -323,15 +323,15 @@ class PayflowIframe extends Controller {
                     $this->model_payment_payflow_iframe->addTransaction($filter);
                     $this->model_payment_payflow_iframe->updateOrderStatus($order_id, 1);
                     
-                    $json['success'] = array('transaction_type' => $this->language->get('lang_text_void'), 'transaction_reference' => $result['PNREF'], 'time' => date('Y-m-d H:i:s'), 'amount' => '0.00',);
+                    $json['success'] = array('transaction_type' => Lang::get('lang_text_void'), 'transaction_reference' => $result['PNREF'], 'time' => date('Y-m-d H:i:s'), 'amount' => '0.00',);
                 } else {
                     $json['error'] = $result['RESPMSG'];
                 }
             } else {
-                $json['error'] = $this->language->get('lang_error_missing_order');
+                $json['error'] = Lang::get('lang_error_missing_order');
             }
         } else {
-            $json['error'] = $this->language->get('lang_error_missing_data');
+            $json['error'] = Lang::get('lang_error_missing_data');
         }
         
         $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
@@ -361,29 +361,29 @@ class PayflowIframe extends Controller {
                 
                 switch ($transaction['transaction_type']) {
                     case 'V':
-                        $transaction_type = $this->language->get('lang_text_void');
+                        $transaction_type = Lang::get('lang_text_void');
                         break;
 
                     case 'S':
-                        $transaction_type = $this->language->get('lang_text_sale');
+                        $transaction_type = Lang::get('lang_text_sale');
                         
-                        $actions[] = array('title' => $this->language->get('lang_text_refund'), 'href' => $this->url->link('payment/payflow_iframe/refund', 'transaction_reference=' . $transaction['transaction_reference'] . '&token=' . $this->session->data['token']),);
+                        $actions[] = array('title' => Lang::get('lang_text_refund'), 'href' => Url::link('payment/payflow_iframe/refund', 'transaction_reference=' . $transaction['transaction_reference'] . '&token=' . $this->session->data['token']),);
                         
                         break;
 
                     case 'D':
-                        $transaction_type = $this->language->get('lang_text_capture');
+                        $transaction_type = Lang::get('lang_text_capture');
                         
-                        $actions[] = array('title' => $this->language->get('lang_text_refund'), 'href' => $this->url->link('payment/payflow_iframe/refund', 'transaction_reference=' . $transaction['transaction_reference'] . '&token=' . $this->session->data['token']),);
+                        $actions[] = array('title' => Lang::get('lang_text_refund'), 'href' => Url::link('payment/payflow_iframe/refund', 'transaction_reference=' . $transaction['transaction_reference'] . '&token=' . $this->session->data['token']),);
                         
                         break;
 
                     case 'A':
-                        $transaction_type = $this->language->get('lang_text_authorise');
+                        $transaction_type = Lang::get('lang_text_authorise');
                         break;
 
                     case 'C':
-                        $transaction_type = $this->language->get('lang_text_refund'); //
+                        $transaction_type = Lang::get('lang_text_refund'); //
                         break;
 
                     default:
@@ -406,23 +406,23 @@ class PayflowIframe extends Controller {
     
     protected function validate() {
         if (!User::hasPermission('modify', 'payment/payflow_iframe')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         if (!$this->request->post['payflow_iframe_vendor']) {
-            $this->error['vendor'] = $this->language->get('lang_error_vendor');
+            $this->error['vendor'] = Lang::get('lang_error_vendor');
         }
         
         if (!$this->request->post['payflow_iframe_user']) {
-            $this->error['user'] = $this->language->get('lang_error_user');
+            $this->error['user'] = Lang::get('lang_error_user');
         }
         
         if (!$this->request->post['payflow_iframe_password']) {
-            $this->error['password'] = $this->language->get('lang_error_password');
+            $this->error['password'] = Lang::get('lang_error_password');
         }
         
         if (!$this->request->post['payflow_iframe_partner']) {
-            $this->error['partner'] = $this->language->get('lang_error_partner');
+            $this->error['partner'] = Lang::get('lang_error_partner');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

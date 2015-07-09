@@ -22,14 +22,14 @@ class Free extends Controller {
     
     public function index() {
         $data = Theme::language('shipping/free');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('free', $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -38,12 +38,12 @@ class Free extends Controller {
             $data['error_warning'] = '';
         }
         
-        $this->breadcrumb->add('lang_text_shipping', 'module/shipping');
-        $this->breadcrumb->add('lang_heading_title', 'shipping/free');
+        Breadcrumb::add('lang_text_shipping', 'module/shipping');
+        Breadcrumb::add('lang_heading_title', 'shipping/free');
         
-        $data['action'] = $this->url->link('shipping/free', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('shipping/free', 'token=' . $this->session->data['token'], 'SSL');
         
-        $data['cancel'] = $this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
         
         if (isset($this->request->post['free_total'])) {
             $data['free_total'] = $this->request->post['free_total'];
@@ -82,7 +82,7 @@ class Free extends Controller {
     
     protected function validate() {
         if (!User::hasPermission('modify', 'shipping/free')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

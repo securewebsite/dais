@@ -22,14 +22,14 @@ class PaypalProPf extends Controller {
     
     public function index() {
         $data = Theme::language('payment/paypal_pro_pf');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('paypal_pro_pf', $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -62,12 +62,12 @@ class PaypalProPf extends Controller {
             $data['error_partner'] = '';
         }
         
-        $this->breadcrumb->add('lang_text_payment', 'module/payment');
-        $this->breadcrumb->add('lang_heading_title', 'payment/paypal_pro_pf');
+        Breadcrumb::add('lang_text_payment', 'module/payment');
+        Breadcrumb::add('lang_heading_title', 'payment/paypal_pro_pf');
         
-        $data['action'] = $this->url->link('payment/paypal_pro_pf', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('payment/paypal_pro_pf', 'token=' . $this->session->data['token'], 'SSL');
         
-        $data['cancel'] = $this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
         
         if (isset($this->request->post['paypal_pro_pf_vendor'])) {
             $data['paypal_pro_pf_vendor'] = $this->request->post['paypal_pro_pf_vendor'];
@@ -154,23 +154,23 @@ class PaypalProPf extends Controller {
     
     private function validate() {
         if (!User::hasPermission('modify', 'payment/paypal_pro_pf')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         if (!$this->request->post['paypal_pro_pf_vendor']) {
-            $this->error['vendor'] = $this->language->get('lang_error_vendor');
+            $this->error['vendor'] = Lang::get('lang_error_vendor');
         }
         
         if (!$this->request->post['paypal_pro_pf_user']) {
-            $this->error['user'] = $this->language->get('lang_error_user');
+            $this->error['user'] = Lang::get('lang_error_user');
         }
         
         if (!$this->request->post['paypal_pro_pf_password']) {
-            $this->error['password'] = $this->language->get('lang_error_password');
+            $this->error['password'] = Lang::get('lang_error_password');
         }
         
         if (!$this->request->post['paypal_pro_pf_partner']) {
-            $this->error['partner'] = $this->language->get('lang_error_partner');
+            $this->error['partner'] = Lang::get('lang_error_partner');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

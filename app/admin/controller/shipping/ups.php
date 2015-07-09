@@ -22,14 +22,14 @@ class Ups extends Controller {
     
     public function index() {
         $data = Theme::language('shipping/ups');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('ups', $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -80,12 +80,12 @@ class Ups extends Controller {
             $data['error_dimension'] = '';
         }
         
-        $this->breadcrumb->add('lang_text_shipping', 'module/shipping');
-        $this->breadcrumb->add('lang_heading_title', 'shipping/ups');
+        Breadcrumb::add('lang_text_shipping', 'module/shipping');
+        Breadcrumb::add('lang_heading_title', 'shipping/ups');
         
-        $data['action'] = $this->url->link('shipping/ups', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('shipping/ups', 'token=' . $this->session->data['token'], 'SSL');
         
-        $data['cancel'] = $this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
         
         if (isset($this->request->post['ups_key'])) {
             $data['ups_key'] = $this->request->post['ups_key'];
@@ -113,19 +113,19 @@ class Ups extends Controller {
         
         $data['pickups'] = array();
         
-        $data['pickups'][] = array('value' => '01', 'text' => $this->language->get('lang_text_daily_pickup'));
+        $data['pickups'][] = array('value' => '01', 'text' => Lang::get('lang_text_daily_pickup'));
         
-        $data['pickups'][] = array('value' => '03', 'text' => $this->language->get('lang_text_customer_counter'));
+        $data['pickups'][] = array('value' => '03', 'text' => Lang::get('lang_text_customer_counter'));
         
-        $data['pickups'][] = array('value' => '06', 'text' => $this->language->get('lang_text_one_time_pickup'));
+        $data['pickups'][] = array('value' => '06', 'text' => Lang::get('lang_text_one_time_pickup'));
         
-        $data['pickups'][] = array('value' => '07', 'text' => $this->language->get('lang_text_on_call_air_pickup'));
+        $data['pickups'][] = array('value' => '07', 'text' => Lang::get('lang_text_on_call_air_pickup'));
         
-        $data['pickups'][] = array('value' => '19', 'text' => $this->language->get('lang_text_letter_center'));
+        $data['pickups'][] = array('value' => '19', 'text' => Lang::get('lang_text_letter_center'));
         
-        $data['pickups'][] = array('value' => '20', 'text' => $this->language->get('lang_text_air_service_center'));
+        $data['pickups'][] = array('value' => '20', 'text' => Lang::get('lang_text_air_service_center'));
         
-        $data['pickups'][] = array('value' => '11', 'text' => $this->language->get('lang_text_suggested_retail_rates'));
+        $data['pickups'][] = array('value' => '11', 'text' => Lang::get('lang_text_suggested_retail_rates'));
         
         if (isset($this->request->post['ups_packaging'])) {
             $data['ups_packaging'] = $this->request->post['ups_packaging'];
@@ -135,19 +135,19 @@ class Ups extends Controller {
         
         $data['packages'] = array();
         
-        $data['packages'][] = array('value' => '02', 'text' => $this->language->get('lang_text_package'));
+        $data['packages'][] = array('value' => '02', 'text' => Lang::get('lang_text_package'));
         
-        $data['packages'][] = array('value' => '01', 'text' => $this->language->get('lang_text_ups_letter'));
+        $data['packages'][] = array('value' => '01', 'text' => Lang::get('lang_text_ups_letter'));
         
-        $data['packages'][] = array('value' => '03', 'text' => $this->language->get('lang_text_ups_tube'));
+        $data['packages'][] = array('value' => '03', 'text' => Lang::get('lang_text_ups_tube'));
         
-        $data['packages'][] = array('value' => '04', 'text' => $this->language->get('lang_text_ups_pak'));
+        $data['packages'][] = array('value' => '04', 'text' => Lang::get('lang_text_ups_pak'));
         
-        $data['packages'][] = array('value' => '21', 'text' => $this->language->get('lang_text_ups_express_box'));
+        $data['packages'][] = array('value' => '21', 'text' => Lang::get('lang_text_ups_express_box'));
         
-        $data['packages'][] = array('value' => '24', 'text' => $this->language->get('lang_text_ups_25kg_box'));
+        $data['packages'][] = array('value' => '24', 'text' => Lang::get('lang_text_ups_25kg_box'));
         
-        $data['packages'][] = array('value' => '25', 'text' => $this->language->get('lang_text_ups_10kg_box'));
+        $data['packages'][] = array('value' => '25', 'text' => Lang::get('lang_text_ups_10kg_box'));
         
         if (isset($this->request->post['ups_classification'])) {
             $data['ups_classification'] = $this->request->post['ups_classification'];
@@ -169,17 +169,17 @@ class Ups extends Controller {
         
         $data['origins'] = array();
         
-        $data['origins'][] = array('value' => 'US', 'text' => $this->language->get('lang_text_us'));
+        $data['origins'][] = array('value' => 'US', 'text' => Lang::get('lang_text_us'));
         
-        $data['origins'][] = array('value' => 'CA', 'text' => $this->language->get('lang_text_ca'));
+        $data['origins'][] = array('value' => 'CA', 'text' => Lang::get('lang_text_ca'));
         
-        $data['origins'][] = array('value' => 'EU', 'text' => $this->language->get('lang_text_eu'));
+        $data['origins'][] = array('value' => 'EU', 'text' => Lang::get('lang_text_eu'));
         
-        $data['origins'][] = array('value' => 'PR', 'text' => $this->language->get('lang_text_pr'));
+        $data['origins'][] = array('value' => 'PR', 'text' => Lang::get('lang_text_pr'));
         
-        $data['origins'][] = array('value' => 'MX', 'text' => $this->language->get('lang_text_mx'));
+        $data['origins'][] = array('value' => 'MX', 'text' => Lang::get('lang_text_mx'));
         
-        $data['origins'][] = array('value' => 'other', 'text' => $this->language->get('lang_text_other'));
+        $data['origins'][] = array('value' => 'other', 'text' => Lang::get('lang_text_other'));
         
         if (isset($this->request->post['ups_city'])) {
             $data['ups_city'] = $this->request->post['ups_city'];
@@ -219,9 +219,9 @@ class Ups extends Controller {
         
         $data['quote_types'] = array();
         
-        $data['quote_types'][] = array('value' => 'residential', 'text' => $this->language->get('lang_text_residential'));
+        $data['quote_types'][] = array('value' => 'residential', 'text' => Lang::get('lang_text_residential'));
         
-        $data['quote_types'][] = array('value' => 'commercial', 'text' => $this->language->get('lang_text_commercial'));
+        $data['quote_types'][] = array('value' => 'commercial', 'text' => Lang::get('lang_text_commercial'));
         
         // US
         if (isset($this->request->post['ups_us_01'])) {
@@ -628,43 +628,43 @@ class Ups extends Controller {
     
     protected function validate() {
         if (!User::hasPermission('modify', 'shipping/ups')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         if (!$this->request->post['ups_key']) {
-            $this->error['key'] = $this->language->get('lang_error_key');
+            $this->error['key'] = Lang::get('lang_error_key');
         }
         
         if (!$this->request->post['ups_username']) {
-            $this->error['username'] = $this->language->get('lang_error_username');
+            $this->error['username'] = Lang::get('lang_error_username');
         }
         
         if (!$this->request->post['ups_password']) {
-            $this->error['password'] = $this->language->get('lang_error_password');
+            $this->error['password'] = Lang::get('lang_error_password');
         }
         
         if (!$this->request->post['ups_city']) {
-            $this->error['city'] = $this->language->get('lang_error_city');
+            $this->error['city'] = Lang::get('lang_error_city');
         }
         
         if (!$this->request->post['ups_state']) {
-            $this->error['state'] = $this->language->get('lang_error_state');
+            $this->error['state'] = Lang::get('lang_error_state');
         }
         
         if (!$this->request->post['ups_country']) {
-            $this->error['country'] = $this->language->get('lang_error_country');
+            $this->error['country'] = Lang::get('lang_error_country');
         }
         
         if (empty($this->request->post['ups_length'])) {
-            $this->error['dimension'] = $this->language->get('lang_error_dimension');
+            $this->error['dimension'] = Lang::get('lang_error_dimension');
         }
         
         if (empty($this->request->post['ups_width'])) {
-            $this->error['dimension'] = $this->language->get('lang_error_dimension');
+            $this->error['dimension'] = Lang::get('lang_error_dimension');
         }
         
         if (empty($this->request->post['ups_height'])) {
-            $this->error['dimension'] = $this->language->get('lang_error_dimension');
+            $this->error['dimension'] = Lang::get('lang_error_dimension');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

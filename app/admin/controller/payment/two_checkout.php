@@ -23,16 +23,16 @@ class TwoCheckout extends Controller {
     public function index() {
         $data = Theme::language('payment/two_checkout');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('two_checkout', $this->request->post);
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -53,12 +53,12 @@ class TwoCheckout extends Controller {
             $data['error_secret'] = '';
         }
         
-        $this->breadcrumb->add('lang_text_payment', 'module/payment');
-        $this->breadcrumb->add('lang_heading_title', 'payment/two_checkout');
+        Breadcrumb::add('lang_text_payment', 'module/payment');
+        Breadcrumb::add('lang_heading_title', 'payment/two_checkout');
         
-        $data['action'] = $this->url->link('payment/two_checkout', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('payment/two_checkout', 'token=' . $this->session->data['token'], 'SSL');
         
-        $data['cancel'] = $this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
         
         if (isset($this->request->post['two_checkout_account'])) {
             $data['two_checkout_account'] = $this->request->post['two_checkout_account'];
@@ -125,15 +125,15 @@ class TwoCheckout extends Controller {
     
     protected function validate() {
         if (!User::hasPermission('modify', 'payment/two_checkout')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         if (!$this->request->post['two_checkout_account']) {
-            $this->error['account'] = $this->language->get('lang_error_account');
+            $this->error['account'] = Lang::get('lang_error_account');
         }
         
         if (!$this->request->post['two_checkout_secret']) {
-            $this->error['secret'] = $this->language->get('lang_error_secret');
+            $this->error['secret'] = Lang::get('lang_error_secret');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

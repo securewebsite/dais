@@ -20,6 +20,7 @@ use Dais\Engine\Controller;
 use Dais\Engine\Action;
 
 class Dashboard extends Controller {
+    
     private $error;
     private $errors = array(
         'install',
@@ -33,7 +34,7 @@ class Dashboard extends Controller {
     public function index() {
         $data = Theme::language('common/dashboard');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         JS::register('flot.min', 'summernote.min')
             ->register('flot.resize.min', 'flot.min');
@@ -50,7 +51,7 @@ class Dashboard extends Controller {
             endif;
         endforeach;
         
-        $data['token'] = $this->session->data['token'];
+        $data['token'] = Session::get('token');
         
         if (isset($this->session->data['success'])):
             $data['success'] = $this->session->data['success'];
@@ -68,8 +69,8 @@ class Dashboard extends Controller {
         
         Theme::model('sale/order');
         
-        $data['total_sale']      = $this->currency->format($this->model_sale_order->getTotalSales() , Config::get('config_currency'));
-        $data['total_sale_year'] = $this->currency->format($this->model_sale_order->getTotalSalesByYear(date('Y')) , Config::get('config_currency'));
+        $data['total_sale']      = Currency::format($this->model_sale_order->getTotalSales() , Config::get('config_currency'));
+        $data['total_sale_year'] = Currency::format($this->model_sale_order->getTotalSalesByYear(date('Y')) , Config::get('config_currency'));
         $data['total_order']     = $this->model_sale_order->getTotalOrders();
         
         Theme::model('people/customer');
@@ -97,16 +98,16 @@ class Dashboard extends Controller {
             $action = array();
             
             $action[] = array(
-                'text' => $this->language->get('lang_text_view') ,
-                'href' => $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'], 'SSL')
+                'text' => Lang::get('lang_text_view') ,
+                'href' => Url::link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'], 'SSL')
             );
             
             $data['orders'][] = array(
                 'order_id'   => $result['order_id'],
                 'customer'   => $result['customer'],
                 'status'     => $result['status'],
-                'date_added' => date($this->language->get('lang_date_format_short') , strtotime($result['date_added'])) ,
-                'total'      => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']) ,
+                'date_added' => date(Lang::get('lang_date_format_short') , strtotime($result['date_added'])) ,
+                'total'      => Currency::format($result['total'], $result['currency_code'], $result['currency_value']) ,
                 'action'     => $action
             );
         }
@@ -137,8 +138,8 @@ class Dashboard extends Controller {
         $json['customers']         = array();
         $json['xaxis']             = array();
         
-        $json['order']['label']    = $this->language->get('lang_text_order');
-        $json['customer']['label'] = $this->language->get('lang_text_customer');
+        $json['order']['label']    = Lang::get('lang_text_order');
+        $json['customer']['label'] = Lang::get('lang_text_customer');
         
         if (isset($this->request->get['range'])) {
             $range = $this->request->get['range'];
@@ -333,7 +334,7 @@ class Dashboard extends Controller {
         fclose($handle);
         
         if (!is_readable($file)):
-            $this->error['image'] = sprintf($this->language->get('lang_error_image') , Config::get('path.image'));
+            $this->error['image'] = sprintf(Lang::get('lang_error_image') , Config::get('path.image'));
         else:
             $this->error['image'] = '';
             unlink($file);
@@ -347,7 +348,7 @@ class Dashboard extends Controller {
         fclose($handle);
         
         if (!is_readable($file)):
-            $this->error['image_cache'] = sprintf($this->language->get('lang_error_image_cache') , Config::get('path.image') . 'cache/');
+            $this->error['image_cache'] = sprintf(Lang::get('lang_error_image_cache') , Config::get('path.image') . 'cache/');
         else:
             $this->error['image_cache'] = '';
             unlink($file);
@@ -361,7 +362,7 @@ class Dashboard extends Controller {
         fclose($handle);
         
         if (!is_readable($file)):
-            $this->error['cache'] = sprintf($this->language->get('lang_error_image_cache') , Config::get('path.cache'));
+            $this->error['cache'] = sprintf(Lang::get('lang_error_image_cache') , Config::get('path.cache'));
         else:
             $this->error['cache'] = '';
             unlink($file);
@@ -375,7 +376,7 @@ class Dashboard extends Controller {
         fclose($handle);
         
         if (!is_readable($file)):
-            $this->error['download'] = sprintf($this->language->get('lang_error_download') , Config::get('path.download'));
+            $this->error['download'] = sprintf(Lang::get('lang_error_download') , Config::get('path.download'));
         else:
             $this->error['download'] = '';
             unlink($file);
@@ -389,7 +390,7 @@ class Dashboard extends Controller {
         fclose($handle);
         
         if (!is_readable($file)):
-            $this->error['logs'] = sprintf($this->language->get('lang_error_logs') , Config::get('path.logs'));
+            $this->error['logs'] = sprintf(Lang::get('lang_error_logs') , Config::get('path.logs'));
         else:
             $this->error['logs'] = '';
             unlink($file);

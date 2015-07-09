@@ -24,7 +24,7 @@ class Footer extends Controller {
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
         $data['javascript']  = Theme::controller('common/javascript');
-        $data['text_footer'] = sprintf($this->language->get('lang_text_footer'), App::version());
+        $data['text_footer'] = sprintf(Lang::get('lang_text_footer'), App::version());
 
 		$key             = JS::compile();
 		$data['js_link'] = Config::get('https.public') . 'asset/' . Config::get('theme.name') . '/compiled/' . Filecache::get_key($key, 'js');

@@ -22,8 +22,8 @@ class Setting extends Controller {
     private $error = array();
     
     public function index() {
-        $data = $this->language->load('setting/setting');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        $data = Lang::load('setting/setting');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
@@ -34,9 +34,9 @@ class Setting extends Controller {
                 $this->model_localization_currency->updateCurrencies();
             }
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('setting/store', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('setting/store', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -291,7 +291,7 @@ class Setting extends Controller {
             $data['error_html_signature'] = '';
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'setting/setting');
+        Breadcrumb::add('lang_heading_title', 'setting/setting');
         
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
@@ -301,9 +301,9 @@ class Setting extends Controller {
             $data['success'] = '';
         }
         
-        $data['action'] = $this->url->link('setting/setting', 'token=' . $this->session->data['token'], 'SSL');
-        $data['flush']  = $this->url->link('setting/setting/flush', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = $this->url->link('setting/store', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('setting/setting', 'token=' . $this->session->data['token'], 'SSL');
+        $data['flush']  = Url::link('setting/setting/flush', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('setting/store', 'token=' . $this->session->data['token'], 'SSL');
         $data['token']  = $this->session->data['token'];
         
         if (isset($this->request->post['config_name'])) {
@@ -368,7 +368,7 @@ class Setting extends Controller {
         
         $data['site_styles'] = array();
         
-        $site_styles = array('shop' => $this->language->get('lang_text_style_shop'), 'content' => $this->language->get('lang_text_style_site'),);
+        $site_styles = array('shop' => Lang::get('lang_text_style_shop'), 'content' => Lang::get('lang_text_style_site'),);
         
         foreach ($site_styles as $key => $value):
             $data['site_styles'][] = array('type' => $key, 'name' => $value);
@@ -1262,181 +1262,181 @@ class Setting extends Controller {
     
     protected function validate() {
         if (!User::hasPermission('modify', 'setting/setting')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         if (!$this->request->post['config_name']) {
-            $this->error['name'] = $this->language->get('lang_error_name');
+            $this->error['name'] = Lang::get('lang_error_name');
         }
         
         if ((Encode::strlen($this->request->post['config_owner']) < 3) || (Encode::strlen($this->request->post['config_owner']) > 64)) {
-            $this->error['owner'] = $this->language->get('lang_error_owner');
+            $this->error['owner'] = Lang::get('lang_error_owner');
         }
         
         if ((Encode::strlen($this->request->post['config_address']) < 3) || (Encode::strlen($this->request->post['config_address']) > 256)) {
-            $this->error['address'] = $this->language->get('lang_error_address');
+            $this->error['address'] = Lang::get('lang_error_address');
         }
         
         if ((Encode::strlen($this->request->post['config_email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['config_email'])) {
-            $this->error['email'] = $this->language->get('lang_error_email');
+            $this->error['email'] = Lang::get('lang_error_email');
         }
         
         if ((Encode::strlen($this->request->post['config_telephone']) < 3) || (Encode::strlen($this->request->post['config_telephone']) > 32)) {
-            $this->error['telephone'] = $this->language->get('lang_error_telephone');
+            $this->error['telephone'] = Lang::get('lang_error_telephone');
         }
         
         if (!$this->request->post['config_title']) {
-            $this->error['title'] = $this->language->get('lang_error_title');
+            $this->error['title'] = Lang::get('lang_error_title');
         }
 
         if (!$this->request->post['config_admin_email_user'] || $this->request->post['config_admin_email_user'] < 1) {
-            $this->error['admin_email_user'] = $this->language->get('lang_error_admin_email_user');
+            $this->error['admin_email_user'] = Lang::get('lang_error_admin_email_user');
         }
 
         if (!$this->request->post['config_text_signature'] || Encode::strlen($this->request->post['config_text_signature']) < 1) {
-            $this->error['text_signature'] = $this->language->get('lang_error_text_signature');
+            $this->error['text_signature'] = Lang::get('lang_error_text_signature');
         }
 
         if (!$this->request->post['config_html_signature'] || Encode::strlen($this->request->post['config_html_signature']) < 1) {
-            $this->error['html_signature'] = $this->language->get('lang_error_html_signature');
+            $this->error['html_signature'] = Lang::get('lang_error_html_signature');
         }
 
         // Affiliate settings
         // If allowing affiliates, params for them must be supplied.
         if ($this->request->post['config_affiliate_allowed']):
             if (!$this->request->post['config_affiliate_terms']):
-                $this->error['affiliate_terms'] = $this->language->get('lang_error_affiliate_terms');
+                $this->error['affiliate_terms'] = Lang::get('lang_error_affiliate_terms');
             endif;
 
             if (Encode::strlen($this->request->post['config_commission']) < 1):
-                $this->error['commission'] = $this->language->get('lang_error_affiliate_commission');
+                $this->error['commission'] = Lang::get('lang_error_affiliate_commission');
             endif;
         endif;
         
         if (!empty($this->request->post['config_customer_group_display']) && !in_array($this->request->post['config_customer_group_id'], $this->request->post['config_customer_group_display'])) {
-            $this->error['customer_group_display'] = $this->language->get('lang_error_customer_group_display');
+            $this->error['customer_group_display'] = Lang::get('lang_error_customer_group_display');
         }
         
         if (!$this->request->post['config_gift_card_min']) {
-            $this->error['gift_card_min'] = $this->language->get('lang_error_gift_card_min');
+            $this->error['gift_card_min'] = Lang::get('lang_error_gift_card_min');
         }
         
         if (!$this->request->post['config_gift_card_max']) {
-            $this->error['gift_card_max'] = $this->language->get('lang_error_gift_card_max');
+            $this->error['gift_card_max'] = Lang::get('lang_error_gift_card_max');
         }
         
         if (!$this->request->post['config_image_category_width'] || !$this->request->post['config_image_category_height']) {
-            $this->error['image_category'] = $this->language->get('lang_error_image_category');
+            $this->error['image_category'] = Lang::get('lang_error_image_category');
         }
         
         if (!$this->request->post['config_image_thumb_width'] || !$this->request->post['config_image_thumb_height']) {
-            $this->error['image_thumb'] = $this->language->get('lang_error_image_thumb');
+            $this->error['image_thumb'] = Lang::get('lang_error_image_thumb');
         }
         
         if (!$this->request->post['config_image_popup_width'] || !$this->request->post['config_image_popup_height']) {
-            $this->error['image_popup'] = $this->language->get('lang_error_image_popup');
+            $this->error['image_popup'] = Lang::get('lang_error_image_popup');
         }
         
         if (!$this->request->post['config_image_product_width'] || !$this->request->post['config_image_product_height']) {
-            $this->error['image_product'] = $this->language->get('lang_error_image_product');
+            $this->error['image_product'] = Lang::get('lang_error_image_product');
         }
         
         if (!$this->request->post['config_image_additional_width'] || !$this->request->post['config_image_additional_height']) {
-            $this->error['image_additional'] = $this->language->get('lang_error_image_additional');
+            $this->error['image_additional'] = Lang::get('lang_error_image_additional');
         }
         
         if (!$this->request->post['config_image_related_width'] || !$this->request->post['config_image_related_height']) {
-            $this->error['image_related'] = $this->language->get('lang_error_image_related');
+            $this->error['image_related'] = Lang::get('lang_error_image_related');
         }
         
         if (!$this->request->post['config_image_compare_width'] || !$this->request->post['config_image_compare_height']) {
-            $this->error['image_compare'] = $this->language->get('lang_error_image_compare');
+            $this->error['image_compare'] = Lang::get('lang_error_image_compare');
         }
         
         if (!$this->request->post['config_image_wishlist_width'] || !$this->request->post['config_image_wishlist_height']) {
-            $this->error['image_wishlist'] = $this->language->get('lang_error_image_wishlist');
+            $this->error['image_wishlist'] = Lang::get('lang_error_image_wishlist');
         }
         
         if (!$this->request->post['config_image_cart_width'] || !$this->request->post['config_image_cart_height']) {
-            $this->error['image_cart'] = $this->language->get('lang_error_image_cart');
+            $this->error['image_cart'] = Lang::get('lang_error_image_cart');
         }
         
         if ($this->request->post['config_ftp_status']) {
             if (!$this->request->post['config_ftp_host']) {
-                $this->error['ftp_host'] = $this->language->get('lang_error_ftp_host');
+                $this->error['ftp_host'] = Lang::get('lang_error_ftp_host');
             }
             
             if (!$this->request->post['config_ftp_port']) {
-                $this->error['ftp_port'] = $this->language->get('lang_error_ftp_port');
+                $this->error['ftp_port'] = Lang::get('lang_error_ftp_port');
             }
             
             if (!$this->request->post['config_ftp_username']) {
-                $this->error['ftp_username'] = $this->language->get('lang_error_ftp_username');
+                $this->error['ftp_username'] = Lang::get('lang_error_ftp_username');
             }
             
             if (!$this->request->post['config_ftp_password']) {
-                $this->error['ftp_password'] = $this->language->get('lang_error_ftp_password');
+                $this->error['ftp_password'] = Lang::get('lang_error_ftp_password');
             }
         }
         
         if (!$this->request->post['config_error_filename']) {
-            $this->error['error_filename'] = $this->language->get('lang_error_error_filename');
+            $this->error['error_filename'] = Lang::get('lang_error_error_filename');
         }
         
         if (!$this->request->post['config_catalog_limit']) {
-            $this->error['catalog_limit'] = $this->language->get('lang_error_limit');
+            $this->error['catalog_limit'] = Lang::get('lang_error_limit');
         }
         
         if (!$this->request->post['config_admin_limit']) {
-            $this->error['admin_limit'] = $this->language->get('lang_error_limit');
+            $this->error['admin_limit'] = Lang::get('lang_error_limit');
         }
         
         if ((Encode::strlen($this->request->post['config_encryption']) < 3) || (Encode::strlen($this->request->post['config_encryption']) > 32)) {
-            $this->error['encryption'] = $this->language->get('lang_error_encryption');
+            $this->error['encryption'] = Lang::get('lang_error_encryption');
         }
         
         if (!$this->request->post['config_default_visibility']):
-            $this->error['default_visibility'] = $this->language->get('lang_error_default_visibility');
+            $this->error['default_visibility'] = Lang::get('lang_error_default_visibility');
         endif;
         
         if (!$this->request->post['config_free_customer']):
-            $this->error['free_customer'] = $this->language->get('lang_error_free_customer');
+            $this->error['free_customer'] = Lang::get('lang_error_free_customer');
         endif;
         
         if (!$this->request->post['config_top_customer']):
-            $this->error['top_customer'] = $this->language->get('lang_error_top_customer');
+            $this->error['top_customer'] = Lang::get('lang_error_top_customer');
         endif;
 
         if (!$this->request->post['blog_image_thumb_width'] || !$this->request->post['blog_image_thumb_height']) {
-            $this->error['blog_image_thumb'] = $this->language->get('lang_error_blog_image_thumb');
+            $this->error['blog_image_thumb'] = Lang::get('lang_error_blog_image_thumb');
         }
         
         if (!$this->request->post['blog_image_popup_width'] || !$this->request->post['blog_image_popup_height']) {
-            $this->error['blog_image_popup'] = $this->language->get('lang_error_blog_image_popup');
+            $this->error['blog_image_popup'] = Lang::get('lang_error_blog_image_popup');
         }
         
         if (!$this->request->post['blog_image_post_width'] || !$this->request->post['blog_image_post_height']) {
-            $this->error['blog_image_post'] = $this->language->get('lang_error_blog_image_post');
+            $this->error['blog_image_post'] = Lang::get('lang_error_blog_image_post');
         }
         
         if (!$this->request->post['blog_image_additional_width'] || !$this->request->post['blog_image_additional_height']) {
-            $this->error['blog_image_additional'] = $this->language->get('lang_error_blog_image_additional');
+            $this->error['blog_image_additional'] = Lang::get('lang_error_blog_image_additional');
         }
         
         if (!$this->request->post['blog_image_related_width'] || !$this->request->post['blog_image_related_height']) {
-            $this->error['blog_image_related'] = $this->language->get('lang_error_blog_image_related');
+            $this->error['blog_image_related'] = Lang::get('lang_error_blog_image_related');
         }
         
         if (!$this->request->post['blog_posted_by']) {
-            $this->error['blog_posted_by'] = $this->language->get('lang_error_blog_posted_by');
+            $this->error['blog_posted_by'] = Lang::get('lang_error_blog_posted_by');
         }
         
         if (!$this->request->post['blog_admin_group_id']) {
-            $this->error['blog_admin_group_id'] = $this->language->get('lang_error_blog_admin_group_id');
+            $this->error['blog_admin_group_id'] = Lang::get('lang_error_blog_admin_group_id');
         }
         
         if ($this->error && !isset($this->error['warning'])) {
-            $this->error['warning'] = $this->language->get('lang_error_warning');
+            $this->error['warning'] = Lang::get('lang_error_warning');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -1526,13 +1526,13 @@ class Setting extends Controller {
     }
     
     public function flush() {
-        $this->language->load('setting/setting');
+        Lang::load('setting/setting');
         
         $this->cache->flush_cache();
         $this->filecache->flush_cache();
         
-        $this->session->data['success'] = $this->language->get('lang_text_flush_success');
+        $this->session->data['success'] = Lang::get('lang_text_flush_success');
         
-        Response::redirect($this->url->link('setting/setting', 'token=' . $this->session->data['token']));
+        Response::redirect(Url::link('setting/setting', 'token=' . $this->session->data['token']));
     }
 }

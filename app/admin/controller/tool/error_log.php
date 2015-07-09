@@ -22,7 +22,7 @@ class ErrorLog extends Controller {
     public function index() {
         $data = Theme::language('tool/error_log');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
@@ -32,9 +32,9 @@ class ErrorLog extends Controller {
             $data['success'] = '';
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'tool/error_log');
+        Breadcrumb::add('lang_heading_title', 'tool/error_log');
         
-        $data['clear'] = $this->url->link('tool/error_log/clear', 'token=' . $this->session->data['token'], 'SSL');
+        $data['clear'] = Url::link('tool/error_log/clear', 'token=' . $this->session->data['token'], 'SSL');
         
         $file = Config::get('path.logs') . Config::get('config_error_filename');
         
@@ -52,7 +52,7 @@ class ErrorLog extends Controller {
     }
     
     public function clear() {
-        $this->language->load('tool/error_log');
+        Lang::load('tool/error_log');
         
         $file = Config::get('path.logs') . Config::get('config_error_filename');
         
@@ -60,10 +60,10 @@ class ErrorLog extends Controller {
         
         fclose($handle);
         
-        $this->session->data['success'] = $this->language->get('lang_text_success');
+        $this->session->data['success'] = Lang::get('lang_text_success');
         
         Theme::listen(__CLASS__, __FUNCTION__);
         
-        Response::redirect($this->url->link('tool/error_log', 'token=' . $this->session->data['token'], 'SSL'));
+        Response::redirect(Url::link('tool/error_log', 'token=' . $this->session->data['token'], 'SSL'));
     }
 }

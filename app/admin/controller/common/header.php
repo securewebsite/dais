@@ -28,8 +28,8 @@ class Header extends Controller {
         endif;
         
         $data['links']     = Theme::getLinks();
-        $data['lang']      = $this->language->get('lang_code');
-        $data['direction'] = $this->language->get('lang_direction');
+        $data['lang']      = Lang::get('lang_code');
+        $data['direction'] = Lang::get('lang_direction');
         
         CSS::register('dais.min')
             ->register('editor.min', 'dais.min');
@@ -38,7 +38,7 @@ class Header extends Controller {
         
         if (!User::isLogged() || !isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])):
             $data['logged']    = '';
-            $data['dashboard'] = $this->url->link('common/login', '', 'SSL');
+            $data['dashboard'] = Url::link('common/login', '', 'SSL');
         else:
             $data['logged'] = true;
         endif;

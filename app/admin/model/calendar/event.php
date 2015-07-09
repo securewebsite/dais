@@ -871,8 +871,8 @@ class Event extends Model {
         $data = Theme::language('notification/event');
 
         $data['event_name'] = $call['event_name'];
-        $data['event_date'] = date($this->language->get('lang_date_format_short'), strtotime($call['date_time']));
-        $data['event_time'] = date($this->language->get('lang_time_format'), strtotime($call['date_time']));
+        $data['event_date'] = date(Lang::get('lang_date_format_short'), strtotime($call['date_time']));
+        $data['event_time'] = date(Lang::get('lang_time_format'), strtotime($call['date_time']));
 
         $data['event_location']  = false;
         $data['event_telephone'] = false;
@@ -907,8 +907,8 @@ class Event extends Model {
         $data = Theme::language('notification/event');
 
         $data['event_name'] = $call['event_name'];
-        $data['event_date'] = date($this->language->get('lang_date_format_short'), strtotime($call['date_time']));
-        $data['event_time'] = date($this->language->get('lang_time_format'), strtotime($call['date_time']));
+        $data['event_date'] = date(Lang::get('lang_date_format_short'), strtotime($call['date_time']));
+        $data['event_time'] = date(Lang::get('lang_time_format'), strtotime($call['date_time']));
 
         $data['event_location']  = false;
         $data['event_telephone'] = false;

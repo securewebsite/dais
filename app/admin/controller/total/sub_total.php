@@ -22,14 +22,14 @@ class SubTotal extends Controller {
     
     public function index() {
         $data = Theme::language('total/sub_total');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('sub_total', $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -38,11 +38,11 @@ class SubTotal extends Controller {
             $data['error_warning'] = '';
         }
         
-        $this->breadcrumb->add('lang_text_total', 'module/total');
-        $this->breadcrumb->add('lang_heading_title', 'total/sub_total');
+        Breadcrumb::add('lang_text_total', 'module/total');
+        Breadcrumb::add('lang_heading_title', 'total/sub_total');
         
-        $data['action'] = $this->url->link('total/sub_total', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = $this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('total/sub_total', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL');
         
         if (isset($this->request->post['sub_total_status'])) {
             $data['sub_total_status'] = $this->request->post['sub_total_status'];
@@ -65,7 +65,7 @@ class SubTotal extends Controller {
     
     protected function validate() {
         if (!User::hasPermission('modify', 'total/sub_total')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

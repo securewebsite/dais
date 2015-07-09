@@ -20,7 +20,7 @@ use Dais\Engine\Controller;
 class CustomerOnline extends Controller {
     public function index() {
         $data = Theme::language('report/customer_online');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         if (isset($this->request->get['filter_ip'])) {
             $filter_ip = $this->request->get['filter_ip'];
@@ -54,7 +54,7 @@ class CustomerOnline extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'report/customer_online', $url);
+        Breadcrumb::add('lang_heading_title', 'report/customer_online', $url);
         
         Theme::model('report/online');
         Theme::model('people/customer');
@@ -71,7 +71,7 @@ class CustomerOnline extends Controller {
             $action = array();
             
             if ($result['customer_id']) {
-                $action[] = array('text' => 'Edit', 'href' => $this->url->link('people/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'], 'SSL'));
+                $action[] = array('text' => 'Edit', 'href' => Url::link('people/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'], 'SSL'));
             }
             
             $customer_info = $this->model_people_customer->getCustomer($result['customer_id']);
@@ -79,7 +79,7 @@ class CustomerOnline extends Controller {
             if ($customer_info) {
                 $customer = $customer_info['firstname'] . ' ' . $customer_info['lastname'];
             } else {
-                $customer = $this->language->get('lang_text_guest');
+                $customer = Lang::get('lang_text_guest');
             }
             
             $data['customers'][] = array('ip' => $result['ip'], 'customer' => $customer, 'url' => $result['url'], 'referer' => $result['referer'], 'date_added' => date('d/m/Y H:i:s', strtotime($result['date_added'])), 'action' => $action);
@@ -97,7 +97,7 @@ class CustomerOnline extends Controller {
             $url.= '&filter_ip=' . $this->request->get['filter_ip'];
         }
         
-        $data['pagination'] = Theme::paginate($customer_total, $page, 20, $this->language->get('lang_text_pagination'), $this->url->link('report/customer_online', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($customer_total, $page, 20, Lang::get('lang_text_pagination'), Url::link('report/customer_online', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['filter_customer'] = $filter_customer;
         $data['filter_ip'] = $filter_ip;

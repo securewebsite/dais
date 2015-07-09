@@ -618,8 +618,8 @@ class Customer extends Model {
             
             $callback = array(
                 'customer_id' => $customer_id,
-                'credit'      => $this->currency->format($amount, Config::get('config_currency')),
-                'total'       => $this->currency->format($this->getCreditTotal($customer_id), Config::get('config_currency')),
+                'credit'      => Currency::format($amount, Config::get('config_currency')),
+                'total'       => Currency::format($this->getCreditTotal($customer_id), Config::get('config_currency')),
                 'callback'    => array(
                     'class'  => __CLASS__,
                     'method' => 'admin_customer_add_credit'
@@ -703,8 +703,8 @@ class Customer extends Model {
             
             $callback = array(
                 'customer_id' => $customer_id,
-                'commission'  => $this->currency->format($amount, Config::get('config_currency')),
-                'total'       => $this->currency->format($this->getCommissionTotal($customer_id), Config::get('config_currency')),
+                'commission'  => Currency::format($amount, Config::get('config_currency')),
+                'total'       => Currency::format($this->getCommissionTotal($customer_id), Config::get('config_currency')),
                 'days'        => '30',
                 'callback'    => array(
                     'class'  => __CLASS__,

@@ -21,8 +21,8 @@ class Order extends Controller {
     private $error = array();
     
     public function index() {
-        $this->language->load('sale/order');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('sale/order');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('sale/order');
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -31,13 +31,13 @@ class Order extends Controller {
     }
     
     public function insert() {
-        $this->language->load('sale/order');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('sale/order');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('sale/order');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_sale_order->addOrder($this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -77,7 +77,7 @@ class Order extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,13 +86,13 @@ class Order extends Controller {
     }
     
     public function update() {
-        $this->language->load('sale/order');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('sale/order');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('sale/order');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_sale_order->editOrder($this->request->get['order_id'], $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -132,7 +132,7 @@ class Order extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -141,8 +141,8 @@ class Order extends Controller {
     }
     
     public function delete() {
-        $this->language->load('sale/order');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('sale/order');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('sale/order');
         
         if (isset($this->request->post['selected']) && ($this->validateDelete())) {
@@ -150,7 +150,7 @@ class Order extends Controller {
                 $this->model_sale_order->deleteOrder($order_id);
             }
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -190,7 +190,7 @@ class Order extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -293,11 +293,11 @@ class Order extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'sale/order', $url);
+        Breadcrumb::add('lang_heading_title', 'sale/order', $url);
         
-        $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
-        $data['insert']  = $this->url->link('sale/order/insert', 'token=' . $this->session->data['token'], 'SSL');
-        $data['delete']  = $this->url->link('sale/order/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['invoice'] = Url::link('sale/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
+        $data['insert']  = Url::link('sale/order/insert', 'token=' . $this->session->data['token'], 'SSL');
+        $data['delete']  = Url::link('sale/order/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         $data['orders'] = array();
         
@@ -322,14 +322,14 @@ class Order extends Controller {
             $action = array();
             
             $action[] = array(
-                'text' => $this->language->get('lang_text_view'), 
-                'href' => $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL')
+                'text' => Lang::get('lang_text_view'), 
+                'href' => Url::link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL')
             );
             
             if (strtotime($result['date_added']) > strtotime('-' . (int)Config::get('config_order_edit') . ' day')) {
                 $action[] = array(
-                    'text' => $this->language->get('lang_text_edit'), 
-                    'href' => $this->url->link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL')
+                    'text' => Lang::get('lang_text_edit'), 
+                    'href' => Url::link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL')
                 );
             }
             
@@ -337,9 +337,9 @@ class Order extends Controller {
                 'order_id'      => $result['order_id'], 
                 'customer'      => $result['customer'], 
                 'status'        => $result['status'], 
-                'total'         => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']), 
-                'date_added'    => date($this->language->get('lang_date_format_short'), strtotime($result['date_added'])), 
-                'date_modified' => date($this->language->get('lang_date_format_short'), strtotime($result['date_modified'])), 
+                'total'         => Currency::format($result['total'], $result['currency_code'], $result['currency_value']), 
+                'date_added'    => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 
+                'date_modified' => date(Lang::get('lang_date_format_short'), strtotime($result['date_modified'])), 
                 'selected'      => isset($this->request->post['selected']) && in_array($result['order_id'], $this->request->post['selected']), 
                 'action'        => $action
             );
@@ -397,12 +397,12 @@ class Order extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_order']         = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.order_id' . $url, 'SSL');
-        $data['sort_customer']      = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=customer' . $url, 'SSL');
-        $data['sort_status']        = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
-        $data['sort_total']         = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.total' . $url, 'SSL');
-        $data['sort_date_added']    = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.date_added' . $url, 'SSL');
-        $data['sort_date_modified'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.date_modified' . $url, 'SSL');
+        $data['sort_order']         = Url::link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.order_id' . $url, 'SSL');
+        $data['sort_customer']      = Url::link('sale/order', 'token=' . $this->session->data['token'] . '&sort=customer' . $url, 'SSL');
+        $data['sort_status']        = Url::link('sale/order', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
+        $data['sort_total']         = Url::link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.total' . $url, 'SSL');
+        $data['sort_date_added']    = Url::link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.date_added' . $url, 'SSL');
+        $data['sort_date_modified'] = Url::link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.date_modified' . $url, 'SSL');
         
         $url = '';
         
@@ -442,8 +442,8 @@ class Order extends Controller {
             $order_total, 
             $page, 
             Config::get('config_admin_limit'), 
-            $this->language->get('lang_text_pagination'), 
-            $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
+            Lang::get('lang_text_pagination'), 
+            Url::link('sale/order', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
         );
         
         $data['filter_order_id']        = $filter_order_id;
@@ -644,15 +644,15 @@ class Order extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'sale/order', $url);
+        Breadcrumb::add('lang_heading_title', 'sale/order', $url);
         
         if (!isset($this->request->get['order_id'])) {
-            $data['action'] = $this->url->link('sale/order/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('sale/order/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . $url, 'SSL');
+            $data['action'] = Url::link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         if (isset($this->request->get['order_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
             $order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
@@ -1067,39 +1067,39 @@ class Order extends Controller {
     
     protected function validateForm() {
         if (!User::hasPermission('modify', 'sale/order')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         if ((Encode::strlen($this->request->post['firstname']) < 1) || (Encode::strlen($this->request->post['firstname']) > 32)) {
-            $this->error['firstname'] = $this->language->get('lang_error_firstname');
+            $this->error['firstname'] = Lang::get('lang_error_firstname');
         }
         
         if ((Encode::strlen($this->request->post['lastname']) < 1) || (Encode::strlen($this->request->post['lastname']) > 32)) {
-            $this->error['lastname'] = $this->language->get('lang_error_lastname');
+            $this->error['lastname'] = Lang::get('lang_error_lastname');
         }
         
         if ((Encode::strlen($this->request->post['email']) > 96) || (!preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['email']))) {
-            $this->error['email'] = $this->language->get('lang_error_email');
+            $this->error['email'] = Lang::get('lang_error_email');
         }
         
         if ((Encode::strlen($this->request->post['telephone']) < 3) || (Encode::strlen($this->request->post['telephone']) > 32)) {
-            $this->error['telephone'] = $this->language->get('lang_error_telephone');
+            $this->error['telephone'] = Lang::get('lang_error_telephone');
         }
         
         if ((Encode::strlen($this->request->post['payment_firstname']) < 1) || (Encode::strlen($this->request->post['payment_firstname']) > 32)) {
-            $this->error['payment_firstname'] = $this->language->get('lang_error_firstname');
+            $this->error['payment_firstname'] = Lang::get('lang_error_firstname');
         }
         
         if ((Encode::strlen($this->request->post['payment_lastname']) < 1) || (Encode::strlen($this->request->post['payment_lastname']) > 32)) {
-            $this->error['payment_lastname'] = $this->language->get('lang_error_lastname');
+            $this->error['payment_lastname'] = Lang::get('lang_error_lastname');
         }
         
         if ((Encode::strlen($this->request->post['payment_address_1']) < 3) || (Encode::strlen($this->request->post['payment_address_1']) > 128)) {
-            $this->error['payment_address_1'] = $this->language->get('lang_error_address_1');
+            $this->error['payment_address_1'] = Lang::get('lang_error_address_1');
         }
         
         if ((Encode::strlen($this->request->post['payment_city']) < 3) || (Encode::strlen($this->request->post['payment_city']) > 128)) {
-            $this->error['payment_city'] = $this->language->get('lang_error_city');
+            $this->error['payment_city'] = Lang::get('lang_error_city');
         }
         
         Theme::model('localization/country');
@@ -1108,24 +1108,24 @@ class Order extends Controller {
         
         if ($country_info) {
             if ($country_info['postcode_required'] && (Encode::strlen($this->request->post['payment_postcode']) < 2) || (Encode::strlen($this->request->post['payment_postcode']) > 10)) {
-                $this->error['payment_postcode'] = $this->language->get('lang_error_postcode');
+                $this->error['payment_postcode'] = Lang::get('lang_error_postcode');
             }
             
             if (Config::get('config_vat') && $this->request->post['payment_tax_id'] && ($this->vat->validate($country_info['iso_code_2'], $this->request->post['payment_tax_id']) == 'invalid')) {
-                $this->error['payment_tax_id'] = $this->language->get('lang_error_vat');
+                $this->error['payment_tax_id'] = Lang::get('lang_error_vat');
             }
         }
         
         if ($this->request->post['payment_country_id'] == '') {
-            $this->error['payment_country'] = $this->language->get('lang_error_country');
+            $this->error['payment_country'] = Lang::get('lang_error_country');
         }
         
         if (!isset($this->request->post['payment_zone_id']) || $this->request->post['payment_zone_id'] == '') {
-            $this->error['payment_zone'] = $this->language->get('lang_error_zone');
+            $this->error['payment_zone'] = Lang::get('lang_error_zone');
         }
         
         if (!isset($this->request->post['payment_method']) || $this->request->post['payment_method'] == '') {
-            $this->error['payment_method'] = $this->language->get('lang_error_payment');
+            $this->error['payment_method'] = Lang::get('lang_error_payment');
         }
         
         // Check if any products require shipping
@@ -1145,19 +1145,19 @@ class Order extends Controller {
         
         if ($shipping) {
             if ((Encode::strlen($this->request->post['shipping_firstname']) < 1) || (Encode::strlen($this->request->post['shipping_firstname']) > 32)) {
-                $this->error['shipping_firstname'] = $this->language->get('lang_error_firstname');
+                $this->error['shipping_firstname'] = Lang::get('lang_error_firstname');
             }
             
             if ((Encode::strlen($this->request->post['shipping_lastname']) < 1) || (Encode::strlen($this->request->post['shipping_lastname']) > 32)) {
-                $this->error['shipping_lastname'] = $this->language->get('lang_error_lastname');
+                $this->error['shipping_lastname'] = Lang::get('lang_error_lastname');
             }
             
             if ((Encode::strlen($this->request->post['shipping_address_1']) < 3) || (Encode::strlen($this->request->post['shipping_address_1']) > 128)) {
-                $this->error['shipping_address_1'] = $this->language->get('lang_error_address_1');
+                $this->error['shipping_address_1'] = Lang::get('lang_error_address_1');
             }
             
             if ((Encode::strlen($this->request->post['shipping_city']) < 3) || (Encode::strlen($this->request->post['shipping_city']) > 128)) {
-                $this->error['shipping_city'] = $this->language->get('lang_error_city');
+                $this->error['shipping_city'] = Lang::get('lang_error_city');
             }
             
             Theme::model('localization/country');
@@ -1165,24 +1165,24 @@ class Order extends Controller {
             $country_info = $this->model_localization_country->getCountry($this->request->post['shipping_country_id']);
             
             if ($country_info && $country_info['postcode_required'] && (Encode::strlen($this->request->post['shipping_postcode']) < 2) || (Encode::strlen($this->request->post['shipping_postcode']) > 10)) {
-                $this->error['shipping_postcode'] = $this->language->get('lang_error_postcode');
+                $this->error['shipping_postcode'] = Lang::get('lang_error_postcode');
             }
             
             if ($this->request->post['shipping_country_id'] == '') {
-                $this->error['shipping_country'] = $this->language->get('lang_error_country');
+                $this->error['shipping_country'] = Lang::get('lang_error_country');
             }
             
             if (!isset($this->request->post['shipping_zone_id']) || $this->request->post['shipping_zone_id'] == '') {
-                $this->error['shipping_zone'] = $this->language->get('lang_error_zone');
+                $this->error['shipping_zone'] = Lang::get('lang_error_zone');
             }
             
             if (!$this->request->post['shipping_method']) {
-                $this->error['shipping_method'] = $this->language->get('lang_error_shipping');
+                $this->error['shipping_method'] = Lang::get('lang_error_shipping');
             }
         }
         
         if ($this->error && !isset($this->error['warning'])) {
-            $this->error['warning'] = $this->language->get('lang_error_warning');
+            $this->error['warning'] = Lang::get('lang_error_warning');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -1192,7 +1192,7 @@ class Order extends Controller {
     
     protected function validateDelete() {
         if (!User::hasPermission('modify', 'sale/order')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -1247,7 +1247,7 @@ class Order extends Controller {
                 $data['error_warning'] = '';
             }
             
-            Theme::setTitle($this->language->get('lang_heading_title'));
+            Theme::setTitle(Lang::get('lang_heading_title'));
             
             $data['token'] = $this->session->data['token'];
             
@@ -1289,10 +1289,10 @@ class Order extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->breadcrumb->add('lang_heading_title', 'sale/order', $url);
+            Breadcrumb::add('lang_heading_title', 'sale/order', $url);
             
-            $data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
-            $data['cancel']  = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['invoice'] = Url::link('sale/order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
+            $data['cancel']  = Url::link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL');
             
             $data['order_id'] = $this->request->get['order_id'];
             
@@ -1308,7 +1308,7 @@ class Order extends Controller {
             $data['lastname']   = $order_info['lastname'];
             
             if ($order_info['customer_id']) {
-                $data['customer'] = $this->url->link('people/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $order_info['customer_id'], 'SSL');
+                $data['customer'] = Url::link('people/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $order_info['customer_id'], 'SSL');
             } else {
                 $data['customer'] = '';
             }
@@ -1328,7 +1328,7 @@ class Order extends Controller {
             $data['comment']         = nl2br($order_info['comment']);
             $data['shipping_method'] = $order_info['shipping_method'];
             $data['payment_method']  = $order_info['payment_method'];
-            $data['total']           = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value']);
+            $data['total']           = Currency::format($order_info['total'], $order_info['currency_code'], $order_info['currency_value']);
             
             if ($order_info['total'] < 0) {
                 $data['credit'] = $order_info['total'];
@@ -1345,12 +1345,12 @@ class Order extends Controller {
             $data['affiliate_lastname']  = $order_info['affiliate_lastname'];
             
             if ($order_info['affiliate_id']) {
-                $data['affiliate'] = $this->url->link('people/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $order_info['affiliate_id'], 'SSL');
+                $data['affiliate'] = Url::link('people/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $order_info['affiliate_id'], 'SSL');
             } else {
                 $data['affiliate'] = '';
             }
             
-            $data['commission']       = $this->currency->format($order_info['commission'], $order_info['currency_code'], $order_info['currency_value']);
+            $data['commission']       = Currency::format($order_info['commission'], $order_info['currency_code'], $order_info['currency_value']);
             $data['commission_total'] = $this->model_people_customer->getTotalCommissionsByOrderId($this->request->get['order_id']);
             
             Theme::model('localization/order_status');
@@ -1367,8 +1367,8 @@ class Order extends Controller {
             $data['forwarded_ip']       = $order_info['forwarded_ip'];
             $data['user_agent']         = $order_info['user_agent'];
             $data['accept_language']    = $order_info['accept_language'];
-            $data['date_added']         = date($this->language->get('lang_date_format_short'), strtotime($order_info['date_added']));
-            $data['date_modified']      = date($this->language->get('lang_date_format_short'), strtotime($order_info['date_modified']));
+            $data['date_added']         = date(Lang::get('lang_date_format_short'), strtotime($order_info['date_added']));
+            $data['date_modified']      = date(Lang::get('lang_date_format_short'), strtotime($order_info['date_modified']));
             $data['payment_firstname']  = $order_info['payment_firstname'];
             $data['payment_lastname']   = $order_info['payment_lastname'];
             $data['payment_company']    = $order_info['payment_company'];
@@ -1413,7 +1413,7 @@ class Order extends Controller {
                             'name'  => $option['name'], 
                             'value' => Encode::substr($option['value'], 0, Encode::strrpos($option['value'], '.')), 
                             'type'  => $option['type'], 
-                            'href'  => $this->url->link('sale/order/download', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . '&order_option_id=' . $option['order_option_id'], 'SSL')
+                            'href'  => Url::link('sale/order/download', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . '&order_option_id=' . $option['order_option_id'], 'SSL')
                         );
                     }
                 }
@@ -1425,9 +1425,9 @@ class Order extends Controller {
                     'model'            => $product['model'], 
                     'option'           => $option_data, 
                     'quantity'         => $product['quantity'], 
-                    'price'            => $this->currency->format($product['price'] + (Config::get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']), 
-                    'total'            => $this->currency->format($product['total'] + (Config::get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']), 
-                    'href'             => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL')
+                    'price'            => Currency::format($product['price'] + (Config::get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']), 
+                    'total'            => Currency::format($product['total'] + (Config::get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']), 
+                    'href'             => Url::link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL')
                 );
             }
             
@@ -1438,8 +1438,8 @@ class Order extends Controller {
             foreach ($gift_cards as $gift_card) {
                 $data['gift_cards'][] = array(
                     'description' => $gift_card['description'], 
-                    'amount'      => $this->currency->format($gift_card['amount'], $order_info['currency_code'], $order_info['currency_value']), 
-                    'href'        => $this->url->link('sale/gift_card/update', 'token=' . $this->session->data['token'] . '&gift_card_id=' . $gift_card['gift_card_id'], 'SSL')
+                    'amount'      => Currency::format($gift_card['amount'], $order_info['currency_code'], $order_info['currency_value']), 
+                    'href'        => Url::link('sale/gift_card/update', 'token=' . $this->session->data['token'] . '&gift_card_id=' . $gift_card['gift_card_id'], 'SSL')
                 );
             }
             
@@ -1681,9 +1681,9 @@ class Order extends Controller {
         } else {
             $data = Theme::language('error/not_found');
             
-            Theme::setTitle($this->language->get('lang_heading_title'));
+            Theme::setTitle(Lang::get('lang_heading_title'));
             
-            $this->breadcrumb->add('lang_heading_title', 'error/not_found');
+            Breadcrumb::add('lang_heading_title', 'error/not_found');
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
@@ -1694,12 +1694,12 @@ class Order extends Controller {
     }
     
     public function createInvoiceNo() {
-        $this->language->load('sale/order');
+        Lang::load('sale/order');
         
         $json = array();
         
         if (!User::hasPermission('modify', 'sale/order')) {
-            $json['error'] = $this->language->get('lang_error_permission');
+            $json['error'] = Lang::get('lang_error_permission');
         } elseif (isset($this->request->get['order_id'])) {
             Theme::model('sale/order');
             
@@ -1708,7 +1708,7 @@ class Order extends Controller {
             if ($invoice_no) {
                 $json['invoice_no'] = $invoice_no;
             } else {
-                $json['error'] = $this->language->get('lang_error_action');
+                $json['error'] = Lang::get('lang_error_action');
             }
         }
         
@@ -1718,12 +1718,12 @@ class Order extends Controller {
     }
     
     public function addCredit() {
-        $this->language->load('sale/order');
+        Lang::load('sale/order');
         
         $json = array();
         
         if (!User::hasPermission('modify', 'sale/order')) {
-            $json['error'] = $this->language->get('lang_error_permission');
+            $json['error'] = Lang::get('lang_error_permission');
         } elseif (isset($this->request->get['order_id'])) {
             Theme::model('sale/order');
             
@@ -1735,11 +1735,11 @@ class Order extends Controller {
                 $credit_total = $this->model_people_customer->getTotalCreditsByOrderId($this->request->get['order_id']);
                 
                 if (!$credit_total) {
-                    $this->model_people_customer->addCredit($order_info['customer_id'], $this->language->get('lang_text_order_id') . ' #' . $this->request->get['order_id'], $order_info['total'], $this->request->get['order_id']);
+                    $this->model_people_customer->addCredit($order_info['customer_id'], Lang::get('lang_text_order_id') . ' #' . $this->request->get['order_id'], $order_info['total'], $this->request->get['order_id']);
                     
-                    $json['success'] = $this->language->get('lang_text_credit_added');
+                    $json['success'] = Lang::get('lang_text_credit_added');
                 } else {
-                    $json['error'] = $this->language->get('lang_error_action');
+                    $json['error'] = Lang::get('lang_error_action');
                 }
             }
         }
@@ -1750,12 +1750,12 @@ class Order extends Controller {
     }
     
     public function removeCredit() {
-        $this->language->load('sale/order');
+        Lang::load('sale/order');
         
         $json = array();
         
         if (!User::hasPermission('modify', 'sale/order')) {
-            $json['error'] = $this->language->get('lang_error_permission');
+            $json['error'] = Lang::get('lang_error_permission');
         } elseif (isset($this->request->get['order_id'])) {
             Theme::model('sale/order');
             
@@ -1766,9 +1766,9 @@ class Order extends Controller {
                 
                 $this->model_people_customer->deleteCredit($this->request->get['order_id']);
                 
-                $json['success'] = $this->language->get('lang_text_credit_removed');
+                $json['success'] = Lang::get('lang_text_credit_removed');
             } else {
-                $json['error'] = $this->language->get('lang_error_action');
+                $json['error'] = Lang::get('lang_error_action');
             }
         }
         
@@ -1778,12 +1778,12 @@ class Order extends Controller {
     }
     
     public function addReward() {
-        $this->language->load('sale/order');
+        Lang::load('sale/order');
         
         $json = array();
         
         if (!User::hasPermission('modify', 'sale/order')) {
-            $json['error'] = $this->language->get('lang_error_permission');
+            $json['error'] = Lang::get('lang_error_permission');
         } elseif (isset($this->request->get['order_id'])) {
             Theme::model('sale/order');
             
@@ -1795,14 +1795,14 @@ class Order extends Controller {
                 $reward_total = $this->model_people_customer->getTotalCustomerRewardsByOrderId($this->request->get['order_id']);
                 
                 if (!$reward_total) {
-                    $this->model_people_customer->addReward($order_info['customer_id'], $this->language->get('lang_text_order_id') . ' #' . $this->request->get['order_id'], $order_info['reward'], $this->request->get['order_id']);
+                    $this->model_people_customer->addReward($order_info['customer_id'], Lang::get('lang_text_order_id') . ' #' . $this->request->get['order_id'], $order_info['reward'], $this->request->get['order_id']);
                     
-                    $json['success'] = $this->language->get('lang_text_reward_added');
+                    $json['success'] = Lang::get('lang_text_reward_added');
                 } else {
-                    $json['error'] = $this->language->get('lang_error_action');
+                    $json['error'] = Lang::get('lang_error_action');
                 }
             } else {
-                $json['error'] = $this->language->get('lang_error_action');
+                $json['error'] = Lang::get('lang_error_action');
             }
         }
         
@@ -1812,12 +1812,12 @@ class Order extends Controller {
     }
     
     public function removeReward() {
-        $this->language->load('sale/order');
+        Lang::load('sale/order');
         
         $json = array();
         
         if (!User::hasPermission('modify', 'sale/order')) {
-            $json['error'] = $this->language->get('lang_error_permission');
+            $json['error'] = Lang::get('lang_error_permission');
         } elseif (isset($this->request->get['order_id'])) {
             Theme::model('sale/order');
             
@@ -1828,9 +1828,9 @@ class Order extends Controller {
                 
                 $this->model_people_customer->deleteReward($this->request->get['order_id']);
                 
-                $json['success'] = $this->language->get('lang_text_reward_removed');
+                $json['success'] = Lang::get('lang_text_reward_removed');
             } else {
-                $json['error'] = $this->language->get('lang_error_action');
+                $json['error'] = Lang::get('lang_error_action');
             }
         }
         
@@ -1840,12 +1840,12 @@ class Order extends Controller {
     }
     
     public function addCommission() {
-        $this->language->load('sale/order');
+        Lang::load('sale/order');
         
         $json = array();
         
         if (!User::hasPermission('modify', 'sale/order')) {
-            $json['error'] = $this->language->get('lang_error_permission');
+            $json['error'] = Lang::get('lang_error_permission');
         } elseif (isset($this->request->get['order_id'])) {
             Theme::model('sale/order');
             
@@ -1857,14 +1857,14 @@ class Order extends Controller {
                 $affiliate_total = $this->model_people_customer->getTotalCommissionsByOrderId($this->request->get['order_id']);
                 
                 if (!$affiliate_total) {
-                    $this->model_people_customer->addCommission($order_info['affiliate_id'], $this->language->get('lang_text_order_id') . ' #' . $this->request->get['order_id'], $order_info['commission'], $this->request->get['order_id']);
+                    $this->model_people_customer->addCommission($order_info['affiliate_id'], Lang::get('lang_text_order_id') . ' #' . $this->request->get['order_id'], $order_info['commission'], $this->request->get['order_id']);
                     
-                    $json['success'] = $this->language->get('lang_text_commission_added');
+                    $json['success'] = Lang::get('lang_text_commission_added');
                 } else {
-                    $json['error'] = $this->language->get('lang_error_action');
+                    $json['error'] = Lang::get('lang_error_action');
                 }
             } else {
-                $json['error'] = $this->language->get('lang_error_action');
+                $json['error'] = Lang::get('lang_error_action');
             }
         }
         
@@ -1874,12 +1874,12 @@ class Order extends Controller {
     }
     
     public function removeCommission() {
-        $this->language->load('sale/order');
+        Lang::load('sale/order');
         
         $json = array();
         
         if (!User::hasPermission('modify', 'sale/order')) {
-            $json['error'] = $this->language->get('lang_error_permission');
+            $json['error'] = Lang::get('lang_error_permission');
         } elseif (isset($this->request->get['order_id'])) {
             Theme::model('sale/order');
             
@@ -1890,9 +1890,9 @@ class Order extends Controller {
                 
                 $this->model_people_customer->deleteCommission($this->request->get['order_id']);
                 
-                $json['success'] = $this->language->get('lang_text_commission_removed');
+                $json['success'] = Lang::get('lang_text_commission_removed');
             } else {
-                $json['error'] = $this->language->get('lang_error_action');
+                $json['error'] = Lang::get('lang_error_action');
             }
         }
         
@@ -1911,13 +1911,13 @@ class Order extends Controller {
         
         if ($this->request->server['REQUEST_METHOD'] == 'POST') {
             if (!User::hasPermission('modify', 'sale/order')) {
-                $data['error'] = $this->language->get('lang_error_permission');
+                $data['error'] = Lang::get('lang_error_permission');
             }
             
             if (!$data['error']) {
                 $this->model_sale_order->addOrderHistory($this->request->get['order_id'], $this->request->post);
                 
-                $data['success'] = $this->language->get('lang_text_success');
+                $data['success'] = Lang::get('lang_text_success');
             }
         }
         
@@ -1933,10 +1933,10 @@ class Order extends Controller {
         
         foreach ($results as $result) {
             $data['histories'][] = array(
-                'notify'     => $result['notify'] ? $this->language->get('lang_text_yes') : $this->language->get('lang_text_no'), 
+                'notify'     => $result['notify'] ? Lang::get('lang_text_yes') : Lang::get('lang_text_no'), 
                 'status'     => $result['status'], 
                 'comment'    => nl2br($result['comment']), 
-                'date_added' => date($this->language->get('lang_date_format_short'), strtotime($result['date_added']))
+                'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added']))
             );
         }
         
@@ -1946,8 +1946,8 @@ class Order extends Controller {
             $history_total, 
             $page, 
             10, 
-            $this->language->get('lang_text_pagination'), 
-            $this->url->link('sale/order/history', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . '&page={page}', 'SSL')
+            Lang::get('lang_text_pagination'), 
+            Url::link('sale/order/history', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . '&page={page}', 'SSL')
         );
         
         Theme::loadjs('javascript/sale/order_history', $data);
@@ -1995,9 +1995,9 @@ class Order extends Controller {
         } else {
             $data = Theme::language('error/not_found');
             
-            Theme::setTitle($this->language->get('lang_heading_title'));
+            Theme::setTitle(Lang::get('lang_heading_title'));
             
-            $this->breadcrumb->add('lang_heading_title', 'error/not_found');
+            Breadcrumb::add('lang_heading_title', 'error/not_found');
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
@@ -2008,7 +2008,7 @@ class Order extends Controller {
     }
     
     public function upload() {
-        $this->language->load('sale/order');
+        Lang::load('sale/order');
         
         $json = array();
         
@@ -2017,7 +2017,7 @@ class Order extends Controller {
                 $filename = html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8');
                 
                 if ((Encode::strlen($filename) < 3) || (Encode::strlen($filename) > 128)) {
-                    $json['error'] = $this->language->get('lang_error_filename');
+                    $json['error'] = Lang::get('lang_error_filename');
                 }
                 
                 // Allowed file extension types
@@ -2030,7 +2030,7 @@ class Order extends Controller {
                 }
                 
                 if (!in_array(substr(strrchr($filename, '.'), 1), $allowed)) {
-                    $json['error'] = $this->language->get('lang_error_filetype');
+                    $json['error'] = Lang::get('lang_error_filetype');
                 }
                 
                 // Allowed file mime types
@@ -2042,21 +2042,21 @@ class Order extends Controller {
                 }
                 
                 if (!in_array($this->request->files['file']['type'], $allowed)) {
-                    $json['error'] = $this->language->get('lang_error_filetype');
+                    $json['error'] = Lang::get('lang_error_filetype');
                 }
                 
                 // Check to see if any PHP files are trying to be uploaded
                 $content = file_get_contents($this->request->files['file']['tmp_name']);
                 
                 if (preg_match('/\<\?php/i', $content)) {
-                    $json['error'] = $this->language->get('lang_error_filetype');
+                    $json['error'] = Lang::get('lang_error_filetype');
                 }
                 
                 if ($this->request->files['file']['error'] != UPLOAD_ERR_OK) {
-                    $json['error'] = $this->language->get('lang_error_upload_' . $this->request->files['file']['error']);
+                    $json['error'] = Lang::get('lang_error_upload_' . $this->request->files['file']['error']);
                 }
             } else {
-                $json['error'] = $this->language->get('lang_error_upload');
+                $json['error'] = Lang::get('lang_error_upload');
             }
             
             if (!isset($json['error'])) {
@@ -2068,7 +2068,7 @@ class Order extends Controller {
                     move_uploaded_file($this->request->files['file']['tmp_name'], Config::get('path.download') . $file);
                 }
                 
-                $json['success'] = $this->language->get('lang_text_upload');
+                $json['success'] = Lang::get('lang_text_upload');
             }
         }
         
@@ -2100,7 +2100,7 @@ class Order extends Controller {
         CSS::reset();
         CSS::register('invoice.min');
         
-        $data['title'] = $this->language->get('lang_heading_title');
+        $data['title'] = Lang::get('lang_heading_title');
         
         if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
             $data['base'] = Config::get('https.server');
@@ -2108,7 +2108,7 @@ class Order extends Controller {
             $data['base'] = Config::get('http.server');
         }
         
-        $data['language'] = $this->language->get('lang_code');
+        $data['language'] = Lang::get('lang_code');
         
         Theme::model('sale/order');
         
@@ -2241,8 +2241,8 @@ class Order extends Controller {
                         'model'    => $product['model'], 
                         'option'   => $option_data, 
                         'quantity' => $product['quantity'], 
-                        'price'    => $this->currency->format($product['price'] + (Config::get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']), 
-                        'total'    => $this->currency->format($product['total'] + (Config::get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'])
+                        'price'    => Currency::format($product['price'] + (Config::get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']), 
+                        'total'    => Currency::format($product['total'] + (Config::get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'])
                     );
                 }
                 
@@ -2253,7 +2253,7 @@ class Order extends Controller {
                 foreach ($gift_cards as $gift_card) {
                     $gift_card_data[] = array(
                         'description' => $gift_card['description'], 
-                        'amount'      => $this->currency->format($gift_card['amount'], $order_info['currency_code'], $order_info['currency_value'])
+                        'amount'      => Currency::format($gift_card['amount'], $order_info['currency_code'], $order_info['currency_value'])
                     );
                 }
                 
@@ -2262,7 +2262,7 @@ class Order extends Controller {
                 $data['orders'][] = array(
                     'order_id'           => $order_id, 
                     'invoice_no'         => $invoice_no, 
-                    'date_added'         => date($this->language->get('lang_date_format_short'), strtotime($order_info['date_added'])), 
+                    'date_added'         => date(Lang::get('lang_date_format_short'), strtotime($order_info['date_added'])), 
                     'store_name'         => $order_info['store_name'], 
                     'store_url'          => rtrim($order_info['store_url'], '/'), 
                     'store_address'      => nl2br($store_address), 
@@ -2286,7 +2286,7 @@ class Order extends Controller {
         
         CSS::compile();
         
-        $data['css_link'] = $this->url->link('common/css', '', 'SSL');
+        $data['css_link'] = Url::link('common/css', '', 'SSL');
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         

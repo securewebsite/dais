@@ -22,7 +22,7 @@ class Category extends Controller {
     
     public function index() {
         Theme::language('content/category');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('content/category');
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -32,14 +32,14 @@ class Category extends Controller {
     
     public function insert() {
         Theme::language('content/category');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('content/category');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_content_category->addCategory($this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('content/category', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('content/category', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -49,14 +49,14 @@ class Category extends Controller {
     
     public function update() {
         Theme::language('content/category');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('content/category');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_content_category->editCategory($this->request->get['category_id'], $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('content/category', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('content/category', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -66,7 +66,7 @@ class Category extends Controller {
     
     public function delete() {
         Theme::language('content/category');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('content/category');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
@@ -74,8 +74,8 @@ class Category extends Controller {
                 $this->model_content_category->deleteCategory($category_id);
             }
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
-            Response::redirect($this->url->link('content/category', 'token=' . $this->session->data['token'], 'SSL'));
+            $this->session->data['success'] = Lang::get('lang_text_success');
+            Response::redirect(Url::link('content/category', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,10 +86,10 @@ class Category extends Controller {
     private function getList() {
         $data = Theme::language('content/category');
         
-        $this->breadcrumb->add('lang_heading_title', 'content/category');
+        Breadcrumb::add('lang_heading_title', 'content/category');
         
-        $data['insert'] = $this->url->link('content/category/insert', 'token=' . $this->session->data['token'], 'SSL');
-        $data['delete'] = $this->url->link('content/category/delete', 'token=' . $this->session->data['token'], 'SSL');
+        $data['insert'] = Url::link('content/category/insert', 'token=' . $this->session->data['token'], 'SSL');
+        $data['delete'] = Url::link('content/category/delete', 'token=' . $this->session->data['token'], 'SSL');
         
         $data['categories'] = array();
         
@@ -99,8 +99,8 @@ class Category extends Controller {
             $action = array();
             
             $action[] = array(
-                'text' => $this->language->get('lang_text_edit'), 
-                'href' => $this->url->link('content/category/update', 'token=' . $this->session->data['token'] . '&category_id=' . $result['category_id'], 'SSL')
+                'text' => Lang::get('lang_text_edit'), 
+                'href' => Url::link('content/category/update', 'token=' . $this->session->data['token'] . '&category_id=' . $result['category_id'], 'SSL')
             );
             
             $data['categories'][] = array(
@@ -154,15 +154,15 @@ class Category extends Controller {
             $data['error_slug'] = array();
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'content/category');
+        Breadcrumb::add('lang_heading_title', 'content/category');
         
         if (!isset($this->request->get['category_id'])) {
-            $data['action'] = $this->url->link('content/category/insert', 'token=' . $this->session->data['token'], 'SSL');
+            $data['action'] = Url::link('content/category/insert', 'token=' . $this->session->data['token'], 'SSL');
         } else {
-            $data['action'] = $this->url->link('content/category/update', 'token=' . $this->session->data['token'] . '&category_id=' . $this->request->get['category_id'], 'SSL');
+            $data['action'] = Url::link('content/category/update', 'token=' . $this->session->data['token'] . '&category_id=' . $this->request->get['category_id'], 'SSL');
         }
         
-        $data['cancel'] = $this->url->link('content/category', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('content/category', 'token=' . $this->session->data['token'], 'SSL');
         
         if (isset($this->request->get['category_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
             $category_info = $this->model_content_category->getCategory($this->request->get['category_id']);
@@ -282,12 +282,12 @@ class Category extends Controller {
     
     private function validateForm() {
         if (!User::hasPermission('modify', 'content/category')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         foreach ($this->request->post['category_description'] as $language_id => $value) {
             if ((Encode::strlen($value['name']) < 2) || (Encode::strlen($value['name']) > 255)) {
-                $this->error['name'][$language_id] = $this->language->get('lang_error_name');
+                $this->error['name'][$language_id] = Lang::get('lang_error_name');
             }
         }
         
@@ -298,20 +298,20 @@ class Category extends Controller {
             if (isset($this->request->get['category_id'])):
                 if ($query):
                     if ($query != 'blog_category_id:' . $this->request->get['category_id']):
-                        $this->error['slug'] = sprintf($this->language->get('lang_error_slug_found'), $this->request->post['slug']);
+                        $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), $this->request->post['slug']);
                     endif;
                 endif;
             else:
                 if ($query):
-                    $this->error['slug'] = sprintf($this->language->get('lang_error_slug_found'), $this->request->post['slug']);
+                    $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), $this->request->post['slug']);
                 endif;
             endif;
         else:
-            $this->error['slug'] = $this->language->get('lang_error_slug');
+            $this->error['slug'] = Lang::get('lang_error_slug');
         endif;
         
         if ($this->error && !isset($this->error['warning'])) {
-            $this->error['warning'] = $this->language->get('lang_error_warning');
+            $this->error['warning'] = Lang::get('lang_error_warning');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -321,7 +321,7 @@ class Category extends Controller {
     
     private function validateDelete() {
         if (!User::hasPermission('modify', 'content/category')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -330,17 +330,17 @@ class Category extends Controller {
     }
     
     public function slug() {
-        $this->language->load('content/category');
+        Lang::load('content/category');
         Theme::model('tool/utility');
         
         $json = array();
         
         if (!isset($this->request->get['name']) || Encode::strlen($this->request->get['name']) < 1):
-            $json['error'] = $this->language->get('lang_error_name_first');
+            $json['error'] = Lang::get('lang_error_name_first');
         else:
             
             // build slug
-            $slug = $this->url->build_slug($this->request->get['name']);
+            $slug = Url::build_slug($this->request->get['name']);
             
             // check that the slug is globally unique
             $query = $this->model_tool_utility->findSlugByName($slug);
@@ -348,12 +348,12 @@ class Category extends Controller {
             if ($query):
                 if (isset($this->request->get['category_id'])):
                     if ($query != 'blog_category_id:' . $this->request->get['category_id']):
-                        $json['error'] = sprintf($this->language->get('lang_error_slug_found'), $slug);
+                        $json['error'] = sprintf(Lang::get('lang_error_slug_found'), $slug);
                     else:
                         $json['slug'] = $slug;
                     endif;
                 else:
-                    $json['error'] = sprintf($this->language->get('lang_error_slug_found'), $slug);
+                    $json['error'] = sprintf(Lang::get('lang_error_slug_found'), $slug);
                 endif;
             else:
                 $json['slug'] = $slug;

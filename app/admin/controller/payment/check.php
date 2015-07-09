@@ -22,14 +22,14 @@ class Check extends Controller {
     
     public function index() {
         $data = Theme::language('payment/check');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('check', $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -44,12 +44,12 @@ class Check extends Controller {
             $data['error_payable'] = '';
         }
         
-        $this->breadcrumb->add('lang_text_payment', 'module/payment');
-        $this->breadcrumb->add('lang_heading_title', 'payment/check');
+        Breadcrumb::add('lang_text_payment', 'module/payment');
+        Breadcrumb::add('lang_heading_title', 'payment/check');
         
-        $data['action'] = $this->url->link('payment/check', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('payment/check', 'token=' . $this->session->data['token'], 'SSL');
         
-        $data['cancel'] = $this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
         
         if (isset($this->request->post['check_payable'])) {
             $data['check_payable'] = $this->request->post['check_payable'];
@@ -104,11 +104,11 @@ class Check extends Controller {
     
     protected function validate() {
         if (!User::hasPermission('modify', 'payment/check')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         if (!$this->request->post['check_payable']) {
-            $this->error['payable'] = $this->language->get('lang_error_payable');
+            $this->error['payable'] = Lang::get('lang_error_payable');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

@@ -14,17 +14,18 @@
 |	
 */
 
-namespace Dais\Services;
+namespace Dais\Facades;
 
-use Dais\Services\Providers\Breadcrumb;
-use Dais\Engine\Container;
-use Dais\Contracts\ServiceContract;
+class View extends Facade {
+    public static function getInstanceIdentifier() {
+        return 'view';
+    }
 
-class BreadcrumbService implements ServiceContract {
-
-	public function register(Container $app) {
-		$app['breadcrumb'] = function ($app) {
-            return new Breadcrumb;
-        };
-	}
+    /**
+     * Allows us to return properties
+     * with Facade::p()->property
+     */
+    public static function p() {
+    	return parent::getInstance();
+    }
 }

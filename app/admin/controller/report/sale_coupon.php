@@ -21,7 +21,7 @@ class SaleCoupon extends Controller {
     public function index() {
         $data = Theme::language('report/sale_coupon');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
@@ -55,7 +55,7 @@ class SaleCoupon extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'report/sale_coupon', $url);
+        Breadcrumb::add('lang_heading_title', 'report/sale_coupon', $url);
         
         Theme::model('report/coupon');
         
@@ -70,9 +70,9 @@ class SaleCoupon extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('sale/coupon/update', 'token=' . $this->session->data['token'] . '&coupon_id=' . $result['coupon_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('sale/coupon/update', 'token=' . $this->session->data['token'] . '&coupon_id=' . $result['coupon_id'] . $url, 'SSL'));
             
-            $data['coupons'][] = array('name' => $result['name'], 'code' => $result['code'], 'orders' => $result['orders'], 'total' => $this->currency->format($result['total'], Config::get('config_currency')), 'action' => $action);
+            $data['coupons'][] = array('name' => $result['name'], 'code' => $result['code'], 'orders' => $result['orders'], 'total' => Currency::format($result['total'], Config::get('config_currency')), 'action' => $action);
         }
         
         $data['token'] = $this->session->data['token'];
@@ -87,7 +87,7 @@ class SaleCoupon extends Controller {
             $url.= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
         
-        $data['pagination'] = Theme::paginate($coupon_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('report/sale_coupon', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($coupon_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/sale_coupon', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;

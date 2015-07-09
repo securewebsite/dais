@@ -26,7 +26,7 @@ class Db {
     
     public function __construct(DBContract $db) {
         $this->db = $db;
-        $this->prefix();
+        $this->setPrefix();
     }
     
     public function prepare($sql) {
@@ -62,6 +62,10 @@ class Db {
     }
     
     public function prefix() {
+        return $this->prefix;
+    }
+
+    private function setPrefix() {
         $this->prefix = $this->db->prefix();
     }
 }

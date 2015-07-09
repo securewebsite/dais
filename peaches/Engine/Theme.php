@@ -95,13 +95,9 @@ final class Theme {
             App::load($key, $class);
         endif;
     }
-
-    public static function app($key) {
-        return self::$app[$key];
-    }
     
     public function view($template, $data = array()) {
-        $view = new View(Config::get('path.theme') . Config::get('theme.name') . SEP);
+        $view = new View();
         return $view->render($template, $data);
     }
     

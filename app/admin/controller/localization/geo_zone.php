@@ -21,8 +21,8 @@ class GeoZone extends Controller {
     private $error = array();
     
     public function index() {
-        $this->language->load('localization/geo_zone');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('localization/geo_zone');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('localization/geo_zone');
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -31,14 +31,14 @@ class GeoZone extends Controller {
     }
     
     public function insert() {
-        $this->language->load('localization/geo_zone');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('localization/geo_zone');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('localization/geo_zone');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_localization_geo_zone->addGeoZone($this->request->post);
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -54,7 +54,7 @@ class GeoZone extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('localization/geo_zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('localization/geo_zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -63,13 +63,13 @@ class GeoZone extends Controller {
     }
     
     public function update() {
-        $this->language->load('localization/geo_zone');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('localization/geo_zone');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('localization/geo_zone');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_localization_geo_zone->editGeoZone($this->request->get['geo_zone_id'], $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -85,7 +85,7 @@ class GeoZone extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('localization/geo_zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('localization/geo_zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -94,8 +94,8 @@ class GeoZone extends Controller {
     }
     
     public function delete() {
-        $this->language->load('localization/geo_zone');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('localization/geo_zone');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('localization/geo_zone');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
@@ -103,7 +103,7 @@ class GeoZone extends Controller {
                 $this->model_localization_geo_zone->deleteGeoZone($geo_zone_id);
             }
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -119,7 +119,7 @@ class GeoZone extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('localization/geo_zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('localization/geo_zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -162,10 +162,10 @@ class GeoZone extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'localization/geo_zone', $url);
+        Breadcrumb::add('lang_heading_title', 'localization/geo_zone', $url);
         
-        $data['insert'] = $this->url->link('localization/geo_zone/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('localization/geo_zone/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('localization/geo_zone/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = Url::link('localization/geo_zone/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         $data['geo_zones'] = array();
         
@@ -178,7 +178,7 @@ class GeoZone extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('localization/geo_zone/update', 'token=' . $this->session->data['token'] . '&geo_zone_id=' . $result['geo_zone_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('localization/geo_zone/update', 'token=' . $this->session->data['token'] . '&geo_zone_id=' . $result['geo_zone_id'] . $url, 'SSL'));
             
             $data['geo_zones'][] = array('geo_zone_id' => $result['geo_zone_id'], 'name' => $result['name'], 'description' => $result['description'], 'selected' => isset($this->request->post['selected']) && in_array($result['geo_zone_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -209,8 +209,8 @@ class GeoZone extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_name'] = $this->url->link('localization/geo_zone', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_description'] = $this->url->link('localization/geo_zone', 'token=' . $this->session->data['token'] . '&sort=description' . $url, 'SSL');
+        $data['sort_name'] = Url::link('localization/geo_zone', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+        $data['sort_description'] = Url::link('localization/geo_zone', 'token=' . $this->session->data['token'] . '&sort=description' . $url, 'SSL');
         
         $url = '';
         
@@ -222,7 +222,7 @@ class GeoZone extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($geo_zone_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('localization/geo_zone', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($geo_zone_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('localization/geo_zone', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -269,15 +269,15 @@ class GeoZone extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'localization/geo_zone', $url);
+        Breadcrumb::add('lang_heading_title', 'localization/geo_zone', $url);
         
         if (!isset($this->request->get['geo_zone_id'])) {
-            $data['action'] = $this->url->link('localization/geo_zone/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('localization/geo_zone/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('localization/geo_zone/update', 'token=' . $this->session->data['token'] . '&geo_zone_id=' . $this->request->get['geo_zone_id'] . $url, 'SSL');
+            $data['action'] = Url::link('localization/geo_zone/update', 'token=' . $this->session->data['token'] . '&geo_zone_id=' . $this->request->get['geo_zone_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = $this->url->link('localization/geo_zone', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('localization/geo_zone', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         if (isset($this->request->get['geo_zone_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
             $geo_zone_info = $this->model_localization_geo_zone->getGeoZone($this->request->get['geo_zone_id']);
@@ -324,15 +324,15 @@ class GeoZone extends Controller {
     
     protected function validateForm() {
         if (!User::hasPermission('modify', 'localization/geo_zone')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 32)) {
-            $this->error['name'] = $this->language->get('lang_error_name');
+            $this->error['name'] = Lang::get('lang_error_name');
         }
         
         if ((Encode::strlen($this->request->post['description']) < 3) || (Encode::strlen($this->request->post['description']) > 255)) {
-            $this->error['description'] = $this->language->get('lang_error_description');
+            $this->error['description'] = Lang::get('lang_error_description');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -342,7 +342,7 @@ class GeoZone extends Controller {
     
     protected function validateDelete() {
         if (!User::hasPermission('modify', 'localization/geo_zone')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::model('localization/tax_rate');
@@ -351,7 +351,7 @@ class GeoZone extends Controller {
             $tax_rate_total = $this->model_localization_tax_rate->getTotalTaxRatesByGeoZoneId($geo_zone_id);
             
             if ($tax_rate_total) {
-                $this->error['warning'] = sprintf($this->language->get('lang_error_tax_rate'), $tax_rate_total);
+                $this->error['warning'] = sprintf(Lang::get('lang_error_tax_rate'), $tax_rate_total);
             }
         }
         
@@ -361,7 +361,7 @@ class GeoZone extends Controller {
     }
     
     public function zone() {
-        $output = '<option value="0">' . $this->language->get('lang_text_all_zones') . '</option>';
+        $output = '<option value="0">' . Lang::get('lang_text_all_zones') . '</option>';
         
         Theme::model('localization/zone');
         

@@ -22,14 +22,14 @@ class SideBarMenu extends Controller {
     
     public function index() {
         $data = Theme::language('widget/side_bar_menu');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('side_bar_menu', $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -38,11 +38,11 @@ class SideBarMenu extends Controller {
             $data['error_warning'] = '';
         }
         
-        $this->breadcrumb->add('lang_text_widget', 'module/widget');
-        $this->breadcrumb->add('lang_heading_title', 'widget/side_bar_menu');
+        Breadcrumb::add('lang_text_widget', 'module/widget');
+        Breadcrumb::add('lang_heading_title', 'widget/side_bar_menu');
         
-        $data['action'] = $this->url->link('widget/side_bar_menu', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = $this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('widget/side_bar_menu', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL');
         
         $data['widgets'] = array();
         
@@ -77,7 +77,7 @@ class SideBarMenu extends Controller {
     
     protected function validate() {
         if (!User::hasPermission('modify', 'widget/side_bar_menu')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

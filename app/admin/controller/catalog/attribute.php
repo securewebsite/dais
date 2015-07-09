@@ -21,8 +21,8 @@ class Attribute extends Controller {
     private $error = array();
     
     public function index() {
-        $this->language->load('catalog/attribute');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('catalog/attribute');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('catalog/attribute');
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -31,14 +31,14 @@ class Attribute extends Controller {
     }
     
     public function insert() {
-        $this->language->load('catalog/attribute');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('catalog/attribute');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('catalog/attribute');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_catalog_attribute->addAttribute($this->request->post);
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -54,7 +54,7 @@ class Attribute extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('catalog/attribute', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/attribute', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -63,14 +63,14 @@ class Attribute extends Controller {
     }
     
     public function update() {
-        $this->language->load('catalog/attribute');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('catalog/attribute');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('catalog/attribute');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_catalog_attribute->editAttribute($this->request->get['attribute_id'], $this->request->post);
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -86,7 +86,7 @@ class Attribute extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('catalog/attribute', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/attribute', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -95,8 +95,8 @@ class Attribute extends Controller {
     }
     
     public function delete() {
-        $this->language->load('catalog/attribute');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('catalog/attribute');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('catalog/attribute');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
@@ -104,7 +104,7 @@ class Attribute extends Controller {
                 $this->model_catalog_attribute->deleteAttribute($attribute_id);
             }
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -120,7 +120,7 @@ class Attribute extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('catalog/attribute', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/attribute', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -163,10 +163,10 @@ class Attribute extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'catalog/attribute', $url);
+        Breadcrumb::add('lang_heading_title', 'catalog/attribute', $url);
         
-        $data['insert'] = $this->url->link('catalog/attribute/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('catalog/attribute/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('catalog/attribute/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = Url::link('catalog/attribute/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         $data['attributes'] = array();
         
@@ -179,7 +179,7 @@ class Attribute extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('catalog/attribute/update', 'token=' . $this->session->data['token'] . '&attribute_id=' . $result['attribute_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/attribute/update', 'token=' . $this->session->data['token'] . '&attribute_id=' . $result['attribute_id'] . $url, 'SSL'));
             
             $data['attributes'][] = array('attribute_id' => $result['attribute_id'], 'name' => $result['name'], 'attribute_group' => $result['attribute_group'], 'sort_order' => $result['sort_order'], 'selected' => isset($this->request->post['selected']) && in_array($result['attribute_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -210,9 +210,9 @@ class Attribute extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_name'] = $this->url->link('catalog/attribute', 'token=' . $this->session->data['token'] . '&sort=ad.name' . $url, 'SSL');
-        $data['sort_attribute_group'] = $this->url->link('catalog/attribute', 'token=' . $this->session->data['token'] . '&sort=attribute_group' . $url, 'SSL');
-        $data['sort_sort_order'] = $this->url->link('catalog/attribute', 'token=' . $this->session->data['token'] . '&sort=a.sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('catalog/attribute', 'token=' . $this->session->data['token'] . '&sort=ad.name' . $url, 'SSL');
+        $data['sort_attribute_group'] = Url::link('catalog/attribute', 'token=' . $this->session->data['token'] . '&sort=attribute_group' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('catalog/attribute', 'token=' . $this->session->data['token'] . '&sort=a.sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -224,7 +224,7 @@ class Attribute extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($attribute_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('catalog/attribute', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($attribute_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/attribute', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -265,15 +265,15 @@ class Attribute extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'catalog/attribute', $url);
+        Breadcrumb::add('lang_heading_title', 'catalog/attribute', $url);
         
         if (!isset($this->request->get['attribute_id'])) {
-            $data['action'] = $this->url->link('catalog/attribute/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/attribute/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('catalog/attribute/update', 'token=' . $this->session->data['token'] . '&attribute_id=' . $this->request->get['attribute_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/attribute/update', 'token=' . $this->session->data['token'] . '&attribute_id=' . $this->request->get['attribute_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = $this->url->link('catalog/attribute', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('catalog/attribute', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         if (isset($this->request->get['attribute_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
             $attribute_info = $this->model_catalog_attribute->getAttribute($this->request->get['attribute_id']);
@@ -320,12 +320,12 @@ class Attribute extends Controller {
     
     protected function validateForm() {
         if (!User::hasPermission('modify', 'catalog/attribute')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         foreach ($this->request->post['attribute_description'] as $language_id => $value) {
             if ((Encode::strlen($value['name']) < 3) || (Encode::strlen($value['name']) > 64)) {
-                $this->error['name'][$language_id] = $this->language->get('lang_error_name');
+                $this->error['name'][$language_id] = Lang::get('lang_error_name');
             }
         }
         
@@ -336,7 +336,7 @@ class Attribute extends Controller {
     
     protected function validateDelete() {
         if (!User::hasPermission('modify', 'catalog/attribute')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::model('catalog/product');
@@ -345,7 +345,7 @@ class Attribute extends Controller {
             $product_total = $this->model_catalog_product->getTotalProductsByAttributeId($attribute_id);
             
             if ($product_total) {
-                $this->error['warning'] = sprintf($this->language->get('lang_error_product'), $product_total);
+                $this->error['warning'] = sprintf(Lang::get('lang_error_product'), $product_total);
             }
         }
         

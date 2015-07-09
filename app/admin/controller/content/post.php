@@ -22,7 +22,7 @@ class Post extends Controller {
     
     public function index() {
         Theme::language('content/post');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('content/post');
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -32,12 +32,12 @@ class Post extends Controller {
     
     public function insert() {
         Theme::language('content/post');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('content/post');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_content_post->addPost($this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -61,7 +61,7 @@ class Post extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('content/post', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('content/post', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -71,12 +71,12 @@ class Post extends Controller {
     
     public function update() {
         Theme::language('content/post');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('content/post');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_content_post->editPost($this->request->get['post_id'], $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -100,7 +100,7 @@ class Post extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('content/post', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('content/post', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -110,7 +110,7 @@ class Post extends Controller {
     
     public function delete() {
         Theme::language('content/post');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('content/post');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
@@ -118,7 +118,7 @@ class Post extends Controller {
                 $this->model_content_post->deletePost($post_id);
             }
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -142,7 +142,7 @@ class Post extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('content/post', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('content/post', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -245,10 +245,10 @@ class Post extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'content/post');
+        Breadcrumb::add('lang_heading_title', 'content/post');
         
-        $data['insert'] = $this->url->link('content/post/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('content/post/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('content/post/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = Url::link('content/post/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         $data['posts'] = array();
         
@@ -275,8 +275,8 @@ class Post extends Controller {
             $action = array();
             
             $action[] = array(
-                'text' => $this->language->get('lang_text_edit'), 
-                'href' => $this->url->link('content/post/update', 'token=' . $this->session->data['token'] . '&post_id=' . $result['post_id'] . $url, 'SSL')
+                'text' => Lang::get('lang_text_edit'), 
+                'href' => Url::link('content/post/update', 'token=' . $this->session->data['token'] . '&post_id=' . $result['post_id'] . $url, 'SSL')
             );
             
             if ($result['image'] && file_exists(Config::get('path.image') . $result['image'])) {
@@ -285,7 +285,7 @@ class Post extends Controller {
                 $image = $this->model_tool_image->resize('placeholder.png', 40, 40);
             }
             
-            $status = (!$result['status']) ? $this->language->get('lang_text_disabled') : (($result['status'] === 2) ? $this->language->get('lang_text_draft') : $this->language->get('lang_text_posted'));
+            $status = (!$result['status']) ? Lang::get('lang_text_disabled') : (($result['status'] === 2) ? Lang::get('lang_text_draft') : Lang::get('lang_text_posted'));
             
             $data['posts'][] = array(
                 'post_id'       => $result['post_id'], 
@@ -294,8 +294,8 @@ class Post extends Controller {
                 'author_id'     => $result['author_id'], 
                 'author_name'   => $this->model_content_post->getPostAuthor($result['author_id']), 
                 'category'      => implode(', ', $this->model_content_post->getPostCategoriesNames($result['post_id'])), 
-                'date_added'    => date($this->language->get('lang_date_format_short'), strtotime($result['date_added'])), 
-                'date_modified' => ($result['date_modified'] != '0000-00-00 00:00:00') ? date($this->language->get('lang_date_format_short'), strtotime($result['date_modified'])) : '-', 
+                'date_added'    => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 
+                'date_modified' => ($result['date_modified'] != '0000-00-00 00:00:00') ? date(Lang::get('lang_date_format_short'), strtotime($result['date_modified'])) : '-', 
                 'viewed'        => $result['viewed'], 'status' => $status, 
                 'selected'      => isset($this->request->post['selected']) && in_array($result['post_id'], $this->request->post['selected']), 
                 'action'        => $action
@@ -358,12 +358,12 @@ class Post extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_name']          = $this->url->link('content/post', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
-        $data['sort_status']        = $this->url->link('content/post', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url, 'SSL');
-        $data['sort_viewed']        = $this->url->link('content/post', 'token=' . $this->session->data['token'] . '&sort=p.viewed' . $url, 'SSL');
-        $data['sort_date_added']    = $this->url->link('content/post', 'token=' . $this->session->data['token'] . '&sort=p.date_added' . $url, 'SSL');
-        $data['sort_date_modified'] = $this->url->link('content/post', 'token=' . $this->session->data['token'] . '&sort=p.date_modified' . $url, 'SSL');
-        $data['sort_order']         = $this->url->link('content/post', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url, 'SSL');
+        $data['sort_name']          = Url::link('content/post', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
+        $data['sort_status']        = Url::link('content/post', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url, 'SSL');
+        $data['sort_viewed']        = Url::link('content/post', 'token=' . $this->session->data['token'] . '&sort=p.viewed' . $url, 'SSL');
+        $data['sort_date_added']    = Url::link('content/post', 'token=' . $this->session->data['token'] . '&sort=p.date_added' . $url, 'SSL');
+        $data['sort_date_modified'] = Url::link('content/post', 'token=' . $this->session->data['token'] . '&sort=p.date_modified' . $url, 'SSL');
+        $data['sort_order']         = Url::link('content/post', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -409,8 +409,8 @@ class Post extends Controller {
             $post_total, 
             $page, 
             Config::get('config_admin_limit'), 
-            $this->language->get('lang_text_pagination'), 
-            $this->url->link('content/post', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
+            Lang::get('lang_text_pagination'), 
+            Url::link('content/post', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
         );
         
         $data['filter_name']          = $filter_name;
@@ -499,15 +499,15 @@ class Post extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'content/post');
+        Breadcrumb::add('lang_heading_title', 'content/post');
         
         if (!isset($this->request->get['post_id'])) {
-            $data['action'] = $this->url->link('content/post/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('content/post/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('content/post/update', 'token=' . $this->session->data['token'] . '&post_id=' . $this->request->get['post_id'] . $url, 'SSL');
+            $data['action'] = Url::link('content/post/update', 'token=' . $this->session->data['token'] . '&post_id=' . $this->request->get['post_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = $this->url->link('content/post', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('content/post', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         if (isset($this->request->get['post_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
             $post_info = $this->model_content_post->getPost($this->request->get['post_id']);
@@ -702,16 +702,16 @@ class Post extends Controller {
     
     private function validateForm() {
         if (!User::hasPermission('modify', 'content/post')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         foreach ($this->request->post['post_description'] as $language_id => $value) {
             if ((Encode::strlen($value['name']) < 1) || (Encode::strlen($value['name']) > 255)) {
-                $this->error['name'][$language_id] = $this->language->get('lang_error_name');
+                $this->error['name'][$language_id] = Lang::get('lang_error_name');
             }
             
             if ((Encode::strlen($value['description']) < 5)) {
-                $this->error['description'][$language_id] = $this->language->get('lang_error_description');
+                $this->error['description'][$language_id] = Lang::get('lang_error_description');
             }
         }
         
@@ -722,20 +722,20 @@ class Post extends Controller {
             if (isset($this->request->get['post_id'])):
                 if ($query):
                     if ($query != 'post_id:' . $this->request->get['post_id']):
-                        $this->error['slug'] = sprintf($this->language->get('lang_error_slug_found'), $this->request->post['slug']);
+                        $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), $this->request->post['slug']);
                     endif;
                 endif;
             else:
                 if ($query):
-                    $this->error['slug'] = sprintf($this->language->get('lang_error_slug_found'), $this->request->post['slug']);
+                    $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), $this->request->post['slug']);
                 endif;
             endif;
         else:
-            $this->error['slug'] = $this->language->get('lang_error_slug');
+            $this->error['slug'] = Lang::get('lang_error_slug');
         endif;
         
         if ($this->error && !isset($this->error['warning'])) {
-            $this->error['warning'] = $this->language->get('lang_error_warning');
+            $this->error['warning'] = Lang::get('lang_error_warning');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -745,7 +745,7 @@ class Post extends Controller {
     
     private function validateDelete() {
         if (!User::hasPermission('modify', 'content/post')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -843,17 +843,17 @@ class Post extends Controller {
     }
     
     public function slug() {
-        $this->language->load('content/post');
+        Lang::load('content/post');
         Theme::model('tool/utility');
         
         $json = array();
         
         if (!isset($this->request->get['name']) || Encode::strlen($this->request->get['name']) < 1):
-            $json['error'] = $this->language->get('lang_error_name_first');
+            $json['error'] = Lang::get('lang_error_name_first');
         else:
             
             // build slug
-            $slug = $this->url->build_slug($this->request->get['name']);
+            $slug = Url::build_slug($this->request->get['name']);
             
             // check that the slug is globally unique
             $query = $this->model_tool_utility->findSlugByName($slug);
@@ -861,12 +861,12 @@ class Post extends Controller {
             if ($query):
                 if (isset($this->request->get['post_id'])):
                     if ($query != 'post_id:' . $this->request->get['post_id']):
-                        $json['error'] = sprintf($this->language->get('lang_error_slug_found'), $slug);
+                        $json['error'] = sprintf(Lang::get('lang_error_slug_found'), $slug);
                     else:
                         $json['slug'] = $slug;
                     endif;
                 else:
-                    $json['error'] = sprintf($this->language->get('lang_error_slug_found'), $slug);
+                    $json['error'] = sprintf(Lang::get('lang_error_slug_found'), $slug);
                 endif;
             else:
                 $json['slug'] = $slug;

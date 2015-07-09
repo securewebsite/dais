@@ -21,7 +21,7 @@ class ProductViewed extends Controller {
     public function index() {
         $data = Theme::language('report/product_viewed');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
@@ -35,7 +35,7 @@ class ProductViewed extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'report/product_viewed', $url);
+        Breadcrumb::add('lang_heading_title', 'report/product_viewed', $url);
         
         Theme::model('report/product');
         
@@ -65,7 +65,7 @@ class ProductViewed extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['reset'] = $this->url->link('report/product_viewed/reset', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['reset'] = Url::link('report/product_viewed/reset', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
@@ -75,7 +75,7 @@ class ProductViewed extends Controller {
             $data['success'] = '';
         }
         
-        $data['pagination'] = Theme::paginate($product_viewed_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('report/product_viewed', 'token=' . $this->session->data['token'] . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($product_viewed_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/product_viewed', 'token=' . $this->session->data['token'] . '&page={page}', 'SSL'));
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
@@ -85,14 +85,14 @@ class ProductViewed extends Controller {
     }
     
     public function reset() {
-        $this->language->load('report/product_viewed');
+        Lang::load('report/product_viewed');
         Theme::model('report/product');
         $this->model_report_product->reset();
         
-        $this->session->data['success'] = $this->language->get('lang_text_success');
+        $this->session->data['success'] = Lang::get('lang_text_success');
         
         Theme::listen(__CLASS__, __FUNCTION__);
         
-        Response::redirect($this->url->link('report/product_viewed', 'token=' . $this->session->data['token'], 'SSL'));
+        Response::redirect(Url::link('report/product_viewed', 'token=' . $this->session->data['token'], 'SSL'));
     }
 }

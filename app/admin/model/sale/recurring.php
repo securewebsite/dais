@@ -157,43 +157,43 @@ class Recurring extends Model {
         foreach ($query->rows as $result) {
             switch ($result['type']) {
                 case 0:
-                    $type = $this->language->get('lang_text_transaction_date_added');
+                    $type = Lang::get('lang_text_transaction_date_added');
                     break;
 
                 case 1:
-                    $type = $this->language->get('lang_text_transaction_payment');
+                    $type = Lang::get('lang_text_transaction_payment');
                     break;
 
                 case 2:
-                    $type = $this->language->get('lang_text_transaction_outstanding_payment');
+                    $type = Lang::get('lang_text_transaction_outstanding_payment');
                     break;
 
                 case 3:
-                    $type = $this->language->get('lang_text_transaction_skipped');
+                    $type = Lang::get('lang_text_transaction_skipped');
                     break;
 
                 case 4:
-                    $type = $this->language->get('lang_text_transaction_failed');
+                    $type = Lang::get('lang_text_transaction_failed');
                     break;
 
                 case 5:
-                    $type = $this->language->get('lang_text_transaction_cancelled');
+                    $type = Lang::get('lang_text_transaction_cancelled');
                     break;
 
                 case 6:
-                    $type = $this->language->get('lang_text_transaction_suspended');
+                    $type = Lang::get('lang_text_transaction_suspended');
                     break;
 
                 case 7:
-                    $type = $this->language->get('lang_text_transaction_suspended_failed');
+                    $type = Lang::get('lang_text_transaction_suspended_failed');
                     break;
 
                 case 8:
-                    $type = $this->language->get('lang_text_transaction_outstanding_failed');
+                    $type = Lang::get('lang_text_transaction_outstanding_failed');
                     break;
 
                 case 9:
-                    $type = $this->language->get('lang_text_transaction_expired');
+                    $type = Lang::get('lang_text_transaction_expired');
                     break;
 
                 default:
@@ -210,27 +210,27 @@ class Recurring extends Model {
     private function getStatus($status) {
         switch ($status) {
             case 1:
-                $result = $this->language->get('lang_text_status_inactive');
+                $result = Lang::get('lang_text_status_inactive');
                 break;
 
             case 2:
-                $result = $this->language->get('lang_text_status_active');
+                $result = Lang::get('lang_text_status_active');
                 break;
 
             case 3:
-                $result = $this->language->get('lang_text_status_suspended');
+                $result = Lang::get('lang_text_status_suspended');
                 break;
 
             case 4:
-                $result = $this->language->get('lang_text_status_cancelled');
+                $result = Lang::get('lang_text_status_cancelled');
                 break;
 
             case 5:
-                $result = $this->language->get('lang_text_status_expired');
+                $result = Lang::get('lang_text_status_expired');
                 break;
 
             case 6:
-                $result = $this->language->get('lang_text_status_pending');
+                $result = Lang::get('lang_text_status_pending');
                 break;
 
             default:

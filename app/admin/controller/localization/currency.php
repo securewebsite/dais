@@ -21,9 +21,9 @@ class Currency extends Controller {
     private $error = array();
     
     public function index() {
-        $this->language->load('localization/currency');
+        Lang::load('localization/currency');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         Theme::model('localization/currency');
         
@@ -33,16 +33,16 @@ class Currency extends Controller {
     }
     
     public function insert() {
-        $this->language->load('localization/currency');
+        Lang::load('localization/currency');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         Theme::model('localization/currency');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_localization_currency->addCurrency($this->request->post);
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -58,7 +58,7 @@ class Currency extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('localization/currency', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('localization/currency', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -67,16 +67,16 @@ class Currency extends Controller {
     }
     
     public function update() {
-        $this->language->load('localization/currency');
+        Lang::load('localization/currency');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         Theme::model('localization/currency');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_localization_currency->editCurrency($this->request->get['currency_id'], $this->request->post);
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -92,7 +92,7 @@ class Currency extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('localization/currency', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('localization/currency', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -101,9 +101,9 @@ class Currency extends Controller {
     }
     
     public function delete() {
-        $this->language->load('localization/currency');
+        Lang::load('localization/currency');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         Theme::model('localization/currency');
         
@@ -112,7 +112,7 @@ class Currency extends Controller {
                 $this->model_localization_currency->deleteCurrency($currency_id);
             }
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -128,7 +128,7 @@ class Currency extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('localization/currency', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('localization/currency', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -171,10 +171,10 @@ class Currency extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'localization/currency', $url);
+        Breadcrumb::add('lang_heading_title', 'localization/currency', $url);
         
-        $data['insert'] = $this->url->link('localization/currency/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('localization/currency/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('localization/currency/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = Url::link('localization/currency/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         $data['currencies'] = array();
         
@@ -187,9 +187,9 @@ class Currency extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('localization/currency/update', 'token=' . $this->session->data['token'] . '&currency_id=' . $result['currency_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('localization/currency/update', 'token=' . $this->session->data['token'] . '&currency_id=' . $result['currency_id'] . $url, 'SSL'));
             
-            $data['currencies'][] = array('currency_id' => $result['currency_id'], 'title' => $result['title'] . (($result['code'] == Config::get('config_currency')) ? $this->language->get('lang_text_default') : null), 'code' => $result['code'], 'value' => $result['value'], 'date_modified' => date($this->language->get('lang_date_format_short'), strtotime($result['date_modified'])), 'selected' => isset($this->request->post['selected']) && in_array($result['currency_id'], $this->request->post['selected']), 'action' => $action);
+            $data['currencies'][] = array('currency_id' => $result['currency_id'], 'title' => $result['title'] . (($result['code'] == Config::get('config_currency')) ? Lang::get('lang_text_default') : null), 'code' => $result['code'], 'value' => $result['value'], 'date_modified' => date(Lang::get('lang_date_format_short'), strtotime($result['date_modified'])), 'selected' => isset($this->request->post['selected']) && in_array($result['currency_id'], $this->request->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -218,10 +218,10 @@ class Currency extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_title'] = $this->url->link('localization/currency', 'token=' . $this->session->data['token'] . '&sort=title' . $url, 'SSL');
-        $data['sort_code'] = $this->url->link('localization/currency', 'token=' . $this->session->data['token'] . '&sort=code' . $url, 'SSL');
-        $data['sort_value'] = $this->url->link('localization/currency', 'token=' . $this->session->data['token'] . '&sort=value' . $url, 'SSL');
-        $data['sort_date_modified'] = $this->url->link('localization/currency', 'token=' . $this->session->data['token'] . '&sort=date_modified' . $url, 'SSL');
+        $data['sort_title'] = Url::link('localization/currency', 'token=' . $this->session->data['token'] . '&sort=title' . $url, 'SSL');
+        $data['sort_code'] = Url::link('localization/currency', 'token=' . $this->session->data['token'] . '&sort=code' . $url, 'SSL');
+        $data['sort_value'] = Url::link('localization/currency', 'token=' . $this->session->data['token'] . '&sort=value' . $url, 'SSL');
+        $data['sort_date_modified'] = Url::link('localization/currency', 'token=' . $this->session->data['token'] . '&sort=date_modified' . $url, 'SSL');
         
         $url = '';
         
@@ -233,7 +233,7 @@ class Currency extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($currency_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('localization/currency', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($currency_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('localization/currency', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -280,15 +280,15 @@ class Currency extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'localization/currency', $url);
+        Breadcrumb::add('lang_heading_title', 'localization/currency', $url);
         
         if (!isset($this->request->get['currency_id'])) {
-            $data['action'] = $this->url->link('localization/currency/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('localization/currency/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('localization/currency/update', 'token=' . $this->session->data['token'] . '&currency_id=' . $this->request->get['currency_id'] . $url, 'SSL');
+            $data['action'] = Url::link('localization/currency/update', 'token=' . $this->session->data['token'] . '&currency_id=' . $this->request->get['currency_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = $this->url->link('localization/currency', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('localization/currency', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         if (isset($this->request->get['currency_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
             $currency_info = $this->model_localization_currency->getCurrency($this->request->get['currency_id']);
@@ -359,15 +359,15 @@ class Currency extends Controller {
     
     protected function validateForm() {
         if (!User::hasPermission('modify', 'localization/currency')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         if ((Encode::strlen($this->request->post['title']) < 3) || (Encode::strlen($this->request->post['title']) > 32)) {
-            $this->error['title'] = $this->language->get('lang_error_title');
+            $this->error['title'] = Lang::get('lang_error_title');
         }
         
         if (Encode::strlen($this->request->post['code']) != 3) {
-            $this->error['code'] = $this->language->get('lang_error_code');
+            $this->error['code'] = Lang::get('lang_error_code');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -377,7 +377,7 @@ class Currency extends Controller {
     
     protected function validateDelete() {
         if (!User::hasPermission('modify', 'localization/currency')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::model('setting/store');
@@ -388,20 +388,20 @@ class Currency extends Controller {
             
             if ($currency_info) {
                 if (Config::get('config_currency') == $currency_info['code']) {
-                    $this->error['warning'] = $this->language->get('lang_error_default');
+                    $this->error['warning'] = Lang::get('lang_error_default');
                 }
                 
                 $store_total = $this->model_setting_store->getTotalStoresByCurrency($currency_info['code']);
                 
                 if ($store_total) {
-                    $this->error['warning'] = sprintf($this->language->get('lang_error_store'), $store_total);
+                    $this->error['warning'] = sprintf(Lang::get('lang_error_store'), $store_total);
                 }
             }
             
             $order_total = $this->model_sale_order->getTotalOrdersByCurrencyId($currency_id);
             
             if ($order_total) {
-                $this->error['warning'] = sprintf($this->language->get('lang_error_order'), $order_total);
+                $this->error['warning'] = sprintf(Lang::get('lang_error_order'), $order_total);
             }
         }
         

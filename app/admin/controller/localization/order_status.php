@@ -21,8 +21,8 @@ class OrderStatus extends Controller {
     private $error = array();
     
     public function index() {
-        $this->language->load('localization/order_status');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('localization/order_status');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('localization/order_status');
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -31,13 +31,13 @@ class OrderStatus extends Controller {
     }
     
     public function insert() {
-        $this->language->load('localization/order_status');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('localization/order_status');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('localization/order_status');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_localization_order_status->addOrderStatus($this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -53,7 +53,7 @@ class OrderStatus extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('localization/order_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('localization/order_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -62,13 +62,13 @@ class OrderStatus extends Controller {
     }
     
     public function update() {
-        $this->language->load('localization/order_status');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('localization/order_status');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('localization/order_status');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_localization_order_status->editOrderStatus($this->request->get['order_status_id'], $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -84,7 +84,7 @@ class OrderStatus extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('localization/order_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('localization/order_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -93,8 +93,8 @@ class OrderStatus extends Controller {
     }
     
     public function delete() {
-        $this->language->load('localization/order_status');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('localization/order_status');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('localization/order_status');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
@@ -102,7 +102,7 @@ class OrderStatus extends Controller {
                 $this->model_localization_order_status->deleteOrderStatus($order_status_id);
             }
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -118,7 +118,7 @@ class OrderStatus extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('localization/order_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('localization/order_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -161,10 +161,10 @@ class OrderStatus extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'localization/order_status', $url);
+        Breadcrumb::add('lang_heading_title', 'localization/order_status', $url);
         
-        $data['insert'] = $this->url->link('localization/order_status/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('localization/order_status/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('localization/order_status/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = Url::link('localization/order_status/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         $data['order_statuses'] = array();
         
@@ -177,9 +177,9 @@ class OrderStatus extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('localization/order_status/update', 'token=' . $this->session->data['token'] . '&order_status_id=' . $result['order_status_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('localization/order_status/update', 'token=' . $this->session->data['token'] . '&order_status_id=' . $result['order_status_id'] . $url, 'SSL'));
             
-            $data['order_statuses'][] = array('order_status_id' => $result['order_status_id'], 'name' => $result['name'] . (($result['order_status_id'] == Config::get('config_order_status_id')) ? $this->language->get('lang_text_default') : null), 'selected' => isset($this->request->post['selected']) && in_array($result['order_status_id'], $this->request->post['selected']), 'action' => $action);
+            $data['order_statuses'][] = array('order_status_id' => $result['order_status_id'], 'name' => $result['name'] . (($result['order_status_id'] == Config::get('config_order_status_id')) ? Lang::get('lang_text_default') : null), 'selected' => isset($this->request->post['selected']) && in_array($result['order_status_id'], $this->request->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -208,7 +208,7 @@ class OrderStatus extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_name'] = $this->url->link('localization/order_status', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+        $data['sort_name'] = Url::link('localization/order_status', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
         
         $url = '';
         
@@ -220,7 +220,7 @@ class OrderStatus extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($order_status_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('localization/order_status', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($order_status_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('localization/order_status', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -261,15 +261,15 @@ class OrderStatus extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'localization/order_status', $url);
+        Breadcrumb::add('lang_heading_title', 'localization/order_status', $url);
         
         if (!isset($this->request->get['order_status_id'])) {
-            $data['action'] = $this->url->link('localization/order_status/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('localization/order_status/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('localization/order_status/update', 'token=' . $this->session->data['token'] . '&order_status_id=' . $this->request->get['order_status_id'] . $url, 'SSL');
+            $data['action'] = Url::link('localization/order_status/update', 'token=' . $this->session->data['token'] . '&order_status_id=' . $this->request->get['order_status_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = $this->url->link('localization/order_status', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('localization/order_status', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         Theme::model('localization/language');
         
@@ -292,12 +292,12 @@ class OrderStatus extends Controller {
     
     protected function validateForm() {
         if (!User::hasPermission('modify', 'localization/order_status')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         foreach ($this->request->post['order_status'] as $language_id => $value) {
             if ((Encode::strlen($value['name']) < 3) || (Encode::strlen($value['name']) > 32)) {
-                $this->error['name'][$language_id] = $this->language->get('lang_error_name');
+                $this->error['name'][$language_id] = Lang::get('lang_error_name');
             }
         }
         
@@ -308,7 +308,7 @@ class OrderStatus extends Controller {
     
     protected function validateDelete() {
         if (!User::hasPermission('modify', 'localization/order_status')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::model('setting/store');
@@ -316,23 +316,23 @@ class OrderStatus extends Controller {
         
         foreach ($this->request->post['selected'] as $order_status_id) {
             if (Config::get('config_order_status_id') == $order_status_id) {
-                $this->error['warning'] = $this->language->get('lang_error_default');
+                $this->error['warning'] = Lang::get('lang_error_default');
             }
             
             if (Config::get('config_download_status_id') == $order_status_id) {
-                $this->error['warning'] = $this->language->get('lang_error_download');
+                $this->error['warning'] = Lang::get('lang_error_download');
             }
             
             $store_total = $this->model_setting_store->getTotalStoresByOrderStatusId($order_status_id);
             
             if ($store_total) {
-                $this->error['warning'] = sprintf($this->language->get('lang_error_store'), $store_total);
+                $this->error['warning'] = sprintf(Lang::get('lang_error_store'), $store_total);
             }
             
             $order_total = $this->model_sale_order->getTotalOrderHistoriesByOrderStatusId($order_status_id);
             
             if ($order_total) {
-                $this->error['warning'] = sprintf($this->language->get('lang_error_order'), $order_total);
+                $this->error['warning'] = sprintf(Lang::get('lang_error_order'), $order_total);
             }
         }
         

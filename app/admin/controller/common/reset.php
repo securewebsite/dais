@@ -24,11 +24,11 @@ class Reset extends Controller {
     
     public function index() {
         if (User::isLogged()):
-            Response::redirect($this->url->link('common/dashboard', '', 'SSL'));
+            Response::redirect(Url::link('common/dashboard', '', 'SSL'));
         endif;
         
         if (!Config::get('config_password')):
-            Response::redirect($this->url->link('common/login', '', 'SSL'));
+            Response::redirect(Url::link('common/login', '', 'SSL'));
         endif;
         
         if (isset($this->request->get['code'])):
@@ -46,11 +46,11 @@ class Reset extends Controller {
             
             if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
                 $this->model_people_user->editPassword($user_info['user_id'], $this->request->post['password']);
-                $this->session->data['success'] = $this->language->get('lang_text_success');
-                Response::redirect($this->url->link('common/login', '', 'SSL'));
+                $this->session->data['success'] = Lang::get('lang_text_success');
+                Response::redirect(Url::link('common/login', '', 'SSL'));
             endif;
             
-            $this->breadcrumb->add('lang_text_reset', 'common/reset');
+            Breadcrumb::add('lang_text_reset', 'common/reset');
             
             if (isset($this->error['warning'])):
                 $data['error_warning'] = $this->error['warning'];
@@ -77,8 +77,8 @@ class Reset extends Controller {
                 $data['error_confirm'] = '';
             endif;
             
-            $data['action'] = $this->url->link('common/reset', 'code=' . $code, 'SSL');
-            $data['cancel'] = $this->url->link('common/login', '', 'SSL');
+            $data['action'] = Url::link('common/reset', 'code=' . $code, 'SSL');
+            $data['cancel'] = Url::link('common/login', '', 'SSL');
             
             if (isset($this->request->post['password'])):
                 $data['password'] = $this->request->post['password'];
@@ -108,11 +108,11 @@ class Reset extends Controller {
     
     protected function validate() {
         if ((Encode::strlen($this->request->post['password']) < 4) || (Encode::strlen($this->request->post['password']) > 20)):
-            $this->error['password'] = $this->language->get('lang_error_password');
+            $this->error['password'] = Lang::get('lang_error_password');
         endif;
         
         if ($this->request->post['confirm'] != $this->request->post['password']):
-            $this->error['confirm'] = $this->language->get('lang_error_confirm');
+            $this->error['confirm'] = Lang::get('lang_error_confirm');
         endif;
         
         Theme::listen(__CLASS__, __FUNCTION__);

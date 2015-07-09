@@ -1278,7 +1278,7 @@ class Order extends Model {
 	    		Theme::language('shipping/' . $module['code']);
 	    		$modules[] = array(
 	    			'code' => $module['code'],
-	    			'name' => $this->language->get('lang_heading_title')
+	    			'name' => Lang::get('lang_heading_title')
 	    		);
     		endif;
     	endforeach;
@@ -1297,7 +1297,7 @@ class Order extends Model {
 	    		Theme::language('payment/' . $module['code']);
 	    		$modules[] = array(
 	    			'code' => $module['code'],
-	    			'name' => $this->language->get('lang_heading_title')
+	    			'name' => Lang::get('lang_heading_title')
 	    		);
     		endif;
     	endforeach;

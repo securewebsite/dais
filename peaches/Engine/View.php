@@ -21,8 +21,12 @@ class View {
     private $file;
     private $data;
     
-    public function __construct($directory) {
-        $this->setDirectory($directory);
+    public function __construct($directory = false) {
+        if ($directory):
+            $this->directory = $directory;
+        else:
+            $this->directory = Config::get('path.theme') . Config::get('theme.name') . SEP;
+        endif;
     }
     
     public function render($template, $data = array()) {

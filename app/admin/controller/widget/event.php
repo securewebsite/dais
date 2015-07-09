@@ -23,13 +23,13 @@ class Event extends Controller {
     
     public function index() {
         $data = Theme::language('widget/event');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('event', $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
-            Response::redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            $this->session->data['success'] = Lang::get('lang_text_success');
+            Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -38,11 +38,11 @@ class Event extends Controller {
             $data['error_warning'] = '';
         }
         
-        $this->breadcrumb->add('lang_text_widget', 'module/widget');
-        $this->breadcrumb->add('lang_heading_title', 'widget/event');
+        Breadcrumb::add('lang_text_widget', 'module/widget');
+        Breadcrumb::add('lang_heading_title', 'widget/event');
         
-        $data['action'] = $this->url->link('widget/event', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = $this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('widget/event', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL');
         
         $data['widgets'] = array();
         
@@ -67,7 +67,7 @@ class Event extends Controller {
     
     private function validate() {
         if (!User::hasPermission('modify', 'widget/event')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         return !$this->error;

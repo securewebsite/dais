@@ -21,9 +21,9 @@ use Dais\Library\Naming;
 class Widget extends Controller {
     public function index() {
         $data = Theme::language('module/widget');
-        Theme::setTitle($this->language->get('lang_heading_widget'));
+        Theme::setTitle(Lang::get('lang_heading_widget'));
         
-        $this->breadcrumb->add('lang_heading_widget', 'module/widget');
+        Breadcrumb::add('lang_heading_widget', 'module/widget');
         
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
@@ -70,22 +70,22 @@ class Widget extends Controller {
                 
                 if (!in_array($module, $modules)) {
                     $action[] = array(
-                        'text' => $this->language->get('lang_text_install'), 
-                        'href' => $this->url->link('module/widget/install', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL')
+                        'text' => Lang::get('lang_text_install'), 
+                        'href' => Url::link('module/widget/install', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL')
                     );
                 } else {
                     $action[] = array(
-                        'text' => $this->language->get('lang_text_edit'), 
-                        'href' => $this->url->link('widget/' . $module . '', 'token=' . $this->session->data['token'], 'SSL')
+                        'text' => Lang::get('lang_text_edit'), 
+                        'href' => Url::link('widget/' . $module . '', 'token=' . $this->session->data['token'], 'SSL')
                     );
                     
                     $action[] = array(
-                        'text' => $this->language->get('lang_text_uninstall'), 
-                        'href' => $this->url->link('module/widget/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL')
+                        'text' => Lang::get('lang_text_uninstall'), 
+                        'href' => Url::link('module/widget/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL')
                     );
                 }
                 
-                $data['modules'][] = array('name' => $this->language->get('lang_heading_title'), 'action' => $action);
+                $data['modules'][] = array('name' => Lang::get('lang_heading_title'), 'action' => $action);
             }
         }
         
@@ -97,14 +97,14 @@ class Widget extends Controller {
     }
     
     public function install() {
-        $this->language->load('module/widget');
+        Lang::load('module/widget');
         
         if (!User::hasPermission('modify', 'module/widget')) {
-            $this->session->data['error'] = $this->language->get('lang_error_permission');
+            $this->session->data['error'] = Lang::get('lang_error_permission');
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
         } else {
             Theme::model('setting/module');
             
@@ -132,19 +132,19 @@ class Widget extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
         }
     }
     
     public function uninstall() {
-        $this->language->load('module/widget');
+        Lang::load('module/widget');
         
         if (!User::hasPermission('modify', 'module/widget')) {
-            $this->session->data['error'] = $this->language->get('lang_error_permission');
+            $this->session->data['error'] = Lang::get('lang_error_permission');
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
         } else {
             Theme::model('setting/module');
             Theme::model('setting/setting');
@@ -169,7 +169,7 @@ class Widget extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
         }
     }
 }

@@ -22,18 +22,18 @@ class PostWall extends Controller {
     
     public function index() {
         $data = Theme::language('widget/post_wall');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('post_wall_widget', $this->request->post);
             $this->cache->delete('posts.masonry');
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             if (!empty($this->request->get['continue'])) {
-                Response::redirect($this->url->link('widget/post_wall', 'token=' . $this->session->data['token'], 'SSL'));
+                Response::redirect(Url::link('widget/post_wall', 'token=' . $this->session->data['token'], 'SSL'));
             } else {
-                Response::redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+                Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
             }
         }
         
@@ -59,11 +59,11 @@ class PostWall extends Controller {
         
         $data['breadcrumbs'] = array();
         
-        $this->breadcrumb->add('lang_text_widget', 'module/widget');
-        $this->breadcrumb->add('lang_heading_title', 'widget/post_wall');
+        Breadcrumb::add('lang_text_widget', 'module/widget');
+        Breadcrumb::add('lang_heading_title', 'widget/post_wall');
         
-        $data['action'] = $this->url->link('widget/post_wall', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = $this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('widget/post_wall', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL');
         
         $data['widgets'] = array();
         
@@ -73,7 +73,7 @@ class PostWall extends Controller {
             $data['widgets'] = Config::get('post_wall_widget');
         }
         
-        $data['post_types'] = array('latest' => $this->language->get('lang_text_latest'), 'featured' => $this->language->get('lang_text_featured'));
+        $data['post_types'] = array('latest' => Lang::get('lang_text_latest'), 'featured' => Lang::get('lang_text_featured'));
         
         Theme::model('design/layout');
         
@@ -90,23 +90,23 @@ class PostWall extends Controller {
     
     private function validate() {
         if (!User::hasPermission('modify', 'widget/post_wall')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         if (isset($this->request->post['post_wall_widget'])) {
             foreach ($this->request->post['post_wall_widget'] as $key => $value) {
                 if ($value['span'] == 1 && $value['description']) {
-                    $this->error['asterisk'][$key]['description'] = $this->language->get('lang_error_asterisk');
+                    $this->error['asterisk'][$key]['description'] = Lang::get('lang_error_asterisk');
                 }
                 
                 if ($value['span'] == 1 && $value['button']) {
-                    $this->error['asterisk'][$key]['button'] = $this->language->get('lang_error_asterisk');
+                    $this->error['asterisk'][$key]['button'] = Lang::get('lang_error_asterisk');
                 }
             }
         }
         
         if ($this->error && !isset($this->error['warning'])) {
-            $this->error['warning'] = $this->language->get('lang_error_span');
+            $this->error['warning'] = Lang::get('lang_error_span');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

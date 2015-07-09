@@ -21,7 +21,7 @@ class SaleReturn extends Controller {
     public function index() {
         $data = Theme::language('report/sale_return');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
@@ -75,7 +75,7 @@ class SaleReturn extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'report/sale_return', $url);
+        Breadcrumb::add('lang_heading_title', 'report/sale_return', $url);
         
         Theme::model('report/returns');
         
@@ -96,8 +96,8 @@ class SaleReturn extends Controller {
         
         foreach ($results as $result) {
             $data['returns'][] = array(
-                'date_start' => date($this->language->get('lang_date_format_short'), strtotime($result['date_start'])), 
-                'date_end'   => date($this->language->get('lang_date_format_short'), strtotime($result['date_end'])), 
+                'date_start' => date(Lang::get('lang_date_format_short'), strtotime($result['date_start'])), 
+                'date_end'   => date(Lang::get('lang_date_format_short'), strtotime($result['date_end'])), 
                 'returns'    => $result['returns']
             );
         }
@@ -111,22 +111,22 @@ class SaleReturn extends Controller {
         $data['groups'] = array();
         
         $data['groups'][] = array(
-            'text'  => $this->language->get('lang_text_year'), 
+            'text'  => Lang::get('lang_text_year'), 
             'value' => 'year'
         );
         
         $data['groups'][] = array(
-            'text'  => $this->language->get('lang_text_month'), 
+            'text'  => Lang::get('lang_text_month'), 
             'value' => 'month'
         );
         
         $data['groups'][] = array(
-            'text'  => $this->language->get('lang_text_week'), 
+            'text'  => Lang::get('lang_text_week'), 
             'value' => 'week'
         );
         
         $data['groups'][] = array(
-            'text'  => $this->language->get('lang_text_day'), 
+            'text'  => Lang::get('lang_text_day'), 
             'value' => 'day'
         );
         
@@ -152,8 +152,8 @@ class SaleReturn extends Controller {
             $return_total, 
             $page, 
             Config::get('config_admin_limit'), 
-            $this->language->get('lang_text_pagination'), 
-            $this->url->link('report/sale_return', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
+            Lang::get('lang_text_pagination'), 
+            Url::link('report/sale_return', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
         );
         
         $data['filter_date_start']       = $filter_date_start;

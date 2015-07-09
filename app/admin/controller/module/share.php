@@ -22,9 +22,9 @@ class Share extends Controller {
 
 	public function index() {
 		$data = Theme::language('module/share');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
 
-        $this->breadcrumb->add('lang_heading_title', 'module/share');
+        Breadcrumb::add('lang_heading_title', 'module/share');
 
         if (isset($this->session->data['success'])):
             $data['success'] = $this->session->data['success'];
@@ -37,9 +37,9 @@ class Share extends Controller {
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
             $this->model_setting_setting->editSetting('share_bar', $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/share', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/share', 'token=' . $this->session->data['token'], 'SSL'));
         endif;
 
         if (isset($this->error['warning'])):
@@ -122,8 +122,8 @@ class Share extends Controller {
         	$data['delicious_enabled'] = false;
         endif;
 
-        $data['action'] = $this->url->link('module/share', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('module/share', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL');
 
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         $data = Theme::render_controllers($data);
@@ -133,7 +133,7 @@ class Share extends Controller {
 
 	protected function validate() {
 		if (!User::hasPermission('modify', 'module/share')):
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         endif;
         
         Theme::listen(__CLASS__, __FUNCTION__);

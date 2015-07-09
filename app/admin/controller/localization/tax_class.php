@@ -21,8 +21,8 @@ class TaxClass extends Controller {
     private $error = array();
     
     public function index() {
-        $this->language->load('localization/tax_class');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('localization/tax_class');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('localization/tax_class');
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -31,13 +31,13 @@ class TaxClass extends Controller {
     }
     
     public function insert() {
-        $this->language->load('localization/tax_class');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('localization/tax_class');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('localization/tax_class');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_localization_tax_class->addTaxClass($this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -53,7 +53,7 @@ class TaxClass extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('localization/tax_class', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('localization/tax_class', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -62,13 +62,13 @@ class TaxClass extends Controller {
     }
     
     public function update() {
-        $this->language->load('localization/tax_class');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('localization/tax_class');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('localization/tax_class');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_localization_tax_class->editTaxClass($this->request->get['tax_class_id'], $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -84,7 +84,7 @@ class TaxClass extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('localization/tax_class', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('localization/tax_class', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -93,8 +93,8 @@ class TaxClass extends Controller {
     }
     
     public function delete() {
-        $this->language->load('localization/tax_class');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('localization/tax_class');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('localization/tax_class');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
@@ -102,7 +102,7 @@ class TaxClass extends Controller {
                 $this->model_localization_tax_class->deleteTaxClass($tax_class_id);
             }
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -118,7 +118,7 @@ class TaxClass extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('localization/tax_class', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('localization/tax_class', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -161,10 +161,10 @@ class TaxClass extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'localization/tax_class', $url);
+        Breadcrumb::add('lang_heading_title', 'localization/tax_class', $url);
         
-        $data['insert'] = $this->url->link('localization/tax_class/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('localization/tax_class/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('localization/tax_class/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = Url::link('localization/tax_class/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         $data['tax_classes'] = array();
         
@@ -177,7 +177,7 @@ class TaxClass extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('localization/tax_class/update', 'token=' . $this->session->data['token'] . '&tax_class_id=' . $result['tax_class_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('localization/tax_class/update', 'token=' . $this->session->data['token'] . '&tax_class_id=' . $result['tax_class_id'] . $url, 'SSL'));
             
             $data['tax_classes'][] = array('tax_class_id' => $result['tax_class_id'], 'title' => $result['title'], 'selected' => isset($this->request->post['selected']) && in_array($result['tax_class_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -208,7 +208,7 @@ class TaxClass extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_title'] = $this->url->link('localization/tax_class', 'token=' . $this->session->data['token'] . '&sort=title' . $url, 'SSL');
+        $data['sort_title'] = Url::link('localization/tax_class', 'token=' . $this->session->data['token'] . '&sort=title' . $url, 'SSL');
         
         $url = '';
         
@@ -220,7 +220,7 @@ class TaxClass extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($tax_class_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('localization/tax_class', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($tax_class_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('localization/tax_class', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -267,15 +267,15 @@ class TaxClass extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'localization/tax_class', $url);
+        Breadcrumb::add('lang_heading_title', 'localization/tax_class', $url);
         
         if (!isset($this->request->get['tax_class_id'])) {
-            $data['action'] = $this->url->link('localization/tax_class/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('localization/tax_class/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('localization/tax_class/update', 'token=' . $this->session->data['token'] . '&tax_class_id=' . $this->request->get['tax_class_id'] . $url, 'SSL');
+            $data['action'] = Url::link('localization/tax_class/update', 'token=' . $this->session->data['token'] . '&tax_class_id=' . $this->request->get['tax_class_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = $this->url->link('localization/tax_class', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('localization/tax_class', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         if (isset($this->request->get['tax_class_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
             $tax_class_info = $this->model_localization_tax_class->getTaxClass($this->request->get['tax_class_id']);
@@ -320,15 +320,15 @@ class TaxClass extends Controller {
     
     protected function validateForm() {
         if (!User::hasPermission('modify', 'localization/tax_class')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         if ((Encode::strlen($this->request->post['title']) < 3) || (Encode::strlen($this->request->post['title']) > 32)) {
-            $this->error['title'] = $this->language->get('lang_error_title');
+            $this->error['title'] = Lang::get('lang_error_title');
         }
         
         if ((Encode::strlen($this->request->post['description']) < 3) || (Encode::strlen($this->request->post['description']) > 255)) {
-            $this->error['description'] = $this->language->get('lang_error_description');
+            $this->error['description'] = Lang::get('lang_error_description');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -338,7 +338,7 @@ class TaxClass extends Controller {
     
     protected function validateDelete() {
         if (!User::hasPermission('modify', 'localization/tax_class')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::model('catalog/product');
@@ -347,7 +347,7 @@ class TaxClass extends Controller {
             $product_total = $this->model_catalog_product->getTotalProductsByTaxClassId($tax_class_id);
             
             if ($product_total) {
-                $this->error['warning'] = sprintf($this->language->get('lang_error_product'), $product_total);
+                $this->error['warning'] = sprintf(Lang::get('lang_error_product'), $product_total);
             }
         }
         

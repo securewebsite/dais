@@ -20,9 +20,9 @@ use Dais\Engine\Controller;
 class Plugin extends Controller {
     public function index() {
         $data = Theme::language('module/plugin');
-        Theme::setTitle($this->language->get('lang_heading_plugin'));
+        Theme::setTitle(Lang::get('lang_heading_plugin'));
         
-        $this->breadcrumb->add('lang_heading_plugin', 'module/plugin');
+        Breadcrumb::add('lang_heading_plugin', 'module/plugin');
         
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
@@ -66,16 +66,16 @@ class Plugin extends Controller {
                 $action = array();
                 
                 if (!in_array($module, $modules)) {
-                    $action[] = array('text' => $this->language->get('lang_text_install'), 'href' => $this->url->link('module/plugin/install', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
+                    $action[] = array('text' => Lang::get('lang_text_install'), 'href' => Url::link('module/plugin/install', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
                 } else {
                     if (is_readable(Config::get('path.plugin') . $module . '/admin/controller/' . $module . '.php')):
-                        $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('plugin/' . $module . '', 'token=' . $this->session->data['token'], 'SSL'));
+                        $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('plugin/' . $module . '', 'token=' . $this->session->data['token'], 'SSL'));
                     endif;
                     
-                    $action[] = array('text' => $this->language->get('lang_text_uninstall'), 'href' => $this->url->link('module/plugin/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
+                    $action[] = array('text' => Lang::get('lang_text_uninstall'), 'href' => Url::link('module/plugin/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
                 }
                 
-                $data['modules'][] = array('name' => $this->language->get('lang_heading_title'), 'action' => $action);
+                $data['modules'][] = array('name' => Lang::get('lang_heading_title'), 'action' => $action);
             }
         }
         
@@ -87,14 +87,14 @@ class Plugin extends Controller {
     }
     
     public function install() {
-        $this->language->load('module/plugin');
+        Lang::load('module/plugin');
         
         if (!User::hasPermission('modify', 'module/plugin')) {
-            $this->session->data['error'] = $this->language->get('lang_error_permission');
+            $this->session->data['error'] = Lang::get('lang_error_permission');
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect($this->url->link('module/plugin', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/plugin', 'token=' . $this->session->data['token'], 'SSL'));
         } else {
             Theme::model('setting/module');
             
@@ -111,19 +111,19 @@ class Plugin extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect($this->url->link('module/plugin', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/plugin', 'token=' . $this->session->data['token'], 'SSL'));
         }
     }
     
     public function uninstall() {
-        $this->language->load('module/plugin');
+        Lang::load('module/plugin');
         
         if (!User::hasPermission('modify', 'module/plugin')) {
-            $this->session->data['error'] = $this->language->get('lang_error_permission');
+            $this->session->data['error'] = Lang::get('lang_error_permission');
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect($this->url->link('module/plugin', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/plugin', 'token=' . $this->session->data['token'], 'SSL'));
         } else {
             Theme::model('setting/module');
             Theme::model('setting/setting');
@@ -135,7 +135,7 @@ class Plugin extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect($this->url->link('module/plugin', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/plugin', 'token=' . $this->session->data['token'], 'SSL'));
         }
     }
 }

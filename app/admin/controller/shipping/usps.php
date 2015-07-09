@@ -22,14 +22,14 @@ class Usps extends Controller {
     
     public function index() {
         $data = Theme::language('shipping/usps');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('usps', $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -68,12 +68,12 @@ class Usps extends Controller {
             $data['error_height'] = '';
         }
         
-        $this->breadcrumb->add('lang_text_shipping', 'module/shipping');
-        $this->breadcrumb->add('lang_heading_title', 'shipping/usps');
+        Breadcrumb::add('lang_text_shipping', 'module/shipping');
+        Breadcrumb::add('lang_heading_title', 'shipping/usps');
         
-        $data['action'] = $this->url->link('shipping/usps', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('shipping/usps', 'token=' . $this->session->data['token'], 'SSL');
         
-        $data['cancel'] = $this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
         
         if (isset($this->request->post['usps_user_id'])) {
             $data['usps_user_id'] = $this->request->post['usps_user_id'];
@@ -323,9 +323,9 @@ class Usps extends Controller {
         
         $data['sizes'] = array();
         
-        $data['sizes'][] = array('text' => $this->language->get('lang_text_regular'), 'value' => 'REGULAR');
+        $data['sizes'][] = array('text' => Lang::get('lang_text_regular'), 'value' => 'REGULAR');
         
-        $data['sizes'][] = array('text' => $this->language->get('lang_text_large'), 'value' => 'LARGE');
+        $data['sizes'][] = array('text' => Lang::get('lang_text_large'), 'value' => 'LARGE');
         
         if (isset($this->request->post['usps_container'])) {
             $data['usps_container'] = $this->request->post['usps_container'];
@@ -335,11 +335,11 @@ class Usps extends Controller {
         
         $data['containers'] = array();
         
-        $data['containers'][] = array('text' => $this->language->get('lang_text_rectangular'), 'value' => 'RECTANGULAR');
+        $data['containers'][] = array('text' => Lang::get('lang_text_rectangular'), 'value' => 'RECTANGULAR');
         
-        $data['containers'][] = array('text' => $this->language->get('lang_text_non_rectangular'), 'value' => 'NONRECTANGULAR');
+        $data['containers'][] = array('text' => Lang::get('lang_text_non_rectangular'), 'value' => 'NONRECTANGULAR');
         
-        $data['containers'][] = array('text' => $this->language->get('lang_text_variable'), 'value' => 'VARIABLE');
+        $data['containers'][] = array('text' => Lang::get('lang_text_variable'), 'value' => 'VARIABLE');
         
         if (isset($this->request->post['usps_machinable'])) {
             $data['usps_machinable'] = $this->request->post['usps_machinable'];
@@ -440,27 +440,27 @@ class Usps extends Controller {
     
     protected function validate() {
         if (!User::hasPermission('modify', 'shipping/usps')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         if (!$this->request->post['usps_user_id']) {
-            $this->error['user_id'] = $this->language->get('lang_error_user_id');
+            $this->error['user_id'] = Lang::get('lang_error_user_id');
         }
         
         if (!$this->request->post['usps_postcode']) {
-            $this->error['postcode'] = $this->language->get('lang_error_postcode');
+            $this->error['postcode'] = Lang::get('lang_error_postcode');
         }
         
         if (!$this->request->post['usps_width']) {
-            $this->error['width'] = $this->language->get('lang_error_width');
+            $this->error['width'] = Lang::get('lang_error_width');
         }
         
         if (!$this->request->post['usps_height']) {
-            $this->error['height'] = $this->language->get('lang_error_height');
+            $this->error['height'] = Lang::get('lang_error_height');
         }
         
         if (!$this->request->post['usps_length']) {
-            $this->error['length'] = $this->language->get('lang_error_length');
+            $this->error['length'] = Lang::get('lang_error_length');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

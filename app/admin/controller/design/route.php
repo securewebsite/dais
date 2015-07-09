@@ -22,9 +22,9 @@ class Route extends Controller {
 	private $error = array();
 
 	public function index() {
-		$this->language->load('design/route');
+		Lang::load('design/route');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         Theme::model('design/route');
         
@@ -34,16 +34,16 @@ class Route extends Controller {
 	}
 
 	public function edit() {
-		$this->language->load('design/route');
+		Lang::load('design/route');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         Theme::model('design/route');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
             $this->model_design_route->editRoutes($this->request->post);
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -51,7 +51,7 @@ class Route extends Controller {
                 $url .= '&page=' . $this->request->get['page'];
             endif;
             
-            Response::redirect($this->url->link('design/route', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('design/route', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         endif;
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -74,9 +74,9 @@ class Route extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         endif;
         
-        $this->breadcrumb->add('lang_heading_title', 'design/route', $url);
+        Breadcrumb::add('lang_heading_title', 'design/route', $url);
         
-        $data['edit'] = $this->url->link('design/route/edit', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['edit'] = Url::link('design/route/edit', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         $data['routes'] = array();
         
@@ -120,8 +120,8 @@ class Route extends Controller {
         	$route_total, 
         	$page, 
         	Config::get('config_admin_limit'), 
-        	$this->language->get('lang_text_pagination'), 
-        	$this->url->link('design/route', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
+        	Lang::get('lang_text_pagination'), 
+        	Url::link('design/route', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
         );
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
@@ -146,10 +146,10 @@ class Route extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         endif;
         
-        $this->breadcrumb->add('lang_heading_title', 'design/route', $url);
+        Breadcrumb::add('lang_heading_title', 'design/route', $url);
         
-        $data['action'] = $this->url->link('design/route/edit', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['cancel'] = $this->url->link('design/route', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['action'] = Url::link('design/route/edit', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('design/route', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         if (isset($this->request->post['custom_route'])):
             $data['custom_routes'] = $this->request->post['custom_route'];
@@ -168,7 +168,7 @@ class Route extends Controller {
 
 	protected function validateForm() {
 		if (!User::hasPermission('modify', 'design/route')):
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         endif;
 
         Theme::listen(__CLASS__, __FUNCTION__);

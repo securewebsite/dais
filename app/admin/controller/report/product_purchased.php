@@ -20,7 +20,7 @@ use Dais\Engine\Controller;
 class ProductPurchased extends Controller {
     public function index() {
         $data = Theme::language('report/product_purchased');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
@@ -64,7 +64,7 @@ class ProductPurchased extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'report/product_purchased', $url);
+        Breadcrumb::add('lang_heading_title', 'report/product_purchased', $url);
         
         Theme::model('report/product');
         
@@ -77,7 +77,7 @@ class ProductPurchased extends Controller {
         $results = $this->model_report_product->getPurchased($filter);
         
         foreach ($results as $result) {
-            $data['products'][] = array('name' => $result['name'], 'model' => $result['model'], 'quantity' => $result['quantity'], 'total' => $this->currency->format($result['total'], Config::get('config_currency')));
+            $data['products'][] = array('name' => $result['name'], 'model' => $result['model'], 'quantity' => $result['quantity'], 'total' => Currency::format($result['total'], Config::get('config_currency')));
         }
         
         $data['token'] = $this->session->data['token'];
@@ -100,7 +100,7 @@ class ProductPurchased extends Controller {
             $url.= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
         }
         
-        $data['pagination'] = Theme::paginate($product_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('report/product_purchased', 'token=' . $this->session->data['token'] . $url . '&page={page}'));
+        $data['pagination'] = Theme::paginate($product_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/product_purchased', 'token=' . $this->session->data['token'] . $url . '&page={page}'));
         
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;

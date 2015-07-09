@@ -22,14 +22,14 @@ class Flat extends Controller {
     
     public function index() {
         $data = Theme::language('shipping/flat');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('flat', $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -38,12 +38,12 @@ class Flat extends Controller {
             $data['error_warning'] = '';
         }
         
-        $this->breadcrumb->add('lang_text_shipping', 'module/shipping');
-        $this->breadcrumb->add('lang_heading_title', 'shipping/flat');
+        Breadcrumb::add('lang_text_shipping', 'module/shipping');
+        Breadcrumb::add('lang_heading_title', 'shipping/flat');
         
-        $data['action'] = $this->url->link('shipping/flat', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('shipping/flat', 'token=' . $this->session->data['token'], 'SSL');
         
-        $data['cancel'] = $this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
         
         if (isset($this->request->post['flat_cost'])) {
             $data['flat_cost'] = $this->request->post['flat_cost'];
@@ -92,7 +92,7 @@ class Flat extends Controller {
     
     protected function validate() {
         if (!User::hasPermission('modify', 'shipping/flat')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

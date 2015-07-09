@@ -22,16 +22,16 @@ class Forgotten extends Controller {
     
     public function index() {
         if (User::isLogged()):
-            Response::redirect($this->url->link('common/dashboard', '', 'SSL'));
+            Response::redirect(Url::link('common/dashboard', '', 'SSL'));
         endif;
         
         if (!Config::get('config_password')):
-            Response::redirect($this->url->link('common/login', '', 'SSL'));
+            Response::redirect(Url::link('common/login', '', 'SSL'));
         endif;
         
         $data = Theme::language('common/forgotten');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/user');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
@@ -40,7 +40,7 @@ class Forgotten extends Controller {
 
             $callback = array(
                 'user_id'  => $user_id,
-                'link'     => $this->url->link('common/reset', 'code=' . $code, 'SSL'),
+                'link'     => Url::link('common/reset', 'code=' . $code, 'SSL'),
                 'callback' => array(
                     'class'  => __CLASS__,
                     'method' => 'admin_forgotten_email'
@@ -49,11 +49,11 @@ class Forgotten extends Controller {
 
             Theme::notify('admin_forgotten_email', $callback);
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
-            Response::redirect($this->url->link('common/login', '', 'SSL'));
+            $this->session->data['success'] = Lang::get('lang_text_success');
+            Response::redirect(Url::link('common/login', '', 'SSL'));
         endif;
         
-        $this->breadcrumb->add('lang_text_forgotten', 'common/forgotten');
+        Breadcrumb::add('lang_text_forgotten', 'common/forgotten');
         
         if (isset($this->error['warning'])):
             $data['error_warning'] = $this->error['warning'];
@@ -61,8 +61,8 @@ class Forgotten extends Controller {
             $data['error_warning'] = '';
         endif;
         
-        $data['action'] = $this->url->link('common/forgotten', '', 'SSL');
-        $data['cancel'] = $this->url->link('common/login', '', 'SSL');
+        $data['action'] = Url::link('common/forgotten', '', 'SSL');
+        $data['cancel'] = Url::link('common/login', '', 'SSL');
         
         if (isset($this->request->post['email'])):
             $data['email'] = $this->request->post['email'];
@@ -78,9 +78,9 @@ class Forgotten extends Controller {
     
     protected function validate() {
         if (!isset($this->request->post['email'])):
-            $this->error['warning'] = $this->language->get('lang_error_email');
+            $this->error['warning'] = Lang::get('lang_error_email');
         elseif (!$this->model_people_user->getTotalUsersByEmail($this->request->post['email'])):
-            $this->error['warning'] = $this->language->get('lang_error_email');
+            $this->error['warning'] = Lang::get('lang_error_email');
         endif;
         
         Theme::listen(__CLASS__, __FUNCTION__);

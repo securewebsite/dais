@@ -22,9 +22,9 @@ class Help extends Controller {
 	public function index() {
 		$data = Theme::language('setting/help');
 
-		Theme::setTitle($this->language->get('lang_heading_title'));
+		Theme::setTitle(Lang::get('lang_heading_title'));
 
-		$this->breadcrumb->add('lang_heading_title', 'setting/help');
+		Breadcrumb::add('lang_heading_title', 'setting/help');
 
 		$data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         

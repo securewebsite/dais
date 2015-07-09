@@ -21,8 +21,8 @@ class CustomerBanIp extends Controller {
     private $error = array();
     
     public function index() {
-        $this->language->load('people/customer_ban_ip');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('people/customer_ban_ip');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/customer_ban_ip');
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -31,13 +31,13 @@ class CustomerBanIp extends Controller {
     }
     
     public function insert() {
-        $this->language->load('people/customer_ban_ip');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('people/customer_ban_ip');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/customer_ban_ip');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_people_customer_ban_ip->addCustomerBanIp($this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -53,7 +53,7 @@ class CustomerBanIp extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -62,13 +62,13 @@ class CustomerBanIp extends Controller {
     }
     
     public function update() {
-        $this->language->load('people/customer_ban_ip');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('people/customer_ban_ip');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/customer_ban_ip');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
             $this->model_people_customer_ban_ip->editCustomerBanIp($this->request->get['customer_ban_ip_id'], $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -84,7 +84,7 @@ class CustomerBanIp extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -93,8 +93,8 @@ class CustomerBanIp extends Controller {
     }
     
     public function delete() {
-        $this->language->load('people/customer_ban_ip');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Lang::load('people/customer_ban_ip');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/customer_ban_ip');
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
@@ -102,7 +102,7 @@ class CustomerBanIp extends Controller {
                 $this->model_people_customer_ban_ip->deleteCustomerBanIp($customer_ban_ip_id);
             }
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
@@ -118,7 +118,7 @@ class CustomerBanIp extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect($this->url->link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -161,10 +161,10 @@ class CustomerBanIp extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'people/customer_ban_ip', $url);
+        Breadcrumb::add('lang_heading_title', 'people/customer_ban_ip', $url);
         
-        $data['insert'] = $this->url->link('people/customer_ban_ip/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = $this->url->link('people/customer_ban_ip/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('people/customer_ban_ip/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['delete'] = Url::link('people/customer_ban_ip/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         $data['customer_ban_ips'] = array();
         
@@ -177,9 +177,9 @@ class CustomerBanIp extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('people/customer_ban_ip/update', 'token=' . $this->session->data['token'] . '&customer_ban_ip_id=' . $result['customer_ban_ip_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/customer_ban_ip/update', 'token=' . $this->session->data['token'] . '&customer_ban_ip_id=' . $result['customer_ban_ip_id'] . $url, 'SSL'));
             
-            $data['customer_ban_ips'][] = array('customer_ban_ip_id' => $result['customer_ban_ip_id'], 'ip' => $result['ip'], 'total' => $result['total'], 'customer' => $this->url->link('people/customer', 'token=' . $this->session->data['token'] . '&filter_ip=' . $result['ip'], 'SSL'), 'selected' => isset($this->request->post['selected']) && in_array($result['customer_ban_ip_id'], $this->request->post['selected']), 'action' => $action);
+            $data['customer_ban_ips'][] = array('customer_ban_ip_id' => $result['customer_ban_ip_id'], 'ip' => $result['ip'], 'total' => $result['total'], 'customer' => Url::link('people/customer', 'token=' . $this->session->data['token'] . '&filter_ip=' . $result['ip'], 'SSL'), 'selected' => isset($this->request->post['selected']) && in_array($result['customer_ban_ip_id'], $this->request->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -208,7 +208,7 @@ class CustomerBanIp extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_ip'] = $this->url->link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . '&sort=ip' . $url, 'SSL');
+        $data['sort_ip'] = Url::link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . '&sort=ip' . $url, 'SSL');
         
         $url = '';
         
@@ -220,7 +220,7 @@ class CustomerBanIp extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($customer_ban_ip_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($customer_ban_ip_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -261,15 +261,15 @@ class CustomerBanIp extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'people/customer_ban_ip', $url);
+        Breadcrumb::add('lang_heading_title', 'people/customer_ban_ip', $url);
         
         if (!isset($this->request->get['customer_ban_ip_id'])) {
-            $data['action'] = $this->url->link('people/customer_ban_ip/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('people/customer_ban_ip/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
         } else {
-            $data['action'] = $this->url->link('people/customer_ban_ip/update', 'token=' . $this->session->data['token'] . '&customer_ban_ip_id=' . $this->request->get['customer_ban_ip_id'] . $url, 'SSL');
+            $data['action'] = Url::link('people/customer_ban_ip/update', 'token=' . $this->session->data['token'] . '&customer_ban_ip_id=' . $this->request->get['customer_ban_ip_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = $this->url->link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('people/customer_ban_ip', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
         if (isset($this->request->get['customer_ban_ip_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
             $customer_ban_ip_info = $this->model_people_customer_ban_ip->getCustomerBanIp($this->request->get['customer_ban_ip_id']);
@@ -292,11 +292,11 @@ class CustomerBanIp extends Controller {
     
     protected function validateForm() {
         if (!User::hasPermission('modify', 'people/customer_ban_ip')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         if ((Encode::strlen($this->request->post['ip']) < 1) || (Encode::strlen($this->request->post['ip']) > 40)) {
-            $this->error['ip'] = $this->language->get('lang_error_ip');
+            $this->error['ip'] = Lang::get('lang_error_ip');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -306,7 +306,7 @@ class CustomerBanIp extends Controller {
     
     protected function validateDelete() {
         if (!User::hasPermission('modify', 'people/customer_ban_ip')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

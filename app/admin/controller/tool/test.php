@@ -21,7 +21,7 @@ class Test extends Controller {
     public function index() {
         $data = Theme::language('tool/test');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         if (isset($this->session->data['success'])):
             $data['success'] = $this->session->data['success'];
@@ -31,7 +31,7 @@ class Test extends Controller {
             $data['success'] = '';
         endif;
         
-        $this->breadcrumb->add('lang_heading_title', 'tool/test');
+        Breadcrumb::add('lang_heading_title', 'tool/test');
 
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         $data = Theme::render_controllers($data);

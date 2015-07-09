@@ -22,14 +22,14 @@ class Total extends Controller {
     
     public function index() {
         $data = Theme::language('total/total');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('total', $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -38,11 +38,11 @@ class Total extends Controller {
             $data['error_warning'] = '';
         }
         
-        $this->breadcrumb->add('lang_text_total', 'module/total');
-        $this->breadcrumb->add('lang_heading_title', 'total/total');
+        Breadcrumb::add('lang_text_total', 'module/total');
+        Breadcrumb::add('lang_heading_title', 'total/total');
         
-        $data['action'] = $this->url->link('total/total', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = $this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('total/total', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL');
         
         if (isset($this->request->post['total_status'])) {
             $data['total_status'] = $this->request->post['total_status'];
@@ -65,7 +65,7 @@ class Total extends Controller {
     
     protected function validate() {
         if (!User::hasPermission('modify', 'total/total')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

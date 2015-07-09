@@ -22,14 +22,14 @@ class AuthorizeNet extends Controller {
     
     public function index() {
         $data = Theme::language('payment/authorize_net');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('authorize_net', $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -50,12 +50,12 @@ class AuthorizeNet extends Controller {
             $data['error_key'] = '';
         }
         
-        $this->breadcrumb->add('lang_text_payment', 'module/payment');
-        $this->breadcrumb->add('lang_heading_title', 'payment/authorize_netaim');
+        Breadcrumb::add('lang_text_payment', 'module/payment');
+        Breadcrumb::add('lang_heading_title', 'payment/authorize_netaim');
         
-        $data['action'] = $this->url->link('payment/authorize_netaim', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('payment/authorize_netaim', 'token=' . $this->session->data['token'], 'SSL');
         
-        $data['cancel'] = $this->url->link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
         
         if (isset($this->request->post['authorize_net_login'])) {
             $data['authorize_net_login'] = $this->request->post['authorize_net_login'];
@@ -140,15 +140,15 @@ class AuthorizeNet extends Controller {
     
     protected function validate() {
         if (!User::hasPermission('modify', 'payment/authorize_netaim')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         if (!$this->request->post['authorize_net_login']) {
-            $this->error['login'] = $this->language->get('lang_error_login');
+            $this->error['login'] = Lang::get('lang_error_login');
         }
         
         if (!$this->request->post['authorize_net_key']) {
-            $this->error['key'] = $this->language->get('lang_error_key');
+            $this->error['key'] = Lang::get('lang_error_key');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

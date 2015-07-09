@@ -358,7 +358,7 @@ class Category extends Model {
 		");
         
         if ($query->row['parent_id']) {
-            return $this->getPath($query->row['parent_id'], Config::get('config_language_id')) . $this->language->get('lang_text_separator') . $query->row['name'];
+            return $this->getPath($query->row['parent_id'], Config::get('config_language_id')) . Lang::get('lang_text_separator') . $query->row['name'];
         } else {
             return $query->row['name'];
         }

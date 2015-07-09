@@ -21,7 +21,7 @@ class SaleShipping extends Controller {
     public function index() {
         $data = Theme::language('report/sale_shipping');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         if (isset($this->request->get['filter_date_start'])) {
             $filter_date_start = $this->request->get['filter_date_start'];
@@ -75,7 +75,7 @@ class SaleShipping extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'report/sale_shipping', $url);
+        Breadcrumb::add('lang_heading_title', 'report/sale_shipping', $url);
         
         Theme::model('report/sale');
         
@@ -88,7 +88,7 @@ class SaleShipping extends Controller {
         $results = $this->model_report_sale->getShipping($filter);
         
         foreach ($results as $result) {
-            $data['orders'][] = array('date_start' => date($this->language->get('lang_date_format_short'), strtotime($result['date_start'])), 'date_end' => date($this->language->get('lang_date_format_short'), strtotime($result['date_end'])), 'title' => $result['title'], 'orders' => $result['orders'], 'total' => $this->currency->format($result['total'], Config::get('config_currency')));
+            $data['orders'][] = array('date_start' => date(Lang::get('lang_date_format_short'), strtotime($result['date_start'])), 'date_end' => date(Lang::get('lang_date_format_short'), strtotime($result['date_end'])), 'title' => $result['title'], 'orders' => $result['orders'], 'total' => Currency::format($result['total'], Config::get('config_currency')));
         }
         
         $data['token'] = $this->session->data['token'];
@@ -99,13 +99,13 @@ class SaleShipping extends Controller {
         
         $data['groups'] = array();
         
-        $data['groups'][] = array('text' => $this->language->get('lang_text_year'), 'value' => 'year',);
+        $data['groups'][] = array('text' => Lang::get('lang_text_year'), 'value' => 'year',);
         
-        $data['groups'][] = array('text' => $this->language->get('lang_text_month'), 'value' => 'month',);
+        $data['groups'][] = array('text' => Lang::get('lang_text_month'), 'value' => 'month',);
         
-        $data['groups'][] = array('text' => $this->language->get('lang_text_week'), 'value' => 'week',);
+        $data['groups'][] = array('text' => Lang::get('lang_text_week'), 'value' => 'week',);
         
-        $data['groups'][] = array('text' => $this->language->get('lang_text_day'), 'value' => 'day',);
+        $data['groups'][] = array('text' => Lang::get('lang_text_day'), 'value' => 'day',);
         
         $url = '';
         
@@ -125,7 +125,7 @@ class SaleShipping extends Controller {
             $url.= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
         }
         
-        $data['pagination'] = Theme::paginate($order_total, $page, Config::get('config_admin_limit'), $this->language->get('lang_text_pagination'), $this->url->link('report/sale_shipping', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($order_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/sale_shipping', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
         
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;

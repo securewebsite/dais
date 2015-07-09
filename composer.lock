@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "38886c3b1c5c2d234d1bf2f2e8390a40",
+    "hash": "c8e257054c07b33381db62b812e3f482",
     "packages": [
         {
             "name": "danielstjules/stringy",
@@ -1903,6 +1903,36 @@
             "time": "2015-02-26 15:33:07"
         },
         {
+            "name": "noahbuscher/macaw",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/NoahBuscher/Macaw.git",
+                "reference": "ede398a876aa6c846756bc1b8ad92962ab298365"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/NoahBuscher/Macaw/zipball/ede398a876aa6c846756bc1b8ad92962ab298365",
+                "reference": "ede398a876aa6c846756bc1b8ad92962ab298365",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "NoahBuscher\\Macaw\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Sexy PHP router.",
+            "time": "2014-12-23 22:41:20"
+        },
+        {
             "name": "pimple/pimple",
             "version": "v3.0.0",
             "source": {
@@ -2833,6 +2863,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "noahbuscher/macaw": 20,
         "swiftmailer/swiftmailer": 0
     },
     "prefer-stable": true,

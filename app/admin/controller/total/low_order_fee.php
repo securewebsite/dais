@@ -22,14 +22,14 @@ class LowOrderFee extends Controller {
     
     public function index() {
         $data = Theme::language('total/low_order_fee');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('low_order_fee', $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -38,11 +38,11 @@ class LowOrderFee extends Controller {
             $data['error_warning'] = '';
         }
         
-        $this->breadcrumb->add('lang_text_total', 'module/total');
-        $this->breadcrumb->add('lang_heading_title', 'total/low_order_fee');
+        Breadcrumb::add('lang_text_total', 'module/total');
+        Breadcrumb::add('lang_heading_title', 'total/low_order_fee');
         
-        $data['action'] = $this->url->link('total/low_order_fee', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = $this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('total/low_order_fee', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL');
         
         if (isset($this->request->post['low_order_fee_total'])) {
             $data['low_order_fee_total'] = $this->request->post['low_order_fee_total'];
@@ -87,7 +87,7 @@ class LowOrderFee extends Controller {
     
     protected function validate() {
         if (!User::hasPermission('modify', 'total/low_order_fee')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

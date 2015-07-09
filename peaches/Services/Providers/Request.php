@@ -47,4 +47,48 @@ class Request {
         
         return $data;
     }
+
+    /**
+     * Aliases methods for returning properties.
+     */
+
+    public function get($key, $value = null) {
+        if (is_null($value)):
+            return (isset($this->get[$key]) ? $this->get[$key] : null);
+        endif;
+
+        $this->get[$key] = $value;
+    }
+
+    public function post($key, $value = null) {
+        if (is_null($value)):
+            return (isset($this->post[$key]) ? $this->post[$key] : null);
+        endif;
+
+        $this->post[$key] = $value;
+    }
+
+    public function cookie($key, $value = null) {
+        if (is_null($value)):
+            return (isset($this->cookie[$key]) ? $this->cookie[$key] : null);
+        endif;
+
+        $this->cookie[$key] = $value;
+    }
+
+    public function files($key, $value = null) {
+        if (is_null($value)):    
+            return (isset($this->files[$key]) ? $this->files[$key] : null);
+        endif;
+
+        $this->files[$key] = $value;
+    }
+
+    public function server($key, $value = null) {
+        if (is_null($value)):
+            return (isset($this->server[$key]) ? $this->server[$key] : null);
+        endif;
+
+        $this->server[$key] = $value;
+    }    
 }

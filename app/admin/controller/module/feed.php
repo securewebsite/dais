@@ -21,9 +21,9 @@ use Dais\Library\Naming;
 class Feed extends Controller {
     public function index() {
         $data = Theme::language('module/feed');
-        Theme::setTitle($this->language->get('lang_heading_feed'));
+        Theme::setTitle(Lang::get('lang_heading_feed'));
         
-        $this->breadcrumb->add('lang_heading_feed', 'module/feed');
+        Breadcrumb::add('lang_heading_feed', 'module/feed');
         
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
@@ -69,14 +69,14 @@ class Feed extends Controller {
                 $action = array();
                 
                 if (!in_array($module, $modules)) {
-                    $action[] = array('text' => $this->language->get('lang_text_install'), 'href' => $this->url->link('module/feed/install', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
+                    $action[] = array('text' => Lang::get('lang_text_install'), 'href' => Url::link('module/feed/install', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
                 } else {
-                    $action[] = array('text' => $this->language->get('lang_text_edit'), 'href' => $this->url->link('feed/' . $module . '', 'token=' . $this->session->data['token'], 'SSL'));
+                    $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('feed/' . $module . '', 'token=' . $this->session->data['token'], 'SSL'));
                     
-                    $action[] = array('text' => $this->language->get('lang_text_uninstall'), 'href' => $this->url->link('module/feed/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
+                    $action[] = array('text' => Lang::get('lang_text_uninstall'), 'href' => Url::link('module/feed/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
                 }
                 
-                $data['modules'][] = array('name' => $this->language->get('lang_heading_title'), 'status' => Config::get($module . '_status') ? $this->language->get('lang_text_enabled') : $this->language->get('lang_text_disabled'), 'action' => $action);
+                $data['modules'][] = array('name' => Lang::get('lang_heading_title'), 'status' => Config::get($module . '_status') ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled'), 'action' => $action);
             }
         }
         
@@ -91,11 +91,11 @@ class Feed extends Controller {
         Theme::language('module/feed');
         
         if (!User::hasPermission('modify', 'module/feed')) {
-            $this->session->data['error'] = $this->language->get('lang_error_permission');
+            $this->session->data['error'] = Lang::get('lang_error_permission');
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect($this->url->link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
         } else {
             Theme::model('setting/module');
             
@@ -123,7 +123,7 @@ class Feed extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect($this->url->link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
         }
     }
     
@@ -131,11 +131,11 @@ class Feed extends Controller {
         Theme::language('module/feed');
         
         if (!User::hasPermission('modify', 'module/feed')) {
-            $this->session->data['error'] = $this->language->get('lang_error_permission');
+            $this->session->data['error'] = Lang::get('lang_error_permission');
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect($this->url->link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
         } else {
             Theme::model('setting/module');
             Theme::model('setting/setting');
@@ -160,7 +160,7 @@ class Feed extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect($this->url->link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
         }
     }
 }

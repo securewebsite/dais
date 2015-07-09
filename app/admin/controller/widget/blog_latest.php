@@ -22,16 +22,16 @@ class BlogLatest extends Controller {
     
     public function index() {
         $data = Theme::language('widget/blog_latest');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('blog_latest', $this->request->post);
             
             $this->cache->delete('posts.latest');
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -46,11 +46,11 @@ class BlogLatest extends Controller {
             $data['error_image'] = array();
         }
         
-        $this->breadcrumb->add('lang_text_widget', 'module/widget');
-        $this->breadcrumb->add('lang_heading_title', 'widget/blog_latest');
+        Breadcrumb::add('lang_text_widget', 'module/widget');
+        Breadcrumb::add('lang_heading_title', 'widget/blog_latest');
         
-        $data['action'] = $this->url->link('widget/blog_latest', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = $this->url->link('module/widget', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('widget/blog_latest', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL');
         
         $data['widgets'] = array();
         
@@ -75,13 +75,13 @@ class BlogLatest extends Controller {
     
     private function validate() {
         if (!User::hasPermission('modify', 'widget/blog_latest')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         if (isset($this->request->post['blog_latest_widget'])) {
             foreach ($this->request->post['blog_latest_widget'] as $key => $value) {
                 if (!$value['image_width'] || !$value['image_height']) {
-                    $this->error['image'][$key] = $this->language->get('lang_error_image');
+                    $this->error['image'][$key] = Lang::get('lang_error_image');
                 }
             }
         }

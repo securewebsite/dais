@@ -22,14 +22,14 @@ class Coupon extends Controller {
     
     public function index() {
         $data = Theme::language('total/coupon');
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('coupon', $this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -38,11 +38,11 @@ class Coupon extends Controller {
             $data['error_warning'] = '';
         }
         
-        $this->breadcrumb->add('lang_text_total', 'module/total');
-        $this->breadcrumb->add('lang_heading_title', 'total/coupon');
+        Breadcrumb::add('lang_text_total', 'module/total');
+        Breadcrumb::add('lang_heading_title', 'total/coupon');
         
-        $data['action'] = $this->url->link('total/coupon', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = $this->url->link('module/total', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('total/coupon', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL');
         
         if (isset($this->request->post['coupon_status'])) {
             $data['coupon_status'] = $this->request->post['coupon_status'];
@@ -65,7 +65,7 @@ class Coupon extends Controller {
     
     protected function validate() {
         if (!User::hasPermission('modify', 'total/coupon')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

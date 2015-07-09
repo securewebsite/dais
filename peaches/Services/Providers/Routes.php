@@ -20,6 +20,7 @@ class Routes {
     
     private $routes = [];
     private $custom_routes = [];
+    private $raw_routes = [];
 
     public function __construct() {
         $this->generate();
@@ -150,6 +151,49 @@ class Routes {
             $cachefile = $routes;
             \Cache::set($key, $cachefile);
         
+        endif;
+
+        return $cachefile;
+    }
+
+    public function allRoutes() {
+        $routes = [];
+
+        $key       = 'all.routes';
+        $cachefile = \Cache::get($key);
+
+        if (is_bool($cachefile)):
+            $query = \DB::query("
+                SELECT * 
+                FROM " . \DB::prefix() . "affiliate_route 
+                UNION 
+                SELECT * 
+                FROM " . \DB::prefix() . "route 
+                UNION 
+                SELECT * 
+                FROM " . \DB::prefix() . "vanity_route
+            ");
+
+            $base = $query->rows;
+
+            $query = \DB::query("
+                SELECT * 
+                FROM " . \DB::prefix() . "custom_route
+            ");
+
+            foreach($query->rows as $row):
+                unset($row['route_id']);
+                $routes[] = $row;
+            endforeach;
+
+            foreach($base as $row):
+                unset($row['route_id']);
+                $routes[] = $row;
+            endforeach;
+
+            $cachefile = $routes;
+            \Cache::set($key, $cachefile);
+
         endif;
 
         return $cachefile;

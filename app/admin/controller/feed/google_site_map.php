@@ -23,16 +23,16 @@ class GoogleSiteMap extends Controller {
     public function index() {
         $data = Theme::language('feed/google_site_map');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('google_site_map', $this->request->post);
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect($this->url->link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -41,12 +41,12 @@ class GoogleSiteMap extends Controller {
             $data['error_warning'] = '';
         }
         
-        $this->breadcrumb->add('lang_text_feed', 'module/feed');
-        $this->breadcrumb->add('lang_heading_title', 'feed/google_site_map');
+        Breadcrumb::add('lang_text_feed', 'module/feed');
+        Breadcrumb::add('lang_heading_title', 'feed/google_site_map');
         
-        $data['action'] = $this->url->link('feed/google_site_map', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('feed/google_site_map', 'token=' . $this->session->data['token'], 'SSL');
         
-        $data['cancel'] = $this->url->link('module/feed', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/feed', 'token=' . $this->session->data['token'], 'SSL');
         
         if (isset($this->request->post['google_site_map_status'])) {
             $data['google_site_map_status'] = $this->request->post['google_site_map_status'];
@@ -65,7 +65,7 @@ class GoogleSiteMap extends Controller {
     
     protected function validate() {
         if (!User::hasPermission('modify', 'feed/google_site_map')) {
-            $this->error['warning'] = $this->language->get('lang_error_permission');
+            $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

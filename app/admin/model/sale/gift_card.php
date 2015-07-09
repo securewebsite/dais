@@ -262,7 +262,7 @@ class GiftCard extends Model {
             $data['html_message'] = nl2br($call['message']);
         endif;
 
-        $data['lang_text_message'] = sprintf($this->language->get('lang_text_message'), $call['from_name']);
+        $data['lang_text_message'] = sprintf(Lang::get('lang_text_message'), $call['from_name']);
 
         $search = array(
             '!amount!',
@@ -272,7 +272,7 @@ class GiftCard extends Model {
         );
 
         $replace = array(
-            $this->currency->format($call['amount']),
+            Currency::format($call['amount']),
             $call['from_name'],
             $call['from_email'],
             $call['code']

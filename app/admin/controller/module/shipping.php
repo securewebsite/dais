@@ -21,9 +21,9 @@ use Dais\Library\Naming;
 class Shipping extends Controller {
     public function index() {
         $data = Theme::language('module/shipping');
-        Theme::setTitle($this->language->get('lang_heading_shipping'));
+        Theme::setTitle(Lang::get('lang_heading_shipping'));
         
-        $this->breadcrumb->add('lang_heading_shipping', 'module/shipping');
+        Breadcrumb::add('lang_heading_shipping', 'module/shipping');
         
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
@@ -70,24 +70,24 @@ class Shipping extends Controller {
                 
                 if (!in_array($module, $modules)) {
                     $action[] = array(
-                        'text' => $this->language->get('lang_text_install'), 
-                        'href' => $this->url->link('module/shipping/install', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL')
+                        'text' => Lang::get('lang_text_install'), 
+                        'href' => Url::link('module/shipping/install', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL')
                     );
                 } else {
                     $action[] = array(
-                        'text' => $this->language->get('lang_text_edit'), 
-                        'href' => $this->url->link('shipping/' . $module . '', 'token=' . $this->session->data['token'], 'SSL')
+                        'text' => Lang::get('lang_text_edit'), 
+                        'href' => Url::link('shipping/' . $module . '', 'token=' . $this->session->data['token'], 'SSL')
                     );
                     
                     $action[] = array(
-                        'text' => $this->language->get('lang_text_uninstall'), 
-                        'href' => $this->url->link('module/shipping/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL')
+                        'text' => Lang::get('lang_text_uninstall'), 
+                        'href' => Url::link('module/shipping/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL')
                     );
                 }
                 
                 $data['modules'][] = array(
-                    'name'       => $this->language->get('lang_heading_title'), 
-                    'status'     => Config::get($module . '_status') ? $this->language->get('lang_text_enabled') : $this->language->get('lang_text_disabled'), 
+                    'name'       => Lang::get('lang_heading_title'), 
+                    'status'     => Config::get($module . '_status') ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled'), 
                     'sort_order' => Config::get($module . '_sort_order'), 
                     'action'     => $action
                 );
@@ -102,14 +102,14 @@ class Shipping extends Controller {
     }
     
     public function install() {
-        $this->language->load('module/shipping');
+        Lang::load('module/shipping');
         
         if (!User::hasPermission('modify', 'module/shipping')) {
-            $this->session->data['error'] = $this->language->get('lang_error_permission');
+            $this->session->data['error'] = Lang::get('lang_error_permission');
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect($this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
         } else {
             Theme::model('setting/module');
             
@@ -137,19 +137,19 @@ class Shipping extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect($this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
         }
     }
     
     public function uninstall() {
-        $this->language->load('module/shipping');
+        Lang::load('module/shipping');
         
         if (!User::hasPermission('modify', 'module/shipping')) {
-            $this->session->data['error'] = $this->language->get('lang_error_permission');
+            $this->session->data['error'] = Lang::get('lang_error_permission');
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect($this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
         } else {
             Theme::model('setting/module');
             Theme::model('setting/setting');
@@ -174,7 +174,7 @@ class Shipping extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect($this->url->link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
         }
     }
 }
