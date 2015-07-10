@@ -17,7 +17,7 @@
 namespace Dais\Services\Utility;
 
 use Dais\Services\Providers\Utility\Validate;
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class ValidateService implements ServiceContract {

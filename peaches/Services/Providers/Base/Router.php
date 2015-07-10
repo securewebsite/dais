@@ -17,11 +17,17 @@
 namespace Dais\Services\Providers\Base;
 
 use Dais\Support\Naming;
-use Dais\Engine\Action;
+use Dais\Base\Action;
 
 class Router {
 
 	public function dispatch() {
+
+		if (!is_null(Request::get('route'))):
+			
+			$action = new Action(Request::get('route'));
+
+        endif;
 
 		if (!is_null(Request::get('_route_'))):
 
@@ -33,7 +39,7 @@ class Router {
 			if (!is_null(Naming::file_from_route($controller))):
 				Request::get('route', implode('/', $segments));
 
-				return new Action(Request::get('route'));
+				$action = new Action(Request::get('route'));
 			endif;
 			
 			// This handles any custom routes
@@ -42,17 +48,94 @@ class Router {
                     if (!is_null(Naming::file_from_route($value))):
                     	Request::get('route', $value);
 
-						return new Action(Request::get('route'));
+						$action = new Action(Request::get('route'));
 					endif;
                 endif;
             endforeach;
 
             // This handles all slug routes
-            
+            $result = $this->iterate($segments);
 			
+			if (!empty($result)):
+				Request::get('route', $result['controller']);
+
+				$action = new Action(Request::get('route'));
+			endif;
+
 		endif;
 
+		$error = new Action('error/not_found');
 
-		//exit;
+        switch (Config::get('active.facade')):
+            case FRONT_FACADE:
+                $default = new Action (Config::get('config_site_style') . '/home');
+                break;
+            case ADMIN_FACADE:
+                $default = new Action('common/dashboard');
+                break;
+        endswitch;
+
+        $actions['action'] = (!is_null(Request::get('route'))) ? $action : $default;
+        $actions['error']  = $error;
+
+        return $actions;
+	}
+
+	private function iterate($search) {
+		
+		$routes = Routes::allRoutes();
+		
+		$result = [];
+
+		// Blog and Product Category Holders
+		$blog    = false;
+		$bpath   = '';
+
+		$product = false;
+		$path    = '';
+		
+		foreach($search as $segment):
+			foreach($routes as $route):
+				if ($route['slug'] === $segment):
+					$items = explode(':', $route['query']);
+					$result['controller'] = $route['route'];
+					switch ($items[0]):
+						case 'blog_category_id':
+							$blog   = true;
+							$bpath .= '_' . $items[1];
+							break;
+						case 'category_id':
+							$product = true;
+							$path   .= '_' . $items[1];
+							break;
+						case 'post_id':
+							Request::get('post_id', $items[1]);
+							break;
+						case 'product_id':
+							Request::get('product_id', $items[1]);
+							break;
+						case 'manufacturer_id':
+							Request::get('manufacturer_id', $items[1]);
+							break;
+						case 'event_page_id':
+							Request::get('event_page_id', $items[1]);
+							break;
+						case 'page_id':
+							Request::get('page_id', $items[1]);
+							break;
+					endswitch;
+				endif;
+			endforeach;
+		endforeach;
+
+		if ($blog):
+			Request::get('bpath', ltrim($bpath, '_'));
+		endif;
+
+		if ($product):
+			Request::get('path',  ltrim($path, '_'));
+		endif;
+
+		return $result;
 	}
 }

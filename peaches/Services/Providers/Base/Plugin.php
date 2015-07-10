@@ -14,11 +14,11 @@
 |	
 */
 
-namespace Dais\Engine;
+namespace Dais\Services\Providers\Base;
 
-use Dais\Engine\Container;
-use Dais\Engine\Controller;
-use Dais\Engine\View;
+use Dais\Base\Container;
+use Dais\Base\Controller;
+use Dais\Base\View;
 use Dais\Support\Naming;
 
 class Plugin extends Controller {
@@ -93,11 +93,11 @@ class Plugin extends Controller {
     }
     
     public function listen($class, $method, $data = array()) {
-        return Hook::listen($class, $method, $data);
+        return \Hook::listen($class, $method, $data);
     }
     
     public function trigger($event, $data = array()) {
-        return Event::trigger($event, $data);
+        return \Event::trigger($event, $data);
     }
     
     public function getPlugins() {

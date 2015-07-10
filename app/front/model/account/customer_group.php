@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Account;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class CustomerGroup extends Model {
     public function getCustomerGroup($customer_group_id) {

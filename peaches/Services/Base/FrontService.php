@@ -16,39 +16,20 @@
 
 namespace Dais\Services\Base;
 
-use Dais\Engine\Front;
-use Dais\Engine\Action;
-use Dais\Engine\Container;
+use Dais\Services\Providers\Base\Front;
+use Dais\Base\Action;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class FrontService implements ServiceContract {
 
 	public function register(Container $app) {
 		
-		$app['front'] = function ($app) {
+		$actions = Router::dispatch();
+
+		$app['front'] = function ($app) use($actions) {
             $front = new Front;
-
-            $error = new Action('error/not_found');
-
-	        switch (Config::get('active.facade')):
-	            case FRONT_FACADE:
-	                $default = new Action (Config::get('config_site_style') . '/home');
-	                break;
-	            case ADMIN_FACADE:
-	                $default = new Action('common/dashboard');
-	                break;
-	        endswitch;
-
-	        Router::dispatch();
-	        
-	        var_dump(Request::p());exit;
-	        if (!is_null(Request::get('route'))):
-	            $action = new Action(Request::get('route'));
-	        else:
-	            $action = $default;
-	        endif;
-
-	        $front->dispatch($action, $error);
+	        $front->dispatch($actions['action'], $actions['error']);
 
             return $front;
         };

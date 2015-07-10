@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Content;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Author extends Model {
     public function getPostAuthor($author_id) {

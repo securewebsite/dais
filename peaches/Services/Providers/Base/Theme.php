@@ -14,9 +14,10 @@
 |	
 */
 
-namespace Dais\Engine;
+namespace Dais\Services\Providers\Base;
 
-use Dais\Engine\Action;
+use Dais\Base\View;
+use Dais\Base\Action;
 use Dais\Support\Naming;
 
 final class Theme {

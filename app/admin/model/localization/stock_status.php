@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Localization;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class StockStatus extends Model {
     public function addStockStatus($data) {

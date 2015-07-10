@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Checkout;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Recurring extends Model {
     public function create($item, $order_id, $description) {

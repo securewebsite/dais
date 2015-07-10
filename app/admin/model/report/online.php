@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Report;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Online extends Model {
     public function getCustomersOnline($data = array()) {

@@ -17,7 +17,7 @@
 namespace Dais\Services\Utility;
 
 use Dais\Services\Providers\Utility\Decorator;
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class DecoratorService implements ServiceContract {

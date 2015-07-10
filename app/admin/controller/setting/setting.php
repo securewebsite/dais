@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Setting;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 use Dais\Driver\Cache\Mem;
 
 class Setting extends Controller {

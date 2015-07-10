@@ -16,7 +16,7 @@
 
 namespace Dais\Support;
 
-use Dais\Engine\Action;
+use Dais\Base\Action;
 
 class Shortcode {
 	

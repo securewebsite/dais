@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Catalog;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Download extends Controller {
     private $error = array();

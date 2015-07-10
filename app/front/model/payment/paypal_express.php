@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Payment;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class PaypalExpress extends Model {
     public function cleanReturn($data) {

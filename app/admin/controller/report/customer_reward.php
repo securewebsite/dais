@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Report;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class CustomerReward extends Controller {
     public function index() {

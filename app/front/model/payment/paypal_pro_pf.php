@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Payment;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class PaypalProPf extends Model {
     public function getMethod($address, $total) {

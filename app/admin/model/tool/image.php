@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Tool;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 use Dais\Library\Image as NewImage;
 
 class Image extends Model {

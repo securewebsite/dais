@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Report;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class SaleReturn extends Controller {
     public function index() {

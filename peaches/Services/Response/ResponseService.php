@@ -17,7 +17,7 @@
 namespace Dais\Services\Response;
 
 use Dais\Services\Providers\Response\Response;
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class ResponseService implements ServiceContract {

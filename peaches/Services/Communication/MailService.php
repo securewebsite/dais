@@ -17,7 +17,7 @@
 namespace Dais\Services\Communication;
 
 use Dais\Services\Providers\Communication\Mail;
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class MailService implements ServiceContract {

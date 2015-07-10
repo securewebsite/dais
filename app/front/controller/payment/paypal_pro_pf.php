@@ -15,7 +15,7 @@
 */
 
 namespace Front\Controller\Payment;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class PaypalProPf extends Controller {
     public function index() {

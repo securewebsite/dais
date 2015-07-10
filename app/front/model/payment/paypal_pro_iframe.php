@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Payment;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 use Dais\Library\Log as Log;
 
 class PaypalProIframe extends Model {

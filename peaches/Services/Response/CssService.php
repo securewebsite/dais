@@ -17,7 +17,7 @@
 namespace Dais\Services\Response;
 
 use Dais\Services\Providers\Response\Css;
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class CssService implements ServiceContract {

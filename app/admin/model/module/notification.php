@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Module;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Notification extends Model {
 	public function addNotification($data) {

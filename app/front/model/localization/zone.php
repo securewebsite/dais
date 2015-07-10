@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Localization;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Zone extends Model {
     public function getZone($zone_id) {

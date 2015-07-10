@@ -16,7 +16,7 @@
 
 namespace Front\Controller\Checkout;
 
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 use Dais\Services\Providers\User;
 
 class Manual extends Controller {

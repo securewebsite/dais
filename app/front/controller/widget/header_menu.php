@@ -15,7 +15,7 @@
 */
 
 namespace Front\Controller\Widget;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class HeaderMenu extends Controller {
     private $items = array();

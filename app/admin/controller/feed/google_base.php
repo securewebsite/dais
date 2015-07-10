@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Feed;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class GoogleBase extends Controller {
     private $error = array();

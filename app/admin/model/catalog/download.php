@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Catalog;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Download extends Model {
     public function addDownload($data) {

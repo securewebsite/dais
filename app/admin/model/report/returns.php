@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Report;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Returns extends Model {
     public function getReturns($data = array()) {

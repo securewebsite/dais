@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Widget;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Special extends Controller {
     private $error = array();

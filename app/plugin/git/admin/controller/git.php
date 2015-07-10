@@ -15,8 +15,8 @@
 */
 
 namespace Plugin\Git\Admin\Controller;
-use Dais\Engine\Container;
-use Dais\Engine\Plugin;
+use Dais\Base\Container;
+use Dais\Base\Plugin;
 
 class Git extends Plugin {
     

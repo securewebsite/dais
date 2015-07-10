@@ -15,7 +15,7 @@
 */
 
 namespace Front\Controller\Tool;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Captcha extends Controller {
     public function index() {

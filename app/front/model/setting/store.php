@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Setting;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Store extends Model {
     public function getStores($data = array()) {

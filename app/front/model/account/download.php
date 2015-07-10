@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Account;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Download extends Model {
     public function getDownload($order_download_id) {

@@ -15,7 +15,7 @@
 */
 
 namespace Front\Controller\Widget;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Masonry extends Controller {
     public function index($setting) {

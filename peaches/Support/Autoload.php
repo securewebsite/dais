@@ -14,9 +14,7 @@
 |   
 */
 
-namespace Dais;
-
-use Dais\Support\Naming;
+namespace Dais\Support;
 
 class Autoload {
 
@@ -42,5 +40,3 @@ class Autoload {
         });
     }
 }
-
-Autoload::register();

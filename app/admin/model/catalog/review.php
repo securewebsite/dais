@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Catalog;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Review extends Model {
     public function addReview($data) {

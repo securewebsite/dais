@@ -49,7 +49,7 @@
 
 namespace Dais\Contracts;
 
-use Dais\Engine\Container;
+use Dais\Base\Container;
 
 /**
  * Pimple service provider interface.

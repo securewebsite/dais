@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\People;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class CustomerBanIp extends Controller {
     private $error = array();

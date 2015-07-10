@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Catalog;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Manufacturer extends Model {
     public function getManufacturer($manufacturer_id) {

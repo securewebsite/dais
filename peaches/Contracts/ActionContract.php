@@ -16,7 +16,7 @@
 
 namespace Dais\Contracts;
 
-use Dais\Engine\Container;
+use Dais\Base\Container;
 
 interface ActionContract {
     public function __construct(Container $app, $route, $args = array());

@@ -68,7 +68,6 @@ $config[ADMIN_FACADE]['pre_render'] = $admin_controllers;
 $front_actions = array(
     'common/maintenance',
     'common/javascript/runner',
-    'common/router'
 );
 
 $config[FRONT_FACADE]['pre_actions'] = $front_actions;
@@ -76,7 +75,7 @@ $config[FRONT_FACADE]['pre_actions'] = $front_actions;
 $admin_actions = array(
     'common/javascript/runner',
     'common/dashboard/login',
-    'common/dashboard/permission'
+    'common/dashboard/permission',
 );
 
 $config[ADMIN_FACADE]['pre_actions'] = $admin_actions;

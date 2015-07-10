@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\People;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class UserGroup extends Model {
     public function addUserGroup($data) {

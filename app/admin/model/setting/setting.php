@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Setting;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Setting extends Model {
     public function getSetting($group, $store_id = 0) {

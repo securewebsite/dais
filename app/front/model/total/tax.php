@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Total;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Tax extends Model {
     public function getTotal(&$total_data, &$total, &$taxes) {

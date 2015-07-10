@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Design;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Layout extends Controller {
     private $error = array();

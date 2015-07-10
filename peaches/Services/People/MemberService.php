@@ -20,7 +20,7 @@ use Dais\Services\Providers\People\User;
 use Dais\Services\Providers\People\Customer;
 use Dais\Services\Providers\Utility\Tax;
 use Dais\Services\Providers\Response\Cart;
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class MemberService implements ServiceContract {

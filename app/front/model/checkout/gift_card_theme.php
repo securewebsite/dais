@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Checkout;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class GiftCardTheme extends Model {
     public function getGiftcardTheme($gift_card_theme_id) {

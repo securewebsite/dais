@@ -17,7 +17,7 @@
 namespace Dais\Services\Utility;
 
 use Dais\Services\Providers\Utility\Encryption;
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class EncryptionService implements ServiceContract {

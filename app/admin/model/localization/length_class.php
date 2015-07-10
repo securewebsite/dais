@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Localization;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class LengthClass extends Model {
     public function addLengthClass($data) {

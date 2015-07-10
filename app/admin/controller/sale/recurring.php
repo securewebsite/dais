@@ -16,8 +16,8 @@
 
 namespace Admin\Controller\Sale;
 
-use Dais\Engine\Controller;
-use Dais\Engine\Action;
+use Dais\Base\Controller;
+use Dais\Base\Action;
 
 class Recurring extends Controller {
     private $error = array();

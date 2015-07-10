@@ -15,8 +15,8 @@
 */
 
 namespace Plugin\Example\Admin\Events;
-use Dais\Engine\Container;
-use Dais\Engine\Plugin;
+use Dais\Base\Container;
+use Dais\Base\Plugin;
 
 class AdminEvent extends Plugin {
     public function __construct(Container $app) {

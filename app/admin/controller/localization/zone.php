@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Localization;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Zone extends Controller {
     private $error = array();

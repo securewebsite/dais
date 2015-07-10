@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Setting;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Menu extends Model {
     public function getMenu($menu_id) {

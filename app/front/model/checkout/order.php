@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Checkout;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 use Dais\Library\Template;
 use Dais\Library\Text;
 

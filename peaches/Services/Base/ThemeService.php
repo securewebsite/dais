@@ -16,8 +16,8 @@
 
 namespace Dais\Services\Base;
 
-use Dais\Engine\Theme;
-use Dais\Engine\Container;
+use Dais\Services\Providers\Base\Theme;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class ThemeService implements ServiceContract {

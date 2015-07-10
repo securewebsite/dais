@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Localization;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Currency extends Model {
     public function getCurrencyByCode($currency) {

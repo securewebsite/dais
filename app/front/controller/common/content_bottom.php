@@ -15,7 +15,7 @@
 */
 
 namespace Front\Controller\Common;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class ContentBottom extends Controller {
     public function index() {

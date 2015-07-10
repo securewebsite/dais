@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Error;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class NotFound extends Controller {
     public function index() {

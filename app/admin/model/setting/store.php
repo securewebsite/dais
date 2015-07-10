@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Setting;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Store extends Model {
     public function addStore($data) {

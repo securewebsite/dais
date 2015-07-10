@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Shipping;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Free extends Controller {
     private $error = array();

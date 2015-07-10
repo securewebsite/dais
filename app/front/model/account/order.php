@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Account;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Order extends Model {
     public function getOrder($order_id) {

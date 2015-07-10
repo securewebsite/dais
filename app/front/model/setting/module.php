@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Setting;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Module extends Model {
     function getModules($type) {

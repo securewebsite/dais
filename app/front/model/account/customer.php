@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Account;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Customer extends Model {
     public function addCustomer($data) {

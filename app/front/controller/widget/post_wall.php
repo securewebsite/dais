@@ -15,7 +15,7 @@
 */
 
 namespace Front\Controller\Widget;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class PostWall extends Controller {
     public function index($setting) {

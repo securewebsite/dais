@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Module;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Menu extends Controller {
     private $error;

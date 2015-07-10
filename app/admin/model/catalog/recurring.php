@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Catalog;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Recurring extends Model {
     public function addRecurring($data) {

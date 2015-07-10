@@ -15,7 +15,7 @@
 */
 
 namespace Front\Controller\Content;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 use Front\Controller\Tool\Captcha;
 
 class Post extends Controller {

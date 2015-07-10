@@ -15,7 +15,7 @@
 */
 
 namespace Front\Controller\Widget;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class BlogHotTopics extends Controller {
     public function index($setting) {

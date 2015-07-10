@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Localization;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Language extends Model {
     public function getLanguage($language_id) {

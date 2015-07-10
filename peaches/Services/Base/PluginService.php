@@ -16,8 +16,8 @@
 
 namespace Dais\Services\Base;
 
-use Dais\Engine\Plugin;
-use Dais\Engine\Container;
+use Dais\Services\Providers\Base\Plugin;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class PluginService implements ServiceContract {

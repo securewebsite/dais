@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Common;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Menu extends Controller {
     

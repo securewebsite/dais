@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Sale;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Recurring extends Model {
     public function getTotalRecurrings($data) {

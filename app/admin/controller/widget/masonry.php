@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Widget;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Masonry extends Controller {
     private $error = array();

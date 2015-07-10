@@ -14,7 +14,7 @@
 |   
 */
 
-namespace Dais;
+namespace Dais\Support;
 
 class Start {
 
@@ -66,5 +66,3 @@ class Start {
         endif;
     }
 }
-
-Start::detect();

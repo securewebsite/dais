@@ -15,8 +15,8 @@
 */
 
 namespace Plugin\Example;
-use Dais\Engine\Container;
-use Dais\Engine\Plugin;
+use Dais\Base\Container;
+use Dais\Base\Plugin;
 use Dais\Service\PluginServiceModel;
 
 class Register extends Plugin {

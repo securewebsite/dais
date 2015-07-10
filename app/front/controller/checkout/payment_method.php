@@ -15,7 +15,7 @@
 */
 
 namespace Front\Controller\Checkout;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class PaymentMethod extends Controller {
     public function index() {

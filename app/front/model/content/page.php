@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Content;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Page extends Model {
     public function getPage($page_id) {

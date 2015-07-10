@@ -15,7 +15,7 @@
 */
 
 namespace Front\Controller\Catalog;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 use Front\Controller\Tool\Captcha;
 
 class Product extends Controller {

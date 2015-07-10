@@ -18,7 +18,7 @@ namespace Dais\Services\Storage;
 
 use Dais\Services\Providers\Storage\Cache;
 use Dais\Driver\Cache\Asset;
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class FilecacheService implements ServiceContract {

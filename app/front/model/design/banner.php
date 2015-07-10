@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Design;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Banner extends Model {
     public function getBanner($banner_id) {

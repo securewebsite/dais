@@ -16,7 +16,7 @@
 
 namespace Dais\Services\Boot;
 
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class ApplicationService implements ServiceContract {

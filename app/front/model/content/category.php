@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Content;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Category extends Model {
     public function getCategory($category_id) {

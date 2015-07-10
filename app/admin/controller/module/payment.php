@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Module;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 use Dais\Library\Naming;
 
 class Payment extends Controller {

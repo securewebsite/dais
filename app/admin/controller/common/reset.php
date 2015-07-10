@@ -15,8 +15,8 @@
 */
 
 namespace Admin\Controller\Common;
-use Dais\Engine\Controller;
-use Dais\Engine\Action;
+use Dais\Base\Controller;
+use Dais\Base\Action;
 use Dais\Service\ActionService;
 
 class Reset extends Controller {

@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Sale;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Coupon extends Model {
     public function addCoupon($data) {

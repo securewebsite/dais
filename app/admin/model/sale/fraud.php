@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Sale;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Fraud extends Model {
     public function getFraud($order_id) {

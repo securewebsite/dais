@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Localization;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class ReturnStatus extends Model {
     public function addReturnStatus($data) {

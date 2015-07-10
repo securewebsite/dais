@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Localization;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class OrderStatus extends Model {
     public function addOrderStatus($data) {

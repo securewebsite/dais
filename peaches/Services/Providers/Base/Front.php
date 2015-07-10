@@ -14,9 +14,9 @@
 |	
 */
 
-namespace Dais\Engine;
+namespace Dais\Services\Providers\Base;
 
-use Dais\Engine\Action;
+use Dais\Base\Action;
 
 final class Front {
 

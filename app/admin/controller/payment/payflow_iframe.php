@@ -16,8 +16,8 @@
 
 namespace Admin\Controller\Payment;
 
-use Dais\Engine\Controller;
-use Dais\Engine\Action;
+use Dais\Base\Controller;
+use Dais\Base\Action;
 
 class PayflowIframe extends Controller {
     private $error = array();

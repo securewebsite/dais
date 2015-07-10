@@ -14,10 +14,48 @@
 |   
 */
 
+// Directory separator
 define('SEP', DIRECTORY_SEPARATOR);
+
+// App start up time
 define('DAIS_START', microtime(true));
+
+/*
+|--------------------------------------------------------------------------
+|   Front Component Directory
+|--------------------------------------------------------------------------
+|	
+|	The name of your front facing component directory. If you rename the
+|	directory make sure you change it here. Best practice is to leave this
+|	directory as is.
+|
+*/
+
 define('FRONT_FACADE', 'front');
+
+/*
+|--------------------------------------------------------------------------
+|   Admin Component Directory
+|--------------------------------------------------------------------------
+|	
+|	The name of your admin facing component. For security you can change
+|	this constant here, but do not rename the directory itself. The app
+|	will automatically reroute requests for this constant to the admin
+|	directory.
+|
+*/
+
 define('ADMIN_FACADE', 'manage');
+
+/*
+|--------------------------------------------------------------------------
+|   API Component Directory
+|--------------------------------------------------------------------------
+|	
+|	DO NOT CHANGE.
+|
+*/
+
 define('API_FACADE',   'api');
 
 /*
@@ -80,7 +118,7 @@ endif;
 //     require $loader;
 // endif;
 
-$autoload = new Dais\Autoload;
+Dais\Support\Autoload::register();
 
 
 /**

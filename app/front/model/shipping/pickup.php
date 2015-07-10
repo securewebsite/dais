@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Shipping;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Pickup extends Model {
     function getQuote($address) {

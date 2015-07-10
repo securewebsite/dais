@@ -20,7 +20,7 @@ namespace Dais\Services\Storage;
 use Dais\Services\Providers\Storage\Encode;
 use Dais\Services\Providers\Utility\Iconv;
 use Dais\Services\Providers\Utility\Mbstring;
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class EncodeService implements ServiceContract {

@@ -20,7 +20,7 @@ use Dais\Services\Providers\Storage\Cache;
 use Dais\Driver\Cache\Apc;
 use Dais\Driver\Cache\File;
 use Dais\Driver\Cache\Mem;
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class CacheService implements ServiceContract {

@@ -15,7 +15,7 @@
 */
 
 namespace Front\Controller\Content;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Home extends Controller {
     public function index() {

@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Sale;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class GiftCardTheme extends Controller {
     private $error = array();

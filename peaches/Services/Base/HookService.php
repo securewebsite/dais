@@ -17,7 +17,7 @@
 namespace Dais\Services\Base;
 
 use Dais\Services\Providers\Base\Hook;
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class HookService implements ServiceContract {

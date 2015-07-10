@@ -15,7 +15,7 @@
 */
 
 namespace Front\Controller\Payment;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class FreeCheckout extends Controller {
     public function index() {

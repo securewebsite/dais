@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Widget;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Banner extends Controller {
     private $error = array();

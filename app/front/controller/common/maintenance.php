@@ -16,8 +16,8 @@
 
 namespace Front\Controller\Common;
 
-use Dais\Engine\Controller;
-use Dais\Engine\Action;
+use Dais\Base\Controller;
+use Dais\Base\Action;
 use Dais\Services\Providers\User;
 
 class Maintenance extends Controller {

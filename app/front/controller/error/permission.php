@@ -15,7 +15,7 @@
 */
 
 namespace Front\Controller\Error;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Permission extends Controller {
     

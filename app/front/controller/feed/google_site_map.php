@@ -15,7 +15,7 @@
 */
 
 namespace Front\Controller\Feed;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class GoogleSiteMap extends Controller {
     public function index() {

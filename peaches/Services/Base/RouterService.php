@@ -17,7 +17,7 @@
 namespace Dais\Services\Base;
 
 use Dais\Services\Providers\Base\Router;
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class RouterService implements ServiceContract {

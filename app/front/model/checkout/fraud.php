@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Checkout;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Fraud extends Model {
     public function getFraudScore($data) {

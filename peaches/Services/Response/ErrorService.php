@@ -17,7 +17,7 @@
 namespace Dais\Services\Response;
 
 use Dais\Services\Providers\Response\Error;
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class ErrorService implements ServiceContract {

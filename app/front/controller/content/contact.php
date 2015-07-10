@@ -15,7 +15,7 @@
 */
 
 namespace Front\Controller\Content;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Contact extends Controller {
     private $error = array();

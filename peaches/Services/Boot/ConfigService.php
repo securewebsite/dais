@@ -17,38 +17,81 @@
 namespace Dais\Services\Boot;
 
 use Dais\Services\Providers\Boot\Config;
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 
 class ConfigService implements ServiceContract {
 
-	private $prefix;
-
 	public function register(Container $app) {
-		$this->prefix = env('DB_PREFIX', '');
-		
 		$config = new Config;
 
-        $configs = $this->build($app['setting.config']);
+        $configs = $this->build($app['boot.config']);
 
         foreach ($configs as $key => $value):
             $config->set($key, $value);
         endforeach;
 
-        App::removeSettingConfig();
+        App::removeBootConfig();
         
 		$app['config'] = function ($app) use($config) {
             return $config;
         };
 	}
 
-	private function build($config) {
-		if ($config['active.facade'] === FRONT_FACADE):
+	private function build($configuration) {
+        $config = [];
+
+        foreach ($configuration['base'] as $key => $value):
+            $config[$key] = $value;
+        endforeach;
+        
+        unset($configuration['base']);
+
+        // Add facade to config
+        $face = Request::facade();
+        
+        $config['active.facade'] = $face;
+
+        /**
+         * Let's find and remove our pre-render controllers for this facade.
+         * Instead of settings those via the loop below, we'll remove them
+         * and give them a specific parameter name so we can accurately
+         * access them in our Theme class.
+         */
+        
+        if (is_array($configuration[$face]['pre_render'])):
+            $config['pre.controllers'] = $configuration[$face]['pre_render'];
+            unset($configuration[$face]['pre_render']);
+        endif;
+        
+        /**
+         * Let's find and remove our pre-actions for this facade.
+         * Instead of settings those via the loop below, we'll remove them
+         * and give them a specific parameter name so we can accurately
+         * access them in our Front class.
+         */
+        
+        if (is_array($configuration[$face]['pre_actions'])):
+            $config['pre.actions'] = $configuration[$face]['pre_actions'];
+            unset($configuration[$face]['pre_actions']);
+        endif;
+        
+        /**
+         * Add remaining configuration to config array
+         */
+        
+        foreach ($configuration[$face] as $key => $value):
+            $config[$key] = $value;
+        endforeach;
+
+        unset($configuration);
+
+        if ($config['active.facade'] === FRONT_FACADE):
             if (isset($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] == 'on') || ($_SERVER['HTTPS'] == '1'))):
                 $store_query = DB::query("
                     SELECT * 
-                    FROM {$this->prefix}store 
+                    FROM " . DB::prefix() . "store 
                     WHERE 
                         REPLACE(`ssl`, 'www.', '') = '" . DB::escape('https://' . str_replace('www.', '', $_SERVER['HTTP_HOST']) . rtrim(dirname($_SERVER['PHP_SELF']) , '/.\\') . '/') . "'
                 ");
@@ -67,7 +110,7 @@ class ConfigService implements ServiceContract {
             else:
                 $store_query = DB::query("
                     SELECT * 
-                    FROM {$this->prefix}store 
+                    FROM " . DB::prefix() . "store 
                     WHERE 
                         REPLACE(`url`, 'www.', '') = '" . DB::escape('http://' . str_replace('www.', '', $_SERVER['HTTP_HOST']) . rtrim(dirname($_SERVER['PHP_SELF']) , '/.\\') . '/') . "'
                 ");
@@ -96,7 +139,7 @@ class ConfigService implements ServiceContract {
         
         $query = DB::query("
             SELECT * 
-            FROM {$this->prefix}setting 
+            FROM " . DB::prefix() . "setting 
             WHERE store_id = '0' 
             OR store_id = '" . (int)$config['config_store_id'] . "' 
             ORDER BY store_id ASC

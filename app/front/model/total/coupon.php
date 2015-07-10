@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Total;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Coupon extends Model {
     public function getTotal(&$total_data, &$total, &$taxes) {

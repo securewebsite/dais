@@ -14,9 +14,10 @@
 |	
 */
 
-namespace Dais\Engine;
+namespace Dais\Base;
 
 class View {
+    
     private $directory;
     private $file;
     private $data;

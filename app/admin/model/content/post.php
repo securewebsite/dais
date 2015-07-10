@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Content;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Post extends Model {
     public function addPost($data) {

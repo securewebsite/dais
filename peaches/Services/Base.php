@@ -16,7 +16,7 @@
 
 namespace Dais\Services;
 
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class Service implements ServiceContract {

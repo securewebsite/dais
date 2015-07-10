@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Calendar;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Event extends Controller {
     

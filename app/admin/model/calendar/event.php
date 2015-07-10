@@ -16,7 +16,7 @@
 
 namespace Admin\Model\Calendar;
 
-use Dais\Engine\Model;
+use Dais\Base\Model;
 use Dais\Support\Template;
 use Dais\Support\Text;
 

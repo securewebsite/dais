@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Total;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Coupon extends Controller {
     private $error = array();

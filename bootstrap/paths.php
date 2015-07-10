@@ -12,27 +12,6 @@
 |	For the full copyright and license information, please view the LICENSE
 |	file that was distributed with this source code.
 |
-*/
-
-
-/*
-|--------------------------------------------------------------------------
-|	Facade Keys
-|--------------------------------------------------------------------------
-|
-|	Set your facade keys here according to your path, these are used 
-|	dynamically to determine what area of the application is to be routed.
-|	This is here mostly so you can rename your install and admin routes.
-|
-|	For instance if you want to change the route for install to "update",
-|	you'll need to rename your assets directory to "update" and change the
-|	install facade key.
-|
-*/
-
-
-
-/*
 |--------------------------------------------------------------------------
 |	Base Paths and Misc Config Settings
 |--------------------------------------------------------------------------
@@ -85,7 +64,7 @@ $config['base'] = $base;
 |	This is where we set paths for our app which will be pulled into the 
 |	Application, then built into the config object in the IoC container.
 |	Once again these can be changed, but if you do, you'll need to update
-|	Dais\Engine\Application to search for the correct key in the array.
+|	Dais\Base\Application to search for the correct key in the array.
 |
 */
 

@@ -15,7 +15,7 @@
 */
 
 namespace Front\Controller\Catalog;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Search extends Controller {
     public function index() {

@@ -17,7 +17,7 @@
 namespace Dais\Services\Storage;
 
 use Dais\Services\Providers\Storage\Session;
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class SessionService implements ServiceContract {

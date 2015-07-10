@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Design;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Layout extends Model {
     public function addLayout($data) {

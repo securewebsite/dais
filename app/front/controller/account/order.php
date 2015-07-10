@@ -16,7 +16,7 @@
 
 
 namespace Front\Controller\Account;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Order extends Controller {
     

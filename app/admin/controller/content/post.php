@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Content;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Post extends Controller {
     private $error = array();

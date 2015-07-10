@@ -15,7 +15,7 @@
 */
 
 namespace Front\Controller\Shop;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Cart extends Controller {
     public function index() {

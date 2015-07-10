@@ -15,7 +15,7 @@
 */
 
 namespace Front\Controller\Account;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Edit extends Controller {
     private $error = array();

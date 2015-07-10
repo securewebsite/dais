@@ -16,9 +16,9 @@
 
 namespace Dais;
 
-use Dais\Start;
+use Dais\Support\Start;
 use Dais\Facades\Facade;
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ApplicationContract;
 
 class Application extends Container implements ApplicationContract {
@@ -33,6 +33,8 @@ class Application extends Container implements ApplicationContract {
 
     protected $basePath;
 
+    protected $appPath;
+
     protected $serviceProviders = [];
     
     protected $loadedProviders  = [];
@@ -43,6 +45,7 @@ class Application extends Container implements ApplicationContract {
 
     public function __construct($basePath = null) {
         $this->setBasePath($basePath);
+        $this->setAppPath();
         $this->instance();
     }
 
@@ -176,27 +179,72 @@ class Application extends Container implements ApplicationContract {
 
     protected function registerBasePaths() {
         // Include our start file that detects server goodness
-        $start = new Start();
+        Start::detect();
 
-        if (is_readable($file = $this->basePath . '/bootstrap/paths.php')):
-            require $file;
+        // if (is_readable($file = $this->basePath . '/bootstrap/paths.php')):
+        //     require $file;
+        // endif;
+
+        // convert our global $_ENV to a more elegant array for paths
+        $env = array();
+
+        foreach($_ENV as $key => $value):
+            $env[strtolower(str_replace('_', '.', $key))] = $value;
+        endforeach;
+
+        $config = [];
+
+        $base   = array(
+            'cache.prefix'   => md5($env['app.env'] . str_replace('.', '', static::VERSION)),
+            'cache.hostname' => $env['cache.hostname'],
+            'cache.port'     => $env['cache.port'],
+            'cache.time'     => $env['cache.time'],
+            'path.app'       => $this->appPath,
+            'path.database'  => $this->appPath . 'database' . SEP,
+            'path.download'  => $this->appPath . 'download' . SEP,
+            'path.plugin'    => $this->appPath . 'plugin' . SEP,
+            'path.storage'   => $this->basePath . SEP . 'storage' . SEP,
+            'path.cache'     => $this->basePath . SEP . 'storage' . SEP . 'framework' . SEP . 'cache' . SEP,
+            'path.logs'      => $this->basePath . SEP . 'storage' . SEP . 'logs' . SEP,
+            'path.views'     => $this->basePath . SEP . 'storage' . SEP . 'framework' . SEP . 'views' . SEP,
+            'prefix.plugin'  => 'plugin'
+        );
+
+        // DO NOT CHANGE THE NAME OF THIS KEY
+
+        $config['base'] = $base;
+
+        if ($env['use.secure'] == 'true'):
+            $front_secure = 'https://' . $env['app.env'] . '/';
+            $admin_secure = 'https://' . $env['app.env'] . '/' . ADMIN_FACADE . '/';
+        else:
+            $front_secure = 'http://' . $env['app.env'] . '/';
+            $admin_secure = 'http://' . $env['app.env'] . '/' . ADMIN_FACADE . '/';
         endif;
 
+        $front = array(
+            'http.server'      => 'http://' . $env['app.env'] . '/',
+            'https.server'     => $front_secure,
+            'http.public'      => 'http://' . $env['app.env'] . '/',
+            'path.application' => APP_PATH . 'front' . SEP,
+            'path.language'    => APP_PATH . 'front' . SEP . 'language' . SEP,
+            'path.theme'       => APP_PATH . 'theme' . SEP . 'front' . SEP,
+            'path.public'      => HOME . PUBLIC_DIR,
+            'path.image'       => HOME . PUBLIC_DIR . 'image' . SEP,
+            'path.sessions'    => STORAGE . 'framework' . SEP . 'sessions' . SEP . 'front' . SEP,
+            'path.asset'       => HOME . PUBLIC_DIR . 'asset' . SEP,
+            'prefix.facade'    => 'front' . SEP
+        );
+
+        $config[FRONT_FACADE] = $front;
+
         // temporarily store boot.config to container
-        // so that it can be accessed by RequestConfigService
+        // so that it can be accessed by ConfigService
         $this['boot.config'] = (!empty($config)) ? $config : null;
     }
 
     public function removeBootConfig() {
         unset($this['boot.config']);
-    }
-
-    public function setSettingConfig($config) {
-        $this['setting.config'] = $config;
-    }
-
-    public function removeSettingConfig() {
-        unset($this['setting.config']);
     }
 
     /**
@@ -209,6 +257,14 @@ class Application extends Container implements ApplicationContract {
 
     public function basePath() {
         return $this->basePath;
+    }
+
+    public function setAppPath() {
+        $this->appPath = APP_PATH;
+    }
+
+    public function appPath() {
+        return $this->appPath;
     }
 
     /**

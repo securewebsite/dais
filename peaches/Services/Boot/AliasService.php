@@ -17,7 +17,7 @@
 namespace Dais\Services\Boot;
 
 use Dais\Services\Providers\Boot\Alias;
-use Dais\Engine\Container;
+use Dais\Base\Container;
 use Dais\Contracts\ServiceContract;
 
 class AliasService implements ServiceContract {

@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Payment;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class PaypalPro extends Controller {
     private $error = array();

@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Module;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Menu extends Model {
     public function addMenu($data) {

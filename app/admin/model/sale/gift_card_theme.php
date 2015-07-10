@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Model\Sale;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class GiftCardTheme extends Model {
     public function addGiftcardTheme($data) {

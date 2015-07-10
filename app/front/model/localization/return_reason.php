@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Localization;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class ReturnReason extends Model {
     public function getReturnReason($return_reason_id) {

@@ -15,8 +15,8 @@
 */
 
 namespace Plugin\Git\Front\Controller;
-use Dais\Engine\Container;
-use Dais\Engine\Plugin;
+use Dais\Base\Container;
+use Dais\Base\Plugin;
 use Exception;
 
 ignore_user_abort(true);

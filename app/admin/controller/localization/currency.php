@@ -15,7 +15,7 @@
 */
 
 namespace Admin\Controller\Localization;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class Currency extends Controller {
     private $error = array();

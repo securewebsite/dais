@@ -15,7 +15,7 @@
 */
 
 namespace Front\Model\Shipping;
-use Dais\Engine\Model;
+use Dais\Base\Model;
 
 class Weight extends Model {
     public function getQuote($address) {

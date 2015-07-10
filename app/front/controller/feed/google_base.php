@@ -16,7 +16,7 @@
 
 
 namespace Front\Controller\Feed;
-use Dais\Engine\Controller;
+use Dais\Base\Controller;
 
 class GoogleBase extends Controller {
     public function index() {

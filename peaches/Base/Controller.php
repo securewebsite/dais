@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Dais\Engine;
+namespace Dais\Base;
 
 abstract class Controller {
     
