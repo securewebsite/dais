@@ -90,7 +90,8 @@ class Naming {
 		if (is_readable($file = $theme_path . $route . '.php')):
 			return $file;
 		else:
-			return $base_path . $route . '.php';
+			// only return the file if it's readable
+			return is_readable($base_path . $route . '.php') ? $base_path . $route . '.php' : null;
 		endif;
 	}
 

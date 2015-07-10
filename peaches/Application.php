@@ -126,9 +126,9 @@ class Application extends Container implements ApplicationContract {
     protected function registerProxyService() {
         $this->registerFacades();
 
-        if (!in_array('Dais\Services\ProxyService', $this->loadedProviders)):
-            $this->register(new Services\ProxyService);
-            $this->loadedProviders[] = 'Dais\Services\ProxyService';
+        if (!in_array('Dais\Services\Boot\AliasService', $this->loadedProviders)):
+            $this->register(new Services\Boot\AliasService);
+            $this->loadedProviders[] = 'Dais\Services\Boot\AliasService';
         endif;
 
         foreach($this->serviceAliases as $key => $class):
@@ -141,9 +141,9 @@ class Application extends Container implements ApplicationContract {
     }
 
     protected function registerApplicationService() {
-        if (!in_array('Dais\Services\ApplicationService', $this->loadedProviders)):
-            $this->register(new Services\ApplicationService);
-            $this->loadedProviders[] = 'Dais\Services\ApplicationService';
+        if (!in_array('Dais\Services\Boot\ApplicationService', $this->loadedProviders)):
+            $this->register(new Services\Boot\ApplicationService);
+            $this->loadedProviders[] = 'Dais\Services\Boot\ApplicationService';
         endif;
     }
 
@@ -237,7 +237,6 @@ class Application extends Container implements ApplicationContract {
         Facade::setContainer($this);
 
         $facades = array(
-            'Proxy'       => 'Dais\Facades\Proxy',
             'App'         => 'Dais\Facades\App',
             'DB'          => 'Dais\Facades\Db',
             'Request'     => 'Dais\Facades\Request',
@@ -276,6 +275,7 @@ class Application extends Container implements ApplicationContract {
             'Event'       => 'Dais\Facades\Event',
             'Hook'        => 'Dais\Facades\Hook',
             'Plugin'      => 'Dais\Facades\Plugin',
+            'Router'      => 'Dais\Facades\Router',
             'Front'       => 'Dais\Facades\Front'
         );
 
@@ -311,47 +311,48 @@ class Application extends Container implements ApplicationContract {
 
     protected function baseProviders() {
         return [
-            Services\DatabaseService::class,
-            Services\RequestService::class,
-            Services\ConfigService::class,
-            Services\CacheService::class,
-            Services\EncodeService::class,
-            Services\LogService::class,
-            Services\ResponseService::class,
-            Services\SessionService::class,
-            Services\LanguageService::class,
-            Services\CurrencyService::class,
-            Services\WeightService::class,
-            Services\LengthService::class,
-            Services\FilecacheService::class,
-            Services\MailService::class,
-            Services\DecoratorService::class,
-            Services\EmailService::class,
-            Services\NotificationService::class,
-            Services\FilterService::class,
-            Services\ValidateService::class,
-            Services\KeywordService::class,
-            Services\RoutesService::class,
-            Services\UrlService::class,
-            Services\BreadcrumbService::class,
-            Services\EncryptionService::class,
-            Services\MemberService::class,
-            Services\SearchService::class,
-            Services\ErrorService::class,
-            Services\JavascriptService::class,
-            Services\CssService::class,
-            Services\PaginateService::class,
-            Services\PluginModelService::class,
+            Services\Boot\DatabaseService::class,
+            Services\Boot\RequestService::class,
+            Services\Boot\ConfigService::class,
+            Services\Storage\CacheService::class,
+            Services\Storage\EncodeService::class,
+            Services\Storage\LogService::class,
+            Services\Response\ResponseService::class,
+            Services\Storage\SessionService::class,
+            Services\Communication\LanguageService::class,
+            Services\Utility\CurrencyService::class,
+            Services\Utility\WeightService::class,
+            Services\Utility\LengthService::class,
+            Services\Storage\FilecacheService::class,
+            Services\Communication\MailService::class,
+            Services\Utility\DecoratorService::class,
+            Services\Communication\EmailService::class,
+            Services\Communication\NotificationService::class,
+            Services\Communication\FilterService::class,
+            Services\Utility\ValidateService::class,
+            Services\Communication\KeywordService::class,
+            Services\Response\RoutesService::class,
+            Services\Response\UrlService::class,
+            Services\Response\BreadcrumbService::class,
+            Services\Utility\EncryptionService::class,
+            Services\People\MemberService::class,
+            Services\Response\SearchService::class,
+            Services\Response\ErrorService::class,
+            Services\Response\JavascriptService::class,
+            Services\Response\CssService::class,
+            Services\Response\PaginateService::class,
         ];
     }
 
     protected function finalProviders() {
         return[
-            Services\ThemeService::class,
-            Services\EventService::class,
-            Services\HookService::class,
-            Services\PluginService::class,
-            Services\FrontService::class,
+            Services\Base\PluginModelService::class,
+            Services\Base\ThemeService::class,
+            Services\Base\EventService::class,
+            Services\Base\HookService::class,
+            Services\Base\PluginService::class,
+            Services\Base\RouterService::class,
+            Services\Base\FrontService::class,
         ];
     }
     

@@ -18,36 +18,20 @@ namespace Front\Controller\Common;
 
 use Dais\Engine\Controller;
 use Dais\Engine\Action;
-use NoahBuscher\Macaw\Macaw;
+use Dais\Support\Naming;
 
 class Router extends Controller {
 
 	public function index() {
-		
-		Macaw::get('/', function() {
-			$home = Config::get('config_site_style') . '/home';
-			Request::get('route', $home);
-		});
+		if (!is_null(Request::get('_route_'))):
 
-		Macaw::get('/(:any)', function($slug) {
-			$result = $this->iterate($slug);
-			//var_dump($result);
-			if (!empty($result)):
-				
-				Request::get('route', $result[0]);
-				
-				if (isset($result[1])):
-					Request::get($result[1], $result[2]);
-				endif;
-				
+			$segments = explode('/', Request::get('_route_'));
+
+			if (!is_null(Naming::file_from_route($segments[0] . '/' . $segments[1]))):
+				Request::get('route', implode('/', $segments));
 			endif;
+
 			
-		});
-
-		Macaw::dispatch();
-
-		if(is_null(Request::get('route'))):
-			Request::get('route', 'error/not_found');
 		endif;
 
 		return new Action(Request::get('route'));
@@ -73,5 +57,13 @@ class Router extends Controller {
 		endforeach;
 
 		return $result;
+	}
+
+	private function isPlugin() {
+
+	}
+
+	private function isNative() {
+
 	}
 }
