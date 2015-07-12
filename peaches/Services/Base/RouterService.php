@@ -17,10 +17,10 @@
 namespace Dais\Services\Base;
 
 use Dais\Services\Providers\Base\Router;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class RouterService implements ServiceContract {
+class RouterService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['router'] = function ($app) {

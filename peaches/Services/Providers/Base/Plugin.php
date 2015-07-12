@@ -16,7 +16,7 @@
 
 namespace Dais\Services\Providers\Base;
 
-use Dais\Base\Container;
+use Pimple\Container;
 use Dais\Base\Controller;
 use Dais\Base\View;
 use Dais\Support\Naming;

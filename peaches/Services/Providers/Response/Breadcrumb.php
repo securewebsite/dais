@@ -22,7 +22,7 @@ class Breadcrumb {
     
     public function __construct() { 
         if (Config::get('active.facade') === ADMIN_FACADE):
-            $query = (isset(Session::p()->data['token'])) ? 'token=' . Session::p()->data['token'] : false;
+            $query = (!is_null(Session::get('token'))) ? 'token=' . Session::get('token') : false;
             
             $this->breadcrumbs[] = array(
                 'text'      => Lang::get('lang_text_dashboard') ,
@@ -46,7 +46,7 @@ class Breadcrumb {
         endif;
         
         if (Config::get('active.facade') === ADMIN_FACADE):
-            $query  = (isset(Session::p()->data['token'])) ? 'token=' . Session::p()->data['token'] . $query : $query;
+            $query  = (!is_null(Session::get('token'))) ? 'token=' . Session::get('token') . $query : $query;
             $url    = \Url::link($route, $query, 'SSL');
         else:
             if ($ssl == 'SSL'):

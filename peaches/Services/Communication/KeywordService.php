@@ -17,10 +17,10 @@
 namespace Dais\Services\Communication;
 
 use Dais\Services\Providers\Communication\Keyword;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class KeywordService implements ServiceContract {
+class KeywordService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['keyword'] = function ($app) {

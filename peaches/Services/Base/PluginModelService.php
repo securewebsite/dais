@@ -17,10 +17,10 @@
 namespace Dais\Services\Base;
 
 use Dais\Services\Providers\Base\PluginModel;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class PluginModelService implements ServiceContract {
+class PluginModelService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['pluginmodel'] = function ($app) {

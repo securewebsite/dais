@@ -20,10 +20,10 @@ namespace Dais\Services\Storage;
 use Dais\Services\Providers\Storage\Encode;
 use Dais\Services\Providers\Utility\Iconv;
 use Dais\Services\Providers\Utility\Mbstring;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class EncodeService implements ServiceContract {
+class EncodeService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
         $app['encode'] = function($app) {

@@ -17,10 +17,10 @@
 namespace Dais\Services\Base;
 
 use Dais\Services\Providers\Base\Event;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class EventService implements ServiceContract {
+class EventService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['events'] = function ($app) {

@@ -17,10 +17,10 @@
 namespace Dais\Services\Utility;
 
 use Dais\Services\Providers\Utility\Encryption;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class EncryptionService implements ServiceContract {
+class EncryptionService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['encryption'] = function ($app) {

@@ -17,10 +17,10 @@
 namespace Dais\Services\Response;
 
 use Dais\Services\Providers\Response\Breadcrumb;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class BreadcrumbService implements ServiceContract {
+class BreadcrumbService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['breadcrumb'] = function ($app) {

@@ -17,10 +17,10 @@
 namespace Dais\Services\Utility;
 
 use Dais\Services\Providers\Utility\Weight;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class WeightService implements ServiceContract {
+class WeightService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['weight'] = function ($app) {

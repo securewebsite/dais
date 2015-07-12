@@ -19,10 +19,10 @@ namespace Dais\Services\Boot;
 use Dais\Services\Providers\Boot\Db;
 use Dais\Driver\Database\Mpdo;
 use Dais\Driver\Database\Mysqli;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class DatabaseService implements ServiceContract {
+class DatabaseService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
         $app['db'] = function ($app) {

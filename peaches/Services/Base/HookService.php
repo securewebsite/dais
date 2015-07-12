@@ -17,10 +17,10 @@
 namespace Dais\Services\Base;
 
 use Dais\Services\Providers\Base\Hook;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class HookService implements ServiceContract {
+class HookService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$hook = new Hook;

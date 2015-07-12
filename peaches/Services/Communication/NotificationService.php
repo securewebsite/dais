@@ -17,10 +17,10 @@
 namespace Dais\Services\Communication;
 
 use Dais\Services\Providers\Communication\Notification;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class NotificationService implements ServiceContract {
+class NotificationService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['notify'] = function ($app) {

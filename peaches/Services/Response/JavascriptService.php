@@ -17,10 +17,10 @@
 namespace Dais\Services\Response;
 
 use Dais\Services\Providers\Response\Javascript;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class JavascriptService implements ServiceContract {
+class JavascriptService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['javascript'] = function ($app) {

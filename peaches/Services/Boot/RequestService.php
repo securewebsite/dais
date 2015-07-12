@@ -17,10 +17,10 @@
 namespace Dais\Services\Boot;
 
 use Dais\Services\Providers\Boot\Request;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class RequestService implements ServiceContract {
+class RequestService implements ServiceProviderInterface {
 
     public function register(Container $app) {
 

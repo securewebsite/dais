@@ -17,10 +17,10 @@
 namespace Dais\Services\Communication;
 
 use Dais\Services\Providers\Communication\Filter;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class FilterService implements ServiceContract {
+class FilterService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['filter'] = function ($app) {

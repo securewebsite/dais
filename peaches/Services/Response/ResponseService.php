@@ -17,10 +17,10 @@
 namespace Dais\Services\Response;
 
 use Dais\Services\Providers\Response\Response;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class ResponseService implements ServiceContract {
+class ResponseService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['response'] = function ($app) {

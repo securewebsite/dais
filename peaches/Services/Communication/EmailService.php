@@ -17,10 +17,10 @@
 namespace Dais\Services\Communication;
 
 use Dais\Services\Providers\Communication\Email;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class EmailService implements ServiceContract {
+class EmailService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['email'] = function($app) {

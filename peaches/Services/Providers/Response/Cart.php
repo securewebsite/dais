@@ -20,14 +20,14 @@ class Cart {
     private $data = array();
     
     public function __construct() {
-        if (isset(Session::p()->data['cart']) || !is_array(Session::p()->data['cart'])):
-            Session::p()->data['cart'] = array();
+        if (is_null(Session::get('cart')) || !is_array(Session::get('cart'))):
+            Session::get('cart', array());
         endif;
     }
     
     public function getProducts() {
         if (!$this->data):
-            foreach (Session::p()->data['cart'] as $key => $quantity):
+            foreach (Session::get('cart') as $key => $quantity):
                 $product    = explode(':', $key);
                 $product_id = $product[0];
                 $stock      = true;
@@ -247,7 +247,7 @@ class Cart {
                     // Product Discounts
                     $discount_quantity = 0;
                     
-                    foreach (Session::p()->data['cart'] as $key_2 => $quantity_2):
+                    foreach (Session::get('cart') as $key_2 => $quantity_2):
                         $product_2 = explode(':', $key_2);
                         
                         if ($product_2[0] == $product_id):
@@ -432,10 +432,10 @@ class Cart {
         endif;
         
         if ((int)$qty && ((int)$qty > 0)):
-            if (isset(Session::p()->data['cart'][$key])):
+            if (!isset(Session::p()->data['cart'][$key])):
                 Session::p()->data['cart'][$key] = (int)$qty;
             else:
-                Session::p()->data['cart'][$key]+= (int)$qty;
+                Session::p()->data['cart'][$key] += (int)$qty;
             endif;
         endif;
         
@@ -461,7 +461,7 @@ class Cart {
     }
     
     public function clear() { 
-        Session::p()->data['cart'] = array();
+        Session::get('cart', array());
         $this->data = array();
     }
     
@@ -530,7 +530,7 @@ class Cart {
     }
     
     public function hasProducts() {
-        return count(Session::p()->data['cart']);
+        return count(Session::get('cart'));
     }
     
     public function hasRecurringProducts() {

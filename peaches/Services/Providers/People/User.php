@@ -25,12 +25,12 @@ class User {
     private $permission = array();
     
     public function __construct() {
-        if (isset(Session::p()->data['user_id'])):
-            $this->user_id          = Session::p()->data['user_id'];
-            $this->user_name        = Session::p()->data['user_name'];
-            $this->user_group_id    = Session::p()->data['user_group_id'];
-            $this->user_last_access = Session::p()->data['user_last_access'];
-            $this->permission       = Session::p()->data['permission'];
+        if (!is_null(Session::get('user_id'))):
+            $this->user_id          = Session::get('user_id');
+            $this->user_name        = Session::get('user_name');
+            $this->user_group_id    = Session::get('user_group_id');
+            $this->user_last_access = Session::get('user_last_access');
+            $this->permission       = Session::get('permission');
         else:
             $this->logout();
         endif;
@@ -40,7 +40,7 @@ class User {
         if ($override):
             $user_query = DB::query("
                 SELECT * FROM " . DB::prefix() . "user 
-                WHERE user_id = '" . DB::escape(Encode::p()->strtolower($user_name)) . "' 
+                WHERE user_id = '" . DB::escape(Encode::strtolower($user_name)) . "' 
                 AND status = '1'
             ");
         else:
@@ -55,15 +55,15 @@ class User {
         endif;
         
         if ($user_query->num_rows):
-            Session::p()->data['user_id']          = $user_query->row['user_id'];
-            Session::p()->data['user_name']        = $user_query->row['user_name'];
-            Session::p()->data['user_group_id']    = $user_query->row['user_group_id'];
-            Session::p()->data['user_last_access'] = strtotime($user_query->row['last_access']);
+            Session::set('user_id', $user_query->row['user_id']);
+            Session::set('user_name', $user_query->row['user_name']);
+            Session::set('user_group_id', $user_query->row['user_group_id']);
+            Session::set('user_last_access', strtotime($user_query->row['last_access']));
             
             DB::query("
 				UPDATE " . DB::prefix() . "user 
 				SET 
-                    ip          = '" . DB::escape(Request::p()->server['REMOTE_ADDR']) . "', 
+                    ip          = '" . DB::escape(Request::server('REMOTE_ADDR')) . "', 
                     code        = '', 
                     last_access = NOW() 
 				WHERE user_id = '" . (int)$user_query->row['user_id'] . "'

@@ -17,11 +17,11 @@
 namespace Dais\Services\Boot;
 
 use Dais\Services\Providers\Boot\Config;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 
-class ConfigService implements ServiceContract {
+class ConfigService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$config = new Config;

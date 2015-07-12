@@ -20,10 +20,10 @@ use Dais\Services\Providers\People\User;
 use Dais\Services\Providers\People\Customer;
 use Dais\Services\Providers\Utility\Tax;
 use Dais\Services\Providers\Response\Cart;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class MemberService implements ServiceContract {
+class MemberService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		/**
@@ -44,7 +44,7 @@ class MemberService implements ServiceContract {
 	        };
 
 	        // Weird spot for this, but let's set our affiliate cookie.
-	        if (isset(Request::p()->get['z'])):
+	        if (!is_null(Request::get('z'))):
 	        	$this->affiliate();
 	        endif;
 
@@ -62,8 +62,8 @@ class MemberService implements ServiceContract {
 	private function affiliate() {
         $query = DB::query("
             SELECT customer_id 
-            FROM " . DB::p()->prefix . "customer 
-            WHERE code = '" . DB::escape(Request::p()->get['z']) . "' 
+            FROM " . DB::prefix() . "customer 
+            WHERE code = '" . DB::escape(Request::get('z')) . "' 
             AND is_affiliate = '1' 
             AND affiliate_status = '1'
         ");

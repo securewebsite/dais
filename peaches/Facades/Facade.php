@@ -16,7 +16,7 @@
 
 namespace Dais\Facades;
 
-use Dais\Base\Container;
+use Pimple\Container;
 
 abstract class Facade {
     

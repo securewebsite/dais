@@ -16,10 +16,10 @@
 
 namespace Dais\Services\Boot;
 
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class ApplicationService implements ServiceContract {
+class ApplicationService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['app'] = function($app) {

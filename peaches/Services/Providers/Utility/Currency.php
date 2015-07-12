@@ -46,12 +46,12 @@ class Currency {
             );
         endforeach;
         
-        if (isset(Request::p()->get['currency']) && (array_key_exists(Request::p()->get['currency'], $this->currencies))):
-            $this->set(Request::p()->get['currency']);
-        elseif ((isset(Session::p()->data['currency'])) && (array_key_exists(Session::p()->data['currency'], $this->currencies))):
-            $this->set(Session::p()->data['currency']);
-        elseif ((isset(Request::p()->cookie['currency'])) && (array_key_exists(Request::p()->cookie['currency'], $this->currencies))):
-            $this->set(Request::p()->cookie['currency']);
+        if (!is_null(Request::get('currency')) && (array_key_exists(Request::get('currency'), $this->currencies))):
+            $this->set(Request::get('currency'));
+        elseif ((!is_null(Session::get('currency'))) && (array_key_exists(Session::get('currency'), $this->currencies))):
+            $this->set(Session::get('currency'));
+        elseif ((!is_null(Request::cookie('currency'))) && (array_key_exists(Request::cookie('currency'), $this->currencies))):
+            $this->set(Request::cookie('currency'));
         else:
             $this->set(Config::get('config_currency'));
         endif;
@@ -60,12 +60,12 @@ class Currency {
     public function set($currency) {
         $this->code = $currency;
         
-        if (isset(Session::p()->data['currency']) || (Session::p()->data['currency'] != $currency)):
-            Session::p()->data['currency'] = $currency;
+        if (is_null(Session::get('currency')) || (Session::get('currency') != $currency)):
+            Session::set('currency', $currency);
         endif;
         
-        if (isset(Request::p()->cookie['currency']) || (Request::p()->cookie['currency'] != $currency)):
-            setcookie('currency', $currency, time() + 60 * 60 * 24 * 30, '/', Request::p()->server['HTTP_HOST']);
+        if (is_null(Request::cookie('currency')) || (Request::cookie('currency') != $currency)):
+            setcookie('currency', $currency, time() + 60 * 60 * 24 * 30, '/', Request::server('HTTP_HOST'));
         endif;
     }
     

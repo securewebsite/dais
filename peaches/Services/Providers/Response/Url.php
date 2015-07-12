@@ -368,7 +368,7 @@ class Url {
                 endif;
             endif;
             
-            if (Theme::p()->style === 'shop'):
+            if (Theme::getStyle() === 'shop'):
                 $url = str_replace('/shop', '', $url);
             else:
                 if (!Config::get('config_home_page')):
@@ -378,7 +378,7 @@ class Url {
             
             return $url_info['scheme'] . '://' . $url_info['host'] . (isset($url_info['port']) ? ':' . $url_info['port'] : '') . str_replace('/index.php', '', $url_info['path']) . $url . $query;
         else:
-            if (Theme::p()->style === 'shop'):
+            if (Theme::getStyle() === 'shop'):
                 return preg_replace('/(index\.php\?route=|shop\/home)/', '', $link);
             else:
                 return preg_replace('/(index\.php\?route=|content\/home)/', '', $link);

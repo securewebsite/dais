@@ -17,10 +17,10 @@
 namespace Dais\Services\Response;
 
 use Dais\Services\Providers\Response\Paginate;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class PaginateService implements ServiceContract {
+class PaginateService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['paginate'] = function ($app) {

@@ -18,7 +18,7 @@ namespace Dais;
 
 use Dais\Support\Start;
 use Dais\Facades\Facade;
-use Dais\Base\Container;
+use Pimple\Container;
 use Dais\Contracts\ApplicationContract;
 
 class Application extends Container implements ApplicationContract {
@@ -137,6 +137,11 @@ class Application extends Container implements ApplicationContract {
     }
 
     protected function registerProxyService() {
+
+        if (env('APP_DEBUG') == 'true'):
+           $this->register(new Services\Utility\WhoopsService); 
+        endif;
+
         $this->registerFacades();
 
         if (!in_array('Dais\Services\Boot\AliasService', $this->loadedProviders)):
@@ -429,24 +434,24 @@ class Application extends Container implements ApplicationContract {
         return $this;
     }
 
-    public static function getInstance() {
+    // public static function getInstance() {
 
-        if (!(static::$instance instanceof Container)):
-            throw new \RuntimeException('The Proxy Subject cannot be retrieved because the Container is not set.');
-        endif;
+    //     if (!(static::$instance instanceof Container)):
+    //         throw new \RuntimeException('The Proxy Subject cannot be retrieved because the Container is not set.');
+    //     endif;
 
-        return static::$instance->get(static::getInstanceIdentifier());
-    }
+    //     return static::$instance->get(static::getInstanceIdentifier());
+    // }
 
-    public static function getInstanceIdentifier() {
+    // public static function getInstanceIdentifier() {
 
-        //throw new \BadMethodCallException('The' . __METHOD__ . ' method must be implemented by a subclass.');
-    }
+    //     //throw new \BadMethodCallException('The' . __METHOD__ . ' method must be implemented by a subclass.');
+    // }
 
-    public static function __callStatic($method, $args) {
+    // public static function __callStatic($method, $args) {
         
-        return call_user_func_array(array(static::getInstance(), $method), $args);
-    }
+    //     return call_user_func_array(array(static::getInstance(), $method), $args);
+    // }
 
     /**
      * Service Providers

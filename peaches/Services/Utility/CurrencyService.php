@@ -17,10 +17,10 @@
 namespace Dais\Services\Utility;
 
 use Dais\Services\Providers\Utility\Currency;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class CurrencyService implements ServiceContract {
+class CurrencyService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['currency'] = function($app) {

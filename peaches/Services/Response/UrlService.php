@@ -17,10 +17,10 @@
 namespace Dais\Services\Response;
 
 use Dais\Services\Providers\Response\Url;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class UrlService implements ServiceContract {
+class UrlService implements ServiceProviderInterface {
 
 	public function register (Container $app) {
 		$app['url'] = function ($app) {

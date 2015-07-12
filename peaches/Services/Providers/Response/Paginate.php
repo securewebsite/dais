@@ -18,18 +18,18 @@ namespace Dais\Services\Providers\Response;
 
 class Paginate {
     
-    public $total         = 0;
-    public $page          = 1;
-    public $limit         = 20;
-    public $num_links     = 10;
-    public $url           = '';
-    public $text          = 'Showing {start} to {end} of {total} ({pages} {plural})';
-    public $text_first    = '|&lt;';
-    public $text_last     = '&gt;|';
-    public $text_next     = '&gt;';
-    public $text_prev     = '&lt;';
-    public $style_links   = 'links';
-    public $style_results = 'results';
+    private $total         = 0;
+    private $page          = 1;
+    private $limit         = 20;
+    private $num_links     = 10;
+    private $url           = '';
+    private $text          = 'Showing {start} to {end} of {total} ({pages} {plural})';
+    private $text_first    = '|&lt;';
+    private $text_last     = '&gt;|';
+    private $text_next     = '&gt;';
+    private $text_prev     = '&lt;';
+    private $style_links   = 'links';
+    private $style_results = 'results';
     
     public function render() {
         $total = $this->total;
@@ -114,5 +114,9 @@ class Paginate {
         );
         
         return ($output ? '<div class="' . $this->style_links . '">' . $output . '</div>' : '') . '<div class="' . $this->style_results . '">' . str_replace($find, $replace, $this->text) . '</div>';
+    }
+
+    public function set($property, $value) {
+        $this->{$property} = $value;
     }
 }

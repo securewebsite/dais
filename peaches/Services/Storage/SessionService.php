@@ -17,10 +17,10 @@
 namespace Dais\Services\Storage;
 
 use Dais\Services\Providers\Storage\Session;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class SessionService implements ServiceContract {
+class SessionService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
         $app['session'] = function ($app) {

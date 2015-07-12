@@ -473,11 +473,11 @@ final class Theme {
     }
     
     public function paginate($total, $page, $limit, $text, $url) { 
-        Paginate::p()->total = $total;
-        Paginate::p()->page  = $page;
-        Paginate::p()->limit = $limit;
-        Paginate::p()->text  = $text;
-        Paginate::p()->url   = $url;
+        Paginate::set('total', $total);
+        Paginate::set('page', $page);
+        Paginate::set('limit', $limit);
+        Paginate::set('text', $text);
+        Paginate::set('url', $url);
         
         return Paginate::render();
     }

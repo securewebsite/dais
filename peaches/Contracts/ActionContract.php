@@ -16,7 +16,7 @@
 
 namespace Dais\Contracts;
 
-use Dais\Base\Container;
+use Pimple\Container;
 
 interface ActionContract {
     public function __construct(Container $app, $route, $args = array());

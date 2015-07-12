@@ -14,14 +14,23 @@
 |	
 */
 
-namespace Dais\Services;
+namespace Dais\Services\Utility;
 
+use Whoops\Handler\PrettyPageHandler;
+use Whoops\Run;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 
-class Service implements ServiceProviderInterface {
+class WhoopsService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		
+		$whoops = new Run;
+        $whoops->pushHandler(new PrettyPageHandler);
+        $whoops->register();
+
+		$app['whoops'] = function($app) use($whoops) {
+            return $whoops;
+        };
 	}
 }

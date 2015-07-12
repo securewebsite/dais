@@ -172,6 +172,6 @@ $app = new Dais\Application(
 
 $app->boot();
 
-//var_dump(Request::get('route'));exit;
+//var_dump($app);exit;
 
 return $app;

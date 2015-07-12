@@ -17,10 +17,10 @@
 namespace Dais\Services\Utility;
 
 use Dais\Services\Providers\Utility\Validate;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class ValidateService implements ServiceContract {
+class ValidateService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['validator'] = function ($app) {

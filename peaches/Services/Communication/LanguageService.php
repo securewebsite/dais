@@ -17,10 +17,10 @@
 namespace Dais\Services\Communication;
 
 use Dais\Services\Providers\Communication\Language;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class LanguageService implements ServiceContract {
+class LanguageService implements ServiceProviderInterface {
 
     public function register(Container $app) {
         $key       = 'default.store.language';
@@ -31,7 +31,7 @@ class LanguageService implements ServiceContract {
             
             $query = DB::query("
                 SELECT * 
-                FROM `" . DB::p()->prefix . "language` 
+                FROM `" . DB::prefix() . "language` 
                 WHERE status = '1'
             ");
             
@@ -40,16 +40,22 @@ class LanguageService implements ServiceContract {
             endforeach;
             
             Cache::set($key, $languages);
+
+            $languages = $languages;
+
         endif;
 
-        $languages = $languages;
-
         unset($key);
+
+        foreach ($languages as $key => $value):
+            $languages[$key]['directory'] = ucfirst($value['directory']);
+            $languages[$key]['filename']  = ucfirst($value['filename']);
+        endforeach;
 
         $app['language'] = function($app) use($languages) {
             $this->build($languages);
 
-            $code     = Session::p()->data['language'];
+            $code     = Session::get('language');
             $language = new Language($languages[$code]['directory']);
             $language->load($languages[$code]['filename']);
 
@@ -60,8 +66,8 @@ class LanguageService implements ServiceContract {
 	public function build($languages) {
         $detect = '';
         
-        if (isset(Request::p()->server['HTTP_ACCEPT_LANGUAGE']) && Request::p()->server['HTTP_ACCEPT_LANGUAGE']):
-            $browser_languages = explode(',', Request::p()->server['HTTP_ACCEPT_LANGUAGE']);
+        if (!is_null(Request::server('HTTP_ACCEPT_LANGUAGE')) && Request::server('HTTP_ACCEPT_LANGUAGE')):
+            $browser_languages = explode(',', Request::server('HTTP_ACCEPT_LANGUAGE'));
             
             foreach ($browser_languages as $browser_language):
                 foreach ($languages as $key => $value):
@@ -75,22 +81,22 @@ class LanguageService implements ServiceContract {
             endforeach;
         endif;
         
-        if (isset(Session::p()->data['language']) && array_key_exists(Session::p()->data['language'], $languages) && $languages[Session::p()->data['language']]['status']):
-            $code = Session::p()->data['language'];
-        elseif (isset(Request::p()->cookie['language']) && array_key_exists(Request::p()->cookie['language'], $languages) && $languages[Request::p()->cookie['language']]['status']):
-            $code = Request::p()->cookie['language'];
+        if (!is_null(Session::get('language')) && array_key_exists(Session::get('language'), $languages) && $languages[Session::get('language')]['status']):
+            $code = Session::get('language');
+        elseif (!is_null(Request::cookie('language')) && array_key_exists(Request::cookie('language'), $languages) && $languages[Request::cookie('language')]['status']):
+            $code = Request::cookie('language');
         elseif ($detect):
             $code = $detect;
         else:
             $code = Config::get('config_language');
         endif;
         
-        if (isset(Session::p()->data['language']) || Session::p()->data['language'] != $code):
-            Session::p()->data['language'] = $code;
+        if (!is_null(Session::get('language')) || Session::get('language') != $code):
+            Session::set('language', $code);
         endif;
         
-        if (isset(Request::p()->cookie['language']) || Request::p()->cookie['language'] != $code):
-            setcookie('language', $code, time() + 60 * 60 * 24 * 30, '/', Request::p()->server['HTTP_HOST']);
+        if (!is_null(Request::cookie('language')) || Request::cookie('language') != $code):
+            setcookie('language', $code, time() + 60 * 60 * 24 * 30, '/', Request::server('HTTP_HOST'));
         endif;
         
         Config::set('config_language_id', $languages[$code]['language_id']);

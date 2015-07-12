@@ -17,10 +17,10 @@
 namespace Dais\Services\Response;
 
 use Dais\Services\Providers\Response\Css;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class CssService implements ServiceContract {
+class CssService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['css'] = function ($app) {

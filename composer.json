@@ -13,6 +13,7 @@
     }],
     "require": {
         "php": ">=5.5.0",
+        "pimple/pimple": "~3.0",
         "laravel/lumen-framework": "5.1.*",
         "vlucas/phpdotenv": "~1.0",
         "elasticsearch/elasticsearch": "~1.0",

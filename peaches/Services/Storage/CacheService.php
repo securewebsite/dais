@@ -20,10 +20,10 @@ use Dais\Services\Providers\Storage\Cache;
 use Dais\Driver\Cache\Apc;
 use Dais\Driver\Cache\File;
 use Dais\Driver\Cache\Mem;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class CacheService implements ServiceContract {
+class CacheService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
         $app['cache'] = function($app) {

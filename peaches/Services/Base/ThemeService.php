@@ -17,10 +17,10 @@
 namespace Dais\Services\Base;
 
 use Dais\Services\Providers\Base\Theme;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class ThemeService implements ServiceContract {
+class ThemeService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['theme'] = function ($app) {

@@ -17,10 +17,10 @@
 namespace Dais\Services\Boot;
 
 use Dais\Services\Providers\Boot\Alias;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class AliasService implements ServiceContract {
+class AliasService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
         $app['alias'] = function($app) {	

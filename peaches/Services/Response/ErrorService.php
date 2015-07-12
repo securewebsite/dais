@@ -17,10 +17,10 @@
 namespace Dais\Services\Response;
 
 use Dais\Services\Providers\Response\Error;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class ErrorService implements ServiceContract {
+class ErrorService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['errorhandler'] = function ($app) {

@@ -17,10 +17,10 @@
 namespace Dais\Services\Storage;
 
 use Dais\Services\Providers\Storage\Log;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class LogService implements ServiceContract {
+class LogService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['log'] = function ($app) {

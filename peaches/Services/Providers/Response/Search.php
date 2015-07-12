@@ -227,7 +227,7 @@ final class Search {
 	private function visibility() {
 		switch(Config::get('active.facade')):
 			case FRONT_FACADE:
-				$visible = Customer::p()->customer_group_id;
+				$visible = Customer::getGroupId();
 				break;
 			case ADMIN_FACADE:
 				$query = DB::query("

@@ -24,14 +24,14 @@ class Tax {
 	private $taxes;
     
     public function __construct() {
-		if (isset(Session::p()->data['shipping_country_id']) || isset(Session::p()->data['shipping_zone_id'])):
-			$this->setShippingAddress(Session::p()->data['shipping_country_id'], Session::p()->data['shipping_zone_id']);
+		if (!is_null(Session::get('shipping_country_id')) || !is_null(Session::get('shipping_zone_id'))):
+			$this->setShippingAddress(Session::get('shipping_country_id'), Session::get('shipping_zone_id'));
 		elseif (Config::get('config_tax_default') == 'shipping'):
 			$this->setShippingAddress(Config::get('config_country_id'), Config::get('config_zone_id'));
 		endif;
 		
-		if (isset(Session::p()->data['payment_country_id']) || isset(Session::p()->data['payment_zone_id'])):
-			$this->setPaymentAddress(Session::p()->data['payment_country_id'], Session::p()->data['payment_zone_id']);
+		if (!is_null(Session::get('payment_country_id')) || !is_null(Session::get('payment_zone_id'))):
+			$this->setPaymentAddress(Session::get('payment_country_id'), Session::get('payment_zone_id'));
 		elseif (Config::get('config_tax_default') == 'payment'):
 			$this->setPaymentAddress(Config::get('config_country_id'), Config::get('config_zone_id'));
 		endif;

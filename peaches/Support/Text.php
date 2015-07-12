@@ -25,7 +25,7 @@ class Text {
         if ($directory):
             $this->path = $directory;
         else:
-            $this->path = Theme::p()->path . 'view/';
+            $this->path = Theme::getPath() . 'view/';
         endif;
     }
     

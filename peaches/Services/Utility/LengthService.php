@@ -17,10 +17,10 @@
 namespace Dais\Services\Utility;
 
 use Dais\Services\Providers\Utility\Length;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class LengthService implements ServiceContract {
+class LengthService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['length'] = function ($app) {

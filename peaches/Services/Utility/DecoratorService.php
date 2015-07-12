@@ -17,10 +17,10 @@
 namespace Dais\Services\Utility;
 
 use Dais\Services\Providers\Utility\Decorator;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class DecoratorService implements ServiceContract {
+class DecoratorService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['decorator'] = function($app) {

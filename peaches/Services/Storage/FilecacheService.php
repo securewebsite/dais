@@ -18,10 +18,10 @@ namespace Dais\Services\Storage;
 
 use Dais\Services\Providers\Storage\Cache;
 use Dais\Driver\Cache\Asset;
-use Dais\Base\Container;
-use Dais\Contracts\ServiceContract;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
-class FilecacheService implements ServiceContract {
+class FilecacheService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['filecache'] = function ($app) {
