@@ -1,0 +1,10 @@
+<?= $lang_column_event_name; ?> <?= $event_name; ?> 
+<?= $lang_column_date_time; ?> <?= $event_date; ?> at <?= $event_time; ?> 
+<?php if ($event_location): ?>
+<?= $lang_column_location; ?> <?= $event_location; ?> 
+<?php endif; ?>
+<?php if ($event_telephone): ?>
+<?= $lang_column_telephone; ?> <?= $event_telephone; ?> 
+<?php endif; ?>
+
+--------------------------------------- 
