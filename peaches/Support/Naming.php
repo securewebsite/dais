@@ -18,9 +18,14 @@ namespace Dais\Support;
 
 class Naming {
 	public static function class_from_filename($file) {
-		$segments = explode('/', str_replace(array(Config::get('path.app'), '.php'), array('', ''), $file));
-		$filename = array_pop($segments);
+		$segments = explode('/', str_replace(array(App::basePath(), '.php'), array('', ''), $file));
+		
+		if ($segments[0] === ''):
+			array_shift($segments);
+		endif;
 
+		$filename = array_pop($segments);
+		
 		foreach ($segments as $key => $segment):
 			$segments[$key] = ucfirst($segment);
 		endforeach;
@@ -43,7 +48,7 @@ class Naming {
 		$classname = array_pop($segments);
 		
 		foreach($segments as $key => $segment):
-			$segments[$key] = strtolower($segment);
+			$segments[$key] = $segment;
 		endforeach;
 
 		$segments = implode('/', $segments);
@@ -52,7 +57,7 @@ class Naming {
         array_shift($pieces);
         
         foreach($pieces as $key => $piece):
-            $pieces[$key] = strtolower($piece);
+            $pieces[$key] = $piece;
         endforeach;
 
         $pieces = implode('_', $pieces);
@@ -62,13 +67,32 @@ class Naming {
 
 	public static function file_from_route($route) {
 		// build our paths
-		$base_path    = Config::get('path.app') . Config::get('prefix.facade') . 'controller' . SEP;
-		$theme_path   = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP;
+		$base_path    = Config::get('path.app') . 'Controllers' . SEP . Config::get('prefix.facade');
+		$theme_path   = Config::get('path.theme') . Config::get('theme.name') . SEP . 'Controllers' . SEP;
 		$plugin_path  = Config::get('path.app') . Config::get('prefix.plugin') . SEP;
 		$plugin_theme = $theme_path . Config::get('prefix.plugin') . SEP;
-		
+
 		// let's determine if we have a plugin
 		$segments = explode(SEP, $route);
+
+		foreach($segments as $key => $segment):
+			$pieces = explode('_', $segment);
+			
+			if (count($pieces) > 1):
+				
+				unset($segments[$key]);
+				
+				foreach($pieces as $key => $piece):
+					$pieces[$key] = ucfirst($piece);
+				endforeach;
+
+				$pieces = implode($pieces);
+				
+				$segment = $pieces;
+			endif;
+
+			$segments[$key] = ucfirst($segment);
+		endforeach;
 
 		if ($segments[0] === Config::get('prefix.plugin')):
 			$plugin = $segments[1];
@@ -80,7 +104,7 @@ class Naming {
 				return $plugin_path . $plugin . '.php';
 			endif;
 		endif; // plugins handled
-
+		
 		if (count($segments) === 3):
 			array_pop($segments);
 		endif;
@@ -106,8 +130,8 @@ class Naming {
 	}
 
 	public static function class_for_model($model) {
-		$base_path  = Config::get('path.app') . Config::get('prefix.facade') . 'model' . SEP;
-		$theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'model' . SEP;
+		$base_path  = Config::get('path.app') . 'Models' . SEP . Config::get('prefix.facade');
+		$theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'Models' . SEP;
 
         if (is_readable($file = $theme_path . $model . '.php')):
             return self::class_from_filename($file);
@@ -117,8 +141,8 @@ class Naming {
 	}
 
 	public static function class_for_hook($route) {
-		$base_path  = Config::get('path.app') . Config::get('prefix.facade') . 'controller' . SEP;
-		$theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP;
+		$base_path  = Config::get('path.app') . 'Controllers' . SEP . Config::get('prefix.facade');
+		$theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'Controllers' . SEP;
         
         if (is_readable($file = $theme_path . $route . '.php')):
             return self::class_from_filename($file);

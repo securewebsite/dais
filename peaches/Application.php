@@ -211,14 +211,14 @@ class Application extends Container implements ApplicationContract {
             'cache.port'     => $env['cache.port'],
             'cache.time'     => $env['cache.time'],
             'path.app'       => $this->appPath() . SEP,
-            'path.database'  => $this->appPath() . SEP . 'database' . SEP,
+            'path.database'  => $this->basePath() . SEP . 'database' . SEP,
             'path.download'  => $this->basePath() . SEP . 'download' . SEP,
-            'path.plugin'    => $this->appPath() . SEP . 'plugin' . SEP,
+            'path.plugin'    => $this->appPath() . SEP . 'Plugin' . SEP,
             'path.storage'   => $this->basePath() . SEP . 'storage' . SEP,
             'path.cache'     => $this->basePath() . SEP . 'storage' . SEP . 'framework' . SEP . 'cache' . SEP,
             'path.logs'      => $this->basePath() . SEP . 'storage' . SEP . 'logs' . SEP,
             'path.views'     => $this->basePath() . SEP . 'storage' . SEP . 'framework' . SEP . 'views' . SEP,
-            'prefix.plugin'  => 'plugin'
+            'prefix.plugin'  => 'Plugin'
         );
 
         // DO NOT CHANGE THE NAME OF THIS KEY
@@ -237,14 +237,14 @@ class Application extends Container implements ApplicationContract {
             'http.server'      => 'http://' . $env['app.env'] . '/',
             'https.server'     => $front_secure,
             'http.public'      => 'http://' . $env['app.env'] . '/',
-            'path.application' => $this->appPath() . SEP . 'front' . SEP,
-            'path.language'    => $this->appPath() . SEP . 'front' . SEP . 'language' . SEP,
-            'path.theme'       => $this->appPath() . SEP . 'theme' . SEP . 'front' . SEP,
+            'path.application' => $this->appPath() . SEP . 'Controllers' . SEP . 'Front' . SEP,
+            'path.language'    => $this->appPath() . SEP . 'Language' . SEP . 'Front' . SEP,
+            'path.theme'       => $this->appPath() . SEP . 'Theme' . SEP . 'Front' . SEP,
             'path.public'      => $this->publicPath() . SEP,
             'path.image'       => $this->publicPath() . SEP . 'image' . SEP,
             'path.sessions'    => $this->basePath() . SEP . 'storage' . SEP . 'framework' . SEP . 'sessions' . SEP . 'front' . SEP,
             'path.asset'       => $this->publicPath() . SEP . 'asset' . SEP,
-            'prefix.facade'    => 'front' . SEP
+            'prefix.facade'    => 'Front' . SEP
         );
 
         $config[FRONT_FACADE] = $front;
@@ -254,13 +254,13 @@ class Application extends Container implements ApplicationContract {
             'http.public'      => 'http://' . $env['app.env'] . '/',
             'https.server'     => $admin_secure,
             'https.public'     => $front_secure,
-            'path.application' => $this->appPath() . SEP . 'admin' . SEP,
-            'path.language'    => $this->appPath() . SEP . 'admin' . SEP . 'language' . SEP,
-            'path.theme'       => $this->appPath() . SEP . 'theme' . SEP . 'admin' . SEP,
+            'path.application' => $this->appPath() . SEP . 'Controllers' . SEP . 'Admin' . SEP,
+            'path.language'    => $this->appPath() . SEP . 'Language' . SEP . 'Admin' . SEP,
+            'path.theme'       => $this->appPath() . SEP . 'Theme' . SEP . 'Admin' . SEP,
             'path.image'       => $this->publicPath() . SEP . 'image' . SEP,
             'path.sessions'    => $this->basePath() . SEP . 'storage' . SEP . 'framework' . SEP . 'sessions' . SEP . 'admin' . SEP,
             'path.asset'       => $this->publicPath() . SEP . 'asset' . SEP,
-            'prefix.facade'    => 'admin' . SEP
+            'prefix.facade'    => 'Admin' . SEP
         );
 
         $config[ADMIN_FACADE] = $admin;
