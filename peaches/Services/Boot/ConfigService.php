@@ -41,7 +41,7 @@ class ConfigService implements ServiceContract {
 
 	private function build($configuration) {
         $config = [];
-
+        
         foreach ($configuration['base'] as $key => $value):
             $config[$key] = $value;
         endforeach;

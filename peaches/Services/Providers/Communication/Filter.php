@@ -23,7 +23,7 @@ class Filter {
 		$url     = array();
 
 		foreach($filters as $filter):
-			if (isset(Request::get($filter))):
+			if (!is_null(Request::get($filter))):
 				$url[$filter] = Request::get($filter);
 			endif;
 		endforeach;
@@ -41,7 +41,7 @@ class Filter {
 		$data    = array();
 		
 		foreach ($filters as $filter):
-			if (isset(Request::get($filter))):
+			if (!is_null(Request::get($filter))):
 				$data[$filter] = Request::get($filter);
 			else:
 				$data[$filter] = (!empty($default) && array_key_exists($filter, $default)) ? $default[$filter] : null;

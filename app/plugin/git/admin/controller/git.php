@@ -183,7 +183,7 @@ class Git extends Plugin {
          * that's the only repo we want top pull from.
          */
 
-        $directory = dirname(APP_PATH);
+        $directory = dirname(App::appPath());
 
         if (!in_array('.git', scandir($directory))):
             $this->error['warning'] = $this->language->get('lang_error_git_folder');

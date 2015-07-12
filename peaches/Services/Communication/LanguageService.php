@@ -85,11 +85,11 @@ class LanguageService implements ServiceContract {
             $code = Config::get('config_language');
         endif;
         
-        if (!isset(Session::p()->data['language']) || Session::p()->data['language'] != $code):
+        if (isset(Session::p()->data['language']) || Session::p()->data['language'] != $code):
             Session::p()->data['language'] = $code;
         endif;
         
-        if (!isset(Request::p()->cookie['language']) || Request::p()->cookie['language'] != $code):
+        if (isset(Request::p()->cookie['language']) || Request::p()->cookie['language'] != $code):
             setcookie('language', $code, time() + 60 * 60 * 24 * 30, '/', Request::p()->server['HTTP_HOST']);
         endif;
         

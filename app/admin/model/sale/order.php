@@ -15,6 +15,7 @@
 */
 
 namespace Admin\Model\Sale;
+
 use Dais\Base\Model;
 
 class Order extends Model {

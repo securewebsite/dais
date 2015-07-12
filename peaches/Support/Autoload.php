@@ -31,7 +31,7 @@ class Autoload {
 
         spl_autoload_register(function ($class) {
             $classname = Naming::file_from_classname($class);
-            
+            var_dump($classname);
             if (is_readable($file = APP_PATH . str_replace('\\', SEP, $classname) . '.php')):
                 require $file;
             else:

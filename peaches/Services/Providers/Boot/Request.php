@@ -70,8 +70,8 @@ class Request {
          * Let's adjust the request to adhere to our facade.
          */
         
-        $this->server['SCRIPT_NAME'] = str_replace(PUBLIC_DIR, '', $this->server['SCRIPT_NAME']);
-        $this->server['PHP_SELF']    = str_replace(PUBLIC_DIR, '', $this->server['PHP_SELF']);
+        $this->server['SCRIPT_NAME'] = str_replace(App::publicPath(), '', $this->server['SCRIPT_NAME']);
+        $this->server['PHP_SELF']    = str_replace(App::publicPath(), '', $this->server['PHP_SELF']);
         
         if (!$route):
             unset($this->get['_route_']);

@@ -27,7 +27,7 @@ class ContentBottom extends Controller {
         if (isset($this->request->get['route'])) {
             $route = (string)$this->request->get['route'];
         } else {
-            $route = $this->theme->style . '/home';
+            $route = Theme::getstyle() . '/home';
         }
         
         $layout_id = 0;

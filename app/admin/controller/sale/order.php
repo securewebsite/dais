@@ -2083,7 +2083,7 @@ class Order extends Controller {
         $modules = $this->model_setting_module->getAll('shipping');
         
         foreach ($modules as $key => $value) {
-            $theme_file = Theme::path . 'controller/shipping/' . $value . '.php';
+            $theme_file = Theme::getPath() . 'controller/shipping/' . $value . '.php';
             $core_file = Config::get('path.application') . 'controller/shipping/' . $value . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {

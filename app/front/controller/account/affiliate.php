@@ -187,9 +187,9 @@ class Affiliate extends Controller {
         $data['vanity_base'] = Config::get('http.server');
 
         if (!empty($customer_info)):
-            $base_url = $this->url->link($this->theme->style . '/home', 'affiliate_id=' . $this->customer->getId());
+            $base_url = $this->url->link(Theme::getstyle() . '/home', 'affiliate_id=' . $this->customer->getId());
         else:
-            $base_url = $this->url->link($this->theme->style . '/home');
+            $base_url = $this->url->link(Theme::getstyle() . '/home');
         endif;
 
 		$data['lang_text_description'] = sprintf($this->language->get('lang_text_description'), $base_url);

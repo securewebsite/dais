@@ -79,7 +79,7 @@ class Affiliate extends Model {
             $this->db->query("
 				INSERT INTO {$this->db->prefix}affiliate_route 
 				SET 
-					route = '" . $this->theme->style . "/home', 
+					route = '" . Theme::getstyle() . "/home', 
 					query = 'affiliate_id:" . (int)$this->customer->getId() . "', 
 					slug  = '" . $this->db->escape($data['slug']) . "'
 			");

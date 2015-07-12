@@ -46,7 +46,7 @@ class Feed extends Controller {
         $modules = $this->model_setting_module->getInstalled('feed');
         
         foreach ($modules as $key => $value) {
-            $theme_file = Theme::path . 'controller/feed/' . $value . '.php';
+            $theme_file = Theme::getPath() . 'controller/feed/' . $value . '.php';
             $core_file = Config::get('path.application') . 'controller/feed/' . $value . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {
@@ -106,7 +106,7 @@ class Feed extends Controller {
             $this->model_people_user_group->addPermission(User::getId(), 'access', 'feed/' . $this->request->get['module']);
             $this->model_people_user_group->addPermission(User::getId(), 'modify', 'feed/' . $this->request->get['module']);
             
-            $base_path  = APP_PATH . Config::get('prefix.facade') . 'controller' . SEP . 'feed' . SEP;
+            $base_path  = App::appPath() . Config::get('prefix.facade') . 'controller' . SEP . 'feed' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'feed' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
@@ -143,7 +143,7 @@ class Feed extends Controller {
             $this->model_setting_module->uninstall('feed', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
-            $base_path  = APP_PATH . Config::get('prefix.facade') . 'controller' . SEP . 'feed' . SEP;
+            $base_path  = App::appPath() . Config::get('prefix.facade') . 'controller' . SEP . 'feed' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'feed' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):

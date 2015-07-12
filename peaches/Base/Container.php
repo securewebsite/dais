@@ -15,6 +15,7 @@
 */
 
 namespace Dais\Base;
+
 use Dais\Contracts\ServiceContract;
 
 class Container implements \ArrayAccess {

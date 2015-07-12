@@ -84,8 +84,6 @@ require dirname(__DIR__) . SEP . 'vendor' . SEP . 'autoload.php';
 
 Dotenv::load(dirname(__DIR__) . SEP);
 
-//require __DIR__ . SEP . 'paths.php';
-
 /*
 |--------------------------------------------------------------------------
 |   API??
@@ -114,11 +112,7 @@ endif;
 |
 */
 
-// if ($loader = dirname(__DIR__) . SEP . 'peaches' . SEP . 'Dais' . SEP . 'autoload.php'):
-//     require $loader;
-// endif;
-
-Dais\Support\Autoload::register();
+//Dais\Support\Autoload::register();
 
 
 /**
@@ -145,7 +139,7 @@ endif;
 $app = new Dais\Application(
     realpath(__DIR__ . '/../')
 );
-//var_dump($app);exit;
+
 /*
 |--------------------------------------------------------------------------
 |   Register Your Service Providers
@@ -161,7 +155,7 @@ $app = new Dais\Application(
 */
 
 /**
- * App::registerServiceProviders([
+ * $app->registerServiceProviders([
  *    Dais\Services\MyCoolNewService::class,
  * ]);
 */
@@ -177,5 +171,7 @@ $app = new Dais\Application(
 */
 
 $app->boot();
+
+//var_dump(Request::get('route'));exit;
 
 return $app;

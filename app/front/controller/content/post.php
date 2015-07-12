@@ -23,7 +23,7 @@ class Post extends Controller {
     public function index() {
         $data = $this->theme->language('content/post');
         
-        if ($this->theme->style === 'shop'):
+        if (Theme::getstyle() === 'shop'):
             $this->breadcrumb->add($this->config->get('config_name'), 'content/home');
         endif;
         

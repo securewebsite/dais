@@ -22,10 +22,6 @@ class Hook {
     
     private $hooks = array();
     
-    public function __construct() {
-        $this->registerHooks();
-    }
-    
     public function registerHooks() {
         $hooks = \PluginModel::getHookHandlers();
         
@@ -82,6 +78,7 @@ class Hook {
             endforeach;
         endforeach;
         
+        return $this->hooks;
         App::set('plugin_hooks', $this->hooks);
     }
     
@@ -112,43 +109,5 @@ class Hook {
         endif;
         
         return $data;
-    }
-
-    public function preControl() {
-        
-        // call hooks from container
-        App::get('hooks');
-        
-        $callable = false;
-        $hook_key = Config::get('prefix.facade') . '_controller';
-        $hooks    = App::get('plugin_hooks');
-        
-        if (array_key_exists($hook_key, $hooks)):
-            foreach ($hooks[$hook_key] as $hook):
-                if ($hook['class'] === $this->class && $hook['method'] === $this->method && $hook['type'] == 'pre'):
-                    $segments  = explode(SEP, $hook['callback']);
-                    $method    = array_pop($segments);
-                    $class     = Naming::class_from_filename(implode(SEP, $segments));
-                    $arguments = isset($hook['arguments']) ? $hook['arguments'] : null;
-                    
-                    $callback = array(
-                        'class'  => $class,
-                        'method' => $method,
-                        'args'   => $arguments
-                    );
-                    
-                    $callable = function () use ($callback) {
-                        $hook = new $callback['class'];
-                        if (is_callable(array($hook, $callback['method']))):
-                            return call_user_func_array(array($hook, $callback['method']) , array($callback['args']));
-                        endif;
-                    };
-                endif;
-                
-                if ($callable):
-                    $this->args[] = $callable();
-                endif;
-            endforeach;
-        endif;
     }
 }

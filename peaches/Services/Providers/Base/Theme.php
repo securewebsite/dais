@@ -36,8 +36,8 @@ final class Theme {
     private $links = array();
     private $controllers = array();
     
-    public $style;
-    public $path;
+    private $style;
+    private $path;
     
     public function __construct() {
 
@@ -100,6 +100,14 @@ final class Theme {
     public function view($template, $data = array()) {
         $view = new View();
         return $view->render($template, $data);
+    }
+
+    public function getPath() {
+        return $this->path;
+    }
+
+    public function getStyle() {
+        return $this->style;
     }
     
     public function loadjs($file, $data, $path = '') {

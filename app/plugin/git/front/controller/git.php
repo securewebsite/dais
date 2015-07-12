@@ -43,7 +43,7 @@ class Git extends Plugin {
         endif;
         
         $this->branch    = $settings['git_branch'];
-        $this->directory = dirname(APP_PATH);
+        $this->directory = dirname(App::appPath());
         
         if(isset($this->request->post['payload'])):    
             $HTTP_RAW_POST_DATA = $this->request->post['payload'];

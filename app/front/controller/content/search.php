@@ -25,7 +25,7 @@ class Search extends Controller {
         $this->theme->model('content/post');
         $this->theme->model('tool/image');
         
-        if ($this->theme->style === 'shop'):
+        if (Theme::getstyle() === 'shop'):
             $this->breadcrumb->add($this->config->get('config_name'), 'content/home');
         endif;
         

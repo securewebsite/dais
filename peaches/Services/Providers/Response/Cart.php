@@ -20,7 +20,7 @@ class Cart {
     private $data = array();
     
     public function __construct() {
-        if (!isset(Session::p()->data['cart']) || !is_array(Session::p()->data['cart'])):
+        if (isset(Session::p()->data['cart']) || !is_array(Session::p()->data['cart'])):
             Session::p()->data['cart'] = array();
         endif;
     }
@@ -432,7 +432,7 @@ class Cart {
         endif;
         
         if ((int)$qty && ((int)$qty > 0)):
-            if (!isset(Session::p()->data['cart'][$key])):
+            if (isset(Session::p()->data['cart'][$key])):
                 Session::p()->data['cart'][$key] = (int)$qty;
             else:
                 Session::p()->data['cart'][$key]+= (int)$qty;

@@ -15,8 +15,9 @@
 */
 
 namespace Admin\Controller\Module;
+
 use Dais\Base\Controller;
-use Dais\Library\Naming;
+use Dais\Support\Naming;
 
 class Widget extends Controller {
     public function index() {
@@ -46,7 +47,7 @@ class Widget extends Controller {
         $modules = $this->model_setting_module->getInstalled('widget');
         
         foreach ($modules as $key => $value) {
-            $theme_file = Theme::path . 'controller/widget/' . $value . '.php';
+            $theme_file = Theme::getPath() . 'controller/widget/' . $value . '.php';
             $core_file  = Config::get('path.application') . 'controller/widget/' . $value . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {
@@ -115,7 +116,7 @@ class Widget extends Controller {
             $this->model_people_user_group->addPermission(User::getId(), 'access', 'widget/' . $this->request->get['module']);
             $this->model_people_user_group->addPermission(User::getId(), 'modify', 'widget/' . $this->request->get['module']);
             
-            $base_path  = APP_PATH . Config::get('prefix.facade') . 'controller' . SEP . 'widget' . SEP;
+            $base_path  = App::appPath() . Config::get('prefix.facade') . 'controller' . SEP . 'widget' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'widget' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
@@ -152,7 +153,7 @@ class Widget extends Controller {
             $this->model_setting_module->uninstall('widget', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
-            $base_path  = APP_PATH . Config::get('prefix.facade') . 'controller' . SEP . 'widget' . SEP;
+            $base_path  = App::appPath() . Config::get('prefix.facade') . 'controller' . SEP . 'widget' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'widget' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):

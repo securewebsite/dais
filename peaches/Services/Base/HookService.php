@@ -23,8 +23,12 @@ use Dais\Contracts\ServiceContract;
 class HookService implements ServiceContract {
 
 	public function register(Container $app) {
-		$app['hooks'] = function ($app) {
-            return new Hook;
+		$hook = new Hook;
+        $hooks = $hook->registerHooks();
+        $app->set('plugin_hooks', $hooks);
+
+		$app['hooks'] = function ($app) use ($hook) {
+            return $hook;
         };
 	}
 }

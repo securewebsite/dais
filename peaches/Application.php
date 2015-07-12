@@ -35,6 +35,8 @@ class Application extends Container implements ApplicationContract {
 
     protected $appPath;
 
+    protected $publicPath;
+
     protected $serviceProviders = [];
     
     protected $loadedProviders  = [];
@@ -44,25 +46,33 @@ class Application extends Container implements ApplicationContract {
     protected $isBooted = false;
 
     public function __construct($basePath = null) {
+        static::setInstance($this);
+
         $this->setBasePath($basePath);
-        $this->setAppPath();
-        $this->instance();
+
+        $this->registerBasePaths();
+        $this->registerBaseServices();
+        $this->registerBaseProviders();
+        
+        
     }
 
     public function version() {
         return static::VERSION;
     }
 
-    protected function instance() {
-        $this->registerBasePaths();
-        $this->registerBaseServices();
-        $this->registerBaseProviders();
-    }
-
     public function boot() {
         $this->registerFinalProviders();
         $this->loadServiceProviders();
         $this->isBooted = true;
+    }
+
+    public static function setInstance(ApplicationContract $container) {
+        static::$instance = $container;
+    }
+
+    public static function instance() {
+        return static::$instance;
     }
 
     /**
@@ -181,10 +191,6 @@ class Application extends Container implements ApplicationContract {
         // Include our start file that detects server goodness
         Start::detect();
 
-        // if (is_readable($file = $this->basePath . '/bootstrap/paths.php')):
-        //     require $file;
-        // endif;
-
         // convert our global $_ENV to a more elegant array for paths
         $env = array();
 
@@ -199,14 +205,14 @@ class Application extends Container implements ApplicationContract {
             'cache.hostname' => $env['cache.hostname'],
             'cache.port'     => $env['cache.port'],
             'cache.time'     => $env['cache.time'],
-            'path.app'       => $this->appPath,
-            'path.database'  => $this->appPath . 'database' . SEP,
-            'path.download'  => $this->appPath . 'download' . SEP,
-            'path.plugin'    => $this->appPath . 'plugin' . SEP,
-            'path.storage'   => $this->basePath . SEP . 'storage' . SEP,
-            'path.cache'     => $this->basePath . SEP . 'storage' . SEP . 'framework' . SEP . 'cache' . SEP,
-            'path.logs'      => $this->basePath . SEP . 'storage' . SEP . 'logs' . SEP,
-            'path.views'     => $this->basePath . SEP . 'storage' . SEP . 'framework' . SEP . 'views' . SEP,
+            'path.app'       => $this->appPath() . SEP,
+            'path.database'  => $this->appPath() . SEP . 'database' . SEP,
+            'path.download'  => $this->basePath() . SEP . 'download' . SEP,
+            'path.plugin'    => $this->appPath() . SEP . 'plugin' . SEP,
+            'path.storage'   => $this->basePath() . SEP . 'storage' . SEP,
+            'path.cache'     => $this->basePath() . SEP . 'storage' . SEP . 'framework' . SEP . 'cache' . SEP,
+            'path.logs'      => $this->basePath() . SEP . 'storage' . SEP . 'logs' . SEP,
+            'path.views'     => $this->basePath() . SEP . 'storage' . SEP . 'framework' . SEP . 'views' . SEP,
             'prefix.plugin'  => 'plugin'
         );
 
@@ -226,17 +232,70 @@ class Application extends Container implements ApplicationContract {
             'http.server'      => 'http://' . $env['app.env'] . '/',
             'https.server'     => $front_secure,
             'http.public'      => 'http://' . $env['app.env'] . '/',
-            'path.application' => APP_PATH . 'front' . SEP,
-            'path.language'    => APP_PATH . 'front' . SEP . 'language' . SEP,
-            'path.theme'       => APP_PATH . 'theme' . SEP . 'front' . SEP,
-            'path.public'      => HOME . PUBLIC_DIR,
-            'path.image'       => HOME . PUBLIC_DIR . 'image' . SEP,
-            'path.sessions'    => STORAGE . 'framework' . SEP . 'sessions' . SEP . 'front' . SEP,
-            'path.asset'       => HOME . PUBLIC_DIR . 'asset' . SEP,
+            'path.application' => $this->appPath() . SEP . 'front' . SEP,
+            'path.language'    => $this->appPath() . SEP . 'front' . SEP . 'language' . SEP,
+            'path.theme'       => $this->appPath() . SEP . 'theme' . SEP . 'front' . SEP,
+            'path.public'      => $this->publicPath() . SEP,
+            'path.image'       => $this->publicPath() . SEP . 'image' . SEP,
+            'path.sessions'    => $this->basePath() . SEP . 'storage' . SEP . 'framework' . SEP . 'sessions' . SEP . 'front' . SEP,
+            'path.asset'       => $this->publicPath() . SEP . 'asset' . SEP,
             'prefix.facade'    => 'front' . SEP
         );
 
         $config[FRONT_FACADE] = $front;
+
+        $admin = array(
+            'http.server'      => 'http://' . $env['app.env'] . '/' . ADMIN_FACADE . '/',
+            'http.public'      => 'http://' . $env['app.env'] . '/',
+            'https.server'     => $admin_secure,
+            'https.public'     => $front_secure,
+            'path.application' => $this->appPath() . SEP . 'admin' . SEP,
+            'path.language'    => $this->appPath() . SEP . 'admin' . SEP . 'language' . SEP,
+            'path.theme'       => $this->appPath() . SEP . 'theme' . SEP . 'admin' . SEP,
+            'path.image'       => $this->publicPath() . SEP . 'image' . SEP,
+            'path.sessions'    => $this->basePath() . SEP . 'storage' . SEP . 'framework' . SEP . 'sessions' . SEP . 'admin' . SEP,
+            'path.asset'       => $this->publicPath() . SEP . 'asset' . SEP,
+            'prefix.facade'    => 'admin' . SEP
+        );
+
+        $config[ADMIN_FACADE] = $admin;
+
+        $front_controllers = array(
+            'header'         => 'content/header',
+            'post_header'    => 'common/post_header',
+            'column_left'    => 'common/column_left',
+            'breadcrumb'     => 'common/bread_crumb',
+            'content_top'    => 'common/content_top',
+            'content_bottom' => 'common/content_bottom',
+            'column_right'   => 'common/column_right',
+            'pre_footer'     => 'common/pre_footer',
+            'footer'         => 'content/footer',
+        );
+
+        $config[FRONT_FACADE]['pre_render'] = $front_controllers;
+
+        $admin_controllers = array(
+            'header'     => 'common/header',
+            'breadcrumb' => 'common/bread_crumb',
+            'footer'     => 'common/footer',
+        );
+
+        $config[ADMIN_FACADE]['pre_render'] = $admin_controllers;
+
+        $front_actions = array(
+            'common/maintenance',
+            'common/javascript/runner',
+        );
+
+        $config[FRONT_FACADE]['pre_actions'] = $front_actions;
+
+        $admin_actions = array(
+            'common/javascript/runner',
+            'common/dashboard/login',
+            'common/dashboard/permission',
+        );
+
+        $config[ADMIN_FACADE]['pre_actions'] = $admin_actions;
 
         // temporarily store boot.config to container
         // so that it can be accessed by ConfigService
@@ -253,6 +312,7 @@ class Application extends Container implements ApplicationContract {
     
     public function setBasePath($basePath) {
         $this->basePath = rtrim($basePath, '\/');
+        $this->setAppPath();
     }
 
     public function basePath() {
@@ -260,11 +320,20 @@ class Application extends Container implements ApplicationContract {
     }
 
     public function setAppPath() {
-        $this->appPath = APP_PATH;
+        $this->appPath = $this->basePath() . SEP . 'app';
+        $this->setPublicPath();
     }
 
     public function appPath() {
         return $this->appPath;
+    }
+
+    public function setPublicPath() {
+        $this->publicPath = $this->basePath() . SEP . 'public';
+    }
+
+    public function publicPath() {
+        return $this->publicPath;
     }
 
     /**
@@ -332,7 +401,7 @@ class Application extends Container implements ApplicationContract {
             'Hook'        => 'Dais\Facades\Hook',
             'Plugin'      => 'Dais\Facades\Plugin',
             'Router'      => 'Dais\Facades\Router',
-            'Front'       => 'Dais\Facades\Front'
+            'Front'       => 'Dais\Facades\Front',
         );
 
         foreach($facades as $key => $value):
@@ -340,14 +409,13 @@ class Application extends Container implements ApplicationContract {
         endforeach;
     }
 
-    // From ProxyManager
     protected function enable($rootNamespace = self::ROOT_NAMESPACE_ANY) {
 
         if ($this['alias']->isRegistered()):
             return true;
         endif;
 
-        // Register the loader to handle aliases and link the proxies to the container
+        // Register the loader to handle aliases and link to the container
         $this['alias']->register($rootNamespace);
         
         return $this['alias']->isRegistered();
@@ -359,6 +427,25 @@ class Application extends Container implements ApplicationContract {
         endif;
 
         return $this;
+    }
+
+    public static function getInstance() {
+
+        if (!(static::$instance instanceof Container)):
+            throw new \RuntimeException('The Proxy Subject cannot be retrieved because the Container is not set.');
+        endif;
+
+        return static::$instance->get(static::getInstanceIdentifier());
+    }
+
+    public static function getInstanceIdentifier() {
+
+        //throw new \BadMethodCallException('The' . __METHOD__ . ' method must be implemented by a subclass.');
+    }
+
+    public static function __callStatic($method, $args) {
+        
+        return call_user_func_array(array(static::getInstance(), $method), $args);
     }
 
     /**

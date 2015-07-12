@@ -105,7 +105,7 @@ class Customer {
             endif;
             
             if ($customer_query->row['wishlist'] && is_string($customer_query->row['wishlist'])):
-                if (!isset(Session::p()->data['wishlist'])):
+                if (isset(Session::p()->data['wishlist'])):
                     Session::p()->data['wishlist'] = array();
                 endif;
                 

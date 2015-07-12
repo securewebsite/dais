@@ -105,7 +105,7 @@ class Header extends Controller {
         $data['text_welcome']  = sprintf($this->language->get('lang_text_welcome'), $this->url->link('account/login', '', 'SSL'), $this->url->link('account/register', '', 'SSL'));
         $data['text_logged']   = sprintf($this->language->get('lang_text_logged'), $this->url->link('account/dashboard', '', 'SSL'), $this->customer->getFirstName(), $this->url->link('account/logout', '', 'SSL'));
         
-        if ($this->theme->style === 'shop'):
+        if (Theme::getstyle() === 'shop'):
             $data['home']           = $this->url->link('shop/home');
             $data['alternate']      = $this->url->link('content/home');
             $data['text_alternate'] = $this->language->get('lang_text_blog');

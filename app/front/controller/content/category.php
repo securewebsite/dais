@@ -21,7 +21,7 @@ class Category extends Controller {
     public function index() {
         $data = $this->theme->language('content/category');
         
-        if ($this->theme->style === 'shop'):
+        if (Theme::getstyle() === 'shop'):
             $this->breadcrumb->add($this->config->get('config_name'), 'content/home');
         endif;
         

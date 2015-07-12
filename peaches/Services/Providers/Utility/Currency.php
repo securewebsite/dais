@@ -60,11 +60,11 @@ class Currency {
     public function set($currency) {
         $this->code = $currency;
         
-        if (!isset(Session::p()->data['currency']) || (Session::p()->data['currency'] != $currency)):
+        if (isset(Session::p()->data['currency']) || (Session::p()->data['currency'] != $currency)):
             Session::p()->data['currency'] = $currency;
         endif;
         
-        if (!isset(Request::p()->cookie['currency']) || (Request::p()->cookie['currency'] != $currency)):
+        if (isset(Request::p()->cookie['currency']) || (Request::p()->cookie['currency'] != $currency)):
             setcookie('currency', $currency, time() + 60 * 60 * 24 * 30, '/', Request::p()->server['HTTP_HOST']);
         endif;
     }

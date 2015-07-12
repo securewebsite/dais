@@ -45,7 +45,7 @@ class Permission extends Controller {
             $this->breadcrumb->add('lang_heading_title', $route, $url, true, $connection);
         endif;
         
-        $data['continue'] = $this->url->link($this->theme->style . '/home');
+        $data['continue'] = $this->url->link(Theme::getstyle() . '/home');
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         $data = $this->theme->render_controllers($data);
