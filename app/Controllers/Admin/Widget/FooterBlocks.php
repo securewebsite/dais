@@ -26,7 +26,7 @@ class FooterBlocks extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('footer_blocks', $this->request->post);
+            $this->model_setting_setting->editSetting('footerblocks', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
@@ -46,10 +46,10 @@ class FooterBlocks extends Controller {
         
         $data['widgets'] = array();
         
-        if (isset($this->request->post['footer_blocks_widget'])) {
-            $data['widgets'] = $this->request->post['footer_blocks_widget'];
-        } elseif (Config::get('footer_blocks_widget')) {
-            $data['widgets'] = Config::get('footer_blocks_widget');
+        if (isset($this->request->post['footerblocks_widget'])) {
+            $data['widgets'] = $this->request->post['footerblocks_widget'];
+        } elseif (Config::get('footerblocks_widget')) {
+            $data['widgets'] = Config::get('footerblocks_widget');
         }
         
         Theme::model('module/menu');
@@ -76,7 +76,7 @@ class FooterBlocks extends Controller {
     }
     
     protected function validate() {
-        if (!User::hasPermission('modify', 'widget/footer_blocks')) {
+        if (!User::hasPermission('modify', 'widget/footerblocks')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

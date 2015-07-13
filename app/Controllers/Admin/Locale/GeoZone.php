@@ -323,7 +323,7 @@ class GeoZone extends Controller {
     }
     
     protected function validateForm() {
-        if (!User::hasPermission('modify', 'locale/geo_zone')) {
+        if (!User::hasPermission('modify', 'locale/geozone')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
@@ -341,7 +341,7 @@ class GeoZone extends Controller {
     }
     
     protected function validateDelete() {
-        if (!User::hasPermission('modify', 'locale/geo_zone')) {
+        if (!User::hasPermission('modify', 'locale/geozone')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

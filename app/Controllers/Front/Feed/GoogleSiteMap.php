@@ -19,7 +19,7 @@ use App\Controllers\Controller;
 
 class GoogleSiteMap extends Controller {
     public function index() {
-        if (Config::get('google_sitemap_status')) {
+        if (Config::get('googlesitemap_status')) {
             $output = '<?xml version="1.0" encoding="UTF-8"?>';
             $output.= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
             Theme::model('catalog/product');

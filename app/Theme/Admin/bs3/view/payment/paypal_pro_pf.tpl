@@ -26,55 +26,55 @@
 		<table class="form">
 			<tr>
 			<td><b class="required">*</b> <?= $lang_entry_vendor; ?></td>
-			<td><input type="text" name="paypal_pro_pf_vendor" value="<?= $paypal_pro_pf_vendor; ?>" class="form-control" autofocus>
+			<td><input type="text" name="paypalpropf_vendor" value="<?= $paypalpropf_vendor; ?>" class="form-control" autofocus>
 				<?php if ($error_vendor) { ?>
 				<span class="help-block error"><?= $error_vendor; ?></span>
 				<?php } ?></td>
 			</tr>
 			<tr>
 			<td><b class="required">*</b> <?= $lang_entry_user; ?></td>
-			<td><input type="text" name="paypal_pro_pf_user" value="<?= $paypal_pro_pf_user; ?>" class="form-control">
+			<td><input type="text" name="paypalpropf_user" value="<?= $paypalpropf_user; ?>" class="form-control">
 				<?php if ($error_user) { ?>
 				<span class="help-block error"><?= $error_user; ?></span>
 				<?php } ?></td>
 			</tr>
 			<tr>
 			<td><b class="required">*</b> <?= $lang_entry_password; ?></td>
-			<td><input type="text" name="paypal_pro_pf_password" value="<?= $paypal_pro_pf_password; ?>" class="form-control">
+			<td><input type="text" name="paypalpropf_password" value="<?= $paypalpropf_password; ?>" class="form-control">
 				<?php if ($error_password) { ?>
 				<span class="help-block error"><?= $error_password; ?></span>
 				<?php } ?></td>
 			</tr>
 			<tr>
 			<td><b class="required">*</b> <?= $lang_entry_partner; ?></td>
-			<td><input type="text" name="paypal_pro_pf_partner" value="<?= $paypal_pro_pf_partner; ?>" class="form-control">
+			<td><input type="text" name="paypalpropf_partner" value="<?= $paypalpropf_partner; ?>" class="form-control">
 				<?php if ($error_partner) { ?>
 				<span class="help-block error"><?= $error_partner; ?></span>
 				<?php } ?></td>
 			</tr>
 			<tr>
 			<td><?= $lang_entry_test; ?></td>
-			<td><?php if ($paypal_pro_pf_test) { ?>
-				<input type="radio" name="paypal_pro_pf_test" value="1" checked="">
+			<td><?php if ($paypalpropf_test) { ?>
+				<input type="radio" name="paypalpropf_test" value="1" checked="">
 				<?= $lang_text_yes; ?>
-				<input type="radio" name="paypal_pro_pf_test" value="0">
+				<input type="radio" name="paypalpropf_test" value="0">
 				<?= $lang_text_no; ?>
 				<?php } else { ?>
-				<input type="radio" name="paypal_pro_pf_test" value="1">
+				<input type="radio" name="paypalpropf_test" value="1">
 				<?= $lang_text_yes; ?>
-				<input type="radio" name="paypal_pro_pf_test" value="0" checked="">
+				<input type="radio" name="paypalpropf_test" value="0" checked="">
 				<?= $lang_text_no; ?>
 				<?php } ?></td>
 			</tr>
 			<tr>
 			<td><?= $lang_entry_transaction; ?></td>
-			<td><select name="paypal_pro_pf_transaction" class="form-control">
-				<?php if (!$paypal_pro_pf_transaction) { ?>
+			<td><select name="paypalpropf_transaction" class="form-control">
+				<?php if (!$paypalpropf_transaction) { ?>
 				<option value="0" selected><?= $lang_text_authorization; ?></option>
 				<?php } else { ?>
 				<option value="0"><?= $lang_text_authorization; ?></option>
 				<?php } ?>
-				<?php if ($paypal_pro_pf_transaction) { ?>
+				<?php if ($paypalpropf_transaction) { ?>
 				<option value="1" selected><?= $lang_text_sale; ?></option>
 				<?php } else { ?>
 				<option value="1"><?= $lang_text_sale; ?></option>
@@ -83,13 +83,13 @@
 			</tr>
 			<tr>
 			<td><?= $lang_entry_total; ?></td>
-			<td><input type="text" name="paypal_pro_pf_total" value="<?= $paypal_pro_pf_total; ?>" class="form-control"></td>
+			<td><input type="text" name="paypalpropf_total" value="<?= $paypalpropf_total; ?>" class="form-control"></td>
 			</tr>	
 			<tr>
 			<td><?= $lang_entry_order_status; ?></td>
-			<td><select name="paypal_pro_pf_order_status_id" class="form-control">
+			<td><select name="paypalpropf_order_status_id" class="form-control">
 				<?php foreach ($order_statuses as $order_status) { ?>
-				<?php if ($order_status['order_status_id'] == $paypal_pro_pf_order_status_id) { ?>
+				<?php if ($order_status['order_status_id'] == $paypalpropf_order_status_id) { ?>
 				<option value="<?= $order_status['order_status_id']; ?>" selected><?= $order_status['name']; ?></option>
 				<?php } else { ?>
 				<option value="<?= $order_status['order_status_id']; ?>"><?= $order_status['name']; ?></option>
@@ -99,10 +99,10 @@
 			</tr>
 			<tr>
 			<td><?= $lang_entry_geo_zone; ?></td>
-			<td><select name="paypal_pro_pf_geo_zone_id" class="form-control">
+			<td><select name="paypalpropf_geo_zone_id" class="form-control">
 				<option value="0"><?= $lang_text_all_zones; ?></option>
 				<?php foreach ($geo_zones as $geo_zone) { ?>
-				<?php if ($geo_zone['geo_zone_id'] == $paypal_pro_pf_geo_zone_id) { ?>
+				<?php if ($geo_zone['geo_zone_id'] == $paypalpropf_geo_zone_id) { ?>
 				<option value="<?= $geo_zone['geo_zone_id']; ?>" selected><?= $geo_zone['name']; ?></option>
 				<?php } else { ?>
 				<option value="<?= $geo_zone['geo_zone_id']; ?>"><?= $geo_zone['name']; ?></option>
@@ -112,8 +112,8 @@
 			</tr>
 			<tr>
 			<td><?= $lang_entry_status; ?></td>
-			<td><select name="paypal_pro_pf_status" class="form-control">
-				<?php if ($paypal_pro_pf_status) { ?>
+			<td><select name="paypalpropf_status" class="form-control">
+				<?php if ($paypalpropf_status) { ?>
 				<option value="1" selected><?= $lang_text_enabled; ?></option>
 				<option value="0"><?= $lang_text_disabled; ?></option>
 				<?php } else { ?>
@@ -124,7 +124,7 @@
 			</tr>
 			<tr>
 			<td><?= $lang_entry_sort_order; ?></td>
-			<td><input type="text" name="paypal_pro_pf_sort_order" value="<?= $paypal_pro_pf_sort_order; ?>" class="form-control"></td>
+			<td><input type="text" name="paypalpropf_sort_order" value="<?= $paypalpropf_sort_order; ?>" class="form-control"></td>
 			</tr>
 		</table>
 		</form>

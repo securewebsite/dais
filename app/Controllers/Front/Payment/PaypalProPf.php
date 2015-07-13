@@ -73,16 +73,16 @@ class PaypalProPf extends Controller {
         
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         
-        if (!Config::get('paypal_pro_pf_transaction')) {
+        if (!Config::get('paypalpropf_transaction')) {
             $payment_type = 'A';
         } else {
             $payment_type = 'S';
         }
         
-        $request = 'USER=' . urlencode(Config::get('paypal_pro_pf_user'));
-        $request.= '&VENDOR=' . urlencode(Config::get('paypal_pro_pf_vendor'));
-        $request.= '&PARTNER=' . urlencode(Config::get('paypal_pro_pf_partner'));
-        $request.= '&PWD=' . urlencode(Config::get('paypal_pro_pf_password'));
+        $request = 'USER=' . urlencode(Config::get('paypalpropf_user'));
+        $request.= '&VENDOR=' . urlencode(Config::get('paypalpropf_vendor'));
+        $request.= '&PARTNER=' . urlencode(Config::get('paypalpropf_partner'));
+        $request.= '&PWD=' . urlencode(Config::get('paypalpropf_password'));
         $request.= '&TENDER=C';
         $request.= '&TRXTYPE=' . $payment_type;
         $request.= '&AMT=' . $this->currency->format($order_info['total'], $order_info['currency_code'], false, false);
@@ -103,7 +103,7 @@ class PaypalProPf extends Controller {
         $request.= '&CARDISSUE=' . urlencode($this->request->post['cc_issue']);
         $request.= '&BUTTONSOURCE=' . urlencode('Dais_Cart_PFP');
         
-        if (!Config::get('paypal_pro_pf_test')) {
+        if (!Config::get('paypalpropf_test')) {
             $curl = curl_init('https://payflowpro.paypal.com');
         } else {
             $curl = curl_init('https://pilot-payflowpro.paypal.com');
@@ -150,7 +150,7 @@ class PaypalProPf extends Controller {
                 $message.= 'TRANSACTIONID: ' . $response_info['TRANSACTIONID'] . "\n";
             }
             
-            $this->model_checkout_order->update($this->session->data['order_id'], Config::get('paypal_pro_pf_order_status_id'), $message);
+            $this->model_checkout_order->update($this->session->data['order_id'], Config::get('paypalpropf_order_status_id'), $message);
             
             $json['success'] = Url::link('checkout/success');
         } else {

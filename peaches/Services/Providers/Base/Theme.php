@@ -359,8 +359,8 @@ final class Theme {
         $filenames = array();
         $files     = array();
         
-        $core_files  = glob(Config::get('path.application') . 'controller' . SEP . $directory . SEP . '*.php');
-        $theme_files = glob(Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . $directory . SEP . '*.php');
+        $core_files  = glob(Config::get('path.application') . $directory . SEP . '*.php');
+        $theme_files = glob(Config::get('path.theme') . Config::get('theme.name') . SEP . 'Controllers' . SEP . $directory . SEP . '*.php');
         
         if (!empty($theme_files)):
             foreach ($theme_files as $file):

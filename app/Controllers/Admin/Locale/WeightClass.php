@@ -311,7 +311,7 @@ class WeightClass extends Controller {
     }
     
     protected function validateForm() {
-        if (!User::hasPermission('modify', 'locale/weight_class')) {
+        if (!User::hasPermission('modify', 'locale/weightclass')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
@@ -331,7 +331,7 @@ class WeightClass extends Controller {
     }
     
     protected function validateDelete() {
-        if (!User::hasPermission('modify', 'locale/weight_class')) {
+        if (!User::hasPermission('modify', 'locale/weightclass')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

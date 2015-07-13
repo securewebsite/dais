@@ -26,7 +26,7 @@ class Masonry extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('masonry_widget', $this->request->post);
+            $this->model_setting_setting->editSetting('masonry', $this->request->post);
             $this->cache->delete('products.masonry');
             $this->session->data['success'] = Lang::get('lang_text_success');
             

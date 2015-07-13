@@ -93,7 +93,7 @@ class PaypalExpress extends Model {
     }
     
     public function log($data, $title = null) {
-        if (Config::get('paypal_express_debug')) {
+        if (Config::get('paypalexpress_debug')) {
             $this->log->write('PayPal Express debug (' . $title . '): ' . json_encode($data));
         }
     }
@@ -242,16 +242,16 @@ class PaypalExpress extends Model {
     }
     
     public function call($data) {
-        if (Config::get('paypal_express_test') == 1) {
+        if (Config::get('paypalexpress_test') == 1) {
             $api_endpoint = 'https://api-3t.sandbox.paypal.com/nvp';
         } else {
             $api_endpoint = 'https://api-3t.paypal.com/nvp';
         }
         
         $settings = array(
-            'USER'         => Config::get('paypal_express_username'), 
-            'PWD'          => Config::get('paypal_express_password'), 
-            'SIGNATURE'    => Config::get('paypal_express_signature'), 
+            'USER'         => Config::get('paypalexpress_username'), 
+            'PWD'          => Config::get('paypalexpress_password'), 
+            'SIGNATURE'    => Config::get('paypalexpress_signature'), 
             'VERSION'      => '109.0', 
             'BUTTONSOURCE' => 'Dais_1.0_EC'
         );

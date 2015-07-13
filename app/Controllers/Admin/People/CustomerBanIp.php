@@ -291,7 +291,7 @@ class CustomerBanIp extends Controller {
     }
     
     protected function validateForm() {
-        if (!User::hasPermission('modify', 'people/customer_ban_ip')) {
+        if (!\User::hasPermission('modify', 'people/customerbanip')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
@@ -305,7 +305,7 @@ class CustomerBanIp extends Controller {
     }
     
     protected function validateDelete() {
-        if (!User::hasPermission('modify', 'people/customer_ban_ip')) {
+        if (!\User::hasPermission('modify', 'people/customerbanip')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

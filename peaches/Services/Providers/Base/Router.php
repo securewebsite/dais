@@ -35,6 +35,17 @@ class Router {
 			
 			$controller = count($segments) > 1 ? $segments[0] . '/' . $segments[1] : $segments[0];
 
+			// This handles all of our search routing
+            if ($segments[0] == 'search'):
+                Request::get('route', 'search/search');
+
+                if (end($segments) !== 'search'):
+                    Request::post('search', end($segments));
+                endif;
+
+                $action = new Action(Request::get('route'));
+            endif;
+			
 			// This handles all native files :not custom routes
 			if (!is_null(Naming::file_from_route($controller))):
 				Request::get('route', implode('/', $segments));

@@ -317,7 +317,7 @@ class Dashboard extends Controller {
                 'common/css'
             );
             
-            if (!in_array($route, $ignore) && !User::hasPermission('access', $route)) {
+            if (!in_array($route, $ignore) && !User::hasPermission('access', str_replace('_', '', $route))) {
                 return new Action('error/permission');
             }
         }

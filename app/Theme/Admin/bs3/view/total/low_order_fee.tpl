@@ -26,22 +26,22 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2"><?= $lang_entry_total; ?></label>
 				<div class="control-field col-sm-4">
-					<input type="text" name="low_order_fee_total" value="<?= $low_order_fee_total; ?>" class="form-control">
+					<input type="text" name="loworderfee_total" value="<?= $loworderfee_total; ?>" class="form-control">
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="control-label col-sm-2"><?= $lang_entry_fee; ?></label>
 				<div class="control-field col-sm-4">
-					<input type="text" name="low_order_fee_fee" value="<?= $low_order_fee_fee; ?>" class="form-control">
+					<input type="text" name="loworderfee_fee" value="<?= $loworderfee_fee; ?>" class="form-control">
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="control-label col-sm-2"><?= $lang_entry_tax_class; ?></label>
 				<div class="control-field col-sm-4">
-					<select name="low_order_fee_tax_class_id" class="form-control">
+					<select name="loworderfee_tax_class_id" class="form-control">
 						<option value="0"><?= $lang_text_none; ?></option>
 						<?php foreach ($tax_classes as $tax_class) { ?>
-						<?php if ($tax_class['tax_class_id'] == $low_order_fee_tax_class_id) { ?>
+						<?php if ($tax_class['tax_class_id'] == $loworderfee_tax_class_id) { ?>
 						<option value="<?= $tax_class['tax_class_id']; ?>" selected><?= $tax_class['title']; ?></option>
 						<?php } else { ?>
 						<option value="<?= $tax_class['tax_class_id']; ?>"><?= $tax_class['title']; ?></option>
@@ -53,8 +53,8 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2"><?= $lang_entry_status; ?></label>
 				<div class="control-field col-sm-4">
-					<select name="low_order_fee_status" class="form-control">
-						<?php if ($low_order_fee_status) { ?>
+					<select name="loworderfee_status" class="form-control">
+						<?php if ($loworderfee_status) { ?>
 						<option value="1" selected><?= $lang_text_enabled; ?></option>
 						<option value="0"><?= $lang_text_disabled; ?></option>
 						<?php } else { ?>
@@ -67,7 +67,7 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2"><?= $lang_entry_sort_order; ?></label>
 				<div class="control-field col-sm-4">
-					<input type="text" name="low_order_fee_sort_order" value="<?= $low_order_fee_sort_order; ?>" class="form-control">
+					<input type="text" name="loworderfee_sort_order" value="<?= $loworderfee_sort_order; ?>" class="form-control">
 				</div>
 			</div>
 		</form>

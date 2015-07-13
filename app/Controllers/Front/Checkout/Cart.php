@@ -272,7 +272,7 @@ class Cart extends Controller {
                 $data['coupon'] = '';
             }
             
-            $data['gift_card_status'] = Config::get('gift_card_status');
+            $data['giftcard_status'] = Config::get('giftcard_status');
             
             if (isset($this->request->post['gift_card'])) {
                 $data['gift_card'] = $this->request->post['gift_card'];

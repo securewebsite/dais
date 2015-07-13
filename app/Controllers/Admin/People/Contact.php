@@ -54,7 +54,7 @@ class Contact extends Controller {
         $json = array();
         
         if ($this->request->server['REQUEST_METHOD'] == 'POST'):
-            if (!User::hasPermission('modify', 'people/contact')):
+            if (!\User::hasPermission('modify', 'people/contact')):
                 $json['error']['warning'] = Lang::get('lang_error_permission');
             endif;
             

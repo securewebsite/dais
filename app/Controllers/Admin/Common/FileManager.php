@@ -174,7 +174,7 @@ class FileManager extends Controller {
             $json['error'] = Lang::get('lang_error_directory');
         }
         
-        if (!User::hasPermission('modify', 'common/file_manager')) {
+        if (!User::hasPermission('modify', 'common/filemanager')) {
             $json['error'] = Lang::get('lang_error_permission');
         }
         
@@ -208,7 +208,7 @@ class FileManager extends Controller {
             $json['error'] = Lang::get('lang_error_select');
         }
         
-        if (!User::hasPermission('modify', 'common/file_manager')) {
+        if (!User::hasPermission('modify', 'common/filemanager')) {
             $json['error'] = Lang::get('lang_error_permission');
         }
         
@@ -280,7 +280,7 @@ class FileManager extends Controller {
             $json['error'] = Lang::get('lang_error_directory');
         }
         
-        if (!User::hasPermission('modify', 'common/file_manager')) {
+        if (!User::hasPermission('modify', 'common/filemanager')) {
             $json['error'] = Lang::get('lang_error_permission');
         }
         
@@ -326,7 +326,7 @@ class FileManager extends Controller {
             $json['error'] = Lang::get('lang_error_select');
         }
         
-        if (!User::hasPermission('modify', 'common/file_manager')) {
+        if (!User::hasPermission('modify', 'common/filemanager')) {
             $json['error'] = Lang::get('lang_error_permission');
         }
         
@@ -410,7 +410,7 @@ class FileManager extends Controller {
             }
         }
         
-        if (!User::hasPermission('modify', 'common/file_manager')) {
+        if (!User::hasPermission('modify', 'common/filemanager')) {
             $json['error'] = Lang::get('lang_error_permission');
         }
         
@@ -477,7 +477,7 @@ class FileManager extends Controller {
             $json['error'] = Lang::get('lang_error_directory');
         }
         
-        if (!User::hasPermission('modify', 'common/file_manager')) {
+        if (!User::hasPermission('modify', 'common/filemanager')) {
             $json['error'] = Lang::get('lang_error_permission');
         }
         
@@ -546,7 +546,7 @@ class FileManager extends Controller {
             $json['error'] = Lang::get('lang_error_directory');
         }
         
-        if (!User::hasPermission('modify', 'common/file_manager')) {
+        if (!User::hasPermission('modify', 'common/filemanager')) {
             $json['error'] = Lang::get('lang_error_permission');
         }
         

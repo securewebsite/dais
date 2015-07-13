@@ -15,6 +15,7 @@
 */
 
 namespace App\Controllers\Admin\Tool;
+
 use App\Controllers\Controller;
 
 class ErrorLog extends Controller {

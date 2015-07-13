@@ -15,8 +15,9 @@
 */
 
 namespace App\Controllers\Admin\Module;
+
 use App\Controllers\Controller;
-use Dais\Library\Naming;
+use Dais\Support\Naming;
 
 class Shipping extends Controller {
     public function index() {
@@ -46,8 +47,8 @@ class Shipping extends Controller {
         $modules = $this->model_setting_module->getInstalled('shipping');
         
         foreach ($modules as $key => $value) {
-            $theme_file = Theme::getPath() . 'controller/shipping/' . $value . '.php';
-            $core_file = Config::get('path.application') . 'controller/shipping/' . $value . '.php';
+            $theme_file = Theme::getPath() . 'Controller/Shipping/' . ucfirst($value) . '.php';
+            $core_file  = Config::get('path.application') . 'Shipping/' . ucfirst($value) . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {
                 $this->model_setting_module->uninstall('shipping', $value);
@@ -120,13 +121,13 @@ class Shipping extends Controller {
             $this->model_people_user_group->addPermission(User::getId(), 'access', 'shipping/' . $this->request->get['module']);
             $this->model_people_user_group->addPermission(User::getId(), 'modify', 'shipping/' . $this->request->get['module']);
             
-            $base_path  = App::appPath() . Config::get('prefix.facade') . 'controller' . SEP . 'shipping' . SEP;
-            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'shipping' . SEP;
+            $base_path  = Config::get('path.application') . 'Shipping' . SEP;
+            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'Controller' . SEP . 'Shipping' . SEP;
             
-            if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
+            if (is_readable($file = $theme_path . ucfirst($this->request->get['module']) . '.php')):
                 $class = Naming::class_from_filename($file);
             else:
-                $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
+                $class = Naming::class_from_filename($base_path . ucfirst($this->request->get['module']) . '.php');
             endif;
             
             $class = new $class;
@@ -157,13 +158,13 @@ class Shipping extends Controller {
             $this->model_setting_module->uninstall('shipping', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
-            $base_path  = App::appPath() . Config::get('prefix.facade') . 'controller' . SEP . 'shipping' . SEP;
-            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'shipping' . SEP;
+            $base_path  = Config::get('path.application') . 'Shipping' . SEP;
+            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'Controller' . SEP . 'Shipping' . SEP;
             
-            if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
+            if (is_readable($file = $theme_path . ucfirst($this->request->get['module']) . '.php')):
                 $class = Naming::class_from_filename($file);
             else:
-                $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
+                $class = Naming::class_from_filename($base_path . ucfirst($this->request->get['module']) . '.php');
             endif;
             
             $class = new $class;

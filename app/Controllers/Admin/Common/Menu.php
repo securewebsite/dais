@@ -27,7 +27,7 @@ class Menu extends Controller {
             
             $data['logged'] = false;
         else:
-            $data['paypal_express_status']       = (Config::get('paypal_express_status')) ? : false;
+            $data['paypalexpress_status']       = (Config::get('paypalexpress_status')) ? : false;
             $data['logged']                      = sprintf(Lang::get('lang_text_logged'), User::getUsername());
             $data['dashboard']                   = Url::link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL');
             $data['allowed'] = false;
@@ -108,7 +108,7 @@ class Menu extends Controller {
             $data['testing']                     = Url::link('tool/test', 'token=' . $this->session->data['token'], 'SSL');
             
             $data['paypal_express']              = Url::link('payment/paypal_express', 'token=' . $this->session->data['token'], 'SSL');
-            $data['paypal_express_search']       = Url::link('payment/paypal_express/search', 'token=' . $this->session->data['token'], 'SSL');
+            $data['paypalexpress_search']       = Url::link('payment/paypal_express/search', 'token=' . $this->session->data['token'], 'SSL');
             
             $data['recurring']                   = Url::link('catalog/recurring', 'token=' . $this->session->data['token'], 'SSL');
             $data['order_recurring']             = Url::link('sale/recurring', 'token=' . $this->session->data['token'], 'SSL');

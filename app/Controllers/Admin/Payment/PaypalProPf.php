@@ -26,7 +26,7 @@ class PaypalProPf extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('paypal_pro_pf', $this->request->post);
+            $this->model_setting_setting->editSetting('paypalpropf', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
@@ -69,80 +69,80 @@ class PaypalProPf extends Controller {
         
         $data['cancel'] = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
         
-        if (isset($this->request->post['paypal_pro_pf_vendor'])) {
-            $data['paypal_pro_pf_vendor'] = $this->request->post['paypal_pro_pf_vendor'];
+        if (isset($this->request->post['paypalpropf_vendor'])) {
+            $data['paypalpropf_vendor'] = $this->request->post['paypalpropf_vendor'];
         } else {
-            $data['paypal_pro_pf_vendor'] = Config::get('paypal_pro_pf_vendor');
+            $data['paypalpropf_vendor'] = Config::get('paypalpropf_vendor');
         }
         
-        if (isset($this->request->post['paypal_pro_pf_user'])) {
-            $data['paypal_pro_pf_user'] = $this->request->post['paypal_pro_pf_user'];
+        if (isset($this->request->post['paypalpropf_user'])) {
+            $data['paypalpropf_user'] = $this->request->post['paypalpropf_user'];
         } else {
-            $data['paypal_pro_pf_user'] = Config::get('paypal_pro_pf_user');
+            $data['paypalpropf_user'] = Config::get('paypalpropf_user');
         }
         
-        if (isset($this->request->post['paypal_pro_pf_password'])) {
-            $data['paypal_pro_pf_password'] = $this->request->post['paypal_pro_pf_password'];
+        if (isset($this->request->post['paypalpropf_password'])) {
+            $data['paypalpropf_password'] = $this->request->post['paypalpropf_password'];
         } else {
-            $data['paypal_pro_pf_password'] = Config::get('paypal_pro_pf_password');
+            $data['paypalpropf_password'] = Config::get('paypalpropf_password');
         }
         
-        if (isset($this->request->post['paypal_pro_pf_partner'])) {
-            $data['paypal_pro_pf_partner'] = $this->request->post['paypal_pro_pf_partner'];
-        } elseif ($this->config->has('paypal_pro_pf_partner')) {
-            $data['paypal_pro_pf_partner'] = Config::get('paypal_pro_pf_partner');
+        if (isset($this->request->post['paypalpropf_partner'])) {
+            $data['paypalpropf_partner'] = $this->request->post['paypalpropf_partner'];
+        } elseif ($this->config->has('paypalpropf_partner')) {
+            $data['paypalpropf_partner'] = Config::get('paypalpropf_partner');
         } else {
-            $data['paypal_pro_pf_partner'] = 'PayPal';
+            $data['paypalpropf_partner'] = 'PayPal';
         }
         
-        if (isset($this->request->post['paypal_pro_pf_test'])) {
-            $data['paypal_pro_pf_test'] = $this->request->post['paypal_pro_pf_test'];
+        if (isset($this->request->post['paypalpropf_test'])) {
+            $data['paypalpropf_test'] = $this->request->post['paypalpropf_test'];
         } else {
-            $data['paypal_pro_pf_test'] = Config::get('paypal_pro_pf_test');
+            $data['paypalpropf_test'] = Config::get('paypalpropf_test');
         }
         
-        if (isset($this->request->post['paypal_pro_pf_method'])) {
-            $data['paypal_pro_pf_transaction'] = $this->request->post['paypal_pro_pf_transaction'];
+        if (isset($this->request->post['paypalpropf_method'])) {
+            $data['paypalpropf_transaction'] = $this->request->post['paypalpropf_transaction'];
         } else {
-            $data['paypal_pro_pf_transaction'] = Config::get('paypal_pro_pf_transaction');
+            $data['paypalpropf_transaction'] = Config::get('paypalpropf_transaction');
         }
         
-        if (isset($this->request->post['paypal_pro_pf_total'])) {
-            $data['paypal_pro_pf_total'] = $this->request->post['paypal_pro_pf_total'];
+        if (isset($this->request->post['paypalpropf_total'])) {
+            $data['paypalpropf_total'] = $this->request->post['paypalpropf_total'];
         } else {
-            $data['paypal_pro_pf_total'] = Config::get('paypal_pro_pf_total');
+            $data['paypalpropf_total'] = Config::get('paypalpropf_total');
         }
         
-        if (isset($this->request->post['paypal_pro_pf_order_status_id'])) {
-            $data['paypal_pro_pf_order_status_id'] = $this->request->post['paypal_pro_pf_order_status_id'];
+        if (isset($this->request->post['paypalpropf_order_status_id'])) {
+            $data['paypalpropf_order_status_id'] = $this->request->post['paypalpropf_order_status_id'];
         } else {
-            $data['paypal_pro_pf_order_status_id'] = Config::get('paypal_pro_pf_order_status_id');
+            $data['paypalpropf_order_status_id'] = Config::get('paypalpropf_order_status_id');
         }
         
         Theme::model('locale/order_status');
         
         $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
         
-        if (isset($this->request->post['paypal_pro_pf_geo_zone_id'])) {
-            $data['paypal_pro_pf_geo_zone_id'] = $this->request->post['paypal_pro_pf_geo_zone_id'];
+        if (isset($this->request->post['paypalpropf_geo_zone_id'])) {
+            $data['paypalpropf_geo_zone_id'] = $this->request->post['paypalpropf_geo_zone_id'];
         } else {
-            $data['paypal_pro_pf_geo_zone_id'] = Config::get('paypal_pro_pf_geo_zone_id');
+            $data['paypalpropf_geo_zone_id'] = Config::get('paypalpropf_geo_zone_id');
         }
         
         Theme::model('locale/geo_zone');
         
         $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
         
-        if (isset($this->request->post['paypal_pro_pf_status'])) {
-            $data['paypal_pro_pf_status'] = $this->request->post['paypal_pro_pf_status'];
+        if (isset($this->request->post['paypalpropf_status'])) {
+            $data['paypalpropf_status'] = $this->request->post['paypalpropf_status'];
         } else {
-            $data['paypal_pro_pf_status'] = Config::get('paypal_pro_pf_status');
+            $data['paypalpropf_status'] = Config::get('paypalpropf_status');
         }
         
-        if (isset($this->request->post['paypal_pro_pf_sort_order'])) {
-            $data['paypal_pro_pf_sort_order'] = $this->request->post['paypal_pro_pf_sort_order'];
+        if (isset($this->request->post['paypalpropf_sort_order'])) {
+            $data['paypalpropf_sort_order'] = $this->request->post['paypalpropf_sort_order'];
         } else {
-            $data['paypal_pro_pf_sort_order'] = Config::get('paypal_pro_pf_sort_order');
+            $data['paypalpropf_sort_order'] = Config::get('paypalpropf_sort_order');
         }
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
@@ -153,23 +153,23 @@ class PaypalProPf extends Controller {
     }
     
     private function validate() {
-        if (!User::hasPermission('modify', 'payment/paypal_pro_pf')) {
+        if (!User::hasPermission('modify', 'payment/paypalpropf')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (!$this->request->post['paypal_pro_pf_vendor']) {
+        if (!$this->request->post['paypalpropf_vendor']) {
             $this->error['vendor'] = Lang::get('lang_error_vendor');
         }
         
-        if (!$this->request->post['paypal_pro_pf_user']) {
+        if (!$this->request->post['paypalpropf_user']) {
             $this->error['user'] = Lang::get('lang_error_user');
         }
         
-        if (!$this->request->post['paypal_pro_pf_password']) {
+        if (!$this->request->post['paypalpropf_password']) {
             $this->error['password'] = Lang::get('lang_error_password');
         }
         
-        if (!$this->request->post['paypal_pro_pf_partner']) {
+        if (!$this->request->post['paypalpropf_partner']) {
             $this->error['partner'] = Lang::get('lang_error_partner');
         }
         

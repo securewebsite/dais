@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Widget;
+
 use App\Controllers\Controller;
 
 class SlideShow extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -26,7 +28,7 @@ class SlideShow extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('slide_show', $this->request->post);
+            $this->model_setting_setting->editSetting('slideshow', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
@@ -52,10 +54,10 @@ class SlideShow extends Controller {
         
         $data['widgets'] = array();
         
-        if (isset($this->request->post['slide_show_widget'])) {
-            $data['widgets'] = $this->request->post['slide_show_widget'];
-        } elseif (Config::get('slide_show_widget')) {
-            $data['widgets'] = Config::get('slide_show_widget');
+        if (isset($this->request->post['slideshow_widget'])) {
+            $data['widgets'] = $this->request->post['slideshow_widget'];
+        } elseif (Config::get('slideshow_widget')) {
+            $data['widgets'] = Config::get('slideshow_widget');
         }
         
         Theme::model('design/layout');
@@ -76,12 +78,12 @@ class SlideShow extends Controller {
     }
     
     protected function validate() {
-        if (!User::hasPermission('modify', 'widget/slide_show')) {
+        if (!User::hasPermission('modify', 'widget/slideshow')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (isset($this->request->post['slide_show_widget'])) {
-            foreach ($this->request->post['slide_show_widget'] as $key => $value) {
+        if (isset($this->request->post['slideshow_widget'])) {
+            foreach ($this->request->post['slideshow_widget'] as $key => $value) {
                 if (!$value['width'] || !$value['height']) {
                     $this->error['dimension'][$key] = Lang::get('lang_error_dimension');
                 }

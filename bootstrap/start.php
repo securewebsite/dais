@@ -172,6 +172,6 @@ $app = new Dais\Application(
 
 $app->boot();
 
-//var_dump($app);exit;
+//var_dump($app['hooks']);exit;
 
 return $app;

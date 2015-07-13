@@ -14,27 +14,26 @@
 |	
 */
 
-namespace Plugin\Git\Front\Controller;
+namespace App\Plugin\Git\Front\Controller;
 
-use Dais\Base\Container;
-use Dais\Base\Plugin;
 use Exception;
+use App\Controllers\Controller;
 
 ignore_user_abort(true);
 
-class Git extends Plugin {
-    private $branch;
+class Git extends Controller {
+    
+    private   $branch;
     protected $directory;
     protected $data;
     
-    public function __construct(Container $app) {
-        parent::__construct($app);
-        parent::setPlugin('git');
+    public function __construct() {
+        Plugin::setPlugin('git');
     }
     
     public function index() {
-        $this->language('git');
-        $this->model('setting/setting');
+        Plugin::language('git');
+        Plugin::model('setting/setting');
         
         $settings = $this->model_setting_setting->getSetting('git');
         
@@ -46,8 +45,8 @@ class Git extends Plugin {
         $this->branch    = $settings['git_branch'];
         $this->directory = dirname(App::appPath());
         
-        if(isset($this->request->post['payload'])):    
-            $HTTP_RAW_POST_DATA = $this->request->post['payload'];
+        if(isset(Request::post('payload'))):    
+            $HTTP_RAW_POST_DATA = Request::post('payload');
         else:
             $HTTP_RAW_POST_DATA = file_get_contents('php://input');
         endif;
@@ -71,7 +70,7 @@ class Git extends Plugin {
                             
                             mail('vkronlein@icloud.com', 'Deployment', 'Fetch seems to have executed successfully.' . "\n\n" . $message);
                         else:
-                            throw new Exception($this->language->get('lang_error_pull_failed'));
+                            throw new Exception(Lang::get('lang_error_pull_failed'));
                         endif;
                     else:
                         
@@ -81,14 +80,13 @@ class Git extends Plugin {
                         return;
                     endif;
                 else:
-                    throw new Exception($this->language->get('lang_error_json_decode'));
+                    throw new Exception(Lang::get('lang_error_json_decode'));
                 endif;
                 return false;
             else:
-                throw new Exception($this->language->get('lang_error_data_not_set'));
+                throw new Exception(Lang::get('lang_error_data_not_set'));
             endif;
-        }
-        catch(Exception $e) {
+        } catch(Exception $e) {
             error_log(sprintf("%s >> %s", date('m-d-Y H:i:s'), $e));
         }
     }

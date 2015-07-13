@@ -19,19 +19,19 @@ use App\Models\Model;
 
 class LowOrderFee extends Model {
     public function getTotal(&$total_data, &$total, &$taxes) {
-        if ($this->cart->getSubTotal() && ($this->cart->getSubTotal() < Config::get('low_order_fee_total'))):
+        if ($this->cart->getSubTotal() && ($this->cart->getSubTotal() < Config::get('loworderfee_total'))):
             Lang::load('total/low_order_fee');
             
             $total_data[] = array(
                 'code'       => 'low_order_fee', 
                 'title'      => Lang::get('lang_text_low_order_fee'), 
-                'text'       => $this->currency->format(Config::get('low_order_fee_fee')), 
-                'value'      => Config::get('low_order_fee_fee'), 
-                'sort_order' => Config::get('low_order_fee_sort_order')
+                'text'       => $this->currency->format(Config::get('loworderfee_fee')), 
+                'value'      => Config::get('loworderfee_fee'), 
+                'sort_order' => Config::get('loworderfee_sort_order')
             );
             
-            if (Config::get('low_order_fee_tax_class_id')):
-                $tax_rates = $this->tax->getRates(Config::get('low_order_fee_fee'), Config::get('low_order_fee_tax_class_id'));
+            if (Config::get('loworderfee_tax_class_id')):
+                $tax_rates = $this->tax->getRates(Config::get('loworderfee_fee'), Config::get('loworderfee_tax_class_id'));
                 
                 foreach ($tax_rates as $tax_rate):
                     if (!isset($taxes[$tax_rate['tax_rate_id']])):
@@ -42,7 +42,7 @@ class LowOrderFee extends Model {
                 endforeach;
             endif;
             
-            $total += Config::get('low_order_fee_fee');
+            $total += Config::get('loworderfee_fee');
         endif;
     }
 }

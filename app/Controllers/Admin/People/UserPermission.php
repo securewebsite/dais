@@ -296,11 +296,12 @@ class UserPermission extends Controller {
             'common/bread_crumb'
         );
         
-        $plugin_files = $this->plugin->getControllers();
+        //$plugin_files = $this->plugin->getControllers();
         
         $data['permissions'] = array();
         
         $files = Theme::getFiles();
+
         $files = array_merge($files, $this->plugin->getPlugins());
         
         foreach ($files as $file) {
@@ -313,11 +314,11 @@ class UserPermission extends Controller {
             }
         }
         
-        foreach ($plugin_files as $plugin):
-            if (!in_array($plugin, $ignore)):
-                $data['permissions'][] = $plugin;
-            endif;
-        endforeach;
+        // foreach ($plugin_files as $plugin):
+        //     if (!in_array($plugin, $ignore)):
+        //         $data['permissions'][] = $plugin;
+        //     endif;
+        // endforeach;
         
         if (isset($this->request->post['permission']['access'])) {
             $data['access'] = $this->request->post['permission']['access'];
@@ -343,7 +344,7 @@ class UserPermission extends Controller {
     }
     
     protected function validateForm() {
-        if (!User::hasPermission('modify', 'people/user_permission')) {
+        if (!\User::hasPermission('modify', 'people/userpermission')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
@@ -357,7 +358,7 @@ class UserPermission extends Controller {
     }
     
     protected function validateDelete() {
-        if (!User::hasPermission('modify', 'people/user_permission')) {
+        if (!\User::hasPermission('modify', 'people/userpermission')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

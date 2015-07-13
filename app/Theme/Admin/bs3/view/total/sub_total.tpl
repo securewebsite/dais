@@ -26,8 +26,8 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2"><?= $lang_entry_status; ?></label>
 				<div class="control-field col-sm-4">
-					<select name="sub_total_status" class="form-control">
-						<?php if ($sub_total_status) { ?>
+					<select name="subtotal_status" class="form-control">
+						<?php if ($subtotal_status) { ?>
 						<option value="1" selected><?= $lang_text_enabled; ?></option>
 						<option value="0"><?= $lang_text_disabled; ?></option>
 						<?php } else { ?>
@@ -40,7 +40,7 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2"><?= $lang_entry_sort_order; ?></label>
 				<div class="control-field col-sm-4">
-					<input type="text" name="sub_total_sort_order" value="<?= $sub_total_sort_order; ?>" class="form-control">
+					<input type="text" name="subtotal_sort_order" value="<?= $subtotal_sort_order; ?>" class="form-control">
 				</div>
 			</div>
 		</form>

@@ -32,13 +32,13 @@ class PaypalExpress extends Model {
     }
     
     public function call($data) {
-        if (Config::get('paypal_express_test') == 1) {
+        if (Config::get('paypalexpress_test') == 1) {
             $api_endpoint = 'https://api-3t.sandbox.paypal.com/nvp';
         } else {
             $api_endpoint = 'https://api-3t.paypal.com/nvp';
         }
         
-        $settings = array('USER' => Config::get('paypal_express_username'), 'PWD' => Config::get('paypal_express_password'), 'SIGNATURE' => Config::get('paypal_express_signature'), 'VERSION' => '109.0', 'BUTTONSOURCE' => 'Dais_1.0_EC',);
+        $settings = array('USER' => Config::get('paypalexpress_username'), 'PWD' => Config::get('paypalexpress_password'), 'SIGNATURE' => Config::get('paypalexpress_signature'), 'VERSION' => '109.0', 'BUTTONSOURCE' => 'Dais_1.0_EC',);
         
         $this->log($data, 'Call data');
         
@@ -73,7 +73,7 @@ class PaypalExpress extends Model {
     }
     
     public function log($data, $title = null) {
-        if (Config::get('paypal_express_debug')) {
+        if (Config::get('paypalexpress_debug')) {
             $this->log->write('PayPal Express debug (' . $title . '): ' . json_encode($data));
         }
     }
@@ -84,13 +84,13 @@ class PaypalExpress extends Model {
         $query = $this->db->query("
 			SELECT * 
 			FROM `{$this->db->prefix}zone_to_geo_zone` 
-			WHERE `geo_zone_id` = '" . (int)Config::get('paypal_express_geo_zone_id') . "' 
+			WHERE `geo_zone_id` = '" . (int)Config::get('paypalexpress_geo_zone_id') . "' 
 			AND `country_id` = '" . (int)$address['country_id'] . "' 
 			AND (`zone_id` = '" . (int)$address['zone_id'] . "' OR `zone_id` = '0')");
         
-        if (Config::get('paypal_express_total') > $total) {
+        if (Config::get('paypalexpress_total') > $total) {
             $status = false;
-        } elseif (!Config::get('paypal_express_geo_zone_id')) {
+        } elseif (!Config::get('paypalexpress_geo_zone_id')) {
             $status = true;
         } elseif ($query->num_rows) {
             $status = true;
@@ -101,7 +101,7 @@ class PaypalExpress extends Model {
         $method_data = array();
         
         if ($status) {
-            $method_data = array('code' => 'paypal_express', 'title' => Lang::get('lang_text_title'), 'terms' => '', 'sort_order' => Config::get('paypal_express_sort_order'));
+            $method_data = array('code' => 'paypal_express', 'title' => Lang::get('lang_text_title'), 'terms' => '', 'sort_order' => Config::get('paypalexpress_sort_order'));
         }
         
         return $method_data;
@@ -155,7 +155,7 @@ class PaypalExpress extends Model {
         
         $data['PAYMENTREQUEST_0_SHIPPINGAMT'] = '';
         $data['PAYMENTREQUEST_0_CURRENCYCODE'] = $this->currency->getCode();
-        $data['PAYMENTREQUEST_0_PAYMENTACTION'] = Config::get('paypal_express_method');
+        $data['PAYMENTREQUEST_0_PAYMENTACTION'] = Config::get('paypalexpress_method');
         
         $i = 0;
         $item_total = 0;

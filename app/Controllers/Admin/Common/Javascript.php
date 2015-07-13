@@ -15,6 +15,7 @@
 */
 
 namespace App\Controllers\Admin\Common;
+
 use App\Controllers\Controller;
 
 class Javascript extends Controller {

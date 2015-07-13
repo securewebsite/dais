@@ -33,7 +33,7 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><b class="required">*</b> <?= $lang_entry_user; ?></label>
 						<div class="control-field col-sm-4">
-							<input type="text" name="paypal_pro_iframe_user" value="<?= $paypal_pro_iframe_user; ?>" class="form-control" autofocus>
+							<input type="text" name="paypalproiframe_user" value="<?= $paypalproiframe_user; ?>" class="form-control" autofocus>
 							<?php if ($error_user) { ?>
 								<span class="help-block error"><?= $error_user; ?></span>
 							<?php } ?>
@@ -42,7 +42,7 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><b class="required">*</b> <?= $lang_entry_password; ?></label>
 						<div class="control-field col-sm-4">
-							<input type="text" name="paypal_pro_iframe_password" value="<?= $paypal_pro_iframe_password; ?>" class="form-control">
+							<input type="text" name="paypalproiframe_password" value="<?= $paypalproiframe_password; ?>" class="form-control">
 							<?php if ($error_password) { ?>
 								<span class="help-block error"><?= $error_password; ?></span>
 							<?php } ?>
@@ -51,7 +51,7 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><b class="required">*</b> <?= $lang_entry_sig; ?></label>
 						<div class="control-field col-sm-4">
-							<input type="text" name="paypal_pro_iframe_sig" value="<?= $paypal_pro_iframe_sig; ?>" class="form-control">
+							<input type="text" name="paypalproiframe_sig" value="<?= $paypalproiframe_sig; ?>" class="form-control">
 							<?php if ($error_sig) { ?>
 								<span class="help-block error"><?= $error_sig; ?></span>
 							<?php } ?>
@@ -60,8 +60,8 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_transaction_method; ?></label>
 						<div class="control-field col-sm-4">
-							<select name="paypal_pro_iframe_transaction_method" class="form-control">
-								<?php if ($paypal_pro_iframe_transaction_method == 'authorization') { ?>
+							<select name="paypalproiframe_transaction_method" class="form-control">
+								<?php if ($paypalproiframe_transaction_method == 'authorization') { ?>
 									<option value="sale"><?= $lang_text_sale; ?></option>
 									<option value="authorization" selected><?= $lang_text_authorization; ?></option>
 								<?php } else { ?>
@@ -74,20 +74,20 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_test; ?></label>
 						<div class="control-field col-sm-4">
-							<?php if ($paypal_pro_iframe_test) { ?>
-								<label class="radio-inline"><input type="radio" name="paypal_pro_iframe_test" value="1" checked=""><?= $lang_text_yes; ?></label>
-								<label class="radio-inline"><input type="radio" name="paypal_pro_iframe_test" value="0"><?= $lang_text_no; ?></label>
+							<?php if ($paypalproiframe_test) { ?>
+								<label class="radio-inline"><input type="radio" name="paypalproiframe_test" value="1" checked=""><?= $lang_text_yes; ?></label>
+								<label class="radio-inline"><input type="radio" name="paypalproiframe_test" value="0"><?= $lang_text_no; ?></label>
 							<?php } else { ?>
-								<label class="radio-inline"><input type="radio" name="paypal_pro_iframe_test" value="1"><?= $lang_text_yes; ?></label>
-								<label class="radio-inline"><input type="radio" name="paypal_pro_iframe_test" value="0" checked=""><?= $lang_text_no; ?></label>
+								<label class="radio-inline"><input type="radio" name="paypalproiframe_test" value="1"><?= $lang_text_yes; ?></label>
+								<label class="radio-inline"><input type="radio" name="paypalproiframe_test" value="0" checked=""><?= $lang_text_no; ?></label>
 							<?php } ?>
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_debug; ?><br><span class="help-block muted"><?= $lang_help_debug ?></span></label>
 						<div class="control-field col-sm-4">
-							<select name="paypal_pro_iframe_debug" class="form-control">
-								<?php if ($paypal_pro_iframe_debug) { ?>
+							<select name="paypalproiframe_debug" class="form-control">
+								<?php if ($paypalproiframe_debug) { ?>
 									<option value="1" selected><?= $lang_text_yes ?></option>
 									<option value="0"><?= $lang_text_no ?></option>
 								<?php } else { ?>
@@ -100,8 +100,8 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_checkout_method ?><br><span class="help-block muted"><?= $lang_help_checkout_method ?></span></label>
 						<div class="control-field col-sm-4">
-							<select name="paypal_pro_iframe_checkout_method" class="form-control">
-								<?php if ($paypal_pro_iframe_checkout_method == 'iframe'): ?>
+							<select name="paypalproiframe_checkout_method" class="form-control">
+								<?php if ($paypalproiframe_checkout_method == 'iframe'): ?>
 								<option value="iframe" selected><?= $lang_text_iframe ?></option>
 								<option value="redirect"><?= $lang_text_redirect ?></option>
 								<?php else: ?>
@@ -114,16 +114,16 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_total; ?></label>
 						<div class="control-field col-sm-4">
-							<input type="text" name="paypal_pro_iframe_total" value="<?= $paypal_pro_iframe_total; ?>" class="form-control">
+							<input type="text" name="paypalproiframe_total" value="<?= $paypalproiframe_total; ?>" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_geo_zone; ?></label>
 						<div class="control-field col-sm-4">
-							<select name="paypal_pro_iframe_geo_zone_id" class="form-control">
+							<select name="paypalproiframe_geo_zone_id" class="form-control">
 								<option value="0"><?= $lang_text_all_zones; ?></option>
 								<?php foreach ($geo_zones as $geo_zone) { ?>
-									<?php if ($geo_zone['geo_zone_id'] == $paypal_pro_iframe_geo_zone_id) { ?>
+									<?php if ($geo_zone['geo_zone_id'] == $paypalproiframe_geo_zone_id) { ?>
 										<option value="<?= $geo_zone['geo_zone_id']; ?>" selected><?= $geo_zone['name']; ?></option>
 									<?php } else { ?>
 										<option value="<?= $geo_zone['geo_zone_id']; ?>"><?= $geo_zone['name']; ?></option>
@@ -135,8 +135,8 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_status; ?></label>
 						<div class="control-field col-sm-4">
-							<select name="paypal_pro_iframe_status" class="form-control">
-								<?php if ($paypal_pro_iframe_status) { ?>
+							<select name="paypalproiframe_status" class="form-control">
+								<?php if ($paypalproiframe_status) { ?>
 									<option value="1" selected><?= $lang_text_enabled; ?></option>
 									<option value="0"><?= $lang_text_disabled; ?></option>
 								<?php } else { ?>
@@ -149,7 +149,7 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_sort_order; ?></label>
 						<div class="control-field col-sm-4">
-							<input type="text" name="paypal_pro_iframe_sort_order" value="<?= $paypal_pro_iframe_sort_order; ?>" class="form-control">
+							<input type="text" name="paypalproiframe_sort_order" value="<?= $paypalproiframe_sort_order; ?>" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
@@ -165,9 +165,9 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_canceled_reversal_status; ?></label>
 						<div class="control-field col-sm-4">
-							<select name="paypal_pro_iframe_canceled_reversal_status_id" class="form-control">
+							<select name="paypalproiframe_canceled_reversal_status_id" class="form-control">
 								<?php foreach ($order_statuses as $order_status) { ?>
-									<?php if ($order_status['order_status_id'] == $paypal_pro_iframe_canceled_reversal_status_id) { ?>
+									<?php if ($order_status['order_status_id'] == $paypalproiframe_canceled_reversal_status_id) { ?>
 										<option value="<?= $order_status['order_status_id']; ?>" selected><?= $order_status['name']; ?></option>
 									<?php } else { ?>
 										<option value="<?= $order_status['order_status_id']; ?>"><?= $order_status['name']; ?></option>
@@ -179,9 +179,9 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_completed_status; ?></label>
 						<div class="control-field col-sm-4">
-							<select name="paypal_pro_iframe_completed_status_id" class="form-control">
+							<select name="paypalproiframe_completed_status_id" class="form-control">
 								<?php foreach ($order_statuses as $order_status) { ?>
-									<?php if ($order_status['order_status_id'] == $paypal_pro_iframe_completed_status_id) { ?>
+									<?php if ($order_status['order_status_id'] == $paypalproiframe_completed_status_id) { ?>
 										<option value="<?= $order_status['order_status_id']; ?>" selected><?= $order_status['name']; ?></option>
 									<?php } else { ?>
 										<option value="<?= $order_status['order_status_id']; ?>"><?= $order_status['name']; ?></option>
@@ -193,9 +193,9 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_denied_status; ?></label>
 						<div class="control-field col-sm-4">
-							<select name="paypal_pro_iframe_denied_status_id" class="form-control">
+							<select name="paypalproiframe_denied_status_id" class="form-control">
 								<?php foreach ($order_statuses as $order_status) { ?>
-									<?php if ($order_status['order_status_id'] == $paypal_pro_iframe_denied_status_id) { ?>
+									<?php if ($order_status['order_status_id'] == $paypalproiframe_denied_status_id) { ?>
 										<option value="<?= $order_status['order_status_id']; ?>" selected><?= $order_status['name']; ?></option>
 									<?php } else { ?>
 										<option value="<?= $order_status['order_status_id']; ?>"><?= $order_status['name']; ?></option>
@@ -207,9 +207,9 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_expired_status; ?></label>
 						<div class="control-field col-sm-4">
-							<select name="paypal_pro_iframe_expired_status_id" class="form-control">
+							<select name="paypalproiframe_expired_status_id" class="form-control">
 								<?php foreach ($order_statuses as $order_status) { ?>
-									<?php if ($order_status['order_status_id'] == $paypal_pro_iframe_expired_status_id) { ?>
+									<?php if ($order_status['order_status_id'] == $paypalproiframe_expired_status_id) { ?>
 										<option value="<?= $order_status['order_status_id']; ?>" selected><?= $order_status['name']; ?></option>
 									<?php } else { ?>
 										<option value="<?= $order_status['order_status_id']; ?>"><?= $order_status['name']; ?></option>
@@ -221,9 +221,9 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_failed_status; ?></label>
 						<div class="control-field col-sm-4">
-							<select name="paypal_pro_iframe_failed_status_id" class="form-control">
+							<select name="paypalproiframe_failed_status_id" class="form-control">
 								<?php foreach ($order_statuses as $order_status) { ?>
-									<?php if ($order_status['order_status_id'] == $paypal_pro_iframe_failed_status_id) { ?>
+									<?php if ($order_status['order_status_id'] == $paypalproiframe_failed_status_id) { ?>
 										<option value="<?= $order_status['order_status_id']; ?>" selected><?= $order_status['name']; ?></option>
 									<?php } else { ?>
 										<option value="<?= $order_status['order_status_id']; ?>"><?= $order_status['name']; ?></option>
@@ -235,9 +235,9 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_pending_status; ?></label>
 						<div class="control-field col-sm-4">
-							<select name="paypal_pro_iframe_pending_status_id" class="form-control">
+							<select name="paypalproiframe_pending_status_id" class="form-control">
 								<?php foreach ($order_statuses as $order_status) { ?>
-									<?php if ($order_status['order_status_id'] == $paypal_pro_iframe_pending_status_id) { ?>
+									<?php if ($order_status['order_status_id'] == $paypalproiframe_pending_status_id) { ?>
 										<option value="<?= $order_status['order_status_id']; ?>" selected><?= $order_status['name']; ?></option>
 									<?php } else { ?>
 										<option value="<?= $order_status['order_status_id']; ?>"><?= $order_status['name']; ?></option>
@@ -249,9 +249,9 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_processed_status; ?></label>
 						<div class="control-field col-sm-4">
-							<select name="paypal_pro_iframe_processed_status_id" class="form-control">
+							<select name="paypalproiframe_processed_status_id" class="form-control">
 								<?php foreach ($order_statuses as $order_status) { ?>
-									<?php if ($order_status['order_status_id'] == $paypal_pro_iframe_processed_status_id) { ?>
+									<?php if ($order_status['order_status_id'] == $paypalproiframe_processed_status_id) { ?>
 										<option value="<?= $order_status['order_status_id']; ?>" selected><?= $order_status['name']; ?></option>
 									<?php } else { ?>
 										<option value="<?= $order_status['order_status_id']; ?>"><?= $order_status['name']; ?></option>
@@ -263,9 +263,9 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_refunded_status; ?></label>
 						<div class="control-field col-sm-4">
-							<select name="paypal_pro_iframe_refunded_status_id" class="form-control">
+							<select name="paypalproiframe_refunded_status_id" class="form-control">
 								<?php foreach ($order_statuses as $order_status) { ?>
-									<?php if ($order_status['order_status_id'] == $paypal_pro_iframe_refunded_status_id) { ?>
+									<?php if ($order_status['order_status_id'] == $paypalproiframe_refunded_status_id) { ?>
 										<option value="<?= $order_status['order_status_id']; ?>" selected><?= $order_status['name']; ?></option>
 									<?php } else { ?>
 										<option value="<?= $order_status['order_status_id']; ?>"><?= $order_status['name']; ?></option>
@@ -277,9 +277,9 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_reversed_status; ?></label>
 						<div class="control-field col-sm-4">
-							<select name="paypal_pro_iframe_reversed_status_id" class="form-control">
+							<select name="paypalproiframe_reversed_status_id" class="form-control">
 								<?php foreach ($order_statuses as $order_status) { ?>
-									<?php if ($order_status['order_status_id'] == $paypal_pro_iframe_reversed_status_id) { ?>
+									<?php if ($order_status['order_status_id'] == $paypalproiframe_reversed_status_id) { ?>
 										<option value="<?= $order_status['order_status_id']; ?>" selected><?= $order_status['name']; ?></option>
 									<?php } else { ?>
 										<option value="<?= $order_status['order_status_id']; ?>"><?= $order_status['name']; ?></option>
@@ -291,9 +291,9 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_voided_status; ?></label>
 						<div class="control-field col-sm-4">
-							<select name="paypal_pro_iframe_voided_status_id" class="form-control">
+							<select name="paypalproiframe_voided_status_id" class="form-control">
 								<?php foreach ($order_statuses as $order_status) { ?>
-									<?php if ($order_status['order_status_id'] == $paypal_pro_iframe_voided_status_id) { ?>
+									<?php if ($order_status['order_status_id'] == $paypalproiframe_voided_status_id) { ?>
 										<option value="<?= $order_status['order_status_id']; ?>" selected><?= $order_status['name']; ?></option>
 									<?php } else { ?>
 										<option value="<?= $order_status['order_status_id']; ?>"><?= $order_status['name']; ?></option>

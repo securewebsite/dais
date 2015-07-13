@@ -76,27 +76,12 @@ class Naming {
 		$segments = explode(SEP, $route);
 
 		foreach($segments as $key => $segment):
-			$pieces = explode('_', $segment);
-			
-			if (count($pieces) > 1):
-				
-				unset($segments[$key]);
-				
-				foreach($pieces as $key => $piece):
-					$pieces[$key] = ucfirst($piece);
-				endforeach;
-
-				$pieces = implode($pieces);
-				
-				$segment = $pieces;
-			endif;
-
-			$segments[$key] = ucfirst($segment);
+			$segments[$key] = self::snake($segment);
 		endforeach;
 
 		if ($segments[0] === Config::get('prefix.plugin')):
 			$plugin = $segments[1];
-			$plugin_path .= $plugin . SEP . Config::get('prefix.facade') . 'controller' . SEP;
+			$plugin_path .= $plugin . SEP . Config::get('prefix.facade') . 'Controller' . SEP;
 
 			if (is_readable($file = $plugin_theme . $plugin . '.php')):
 				return $file;
@@ -121,12 +106,12 @@ class Naming {
 
 	public static function method_from_route($route) {
 		$segments = explode(SEP, $route);
-
+		
 		if (count($segments) > 2):
 			return $segments[2];
-		else:
-			return 'index';
 		endif;
+
+		return 'index';
 	}
 
 	public static function class_for_model($model) {
@@ -134,6 +119,17 @@ class Naming {
 		$theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'Models' . SEP;
 
         if (is_readable($file = $theme_path . $model . '.php')):
+            return self::class_from_filename($file);
+        else:
+            return self::class_from_filename($base_path . $model . '.php');
+        endif;
+	}
+
+	public static function class_for_plugin_model($plugin, $model) {
+		$base_path   = Config::get('path.app') . 'Models' . SEP . Config::get('prefix.facade');
+		$plugin_path = Config::get('path.app') . Config::get('prefix.plugin') . SEP . $plugin . SEP . Config::get('prefix.facade') . 'Model' . SEP;
+
+		if (is_readable($file = $plugin_path . $model . '.php')):
             return self::class_from_filename($file);
         else:
             return self::class_from_filename($base_path . $model . '.php');
@@ -149,5 +145,15 @@ class Naming {
         else:
             return self::class_from_filename($base_path . $route . '.php');
         endif;
+	}
+
+	public static function snake($segment) {
+		$pieces = preg_split('/[_]/', $segment);
+		
+		foreach($pieces as $k => $piece):
+			$pieces[$k] = ucfirst($piece);
+		endforeach;
+		
+		return implode('', $pieces);
 	}
 }

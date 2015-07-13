@@ -38,7 +38,7 @@
 				<?php $widget_row = 0; ?>
 				<?php foreach ($widgets as $widget) { ?>
 					<tr id="widget-row<?= $widget_row; ?>">
-						<td><select name="header_menu_widget[<?= $widget_row; ?>][menu_id]" class="form-control">
+						<td><select name="headermenu_widget[<?= $widget_row; ?>][menu_id]" class="form-control">
 							<?php foreach ($menus as $menu): ?>
 							<?php if ($menu['menu_id'] == $widget['menu_id']): ?>
 							<option value="<?= $menu['menu_id']; ?>" selected><?= $menu['name']; ?></option>
@@ -47,7 +47,7 @@
 							<?php endif; ?>
 							<?php endforeach; ?>
 						</select></td>
-						<td><select name="header_menu_widget[<?= $widget_row; ?>][layout_id]" class="form-control">
+						<td><select name="headermenu_widget[<?= $widget_row; ?>][layout_id]" class="form-control">
 							<?php foreach ($layouts as $layout) { ?>
 							<?php if ($layout['layout_id'] == $widget['layout_id']) { ?>
 							<option value="<?= $layout['layout_id']; ?>" selected><?= $layout['name']; ?></option>
@@ -56,7 +56,7 @@
 							<?php } ?>
 							<?php } ?>
 						</select></td>
-						<td><select name="header_menu_widget[<?= $widget_row; ?>][position]" class="form-control">
+						<td><select name="headermenu_widget[<?= $widget_row; ?>][position]" class="form-control">
 							<?php if ($widget['position'] == 'shop_header'): ?>
 							<option value="shop_header" selected><?= $lang_text_shop_header; ?></option>
 							<?php else: ?>
@@ -71,22 +71,22 @@
 						<td><div class="btn-group" data-toggle="buttons">
 							<?php if ($widget['status']): ?>
 							<label class="btn btn-default active" title="<?= $lang_text_enabled; ?>">
-								<input type="radio" name="header_menu_widget[<?= $widget_row; ?>][status]" value="1" checked=""><i class="fa fa-play"></i>
+								<input type="radio" name="headermenu_widget[<?= $widget_row; ?>][status]" value="1" checked=""><i class="fa fa-play"></i>
 							</label>
 							<label class="btn btn-default" title="<?= $lang_text_disabled; ?>">
-								<input type="radio" name="header_menu_widget[<?= $widget_row; ?>][status]" value="0"><i class="fa fa-pause"></i>
+								<input type="radio" name="headermenu_widget[<?= $widget_row; ?>][status]" value="0"><i class="fa fa-pause"></i>
 							</label>
 							<?php else: ?>
 							<label class="btn btn-default" title="<?= $lang_text_enabled; ?>">
-								<input type="radio" name="header_menu_widget[<?= $widget_row; ?>][status]" value="1"><i class="fa fa-play"></i>
+								<input type="radio" name="headermenu_widget[<?= $widget_row; ?>][status]" value="1"><i class="fa fa-play"></i>
 							</label>
 							<label class="btn btn-default active" title="<?= $lang_text_disabled; ?>">
-								<input type="radio" name="header_menu_widget[<?= $widget_row; ?>][status]" value="0" checked=""><i class="fa fa-pause"></i>
+								<input type="radio" name="headermenu_widget[<?= $widget_row; ?>][status]" value="0" checked=""><i class="fa fa-pause"></i>
 							</label>
 							<?php endif; ?>
 						</div></td>
 						<td class="text-right">
-							<input type="text" name="header_menu_widget[<?= $widget_row; ?>][sort_order]" value="<?= $widget['sort_order']; ?>" class="form-control">
+							<input type="text" name="headermenu_widget[<?= $widget_row; ?>][sort_order]" value="<?= $widget['sort_order']; ?>" class="form-control">
 						</td>
 						<td>
 							<a onclick="$('#widget-row<?= $widget_row; ?>').remove();" class="btn btn-danger">

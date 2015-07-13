@@ -14,7 +14,7 @@
 <div id="content">
 	<?= $content_top; ?>
 	<h1><?= $heading_title; ?></h1>
-	<?php if ($coupon_status || $gift_card_status || $reward_status) { ?>
+	<?php if ($coupon_status || $giftcard_status || $reward_status) { ?>
 		<h2><?= $lang_text_next; ?></h2>
 		<div class="content">
 			<p><?= $lang_text_next_choice; ?></p>
@@ -33,7 +33,7 @@
 						<td><label for="use_coupon"><?= $lang_text_use_coupon; ?></label></td>
 					</tr>
 				<?php } ?>
-				<?php if ($gift_card_status) { ?>
+				<?php if ($giftcard_status) { ?>
 					<tr class="highlight">
 						<td>
 							<div class="radio radio-inline">

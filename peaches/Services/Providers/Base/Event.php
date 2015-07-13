@@ -57,12 +57,12 @@ class Event {
         foreach ($this->events[$event] as $handler):
             $segments = explode(SEP, $handler);
             $method   = array_pop($segments);
-            $class    = Naming::class_from_filename(Config::get('prefix.plugin') . SEP . implode(SEP, $segments));
+            $class    = Naming::class_from_filename('app' . SEP . Config::get('prefix.plugin') . SEP . implode(SEP, $segments));
             
             $arguments = !empty($data) ? $data : null;
 
-            $class = new $class(parent::$app);
-            
+            //$class = new $class;
+            //var_dump($method);exit;
             if (is_callable(array($class, $method))):
                 return call_user_func_array(array($class, $method), array($arguments));
             endif;

@@ -34,7 +34,7 @@ class SubTotal extends Model {
             'title'      => Lang::get('lang_text_sub_total'), 
             'text'       => $this->currency->format($sub_total), 
             'value'      => $sub_total, 
-            'sort_order' => Config::get('sub_total_sort_order')
+            'sort_order' => Config::get('subtotal_sort_order')
         );
         
         $total += $sub_total;

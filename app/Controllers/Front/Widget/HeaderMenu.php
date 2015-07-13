@@ -67,7 +67,7 @@ class HeaderMenu extends Controller {
         $widgets = array();
         $all_widgets = array();
         
-        $all_widgets = Config::get('header_menu_widget');
+        $all_widgets = Config::get('headermenu_widget');
         
         if ($all_widgets):
             foreach ($all_widgets as $widget):

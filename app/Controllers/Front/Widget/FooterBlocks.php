@@ -67,7 +67,7 @@ class FooterBlocks extends Controller {
         $widgets             = array();
         $all_widgets         = array();
         
-        $all_widgets = Config::get('footer_blocks_widget');
+        $all_widgets = Config::get('footerblocks_widget');
         
         if ($all_widgets):
             foreach ($all_widgets as $widget):

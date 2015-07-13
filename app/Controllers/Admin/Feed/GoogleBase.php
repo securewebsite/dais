@@ -28,7 +28,7 @@ class GoogleBase extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('google_base', $this->request->post);
+            $this->model_setting_setting->editSetting('googlebase', $this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -48,13 +48,13 @@ class GoogleBase extends Controller {
         
         $data['cancel'] = Url::link('module/feed', 'token=' . $this->session->data['token'], 'SSL');
         
-        if (isset($this->request->post['google_base_status'])) {
-            $data['google_base_status'] = $this->request->post['google_base_status'];
+        if (isset($this->request->post['googlebase_status'])) {
+            $data['googlebase_status'] = $this->request->post['googlebase_status'];
         } else {
-            $data['google_base_status'] = Config::get('google_base_status');
+            $data['googlebase_status'] = Config::get('googlebase_status');
         }
         
-        $data['data_feed'] = Config::get('http.public') . 'feed/google_base';
+        $data['data_feed'] = Config::get('http.public') . 'feed/googlebase';
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
@@ -64,7 +64,7 @@ class GoogleBase extends Controller {
     }
     
     protected function validate() {
-        if (!User::hasPermission('modify', 'feed/google_base')) {
+        if (!User::hasPermission('modify', 'feed/googlebase')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

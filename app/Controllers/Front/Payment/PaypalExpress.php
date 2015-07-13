@@ -94,16 +94,16 @@ class PaypalExpress extends Controller {
             'CANCELURL'          => Url::link('checkout/cart', '', 'SSL'), 
             'REQCONFIRMSHIPPING' => 0, 
             'NOSHIPPING'         => $shipping, 
-            'ALLOWNOTE'          => Config::get('paypal_express_allow_note'), 
+            'ALLOWNOTE'          => Config::get('paypalexpress_allow_note'), 
             'LOCALECODE'         => 'EN', 
             'LANDINGPAGE'        => 'Login', 
-            'HDRIMG'             => $this->model_tool_image->resize(Config::get('paypal_express_logo'), 790, 90), 
-            'PAYFLOWCOLOR'       => Config::get('paypal_express_page_colour'), 
+            'HDRIMG'             => $this->model_tool_image->resize(Config::get('paypalexpress_logo'), 790, 90), 
+            'PAYFLOWCOLOR'       => Config::get('paypalexpress_page_colour'), 
             'CHANNELTYPE'        => 'Merchant'
         );
         
-        if (isset($this->session->data['paypal_express_login']['seamless']['access_token']) && (isset($this->session->data['paypal_express_login']['seamless']['customer_id']) && $this->session->data['paypal_express_login']['seamless']['customer_id'] == $this->customer->getId()) && Config::get('paypal_express_login_seamless')) {
-            $data['IDENTITYACCESSTOKEN'] = $this->session->data['paypal_express_login']['seamless']['access_token'];
+        if (isset($this->session->data['paypalexpress_login']['seamless']['access_token']) && (isset($this->session->data['paypalexpress_login']['seamless']['customer_id']) && $this->session->data['paypalexpress_login']['seamless']['customer_id'] == $this->customer->getId()) && Config::get('paypalexpress_login_seamless')) {
+            $data['IDENTITYACCESSTOKEN'] = $this->session->data['paypalexpress_login']['seamless']['access_token'];
         }
         
         $data = array_merge($data, $this->model_payment_paypal_express->paymentRequestInfo());
@@ -121,7 +121,7 @@ class PaypalExpress extends Controller {
              * used on the cart or checkout pages - need to be added?
              * If PayPal debug log is off then still log error to normal error log.
              */
-            if (Config::get('paypal_express_debug') == 1) {
+            if (Config::get('paypalexpress_debug') == 1) {
                 $this->log->write(serialize($result));
             }
             
@@ -130,7 +130,7 @@ class PaypalExpress extends Controller {
         
         $this->session->data['paypal']['token'] = $result['TOKEN'];
         
-        if (Config::get('paypal_express_test') == 1) {
+        if (Config::get('paypalexpress_test') == 1) {
             header('Location: https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $result['TOKEN']);
         } else {
             header('Location: https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $result['TOKEN']);
@@ -733,7 +733,7 @@ class PaypalExpress extends Controller {
             $data['attention'] = '';
         }
         
-        Theme::loadjs('javascript/payment/paypal_express_confirm', $data);
+        Theme::loadjs('javascript/payment/paypalexpress_confirm', $data);
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
@@ -742,7 +742,7 @@ class PaypalExpress extends Controller {
         
         $data = Theme::render_controllers($data);
         
-        $this->response->setOutput(Theme::view('payment/paypal_express_confirm', $data));
+        $this->response->setOutput(Theme::view('payment/paypalexpress_confirm', $data));
     }
     
     public function expressComplete() {
@@ -1106,43 +1106,43 @@ class PaypalExpress extends Controller {
                 //handle order status
                 switch ($result['PAYMENTINFO_0_PAYMENTSTATUS']) {
                     case 'Canceled_Reversal':
-                        $order_status_id = Config::get('paypal_express_canceled_reversal_status_id');
+                        $order_status_id = Config::get('paypalexpress_canceled_reversal_status_id');
                         break;
 
                     case 'Completed':
-                        $order_status_id = Config::get('paypal_express_completed_status_id');
+                        $order_status_id = Config::get('paypalexpress_completed_status_id');
                         break;
 
                     case 'Denied':
-                        $order_status_id = Config::get('paypal_express_denied_status_id');
+                        $order_status_id = Config::get('paypalexpress_denied_status_id');
                         break;
 
                     case 'Expired':
-                        $order_status_id = Config::get('paypal_express_expired_status_id');
+                        $order_status_id = Config::get('paypalexpress_expired_status_id');
                         break;
 
                     case 'Failed':
-                        $order_status_id = Config::get('paypal_express_failed_status_id');
+                        $order_status_id = Config::get('paypalexpress_failed_status_id');
                         break;
 
                     case 'Pending':
-                        $order_status_id = Config::get('paypal_express_pending_status_id');
+                        $order_status_id = Config::get('paypalexpress_pending_status_id');
                         break;
 
                     case 'Processed':
-                        $order_status_id = Config::get('paypal_express_processed_status_id');
+                        $order_status_id = Config::get('paypalexpress_processed_status_id');
                         break;
 
                     case 'Refunded':
-                        $order_status_id = Config::get('paypal_express_refunded_status_id');
+                        $order_status_id = Config::get('paypalexpress_refunded_status_id');
                         break;
 
                     case 'Reversed':
-                        $order_status_id = Config::get('paypal_express_reversed_status_id');
+                        $order_status_id = Config::get('paypalexpress_reversed_status_id');
                         break;
 
                     case 'Voided':
-                        $order_status_id = Config::get('paypal_express_voided_status_id');
+                        $order_status_id = Config::get('paypalexpress_voided_status_id');
                         break;
                 }
                 
@@ -1151,7 +1151,7 @@ class PaypalExpress extends Controller {
                 //add order to paypal table
                 $paypal_order_data = array(
                     'order_id'         => $order_id, 
-                    'capture_status'   => (Config::get('paypal_express_method') == 'Sale' ? 'Complete' : 'NotComplete'), 
+                    'capture_status'   => (Config::get('paypalexpress_method') == 'Sale' ? 'Complete' : 'NotComplete'), 
                     'currency_code'    => $result['PAYMENTINFO_0_CURRENCYCODE'], 
                     'authorization_id' => $result['PAYMENTINFO_0_TRANSACTIONID'], 
                     'total'            => $result['PAYMENTINFO_0_AMT']
@@ -1170,7 +1170,7 @@ class PaypalExpress extends Controller {
                     'payment_type'          => $result['PAYMENTINFO_0_PAYMENTTYPE'], 
                     'payment_status'        => $result['PAYMENTINFO_0_PAYMENTSTATUS'], 
                     'pending_reason'        => $result['PAYMENTINFO_0_PENDINGREASON'], 
-                    'transaction_entity'    => (Config::get('paypal_express_method') == 'Sale' ? 'payment' : 'auth'), 
+                    'transaction_entity'    => (Config::get('paypalexpress_method') == 'Sale' ? 'payment' : 'auth'), 
                     'amount'                => $result['PAYMENTINFO_0_AMT'], 
                     'debug_data'            => json_encode($result)
                 );
@@ -1270,7 +1270,7 @@ class PaypalExpress extends Controller {
                         $this->session->data['paypal_redirect_count'] = 1;
                     }
                     
-                    if (Config::get('paypal_express_test') == 1) {
+                    if (Config::get('paypalexpress_test') == 1) {
                         $this->response->redirect('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $this->session->data['paypal']['token']);
                     } else {
                         $this->response->redirect('https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $this->session->data['paypal']['token']);
@@ -1309,14 +1309,14 @@ class PaypalExpress extends Controller {
             'NOSHIPPING'         => 1, 
             'LOCALECODE'         => 'EN', 
             'LANDINGPAGE'        => 'Login', 
-            'HDRIMG'             => $this->model_tool_image->resize(Config::get('paypal_express_logo'), 790, 90), 
-            'PAYFLOWCOLOR'       => Config::get('paypal_express_page_colour'), 
+            'HDRIMG'             => $this->model_tool_image->resize(Config::get('paypalexpress_logo'), 790, 90), 
+            'PAYFLOWCOLOR'       => Config::get('paypalexpress_page_colour'), 
             'CHANNELTYPE'        => 'Merchant', 
-            'ALLOWNOTE'          => Config::get('paypal_express_allow_note')
+            'ALLOWNOTE'          => Config::get('paypalexpress_allow_note')
         );
         
-        if (isset($this->session->data['paypal_express_login']['seamless']['access_token']) && (isset($this->session->data['paypal_express_login']['seamless']['customer_id']) && $this->session->data['paypal_express_login']['seamless']['customer_id'] == $this->customer->getId()) && Config::get('paypal_express_login_seamless')) {
-            $data['IDENTITYACCESSTOKEN'] = $this->session->data['paypal_express_login']['seamless']['access_token'];
+        if (isset($this->session->data['paypalexpress_login']['seamless']['access_token']) && (isset($this->session->data['paypalexpress_login']['seamless']['customer_id']) && $this->session->data['paypalexpress_login']['seamless']['customer_id'] == $this->customer->getId()) && Config::get('paypalexpress_login_seamless')) {
+            $data['IDENTITYACCESSTOKEN'] = $this->session->data['paypalexpress_login']['seamless']['access_token'];
         }
         
         $data = array_merge($data, $this->model_payment_paypal_express->paymentRequestInfo());
@@ -1334,7 +1334,7 @@ class PaypalExpress extends Controller {
              * used on the cart or checkout pages - need to be added?
              * If PayPal debug log is off then still log error to normal error log.
              */
-            if (Config::get('paypal_express_debug') == 1) {
+            if (Config::get('paypalexpress_debug') == 1) {
                 $this->log->write(serialize($result));
             }
             
@@ -1343,7 +1343,7 @@ class PaypalExpress extends Controller {
         
         $this->session->data['paypal']['token'] = $result['TOKEN'];
         
-        if (Config::get('paypal_express_test') == 1) {
+        if (Config::get('paypalexpress_test') == 1) {
             header('Location: https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $result['TOKEN'] . '&useraction=commit');
         } else {
             header('Location: https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $result['TOKEN'] . '&useraction=commit');
@@ -1385,43 +1385,43 @@ class PaypalExpress extends Controller {
             //handle order status
             switch ($result['PAYMENTINFO_0_PAYMENTSTATUS']) {
                 case 'Canceled_Reversal':
-                    $order_status_id = Config::get('paypal_express_canceled_reversal_status_id');
+                    $order_status_id = Config::get('paypalexpress_canceled_reversal_status_id');
                     break;
 
                 case 'Completed':
-                    $order_status_id = Config::get('paypal_express_completed_status_id');
+                    $order_status_id = Config::get('paypalexpress_completed_status_id');
                     break;
 
                 case 'Denied':
-                    $order_status_id = Config::get('paypal_express_denied_status_id');
+                    $order_status_id = Config::get('paypalexpress_denied_status_id');
                     break;
 
                 case 'Expired':
-                    $order_status_id = Config::get('paypal_express_expired_status_id');
+                    $order_status_id = Config::get('paypalexpress_expired_status_id');
                     break;
 
                 case 'Failed':
-                    $order_status_id = Config::get('paypal_express_failed_status_id');
+                    $order_status_id = Config::get('paypalexpress_failed_status_id');
                     break;
 
                 case 'Pending':
-                    $order_status_id = Config::get('paypal_express_pending_status_id');
+                    $order_status_id = Config::get('paypalexpress_pending_status_id');
                     break;
 
                 case 'Processed':
-                    $order_status_id = Config::get('paypal_express_processed_status_id');
+                    $order_status_id = Config::get('paypalexpress_processed_status_id');
                     break;
 
                 case 'Refunded':
-                    $order_status_id = Config::get('paypal_express_refunded_status_id');
+                    $order_status_id = Config::get('paypalexpress_refunded_status_id');
                     break;
 
                 case 'Reversed':
-                    $order_status_id = Config::get('paypal_express_reversed_status_id');
+                    $order_status_id = Config::get('paypalexpress_reversed_status_id');
                     break;
 
                 case 'Voided':
-                    $order_status_id = Config::get('paypal_express_voided_status_id');
+                    $order_status_id = Config::get('paypalexpress_voided_status_id');
                     break;
             }
             
@@ -1430,7 +1430,7 @@ class PaypalExpress extends Controller {
             //add order to paypal table
             $paypal_order_data = array(
                 'order_id'         => $order_id, 
-                'capture_status'   => (Config::get('paypal_express_method') == 'Sale' ? 'Complete' : 'NotComplete'), 
+                'capture_status'   => (Config::get('paypalexpress_method') == 'Sale' ? 'Complete' : 'NotComplete'), 
                 'currency_code'    => $result['PAYMENTINFO_0_CURRENCYCODE'], 
                 'authorization_id' => $result['PAYMENTINFO_0_TRANSACTIONID'], 
                 'total'            => $result['PAYMENTINFO_0_AMT']
@@ -1449,7 +1449,7 @@ class PaypalExpress extends Controller {
                 'payment_type'          => $result['PAYMENTINFO_0_PAYMENTTYPE'], 
                 'payment_status'        => $result['PAYMENTINFO_0_PAYMENTSTATUS'], 
                 'pending_reason'        => $result['PAYMENTINFO_0_PENDINGREASON'], 
-                'transaction_entity'    => (Config::get('paypal_express_method') == 'Sale' ? 'payment' : 'auth'), 
+                'transaction_entity'    => (Config::get('paypalexpress_method') == 'Sale' ? 'payment' : 'auth'), 
                 'amount'                => $result['PAYMENTINFO_0_AMT'], 
                 'debug_data'            => json_encode($result)
             );
@@ -1549,7 +1549,7 @@ class PaypalExpress extends Controller {
                     $this->session->data['paypal_redirect_count'] = 1;
                 }
                 
-                if (Config::get('paypal_express_test') == 1) {
+                if (Config::get('paypalexpress_test') == 1) {
                     $this->response->redirect('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $this->session->data['paypal']['token']);
                 } else {
                     $this->response->redirect('https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $this->session->data['paypal']['token']);
@@ -1586,7 +1586,7 @@ class PaypalExpress extends Controller {
         
         $request = 'cmd=_notify-validate';
         
-        if (Config::get('paypal_express_test') == 1) {
+        if (Config::get('paypalexpress_test') == 1) {
             $curl = curl_init('https://www.sandbox.paypal.com/cgi-bin/webscr');
         } else {
             $curl = curl_init('https://www.paypal.com/cgi-bin/webscr');
@@ -1617,7 +1617,7 @@ class PaypalExpress extends Controller {
         
         if ((string)$response == "VERIFIED") {
             
-            if (Config::get('paypal_express_debug') == 1) {
+            if (Config::get('paypalexpress_debug') == 1) {
                 if (isset($this->request->post['transaction_entity'])) $this->log->write($this->request->post['transaction_entity']);
             }
             
@@ -1630,7 +1630,7 @@ class PaypalExpress extends Controller {
             if ($transaction) {
                 
                 //transaction exists, check for cleared payment or updates etc
-                if (Config::get('paypal_express_debug') == 1) $this->log->write('Transaction exists');
+                if (Config::get('paypalexpress_debug') == 1) $this->log->write('Transaction exists');
                 
                 //if the transaction is pending but the new status is completed
                 if ($transaction['payment_status'] != $this->request->post['payment_status']) {
@@ -1639,7 +1639,7 @@ class PaypalExpress extends Controller {
                     $this->model_payment_express_ipn->updatePending($this->request->post['pending_reason'], $transaction['transaction_id']);
                 }
             } else {
-                if (Config::get('paypal_express_debug') == 1) $this->log->write('Transaction does not exist');
+                if (Config::get('paypalexpress_debug') == 1) $this->log->write('Transaction does not exist');
                 
                 $parent_transaction = false;
                 
@@ -1650,7 +1650,7 @@ class PaypalExpress extends Controller {
                 }
                 
                 if ($parent_transaction) {
-                    if (Config::get('paypal_express_debug') == 1) $this->log->write('Parent transaction exists');
+                    if (Config::get('paypalexpress_debug') == 1) $this->log->write('Parent transaction exists');
                     
                     //parent transaction exists
                     //add new related transaction
@@ -1686,7 +1686,7 @@ class PaypalExpress extends Controller {
                         $refunded  = $this->currency->format($this->model_payment_paypal_express->totalRefundedOrder($parent_transaction['paypal_order_id']), false, false, false);
                         $remaining = $this->currency->format($parent_transaction['amount'] - $captured + $refunded, false, false, false);
                         
-                        if (Config::get('paypal_express_debug') == 1) {
+                        if (Config::get('paypalexpress_debug') == 1) {
                             $this->log->write('Captured: ' . $captured);
                             $this->log->write('Refunded: ' . $refunded);
                             $this->log->write('Remaining: ' . $remaining);
@@ -1716,7 +1716,7 @@ class PaypalExpress extends Controller {
                 } else {
                     
                     //parent transaction doesn't exists, need to investigate?
-                    if (Config::get('paypal_express_debug') == 1) $this->log->write('Parent transaction not found');
+                    if (Config::get('paypalexpress_debug') == 1) $this->log->write('Parent transaction not found');
                 }
             }
             
@@ -1823,7 +1823,7 @@ class PaypalExpress extends Controller {
         } elseif ((string)$response == "INVALID") {
             $this->model_payment_paypal_express->log(array('IPN was invalid'), 'IPN fail');
         } else {
-            if (Config::get('paypal_express_debug') == 1) {
+            if (Config::get('paypalexpress_debug') == 1) {
                 $this->log->write('string unknown ');
             }
         }

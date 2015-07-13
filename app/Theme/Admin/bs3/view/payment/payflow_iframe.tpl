@@ -26,36 +26,36 @@
 			<table class="form">
 				<tr>
 					<td><b class="required">*</b> <?= $lang_entry_vendor; ?><br><span class="help-block muted"><?= $help_vendor ?></span></td>
-					<td><input type="text" name="payflow_iframe_vendor" value="<?= $payflow_iframe_vendor; ?>" class="form-control" autofocus>
+					<td><input type="text" name="payflowiframe_vendor" value="<?= $payflowiframe_vendor; ?>" class="form-control" autofocus>
 						<?php if ($error_vendor) { ?>
 							<span class="help-block error"><?= $error_vendor; ?></span>
 						<?php } ?></td>
 				</tr>
 				<tr>
 					<td><b class="required">*</b> <?= $lang_entry_user; ?><br><span class="help-block muted"><?= $help_user ?></span></td>
-					<td><input type="text" name="payflow_iframe_user" value="<?= $payflow_iframe_user; ?>" class="form-control">
+					<td><input type="text" name="payflowiframe_user" value="<?= $payflowiframe_user; ?>" class="form-control">
 						<?php if ($error_user) { ?>
 							<span class="help-block error"><?= $error_user; ?></span>
 						<?php } ?></td>
 				</tr>
 				<tr>
 					<td><b class="required">*</b> <?= $lang_entry_password; ?><br><span class="help-block muted"><?= $help_password ?></span></td>
-					<td><input type="text" name="payflow_iframe_password" value="<?= $payflow_iframe_password; ?>" class="form-control">
+					<td><input type="text" name="payflowiframe_password" value="<?= $payflowiframe_password; ?>" class="form-control">
 						<?php if ($error_password) { ?>
 							<span class="help-block error"><?= $error_password; ?></span>
 						<?php } ?></td>
 				</tr>
 				<tr>
 					<td><b class="required">*</b> <?= $lang_entry_partner; ?><br><span class="help-block muted"><?= $help_partner ?></span></td>
-					<td><input type="text" name="payflow_iframe_partner" value="<?= $payflow_iframe_partner; ?>" class="form-control">
+					<td><input type="text" name="payflowiframe_partner" value="<?= $payflowiframe_partner; ?>" class="form-control">
 						<?php if ($error_partner) { ?>
 							<span class="help-block error"><?= $error_partner; ?></span>
 						<?php } ?></td>
 				</tr>
 				<tr>
 					<td><?= $lang_entry_transaction_method; ?></td>
-					<td><select name="payflow_iframe_transaction_method" class="form-control">
-							<?php if ($payflow_iframe_transaction_method == 'authorization') { ?>
+					<td><select name="payflowiframe_transaction_method" class="form-control">
+							<?php if ($payflowiframe_transaction_method == 'authorization') { ?>
 								<option value="sale"><?= $lang_text_sale; ?></option>
 								<option value="authorization" selected><?= $lang_text_authorization; ?></option>
 							<?php } else { ?>
@@ -66,22 +66,22 @@
 				</tr>
 				<tr>
 					<td><?= $lang_entry_test; ?></td>
-					<td><?php if ($payflow_iframe_test) { ?>
-							<input type="radio" name="payflow_iframe_test" value="1" checked="">
+					<td><?php if ($payflowiframe_test) { ?>
+							<input type="radio" name="payflowiframe_test" value="1" checked="">
 							<?= $lang_text_yes; ?>
-							<input type="radio" name="payflow_iframe_test" value="0">
+							<input type="radio" name="payflowiframe_test" value="0">
 							<?= $lang_text_no; ?>
 						<?php } else { ?>
-							<input type="radio" name="payflow_iframe_test" value="1">
+							<input type="radio" name="payflowiframe_test" value="1">
 							<?= $lang_text_yes; ?>
-							<input type="radio" name="payflow_iframe_test" value="0" checked="">
+							<input type="radio" name="payflowiframe_test" value="0" checked="">
 							<?= $lang_text_no; ?>
 						<?php } ?></td>
 				</tr>
 				<tr>
 					<td><?= $lang_entry_debug; ?><br><span class="help-block muted"><?= $lang_help_debug ?></span></td>
-					<td><select name="payflow_iframe_debug" class="form-control">
-							<?php if ($payflow_iframe_debug) { ?>
+					<td><select name="payflowiframe_debug" class="form-control">
+							<?php if ($payflowiframe_debug) { ?>
 								<option value="1" selected><?= $lang_text_yes ?></option>
 								<option value="0"><?= $lang_text_no ?></option>
 							<?php } else { ?>
@@ -92,8 +92,8 @@
 				</tr>
 				<tr>
 					<td><?= $lang_entry_checkout_method ?><br><span class="help-block muted"><?= $lang_help_checkout_method ?></span></td>
-					<td><select name="payflow_iframe_checkout_method" class="form-control">
-							<?php if ($payflow_iframe_checkout_method == 'iframe'): ?>
+					<td><select name="payflowiframe_checkout_method" class="form-control">
+							<?php if ($payflowiframe_checkout_method == 'iframe'): ?>
 								<option value="iframe" selected><?= $lang_text_iframe ?></option>
 								<option value="redirect"><?= $lang_text_redirect ?></option>
 							<?php else: ?>
@@ -104,9 +104,9 @@
 				</tr>
 				<tr>
 					<td><?= $lang_entry_order_status; ?></td>
-					<td><select name="payflow_iframe_order_status_id" class="form-control">
+					<td><select name="payflowiframe_order_status_id" class="form-control">
 							<?php foreach ($order_statuses as $order_status) { ?>
-								<?php if ($order_status['order_status_id'] == $payflow_iframe_order_status_id) { ?>
+								<?php if ($order_status['order_status_id'] == $payflowiframe_order_status_id) { ?>
 									<option value="<?= $order_status['order_status_id']; ?>" selected><?= $order_status['name']; ?></option>
 								<?php } else { ?>
 									<option value="<?= $order_status['order_status_id']; ?>"><?= $order_status['name']; ?></option>
@@ -116,14 +116,14 @@
 				</tr>
 				<tr>
 					<td><?= $lang_entry_total; ?></td>
-					<td><input type="text" name="payflow_iframe_total" value="<?= $payflow_iframe_total; ?>" class="form-control"></td>
+					<td><input type="text" name="payflowiframe_total" value="<?= $payflowiframe_total; ?>" class="form-control"></td>
 				</tr>
 				<tr>
 					<td><?= $lang_entry_geo_zone; ?></td>
-					<td><select name="payflow_iframe_geo_zone_id" class="form-control">
+					<td><select name="payflowiframe_geo_zone_id" class="form-control">
 							<option value="0"><?= $lang_text_all_zones; ?></option>
 							<?php foreach ($geo_zones as $geo_zone) { ?>
-								<?php if ($geo_zone['geo_zone_id'] == $payflow_iframe_geo_zone_id) { ?>
+								<?php if ($geo_zone['geo_zone_id'] == $payflowiframe_geo_zone_id) { ?>
 									<option value="<?= $geo_zone['geo_zone_id']; ?>" selected><?= $geo_zone['name']; ?></option>
 								<?php } else { ?>
 									<option value="<?= $geo_zone['geo_zone_id']; ?>"><?= $geo_zone['name']; ?></option>
@@ -133,8 +133,8 @@
 				</tr>
 				<tr>
 					<td><?= $lang_entry_status; ?></td>
-					<td><select name="payflow_iframe_status" class="form-control">
-							<?php if ($payflow_iframe_status) { ?>
+					<td><select name="payflowiframe_status" class="form-control">
+							<?php if ($payflowiframe_status) { ?>
 								<option value="1" selected><?= $lang_text_enabled; ?></option>
 								<option value="0"><?= $lang_text_disabled; ?></option>
 							<?php } else { ?>
@@ -145,7 +145,7 @@
 				</tr>
 				<tr>
 					<td><?= $lang_entry_sort_order; ?></td>
-					<td><input type="text" name="payflow_iframe_sort_order" value="<?= $payflow_iframe_sort_order; ?>" class="form-control"></td>
+					<td><input type="text" name="payflowiframe_sort_order" value="<?= $payflowiframe_sort_order; ?>" class="form-control"></td>
 				</tr>
 				<tr>
 					<td><?= $lang_entry_cancel_url; ?></td>

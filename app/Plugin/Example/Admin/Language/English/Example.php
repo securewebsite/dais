@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Plugin\Example\Admin\Language\English;
+namespace App\Plugin\Example\Admin\Language\English;
 
 class Example {
 	public static function lang() {

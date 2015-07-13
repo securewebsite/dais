@@ -26,7 +26,7 @@ class AuthorizeNet extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('authorize_net', $this->request->post);
+            $this->model_setting_setting->editSetting('authorizenet', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
@@ -57,78 +57,78 @@ class AuthorizeNet extends Controller {
         
         $data['cancel'] = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
         
-        if (isset($this->request->post['authorize_net_login'])) {
-            $data['authorize_net_login'] = $this->request->post['authorize_net_login'];
+        if (isset($this->request->post['authorizenet_login'])) {
+            $data['authorizenet_login'] = $this->request->post['authorizenet_login'];
         } else {
-            $data['authorize_net_login'] = Config::get('authorize_net_login');
+            $data['authorizenet_login'] = Config::get('authorizenet_login');
         }
         
-        if (isset($this->request->post['authorize_net_key'])) {
-            $data['authorize_net_key'] = $this->request->post['authorize_net_key'];
+        if (isset($this->request->post['authorizenet_key'])) {
+            $data['authorizenet_key'] = $this->request->post['authorizenet_key'];
         } else {
-            $data['authorize_net_key'] = Config::get('authorize_net_key');
+            $data['authorizenet_key'] = Config::get('authorizenet_key');
         }
         
-        if (isset($this->request->post['authorize_net_hash'])) {
-            $data['authorize_net_hash'] = $this->request->post['authorize_net_hash'];
+        if (isset($this->request->post['authorizenet_hash'])) {
+            $data['authorizenet_hash'] = $this->request->post['authorizenet_hash'];
         } else {
-            $data['authorize_net_hash'] = Config::get('authorize_net_hash');
+            $data['authorizenet_hash'] = Config::get('authorizenet_hash');
         }
         
-        if (isset($this->request->post['authorize_net_server'])) {
-            $data['authorize_net_server'] = $this->request->post['authorize_net_server'];
+        if (isset($this->request->post['authorizenet_server'])) {
+            $data['authorizenet_server'] = $this->request->post['authorizenet_server'];
         } else {
-            $data['authorize_net_server'] = Config::get('authorize_net_server');
+            $data['authorizenet_server'] = Config::get('authorizenet_server');
         }
         
-        if (isset($this->request->post['authorize_net_mode'])) {
-            $data['authorize_net_mode'] = $this->request->post['authorize_net_mode'];
+        if (isset($this->request->post['authorizenet_mode'])) {
+            $data['authorizenet_mode'] = $this->request->post['authorizenet_mode'];
         } else {
-            $data['authorize_net_mode'] = Config::get('authorize_net_mode');
+            $data['authorizenet_mode'] = Config::get('authorizenet_mode');
         }
         
-        if (isset($this->request->post['authorize_net_method'])) {
-            $data['authorize_net_method'] = $this->request->post['authorize_net_method'];
+        if (isset($this->request->post['authorizenet_method'])) {
+            $data['authorizenet_method'] = $this->request->post['authorizenet_method'];
         } else {
-            $data['authorize_net_method'] = Config::get('authorize_net_method');
+            $data['authorizenet_method'] = Config::get('authorizenet_method');
         }
         
-        if (isset($this->request->post['authorize_net_total'])) {
-            $data['authorize_net_total'] = $this->request->post['authorize_net_total'];
+        if (isset($this->request->post['authorizenet_total'])) {
+            $data['authorizenet_total'] = $this->request->post['authorizenet_total'];
         } else {
-            $data['authorize_net_total'] = Config::get('authorize_net_total');
+            $data['authorizenet_total'] = Config::get('authorizenet_total');
         }
         
-        if (isset($this->request->post['authorize_net_order_status_id'])) {
-            $data['authorize_net_order_status_id'] = $this->request->post['authorize_net_order_status_id'];
+        if (isset($this->request->post['authorizenet_order_status_id'])) {
+            $data['authorizenet_order_status_id'] = $this->request->post['authorizenet_order_status_id'];
         } else {
-            $data['authorize_net_order_status_id'] = Config::get('authorize_net_order_status_id');
+            $data['authorizenet_order_status_id'] = Config::get('authorizenet_order_status_id');
         }
         
         Theme::model('locale/order_status');
         
         $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
         
-        if (isset($this->request->post['authorize_net_geo_zone_id'])) {
-            $data['authorize_net_geo_zone_id'] = $this->request->post['authorize_net_geo_zone_id'];
+        if (isset($this->request->post['authorizenet_geo_zone_id'])) {
+            $data['authorizenet_geo_zone_id'] = $this->request->post['authorizenet_geo_zone_id'];
         } else {
-            $data['authorize_net_geo_zone_id'] = Config::get('authorize_net_geo_zone_id');
+            $data['authorizenet_geo_zone_id'] = Config::get('authorizenet_geo_zone_id');
         }
         
         Theme::model('locale/geo_zone');
         
         $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
         
-        if (isset($this->request->post['authorize_net_status'])) {
-            $data['authorize_net_status'] = $this->request->post['authorize_net_status'];
+        if (isset($this->request->post['authorizenet_status'])) {
+            $data['authorizenet_status'] = $this->request->post['authorizenet_status'];
         } else {
-            $data['authorize_net_status'] = Config::get('authorize_net_status');
+            $data['authorizenet_status'] = Config::get('authorizenet_status');
         }
         
-        if (isset($this->request->post['authorize_net_sort_order'])) {
-            $data['authorize_net_sort_order'] = $this->request->post['authorize_net_sort_order'];
+        if (isset($this->request->post['authorizenet_sort_order'])) {
+            $data['authorizenet_sort_order'] = $this->request->post['authorizenet_sort_order'];
         } else {
-            $data['authorize_net_sort_order'] = Config::get('authorize_net_sort_order');
+            $data['authorizenet_sort_order'] = Config::get('authorizenet_sort_order');
         }
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
@@ -139,15 +139,15 @@ class AuthorizeNet extends Controller {
     }
     
     protected function validate() {
-        if (!User::hasPermission('modify', 'payment/authorize_netaim')) {
+        if (!User::hasPermission('modify', 'payment/authorizenetaim')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (!$this->request->post['authorize_net_login']) {
+        if (!$this->request->post['authorizenet_login']) {
             $this->error['login'] = Lang::get('lang_error_login');
         }
         
-        if (!$this->request->post['authorize_net_key']) {
+        if (!$this->request->post['authorizenet_key']) {
             $this->error['key'] = Lang::get('lang_error_key');
         }
         

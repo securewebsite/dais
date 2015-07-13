@@ -26,7 +26,7 @@ class PayflowIframe extends Controller {
         
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         
-        if (Config::get('payflow_iframe_test')) {
+        if (Config::get('payflowiframe_test')) {
             $mode = 'TEST';
         } else {
             $mode = 'LIVE';
@@ -34,7 +34,7 @@ class PayflowIframe extends Controller {
         
         $payflow_url = 'https://payflowlink.paypal.com';
         
-        if (Config::get('payflow_iframe_transaction_method') == 'sale') {
+        if (Config::get('payflowiframe_transaction_method') == 'sale') {
             $transaction_type = 'S';
         } else {
             $transaction_type = 'A';
@@ -75,7 +75,7 @@ class PayflowIframe extends Controller {
         $iframe_params = array('MODE' => $mode, 'SECURETOKENID' => $secure_token_id, 'SECURETOKEN' => $secure_token,);
         
         $data['iframe_url'] = $payflow_url . '?' . http_build_query($iframe_params, '', "&");
-        $data['checkout_method'] = Config::get('payflow_iframe_checkout_method');
+        $data['checkout_method'] = Config::get('payflowiframe_checkout_method');
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
@@ -87,7 +87,7 @@ class PayflowIframe extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->response->setOutput(Theme::view('payment/payflow_iframe_return', $data));
+        $this->response->setOutput(Theme::view('payment/payflowiframe_return', $data));
     }
     
     public function pp_cancel() {
@@ -95,7 +95,7 @@ class PayflowIframe extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->response->setOutput(Theme::view('payment/payflow_iframe_cancel', $data));
+        $this->response->setOutput(Theme::view('payment/payflowiframe_cancel', $data));
     }
     
     public function pp_error() {
@@ -103,7 +103,7 @@ class PayflowIframe extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->response->setOutput(Theme::view('payment/payflow_iframe_error', $data));
+        $this->response->setOutput(Theme::view('payment/payflowiframe_error', $data));
     }
     
     public function pp_post() {
@@ -122,7 +122,7 @@ class PayflowIframe extends Controller {
             $response_params = $this->model_payment_payflow_iframe->call($urlParams);
             
             if ($order_info['order_status_id'] == 0 && $response_params['RESULT'] == '0' && $this->request->post['RESULT'] == 0) {
-                $this->model_checkout_order->confirm($order_id, Config::get('payflow_iframe_order_status_id'));
+                $this->model_checkout_order->confirm($order_id, Config::get('payflowiframe_order_status_id'));
                 
                 if ($this->request->post['TYPE'] == 'S') {
                     $complete = 1;

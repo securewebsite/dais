@@ -73,11 +73,11 @@
 								<li><a href="<?= $gift_card_theme; ?>"><?= $lang_text_gift_card_theme; ?></a></li>
 							</ul>
 						</li>
-						<?php if ($paypal_express_status) { ?>
+						<?php if ($paypalexpress_status) { ?>
 							<li class="dropdown-submenu"><a class="dropdown-toggle" data-toggle="dropdown"><?= $lang_text_paypal_manage; ?> <b class="fa fa-caret-right"></b></a>
 								<ul class="dropdown-menu">
 									<li><a href="<?= $paypal_express; ?>"><?= $lang_text_paypal_manage; ?></a></li>
-									<li><a href="<?= $paypal_express_search; ?>"><?= $lang_text_paypal_search; ?></a></li>
+									<li><a href="<?= $paypalexpress_search; ?>"><?= $lang_text_paypal_search; ?></a></li>
 								</ul>
 							</li>
 						<?php } ?>

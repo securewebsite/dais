@@ -107,7 +107,11 @@ class Request {
      * Aliases methods for returning properties.
      */
 
-    public function get($key, $value = null) {
+    public function get($key = null, $value = null) {
+        if (is_null($key)):
+            return $this->get;
+        endif;
+
         if (is_null($value)):
             return (isset($this->get[$key]) ? $this->get[$key] : null);
         endif;
@@ -115,7 +119,11 @@ class Request {
         $this->get[$key] = $value;
     }
 
-    public function post($key, $value = null) {
+    public function post($key = null, $value = null) {
+        if (is_null($key)):
+            return $this->post;
+        endif;
+
         if (is_null($value)):
             return (isset($this->post[$key]) ? $this->post[$key] : null);
         endif;
@@ -123,7 +131,11 @@ class Request {
         $this->post[$key] = $value;
     }
 
-    public function cookie($key, $value = null) {
+    public function cookie($key = null, $value = null) {
+        if (is_null($key)):
+            return $this->cookie;
+        endif;
+
         if (is_null($value)):
             return (isset($this->cookie[$key]) ? $this->cookie[$key] : null);
         endif;
@@ -131,7 +143,11 @@ class Request {
         $this->cookie[$key] = $value;
     }
 
-    public function files($key, $value = null) {
+    public function files($key = null, $value = null) {
+        if (is_null($key)):
+            return $this->files;
+        endif;
+
         if (is_null($value)):    
             return (isset($this->files[$key]) ? $this->files[$key] : null);
         endif;
@@ -139,7 +155,11 @@ class Request {
         $this->files[$key] = $value;
     }
 
-    public function server($key, $value = null) {
+    public function server($key = null, $value = null) {
+        if (is_null($key)):
+            return $this->server;
+        endif;
+
         if (is_null($value)):
             return (isset($this->server[$key]) ? $this->server[$key] : null);
         endif;

@@ -30,7 +30,7 @@ class BlogFeatured extends Controller {
         
         $data['posts'] = array();
         
-        $posts = explode(',', Config::get('blog_featured_post'));
+        $posts = explode(',', Config::get('blogfeatured_post'));
         
         if (empty($setting['limit'])) {
             $setting['limit'] = 5;

@@ -15,6 +15,7 @@
 */
 
 namespace App\Models\Admin\People;
+
 use App\Models\Model;
 
 class UserGroup extends Model {
@@ -26,7 +27,7 @@ class UserGroup extends Model {
 				permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "'
 		");
         
-        User::reload_permissions();
+        \User::reload_permissions();
     }
     
     public function editUserGroup($user_group_id, $data) {
@@ -38,13 +39,13 @@ class UserGroup extends Model {
 			WHERE user_group_id = '" . (int)$user_group_id . "'
 		");
         
-        User::reload_permissions();
+        \User::reload_permissions();
     }
     
     public function deleteUserGroup($user_group_id) {
         $this->db->query("DELETE FROM {$this->db->prefix}user_group WHERE user_group_id = '" . (int)$user_group_id . "'");
         
-        User::reload_permissions();
+        \User::reload_permissions();
     }
     
     public function addPermission($user_id, $type, $page) {
@@ -75,7 +76,7 @@ class UserGroup extends Model {
             }
         }
         
-        User::reload_permissions();
+        \User::reload_permissions();
     }
     
     public function getUserGroup($user_group_id) {

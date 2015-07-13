@@ -65,7 +65,7 @@ class PaypalProUk extends Controller {
     }
     
     public function send() {
-        if (!Config::get('paypal_pro_uk_transaction')) {
+        if (!Config::get('paypalprouk_transaction')) {
             $payment_type = 'Authorization';
         } else {
             $payment_type = 'Sale';
@@ -77,9 +77,9 @@ class PaypalProUk extends Controller {
         
         $request = 'METHOD=DoDirectPayment';
         $request.= '&VERSION=51.0';
-        $request.= '&USER=' . urlencode(Config::get('paypal_pro_uk_username'));
-        $request.= '&PWD=' . urlencode(Config::get('paypal_pro_uk_password'));
-        $request.= '&SIGNATURE=' . urlencode(Config::get('paypal_pro_uk_signature'));
+        $request.= '&USER=' . urlencode(Config::get('paypalprouk_username'));
+        $request.= '&PWD=' . urlencode(Config::get('paypalprouk_password'));
+        $request.= '&SIGNATURE=' . urlencode(Config::get('paypalprouk_signature'));
         $request.= '&CUSTREF=' . (int)$order_info['order_id'];
         $request.= '&PAYMENTACTION=' . $payment_type;
         $request.= '&AMT=' . $this->currency->format($order_info['total'], $order_info['currency_code'], false, false);
@@ -122,7 +122,7 @@ class PaypalProUk extends Controller {
             $request.= '&SHIPTOZIP=' . urlencode($order_info['payment_postcode']);
         }
         
-        if (!Config::get('paypal_pro_uk_test')) {
+        if (!Config::get('paypalprouk_test')) {
             $curl = curl_init('https://api-3t.paypal.com/nvp');
         } else {
             $curl = curl_init('https://api-3t.sandbox.paypal.com/nvp');
@@ -168,7 +168,7 @@ class PaypalProUk extends Controller {
                 $message.= 'TRANSACTIONID: ' . $response_info['TRANSACTIONID'] . "\n";
             }
             
-            $this->model_checkout_order->update($this->session->data['order_id'], Config::get('paypal_pro_uk_order_status_id'), $message);
+            $this->model_checkout_order->update($this->session->data['order_id'], Config::get('paypalprouk_order_status_id'), $message);
             
             $json['success'] = Url::link('checkout/success');
         } else {

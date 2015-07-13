@@ -26,8 +26,8 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2"><?= $lang_entry_status; ?></label>
 				<div class="control-field col-sm-4">
-					<select name="google_base_status" class="form-control">
-						<?php if ($google_base_status) { ?>
+					<select name="googlebase_status" class="form-control">
+						<?php if ($googlebase_status) { ?>
 						<option value="1" selected><?= $lang_text_enabled; ?></option>
 						<option value="0"><?= $lang_text_disabled; ?></option>
 						<?php } else { ?>

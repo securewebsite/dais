@@ -14,17 +14,13 @@
 |	
 */
 
-namespace App\Plugin\Git;
+namespace Dais\Contracts;
 
-use Dais\Contracts\PluginRegistryContract;
+interface PluginRegistryContract {
 
-class Register extends Plugin implements PluginRegistryContract {
-    
-    public function __construct() {
-        Plugin::setPlugin('Git');
-    }
+	public function __construct();
 
-    public function add() {}
+	public function add();
 
-    public function remove() {}
+	public function remove();
 }

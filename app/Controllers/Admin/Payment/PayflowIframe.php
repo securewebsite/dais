@@ -28,7 +28,7 @@ class PayflowIframe extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('payflow_iframe', $this->request->post);
+            $this->model_setting_setting->editSetting('payflowiframe', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
@@ -71,89 +71,89 @@ class PayflowIframe extends Controller {
         
         $data['cancel'] = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
         
-        if (isset($this->request->post['payflow_iframe_vendor'])) {
-            $data['payflow_iframe_vendor'] = $this->request->post['payflow_iframe_vendor'];
+        if (isset($this->request->post['payflowiframe_vendor'])) {
+            $data['payflowiframe_vendor'] = $this->request->post['payflowiframe_vendor'];
         } else {
-            $data['payflow_iframe_vendor'] = Config::get('payflow_iframe_vendor');
+            $data['payflowiframe_vendor'] = Config::get('payflowiframe_vendor');
         }
         
-        if (isset($this->request->post['payflow_iframe_user'])) {
-            $data['payflow_iframe_user'] = $this->request->post['payflow_iframe_user'];
+        if (isset($this->request->post['payflowiframe_user'])) {
+            $data['payflowiframe_user'] = $this->request->post['payflowiframe_user'];
         } else {
-            $data['payflow_iframe_user'] = Config::get('payflow_iframe_user');
+            $data['payflowiframe_user'] = Config::get('payflowiframe_user');
         }
         
-        if (isset($this->request->post['payflow_iframe_password'])) {
-            $data['payflow_iframe_password'] = $this->request->post['payflow_iframe_password'];
+        if (isset($this->request->post['payflowiframe_password'])) {
+            $data['payflowiframe_password'] = $this->request->post['payflowiframe_password'];
         } else {
-            $data['payflow_iframe_password'] = Config::get('payflow_iframe_password');
+            $data['payflowiframe_password'] = Config::get('payflowiframe_password');
         }
         
-        if (isset($this->request->post['payflow_iframe_partner'])) {
-            $data['payflow_iframe_partner'] = $this->request->post['payflow_iframe_partner'];
+        if (isset($this->request->post['payflowiframe_partner'])) {
+            $data['payflowiframe_partner'] = $this->request->post['payflowiframe_partner'];
         } else {
-            $data['payflow_iframe_partner'] = Config::get('payflow_iframe_partner');
+            $data['payflowiframe_partner'] = Config::get('payflowiframe_partner');
         }
         
-        if (isset($this->request->post['payflow_iframe_transaction_method'])) {
-            $data['payflow_iframe_transaction_method'] = $this->request->post['payflow_iframe_transaction_method'];
+        if (isset($this->request->post['payflowiframe_transaction_method'])) {
+            $data['payflowiframe_transaction_method'] = $this->request->post['payflowiframe_transaction_method'];
         } else {
-            $data['payflow_iframe_transaction_method'] = Config::get('payflow_iframe_transaction_method');
+            $data['payflowiframe_transaction_method'] = Config::get('payflowiframe_transaction_method');
         }
         
-        if (isset($this->request->post['payflow_iframe_test'])) {
-            $data['payflow_iframe_test'] = $this->request->post['payflow_iframe_test'];
+        if (isset($this->request->post['payflowiframe_test'])) {
+            $data['payflowiframe_test'] = $this->request->post['payflowiframe_test'];
         } else {
-            $data['payflow_iframe_test'] = Config::get('payflow_iframe_test');
+            $data['payflowiframe_test'] = Config::get('payflowiframe_test');
         }
         
-        if (isset($this->request->post['payflow_iframe_total'])) {
-            $data['payflow_iframe_total'] = $this->request->post['payflow_iframe_total'];
+        if (isset($this->request->post['payflowiframe_total'])) {
+            $data['payflowiframe_total'] = $this->request->post['payflowiframe_total'];
         } else {
-            $data['payflow_iframe_total'] = Config::get('payflow_iframe_total');
+            $data['payflowiframe_total'] = Config::get('payflowiframe_total');
         }
         
         Theme::model('locale/order_status');
         $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
         
-        if (isset($this->request->post['payflow_iframe_order_status_id'])) {
-            $data['payflow_iframe_order_status_id'] = $this->request->post['payflow_iframe_order_status_id'];
+        if (isset($this->request->post['payflowiframe_order_status_id'])) {
+            $data['payflowiframe_order_status_id'] = $this->request->post['payflowiframe_order_status_id'];
         } else {
-            $data['payflow_iframe_order_status_id'] = Config::get('payflow_iframe_order_status_id');
+            $data['payflowiframe_order_status_id'] = Config::get('payflowiframe_order_status_id');
         }
         
-        if (isset($this->request->post['payflow_iframe_geo_zone_id'])) {
-            $data['payflow_iframe_geo_zone_id'] = $this->request->post['payflow_iframe_geo_zone_id'];
+        if (isset($this->request->post['payflowiframe_geo_zone_id'])) {
+            $data['payflowiframe_geo_zone_id'] = $this->request->post['payflowiframe_geo_zone_id'];
         } else {
-            $data['payflow_iframe_geo_zone_id'] = Config::get('payflow_iframe_geo_zone_id');
+            $data['payflowiframe_geo_zone_id'] = Config::get('payflowiframe_geo_zone_id');
         }
         
         Theme::model('locale/geo_zone');
         
         $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
         
-        if (isset($this->request->post['payflow_iframe_status'])) {
-            $data['payflow_iframe_status'] = $this->request->post['payflow_iframe_status'];
+        if (isset($this->request->post['payflowiframe_status'])) {
+            $data['payflowiframe_status'] = $this->request->post['payflowiframe_status'];
         } else {
-            $data['payflow_iframe_status'] = Config::get('payflow_iframe_status');
+            $data['payflowiframe_status'] = Config::get('payflowiframe_status');
         }
         
-        if (isset($this->request->post['payflow_iframe_sort_order'])) {
-            $data['payflow_iframe_sort_order'] = $this->request->post['payflow_iframe_sort_order'];
+        if (isset($this->request->post['payflowiframe_sort_order'])) {
+            $data['payflowiframe_sort_order'] = $this->request->post['payflowiframe_sort_order'];
         } else {
-            $data['payflow_iframe_sort_order'] = Config::get('payflow_iframe_sort_order');
+            $data['payflowiframe_sort_order'] = Config::get('payflowiframe_sort_order');
         }
         
-        if (isset($this->request->post['payflow_iframe_checkout_method'])) {
-            $data['payflow_iframe_checkout_method'] = $this->request->post['payflow_iframe_checkout_method'];
+        if (isset($this->request->post['payflowiframe_checkout_method'])) {
+            $data['payflowiframe_checkout_method'] = $this->request->post['payflowiframe_checkout_method'];
         } else {
-            $data['payflow_iframe_checkout_method'] = Config::get('payflow_iframe_checkout_method');
+            $data['payflowiframe_checkout_method'] = Config::get('payflowiframe_checkout_method');
         }
         
-        if (isset($this->request->post['payflow_iframe_debug'])) {
-            $data['payflow_iframe_debug'] = $this->request->post['payflow_iframe_debug'];
+        if (isset($this->request->post['payflowiframe_debug'])) {
+            $data['payflowiframe_debug'] = $this->request->post['payflowiframe_debug'];
         } else {
-            $data['payflow_iframe_debug'] = Config::get('payflow_iframe_debug');
+            $data['payflowiframe_debug'] = Config::get('payflowiframe_debug');
         }
         
         $data['cancel_url'] = Config::get('https.public') . 'payment/payflow_iframe/pp_cancel';
@@ -202,13 +202,13 @@ class PayflowIframe extends Controller {
             
             $data['token'] = $this->session->data['token'];
             
-            Theme::loadjs('javascript/payment/payflow_iframe_refund', $data);
+            Theme::loadjs('javascript/payment/payflowiframe_refund', $data);
             
             $data = Theme::render_controllers($data);
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::setOutput(Theme::view('payment/payflow_iframe_refund', $data));
+            Response::setOutput(Theme::view('payment/payflowiframe_refund', $data));
         } else {
             return new Action('error/not_found');
         }
@@ -394,34 +394,34 @@ class PayflowIframe extends Controller {
                 $data['transactions'][] = array('transaction_reference' => $transaction['transaction_reference'], 'transaction_type' => $transaction_type, 'time' => $transaction['time'], 'amount' => $transaction['amount'], 'actions' => $actions,);
             }
             
-            Theme::loadjs('javascript/payment/payflow_iframe_order', $data);
+            Theme::loadjs('javascript/payment/payflowiframe_order', $data);
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
             $data['javascript'] = Theme::controller('common/javascript');
             
-            Response::setOutput(Theme::view('payment/payflow_iframe_order', $data));
+            Response::setOutput(Theme::view('payment/payflowiframe_order', $data));
         }
     }
     
     protected function validate() {
-        if (!User::hasPermission('modify', 'payment/payflow_iframe')) {
+        if (!User::hasPermission('modify', 'payment/payflowiframe')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (!$this->request->post['payflow_iframe_vendor']) {
+        if (!$this->request->post['payflowiframe_vendor']) {
             $this->error['vendor'] = Lang::get('lang_error_vendor');
         }
         
-        if (!$this->request->post['payflow_iframe_user']) {
+        if (!$this->request->post['payflowiframe_user']) {
             $this->error['user'] = Lang::get('lang_error_user');
         }
         
-        if (!$this->request->post['payflow_iframe_password']) {
+        if (!$this->request->post['payflowiframe_password']) {
             $this->error['password'] = Lang::get('lang_error_password');
         }
         
-        if (!$this->request->post['payflow_iframe_partner']) {
+        if (!$this->request->post['payflowiframe_partner']) {
             $this->error['partner'] = Lang::get('lang_error_partner');
         }
         

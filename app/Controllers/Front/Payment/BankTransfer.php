@@ -21,7 +21,7 @@ class BankTransfer extends Controller {
     public function index() {
         $data = Theme::language('payment/bank_transfer');
         
-        $data['bank'] = nl2br(Config::get('bank_transfer_bank_' . Config::get('config_language_id')));
+        $data['bank'] = nl2br(Config::get('banktransfer_bank_' . Config::get('config_language_id')));
         
         $data['continue'] = Url::link('checkout/success');
         
@@ -40,13 +40,13 @@ class BankTransfer extends Controller {
         Theme::model('checkout/order');
         
         $comment = Lang::get('lang_text_instruction') . "\n\n";
-        $comment.= Config::get('bank_transfer_bank_' . Config::get('config_language_id')) . "\n\n";
+        $comment.= Config::get('banktransfer_bank_' . Config::get('config_language_id')) . "\n\n";
         $comment.= Lang::get('lang_text_payment');
         
         $data['comment'] = $comment;
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->model_checkout_order->confirm($this->session->data['order_id'], Config::get('bank_transfer_order_status_id'), $data['comment'], true);
+        $this->model_checkout_order->confirm($this->session->data['order_id'], Config::get('banktransfer_order_status_id'), $data['comment'], true);
     }
 }

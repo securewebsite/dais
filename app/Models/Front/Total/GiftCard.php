@@ -38,7 +38,7 @@ class GiftCard extends Model {
                     'title'      => sprintf(Lang::get('lang_text_gift_card'), $this->session->data['gift_card']), 
                     'text'       => $this->currency->format(-$amount), 
                     'value'      => - $amount, 
-                    'sort_order' => Config::get('gift_card_sort_order')
+                    'sort_order' => Config::get('giftcard_sort_order')
                 );
                 
                 $total -= $amount;

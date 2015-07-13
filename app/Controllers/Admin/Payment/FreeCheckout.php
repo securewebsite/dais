@@ -26,7 +26,7 @@ class FreeCheckout extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('free_checkout', $this->request->post);
+            $this->model_setting_setting->editSetting('freecheckout', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
@@ -45,26 +45,26 @@ class FreeCheckout extends Controller {
         
         $data['cancel'] = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
         
-        if (isset($this->request->post['free_checkout_order_status_id'])) {
-            $data['free_checkout_order_status_id'] = $this->request->post['free_checkout_order_status_id'];
+        if (isset($this->request->post['freecheckout_order_status_id'])) {
+            $data['freecheckout_order_status_id'] = $this->request->post['freecheckout_order_status_id'];
         } else {
-            $data['free_checkout_order_status_id'] = Config::get('free_checkout_order_status_id');
+            $data['freecheckout_order_status_id'] = Config::get('freecheckout_order_status_id');
         }
         
         Theme::model('locale/order_status');
         
         $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
         
-        if (isset($this->request->post['free_checkout_status'])) {
-            $data['free_checkout_status'] = $this->request->post['free_checkout_status'];
+        if (isset($this->request->post['freecheckout_status'])) {
+            $data['freecheckout_status'] = $this->request->post['freecheckout_status'];
         } else {
-            $data['free_checkout_status'] = Config::get('free_checkout_status');
+            $data['freecheckout_status'] = Config::get('freecheckout_status');
         }
         
-        if (isset($this->request->post['free_checkout_sort_order'])) {
-            $data['free_checkout_sort_order'] = $this->request->post['free_checkout_sort_order'];
+        if (isset($this->request->post['freecheckout_sort_order'])) {
+            $data['freecheckout_sort_order'] = $this->request->post['freecheckout_sort_order'];
         } else {
-            $data['free_checkout_sort_order'] = Config::get('free_checkout_sort_order');
+            $data['freecheckout_sort_order'] = Config::get('freecheckout_sort_order');
         }
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
@@ -75,7 +75,7 @@ class FreeCheckout extends Controller {
     }
     
     protected function validate() {
-        if (!User::hasPermission('modify', 'payment/free_checkout')) {
+        if (!User::hasPermission('modify', 'payment/freecheckout')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

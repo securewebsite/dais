@@ -26,7 +26,7 @@ class BlogLatest extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('blog_latest', $this->request->post);
+            $this->model_setting_setting->editSetting('bloglatest', $this->request->post);
             
             $this->cache->delete('posts.latest');
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -54,10 +54,10 @@ class BlogLatest extends Controller {
         
         $data['widgets'] = array();
         
-        if (isset($this->request->post['blog_latest_widget'])) {
-            $data['widgets'] = $this->request->post['blog_latest_widget'];
-        } elseif (Config::get('blog_latest_widget')) {
-            $data['widgets'] = Config::get('blog_latest_widget');
+        if (isset($this->request->post['bloglatest_widget'])) {
+            $data['widgets'] = $this->request->post['bloglatest_widget'];
+        } elseif (Config::get('bloglatest_widget')) {
+            $data['widgets'] = Config::get('bloglatest_widget');
         }
         
         Theme::model('design/layout');
@@ -74,12 +74,12 @@ class BlogLatest extends Controller {
     }
     
     private function validate() {
-        if (!User::hasPermission('modify', 'widget/blog_latest')) {
+        if (!User::hasPermission('modify', 'widget/bloglatest')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (isset($this->request->post['blog_latest_widget'])) {
-            foreach ($this->request->post['blog_latest_widget'] as $key => $value) {
+        if (isset($this->request->post['bloglatest_widget'])) {
+            foreach ($this->request->post['bloglatest_widget'] as $key => $value) {
                 if (!$value['image_width'] || !$value['image_height']) {
                     $this->error['image'][$key] = Lang::get('lang_error_image');
                 }

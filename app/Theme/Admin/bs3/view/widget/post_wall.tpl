@@ -43,9 +43,9 @@
 					<?php $widget_row = 0; ?>
 					<?php foreach ($widgets as $widget): ?>
 					<tr id="widget-row<?= $widget_row; ?>">
-						<td><input type="text" class="form-control" name="post_wall_widget[<?= $widget_row; ?>][limit]" 
+						<td><input type="text" class="form-control" name="postwall_widget[<?= $widget_row; ?>][limit]" 
 								value="<?= $widget['limit']; ?>" size="1"></td>
-						<td><select name="post_wall_widget[<?= $widget_row; ?>][span]" class="form-control">
+						<td><select name="postwall_widget[<?= $widget_row; ?>][span]" class="form-control">
 								<?php foreach (array(1,2,3,4,6) as $span): ?>
 								<?php if ($span == $widget['span']): ?>
 								<option value="<?= $span; ?>" selected><?= $span; ?></option>
@@ -55,19 +55,19 @@
 								<?php endforeach; ?>
 							</select></td>
 						<td><?php if (!$widget['height']): ?>
-							<input type="text" class="form-control" name="post_wall_widget[<?= $widget_row; ?>][height]" value="<?= $widget['height']; ?>" disabled="" size="1">
+							<input type="text" class="form-control" name="postwall_widget[<?= $widget_row; ?>][height]" value="<?= $widget['height']; ?>" disabled="" size="1">
 							&nbsp; <label class="checkbox">
-								<input type="checkbox" name="post_wall_widget[<?= $widget_row; ?>][height]" value="" class="toggle" checked="">
+								<input type="checkbox" name="postwall_widget[<?= $widget_row; ?>][height]" value="" class="toggle" checked="">
 								<?= $lang_text_auto; ?>
 							</label>
 							<?php else: ?>
-								<input type="text" class="form-control" name="post_wall_widget[<?= $widget_row; ?>][height]" value="<?= $widget['height']; ?>" size="1">
+								<input type="text" class="form-control" name="postwall_widget[<?= $widget_row; ?>][height]" value="<?= $widget['height']; ?>" size="1">
 								&nbsp; <label class="checkbox">
-								<input type="checkbox" name="post_wall_widget[<?= $widget_row; ?>][height]" value="" class="toggle"> 
+								<input type="checkbox" name="postwall_widget[<?= $widget_row; ?>][height]" value="" class="toggle"> 
 									<?= $lang_text_auto; ?>
 								</label>
 							<?php endif; ?></td>
-						<td><select name="post_wall_widget[<?= $widget_row; ?>][post_type]" class="form-control">
+						<td><select name="postwall_widget[<?= $widget_row; ?>][post_type]" class="form-control">
 								<?php foreach ($post_types as $key => $post_type): ?>
 								<?php if ($key == $widget['post_type']): ?>
 								<option value="<?= $key; ?>" selected><?= $post_type; ?></option>
@@ -76,7 +76,7 @@
 								<?php endif; ?>
 								<?php endforeach; ?>
 							</select></td>
-						<td><select name="post_wall_widget[<?= $widget_row; ?>][description]" class="form-control">
+						<td><select name="postwall_widget[<?= $widget_row; ?>][description]" class="form-control">
 								<?php if ($widget['description']): ?>
 								<option value="1" selected><?= $lang_text_enabled; ?></option>
 								<option value="0"><?= $lang_text_disabled; ?></option>
@@ -88,7 +88,7 @@
 							<?php if (isset($error_asterisk[$widget_row]['description'])): ?>
 								<div class="text-danger"><?= $error_asterisk[$widget_row]['description']; ?></div>
 							<?php endif; ?></td>
-						<td><select name="post_wall_widget[<?= $widget_row; ?>][button]" class="form-control">
+						<td><select name="postwall_widget[<?= $widget_row; ?>][button]" class="form-control">
 								<?php if ($widget['button']): ?>
 								<option value="1" selected><?= $lang_text_enabled; ?></option>
 								<option value="0"><?= $lang_text_disabled; ?></option>
@@ -100,7 +100,7 @@
 							<?php if (isset($error_asterisk[$widget_row]['button'])): ?>
 								<div class="error"><?= $error_asterisk[$widget_row]['button']; ?></div>
 							<?php endif; ?></td>
-						<td><select name="post_wall_widget[<?= $widget_row; ?>][layout_id]" class="form-control">
+						<td><select name="postwall_widget[<?= $widget_row; ?>][layout_id]" class="form-control">
 								<?php foreach ($layouts as $layout): ?>
 								<?php if ($layout['layout_id'] == $widget['layout_id']): ?>
 								<option value="<?= $layout['layout_id']; ?>" selected><?= $layout['name']; ?></option>
@@ -109,7 +109,7 @@
 								<?php endif; ?>
 								<?php endforeach; ?>
 							</select></td>
-						<td><select name="post_wall_widget[<?= $widget_row; ?>][position]" class="form-control">
+						<td><select name="postwall_widget[<?= $widget_row; ?>][position]" class="form-control">
 								<?php if ($widget['position'] == 'content_top'): ?>
 								<option value="content_top" selected><?= $lang_text_content_top; ?></option>
 								<?php else: ?>
@@ -144,17 +144,17 @@
 						<td><div class="btn-group" data-toggle="buttons">
 							<?php if ($widget['status']){ ?>
 							<label class="btn btn-default active" title="<?= $lang_text_enabled; ?>">
-								<input type="radio" name="post_wall_widget[<?= $widget_row; ?>][status]" value="1" checked=""><i class="fa fa-play"></i></label>
+								<input type="radio" name="postwall_widget[<?= $widget_row; ?>][status]" value="1" checked=""><i class="fa fa-play"></i></label>
 							<label class="btn btn-default" title="<?= $lang_text_disabled; ?>">
-								<input type="radio" name="post_wall_widget[<?= $widget_row; ?>][status]" value="0"><i class="fa fa-pause"></i></label>
+								<input type="radio" name="postwall_widget[<?= $widget_row; ?>][status]" value="0"><i class="fa fa-pause"></i></label>
 							<?php } else { ?>
 							<label class="btn btn-default" title="<?= $lang_text_enabled; ?>">
-								<input type="radio" name="post_wall_widget[<?= $widget_row; ?>][status]" value="1"><i class="fa fa-play"></i></label>
+								<input type="radio" name="postwall_widget[<?= $widget_row; ?>][status]" value="1"><i class="fa fa-play"></i></label>
 							<label class="btn btn-default active" title="<?= $lang_text_disabled; ?>">
-								<input type="radio" name="post_wall_widget[<?= $widget_row; ?>][status]" value="0" checked=""><i class="fa fa-pause"></i></label>
+								<input type="radio" name="postwall_widget[<?= $widget_row; ?>][status]" value="0" checked=""><i class="fa fa-pause"></i></label>
 							<?php } ?>
 							</div></td>
-						<td><input type="text" class="form-control" name="post_wall_widget[<?= $widget_row; ?>][sort_order]" value="<?= $widget['sort_order']; ?>" size="3"></td>
+						<td><input type="text" class="form-control" name="postwall_widget[<?= $widget_row; ?>][sort_order]" value="<?= $widget['sort_order']; ?>" size="3"></td>
 						<td><a onclick="$('#widget-row<?= $widget_row; ?>').remove();" class="btn btn-danger">
 								<i class="fa fa-trash-o fa-lg"></i><span class="hidden-xs"> <?= $lang_button_remove; ?></span></a></td>
 					</tr>

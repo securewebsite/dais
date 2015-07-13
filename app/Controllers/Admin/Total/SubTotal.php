@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Total;
+
 use App\Controllers\Controller;
 
 class SubTotal extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -26,7 +28,7 @@ class SubTotal extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('sub_total', $this->request->post);
+            $this->model_setting_setting->editSetting('subtotal', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
@@ -44,16 +46,16 @@ class SubTotal extends Controller {
         $data['action'] = Url::link('total/sub_total', 'token=' . $this->session->data['token'], 'SSL');
         $data['cancel'] = Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL');
         
-        if (isset($this->request->post['sub_total_status'])) {
-            $data['sub_total_status'] = $this->request->post['sub_total_status'];
+        if (isset($this->request->post['subtotal_status'])) {
+            $data['subtotal_status'] = $this->request->post['subtotal_status'];
         } else {
-            $data['sub_total_status'] = Config::get('sub_total_status');
+            $data['subtotal_status'] = Config::get('subtotal_status');
         }
         
-        if (isset($this->request->post['sub_total_sort_order'])) {
-            $data['sub_total_sort_order'] = $this->request->post['sub_total_sort_order'];
+        if (isset($this->request->post['subtotal_sort_order'])) {
+            $data['subtotal_sort_order'] = $this->request->post['subtotal_sort_order'];
         } else {
-            $data['sub_total_sort_order'] = Config::get('sub_total_sort_order');
+            $data['subtotal_sort_order'] = Config::get('subtotal_sort_order');
         }
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
@@ -64,7 +66,7 @@ class SubTotal extends Controller {
     }
     
     protected function validate() {
-        if (!User::hasPermission('modify', 'total/sub_total')) {
+        if (!User::hasPermission('modify', 'total/subtotal')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

@@ -37,7 +37,7 @@
 				<?php $widget_row = 0; ?>
 				<?php foreach ($widgets as $widget) { ?>
 					<tr id="widget-row<?= $widget_row; ?>">
-						<td><select name="blog_category_widget[<?= $widget_row; ?>][layout_id]" class="form-control">
+						<td><select name="blogcategory_widget[<?= $widget_row; ?>][layout_id]" class="form-control">
 							<?php foreach ($layouts as $layout) { ?>
 							<?php if ($layout['layout_id'] == $widget['layout_id']) { ?>
 							<option value="<?= $layout['layout_id']; ?>" selected><?= $layout['name']; ?></option>
@@ -46,7 +46,7 @@
 							<?php } ?>
 							<?php } ?>
 						</select></td>
-						<td><select name="blog_category_widget[<?= $widget_row; ?>][position]" class="form-control">
+						<td><select name="blogcategory_widget[<?= $widget_row; ?>][position]" class="form-control">
 							<?php if ($widget['position'] == 'content_top'): ?>
 							<option value="content_top" selected><?= $lang_text_content_top; ?></option>
 							<?php else: ?>
@@ -80,14 +80,14 @@
 						</select></td>
 						<td><div class="btn-group" data-toggle="buttons">
 							<?php if ($widget['status']){ ?>
-							<label class="btn btn-default active" title="<?= $lang_text_enabled; ?>"><input type="radio" name="blog_category_widget[<?= $widget_row; ?>][status]" value="1" checked=""><i class="fa fa-play"></i></label>
-							<label class="btn btn-default" title="<?= $lang_text_disabled; ?>"><input type="radio" name="blog_category_widget[<?= $widget_row; ?>][status]" value="0"><i class="fa fa-pause"></i></label>
+							<label class="btn btn-default active" title="<?= $lang_text_enabled; ?>"><input type="radio" name="blogcategory_widget[<?= $widget_row; ?>][status]" value="1" checked=""><i class="fa fa-play"></i></label>
+							<label class="btn btn-default" title="<?= $lang_text_disabled; ?>"><input type="radio" name="blogcategory_widget[<?= $widget_row; ?>][status]" value="0"><i class="fa fa-pause"></i></label>
 							<?php } else { ?>
-							<label class="btn btn-default" title="<?= $lang_text_enabled; ?>"><input type="radio" name="blog_category_widget[<?= $widget_row; ?>][status]" value="1"><i class="fa fa-play"></i></label>
-							<label class="btn btn-default active" title="<?= $lang_text_disabled; ?>"><input type="radio" name="blog_category_widget[<?= $widget_row; ?>][status]" value="0" checked=""><i class="fa fa-pause"></i></label>
+							<label class="btn btn-default" title="<?= $lang_text_enabled; ?>"><input type="radio" name="blogcategory_widget[<?= $widget_row; ?>][status]" value="1"><i class="fa fa-play"></i></label>
+							<label class="btn btn-default active" title="<?= $lang_text_disabled; ?>"><input type="radio" name="blogcategory_widget[<?= $widget_row; ?>][status]" value="0" checked=""><i class="fa fa-pause"></i></label>
 							<?php } ?>
 						</div></td>
-						<td class="text-right"><input type="text" name="blog_category_widget[<?= $widget_row; ?>][sort_order]" value="<?= $widget['sort_order']; ?>" class="form-control"></td>
+						<td class="text-right"><input type="text" name="blogcategory_widget[<?= $widget_row; ?>][sort_order]" value="<?= $widget['sort_order']; ?>" class="form-control"></td>
 						<td><a onclick="$('#widget-row<?= $widget_row; ?>').remove();" class="btn btn-danger"><i class="fa fa-trash-o fa-lg"></i><span class="hidden-xs"> <?= $lang_button_remove; ?></span></a></td>
 					</tr>
 				<?php $widget_row++; ?>

@@ -26,7 +26,7 @@ class TwoCheckout extends Controller {
         
         $data['action'] = 'https://www.2checkout.com/checkout/spurchase';
         
-        $data['sid'] = Config::get('two_checkout_account');
+        $data['sid'] = Config::get('twocheckout_account');
         $data['total'] = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
         $data['cart_order_id'] = $this->session->data['order_id'];
         $data['card_holder_name'] = $order_info['payment_firstname'] . ' ' . $order_info['payment_lastname'];
@@ -66,7 +66,7 @@ class TwoCheckout extends Controller {
             $data['products'][] = array('product_id' => $product['product_id'], 'name' => $product['name'], 'description' => $product['name'], 'quantity' => $product['quantity'], 'price' => $this->currency->format($product['price'], $order_info['currency_code'], $order_info['currency_value'], false));
         }
         
-        if (Config::get('two_checkout_test')) {
+        if (Config::get('twocheckout_test')) {
             $data['demo'] = 'Y';
         } else {
             $data['demo'] = '';
@@ -90,15 +90,15 @@ class TwoCheckout extends Controller {
         
         $order_info = $this->model_checkout_order->getOrder($this->request->post['cart_order_id']);
         
-        if (!Config::get('two_checkout_test')) {
+        if (!Config::get('twocheckout_test')) {
             $order_number = $this->request->post['order_number'];
         } else {
             $order_number = '1';
         }
         
-        if (strtoupper(md5(Config::get('two_checkout_secret') . Config::get('two_checkout_account') . $order_number . $this->request->post['total'])) == $this->request->post['key']) {
+        if (strtoupper(md5(Config::get('twocheckout_secret') . Config::get('twocheckout_account') . $order_number . $this->request->post['total'])) == $this->request->post['key']) {
             if ($this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false) == $this->request->post['total']) {
-                $this->model_checkout_order->confirm($this->request->post['cart_order_id'], Config::get('two_checkout_order_status_id'));
+                $this->model_checkout_order->confirm($this->request->post['cart_order_id'], Config::get('twocheckout_order_status_id'));
             } else {
                 $this->model_checkout_order->confirm($this->request->post['cart_order_id'], Config::get('config_order_status_id'));
                  // Ugh. Some one've faked the sum. What should we do? Probably drop a mail to the shop owner?

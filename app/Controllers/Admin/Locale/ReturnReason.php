@@ -291,7 +291,7 @@ class ReturnReason extends Controller {
     }
     
     protected function validateForm() {
-        if (!User::hasPermission('modify', 'locale/return_reason')) {
+        if (!User::hasPermission('modify', 'locale/returnreason')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
@@ -307,7 +307,7 @@ class ReturnReason extends Controller {
     }
     
     protected function validateDelete() {
-        if (!User::hasPermission('modify', 'locale/return_reason')) {
+        if (!User::hasPermission('modify', 'locale/returnreason')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

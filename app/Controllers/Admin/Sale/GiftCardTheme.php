@@ -340,7 +340,7 @@ class GiftCardTheme extends Controller {
     }
     
     protected function validateForm() {
-        if (!User::hasPermission('modify', 'sale/gift_card_theme')) {
+        if (!User::hasPermission('modify', 'sale/giftcardtheme')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
@@ -360,7 +360,7 @@ class GiftCardTheme extends Controller {
     }
     
     protected function validateDelete() {
-        if (!User::hasPermission('modify', 'sale/gift_card_theme')) {
+        if (!User::hasPermission('modify', 'sale/giftcardtheme')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

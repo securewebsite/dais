@@ -102,13 +102,13 @@ class PaypalProIframe extends Model {
     
     public function call($data) {
         
-        if (Config::get('paypal_pro_iframe_test') == 1) {
+        if (Config::get('paypalproiframe_test') == 1) {
             $api_endpoint = 'https://api-3t.sandbox.paypal.com/nvp';
         } else {
             $api_endpoint = 'https://api-3t.paypal.com/nvp';
         }
         
-        $settings = array('USER' => Config::get('paypal_pro_iframe_user'), 'PWD' => Config::get('paypal_pro_iframe_password'), 'SIGNATURE' => Config::get('paypal_pro_iframe_sig'), 'VERSION' => '84', 'BUTTONSOURCE' => 'WM_PRO_Dais_UK_' . VERSION,);
+        $settings = array('USER' => Config::get('paypalproiframe_user'), 'PWD' => Config::get('paypalproiframe_password'), 'SIGNATURE' => Config::get('paypalproiframe_sig'), 'VERSION' => '84', 'BUTTONSOURCE' => 'WM_PRO_Dais_UK_' . VERSION,);
         
         $this->log($data, 'Call data');
         
@@ -179,7 +179,7 @@ class PaypalProIframe extends Model {
     }
     
     public function log($data, $title = null) {
-        if (Config::get('paypal_pro_iframe_debug')) {
+        if (Config::get('paypalproiframe_debug')) {
             $log = new Log('paypal_pro_iframe.log');
             $log->write($title . ': ' . json_encode($data));
         }

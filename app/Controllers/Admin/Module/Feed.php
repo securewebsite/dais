@@ -15,10 +15,12 @@
 */
 
 namespace App\Controllers\Admin\Module;
+
 use App\Controllers\Controller;
-use Dais\Library\Naming;
+use Dais\Support\Naming;
 
 class Feed extends Controller {
+    
     public function index() {
         $data = Theme::language('module/feed');
         Theme::setTitle(Lang::get('lang_heading_feed'));
@@ -46,8 +48,8 @@ class Feed extends Controller {
         $modules = $this->model_setting_module->getInstalled('feed');
         
         foreach ($modules as $key => $value) {
-            $theme_file = Theme::getPath() . 'controller/feed/' . $value . '.php';
-            $core_file = Config::get('path.application') . 'controller/feed/' . $value . '.php';
+            $theme_file = Theme::getPath() . 'Controller/Feed/' . ucfirst($value) . '.php';
+            $core_file  = Config::get('path.application') . 'Feed/' . ucfirst($value) . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {
                 $this->model_setting_module->uninstall('feed', $value);
@@ -69,14 +71,27 @@ class Feed extends Controller {
                 $action = array();
                 
                 if (!in_array($module, $modules)) {
-                    $action[] = array('text' => Lang::get('lang_text_install'), 'href' => Url::link('module/feed/install', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
+                    $action[] = array(
+                        'text' => Lang::get('lang_text_install'), 
+                        'href' => Url::link('module/feed/install', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL')
+                    );
                 } else {
-                    $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('feed/' . $module . '', 'token=' . $this->session->data['token'], 'SSL'));
+                    $action[] = array(
+                        'text' => Lang::get('lang_text_edit'), 
+                        'href' => Url::link('feed/' . $module . '', 'token=' . $this->session->data['token'], 'SSL')
+                    );
                     
-                    $action[] = array('text' => Lang::get('lang_text_uninstall'), 'href' => Url::link('module/feed/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
+                    $action[] = array(
+                        'text' => Lang::get('lang_text_uninstall'), 
+                        'href' => Url::link('module/feed/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL')
+                    );
                 }
                 
-                $data['modules'][] = array('name' => Lang::get('lang_heading_title'), 'status' => Config::get($module . '_status') ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled'), 'action' => $action);
+                $data['modules'][] = array(
+                    'name'   => Lang::get('lang_heading_title'), 
+                    'status' => Config::get($module . '_status') ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled'), 
+                    'action' => $action
+                );
             }
         }
         
@@ -106,13 +121,13 @@ class Feed extends Controller {
             $this->model_people_user_group->addPermission(User::getId(), 'access', 'feed/' . $this->request->get['module']);
             $this->model_people_user_group->addPermission(User::getId(), 'modify', 'feed/' . $this->request->get['module']);
             
-            $base_path  = App::appPath() . Config::get('prefix.facade') . 'controller' . SEP . 'feed' . SEP;
-            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'feed' . SEP;
+            $base_path  = Config::get('path.application') . 'Feed' . SEP;
+            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'Controller' . SEP . 'Feed' . SEP;
             
-            if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
+            if (is_readable($file = $theme_path . ucfirst($this->request->get['module']) . '.php')):
                 $class = Naming::class_from_filename($file);
             else:
-                $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
+                $class = Naming::class_from_filename($base_path . ucfirst($this->request->get['module']) . '.php');
             endif;
             
             $class = new $class;
@@ -143,13 +158,13 @@ class Feed extends Controller {
             $this->model_setting_module->uninstall('feed', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
-            $base_path  = App::appPath() . Config::get('prefix.facade') . 'controller' . SEP . 'feed' . SEP;
-            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'feed' . SEP;
+            $base_path  = Config::get('path.application') . 'Feed' . SEP;
+            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'Controller' . SEP . 'Feed' . SEP;
             
-            if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
+            if (is_readable($file = $theme_path . ucfirst($this->request->get['module']) . '.php')):
                 $class = Naming::class_from_filename($file);
             else:
-                $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
+                $class = Naming::class_from_filename($base_path . ucfirst($this->request->get['module']) . '.php');
             endif;
             
             $class = new $class;

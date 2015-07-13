@@ -37,6 +37,6 @@ class FreeCheckout extends Controller {
         
         Theme::listen(__CLASS__, __FUNCTION__);
         
-        $this->model_checkout_order->confirm($this->session->data['order_id'], Config::get('free_checkout_order_status_id'));
+        $this->model_checkout_order->confirm($this->session->data['order_id'], Config::get('freecheckout_order_status_id'));
     }
 }

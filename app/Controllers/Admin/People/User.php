@@ -400,7 +400,7 @@ class User extends Controller {
     }
     
     protected function validateForm() {
-        if (!User::hasPermission('modify', 'people/user')) {
+        if (!\User::hasPermission('modify', 'people/user')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
@@ -448,12 +448,12 @@ class User extends Controller {
     }
     
     protected function validateDelete() {
-        if (!User::hasPermission('modify', 'people/user')) {
+        if (!\User::hasPermission('modify', 'people/user')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         foreach ($this->request->post['selected'] as $user_id) {
-            if (User::getId() == $user_id) {
+            if (\User::getId() == $user_id) {
                 $this->error['warning'] = Lang::get('lang_error_account');
             }
         }

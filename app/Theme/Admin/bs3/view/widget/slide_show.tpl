@@ -39,7 +39,7 @@
 				<?php $widget_row = 0; ?>
 				<?php foreach ($widgets as $widget) { ?>
 					<tr id="widget-row<?= $widget_row; ?>">
-						<td><select name="slide_show_widget[<?= $widget_row; ?>][banner_id]" class="form-control">
+						<td><select name="slideshow_widget[<?= $widget_row; ?>][banner_id]" class="form-control">
 							<?php foreach ($banners as $banner) { ?>
 							<?php if ($banner['banner_id'] == $widget['banner_id']) { ?>
 							<option value="<?= $banner['banner_id']; ?>" selected><?= $banner['name']; ?></option>
@@ -48,12 +48,12 @@
 							<?php } ?>
 							<?php } ?>
 						</select></td>
-						<td><input type="text" name="slide_show_widget[<?= $widget_row; ?>][width]" value="<?= $widget['width']; ?>" class="form-control">
-							<input type="text" name="slide_show_widget[<?= $widget_row; ?>][height]" value="<?= $widget['height']; ?>" class="form-control">
+						<td><input type="text" name="slideshow_widget[<?= $widget_row; ?>][width]" value="<?= $widget['width']; ?>" class="form-control">
+							<input type="text" name="slideshow_widget[<?= $widget_row; ?>][height]" value="<?= $widget['height']; ?>" class="form-control">
 							<?php if (isset($error_dimension[$widget_row])) { ?>
 							<div class="text-danger"><?= $error_dimension[$widget_row]; ?></div>
 							<?php } ?></td>
-						<td><select name="slide_show_widget[<?= $widget_row; ?>][layout_id]" class="form-control">
+						<td><select name="slideshow_widget[<?= $widget_row; ?>][layout_id]" class="form-control">
 							<?php foreach ($layouts as $layout) { ?>
 							<?php if ($layout['layout_id'] == $widget['layout_id']) { ?>
 							<option value="<?= $layout['layout_id']; ?>" selected><?= $layout['name']; ?></option>
@@ -62,7 +62,7 @@
 							<?php } ?>
 							<?php } ?>
 						</select></td>
-						<td><select name="slide_show_widget[<?= $widget_row; ?>][position]" class="form-control">
+						<td><select name="slideshow_widget[<?= $widget_row; ?>][position]" class="form-control">
 							<?php if ($widget['position'] == 'content_top'): ?>
 							<option value="content_top" selected><?= $lang_text_content_top; ?></option>
 							<?php else: ?>
@@ -96,14 +96,14 @@
 						</select></td>
 						<td><div class="btn-group" data-toggle="buttons">
 							<?php if ($widget['status']){ ?>
-							<label class="btn btn-default active" title="<?= $lang_text_enabled; ?>"><input type="radio" name="slide_show_widget[<?= $widget_row; ?>][status]" value="1" checked=""><i class="fa fa-play"></i></label>
-							<label class="btn btn-default" title="<?= $lang_text_disabled; ?>"><input type="radio" name="slide_show_widget[<?= $widget_row; ?>][status]" value="0"><i class="fa fa-pause"></i></label>
+							<label class="btn btn-default active" title="<?= $lang_text_enabled; ?>"><input type="radio" name="slideshow_widget[<?= $widget_row; ?>][status]" value="1" checked=""><i class="fa fa-play"></i></label>
+							<label class="btn btn-default" title="<?= $lang_text_disabled; ?>"><input type="radio" name="slideshow_widget[<?= $widget_row; ?>][status]" value="0"><i class="fa fa-pause"></i></label>
 							<?php } else { ?>
-							<label class="btn btn-default" title="<?= $lang_text_enabled; ?>"><input type="radio" name="slide_show_widget[<?= $widget_row; ?>][status]" value="1"><i class="fa fa-play"></i></label>
-							<label class="btn btn-default active" title="<?= $lang_text_disabled; ?>"><input type="radio" name="slide_show_widget[<?= $widget_row; ?>][status]" value="0" checked=""><i class="fa fa-pause"></i></label>
+							<label class="btn btn-default" title="<?= $lang_text_enabled; ?>"><input type="radio" name="slideshow_widget[<?= $widget_row; ?>][status]" value="1"><i class="fa fa-play"></i></label>
+							<label class="btn btn-default active" title="<?= $lang_text_disabled; ?>"><input type="radio" name="slideshow_widget[<?= $widget_row; ?>][status]" value="0" checked=""><i class="fa fa-pause"></i></label>
 							<?php } ?>
 						</div></td>
-						<td class="text-right"><input type="text" name="slide_show_widget[<?= $widget_row; ?>][sort_order]" value="<?= $widget['sort_order']; ?>" class="form-control"></td>
+						<td class="text-right"><input type="text" name="slideshow_widget[<?= $widget_row; ?>][sort_order]" value="<?= $widget['sort_order']; ?>" class="form-control"></td>
 						<td><a onclick="$('#widget-row<?= $widget_row; ?>').remove();" class="btn btn-danger"><i class="fa fa-trash-o fa-lg"></i><span class="hidden-xs"> <?= $lang_button_remove; ?></span></a></td>
 					</tr>
 				<?php $widget_row++; ?>

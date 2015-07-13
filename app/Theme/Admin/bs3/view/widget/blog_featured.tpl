@@ -37,7 +37,7 @@
 						<?php } ?>
 						</div>
 					</div>
-					<input type="hidden" name="blog_featured_post" value="<?= $blog_featured_post; ?>">
+					<input type="hidden" name="blogfeatured_post" value="<?= $blogfeatured_post; ?>">
 				</div>
 			</div>
 			<table id="widget" class="table table-bordered table-striped">
@@ -56,13 +56,13 @@
 				<?php $widget_row = 0; ?>
 				<?php foreach ($widgets as $widget) { ?>
 					<tr id="widget-row<?= $widget_row; ?>">
-						<td><input type="text" name="blog_featured_widget[<?= $widget_row; ?>][limit]" value="<?= $widget['limit']; ?>" class="form-control"></td>
-						<td><input type="text" name="blog_featured_widget[<?= $widget_row; ?>][image_width]" value="<?= $widget['image_width']; ?>" class="form-control">
-							<input type="text" name="blog_featured_widget[<?= $widget_row; ?>][image_height]" value="<?= $widget['image_height']; ?>" class="form-control">
+						<td><input type="text" name="blogfeatured_widget[<?= $widget_row; ?>][limit]" value="<?= $widget['limit']; ?>" class="form-control"></td>
+						<td><input type="text" name="blogfeatured_widget[<?= $widget_row; ?>][image_width]" value="<?= $widget['image_width']; ?>" class="form-control">
+							<input type="text" name="blogfeatured_widget[<?= $widget_row; ?>][image_height]" value="<?= $widget['image_height']; ?>" class="form-control">
 							<?php if (isset($error_image[$widget_row])) { ?>
 							<div class="text-danger"><?= $error_image[$widget_row]; ?></div>
 							<?php } ?></td>
-						<td><select name="blog_featured_widget[<?= $widget_row; ?>][layout_id]" class="form-control">
+						<td><select name="blogfeatured_widget[<?= $widget_row; ?>][layout_id]" class="form-control">
 							<?php foreach ($layouts as $layout) { ?>
 							<?php if ($layout['layout_id'] == $widget['layout_id']) { ?>
 							<option value="<?= $layout['layout_id']; ?>" selected><?= $layout['name']; ?></option>
@@ -71,7 +71,7 @@
 							<?php } ?>
 							<?php } ?>
 						</select></td>
-						<td><select name="blog_featured_widget[<?= $widget_row; ?>][position]" class="form-control">
+						<td><select name="blogfeatured_widget[<?= $widget_row; ?>][position]" class="form-control">
 							<?php if ($widget['position'] == 'content_top'): ?>
 							<option value="content_top" selected><?= $lang_text_content_top; ?></option>
 							<?php else: ?>
@@ -105,14 +105,14 @@
 						</select></td>
 						<td><div class="btn-group" data-toggle="buttons">
 							<?php if ($widget['status']){ ?>
-							<label class="btn btn-default active" title="<?= $lang_text_enabled; ?>"><input type="radio" name="blog_featured_widget[<?= $widget_row; ?>][status]" value="1" checked=""><i class="fa fa-play"></i></label>
-							<label class="btn btn-default" title="<?= $lang_text_disabled; ?>"><input type="radio" name="blog_featured_widget[<?= $widget_row; ?>][status]" value="0"><i class="fa fa-pause"></i></label>
+							<label class="btn btn-default active" title="<?= $lang_text_enabled; ?>"><input type="radio" name="blogfeatured_widget[<?= $widget_row; ?>][status]" value="1" checked=""><i class="fa fa-play"></i></label>
+							<label class="btn btn-default" title="<?= $lang_text_disabled; ?>"><input type="radio" name="blogfeatured_widget[<?= $widget_row; ?>][status]" value="0"><i class="fa fa-pause"></i></label>
 							<?php } else { ?>
-							<label class="btn btn-default" title="<?= $lang_text_enabled; ?>"><input type="radio" name="blog_featured_widget[<?= $widget_row; ?>][status]" value="1"><i class="fa fa-play"></i></label>
-							<label class="btn btn-default active" title="<?= $lang_text_disabled; ?>"><input type="radio" name="blog_featured_widget[<?= $widget_row; ?>][status]" value="0" checked=""><i class="fa fa-pause"></i></label>
+							<label class="btn btn-default" title="<?= $lang_text_enabled; ?>"><input type="radio" name="blogfeatured_widget[<?= $widget_row; ?>][status]" value="1"><i class="fa fa-play"></i></label>
+							<label class="btn btn-default active" title="<?= $lang_text_disabled; ?>"><input type="radio" name="blogfeatured_widget[<?= $widget_row; ?>][status]" value="0" checked=""><i class="fa fa-pause"></i></label>
 							<?php } ?>
 						</div></td>
-						<td class="text-right"><input type="text" name="blog_featured_widget[<?= $widget_row; ?>][sort_order]" value="<?= $widget['sort_order']; ?>" class="form-control"></td>
+						<td class="text-right"><input type="text" name="blogfeatured_widget[<?= $widget_row; ?>][sort_order]" value="<?= $widget['sort_order']; ?>" class="form-control"></td>
 						<td><a onclick="$('#widget-row<?= $widget_row; ?>').remove();" class="btn btn-danger"><i class="fa fa-trash-o fa-lg"></i><span class="hidden-xs"> <?= $lang_button_remove; ?></span></a></td>
 					</tr>
 				<?php $widget_row++; ?>

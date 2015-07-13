@@ -27,8 +27,22 @@ class Hook {
         
         foreach ($hooks as $hook):
             $handlers     = unserialize($hook['handlers']);
-            $class_locale = str_replace('_', SEP, $hook['hook']);
+            
+            $segments = explode('_', $hook['hook']);
+
+            foreach($segments as $key => $value):
+                $segments[$key] = ucfirst($value);
+            endforeach;
+
+            $class_locale = implode('/', $segments);
+
+            $segments = array_reverse($segments);
+
+            $base_locale = implode('/', $segments);
+
             $theme_locale = Config::get('path.theme') . Config::get('theme.name') . SEP . basename($class_locale) . SEP;
+            
+            unset($segments);
             
             foreach ($handlers as $handler):
                 if (!array_key_exists($hook['hook'], $this->hooks)):
@@ -40,9 +54,19 @@ class Hook {
                     $arguments = $handler['args'];
                     unset($handler['args']);
                 endif;
+
+                $segments = explode('/', $handler['class']);
+            
+                foreach($segments as $key => $value):
+                    $segments[$key] = ucfirst($value);
+                endforeach;
+
+                $handler['class'] = implode('/', $segments);
+
+                unset($segments);
                 
                 $theme_path = $theme_locale . $handler['class'];
-                $file_path  = Config::get('path.app') . $class_locale . SEP;
+                $file_path  = Config::get('path.app') . $base_locale . SEP;
                 
                 if (is_readable($theme_path . '.php')):
                     $class_path = Naming::class_from_filename($theme_path);
@@ -70,23 +94,22 @@ class Hook {
                     'class'     => $class_path,
                     'method'    => $method,
                     'type'      => $type,
-                    'callback'  => $plugin_path,
+                    'callback'  => 'app' . SEP . $plugin_path,
                     'arguments' => isset($arguments) ? $arguments : null
                 );
                 
                 $this->hooks[$hook['hook']][] = $handler_array;
             endforeach;
         endforeach;
-        
+
         return $this->hooks;
-        App::set('plugin_hooks', $this->hooks);
     }
     
     public function unregisterHooks() {
     }
     
     public function listen($class, $method, $data = array()) {
-        $key = trim(Config::get('prefix.facade'), '/') . '_controller';
+        $key = trim(strtolower(Config::get('prefix.facade')), '/') . '_controllers';
         
         if (array_key_exists($key, $this->hooks)):
             foreach ($this->hooks[$key] as $hook):

@@ -26,7 +26,7 @@ class BankTransfer extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('bank_transfer', $this->request->post);
+            $this->model_setting_setting->editSetting('banktransfer', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
@@ -60,51 +60,51 @@ class BankTransfer extends Controller {
         Theme::model('locale/language');
         
         foreach ($languages as $language) {
-            if (isset($this->request->post['bank_transfer_bank_' . $language['language_id']])) {
-                $data['bank_transfer_bank_' . $language['language_id']] = $this->request->post['bank_transfer_bank_' . $language['language_id']];
+            if (isset($this->request->post['banktransfer_bank_' . $language['language_id']])) {
+                $data['banktransfer_bank_' . $language['language_id']] = $this->request->post['banktransfer_bank_' . $language['language_id']];
             } else {
-                $data['bank_transfer_bank_' . $language['language_id']] = Config::get('bank_transfer_bank_' . $language['language_id']);
+                $data['banktransfer_bank_' . $language['language_id']] = Config::get('banktransfer_bank_' . $language['language_id']);
             }
         }
         
         $data['languages'] = $languages;
         
-        if (isset($this->request->post['bank_transfer_total'])) {
-            $data['bank_transfer_total'] = $this->request->post['bank_transfer_total'];
+        if (isset($this->request->post['banktransfer_total'])) {
+            $data['banktransfer_total'] = $this->request->post['banktransfer_total'];
         } else {
-            $data['bank_transfer_total'] = Config::get('bank_transfer_total');
+            $data['banktransfer_total'] = Config::get('banktransfer_total');
         }
         
-        if (isset($this->request->post['bank_transfer_order_status_id'])) {
-            $data['bank_transfer_order_status_id'] = $this->request->post['bank_transfer_order_status_id'];
+        if (isset($this->request->post['banktransfer_order_status_id'])) {
+            $data['banktransfer_order_status_id'] = $this->request->post['banktransfer_order_status_id'];
         } else {
-            $data['bank_transfer_order_status_id'] = Config::get('bank_transfer_order_status_id');
+            $data['banktransfer_order_status_id'] = Config::get('banktransfer_order_status_id');
         }
         
         Theme::model('locale/order_status');
         
         $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
         
-        if (isset($this->request->post['bank_transfer_geo_zone_id'])) {
-            $data['bank_transfer_geo_zone_id'] = $this->request->post['bank_transfer_geo_zone_id'];
+        if (isset($this->request->post['banktransfer_geo_zone_id'])) {
+            $data['banktransfer_geo_zone_id'] = $this->request->post['banktransfer_geo_zone_id'];
         } else {
-            $data['bank_transfer_geo_zone_id'] = Config::get('bank_transfer_geo_zone_id');
+            $data['banktransfer_geo_zone_id'] = Config::get('banktransfer_geo_zone_id');
         }
         
         Theme::model('locale/geo_zone');
         
         $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
         
-        if (isset($this->request->post['bank_transfer_status'])) {
-            $data['bank_transfer_status'] = $this->request->post['bank_transfer_status'];
+        if (isset($this->request->post['banktransfer_status'])) {
+            $data['banktransfer_status'] = $this->request->post['banktransfer_status'];
         } else {
-            $data['bank_transfer_status'] = Config::get('bank_transfer_status');
+            $data['banktransfer_status'] = Config::get('banktransfer_status');
         }
         
-        if (isset($this->request->post['bank_transfer_sort_order'])) {
-            $data['bank_transfer_sort_order'] = $this->request->post['bank_transfer_sort_order'];
+        if (isset($this->request->post['banktransfer_sort_order'])) {
+            $data['banktransfer_sort_order'] = $this->request->post['banktransfer_sort_order'];
         } else {
-            $data['bank_transfer_sort_order'] = Config::get('bank_transfer_sort_order');
+            $data['banktransfer_sort_order'] = Config::get('banktransfer_sort_order');
         }
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
@@ -115,7 +115,7 @@ class BankTransfer extends Controller {
     }
     
     protected function validate() {
-        if (!User::hasPermission('modify', 'payment/bank_transfer')) {
+        if (!User::hasPermission('modify', 'payment/banktransfer')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
@@ -124,7 +124,7 @@ class BankTransfer extends Controller {
         $languages = $this->model_locale_language->getLanguages();
         
         foreach ($languages as $language) {
-            if (!$this->request->post['bank_transfer_bank_' . $language['language_id']]) {
+            if (!$this->request->post['banktransfer_bank_' . $language['language_id']]) {
                 $this->error['bank_' . $language['language_id']] = Lang::get('lang_error_bank');
             }
         }

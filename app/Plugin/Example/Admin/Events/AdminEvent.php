@@ -14,14 +14,14 @@
 |	
 */
 
-namespace Plugin\Example\Admin\Events;
-use Dais\Base\Container;
-use Dais\Base\Plugin;
+namespace App\Plugin\Example\Admin\Events;
 
-class AdminEvent extends Plugin {
-    public function __construct(Container $app) {
-        parent::__construct($app);
-        parent::setPlugin('example');
+use App\Controllers\Controller;
+
+class AdminEvent extends Controller {
+    
+    public function __construct() {
+        Plugin::setPlugin('example');
     }
     
     // Add call back methods for events below
@@ -29,6 +29,6 @@ class AdminEvent extends Plugin {
         
         // triggered on admin_edit_product
         
-        $this->response->redirect($this->url->link('tool/error_log', 'token=' . $this->session->data['token'], 'SSL'));
+        $this->response->redirect(Url::link('tool/error_log', 'token=' . Session::get('token'), 'SSL'));
     }
 }

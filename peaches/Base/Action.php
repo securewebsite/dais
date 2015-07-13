@@ -38,10 +38,9 @@ final class Action {
             $this->method = $this->args['method'];
         endif;
         
-
         $this->file  = Naming::file_from_route($route);
         $this->class = Naming::class_from_filename($this->file);
-
+        
         return $this;
     }
     
@@ -63,9 +62,9 @@ final class Action {
     }
 
     public function preControl() {
-
+        
         $callable = false;
-        $hook_key = Config::get('prefix.facade') . '_controller';
+        $hook_key = trim(strtolower(Config::get('prefix.facade')), '/') . '_controllers';
         $hooks    = App::get('plugin_hooks');
         
         if (array_key_exists($hook_key, $hooks)):

@@ -72,7 +72,7 @@
 				</tbody>
 			</table>
 		</form>
-		<?php if ($coupon_status || $gift_card_status || $reward_status || $shipping_status){ ?>
+		<?php if ($coupon_status || $giftcard_status || $reward_status || $shipping_status){ ?>
 			<fieldset>
 			<legend><?= $lang_text_next; ?></legend>
 			<p><?= $lang_text_next_choice; ?></p>
@@ -96,7 +96,7 @@
 						</div>
 					</div>
 				<?php } ?>
-				<?php if ($gift_card_status){ ?>
+				<?php if ($giftcard_status){ ?>
 					<div class="panel panel-default">
 						<div class="panel-heading panel-heading-collapse"><a data-toggle="collapse" data-parent="#next-container" href="#gift_card"><?= $lang_text_use_gift_card; ?></a></div>
 						<div id="gift_card" class="panel-collapse collapse<?= ($next == 'gift_card' ? ' in' : ''); ?>">

@@ -26,7 +26,7 @@ class BestSeller extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('best_seller', $this->request->post);
+            $this->model_setting_setting->editSetting('bestseller', $this->request->post);
             $this->cache->delete('products.best_seller');
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -53,10 +53,10 @@ class BestSeller extends Controller {
         
         $data['widgets'] = array();
         
-        if (isset($this->request->post['best_seller_widget'])) {
-            $data['widgets'] = $this->request->post['best_seller_widget'];
-        } elseif (Config::get('best_seller_widget')) {
-            $data['widgets'] = Config::get('best_seller_widget');
+        if (isset($this->request->post['bestseller_widget'])) {
+            $data['widgets'] = $this->request->post['bestseller_widget'];
+        } elseif (Config::get('bestseller_widget')) {
+            $data['widgets'] = Config::get('bestseller_widget');
         }
         
         Theme::model('design/layout');
@@ -73,12 +73,12 @@ class BestSeller extends Controller {
     }
     
     protected function validate() {
-        if (!User::hasPermission('modify', 'widget/best_seller')) {
+        if (!User::hasPermission('modify', 'widget/bestseller')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (isset($this->request->post['best_seller_widget'])) {
-            foreach ($this->request->post['best_seller_widget'] as $key => $value) {
+        if (isset($this->request->post['bestseller_widget'])) {
+            foreach ($this->request->post['bestseller_widget'] as $key => $value) {
                 if (!$value['image_width'] || !$value['image_height']) {
                     $this->error['image'][$key] = Lang::get('lang_error_image');
                 }

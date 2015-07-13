@@ -26,7 +26,7 @@ class SideBarMenu extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('side_bar_menu', $this->request->post);
+            $this->model_setting_setting->editSetting('sidebarmenu', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
@@ -46,10 +46,10 @@ class SideBarMenu extends Controller {
         
         $data['widgets'] = array();
         
-        if (isset($this->request->post['side_bar_menu_widget'])) {
-            $data['widgets'] = $this->request->post['side_bar_menu_widget'];
-        } elseif (Config::get('side_bar_menu_widget')) {
-            $data['widgets'] = Config::get('side_bar_menu_widget');
+        if (isset($this->request->post['sidebarmenu_widget'])) {
+            $data['widgets'] = $this->request->post['sidebarmenu_widget'];
+        } elseif (Config::get('sidebarmenu_widget')) {
+            $data['widgets'] = Config::get('sidebarmenu_widget');
         }
         
         Theme::model('module/menu');
@@ -76,7 +76,7 @@ class SideBarMenu extends Controller {
     }
     
     protected function validate() {
-        if (!User::hasPermission('modify', 'widget/side_bar_menu')) {
+        if (!User::hasPermission('modify', 'widget/sidebarmenu')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

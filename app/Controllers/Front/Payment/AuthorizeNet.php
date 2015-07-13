@@ -45,9 +45,9 @@ class AuthorizeNet extends Controller {
     }
     
     public function send() {
-        if (Config::get('authorize_net_server') == 'live') {
+        if (Config::get('authorizenet_server') == 'live') {
             $url = 'https://secure.authorize.net/gateway/transact.dll';
-        } elseif (Config::get('authorize_net_server') == 'test') {
+        } elseif (Config::get('authorizenet_server') == 'test') {
             $url = 'https://test.authorize.net/gateway/transact.dll';
         }
         
@@ -57,8 +57,8 @@ class AuthorizeNet extends Controller {
         
         $send = array();
         
-        $send['x_login'] = Config::get('authorize_net_login');
-        $send['x_tran_key'] = Config::get('authorize_net_key');
+        $send['x_login'] = Config::get('authorizenet_login');
+        $send['x_tran_key'] = Config::get('authorizenet_key');
         $send['x_version'] = '3.1';
         $send['x_delim_data'] = 'true';
         $send['x_delim_char'] = ',';
@@ -79,7 +79,7 @@ class AuthorizeNet extends Controller {
         $send['x_amount'] = $this->currency->format($order_info['total'], $order_info['currency_code'], 1.00000, false);
         $send['x_currency_code'] = $this->currency->getCode();
         $send['x_method'] = 'CC';
-        $send['x_type'] = (Config::get('authorize_net_method') == 'capture') ? 'AUTH_CAPTURE' : 'AUTH_ONLY';
+        $send['x_type'] = (Config::get('authorizenet_method') == 'capture') ? 'AUTH_CAPTURE' : 'AUTH_ONLY';
         $send['x_card_num'] = str_replace(' ', '', $this->request->post['cc_number']);
         $send['x_exp_date'] = $this->request->post['cc_expire_date_month'] . $this->request->post['cc_expire_date_year'];
         $send['x_card_code'] = $this->request->post['cc_cvv2'];
@@ -96,7 +96,7 @@ class AuthorizeNet extends Controller {
         $send['x_ship_to_zip'] = html_entity_decode($order_info['shipping_postcode'], ENT_QUOTES, 'UTF-8');
         $send['x_ship_to_country'] = html_entity_decode($order_info['shipping_country'], ENT_QUOTES, 'UTF-8');
         
-        if (Config::get('authorize_net_mode') == 'test') {
+        if (Config::get('authorizenet_mode') == 'test') {
             $send['x_test_request'] = 'true';
         }
         
@@ -135,7 +135,7 @@ class AuthorizeNet extends Controller {
             }
             
             if ($response_info[1] == '1') {
-                if (strtoupper($response_info[38]) == strtoupper(md5(Config::get('authorize_net_hash') . Config::get('authorize_net_login') . $response_info[7] . $this->currency->format($order_info['total'], $order_info['currency_code'], 1.00000, false)))) {
+                if (strtoupper($response_info[38]) == strtoupper(md5(Config::get('authorizenet_hash') . Config::get('authorizenet_login') . $response_info[7] . $this->currency->format($order_info['total'], $order_info['currency_code'], 1.00000, false)))) {
                     $this->model_checkout_order->confirm($this->session->data['order_id'], Config::get('config_order_status_id'));
                     
                     $message = '';
@@ -160,7 +160,7 @@ class AuthorizeNet extends Controller {
                         $message.= 'Cardholder Authentication Verification Response: ' . $response_info['40'] . "\n";
                     }
                     
-                    $this->model_checkout_order->update($this->session->data['order_id'], Config::get('authorize_net_order_status_id'), $message);
+                    $this->model_checkout_order->update($this->session->data['order_id'], Config::get('authorizenet_order_status_id'), $message);
                 }
                 
                 $json['success'] = Url::link('checkout/success', '', 'SSL');

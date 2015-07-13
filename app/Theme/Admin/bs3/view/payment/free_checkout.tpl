@@ -26,9 +26,9 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2"><?= $lang_entry_order_status; ?></label>
 				<div class="control-field col-sm-4">
-					<select name="free_checkout_order_status_id" class="form-control">
+					<select name="freecheckout_order_status_id" class="form-control">
 						<?php foreach ($order_statuses as $order_status) { ?>
-						<?php if ($order_status['order_status_id'] == $free_checkout_order_status_id) { ?>
+						<?php if ($order_status['order_status_id'] == $freecheckout_order_status_id) { ?>
 						<option value="<?= $order_status['order_status_id']; ?>" selected><?= $order_status['name']; ?></option>
 						<?php } else { ?>
 						<option value="<?= $order_status['order_status_id']; ?>"><?= $order_status['name']; ?></option>
@@ -40,8 +40,8 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2"><?= $lang_entry_status; ?></label>
 				<div class="control-field col-sm-4">
-					<select name="free_checkout_status" class="form-control">
-						<?php if ($free_checkout_status) { ?>
+					<select name="freecheckout_status" class="form-control">
+						<?php if ($freecheckout_status) { ?>
 						<option value="1" selected><?= $lang_text_enabled; ?></option>
 						<option value="0"><?= $lang_text_disabled; ?></option>
 						<?php } else { ?>
@@ -54,7 +54,7 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2"><?= $lang_entry_sort_order; ?></label>
 				<div class="control-field col-sm-4">
-					<input type="text" name="free_checkout_sort_order" value="<?= $free_checkout_sort_order; ?>" class="form-control">
+					<input type="text" name="freecheckout_sort_order" value="<?= $freecheckout_sort_order; ?>" class="form-control">
 				</div>
 			</div>
 		</form>

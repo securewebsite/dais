@@ -26,8 +26,8 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2"><?= $lang_entry_status; ?></label>
 				<div class="control-field col-sm-4">
-					<select name="gift_card_status" class="form-control">
-						<?php if ($gift_card_status) { ?>
+					<select name="giftcard_status" class="form-control">
+						<?php if ($giftcard_status) { ?>
 						<option value="1" selected><?= $lang_text_enabled; ?></option>
 						<option value="0"><?= $lang_text_disabled; ?></option>
 						<?php } else { ?>
@@ -40,7 +40,7 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2"><?= $lang_entry_sort_order; ?></label>
 				<div class="control-field col-sm-4">
-					<input type="text" name="gift_card_sort_order" value="<?= $gift_card_sort_order; ?>" class="form-control">
+					<input type="text" name="giftcard_sort_order" value="<?= $giftcard_sort_order; ?>" class="form-control">
 				</div>
 			</div>
 		</form>

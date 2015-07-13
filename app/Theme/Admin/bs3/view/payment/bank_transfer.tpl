@@ -29,7 +29,7 @@
 					<div class="control-field col-sm-4">
 						<div class="input-group">
 							<span class="input-group-addon"><span class="input-group-addon"><i class="lang-<?= str_replace('.png','', $language['image']); ?>" title="<?= $language['name']; ?>"></i></span></span>
-							<textarea name="bank_transfer_bank_<?= $language['language_id']; ?>" class="form-control" rows="3"><?= isset(${'bank_transfer_bank_' . $language['language_id']}) ? ${'bank_transfer_bank_' . $language['language_id']} : ''; ?></textarea>
+							<textarea name="banktransfer_bank_<?= $language['language_id']; ?>" class="form-control" rows="3"><?= isset(${'banktransfer_bank_' . $language['language_id']}) ? ${'banktransfer_bank_' . $language['language_id']} : ''; ?></textarea>
 						</div>
 						<?php if (isset(${'error_bank_' . $language['language_id']})) { ?>
 						<span class="help-block error"><?= ${'error_bank_' . $language['language_id']}; ?></span>
@@ -38,17 +38,17 @@
 				</div>
 			<?php } ?>
 			<div class="form-group">
-				<label class="control-label col-sm-2" for="bank_transfer_total"><?= $lang_entry_total; ?></label>
+				<label class="control-label col-sm-2" for="banktransfer_total"><?= $lang_entry_total; ?></label>
 				<div class="control-field col-sm-4">
-					<input type="text" name="bank_transfer_total" value="<?= $bank_transfer_total; ?>" id="bank_transfer_total" class="form-control">
+					<input type="text" name="banktransfer_total" value="<?= $banktransfer_total; ?>" id="banktransfer_total" class="form-control">
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="control-label col-sm-2"><?= $lang_entry_order_status; ?></label>
 				<div class="control-field col-sm-4">
-					<select name="bank_transfer_order_status_id" class="form-control">
+					<select name="banktransfer_order_status_id" class="form-control">
 						<?php foreach ($order_statuses as $order_status) { ?>
-						<?php if ($order_status['order_status_id'] == $bank_transfer_order_status_id) { ?>
+						<?php if ($order_status['order_status_id'] == $banktransfer_order_status_id) { ?>
 						<option value="<?= $order_status['order_status_id']; ?>" selected><?= $order_status['name']; ?></option>
 						<?php } else { ?>
 						<option value="<?= $order_status['order_status_id']; ?>"><?= $order_status['name']; ?></option>
@@ -60,10 +60,10 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2"><?= $lang_entry_geo_zone; ?></label>
 				<div class="control-field col-sm-4">
-					<select name="bank_transfer_geo_zone_id" class="form-control">
+					<select name="banktransfer_geo_zone_id" class="form-control">
 						<option value="0"><?= $lang_text_all_zones; ?></option>
 						<?php foreach ($geo_zones as $geo_zone) { ?>
-						<?php if ($geo_zone['geo_zone_id'] == $bank_transfer_geo_zone_id) { ?>
+						<?php if ($geo_zone['geo_zone_id'] == $banktransfer_geo_zone_id) { ?>
 						<option value="<?= $geo_zone['geo_zone_id']; ?>" selected><?= $geo_zone['name']; ?></option>
 						<?php } else { ?>
 						<option value="<?= $geo_zone['geo_zone_id']; ?>"><?= $geo_zone['name']; ?></option>
@@ -75,8 +75,8 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2"><?= $lang_entry_status; ?></label>
 				<div class="control-field col-sm-4">
-					<select name="bank_transfer_status" class="form-control">
-						<?php if ($bank_transfer_status) { ?>
+					<select name="banktransfer_status" class="form-control">
+						<?php if ($banktransfer_status) { ?>
 						<option value="1" selected><?= $lang_text_enabled; ?></option>
 						<option value="0"><?= $lang_text_disabled; ?></option>
 						<?php } else { ?>
@@ -87,9 +87,9 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="control-label col-sm-2" for="bank_transfer_sort_order"><?= $lang_entry_sort_order; ?></label>
+				<label class="control-label col-sm-2" for="banktransfer_sort_order"><?= $lang_entry_sort_order; ?></label>
 				<div class="control-field col-sm-4">
-					<input type="text" name="bank_transfer_sort_order" value="<?= $bank_transfer_sort_order; ?>" id="bank_transfer_sort_order" class="form-control">
+					<input type="text" name="banktransfer_sort_order" value="<?= $banktransfer_sort_order; ?>" id="banktransfer_sort_order" class="form-control">
 				</div>
 			</div>
 		</form>

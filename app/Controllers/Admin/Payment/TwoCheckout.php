@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Payment;
+
 use App\Controllers\Controller;
 
 class TwoCheckout extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -28,7 +30,7 @@ class TwoCheckout extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('two_checkout', $this->request->post);
+            $this->model_setting_setting->editSetting('twocheckout', $this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -60,60 +62,60 @@ class TwoCheckout extends Controller {
         
         $data['cancel'] = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
         
-        if (isset($this->request->post['two_checkout_account'])) {
-            $data['two_checkout_account'] = $this->request->post['two_checkout_account'];
+        if (isset($this->request->post['twocheckout_account'])) {
+            $data['twocheckout_account'] = $this->request->post['twocheckout_account'];
         } else {
-            $data['two_checkout_account'] = Config::get('two_checkout_account');
+            $data['twocheckout_account'] = Config::get('twocheckout_account');
         }
         
-        if (isset($this->request->post['two_checkout_secret'])) {
-            $data['two_checkout_secret'] = $this->request->post['two_checkout_secret'];
+        if (isset($this->request->post['twocheckout_secret'])) {
+            $data['twocheckout_secret'] = $this->request->post['twocheckout_secret'];
         } else {
-            $data['two_checkout_secret'] = Config::get('two_checkout_secret');
+            $data['twocheckout_secret'] = Config::get('twocheckout_secret');
         }
         
-        if (isset($this->request->post['two_checkout_test'])) {
-            $data['two_checkout_test'] = $this->request->post['two_checkout_test'];
+        if (isset($this->request->post['twocheckout_test'])) {
+            $data['twocheckout_test'] = $this->request->post['twocheckout_test'];
         } else {
-            $data['two_checkout_test'] = Config::get('two_checkout_test');
+            $data['twocheckout_test'] = Config::get('twocheckout_test');
         }
         
-        if (isset($this->request->post['two_checkout_total'])) {
-            $data['two_checkout_total'] = $this->request->post['two_checkout_total'];
+        if (isset($this->request->post['twocheckout_total'])) {
+            $data['twocheckout_total'] = $this->request->post['twocheckout_total'];
         } else {
-            $data['two_checkout_total'] = Config::get('two_checkout_total');
+            $data['twocheckout_total'] = Config::get('twocheckout_total');
         }
         
-        if (isset($this->request->post['two_checkout_order_status_id'])) {
-            $data['two_checkout_order_status_id'] = $this->request->post['two_checkout_order_status_id'];
+        if (isset($this->request->post['twocheckout_order_status_id'])) {
+            $data['twocheckout_order_status_id'] = $this->request->post['twocheckout_order_status_id'];
         } else {
-            $data['two_checkout_order_status_id'] = Config::get('two_checkout_order_status_id');
+            $data['twocheckout_order_status_id'] = Config::get('twocheckout_order_status_id');
         }
         
         Theme::model('locale/order_status');
         
         $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
         
-        if (isset($this->request->post['two_checkout_geo_zone_id'])) {
-            $data['two_checkout_geo_zone_id'] = $this->request->post['two_checkout_geo_zone_id'];
+        if (isset($this->request->post['twocheckout_geo_zone_id'])) {
+            $data['twocheckout_geo_zone_id'] = $this->request->post['twocheckout_geo_zone_id'];
         } else {
-            $data['two_checkout_geo_zone_id'] = Config::get('two_checkout_geo_zone_id');
+            $data['twocheckout_geo_zone_id'] = Config::get('twocheckout_geo_zone_id');
         }
         
         Theme::model('locale/geo_zone');
         
         $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
         
-        if (isset($this->request->post['two_checkout_status'])) {
-            $data['two_checkout_status'] = $this->request->post['two_checkout_status'];
+        if (isset($this->request->post['twocheckout_status'])) {
+            $data['twocheckout_status'] = $this->request->post['twocheckout_status'];
         } else {
-            $data['two_checkout_status'] = Config::get('two_checkout_status');
+            $data['twocheckout_status'] = Config::get('twocheckout_status');
         }
         
-        if (isset($this->request->post['two_checkout_sort_order'])) {
-            $data['two_checkout_sort_order'] = $this->request->post['two_checkout_sort_order'];
+        if (isset($this->request->post['twocheckout_sort_order'])) {
+            $data['twocheckout_sort_order'] = $this->request->post['twocheckout_sort_order'];
         } else {
-            $data['two_checkout_sort_order'] = Config::get('two_checkout_sort_order');
+            $data['twocheckout_sort_order'] = Config::get('twocheckout_sort_order');
         }
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
@@ -124,15 +126,15 @@ class TwoCheckout extends Controller {
     }
     
     protected function validate() {
-        if (!User::hasPermission('modify', 'payment/two_checkout')) {
+        if (!User::hasPermission('modify', 'payment/twocheckout')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (!$this->request->post['two_checkout_account']) {
+        if (!$this->request->post['twocheckout_account']) {
             $this->error['account'] = Lang::get('lang_error_account');
         }
         
-        if (!$this->request->post['two_checkout_secret']) {
+        if (!$this->request->post['twocheckout_secret']) {
             $this->error['secret'] = Lang::get('lang_error_secret');
         }
         

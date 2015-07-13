@@ -291,7 +291,7 @@ class OrderStatus extends Controller {
     }
     
     protected function validateForm() {
-        if (!User::hasPermission('modify', 'locale/order_status')) {
+        if (!User::hasPermission('modify', 'locale/orderstatus')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
@@ -307,7 +307,7 @@ class OrderStatus extends Controller {
     }
     
     protected function validateDelete() {
-        if (!User::hasPermission('modify', 'locale/order_status')) {
+        if (!User::hasPermission('modify', 'locale/orderstatus')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

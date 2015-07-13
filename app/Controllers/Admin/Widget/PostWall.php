@@ -26,7 +26,7 @@ class PostWall extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('post_wall_widget', $this->request->post);
+            $this->model_setting_setting->editSetting('postwall', $this->request->post);
             $this->cache->delete('posts.masonry');
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -67,10 +67,10 @@ class PostWall extends Controller {
         
         $data['widgets'] = array();
         
-        if (isset($this->request->post['post_wall_widget'])) {
-            $data['widgets'] = $this->request->post['post_wall_widget'];
-        } elseif (Config::get('post_wall_widget')) {
-            $data['widgets'] = Config::get('post_wall_widget');
+        if (isset($this->request->post['postwall_widget'])) {
+            $data['widgets'] = $this->request->post['postwall_widget'];
+        } elseif (Config::get('postwall_widget')) {
+            $data['widgets'] = Config::get('postwall_widget');
         }
         
         $data['post_types'] = array('latest' => Lang::get('lang_text_latest'), 'featured' => Lang::get('lang_text_featured'));
@@ -89,12 +89,12 @@ class PostWall extends Controller {
     }
     
     private function validate() {
-        if (!User::hasPermission('modify', 'widget/post_wall')) {
+        if (!User::hasPermission('modify', 'widget/postwall')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (isset($this->request->post['post_wall_widget'])) {
-            foreach ($this->request->post['post_wall_widget'] as $key => $value) {
+        if (isset($this->request->post['postwall_widget'])) {
+            foreach ($this->request->post['postwall_widget'] as $key => $value) {
                 if ($value['span'] == 1 && $value['description']) {
                     $this->error['asterisk'][$key]['description'] = Lang::get('lang_error_asterisk');
                 }

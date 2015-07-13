@@ -430,7 +430,7 @@ class GiftCard extends Controller {
     }
     
     protected function validateForm() {
-        if (!User::hasPermission('modify', 'sale/gift_card')) {
+        if (!User::hasPermission('modify', 'sale/giftcard')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
@@ -474,7 +474,7 @@ class GiftCard extends Controller {
     }
     
     protected function validateDelete() {
-        if (!User::hasPermission('modify', 'sale/gift_card')) {
+        if (!User::hasPermission('modify', 'sale/giftcard')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
@@ -539,7 +539,7 @@ class GiftCard extends Controller {
         
         $json = array();
         
-        if (!User::hasPermission('modify', 'sale/gift_card')) {
+        if (!User::hasPermission('modify', 'sale/giftcard')) {
             $json['error'] = Lang::get('lang_error_permission');
         } elseif (isset($this->request->get['gift_card_id'])) {
             Theme::model('sale/gift_card');

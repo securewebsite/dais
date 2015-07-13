@@ -24,10 +24,10 @@
     },
     "autoload": {
         "classmap": [
-            "database/",
-            "app/"
+            "database/"
         ],
         "psr-4": {
+            "App\\": "app/",
             "Api\\": "api/",
             "Dais\\": [
                 "override/",

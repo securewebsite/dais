@@ -15,6 +15,7 @@
 */
 
 namespace App\Controllers\Front\Common;
+
 use App\Controllers\Controller;
 
 class ShareBar extends Controller {
@@ -25,7 +26,7 @@ class ShareBar extends Controller {
 
 		Theme::model('setting/setting');
 
-		$settings = $this->model_setting_setting->getSetting('share_bar');
+		$settings = $this->model_setting_setting->getSetting('sharebar');
 
 		foreach($settings as $key => $setting):
 			$data[$key] = $setting;

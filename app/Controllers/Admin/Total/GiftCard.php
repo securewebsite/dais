@@ -26,7 +26,7 @@ class GiftCard extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('gift_card', $this->request->post);
+            $this->model_setting_setting->editSetting('giftcard', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
@@ -44,16 +44,16 @@ class GiftCard extends Controller {
         $data['action'] = Url::link('total/gift_card', 'token=' . $this->session->data['token'], 'SSL');
         $data['cancel'] = Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL');
         
-        if (isset($this->request->post['gift_card_status'])) {
-            $data['gift_card_status'] = $this->request->post['gift_card_status'];
+        if (isset($this->request->post['giftcard_status'])) {
+            $data['giftcard_status'] = $this->request->post['giftcard_status'];
         } else {
-            $data['gift_card_status'] = Config::get('gift_card_status');
+            $data['giftcard_status'] = Config::get('giftcard_status');
         }
         
-        if (isset($this->request->post['gift_card_sort_order'])) {
-            $data['gift_card_sort_order'] = $this->request->post['gift_card_sort_order'];
+        if (isset($this->request->post['giftcard_sort_order'])) {
+            $data['giftcard_sort_order'] = $this->request->post['giftcard_sort_order'];
         } else {
-            $data['gift_card_sort_order'] = Config::get('gift_card_sort_order');
+            $data['giftcard_sort_order'] = Config::get('giftcard_sort_order');
         }
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
@@ -64,7 +64,7 @@ class GiftCard extends Controller {
     }
     
     protected function validate() {
-        if (!User::hasPermission('modify', 'total/gift_card')) {
+        if (!User::hasPermission('modify', 'total/giftcard')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

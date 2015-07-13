@@ -16,18 +16,17 @@
 
 namespace Dais\Services\Providers\Base;
 
-use Pimple\Container;
 use Dais\Base\Controller;
 use Dais\Base\View;
 use Dais\Support\Naming;
 
-class Plugin extends Controller {
+class Plugin {
     
-    private     $plugins = array();
-    private     $controllers = array();
-    private     $locale;
-    protected   $directory;
-    protected   $plugin_name;
+    private   $plugins     = array();
+    private   $controllers = array();
+    private   $locale;
+    protected $directory;
+    protected $plugin_name;
     
     public function __construct() {
         $this->locale = Config::get('active.facade') . SEP;
@@ -51,15 +50,16 @@ class Plugin extends Controller {
         
         unset($files);
         
-        $files = glob($this->directory . '*' . SEP . '*' . SEP . 'controller' . SEP . '*.php');
+        $files = glob($this->directory . '*' . SEP . '*' . SEP . 'Controller' . SEP . '*.php');
         
         foreach ($files as $key => $file):
             $path  = str_replace(Config::get('path.app'), '', rtrim($file, '.php'));
-            
             $slugs = explode(SEP, $path);
             
-            if ($slugs[0] !== end($slugs)):
-                $this->controllers[] = Config::get('prefix.plugin') . SEP . $slugs[0] . SEP . end($slugs);
+            $facade = trim(Config::get('prefix.facade'), '/');
+            
+            if ($slugs[0] !== end($slugs) && $slugs[2] === $facade):
+                $this->controllers[] = $slugs[0] . SEP . end($slugs);
             endif;
         endforeach;
         
@@ -75,7 +75,7 @@ class Plugin extends Controller {
     }
     
     public function install($plugin) {
-        $class      = 'Plugin\\' . $this->format($plugin) . '\Register';
+        $class      = 'App\\Plugin\\' . $this->format($plugin) . '\Register';
         $controller = new $class;
         
         if (is_callable(array($controller, 'add'))):
@@ -84,7 +84,7 @@ class Plugin extends Controller {
     }
     
     public function uninstall($plugin) {
-        $class      = 'Plugin\\' . $this->format($plugin) . '\Register';
+        $class      = 'App\\Plugin\\' . $this->format($plugin) . '\Register';
         $controller = new $class;
         
         if (is_callable(array($controller, 'remove'))):
@@ -113,11 +113,10 @@ class Plugin extends Controller {
     }
     
     public function model($model) {
-        $items = $this->build_model($model);
-        $key   = $items['key'];
+        $key = 'model_' . str_replace('/', '_', $model);
         
         if (!App::offsetExists($key)):
-            $class = $items['class'];
+            $class = Naming::class_for_plugin_model($this->plugin_name, $model);
             App::load($key, $class);
         endif;
     }
@@ -135,7 +134,7 @@ class Plugin extends Controller {
             $lang = array_merge($lang, $data);
         endif;
         
-        $file = $this->directory . $plugin_locale . SEP . $this->locale . 'language' . SEP . $locale . SEP . $plugin . '.php';
+        $file = $this->directory . $plugin_locale . SEP . $this->locale . 'Language' . SEP . $locale . SEP . $plugin . '.php';
         
         if (is_readable($file)):
             $class = Naming::class_from_filename($file);
@@ -154,29 +153,5 @@ class Plugin extends Controller {
         $view = new View($dir);
         
         return $view->render($template, $data);
-    }
-    
-    private function build_model($model) {
-        $data        = array();
-        $data['key'] = 'model_' . str_replace('/', '_', $model);
-        
-        $parts = explode('/', $model);
-        $path  = '';
-        
-        foreach ($parts as $part):
-            $path.= ucfirst(str_replace('_', '', $part)) . '/';
-        endforeach;
-        
-        $path = str_replace('/', '\\', rtrim($path, '/'));
-        
-        if (is_readable($this->directory . $this->plugin_name . '/' . $this->locale . 'model/' . $model . '.php')):
-            $class = 'Plugin\\' . ucfirst($this->plugin_name) . Config::get('prefix.facade') . 'Model\\' . $path;
-        else:
-            return \Theme::model($model);
-        endif;
-        
-        $data['class'] = $class;
-        
-        return $data;
     }
 }

@@ -138,7 +138,7 @@ class Customer extends Controller {
         
         Theme::model('people/customer');
         
-        if (!User::hasPermission('modify', 'people/customer')):
+        if (!\User::hasPermission('modify', 'people/customer')):
             $this->error['warning'] = Lang::get('lang_error_permission');
         elseif (isset($this->request->post['selected'])):
             $approved = 0;
@@ -421,7 +421,7 @@ class Customer extends Controller {
     }
     
     protected function validateForm() {
-        if (!User::hasPermission('modify', 'people/customer')):
+        if (!\User::hasPermission('modify', 'people/customer')):
             $this->error['warning'] = Lang::get('lang_error_permission');
         endif;
         
@@ -561,7 +561,7 @@ class Customer extends Controller {
     }
     
     protected function validateDelete() {
-        if (!User::hasPermission('modify', 'people/customer')):
+        if (!\User::hasPermission('modify', 'people/customer')):
             $this->error['warning'] = Lang::get('lang_error_permission');
         endif;
         
@@ -619,14 +619,14 @@ class Customer extends Controller {
         
         Theme::model('people/customer');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && User::hasPermission('modify', 'people/customer')):
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && \User::hasPermission('modify', 'people/customer')):
             $this->model_people_customer->addHistory($this->request->get['customer_id'], $this->request->post['comment']);
             $data['success'] = Lang::get('lang_text_success');
         else:
             $data['success'] = '';
         endif;
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !User::hasPermission('modify', 'people/customer')):
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !\User::hasPermission('modify', 'people/customer')):
             $data['error_warning'] = Lang::get('lang_error_permission');
         else:
             $data['error_warning'] = '';
@@ -669,14 +669,14 @@ class Customer extends Controller {
         
         Theme::model('people/customer');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && User::hasPermission('modify', 'people/customer')):
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && \User::hasPermission('modify', 'people/customer')):
             $this->model_people_customer->addCredit($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['amount']);
             $data['success'] = Lang::get('lang_text_credit_success');
         else:
             $data['success'] = '';
         endif;
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !User::hasPermission('modify', 'people/customer')):
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !\User::hasPermission('modify', 'people/customer')):
             $data['error_warning'] = Lang::get('lang_error_permission');
         else:
             $data['error_warning'] = '';
@@ -726,14 +726,14 @@ class Customer extends Controller {
         
         Theme::model('people/customer');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && User::hasPermission('modify', 'people/customer')):
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && \User::hasPermission('modify', 'people/customer')):
             $this->model_people_customer->addCommission($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['amount']);
             $data['success'] = Lang::get('lang_text_commission_success');
         else:
             $data['success'] = '';
         endif;
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !User::hasPermission('modify', 'people/customer')):
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !\User::hasPermission('modify', 'people/customer')):
             $data['error_warning'] = Lang::get('lang_error_permission');
         else:
             $data['error_warning'] = '';
@@ -783,14 +783,14 @@ class Customer extends Controller {
         
         Theme::model('people/customer');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && User::hasPermission('modify', 'people/customer')):
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && \User::hasPermission('modify', 'people/customer')):
             $this->model_people_customer->addReward($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['points']);
             $data['success'] = Lang::get('lang_text_reward_success');
         else:
             $data['success'] = '';
         endif;
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !User::hasPermission('modify', 'people/customer')):
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !\User::hasPermission('modify', 'people/customer')):
             $data['error_warning'] = Lang::get('lang_error_permission');
         else:
             $data['error_warning'] = '';
@@ -841,7 +841,7 @@ class Customer extends Controller {
         $json = array();
         
         if (isset($this->request->post['ip'])):
-            if (!User::hasPermission('modify', 'people/customer')):
+            if (!\User::hasPermission('modify', 'people/customer')):
                 $json['error'] = Lang::get('lang_error_permission');
             else:
                 Theme::model('people/customer');
@@ -863,7 +863,7 @@ class Customer extends Controller {
         $json = array();
         
         if (isset($this->request->post['ip'])):
-            if (!User::hasPermission('modify', 'people/customer')):
+            if (!\User::hasPermission('modify', 'people/customer')):
                 $json['error'] = Lang::get('lang_error_permission');
             else:
                 Theme::model('people/customer');

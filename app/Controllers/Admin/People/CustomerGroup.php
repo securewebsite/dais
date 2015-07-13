@@ -344,7 +344,7 @@ class CustomerGroup extends Controller {
     }
     
     protected function validateForm() {
-        if (!User::hasPermission('modify', 'people/customer_group')) {
+        if (!\User::hasPermission('modify', 'people/customergroup')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
@@ -360,7 +360,7 @@ class CustomerGroup extends Controller {
     }
     
     protected function validateDelete() {
-        if (!User::hasPermission('modify', 'people/customer_group')) {
+        if (!\User::hasPermission('modify', 'people/customergroup')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

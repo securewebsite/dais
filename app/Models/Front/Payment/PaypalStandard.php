@@ -21,11 +21,11 @@ class PaypalStandard extends Model {
     public function getMethod($address, $total) {
         Lang::load('payment/paypal_standard');
         
-        $query = $this->db->query("SELECT * FROM {$this->db->prefix}zone_to_geo_zone WHERE geo_zone_id = '" . (int)Config::get('paypal_standard_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+        $query = $this->db->query("SELECT * FROM {$this->db->prefix}zone_to_geo_zone WHERE geo_zone_id = '" . (int)Config::get('paypalstandard_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
         
-        if (Config::get('paypal_standard_total') > $total) {
+        if (Config::get('paypalstandard_total') > $total) {
             $status = false;
-        } elseif (!Config::get('paypal_standard_geo_zone_id')) {
+        } elseif (!Config::get('paypalstandard_geo_zone_id')) {
             $status = true;
         } elseif ($query->num_rows) {
             $status = true;
@@ -42,7 +42,7 @@ class PaypalStandard extends Model {
         $method_data = array();
         
         if ($status) {
-            $method_data = array('code' => 'paypal_standard', 'title' => Lang::get('lang_text_title'), 'sort_order' => Config::get('paypal_standard_sort_order'));
+            $method_data = array('code' => 'paypal_standard', 'title' => Lang::get('lang_text_title'), 'sort_order' => Config::get('paypalstandard_sort_order'));
         }
         
         return $method_data;

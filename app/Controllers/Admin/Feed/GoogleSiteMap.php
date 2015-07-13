@@ -28,7 +28,7 @@ class GoogleSiteMap extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('google_site_map', $this->request->post);
+            $this->model_setting_setting->editSetting('googlesitemap', $this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -48,13 +48,13 @@ class GoogleSiteMap extends Controller {
         
         $data['cancel'] = Url::link('module/feed', 'token=' . $this->session->data['token'], 'SSL');
         
-        if (isset($this->request->post['google_site_map_status'])) {
-            $data['google_site_map_status'] = $this->request->post['google_site_map_status'];
+        if (isset($this->request->post['googlesitemap_status'])) {
+            $data['googlesitemap_status'] = $this->request->post['googlesitemap_status'];
         } else {
-            $data['google_site_map_status'] = Config::get('google_site_map_status');
+            $data['googlesitemap_status'] = Config::get('googlesitemap_status');
         }
         
-        $data['data_feed'] = Config::get('http.public') . 'feed/google_site_map';
+        $data['data_feed'] = Config::get('http.public') . 'feed/googlesitemap';
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
@@ -64,7 +64,7 @@ class GoogleSiteMap extends Controller {
     }
     
     protected function validate() {
-        if (!User::hasPermission('modify', 'feed/google_site_map')) {
+        if (!User::hasPermission('modify', 'feed/googlesitemap')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

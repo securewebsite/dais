@@ -15,8 +15,9 @@
 */
 
 namespace App\Controllers\Admin\Module;
+
 use App\Controllers\Controller;
-use Dais\Library\Naming;
+use Dais\Support\Naming;
 
 class Payment extends Controller {
     public function index() {
@@ -46,8 +47,8 @@ class Payment extends Controller {
         $modules = $this->model_setting_module->getInstalled('payment');
         
         foreach ($modules as $key => $value) {
-            $theme_file = Theme::getPath() . 'controller/payment/' . $value . '.php';
-            $core_file = Config::get('path.application') . 'controller/payment/' . $value . '.php';
+            $theme_file = Theme::getPath() . 'Controller/Payment/' . ucfirst($value) . '.php';
+            $core_file  = Config::get('path.application') . 'Payment/' . ucfirst($value) . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {
                 $this->model_setting_module->uninstall('payment', $value);
@@ -106,13 +107,13 @@ class Payment extends Controller {
             $this->model_people_user_group->addPermission(User::getId(), 'access', 'payment/' . $this->request->get['module']);
             $this->model_people_user_group->addPermission(User::getId(), 'modify', 'payment/' . $this->request->get['module']);
             
-            $base_path  = App::appPath() . Config::get('prefix.facade') . 'controller' . SEP . 'payment' . SEP;
-            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'payment' . SEP;
+            $base_path  = Config::get('path.application') . 'Payment' . SEP;
+            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'Controller' . SEP . 'Payment' . SEP;
             
-            if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
+            if (is_readable($file = $theme_path . ucfirst($this->request->get['module']) . '.php')):
                 $class = Naming::class_from_filename($file);
             else:
-                $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
+                $class = Naming::class_from_filename($base_path . ucfirst($this->request->get['module']) . '.php');
             endif;
             
             $class = new $class;
@@ -143,13 +144,13 @@ class Payment extends Controller {
             $this->model_setting_module->uninstall('payment', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
-            $base_path  = App::appPath() . Config::get('prefix.facade') . 'controller' . SEP . 'payment' . SEP;
-            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'payment' . SEP;
+            $base_path  = Config::get('path.application') . 'Payment' . SEP;
+            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'Controller' . SEP . 'Payment' . SEP;
             
-            if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
+            if (is_readable($file = $theme_path . ucfirst($this->request->get['module']) . '.php')):
                 $class = Naming::class_from_filename($file);
             else:
-                $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
+                $class = Naming::class_from_filename($base_path . ucfirst($this->request->get['module']) . '.php');
             endif;
             
             $class = new $class;

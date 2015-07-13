@@ -14,35 +14,31 @@
 |   
 */
 
-namespace Plugin\Example;
-use Dais\Base\Container;
-use Dais\Base\Plugin;
-use Dais\Service\PluginServiceModel;
+namespace App\Plugin\Example;
 
-class Register extends Plugin {
+use Dais\Contracts\PluginRegistryContract;
+
+class Register extends Plugin implements PluginRegistryContract {
     
-    public function __construct(Container $app) {
-        parent::__construct($app);
-        parent::setPlugin('example');
+    public function __construct() {
+        Plugin::setPlugin('Example');
     }
     
     public function add() {
-        $model = new PluginServiceModel($this->app);
-        
         // set all event handlers
-        $model->setEventHandler('admin_edit_product', array(
-            'plugin' => 'example',
-            'file'   => 'admin/events/admin_event',
+        PluginModel::setEventHandler('admin_edit_product', array(
+            'plugin' => 'Example',
+            'file'   => 'Admin/Events/AdminEvent',
             'method' => 'editProduct'
         ));
         
         // set all hooks handlers
-        $model->setHookHandler('admin_controller', array(
+        PluginModel::setHookHandler('admin_controllers', array(
             'class'    => 'tool/test',
             'method'   => 'index',
             'type'     => 'post',
-            'plugin'   => 'example',
-            'file'     => 'admin/hooks/controller_hooks',
+            'plugin'   => 'Example',
+            'file'     => 'Admin/Hooks/ControllerHooks',
             'callback' => 'exampleHook',
             'args'     => array(
                 'heading_title' => 'Example Test Page',
@@ -50,33 +46,31 @@ class Register extends Plugin {
             )
         ));
         
-        $model->setHookHandler('admin_controller', array(
+        PluginModel::setHookHandler('admin_controllers', array(
             'class'    => 'tool/test',
             'method'   => 'index',
             'type'     => 'pre',
-            'plugin'   => 'example',
-            'file'     => 'admin/hooks/controller_hooks',
+            'plugin'   => 'Example',
+            'file'     => 'Admin/Hooks/ControllerHooks',
             'callback' => 'preHook'
         ));
     }
     
     public function remove() {
-        $model = new PluginServiceModel($this->app);
-        
         // remove all event handlers
-        $model->removeEventHandler('admin_edit_product', array(
-            'plugin' => 'example',
-            'file'   => 'admin/events/admin_event',
+        PluginModel::removeEventHandler('admin_edit_product', array(
+            'plugin' => 'Example',
+            'file'   => 'Admin/Events/AdminEvent',
             'method' => 'editProduct'
         ));
         
         // remove all hook handlers
-        $model->removeHookHandler('admin_controller', array(
+        PluginModel::removeHookHandler('admin_controllers', array(
             'class'    => 'tool/test',
             'method'   => 'index',
             'type'     => 'post',
-            'plugin'   => 'example',
-            'file'     => 'admin/hooks/controller_hooks',
+            'plugin'   => 'Example',
+            'file'     => 'Admin/Hooks/ControllerHooks',
             'callback' => 'exampleHook',
             'args'     => array(
                 'heading_title' => 'Example Test Page',
@@ -84,12 +78,12 @@ class Register extends Plugin {
             )
         ));
         
-        $model->removeHookHandler('admin_controller', array(
+        PluginModel::removeHookHandler('admin_controllers', array(
             'class'    => 'tool/test',
             'method'   => 'index',
             'type'     => 'pre',
-            'plugin'   => 'example',
-            'file'     => 'admin/hooks/controller_hooks',
+            'plugin'   => 'Example',
+            'file'     => 'Admin/Hooks/ControllerHooks',
             'callback' => 'preHook'
         ));
     }

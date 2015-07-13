@@ -26,7 +26,7 @@ class HeaderMenu extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('header_menu', $this->request->post);
+            $this->model_setting_setting->editSetting('headermenu', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
@@ -46,10 +46,10 @@ class HeaderMenu extends Controller {
         
         $data['widgets'] = array();
         
-        if (isset($this->request->post['header_menu_widget'])) {
-            $data['widgets'] = $this->request->post['header_menu_widget'];
-        } elseif (Config::get('header_menu_widget')) {
-            $data['widgets'] = Config::get('header_menu_widget');
+        if (isset($this->request->post['headermenu_widget'])) {
+            $data['widgets'] = $this->request->post['headermenu_widget'];
+        } elseif (Config::get('headermenu_widget')) {
+            $data['widgets'] = Config::get('headermenu_widget');
         }
         
         Theme::model('module/menu');
@@ -76,7 +76,7 @@ class HeaderMenu extends Controller {
     }
     
     protected function validate() {
-        if (!User::hasPermission('modify', 'widget/header_menu')) {
+        if (!User::hasPermission('modify', 'widget/headermenu')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

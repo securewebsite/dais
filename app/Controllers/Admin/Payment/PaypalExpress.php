@@ -31,7 +31,7 @@ class PaypalExpress extends Controller {
         $this->error = array();
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('paypal_express', $this->request->post);
+            $this->model_setting_setting->editSetting('paypalexpress', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
@@ -49,54 +49,54 @@ class PaypalExpress extends Controller {
         $data['cancel'] = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
         $data['search'] = Url::link('payment/paypal_express/search', 'token=' . $this->session->data['token'], 'SSL');
         
-        $data['paypal_express_login_seamless'] = true;
+        $data['paypalexpress_login_seamless'] = true;
         
-        if (isset($this->request->post['paypal_express_username'])) {
-            $data['paypal_express_username'] = $this->request->post['paypal_express_username'];
+        if (isset($this->request->post['paypalexpress_username'])) {
+            $data['paypalexpress_username'] = $this->request->post['paypalexpress_username'];
         } else {
-            $data['paypal_express_username'] = Config::get('paypal_express_username');
+            $data['paypalexpress_username'] = Config::get('paypalexpress_username');
         }
         
-        if (isset($this->request->post['paypal_express_password'])) {
-            $data['paypal_express_password'] = $this->request->post['paypal_express_password'];
+        if (isset($this->request->post['paypalexpress_password'])) {
+            $data['paypalexpress_password'] = $this->request->post['paypalexpress_password'];
         } else {
-            $data['paypal_express_password'] = Config::get('paypal_express_password');
+            $data['paypalexpress_password'] = Config::get('paypalexpress_password');
         }
         
-        if (isset($this->request->post['paypal_express_signature'])) {
-            $data['paypal_express_signature'] = $this->request->post['paypal_express_signature'];
+        if (isset($this->request->post['paypalexpress_signature'])) {
+            $data['paypalexpress_signature'] = $this->request->post['paypalexpress_signature'];
         } else {
-            $data['paypal_express_signature'] = Config::get('paypal_express_signature');
+            $data['paypalexpress_signature'] = Config::get('paypalexpress_signature');
         }
         
-        if (isset($this->request->post['paypal_express_test'])) {
-            $data['paypal_express_test'] = $this->request->post['paypal_express_test'];
+        if (isset($this->request->post['paypalexpress_test'])) {
+            $data['paypalexpress_test'] = $this->request->post['paypalexpress_test'];
         } else {
-            $data['paypal_express_test'] = Config::get('paypal_express_test');
+            $data['paypalexpress_test'] = Config::get('paypalexpress_test');
         }
         
-        if (isset($this->request->post['paypal_express_method'])) {
-            $data['paypal_express_method'] = $this->request->post['paypal_express_method'];
+        if (isset($this->request->post['paypalexpress_method'])) {
+            $data['paypalexpress_method'] = $this->request->post['paypalexpress_method'];
         } else {
-            $data['paypal_express_method'] = Config::get('paypal_express_method');
+            $data['paypalexpress_method'] = Config::get('paypalexpress_method');
         }
         
-        if (isset($this->request->post['paypal_express_total'])) {
-            $data['paypal_express_total'] = $this->request->post['paypal_express_total'];
+        if (isset($this->request->post['paypalexpress_total'])) {
+            $data['paypalexpress_total'] = $this->request->post['paypalexpress_total'];
         } else {
-            $data['paypal_express_total'] = Config::get('paypal_express_total');
+            $data['paypalexpress_total'] = Config::get('paypalexpress_total');
         }
         
-        if (isset($this->request->post['paypal_express_debug'])) {
-            $data['paypal_express_debug'] = $this->request->post['paypal_express_debug'];
+        if (isset($this->request->post['paypalexpress_debug'])) {
+            $data['paypalexpress_debug'] = $this->request->post['paypalexpress_debug'];
         } else {
-            $data['paypal_express_debug'] = Config::get('paypal_express_debug');
+            $data['paypalexpress_debug'] = Config::get('paypalexpress_debug');
         }
         
-        if (isset($this->request->post['paypal_express_currency'])) {
-            $data['paypal_express_currency'] = $this->request->post['paypal_express_currency'];
+        if (isset($this->request->post['paypalexpress_currency'])) {
+            $data['paypalexpress_currency'] = $this->request->post['paypalexpress_currency'];
         } else {
-            $data['paypal_express_currency'] = Config::get('paypal_express_currency');
+            $data['paypalexpress_currency'] = Config::get('paypalexpress_currency');
         }
         
         $data['currency_codes'] = $this->model_payment_paypal_express->currencyCodes();
@@ -105,96 +105,96 @@ class PaypalExpress extends Controller {
         
         $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
         
-        if (isset($this->request->post['paypal_express_canceled_reversal_status_id'])) {
-            $data['paypal_express_canceled_reversal_status_id'] = $this->request->post['paypal_express_canceled_reversal_status_id'];
+        if (isset($this->request->post['paypalexpress_canceled_reversal_status_id'])) {
+            $data['paypalexpress_canceled_reversal_status_id'] = $this->request->post['paypalexpress_canceled_reversal_status_id'];
         } else {
-            $data['paypal_express_canceled_reversal_status_id'] = Config::get('paypal_express_canceled_reversal_status_id');
+            $data['paypalexpress_canceled_reversal_status_id'] = Config::get('paypalexpress_canceled_reversal_status_id');
         }
         
-        if (isset($this->request->post['paypal_express_completed_status_id'])) {
-            $data['paypal_express_completed_status_id'] = $this->request->post['paypal_express_completed_status_id'];
+        if (isset($this->request->post['paypalexpress_completed_status_id'])) {
+            $data['paypalexpress_completed_status_id'] = $this->request->post['paypalexpress_completed_status_id'];
         } else {
-            $data['paypal_express_completed_status_id'] = Config::get('paypal_express_completed_status_id');
+            $data['paypalexpress_completed_status_id'] = Config::get('paypalexpress_completed_status_id');
         }
         
-        if (isset($this->request->post['paypal_express_denied_status_id'])) {
-            $data['paypal_express_denied_status_id'] = $this->request->post['paypal_express_denied_status_id'];
+        if (isset($this->request->post['paypalexpress_denied_status_id'])) {
+            $data['paypalexpress_denied_status_id'] = $this->request->post['paypalexpress_denied_status_id'];
         } else {
-            $data['paypal_express_denied_status_id'] = Config::get('paypal_express_denied_status_id');
+            $data['paypalexpress_denied_status_id'] = Config::get('paypalexpress_denied_status_id');
         }
         
-        if (isset($this->request->post['paypal_express_expired_status_id'])) {
-            $data['paypal_express_expired_status_id'] = $this->request->post['paypal_express_expired_status_id'];
+        if (isset($this->request->post['paypalexpress_expired_status_id'])) {
+            $data['paypalexpress_expired_status_id'] = $this->request->post['paypalexpress_expired_status_id'];
         } else {
-            $data['paypal_express_expired_status_id'] = Config::get('paypal_express_expired_status_id');
+            $data['paypalexpress_expired_status_id'] = Config::get('paypalexpress_expired_status_id');
         }
         
-        if (isset($this->request->post['paypal_express_failed_status_id'])) {
-            $data['paypal_express_failed_status_id'] = $this->request->post['paypal_express_failed_status_id'];
+        if (isset($this->request->post['paypalexpress_failed_status_id'])) {
+            $data['paypalexpress_failed_status_id'] = $this->request->post['paypalexpress_failed_status_id'];
         } else {
-            $data['paypal_express_failed_status_id'] = Config::get('paypal_express_failed_status_id');
+            $data['paypalexpress_failed_status_id'] = Config::get('paypalexpress_failed_status_id');
         }
         
-        if (isset($this->request->post['paypal_express_pending_status_id'])) {
-            $data['paypal_express_pending_status_id'] = $this->request->post['paypal_express_pending_status_id'];
+        if (isset($this->request->post['paypalexpress_pending_status_id'])) {
+            $data['paypalexpress_pending_status_id'] = $this->request->post['paypalexpress_pending_status_id'];
         } else {
-            $data['paypal_express_pending_status_id'] = Config::get('paypal_express_pending_status_id');
+            $data['paypalexpress_pending_status_id'] = Config::get('paypalexpress_pending_status_id');
         }
         
-        if (isset($this->request->post['paypal_express_processed_status_id'])) {
-            $data['paypal_express_processed_status_id'] = $this->request->post['paypal_express_processed_status_id'];
+        if (isset($this->request->post['paypalexpress_processed_status_id'])) {
+            $data['paypalexpress_processed_status_id'] = $this->request->post['paypalexpress_processed_status_id'];
         } else {
-            $data['paypal_express_processed_status_id'] = Config::get('paypal_express_processed_status_id');
+            $data['paypalexpress_processed_status_id'] = Config::get('paypalexpress_processed_status_id');
         }
         
-        if (isset($this->request->post['paypal_express_refunded_status_id'])) {
-            $data['paypal_express_refunded_status_id'] = $this->request->post['paypal_express_refunded_status_id'];
+        if (isset($this->request->post['paypalexpress_refunded_status_id'])) {
+            $data['paypalexpress_refunded_status_id'] = $this->request->post['paypalexpress_refunded_status_id'];
         } else {
-            $data['paypal_express_refunded_status_id'] = Config::get('paypal_express_refunded_status_id');
+            $data['paypalexpress_refunded_status_id'] = Config::get('paypalexpress_refunded_status_id');
         }
         
-        if (isset($this->request->post['paypal_express_reversed_status_id'])) {
-            $data['paypal_express_reversed_status_id'] = $this->request->post['paypal_express_reversed_status_id'];
+        if (isset($this->request->post['paypalexpress_reversed_status_id'])) {
+            $data['paypalexpress_reversed_status_id'] = $this->request->post['paypalexpress_reversed_status_id'];
         } else {
-            $data['paypal_express_reversed_status_id'] = Config::get('paypal_express_reversed_status_id');
+            $data['paypalexpress_reversed_status_id'] = Config::get('paypalexpress_reversed_status_id');
         }
         
-        if (isset($this->request->post['paypal_express_voided_status_id'])) {
-            $data['paypal_express_voided_status_id'] = $this->request->post['paypal_express_voided_status_id'];
+        if (isset($this->request->post['paypalexpress_voided_status_id'])) {
+            $data['paypalexpress_voided_status_id'] = $this->request->post['paypalexpress_voided_status_id'];
         } else {
-            $data['paypal_express_voided_status_id'] = Config::get('paypal_express_voided_status_id');
+            $data['paypalexpress_voided_status_id'] = Config::get('paypalexpress_voided_status_id');
         }
         
-        if (isset($this->request->post['paypal_express_allow_note'])) {
-            $data['paypal_express_allow_note'] = $this->request->post['paypal_express_allow_note'];
+        if (isset($this->request->post['paypalexpress_allow_note'])) {
+            $data['paypalexpress_allow_note'] = $this->request->post['paypalexpress_allow_note'];
         } else {
-            $data['paypal_express_allow_note'] = Config::get('paypal_express_allow_note');
+            $data['paypalexpress_allow_note'] = Config::get('paypalexpress_allow_note');
         }
         
-        if (isset($this->request->post['paypal_express_logo'])) {
-            $data['paypal_express_logo'] = $this->request->post['paypal_express_logo'];
+        if (isset($this->request->post['paypalexpress_logo'])) {
+            $data['paypalexpress_logo'] = $this->request->post['paypalexpress_logo'];
         } else {
-            $data['paypal_express_logo'] = Config::get('paypal_express_logo');
+            $data['paypalexpress_logo'] = Config::get('paypalexpress_logo');
         }
         
-        if (isset($this->request->post['paypal_express_page_colour'])) {
-            $data['paypal_express_page_colour'] = str_replace('#', '', $this->request->post['paypal_express_page_colour']);
+        if (isset($this->request->post['paypalexpress_page_colour'])) {
+            $data['paypalexpress_page_colour'] = str_replace('#', '', $this->request->post['paypalexpress_page_colour']);
         } else {
-            $data['paypal_express_page_colour'] = Config::get('paypal_express_page_colour');
+            $data['paypalexpress_page_colour'] = Config::get('paypalexpress_page_colour');
         }
         
-        if (isset($this->request->post['paypal_express_recurring_cancel_status'])) {
-            $data['paypal_express_recurring_cancel_status'] = $this->request->post['paypal_express_recurring_cancel_status'];
+        if (isset($this->request->post['paypalexpress_recurring_cancel_status'])) {
+            $data['paypalexpress_recurring_cancel_status'] = $this->request->post['paypalexpress_recurring_cancel_status'];
         } else {
-            $data['paypal_express_recurring_cancel_status'] = Config::get('paypal_express_recurring_cancel_status');
+            $data['paypalexpress_recurring_cancel_status'] = Config::get('paypalexpress_recurring_cancel_status');
         }
         
         Theme::model('tool/image');
         
-        $logo = Config::get('paypal_express_logo');
+        $logo = Config::get('paypalexpress_logo');
         
-        if (isset($this->request->post['paypal_express_logo']) && file_exists(Config::get('path.image') . $this->request->post['paypal_express_logo'])) {
-            $data['thumb'] = $this->model_tool_image->resize($this->request->post['paypal_express_logo'], 750, 90);
+        if (isset($this->request->post['paypalexpress_logo']) && file_exists(Config::get('path.image') . $this->request->post['paypalexpress_logo'])) {
+            $data['thumb'] = $this->model_tool_image->resize($this->request->post['paypalexpress_logo'], 750, 90);
         } elseif (($logo != '') && file_exists(Config::get('path.image') . $logo)) {
             $data['thumb'] = $this->model_tool_image->resize($logo, 750, 90);
         } else {
@@ -203,26 +203,26 @@ class PaypalExpress extends Controller {
         
         $data['no_image'] = $this->model_tool_image->resize('placeholder.png', 750, 90);
         
-        if (isset($this->request->post['paypal_express_geo_zone_id'])) {
-            $data['paypal_express_geo_zone_id'] = $this->request->post['paypal_express_geo_zone_id'];
+        if (isset($this->request->post['paypalexpress_geo_zone_id'])) {
+            $data['paypalexpress_geo_zone_id'] = $this->request->post['paypalexpress_geo_zone_id'];
         } else {
-            $data['paypal_express_geo_zone_id'] = Config::get('paypal_express_geo_zone_id');
+            $data['paypalexpress_geo_zone_id'] = Config::get('paypalexpress_geo_zone_id');
         }
         
         Theme::model('locale/geo_zone');
         
         $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
         
-        if (isset($this->request->post['paypal_express_status'])) {
-            $data['paypal_express_status'] = $this->request->post['paypal_express_status'];
+        if (isset($this->request->post['paypalexpress_status'])) {
+            $data['paypalexpress_status'] = $this->request->post['paypalexpress_status'];
         } else {
-            $data['paypal_express_status'] = Config::get('paypal_express_status');
+            $data['paypalexpress_status'] = Config::get('paypalexpress_status');
         }
         
-        if (isset($this->request->post['paypal_express_sort_order'])) {
-            $data['paypal_express_sort_order'] = $this->request->post['paypal_express_sort_order'];
+        if (isset($this->request->post['paypalexpress_sort_order'])) {
+            $data['paypalexpress_sort_order'] = $this->request->post['paypalexpress_sort_order'];
         } else {
-            $data['paypal_express_sort_order'] = Config::get('paypal_express_sort_order');
+            $data['paypalexpress_sort_order'] = Config::get('paypalexpress_sort_order');
         }
         
         $data['token'] = $this->session->data['token'];
@@ -243,19 +243,19 @@ class PaypalExpress extends Controller {
     }
     
     protected function validate() {
-        if (!User::hasPermission('modify', 'payment/paypal_express')) {
+        if (!User::hasPermission('modify', 'payment/paypalexpress')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (empty($this->request->post['paypal_express_username'])) {
+        if (empty($this->request->post['paypalexpress_username'])) {
             $this->error['username'] = Lang::get('lang_error_username');
         }
         
-        if (empty($this->request->post['paypal_express_password'])) {
+        if (empty($this->request->post['paypalexpress_password'])) {
             $this->error['password'] = Lang::get('lang_error_password');
         }
         
-        if (empty($this->request->post['paypal_express_signature'])) {
+        if (empty($this->request->post['paypalexpress_signature'])) {
             $this->error['signature'] = Lang::get('lang_error_signature');
         }
         
@@ -519,7 +519,7 @@ class PaypalExpress extends Controller {
     }
     
     public function refund() {
-        $data = Theme::language('payment/paypal_express_refund');
+        $data = Theme::language('payment/paypalexpress_refund');
         
         Theme::setTitle(Lang::get('lang_heading_title'));
         
@@ -561,7 +561,7 @@ class PaypalExpress extends Controller {
         
         $data = Theme::render_controllers($data);
         
-        Response::setOutput(Theme::view('payment/paypal_express_refund', $data));
+        Response::setOutput(Theme::view('payment/paypalexpress_refund', $data));
     }
     
     public function doRefund() {
@@ -675,7 +675,7 @@ class PaypalExpress extends Controller {
     }
     
     public function orderAction() {
-        if (Config::get('paypal_express_status')) {
+        if (Config::get('paypalexpress_status')) {
             $data = Theme::language('payment/paypal_express_order');
             Theme::model('payment/paypal_express');
             
@@ -720,7 +720,7 @@ class PaypalExpress extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         
         $data['currency_codes']   = $this->model_payment_paypal_express->currencyCodes();
-        $data['default_currency'] = Config::get('paypal_express_currency');
+        $data['default_currency'] = Config::get('paypalexpress_currency');
         
         Breadcrumb::add('lang_text_paypal_express', 'payment/paypal_express');
         Breadcrumb::add('lang_heading_title', 'payment/paypal_express/search');
