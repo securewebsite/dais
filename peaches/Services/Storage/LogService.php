@@ -16,15 +16,15 @@
 
 namespace Dais\Services\Storage;
 
-use Dais\Services\Providers\Storage\Log;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Storage\Log;
 
 class LogService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['log'] = function ($app) {
-            return new Log(Config::get('config_error_filename'), Config::get('path.logs'));
+            return new Log($app['config']->get('config_error_filename'), $app['config']->get('path.logs'));
         };
 	}
 }

@@ -16,9 +16,9 @@
 
 namespace Dais\Services\Communication;
 
-use Dais\Services\Providers\Communication\Notification;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Communication\Notification;
 
 class NotificationService implements ServiceProviderInterface {
 

@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Common;
+
 use App\Controllers\Controller;
 
 class Header extends Controller {
+    
     public function index() {
         $data['title'] = Theme::getTitle();
         
@@ -30,9 +32,6 @@ class Header extends Controller {
         $data['links']     = Theme::getLinks();
         $data['lang']      = Lang::get('lang_code');
         $data['direction'] = Lang::get('lang_direction');
-        
-        CSS::register('dais.min')
-            ->register('editor.min', 'dais.min');
         
         $data = Theme::language('common/header', $data);
         
@@ -47,7 +46,7 @@ class Header extends Controller {
         $data['menu']     = Theme::controller('common/menu');
 
         $key              = CSS::compile();
-        $data['css_link'] = Config::get('https.public') . 'asset/' . Config::get('theme.name') . '/compiled/' . Filecache::get_key($key, 'css');
+        $data['css_link'] = Config::get('https.public') . 'asset/css/' . Filecache::get_key($key, 'css');
         
         return Theme::view('common/header', $data);
     }

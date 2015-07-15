@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Catalog;
-use Dais\Base\Model;
+namespace App\Models\Front\Catalog;
+use App\Models\Model;
 
 class Review extends Model {
     public function addReview($product_id, $data) {

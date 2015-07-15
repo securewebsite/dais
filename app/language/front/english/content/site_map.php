@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Front\Language\English\Content;
+namespace App\Language\Front\English\Content;
 
 class SiteMap {
 	public static function lang() {

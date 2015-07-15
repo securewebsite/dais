@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Widget;
+
 use App\Controllers\Controller;
 
 class PostWall extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -83,7 +85,7 @@ class PostWall extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('widget/post_wall', $data));
     }

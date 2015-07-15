@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Report;
+
 use App\Controllers\Controller;
 
 class SaleCoupon extends Controller {
+    
     public function index() {
         $data = Theme::language('report/sale_coupon');
         
@@ -94,7 +96,7 @@ class SaleCoupon extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('report/sale_coupon', $data));
     }

@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Content;
-use Dais\Base\Model;
+namespace App\Models\Admin\Content;
+
+use App\Models\Model;
 
 class Comment extends Model {
+    
     public function addComment($data) {
         $this->db->query("
 			INSERT INTO {$this->db->prefix}blog_comment 

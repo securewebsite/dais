@@ -15,6 +15,7 @@
 */
 
 namespace App\Controllers\Admin\Content;
+
 use App\Controllers\Controller;
 
 class Calendar extends Controller {

@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Catalog;
+namespace App\Language\Admin\English\Catalog;
 
 class Filter {
 	public static function lang() {

@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Front\Language\English\Shop;
+namespace App\Language\Front\English\Shop;
 
 class Footer {
 	public static function lang() {

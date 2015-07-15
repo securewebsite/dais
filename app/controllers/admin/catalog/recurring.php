@@ -14,11 +14,12 @@
 |	
 */
 
-
 namespace App\Controllers\Admin\Catalog;
+
 use App\Controllers\Controller;
 
 class Recurring extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -266,7 +267,7 @@ class Recurring extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('catalog/recurring_list', $data));
     }
@@ -316,9 +317,9 @@ class Recurring extends Controller {
         
         $data['token'] = $this->session->data['token'];
         
-        Theme::model('localization/language');
+        Theme::model('locale/language');
         
-        $data['languages'] = $this->model_localization_language->getLanguages();
+        $data['languages'] = $this->model_locale_language->getLanguages();
         
         if (isset($this->request->post['recurring_description'])) {
             $data['recurring_description'] = $this->request->post['recurring_description'];
@@ -429,7 +430,7 @@ class Recurring extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('catalog/recurring_form', $data));
     }

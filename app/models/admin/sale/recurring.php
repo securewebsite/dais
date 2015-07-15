@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Sale;
-use Dais\Base\Model;
+namespace App\Models\Admin\Sale;
+
+use App\Models\Model;
 
 class Recurring extends Model {
+    
     public function getTotalRecurrings($data) {
         $sql = "
 			SELECT COUNT(*) AS `total` 

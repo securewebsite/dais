@@ -6,26 +6,34 @@
 |--------------------------------------------------------------------------
 |
 |   This file is part of the Dais Framework package.
-|	
-|	(c) Vince Kronlein <vince@dais.io>
-|	
-|	For the full copyright and license information, please view the LICENSE
-|	file that was distributed with this source code.
-|	
+|   
+|   (c) Vince Kronlein <vince@dais.io>
+|   
+|   For the full copyright and license information, please view the LICENSE
+|   file that was distributed with this source code.
+|   
 */
 
 namespace Dais\Facades;
 
+use Dais\Support\Facade;
+
 class Tax extends Facade {
-    public static function getInstanceIdentifier() {
+    
+    protected static function getFacadeAccessor() {
         return 'tax';
     }
 
-    /**
-     * Allows us to return properties
-     * with Facade::p()->property
-     */
+    /*
+    |--------------------------------------------------------------------------
+    |   Magic p() Method
+    |-------------------------------------------------------------------------- 
+    |
+    |	This method allows us to access properties in our facaded service
+    |	via: Facade::p()->property 
+    */
+   
     public static function p() {
-    	return parent::getInstance();
+    	return static::getFacadeRoot();
     }
 }

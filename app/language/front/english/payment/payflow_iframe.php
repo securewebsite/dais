@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Front\Language\English\Payment;
+namespace App\Language\Front\English\Payment;
 
 class PayflowIframe {
 	public static function lang() {

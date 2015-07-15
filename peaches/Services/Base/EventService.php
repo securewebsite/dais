@@ -16,15 +16,21 @@
 
 namespace Dais\Services\Base;
 
-use Dais\Services\Providers\Base\Event;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Base\Event;
 
 class EventService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
-		$app['events'] = function ($app) {
-            return new Event;
+		
+		$event  = new Event;
+		$events = $event->registerEvents();
+
+		$app->set('plugin_events', $events);
+
+		$app['events'] = function ($app) use ($event) {
+            return $event;
         };
 	}
 }

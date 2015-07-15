@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Payment;
-use Dais\Base\Model;
+namespace App\Models\Admin\Payment;
+
+use App\Models\Model;
 
 class PaypalExpress extends Model {
+    
     public function install() {
         $this->db->query("
 			CREATE TABLE IF NOT EXISTS `{$this->db->prefix}paypal_order` (

@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Error;
+
 use App\Controllers\Controller;
 
 class NotFound extends Controller {
+    
     public function index() {
         $data = Theme::language('error/not_found');
         
@@ -27,7 +29,7 @@ class NotFound extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('error/not_found', $data));
     }

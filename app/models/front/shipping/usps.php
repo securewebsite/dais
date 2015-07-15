@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Shipping;
-use Dais\Base\Model;
+namespace App\Models\Front\Shipping;
+use App\Models\Model;
 use DOMDocument;
 
 class Usps extends Model {
@@ -41,7 +41,7 @@ class Usps extends Model {
         $method_data = array();
         
         if ($status):
-            $this->theme->model('localization/country');
+            $this->theme->model('locale/country');
             
             $quote_data = array();
             

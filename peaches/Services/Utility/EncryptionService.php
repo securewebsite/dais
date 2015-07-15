@@ -16,15 +16,15 @@
 
 namespace Dais\Services\Utility;
 
-use Dais\Services\Providers\Utility\Encryption;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Utility\Encryption;
 
 class EncryptionService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['encryption'] = function ($app) {
-            return new Encryption(Config::get('config_encryption'));
+            return new Encryption($app['config']->get('config_encryption'));
         };
 	}
 }

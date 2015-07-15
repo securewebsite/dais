@@ -59,7 +59,7 @@ class Logout extends Controller {
         
         $this->breadcrumb->add('lang_text_logout', 'account/logout', null, true, 'SSL');
 
-        if (Theme::getstyle() = 'content'):
+        if (Theme::getstyle() == 'content'):
             $route = 'content/home';
         else:
             $route = 'shop/home';
@@ -70,7 +70,7 @@ class Logout extends Controller {
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = $this->theme->renderControllers($data);
         
         $this->response->setOutput($this->theme->view('common/success', $data));
     }

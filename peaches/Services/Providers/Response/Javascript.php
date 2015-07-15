@@ -29,8 +29,8 @@ final class Javascript {
     public  $cache_key;
     
     public function __construct() {
-        $this->directory        = Config::get('path.asset') . Config::get('theme.name') . '/js/';
-        $this->script_directory = Config::get('path.theme') . Config::get('theme.name') . '/view/';
+        $this->directory        = Config::get('theme.asset.path') . 'js' . SEP;
+        $this->script_directory = Config::get('theme.path') . 'view' . SEP;
     }
     
     public function register($name, $dep = null, $last = false) {

@@ -61,7 +61,7 @@ class Page extends Controller {
             
             $data             = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
             $data['share_bar'] = $this->theme->controller('common/share_bar', array('page', $data));
-            $data             = $this->theme->render_controllers($data);
+            $data             = $this->theme->renderControllers($data);
             
             $this->response->setOutput($this->theme->view('content/page', $data));
         } else {
@@ -77,7 +77,7 @@ class Page extends Controller {
             
             $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
             
-            $data = $this->theme->render_controllers($data);
+            $data = $this->theme->renderControllers($data);
             
             $this->response->setOutput($this->theme->view('error/not_found', $data));
         }

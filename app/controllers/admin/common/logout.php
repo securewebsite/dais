@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Common;
+
 use App\Controllers\Controller;
 
 class Logout extends Controller {
+    
     public function index() {
         User::logout();
         

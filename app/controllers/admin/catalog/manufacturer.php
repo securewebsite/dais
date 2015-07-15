@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Catalog;
+
 use App\Controllers\Controller;
 
 class Manufacturer extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -238,7 +240,7 @@ class Manufacturer extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('catalog/manufacturer_list', $data));
     }
@@ -352,7 +354,7 @@ class Manufacturer extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('catalog/manufacturer_form', $data));
     }

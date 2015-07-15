@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Account;
-use Dais\Base\Model;
+namespace App\Models\Front\Account;
+use App\Models\Model;
 
 class Product extends Model {
     public function getProduct($product_id, $customer_id) {

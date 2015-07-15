@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Common;
+
 use App\Controllers\Controller;
 
 class Footer extends Controller {
+    
     public function index() {
         $data = Theme::language('common/footer');
         
@@ -27,7 +29,7 @@ class Footer extends Controller {
         $data['text_footer'] = sprintf(Lang::get('lang_text_footer'), App::version());
 
 		$key             = JS::compile();
-		$data['js_link'] = Config::get('https.public') . 'asset/' . Config::get('theme.name') . '/compiled/' . Filecache::get_key($key, 'js');
+		$data['js_link'] = Config::get('https.public') . 'asset/js/' . Filecache::get_key($key, 'js');
         
         return Theme::view('common/footer', $data);
     }

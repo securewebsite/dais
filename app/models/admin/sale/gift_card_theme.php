@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Sale;
-use Dais\Base\Model;
+namespace App\Models\Admin\Sale;
+
+use App\Models\Model;
 
 class GiftCardTheme extends Model {
+    
     public function addGiftcardTheme($data) {
         $this->db->query("
 			INSERT INTO {$this->db->prefix}gift_card_theme 

@@ -14,11 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Sale;
+namespace App\Models\Admin\Sale;
 
-use Dais\Base\Model;
+use App\Models\Model;
 
 class Order extends Model {
+    
     public function addOrder($data) {
         Theme::model('setting/store');
         
@@ -42,11 +43,11 @@ class Order extends Model {
             $invoice_prefix = Config::get('config_invoice_prefix');
         }
         
-        Theme::model('localization/country');
+        Theme::model('locale/country');
         
-        Theme::model('localization/zone');
+        Theme::model('locale/zone');
         
-        $country_info = $this->model_localization_country->getCountry($data['shipping_country_id']);
+        $country_info = $this->model_locale_country->getCountry($data['shipping_country_id']);
         
         if ($country_info) {
             $shipping_country = $country_info['name'];
@@ -56,7 +57,7 @@ class Order extends Model {
             $shipping_address_format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
         }
         
-        $zone_info = $this->model_localization_zone->getZone($data['shipping_zone_id']);
+        $zone_info = $this->model_locale_zone->getZone($data['shipping_zone_id']);
         
         if ($zone_info) {
             $shipping_zone = $zone_info['name'];
@@ -64,7 +65,7 @@ class Order extends Model {
             $shipping_zone = '';
         }
         
-        $country_info = $this->model_localization_country->getCountry($data['payment_country_id']);
+        $country_info = $this->model_locale_country->getCountry($data['payment_country_id']);
         
         if ($country_info) {
             $payment_country = $country_info['name'];
@@ -74,7 +75,7 @@ class Order extends Model {
             $payment_address_format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
         }
         
-        $zone_info = $this->model_localization_zone->getZone($data['payment_zone_id']);
+        $zone_info = $this->model_locale_zone->getZone($data['payment_zone_id']);
         
         if ($zone_info) {
             $payment_zone = $zone_info['name'];
@@ -82,9 +83,9 @@ class Order extends Model {
             $payment_zone = '';
         }
         
-        Theme::model('localization/currency');
+        Theme::model('locale/currency');
         
-        $currency_info = $this->model_localization_currency->getCurrencyByCode(Config::get('config_currency'));
+        $currency_info = $this->model_locale_currency->getCurrencyByCode(Config::get('config_currency'));
         
         if ($currency_info) {
             $currency_id = $currency_info['currency_id'];
@@ -292,11 +293,11 @@ class Order extends Model {
     }
     
     public function editOrder($order_id, $data) {
-        Theme::model('localization/country');
+        Theme::model('locale/country');
         
-        Theme::model('localization/zone');
+        Theme::model('locale/zone');
         
-        $country_info = $this->model_localization_country->getCountry($data['shipping_country_id']);
+        $country_info = $this->model_locale_country->getCountry($data['shipping_country_id']);
         
         if ($country_info) {
             $shipping_country = $country_info['name'];
@@ -306,7 +307,7 @@ class Order extends Model {
             $shipping_address_format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
         }
         
-        $zone_info = $this->model_localization_zone->getZone($data['shipping_zone_id']);
+        $zone_info = $this->model_locale_zone->getZone($data['shipping_zone_id']);
         
         if ($zone_info) {
             $shipping_zone = $zone_info['name'];
@@ -314,7 +315,7 @@ class Order extends Model {
             $shipping_zone = '';
         }
         
-        $country_info = $this->model_localization_country->getCountry($data['payment_country_id']);
+        $country_info = $this->model_locale_country->getCountry($data['payment_country_id']);
         
         if ($country_info) {
             $payment_country = $country_info['name'];
@@ -324,7 +325,7 @@ class Order extends Model {
             $payment_address_format = '{firstname} {lastname}' . "\n" . '{company}' . "\n" . '{address_1}' . "\n" . '{address_2}' . "\n" . '{city} {postcode}' . "\n" . '{zone}' . "\n" . '{country}';
         }
         
-        $zone_info = $this->model_localization_zone->getZone($data['payment_zone_id']);
+        $zone_info = $this->model_locale_zone->getZone($data['payment_zone_id']);
         
         if ($zone_info) {
             $payment_zone = $zone_info['name'];
@@ -739,9 +740,9 @@ class Order extends Model {
 				$affiliate_lastname  = '';
             }
             
-            Theme::model('localization/language');
+            Theme::model('locale/language');
             
-            $language_info = $this->model_localization_language->getLanguage($order_query->row['language_id']);
+            $language_info = $this->model_locale_language->getLanguage($order_query->row['language_id']);
             
             if ($language_info) {
                 $language_code = $language_info['code'];

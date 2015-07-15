@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Front\Language\English\Checkout;
+namespace App\Language\Front\English\Checkout;
 
 class Cart {
 	public static function lang() {

@@ -13,7 +13,8 @@
 |	file that was distributed with this source code.
 |	
 */
-namespace Admin\Language\English\Payment;
+
+namespace App\Language\Admin\English\Payment;
 
 class PaypalExpressRefund {
 	public static function lang() {

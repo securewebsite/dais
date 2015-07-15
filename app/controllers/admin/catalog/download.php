@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Catalog;
+
 use App\Controllers\Controller;
 
 class Download extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -238,7 +240,7 @@ class Download extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('catalog/download_list', $data));
     }
@@ -296,9 +298,9 @@ class Download extends Controller {
         
         $data['cancel'] = Url::link('catalog/download', 'token=' . $this->session->data['token'] . $url, 'SSL');
         
-        Theme::model('localization/language');
+        Theme::model('locale/language');
         
-        $data['languages'] = $this->model_localization_language->getLanguages();
+        $data['languages'] = $this->model_locale_language->getLanguages();
         
         if (isset($this->request->get['download_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
             $download_info = $this->model_catalog_download->getDownload($this->request->get['download_id']);
@@ -354,7 +356,7 @@ class Download extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('catalog/download_form', $data));
     }

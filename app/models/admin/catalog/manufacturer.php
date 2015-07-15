@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Catalog;
-use Dais\Base\Model;
+namespace App\Models\Admin\Catalog;
+
+use App\Models\Model;
 
 class Manufacturer extends Model {
+    
     public function addManufacturer($data) {
         $this->db->query("
 			INSERT INTO {$this->db->prefix}manufacturer 

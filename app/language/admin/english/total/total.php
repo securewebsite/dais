@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Total;
+namespace App\Language\Admin\English\Total;
 
 class Total {
 	public static function lang() {

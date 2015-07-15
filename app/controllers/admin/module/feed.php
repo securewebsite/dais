@@ -15,10 +15,12 @@
 */
 
 namespace App\Controllers\Admin\Module;
+
 use App\Controllers\Controller;
-use Dais\Library\Naming;
+use Dais\Support\Naming;
 
 class Feed extends Controller {
+    
     public function index() {
         $data = Theme::language('module/feed');
         Theme::setTitle(Lang::get('lang_heading_feed'));
@@ -47,7 +49,7 @@ class Feed extends Controller {
         
         foreach ($modules as $key => $value) {
             $theme_file = Theme::getPath() . 'controller/feed/' . $value . '.php';
-            $core_file = Config::get('path.application') . 'controller/feed/' . $value . '.php';
+            $core_file  = Config::get('path.application') . 'feed/' . $value . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {
                 $this->model_setting_module->uninstall('feed', $value);
@@ -82,7 +84,7 @@ class Feed extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('module/feed', $data));
     }
@@ -106,7 +108,7 @@ class Feed extends Controller {
             $this->model_people_user_group->addPermission(User::getId(), 'access', 'feed/' . $this->request->get['module']);
             $this->model_people_user_group->addPermission(User::getId(), 'modify', 'feed/' . $this->request->get['module']);
             
-            $base_path  = App::appPath() . Config::get('prefix.facade') . 'controller' . SEP . 'feed' . SEP;
+            $base_path  = Config::get('path.application') . 'feed' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'feed' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
@@ -143,7 +145,7 @@ class Feed extends Controller {
             $this->model_setting_module->uninstall('feed', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
-            $base_path  = App::appPath() . Config::get('prefix.facade') . 'controller' . SEP . 'feed' . SEP;
+            $base_path  = Config::get('path.application') . 'feed' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'feed' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):

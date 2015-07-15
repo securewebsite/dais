@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Catalog;
+
 use App\Controllers\Controller;
 
 class Review extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -272,7 +274,7 @@ class Review extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('catalog/review_list', $data));
     }
@@ -396,7 +398,7 @@ class Review extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('catalog/review_form', $data));
     }

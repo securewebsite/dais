@@ -16,17 +16,17 @@
 
 namespace Dais\Services\Storage;
 
-use Dais\Services\Providers\Storage\Session;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Storage\Session;
 
 class SessionService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
         $app['session'] = function ($app) {
-            $session = new Session(Config::get('path.sessions'));
+            $session = new Session($app['config']->get('path.sessions'));
             
-	        switch (Config::get('active.facade')):
+	        switch ($app['config']->get('active.facade')):
 	            case ADMIN_FACADE:
 	                $session->admin_session();
 	                break;

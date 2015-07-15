@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Content;
+
 use App\Controllers\Controller;
 
 class Page extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -245,7 +247,7 @@ class Page extends Controller {
         $data['order'] = $order;
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('content/page_list', $data));
     }
@@ -313,9 +315,9 @@ class Page extends Controller {
         
         $data['token'] = $this->session->data['token'];
         
-        Theme::model('localization/language');
+        Theme::model('locale/language');
         
-        $data['languages'] = $this->model_localization_language->getLanguages();
+        $data['languages'] = $this->model_locale_language->getLanguages();
         
         if (isset($this->request->post['page_description'])) {
             $data['page_description'] = $this->request->post['page_description'];
@@ -418,7 +420,7 @@ class Page extends Controller {
         Theme::loadjs('javascript/content/page_form', $data);
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('content/page_form', $data));
     }

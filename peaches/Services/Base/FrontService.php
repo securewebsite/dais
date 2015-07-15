@@ -16,10 +16,10 @@
 
 namespace Dais\Services\Base;
 
-use Dais\Services\Providers\Base\Front;
 use Dais\Base\Action;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Base\Front;
 
 class FrontService implements ServiceProviderInterface {
 

@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Calendar;
+namespace App\Language\Admin\English\Calendar;
 
 class Event {
 	public static function lang() {

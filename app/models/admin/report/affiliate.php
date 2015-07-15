@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Report;
-use Dais\Base\Model;
+namespace App\Models\Admin\Report;
+
+use App\Models\Model;
 
 class Affiliate extends Model {
+    
     public function getCommission($data = array()) {
         $sql = "
             SELECT 

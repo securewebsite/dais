@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Widget;
+
 use App\Controllers\Controller;
 
 class Welcome extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -58,15 +60,15 @@ class Welcome extends Controller {
         
         $data['layouts'] = $this->model_design_layout->getLayouts();
         
-        Theme::model('localization/language');
+        Theme::model('locale/language');
         
-        $data['languages'] = $this->model_localization_language->getLanguages();
+        $data['languages'] = $this->model_locale_language->getLanguages();
         
         Theme::loadjs('javascript/widget/welcome', $data);
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('widget/welcome', $data));
     }

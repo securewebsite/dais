@@ -14,11 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Payment;
-use Dais\Base\Model;
-use Dais\Library\Log;
+namespace App\Models\Admin\Payment;
+
+use App\Models\Model;
 
 class PayflowIframe extends Model {
+    
     public function install() {
         $this->db->query("
 			CREATE TABLE `{$this->db->prefix}paypal_payflow_iframe_order` (

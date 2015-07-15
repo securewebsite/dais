@@ -16,9 +16,9 @@
 
 namespace Dais\Services\Utility;
 
-use Dais\Services\Providers\Utility\Weight;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Utility\Weight;
 
 class WeightService implements ServiceProviderInterface {
 

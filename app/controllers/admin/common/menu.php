@@ -15,6 +15,7 @@
 */
 
 namespace App\Controllers\Admin\Common;
+
 use App\Controllers\Controller;
 
 class Menu extends Controller {
@@ -43,9 +44,9 @@ class Menu extends Controller {
             $data['blog_post']                   = Url::link('content/post', 'token=' . $this->session->data['token'], 'SSL');
             $data['blog_comment']                = Url::link('content/comment', 'token=' . $this->session->data['token'], 'SSL');
             $data['category']                    = Url::link('catalog/category', 'token=' . $this->session->data['token'], 'SSL');
-            $data['country']                     = Url::link('localization/country', 'token=' . $this->session->data['token'], 'SSL');
+            $data['country']                     = Url::link('locale/country', 'token=' . $this->session->data['token'], 'SSL');
             $data['coupon']                      = Url::link('sale/coupon', 'token=' . $this->session->data['token'], 'SSL');
-            $data['currency']                    = Url::link('localization/currency', 'token=' . $this->session->data['token'], 'SSL');
+            $data['currency']                    = Url::link('locale/currency', 'token=' . $this->session->data['token'], 'SSL');
             $data['customer']                    = Url::link('people/customer', 'token=' . $this->session->data['token'], 'SSL');
             $data['customer_group']              = Url::link('people/customer_group', 'token=' . $this->session->data['token'], 'SSL');
             $data['customer_ban_ip']             = Url::link('people/customer_ban_ip', 'token=' . $this->session->data['token'], 'SSL');
@@ -55,10 +56,10 @@ class Menu extends Controller {
             $data['presenter']                   = Url::link('calendar/event/presenter_list', 'token=' . $this->session->data['token'], 'SSL');
             $data['feed']                        = Url::link('module/feed', 'token=' . $this->session->data['token'], 'SSL');
             $data['filter']                      = Url::link('catalog/filter', 'token=' . $this->session->data['token'], 'SSL');
-            $data['geo_zone']                    = Url::link('localization/geo_zone', 'token=' . $this->session->data['token'], 'SSL');
+            $data['geo_zone']                    = Url::link('locale/geo_zone', 'token=' . $this->session->data['token'], 'SSL');
             $data['help']                        = Url::link('setting/help', 'token=' . $this->session->data['token'], 'SSL');
             $data['page']                        = Url::link('content/page', 'token=' . $this->session->data['token'], 'SSL');
-            $data['language']                    = Url::link('localization/language', 'token=' . $this->session->data['token'], 'SSL');
+            $data['language']                    = Url::link('locale/language', 'token=' . $this->session->data['token'], 'SSL');
             $data['layout']                      = Url::link('design/layout', 'token=' . $this->session->data['token'], 'SSL');
             $data['logout']                      = Url::link('common/logout', 'token=' . $this->session->data['token'], 'SSL');
             $data['contact']                     = Url::link('people/contact', 'token=' . $this->session->data['token'], 'SSL');
@@ -69,7 +70,7 @@ class Menu extends Controller {
             $data['widget']                      = Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL');
             $data['option']                      = Url::link('catalog/option', 'token=' . $this->session->data['token'], 'SSL');
             $data['order']                       = Url::link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
-            $data['order_status']                = Url::link('localization/order_status', 'token=' . $this->session->data['token'], 'SSL');
+            $data['order_status']                = Url::link('locale/order_status', 'token=' . $this->session->data['token'], 'SSL');
             $data['payment']                     = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
             $data['product']                     = Url::link('catalog/product', 'token=' . $this->session->data['token'], 'SSL');
             $data['plugin']                      = Url::link('module/plugin', 'token=' . $this->session->data['token'], 'SSL');
@@ -87,23 +88,23 @@ class Menu extends Controller {
             $data['report_affiliate_commission'] = Url::link('report/affiliate_commission', 'token=' . $this->session->data['token'], 'SSL');
             $data['review']                      = Url::link('catalog/review', 'token=' . $this->session->data['token'], 'SSL');
             $data['return']                      = Url::link('sale/returns', 'token=' . $this->session->data['token'], 'SSL');
-            $data['return_action']               = Url::link('localization/return_action', 'token=' . $this->session->data['token'], 'SSL');
-            $data['return_reason']               = Url::link('localization/return_reason', 'token=' . $this->session->data['token'], 'SSL');
-            $data['return_status']               = Url::link('localization/return_status', 'token=' . $this->session->data['token'], 'SSL');
+            $data['return_action']               = Url::link('locale/return_action', 'token=' . $this->session->data['token'], 'SSL');
+            $data['return_reason']               = Url::link('locale/return_reason', 'token=' . $this->session->data['token'], 'SSL');
+            $data['return_status']               = Url::link('locale/return_status', 'token=' . $this->session->data['token'], 'SSL');
             $data['route']                       = Url::link('design/route', 'token=' . $this->session->data['token'], 'SSL');
             $data['shipping']                    = Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
             $data['store']                       = Config::get('http.public');
-            $data['stock_status']                = Url::link('localization/stock_status', 'token=' . $this->session->data['token'], 'SSL');
-            $data['tax_class']                   = Url::link('localization/tax_class', 'token=' . $this->session->data['token'], 'SSL');
-            $data['tax_rate']                    = Url::link('localization/tax_rate', 'token=' . $this->session->data['token'], 'SSL');
+            $data['stock_status']                = Url::link('locale/stock_status', 'token=' . $this->session->data['token'], 'SSL');
+            $data['tax_class']                   = Url::link('locale/tax_class', 'token=' . $this->session->data['token'], 'SSL');
+            $data['tax_rate']                    = Url::link('locale/tax_rate', 'token=' . $this->session->data['token'], 'SSL');
             $data['total']                       = Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL');
             $data['user']                        = Url::link('people/user', 'token=' . $this->session->data['token'], 'SSL');
             $data['user_group']                  = Url::link('people/user_permission', 'token=' . $this->session->data['token'], 'SSL');
             $data['gift_card']                   = Url::link('sale/gift_card', 'token=' . $this->session->data['token'], 'SSL');
             $data['gift_card_theme']             = Url::link('sale/gift_card_theme', 'token=' . $this->session->data['token'], 'SSL');
-            $data['weight_class']                = Url::link('localization/weight_class', 'token=' . $this->session->data['token'], 'SSL');
-            $data['length_class']                = Url::link('localization/length_class', 'token=' . $this->session->data['token'], 'SSL');
-            $data['zone']                        = Url::link('localization/zone', 'token=' . $this->session->data['token'], 'SSL');
+            $data['weight_class']                = Url::link('locale/weight_class', 'token=' . $this->session->data['token'], 'SSL');
+            $data['length_class']                = Url::link('locale/length_class', 'token=' . $this->session->data['token'], 'SSL');
+            $data['zone']                        = Url::link('locale/zone', 'token=' . $this->session->data['token'], 'SSL');
             
             $data['testing']                     = Url::link('tool/test', 'token=' . $this->session->data['token'], 'SSL');
             
@@ -115,7 +116,7 @@ class Menu extends Controller {
             
             // Orders
             Theme::model('sale/order');
-            Theme::model('localization/order_status');
+            Theme::model('locale/order_status');
             
             $order_status_total = $this->model_sale_order->getTotalOrders(array('filter_order_status_id' => Config::get('config_order_status_id')));
             
@@ -123,13 +124,13 @@ class Menu extends Controller {
             
             $data['alert_order_status'] = Url::link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status_id=' . Config::get('config_order_status_id'), 'SSL');
             
-            $data['text_pending_status'] = $this->model_localization_order_status->getMenuStatusDescription(Config::get('config_order_status_id'));
+            $data['text_pending_status'] = $this->model_locale_order_status->getMenuStatusDescription(Config::get('config_order_status_id'));
             
             $data['complete_status_total'] = $this->model_sale_order->getTotalOrders(array('filter_order_status_id' => Config::get('config_complete_status_id')));
             
             $data['alert_complete_status'] = Url::link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status_id=' . Config::get('config_complete_status_id'), 'SSL');
             
-            $data['text_complete_status'] = $this->model_localization_order_status->getMenuStatusDescription(Config::get('config_complete_status_id'));
+            $data['text_complete_status'] = $this->model_locale_order_status->getMenuStatusDescription(Config::get('config_complete_status_id'));
             
             // Returns
             Theme::model('sale/returns');

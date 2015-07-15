@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Checkout;
-use Dais\Base\Model;
+namespace App\Models\Front\Checkout;
+use App\Models\Model;
 
 class Coupon extends Model {
     public function getCoupon($code) {

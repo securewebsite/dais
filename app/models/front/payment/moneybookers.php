@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Payment;
-use Dais\Base\Model;
+namespace App\Models\Front\Payment;
+use App\Models\Model;
 
 class Moneybookers extends Model {
     public function getMethod($address, $total) {

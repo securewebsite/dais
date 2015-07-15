@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Setting;
-use Dais\Base\Model;
+namespace App\Models\Admin\Setting;
+
+use App\Models\Model;
 
 class Store extends Model {
+    
     public function addStore($data) {
         $this->db->query("
 			INSERT INTO {$this->db->prefix}store 

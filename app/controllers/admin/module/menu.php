@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Module;
+
 use App\Controllers\Controller;
 
 class Menu extends Controller {
+    
     private $error;
     
     public function index() {
@@ -173,7 +175,7 @@ class Menu extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('module/menu_builder_list', $data));
     }
@@ -263,7 +265,7 @@ class Menu extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('module/menu_builder_form', $data));
     }

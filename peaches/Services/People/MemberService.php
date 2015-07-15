@@ -16,12 +16,12 @@
 
 namespace Dais\Services\People;
 
-use Dais\Services\Providers\People\User;
-use Dais\Services\Providers\People\Customer;
-use Dais\Services\Providers\Utility\Tax;
-use Dais\Services\Providers\Response\Cart;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\People\User;
+use Dais\Services\Providers\Utility\Tax;
+use Dais\Services\Providers\Response\Cart;
+use Dais\Services\Providers\People\Customer;
 
 class MemberService implements ServiceProviderInterface {
 

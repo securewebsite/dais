@@ -14,9 +14,9 @@
 |	
 */
 
-namespace Admin\Language\English\Payment;
+namespace App\Language\Admin\English\Payment;
 
-class PayflowIFrame {
+class PayflowIframe {
 	public static function lang() {
 		//Headings
 		$_['lang_heading_title']                  = 'PayPal Payflow Pro iFrame';

@@ -16,9 +16,9 @@
 
 namespace Dais\Services\Response;
 
-use Dais\Services\Providers\Response\Response;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Response\Response;
 
 class ResponseService implements ServiceProviderInterface {
 
@@ -26,7 +26,7 @@ class ResponseService implements ServiceProviderInterface {
 		$app['response'] = function ($app) {
             $response = new Response;
 	        $response->addHeader('Content-Type: text/html; charset=utf-8');
-	        $response->setCompression(Config::get('config_compression'));
+	        $response->setCompression($app['config']->get('config_compression'));
 
             return $response;
         };

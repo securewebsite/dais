@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Report;
+
 use App\Controllers\Controller;
 
 class SaleShipping extends Controller {
+    
     public function index() {
         $data = Theme::language('report/sale_shipping');
         
@@ -93,9 +95,9 @@ class SaleShipping extends Controller {
         
         $data['token'] = $this->session->data['token'];
         
-        Theme::model('localization/order_status');
+        Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
+        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
         
         $data['groups'] = array();
         
@@ -134,7 +136,7 @@ class SaleShipping extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('report/sale_shipping', $data));
     }

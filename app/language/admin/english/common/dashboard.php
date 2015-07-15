@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Common;
+namespace App\Language\Admin\English\Common;
 
 class Dashboard {
 	public static function lang() {

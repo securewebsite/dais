@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Shipping;
-use Dais\Base\Model;
+namespace App\Models\Front\Shipping;
+use App\Models\Model;
 
 class Free extends Model {
     function getQuote($address) {

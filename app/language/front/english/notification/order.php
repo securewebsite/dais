@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Front\Language\English\Notification;
+namespace App\Language\Front\English\Notification;
 
 class Order {
 	public static function lang() {

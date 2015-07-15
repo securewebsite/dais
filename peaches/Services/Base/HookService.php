@@ -16,9 +16,9 @@
 
 namespace Dais\Services\Base;
 
-use Dais\Services\Providers\Base\Hook;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Base\Hook;
 
 class HookService implements ServiceProviderInterface {
 

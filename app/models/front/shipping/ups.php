@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Shipping;
-use Dais\Base\Model;
+namespace App\Models\Front\Shipping;
+use App\Models\Model;
 use DOMDocument;
 
 class Ups extends Model {

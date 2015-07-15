@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\People;
+
 use App\Controllers\Controller;
 
 class CustomerBanIp extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -227,7 +229,7 @@ class CustomerBanIp extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('people/customer_ban_ip_list', $data));
     }
@@ -285,13 +287,13 @@ class CustomerBanIp extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('people/customer_ban_ip_form', $data));
     }
     
     protected function validateForm() {
-        if (!User::hasPermission('modify', 'people/customer_ban_ip')) {
+        if (!\User::hasPermission('modify', 'people/customer_ban_ip')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
@@ -305,7 +307,7 @@ class CustomerBanIp extends Controller {
     }
     
     protected function validateDelete() {
-        if (!User::hasPermission('modify', 'people/customer_ban_ip')) {
+        if (!\User::hasPermission('modify', 'people/customer_ban_ip')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

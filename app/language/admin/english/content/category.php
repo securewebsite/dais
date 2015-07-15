@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Content;
+namespace App\Language\Admin\English\Content;
 
 class Category {
 	public static function lang() {

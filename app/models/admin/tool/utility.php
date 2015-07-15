@@ -14,8 +14,9 @@
 |	
 */
 
-namespace Admin\Model\Tool;
-use Dais\Base\Model;
+namespace App\Models\Admin\Tool;
+
+use App\Models\Model;
 
 class Utility extends Model {
     

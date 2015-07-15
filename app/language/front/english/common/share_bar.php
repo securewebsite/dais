@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Front\Language\English\Common;
+namespace App\Language\Front\English\Common;
 
 class ShareBar {
 	public static function lang() {

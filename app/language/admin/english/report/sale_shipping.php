@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Report;
+namespace App\Language\Admin\English\Report;
 
 class SaleShipping {
 	public static function lang() {

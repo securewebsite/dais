@@ -113,16 +113,16 @@ class Dashboard extends Controller {
         }
         
         if (Config::get('config_currency_auto')) {
-            Theme::model('localization/currency');
+            Theme::model('locale/currency');
             
-            $this->model_localization_currency->updateCurrencies();
+            $this->model_locale_currency->updateCurrencies();
         }
         
         Theme::loadjs('javascript/common/dashboard', $data);
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('common/dashboard', $data));
     }

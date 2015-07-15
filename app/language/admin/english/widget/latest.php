@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Widget;
+namespace App\Language\Admin\English\Widget;
 
 class Latest {
 	public static function lang() {

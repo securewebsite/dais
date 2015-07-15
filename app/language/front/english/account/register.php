@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Front\Language\English\Account;
+namespace App\Language\Front\English\Account;
 
 class Register {
 	public static function lang() {

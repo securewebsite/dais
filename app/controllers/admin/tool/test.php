@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Tool;
+
 use App\Controllers\Controller;
 
 class Test extends Controller {
+    
     public function index() {
         $data = Theme::language('tool/test');
         
@@ -34,7 +36,7 @@ class Test extends Controller {
         Breadcrumb::add('lang_heading_title', 'tool/test');
 
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('tool/test', $data));
     }

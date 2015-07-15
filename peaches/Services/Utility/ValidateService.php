@@ -16,9 +16,9 @@
 
 namespace Dais\Services\Utility;
 
-use Dais\Services\Providers\Utility\Validate;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Utility\Validate;
 
 class ValidateService implements ServiceProviderInterface {
 

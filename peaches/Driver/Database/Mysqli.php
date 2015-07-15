@@ -16,9 +16,9 @@
 
 namespace Dais\Driver\Database;
 
+use stdClass;
 use mysqli as Msq;
 use mysqli_result;
-use stdClass;
 use Dais\Contracts\DBContract;
 
 class Mysqli implements DBContract {

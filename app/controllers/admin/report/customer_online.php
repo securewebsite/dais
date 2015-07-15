@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Report;
+
 use App\Controllers\Controller;
 
 class CustomerOnline extends Controller {
+    
     public function index() {
         $data = Theme::language('report/customer_online');
         Theme::setTitle(Lang::get('lang_heading_title'));
@@ -104,7 +106,7 @@ class CustomerOnline extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('report/customer_online', $data));
     }

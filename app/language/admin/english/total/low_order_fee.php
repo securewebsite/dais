@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Total;
+namespace App\Language\Admin\English\Total;
 
 class LowOrderFee {
 	public static function lang() {

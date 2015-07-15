@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Feed;
+namespace App\Language\Admin\English\Feed;
 
 class GoogleBase {
 	public static function lang() {

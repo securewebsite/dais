@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Design;
+namespace App\Language\Admin\English\Design;
 
 class Layout {
 	public static function lang() {

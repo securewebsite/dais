@@ -18,4 +18,4 @@ namespace App\Controllers;
 
 use Dais\Base\Controller as BaseController;
 
-class Controller extends BaseController {}
+abstract class Controller extends BaseController {}

@@ -16,9 +16,9 @@
 
 namespace Dais\Services\Utility;
 
-use Dais\Services\Providers\Utility\Decorator;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Utility\Decorator;
 
 class DecoratorService implements ServiceProviderInterface {
 

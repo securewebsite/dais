@@ -15,9 +15,9 @@
 */
 
 namespace App\Controllers\Admin\Common;
+
 use App\Controllers\Controller;
 use Dais\Base\Action;
-use Dais\Service\ActionService;
 
 class Reset extends Controller {
     private $error = array();
@@ -93,7 +93,7 @@ class Reset extends Controller {
             endif;
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
-            $data = Theme::render_controllers($data);
+            $data = Theme::renderControllers($data);
             
             Response::setOutput(Theme::view('common/reset', $data));
         else:

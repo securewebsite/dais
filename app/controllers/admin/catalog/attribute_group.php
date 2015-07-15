@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Catalog;
+
 use App\Controllers\Controller;
 
 class AttributeGroup extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -238,7 +240,7 @@ class AttributeGroup extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('catalog/attribute_group_list', $data));
     }
@@ -286,9 +288,9 @@ class AttributeGroup extends Controller {
             $attribute_group_info = $this->model_catalog_attribute_group->getAttributeGroup($this->request->get['attribute_group_id']);
         }
         
-        Theme::model('localization/language');
+        Theme::model('locale/language');
         
-        $data['languages'] = $this->model_localization_language->getLanguages();
+        $data['languages'] = $this->model_locale_language->getLanguages();
         
         if (isset($this->request->post['attribute_group_description'])) {
             $data['attribute_group_description'] = $this->request->post['attribute_group_description'];
@@ -308,7 +310,7 @@ class AttributeGroup extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('catalog/attribute_group_form', $data));
     }

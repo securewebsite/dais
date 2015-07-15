@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Sale;
+
 use App\Controllers\Controller;
 
 class Order extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -453,16 +455,16 @@ class Order extends Controller {
         $data['filter_date_added']      = $filter_date_added;
         $data['filter_date_modified']   = $filter_date_modified;
         
-        Theme::model('localization/order_status');
+        Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
+        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
         
         $data['sort']  = $sort;
         $data['order'] = $order;
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('sale/order_list', $data));
     }
@@ -768,9 +770,9 @@ class Order extends Controller {
             $data['order_status_id'] = '';
         }
         
-        Theme::model('localization/order_status');
+        Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
+        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
         
         if (isset($this->request->post['comment'])) {
             $data['comment'] = $this->request->post['comment'];
@@ -968,9 +970,9 @@ class Order extends Controller {
             $data['shipping_zone_id'] = '';
         }
         
-        Theme::model('localization/country');
+        Theme::model('locale/country');
         
-        $data['countries'] = $this->model_localization_country->getCountries();
+        $data['countries'] = $this->model_locale_country->getCountries();
         
         if (isset($this->request->post['shipping_method'])) {
             $data['shipping_method'] = $this->request->post['shipping_method'];
@@ -1060,7 +1062,7 @@ class Order extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('sale/order_form', $data));
     }
@@ -1102,9 +1104,9 @@ class Order extends Controller {
             $this->error['payment_city'] = Lang::get('lang_error_city');
         }
         
-        Theme::model('localization/country');
+        Theme::model('locale/country');
         
-        $country_info = $this->model_localization_country->getCountry($this->request->post['payment_country_id']);
+        $country_info = $this->model_locale_country->getCountry($this->request->post['payment_country_id']);
         
         if ($country_info) {
             if ($country_info['postcode_required'] && (Encode::strlen($this->request->post['payment_postcode']) < 2) || (Encode::strlen($this->request->post['payment_postcode']) > 10)) {
@@ -1160,9 +1162,9 @@ class Order extends Controller {
                 $this->error['shipping_city'] = Lang::get('lang_error_city');
             }
             
-            Theme::model('localization/country');
+            Theme::model('locale/country');
             
-            $country_info = $this->model_localization_country->getCountry($this->request->post['shipping_country_id']);
+            $country_info = $this->model_locale_country->getCountry($this->request->post['shipping_country_id']);
             
             if ($country_info && $country_info['postcode_required'] && (Encode::strlen($this->request->post['shipping_postcode']) < 2) || (Encode::strlen($this->request->post['shipping_postcode']) > 10)) {
                 $this->error['shipping_postcode'] = Lang::get('lang_error_postcode');
@@ -1203,12 +1205,12 @@ class Order extends Controller {
     public function country() {
         $json = array();
         
-        Theme::model('localization/country');
+        Theme::model('locale/country');
         
-        $country_info = $this->model_localization_country->getCountry($this->request->get['country_id']);
+        $country_info = $this->model_locale_country->getCountry($this->request->get['country_id']);
         
         if ($country_info) {
-            Theme::model('localization/zone');
+            Theme::model('locale/zone');
             
             $json = array(
                 'country_id'        => $country_info['country_id'], 
@@ -1217,7 +1219,7 @@ class Order extends Controller {
                 'iso_code_3'        => $country_info['iso_code_3'], 
                 'address_format'    => $country_info['address_format'], 
                 'postcode_required' => $country_info['postcode_required'], 
-                'zone'              => $this->model_localization_zone->getZonesByCountryId($this->request->get['country_id']), 
+                'zone'              => $this->model_locale_zone->getZonesByCountryId($this->request->get['country_id']), 
                 'status'            => $country_info['status']
             );
         }
@@ -1353,9 +1355,9 @@ class Order extends Controller {
             $data['commission']       = Currency::format($order_info['commission'], $order_info['currency_code'], $order_info['currency_value']);
             $data['commission_total'] = $this->model_people_customer->getTotalCommissionsByOrderId($this->request->get['order_id']);
             
-            Theme::model('localization/order_status');
+            Theme::model('locale/order_status');
             
-            $order_status_info = $this->model_localization_order_status->getOrderStatus($order_info['order_status_id']);
+            $order_status_info = $this->model_locale_order_status->getOrderStatus($order_info['order_status_id']);
             
             if ($order_status_info) {
                 $data['order_status'] = $order_status_info['name'];
@@ -1459,7 +1461,7 @@ class Order extends Controller {
                 }
             }
             
-            $data['order_statuses']  = $this->model_localization_order_status->getOrderStatuses();
+            $data['order_statuses']  = $this->model_locale_order_status->getOrderStatuses();
             $data['order_status_id'] = $order_info['order_status_id'];
             
             // Fraud
@@ -1675,7 +1677,7 @@ class Order extends Controller {
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $data = Theme::render_controllers($data);
+            $data = Theme::renderControllers($data);
             
             Response::setOutput(Theme::view('sale/order_info', $data));
         } else {
@@ -1687,7 +1689,7 @@ class Order extends Controller {
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $data = Theme::render_controllers($data);
+            $data = Theme::renderControllers($data);
             
             Response::setOutput(Theme::view('error/not_found', $data));
         }
@@ -2001,7 +2003,7 @@ class Order extends Controller {
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $data = Theme::render_controllers($data);
+            $data = Theme::renderControllers($data);
             
             Response::setOutput(Theme::view('error/not_found', $data));
         }

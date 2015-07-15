@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Shipping;
+namespace App\Language\Admin\English\Shipping;
 
 class Usps {
 	public static function lang() {

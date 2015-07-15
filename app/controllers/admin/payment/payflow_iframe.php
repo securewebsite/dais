@@ -20,6 +20,7 @@ use App\Controllers\Controller;
 use Dais\Base\Action;
 
 class PayflowIframe extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -113,8 +114,8 @@ class PayflowIframe extends Controller {
             $data['payflow_iframe_total'] = Config::get('payflow_iframe_total');
         }
         
-        Theme::model('localization/order_status');
-        $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
+        Theme::model('locale/order_status');
+        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
         
         if (isset($this->request->post['payflow_iframe_order_status_id'])) {
             $data['payflow_iframe_order_status_id'] = $this->request->post['payflow_iframe_order_status_id'];
@@ -128,9 +129,9 @@ class PayflowIframe extends Controller {
             $data['payflow_iframe_geo_zone_id'] = Config::get('payflow_iframe_geo_zone_id');
         }
         
-        Theme::model('localization/geo_zone');
+        Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
+        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
         
         if (isset($this->request->post['payflow_iframe_status'])) {
             $data['payflow_iframe_status'] = $this->request->post['payflow_iframe_status'];
@@ -163,7 +164,7 @@ class PayflowIframe extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('payment/payflow_iframe', $data));
     }
@@ -204,7 +205,7 @@ class PayflowIframe extends Controller {
             
             Theme::loadjs('javascript/payment/payflow_iframe_refund', $data);
             
-            $data = Theme::render_controllers($data);
+            $data = Theme::renderControllers($data);
             
             Theme::listen(__CLASS__, __FUNCTION__);
             

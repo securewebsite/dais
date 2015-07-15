@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Checkout;
-use Dais\Base\Model;
+namespace App\Models\Front\Checkout;
+use App\Models\Model;
 use Dais\Library\Template;
 use Dais\Library\Text;
 
@@ -226,9 +226,9 @@ class Order extends Model {
                 $shipping_zone_code = '';
             endif;
             
-            $this->theme->model('localization/language');
+            $this->theme->model('locale/language');
             
-            $language_info = $this->model_localization_language->getLanguage($order_query->row['language_id']);
+            $language_info = $this->model_locale_language->getLanguage($order_query->row['language_id']);
             
             if ($language_info):
 				$language_code      = $language_info['code'];

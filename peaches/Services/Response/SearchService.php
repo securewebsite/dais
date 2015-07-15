@@ -16,9 +16,9 @@
 
 namespace Dais\Services\Response;
 
-use Dais\Services\Providers\Response\Search;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Response\Search;
 
 class SearchService implements ServiceProviderInterface {
 

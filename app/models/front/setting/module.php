@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Setting;
-use Dais\Base\Model;
+namespace App\Models\Front\Setting;
+use App\Models\Model;
 
 class Module extends Model {
     function getModules($type) {

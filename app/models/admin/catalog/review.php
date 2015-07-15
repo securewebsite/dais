@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Catalog;
-use Dais\Base\Model;
+namespace App\Models\Admin\Catalog;
+
+use App\Models\Model;
 
 class Review extends Model {
+    
     public function addReview($data) {
         $this->db->query("
 			INSERT INTO {$this->db->prefix}review 

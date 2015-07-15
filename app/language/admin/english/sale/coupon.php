@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Sale;
+namespace App\Language\Admin\English\Sale;
 
 class Coupon {
 	public static function lang() {

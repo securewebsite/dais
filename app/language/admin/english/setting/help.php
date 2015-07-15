@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Setting;
+namespace App\Language\Admin\English\Setting;
 
 class Help {
 	public static function lang() {

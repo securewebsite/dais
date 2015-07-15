@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Setting;
-use Dais\Base\Model;
+namespace App\Models\Admin\Setting;
+
+use App\Models\Model;
 
 class Module extends Model {
+    
     public function getInstalled($type) {
         $module_data = array();
         

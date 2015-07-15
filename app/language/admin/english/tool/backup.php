@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Tool;
+namespace App\Language\Admin\English\Tool;
 
 class Backup {
 	public static function lang() {

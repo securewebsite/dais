@@ -16,14 +16,13 @@
 
 namespace Dais\Services\Boot;
 
-use Dais\Services\Providers\Boot\Request;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Boot\Request;
 
 class RequestService implements ServiceProviderInterface {
 
     public function register(Container $app) {
-
         $app['request'] = function ($app) {
             return new Request;
         };

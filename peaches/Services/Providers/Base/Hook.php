@@ -26,19 +26,12 @@ class Hook {
         $hooks = \PluginModel::getHookHandlers();
         
         foreach ($hooks as $hook):
-            $handlers     = unserialize($hook['handlers']);
             
-            $segments = explode('_', $hook['hook']);
-
-            foreach($segments as $key => $value):
-                $segments[$key] = ucfirst($value);
-            endforeach;
-
+            $handlers     = unserialize($hook['handlers']);
+            $segments     = explode('_', $hook['hook']);
             $class_locale = implode('/', $segments);
-
-            $segments = array_reverse($segments);
-
-            $base_locale = implode('/', $segments);
+            $segments     = array_reverse($segments);
+            $base_locale  = implode('/', $segments);
 
             $theme_locale = Config::get('path.theme') . Config::get('theme.name') . SEP . basename($class_locale) . SEP;
             
@@ -55,19 +48,14 @@ class Hook {
                     unset($handler['args']);
                 endif;
 
-                $segments = explode('/', $handler['class']);
-            
-                foreach($segments as $key => $value):
-                    $segments[$key] = ucfirst($value);
-                endforeach;
-
+                $segments         = explode('/', $handler['class']);
                 $handler['class'] = implode('/', $segments);
 
                 unset($segments);
                 
                 $theme_path = $theme_locale . $handler['class'];
                 $file_path  = Config::get('path.app') . $base_locale . SEP;
-                
+
                 if (is_readable($theme_path . '.php')):
                     $class_path = Naming::class_from_filename($theme_path);
                 else:
@@ -105,11 +93,10 @@ class Hook {
         return $this->hooks;
     }
     
-    public function unregisterHooks() {
-    }
+    public function unregisterHooks() {}
     
     public function listen($class, $method, $data = array()) {
-        $key = trim(strtolower(Config::get('prefix.facade')), '/') . '_controllers';
+        $key = trim(Config::get('prefix.facade'), '/') . '_controllers';
         
         if (array_key_exists($key, $this->hooks)):
             foreach ($this->hooks[$key] as $hook):

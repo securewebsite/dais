@@ -23,27 +23,27 @@ class Apc implements CacheContract {
     private $expire;
     
     public function __construct() {
-        $this->expire = \Config::get('cache.time');
+        $this->expire = Config::get('cache.time');
     }
     
     public function get($key, $type = false) {
-        if (!\Config::get('cache.status')):
+        if (!Config::get('cache.status')):
             return false;
         endif;
         
-        return apc_fetch(\Config::get('cache.prefix') . $key);
+        return apc_fetch(Config::get('cache.prefix') . $key);
     }
     
     public function set($key, $value, $type = false, $expire = false) {
-         if (!\Config::get('cache.status')):
+         if (!Config::get('cache.status')):
             return false;
         endif;
         
-        return apc_store(\Config::get('cache.prefix') . $key, $value, $this->expire);
+        return apc_store(Config::get('cache.prefix') . $key, $value, $this->expire);
     }
     
     public function delete($key, $type = false) {
-        apc_delete(\Config::get('cache.prefix') . $key);
+        apc_delete(Config::get('cache.prefix') . $key);
     }
     
     public function flush_cache() {

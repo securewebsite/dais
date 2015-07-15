@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Catalog;
-use Dais\Base\Model;
+namespace App\Models\Admin\Catalog;
+
+use App\Models\Model;
 
 class Recurring extends Model {
+    
     public function addRecurring($data) {
         $this->db->query("
 			INSERT INTO {$this->db->prefix}recurring 

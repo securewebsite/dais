@@ -24,14 +24,15 @@ class Calendar extends Controller {
         $this->theme->setTitle($this->language->get('lang_heading_title'));
         $this->breadcrumb->add('lang_heading_title', 'content/calendar', null, true, 'SSL');
         
-        $data['template_path'] = 'asset/' . Config::get('theme.name') . '/template/';
+        //$data['template_path'] = 'asset/' . Config::get('theme.name') . '/template/';
+        $data['template_path'] = 'asset/calendar/';
         $data['today']         = date('Y-m-d', time());
         $data['continue']      = $this->url->link('content/home');
         
         $this->theme->loadjs('javascript/content/calendar', $data);
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-        $data = $this->theme->render_controllers($data);
+        $data = $this->theme->renderControllers($data);
         
         $this->response->setOutput($this->theme->view('content/calendar', $data));
     }

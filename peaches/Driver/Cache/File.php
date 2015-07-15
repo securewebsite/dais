@@ -23,9 +23,9 @@ class File implements CacheContract {
     private $expire;
     
     public function __construct() {
-        $this->expire = \Config::get('cache.time');
+        $this->expire = Config::get('cache.time');
         
-        $files = glob(\Config::get('path.cache') . \Config::get('cache.prefix') . '*');
+        $files = glob(Config::get('path.cache') . Config::get('cache.prefix') . '*');
         
         if ($files):
             foreach ($files as $file):
@@ -40,11 +40,11 @@ class File implements CacheContract {
     }
     
     public function get($key, $type = false) {
-        if (!\Config::get('cache.status')):
+        if (!Config::get('cache.status')):
             return false;
         endif;
         
-        $files = glob(\Config::get('path.cache') . \Config::get('cache.prefix') . '.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.*');
+        $files = glob(Config::get('path.cache') . Config::get('cache.prefix') . '.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.*');
         
         if ($files):
             $file_handle = fopen($files[0], 'r');
@@ -59,7 +59,7 @@ class File implements CacheContract {
     }
     
     public function set($key, $value, $type = false, $expire = 0) {
-        if (!\Config::get('cache.status')):
+        if (!Config::get('cache.status')):
             return false;
         endif;
         
@@ -67,7 +67,7 @@ class File implements CacheContract {
         
         $expires = ($expire) ? $expire : $this->expire;
         
-        $file = \Config::get('path.cache') . \Config::get('cache.prefix') . '.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.' . (time() + $expires);
+        $file = Config::get('path.cache') . Config::get('cache.prefix') . '.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.' . (time() + $expires);
         
         $data = (is_array($value)) ? serialize($value) : $value;
         
@@ -80,7 +80,7 @@ class File implements CacheContract {
     }
     
     public function delete($key, $type = false) {
-        $files = glob(\Config::get('path.cache') . \Config::get('cache.prefix') . '.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.*');
+        $files = glob(Config::get('path.cache') . Config::get('cache.prefix') . '.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.*');
         
         if ($files):
             foreach ($files as $file):
@@ -92,7 +92,7 @@ class File implements CacheContract {
     }
     
     public function flush_cache() {
-        $files = glob(\Config::get('path.cache') . \Config::get('cache.prefix') . '.*');
+        $files = glob(Config::get('path.cache') . Config::get('cache.prefix') . '.*');
         
         if ($files):
             foreach ($files as $file):

@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Catalog;
+
 use App\Controllers\Controller;
 
 class Attribute extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -231,7 +233,7 @@ class Attribute extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('catalog/attribute_list', $data));
     }
@@ -279,9 +281,9 @@ class Attribute extends Controller {
             $attribute_info = $this->model_catalog_attribute->getAttribute($this->request->get['attribute_id']);
         }
         
-        Theme::model('localization/language');
+        Theme::model('locale/language');
         
-        $data['languages'] = $this->model_localization_language->getLanguages();
+        $data['languages'] = $this->model_locale_language->getLanguages();
         
         if (isset($this->request->post['attribute_description'])) {
             $data['attribute_description'] = $this->request->post['attribute_description'];
@@ -313,7 +315,7 @@ class Attribute extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('catalog/attribute_form', $data));
     }

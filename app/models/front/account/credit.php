@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Account;
-use Dais\Base\Model;
+namespace App\Models\Front\Account;
+use App\Models\Model;
 
 class Credit extends Model {
     public function getCredits($data = array()) {

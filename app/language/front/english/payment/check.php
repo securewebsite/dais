@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Front\Language\English\Payment;
+namespace App\Language\Front\English\Payment;
 
 class Check {
 	public static function lang() {

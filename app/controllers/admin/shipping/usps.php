@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Shipping;
+
 use App\Controllers\Controller;
 
 class Usps extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -389,9 +391,9 @@ class Usps extends Controller {
             $data['usps_weight_class_id'] = Config::get('usps_weight_class_id');
         }
         
-        Theme::model('localization/weight_class');
+        Theme::model('locale/weight_class');
         
-        $data['weight_classes'] = $this->model_localization_weight_class->getWeightClasses();
+        $data['weight_classes'] = $this->model_locale_weight_class->getWeightClasses();
         
         if (isset($this->request->post['usps_tax_class_id'])) {
             $data['usps_tax_class_id'] = $this->request->post['usps_tax_class_id'];
@@ -399,9 +401,9 @@ class Usps extends Controller {
             $data['usps_tax_class_id'] = Config::get('usps_tax_class_id');
         }
         
-        Theme::model('localization/tax_class');
+        Theme::model('locale/tax_class');
         
-        $data['tax_classes'] = $this->model_localization_tax_class->getTaxClasses();
+        $data['tax_classes'] = $this->model_locale_tax_class->getTaxClasses();
         
         if (isset($this->request->post['usps_geo_zone_id'])) {
             $data['usps_geo_zone_id'] = $this->request->post['usps_geo_zone_id'];
@@ -409,9 +411,9 @@ class Usps extends Controller {
             $data['usps_geo_zone_id'] = Config::get('usps_geo_zone_id');
         }
         
-        Theme::model('localization/geo_zone');
+        Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
+        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
         
         if (isset($this->request->post['usps_debug'])) {
             $data['usps_debug'] = $this->request->post['usps_debug'];
@@ -433,7 +435,7 @@ class Usps extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('shipping/usps', $data));
     }

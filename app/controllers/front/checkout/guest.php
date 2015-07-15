@@ -129,9 +129,9 @@ class Guest extends Controller {
         
         $data['params'] = htmlentities('{"zone_id":"' . $data['zone_id'] . '","select":"' . $this->language->get('lang_text_select') . '","none":"' . $this->language->get('lang_text_none') . '"}');
         
-        $this->theme->model('localization/country');
+        $this->theme->model('locale/country');
         
-        $data['countries'] = $this->model_localization_country->getCountries();
+        $data['countries'] = $this->model_locale_country->getCountries();
         
         $data['shipping_required'] = $this->cart->hasShipping();
         
@@ -219,9 +219,9 @@ class Guest extends Controller {
                 $json['error']['city'] = $this->language->get('lang_error_city');
             }
             
-            $this->theme->model('localization/country');
+            $this->theme->model('locale/country');
             
-            $country_info = $this->model_localization_country->getCountry($this->request->post['country_id']);
+            $country_info = $this->model_locale_country->getCountry($this->request->post['country_id']);
             
             if ($country_info) {
                 if ($country_info['postcode_required'] && ($this->encode->strlen($this->request->post['postcode']) < 2) || ($this->encode->strlen($this->request->post['postcode']) > 10)) {
@@ -261,9 +261,9 @@ class Guest extends Controller {
             $this->session->data['guest']['payment']['country_id'] = $this->request->post['country_id'];
             $this->session->data['guest']['payment']['zone_id']    = $this->request->post['zone_id'];
             
-            $this->theme->model('localization/country');
+            $this->theme->model('locale/country');
             
-            $country_info = $this->model_localization_country->getCountry($this->request->post['country_id']);
+            $country_info = $this->model_locale_country->getCountry($this->request->post['country_id']);
             
             if ($country_info) {
                 $this->session->data['guest']['payment']['country']        = $country_info['name'];
@@ -277,9 +277,9 @@ class Guest extends Controller {
                 $this->session->data['guest']['payment']['address_format'] = '';
             }
             
-            $this->theme->model('localization/zone');
+            $this->theme->model('locale/zone');
             
-            $zone_info = $this->model_localization_zone->getZone($this->request->post['zone_id']);
+            $zone_info = $this->model_locale_zone->getZone($this->request->post['zone_id']);
             
             if ($zone_info) {
                 $this->session->data['guest']['payment']['zone']      = $zone_info['name'];
@@ -352,9 +352,9 @@ class Guest extends Controller {
     public function zone() {
         $output = '<option value="">' . $this->language->get('lang_text_select') . '</option>';
         
-        $this->theme->model('localization/zone');
+        $this->theme->model('locale/zone');
         
-        $results = $this->model_localization_zone->getZonesByCountryId($this->request->get['country_id']);
+        $results = $this->model_locale_zone->getZonesByCountryId($this->request->get['country_id']);
         
         foreach ($results as $result) {
             $output.= '<option value="' . $result['zone_id'] . '"';

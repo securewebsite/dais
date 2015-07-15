@@ -15,6 +15,7 @@
 */
 
 namespace App\Controllers\Admin\Design;
+
 use App\Controllers\Controller;
 
 class Route extends Controller {
@@ -126,7 +127,7 @@ class Route extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('design/route_list', $data));
 	}
@@ -161,7 +162,7 @@ class Route extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('design/route_form', $data));
 	}

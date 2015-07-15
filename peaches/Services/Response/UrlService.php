@@ -16,9 +16,9 @@
 
 namespace Dais\Services\Response;
 
-use Dais\Services\Providers\Response\Url;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Response\Url;
 
 class UrlService implements ServiceProviderInterface {
 

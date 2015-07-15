@@ -15,6 +15,7 @@
 */
 
 namespace App\Controllers\Admin\Tool;
+
 use App\Controllers\Controller;
 
 class ErrorLog extends Controller {
@@ -46,7 +47,7 @@ class ErrorLog extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('tool/error_log', $data));
     }

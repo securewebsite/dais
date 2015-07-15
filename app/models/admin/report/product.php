@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Report;
-use Dais\Base\Model;
+namespace App\Models\Admin\Report;
+
+use App\Models\Model;
 
 class Product extends Model {
+    
     public function getProductsViewed($data = array()) {
         $sql = "SELECT pd.name, p.model, p.viewed FROM {$this->db->prefix}product p LEFT JOIN {$this->db->prefix}product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "' AND p.viewed > 0 ORDER BY p.viewed DESC";
         

@@ -16,12 +16,11 @@
 
 namespace Dais\Services\Storage;
 
-
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use Dais\Services\Providers\Storage\Encode;
 use Dais\Services\Providers\Utility\Iconv;
 use Dais\Services\Providers\Utility\Mbstring;
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
 
 class EncodeService implements ServiceProviderInterface {
 

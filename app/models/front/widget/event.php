@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Widget;
-use Dais\Base\Model;
+namespace App\Models\Front\Widget;
+use App\Models\Model;
 
 class Event extends Model {
     public function getEvents($customer_id) {

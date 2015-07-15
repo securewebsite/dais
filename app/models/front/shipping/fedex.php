@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Shipping;
-use Dais\Base\Model;
+namespace App\Models\Front\Shipping;
+use App\Models\Model;
 use DOMDocument;
 
 class Fedex extends Model {
@@ -53,11 +53,11 @@ class Fedex extends Model {
                 $date+= 86400;
             endif;
             
-            $this->theme->model('localization/country');
-            $country_info = $this->model_localization_country->getCountry($this->config->get('config_country_id'));
+            $this->theme->model('locale/country');
+            $country_info = $this->model_locale_country->getCountry($this->config->get('config_country_id'));
             
-            $this->theme->model('localization/zone');
-            $zone_info = $this->model_localization_zone->getZone($this->config->get('config_zone_id'));
+            $this->theme->model('locale/zone');
+            $zone_info = $this->model_locale_zone->getZone($this->config->get('config_zone_id'));
             
             if (!$this->config->get('fedex_test')):
                 $url = 'https://gateway.fedex.com/web-services/';

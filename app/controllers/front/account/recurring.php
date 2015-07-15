@@ -64,10 +64,10 @@ class Recurring extends Controller {
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->set_controller('header', 'shop/header');
-        $this->theme->set_controller('footer', 'shop/footer');
+        $this->theme->setController('header', 'shop/header');
+        $this->theme->setController('footer', 'shop/footer');
         
-        $data = $this->theme->render_controllers($data);
+        $data = $this->theme->renderControllers($data);
         
         $this->response->setOutput($this->theme->view('account/recurring_list', $data));
     }
@@ -132,11 +132,11 @@ class Recurring extends Controller {
             
             $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
             
-            $this->theme->set_controller('header', 'shop/header');
-            $this->theme->set_controller('footer', 'shop/footer');
-            $this->theme->set_controller('buttons', 'payment/' . $recurring['payment_code'] . '/recurringButtons');
+            $this->theme->setController('header', 'shop/header');
+            $this->theme->setController('footer', 'shop/footer');
+            $this->theme->setController('buttons', 'payment/' . $recurring['payment_code'] . '/recurringButtons');
             
-            $data = $this->theme->render_controllers($data);
+            $data = $this->theme->renderControllers($data);
             
             $this->response->setOutput($this->theme->view('account/recurring_info', $data));
         else:

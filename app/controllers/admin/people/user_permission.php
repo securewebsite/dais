@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\People;
+
 use App\Controllers\Controller;
 
 class UserPermission extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -227,7 +229,7 @@ class UserPermission extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('people/user_group_list', $data));
     }
@@ -337,13 +339,13 @@ class UserPermission extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('people/user_group_form', $data));
     }
     
     protected function validateForm() {
-        if (!User::hasPermission('modify', 'people/user_permission')) {
+        if (!\User::hasPermission('modify', 'people/user_permission')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
@@ -357,7 +359,7 @@ class UserPermission extends Controller {
     }
     
     protected function validateDelete() {
-        if (!User::hasPermission('modify', 'people/user_permission')) {
+        if (!\User::hasPermission('modify', 'people/user_permission')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

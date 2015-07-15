@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Shipping;
+
 use App\Controllers\Controller;
 
 class Flat extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -57,9 +59,9 @@ class Flat extends Controller {
             $data['flat_tax_class_id'] = Config::get('flat_tax_class_id');
         }
         
-        Theme::model('localization/tax_class');
+        Theme::model('locale/tax_class');
         
-        $data['tax_classes'] = $this->model_localization_tax_class->getTaxClasses();
+        $data['tax_classes'] = $this->model_locale_tax_class->getTaxClasses();
         
         if (isset($this->request->post['flat_geo_zone_id'])) {
             $data['flat_geo_zone_id'] = $this->request->post['flat_geo_zone_id'];
@@ -67,9 +69,9 @@ class Flat extends Controller {
             $data['flat_geo_zone_id'] = Config::get('flat_geo_zone_id');
         }
         
-        Theme::model('localization/geo_zone');
+        Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
+        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
         
         if (isset($this->request->post['flat_status'])) {
             $data['flat_status'] = $this->request->post['flat_status'];
@@ -85,7 +87,7 @@ class Flat extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('shipping/flat', $data));
     }

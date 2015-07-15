@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Module;
-use Dais\Base\Model;
+namespace App\Models\Admin\Module;
+
+use App\Models\Model;
 
 class Notification extends Model {
+	
 	public function addNotification($data) {
 		$this->db->query("
 			INSERT INTO {$this->db->prefix}email 

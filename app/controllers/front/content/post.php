@@ -292,7 +292,7 @@ class Post extends Controller {
             
             $data             = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
             $data['share_bar'] = $this->theme->controller('common/share_bar', array('post', $data));
-            $data             = $this->theme->render_controllers($data);
+            $data             = $this->theme->renderControllers($data);
             
             $this->response->setOutput($this->theme->view('content/post', $data));
         } else {
@@ -332,7 +332,7 @@ class Post extends Controller {
             
             $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
             
-            $data = $this->theme->render_controllers($data);
+            $data = $this->theme->renderControllers($data);
             
             $this->response->setOutput($this->theme->view('error/not_found', $data));
         }

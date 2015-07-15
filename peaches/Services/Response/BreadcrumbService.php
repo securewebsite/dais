@@ -16,9 +16,9 @@
 
 namespace Dais\Services\Response;
 
-use Dais\Services\Providers\Response\Breadcrumb;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Response\Breadcrumb;
 
 class BreadcrumbService implements ServiceProviderInterface {
 

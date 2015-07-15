@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Payment;
-use Dais\Base\Model;
+namespace App\Models\Front\Payment;
+use App\Models\Model;
 use Dais\Library\Log as Log;
 
 class PayflowIframe extends Model {

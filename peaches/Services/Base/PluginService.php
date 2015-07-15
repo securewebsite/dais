@@ -16,9 +16,9 @@
 
 namespace Dais\Services\Base;
 
-use Dais\Services\Providers\Base\Plugin;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Base\Plugin;
 
 class PluginService implements ServiceProviderInterface {
 

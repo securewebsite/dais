@@ -16,9 +16,9 @@
 
 namespace Dais\Services\Communication;
 
-use Dais\Services\Providers\Communication\Language;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Communication\Language;
 
 class LanguageService implements ServiceProviderInterface {
 

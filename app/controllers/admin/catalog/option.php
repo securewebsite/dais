@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Catalog;
+
 use App\Controllers\Controller;
 
 class Option extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -238,7 +240,7 @@ class Option extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('catalog/option_list', $data));
     }
@@ -294,9 +296,9 @@ class Option extends Controller {
         
         $data['token'] = $this->session->data['token'];
         
-        Theme::model('localization/language');
+        Theme::model('locale/language');
         
-        $data['languages'] = $this->model_localization_language->getLanguages();
+        $data['languages'] = $this->model_locale_language->getLanguages();
         
         if (isset($this->request->post['option_description'])) {
             $data['option_description'] = $this->request->post['option_description'];
@@ -350,7 +352,7 @@ class Option extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('catalog/option_form', $data));
     }

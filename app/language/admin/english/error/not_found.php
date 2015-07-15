@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Error;
+namespace App\Language\Admin\English\Error;
 
 class NotFound {
 	public static function lang() {

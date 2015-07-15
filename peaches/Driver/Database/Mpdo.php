@@ -17,8 +17,8 @@
 namespace Dais\Driver\Database;
 
 use PDO;
-use PDOException;
 use stdClass;
+use PDOException;
 use Dais\Contracts\DBContract;
 
 class Mpdo implements DBContract {

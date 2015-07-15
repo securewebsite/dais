@@ -115,7 +115,7 @@
 								<li><a href="<?= $banner; ?>"><?= $lang_text_banner; ?></a></li>
 							</ul>
 						</li>
-						<li class="dropdown-submenu"><a class="dropdown-toggle" data-toggle="dropdown"><?= $lang_text_localization; ?> <b class="fa fa-caret-right"></b></a>
+						<li class="dropdown-submenu"><a class="dropdown-toggle" data-toggle="dropdown"><?= $lang_text_locale; ?> <b class="fa fa-caret-right"></b></a>
 							<ul class="dropdown-menu">
 								<li><a href="<?= $language; ?>"><?= $lang_text_language; ?></a></li>
 								<li><a href="<?= $currency; ?>"><?= $lang_text_currency; ?></a></li>

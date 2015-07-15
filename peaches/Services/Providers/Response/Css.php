@@ -18,15 +18,15 @@ namespace Dais\Services\Providers\Response;
 
 class Css {
     
-    private $registered = array();
-    private $queued = array();
-    private $complete = array();
+    private $registered = [];
+    private $queued     = [];
+    private $complete   = [];
     private $last_file;
     private $directory;
     public  $cache_key;
     
     public function __construct() {
-        $this->directory = Config::get('path.asset') . Config::get('theme.name') . '/css/';
+        $this->directory = Config::get('theme.asset.path') . 'css' . SEP;
     }
     
     public function register($name, $dep = null, $last = false) {

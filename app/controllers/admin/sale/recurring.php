@@ -20,6 +20,7 @@ use App\Controllers\Controller;
 use Dais\Base\Action;
 
 class Recurring extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -249,7 +250,7 @@ class Recurring extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('sale/recurring_list', $data));
     }
@@ -367,7 +368,7 @@ class Recurring extends Controller {
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $data = Theme::render_controllers($data);
+            $data = Theme::renderControllers($data);
             
             Response::setOutput(Theme::view('sale/recurring_info', $data));
         } else {

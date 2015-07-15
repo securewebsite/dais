@@ -21,8 +21,8 @@ class PayflowIframe extends Controller {
     public function index() {
         $this->theme->model('checkout/order');
         $this->theme->model('payment/payflow_iframe');
-        $this->theme->model('localization/country');
-        $this->theme->model('localization/zone');
+        $this->theme->model('locale/country');
+        $this->theme->model('locale/zone');
         
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         
@@ -44,11 +44,11 @@ class PayflowIframe extends Controller {
         
         $this->model_payment_payflow_iframe->addOrder($order_info['order_id'], $secure_token_id);
         
-        $shipping_country = $this->model_localization_country->getCountry($order_info['shipping_country_id']);
-        $shipping_zone = $this->model_localization_zone->getZone($order_info['shipping_zone_id']);
+        $shipping_country = $this->model_locale_country->getCountry($order_info['shipping_country_id']);
+        $shipping_zone = $this->model_locale_zone->getZone($order_info['shipping_zone_id']);
         
-        $payment_country = $this->model_localization_country->getCountry($order_info['payment_country_id']);
-        $payment_zone = $this->model_localization_zone->getZone($order_info['payment_zone_id']);
+        $payment_country = $this->model_locale_country->getCountry($order_info['payment_country_id']);
+        $payment_zone = $this->model_locale_zone->getZone($order_info['payment_zone_id']);
         
         $urlParams = array('TENDER' => 'C', 'TRXTYPE' => $transaction_type, 'AMT' => $this->currency->format($order_info['total'], $order_info['currency_code'], false, false), 'CURRENCY' => $order_info['currency_code'], 'CREATESECURETOKEN' => 'Y', 'SECURETOKENID' => $secure_token_id, 
         'BILLTOFIRSTNAME' => $order_info['payment_firstname'], 'BILLTOLASTNAME' => $order_info['payment_lastname'], 'BILLTOSTREET' => trim($order_info['payment_address_1'] . ' ' . $order_info['payment_address_2']), 'BILLTOCITY' => $order_info['payment_city'], 'BILLTOSTATE' => $payment_zone['code'], 'BILLTOZIP' => $order_info['payment_postcode'], 'BILLTOCOUNTRY' => $payment_country['iso_code_2'],);

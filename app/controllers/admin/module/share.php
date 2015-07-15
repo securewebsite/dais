@@ -15,10 +15,12 @@
 */
 
 namespace App\Controllers\Admin\Module;
+
 use App\Controllers\Controller;
 
 class Share extends Controller {
-	private $error = array();
+	
+    private $error = array();
 
 	public function index() {
 		$data = Theme::language('module/share');
@@ -126,7 +128,7 @@ class Share extends Controller {
         $data['cancel'] = Url::link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL');
 
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('module/share', $data));
 	}

@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Module;
+
 use App\Controllers\Controller;
 
 class Plugin extends Controller {
+    
     public function index() {
         $data = Theme::language('module/plugin');
         Theme::setTitle(Lang::get('lang_heading_plugin'));
@@ -81,7 +83,7 @@ class Plugin extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('module/plugin', $data));
     }

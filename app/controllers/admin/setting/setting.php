@@ -15,10 +15,12 @@
 */
 
 namespace App\Controllers\Admin\Setting;
+
 use App\Controllers\Controller;
 use Dais\Driver\Cache\Mem;
 
 class Setting extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -30,8 +32,8 @@ class Setting extends Controller {
             $this->model_setting_setting->editSetting('config', $this->request->post);
             
             if (Config::get('config_currency_auto')) {
-                Theme::model('localization/currency');
-                $this->model_localization_currency->updateCurrencies();
+                Theme::model('locale/currency');
+                $this->model_locale_currency->updateCurrencies();
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -432,9 +434,9 @@ class Setting extends Controller {
             $data['config_country_id'] = Config::get('config_country_id');
         }
         
-        Theme::model('localization/country');
+        Theme::model('locale/country');
         
-        $data['countries'] = $this->model_localization_country->getCountries();
+        $data['countries'] = $this->model_locale_country->getCountries();
         
         if (isset($this->request->post['config_zone_id'])) {
             $data['config_zone_id'] = $this->request->post['config_zone_id'];
@@ -448,9 +450,9 @@ class Setting extends Controller {
             $data['config_language'] = Config::get('config_language');
         }
         
-        Theme::model('localization/language');
+        Theme::model('locale/language');
         
-        $data['languages'] = $this->model_localization_language->getLanguages();
+        $data['languages'] = $this->model_locale_language->getLanguages();
         
         if (isset($this->request->post['config_admin_language'])) {
             $data['config_admin_language'] = $this->request->post['config_admin_language'];
@@ -470,9 +472,9 @@ class Setting extends Controller {
             $data['config_currency_auto'] = Config::get('config_currency_auto');
         }
         
-        Theme::model('localization/currency');
+        Theme::model('locale/currency');
         
-        $data['currencies'] = $this->model_localization_currency->getCurrencies();
+        $data['currencies'] = $this->model_locale_currency->getCurrencies();
         
         if (isset($this->request->post['config_length_class_id'])) {
             $data['config_length_class_id'] = $this->request->post['config_length_class_id'];
@@ -480,9 +482,9 @@ class Setting extends Controller {
             $data['config_length_class_id'] = Config::get('config_length_class_id');
         }
         
-        Theme::model('localization/length_class');
+        Theme::model('locale/length_class');
         
-        $data['length_classes'] = $this->model_localization_length_class->getLengthClasses();
+        $data['length_classes'] = $this->model_locale_length_class->getLengthClasses();
         
         if (isset($this->request->post['config_weight_class_id'])) {
             $data['config_weight_class_id'] = $this->request->post['config_weight_class_id'];
@@ -490,9 +492,9 @@ class Setting extends Controller {
             $data['config_weight_class_id'] = Config::get('config_weight_class_id');
         }
         
-        Theme::model('localization/weight_class');
+        Theme::model('locale/weight_class');
         
-        $data['weight_classes'] = $this->model_localization_weight_class->getWeightClasses();
+        $data['weight_classes'] = $this->model_locale_weight_class->getWeightClasses();
         
         if (isset($this->request->post['config_catalog_limit'])) {
             $data['config_catalog_limit'] = $this->request->post['config_catalog_limit'];
@@ -755,9 +757,9 @@ class Setting extends Controller {
             $data['config_complete_status_id'] = Config::get('config_complete_status_id');
         }
         
-        Theme::model('localization/order_status');
+        Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
+        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
         
         if (isset($this->request->post['config_stock_display'])) {
             $data['config_stock_display'] = $this->request->post['config_stock_display'];
@@ -783,9 +785,9 @@ class Setting extends Controller {
             $data['config_stock_status_id'] = Config::get('config_stock_status_id');
         }
         
-        Theme::model('localization/stock_status');
+        Theme::model('locale/stock_status');
         
-        $data['stock_statuses'] = $this->model_localization_stock_status->getStockStatuses();
+        $data['stock_statuses'] = $this->model_locale_stock_status->getStockStatuses();
         
         if (isset($this->request->post['config_affiliate_allowed'])) {
             $data['config_affiliate_allowed'] = $this->request->post['config_affiliate_allowed'];
@@ -819,9 +821,9 @@ class Setting extends Controller {
             $data['config_return_status_id'] = Config::get('config_return_status_id');
         }
         
-        Theme::model('localization/return_status');
+        Theme::model('locale/return_status');
         
-        $data['return_statuses'] = $this->model_localization_return_status->getReturnStatuses();
+        $data['return_statuses'] = $this->model_locale_return_status->getReturnStatuses();
         
         Theme::model('tool/image');
         
@@ -1255,7 +1257,7 @@ class Setting extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('setting/setting', $data));
     }
@@ -1510,14 +1512,14 @@ class Setting extends Controller {
     public function country() {
         $json = array();
         
-        Theme::model('localization/country');
+        Theme::model('locale/country');
         
-        $country_info = $this->model_localization_country->getCountry($this->request->get['country_id']);
+        $country_info = $this->model_locale_country->getCountry($this->request->get['country_id']);
         
         if ($country_info) {
-            Theme::model('localization/zone');
+            Theme::model('locale/zone');
             
-            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => $this->model_localization_zone->getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
+            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => $this->model_locale_zone->getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
         }
         
         $json = Theme::listen(__CLASS__, __FUNCTION__, $json);

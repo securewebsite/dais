@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Front\Language\English\Total;
+namespace App\Language\Front\English\Total;
 
 class GiftCard {
 	public static function lang() {

@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Front\Language\English\Catalog;
+namespace App\Language\Front\English\Catalog;
 
 class Special {
 	public static function lang() {

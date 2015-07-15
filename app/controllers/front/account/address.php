@@ -227,10 +227,10 @@ class Address extends Controller {
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->set_controller('header', 'shop/header');
-        $this->theme->set_controller('footer', 'shop/footer');
+        $this->theme->setController('header', 'shop/header');
+        $this->theme->setController('footer', 'shop/footer');
         
-        $data = $this->theme->render_controllers($data);
+        $data = $this->theme->renderControllers($data);
         
         $this->response->setOutput($this->theme->view('account/address_list', $data));
     }
@@ -417,9 +417,9 @@ class Address extends Controller {
         
         $data['params'] = htmlentities('{"zone_id":"' . $data['zone_id'] . '","select":"' . $this->language->get('lang_text_select') . '","none":"' . $this->language->get('lang_text_none') . '"}');
         
-        $this->theme->model('localization/country');
+        $this->theme->model('locale/country');
         
-        $data['countries'] = $this->model_localization_country->getCountries();
+        $data['countries'] = $this->model_locale_country->getCountries();
         
         if (isset($this->request->post['default'])) {
             $data['default'] = $this->request->post['default'];
@@ -433,10 +433,10 @@ class Address extends Controller {
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->set_controller('header', 'shop/header');
-        $this->theme->set_controller('footer', 'shop/footer');
+        $this->theme->setController('header', 'shop/header');
+        $this->theme->setController('footer', 'shop/footer');
         
-        $data = $this->theme->render_controllers($data);
+        $data = $this->theme->renderControllers($data);
         
         $this->response->setOutput($this->theme->view('account/address_form', $data));
     }
@@ -458,9 +458,9 @@ class Address extends Controller {
             $this->error['city'] = $this->language->get('lang_error_city');
         }
         
-        $this->theme->model('localization/country');
+        $this->theme->model('locale/country');
         
-        $country_info = $this->model_localization_country->getCountry($this->request->post['country_id']);
+        $country_info = $this->model_locale_country->getCountry($this->request->post['country_id']);
         
         if ($country_info) {
             if ($country_info['postcode_required'] && ($this->encode->strlen($this->request->post['postcode']) < 2) || ($this->encode->strlen($this->request->post['postcode']) > 10)) {
@@ -502,14 +502,14 @@ class Address extends Controller {
     public function country() {
         $json = array();
         
-        $this->theme->model('localization/country');
+        $this->theme->model('locale/country');
         
-        $country_info = $this->model_localization_country->getCountry($this->request->get['country_id']);
+        $country_info = $this->model_locale_country->getCountry($this->request->get['country_id']);
         
         if ($country_info) {
-            $this->theme->model('localization/zone');
+            $this->theme->model('locale/zone');
             
-            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => $this->model_localization_zone->getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
+            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => $this->model_locale_zone->getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
         }
         
         $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);

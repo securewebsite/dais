@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Module;
+namespace App\Language\Admin\English\Module;
 
 class Widget {
 	public static function lang() {

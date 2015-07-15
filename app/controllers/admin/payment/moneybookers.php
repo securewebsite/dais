@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Payment;
+
 use App\Controllers\Controller;
 
 class Moneybookers extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -99,9 +101,9 @@ class Moneybookers extends Controller {
             $data['moneybookers_chargeback_status_id'] = Config::get('moneybookers_chargeback_status_id');
         }
         
-        Theme::model('localization/order_status');
+        Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
+        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
         
         if (isset($this->request->post['moneybookers_geo_zone_id'])) {
             $data['moneybookers_geo_zone_id'] = $this->request->post['moneybookers_geo_zone_id'];
@@ -109,9 +111,9 @@ class Moneybookers extends Controller {
             $data['moneybookers_geo_zone_id'] = Config::get('moneybookers_geo_zone_id');
         }
         
-        Theme::model('localization/geo_zone');
+        Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
+        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
         
         if (isset($this->request->post['moneybookers_status'])) {
             $data['moneybookers_status'] = $this->request->post['moneybookers_status'];
@@ -139,7 +141,7 @@ class Moneybookers extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('payment/moneybookers', $data));
     }

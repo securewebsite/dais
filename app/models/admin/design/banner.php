@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Design;
-use Dais\Base\Model;
+namespace App\Models\Admin\Design;
+
+use App\Models\Model;
 
 class Banner extends Model {
+    
     public function addBanner($data) {
         $this->db->query("
             INSERT INTO {$this->db->prefix}banner 

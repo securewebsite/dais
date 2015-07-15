@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Report;
+
 use App\Controllers\Controller;
 
 class SaleReturn extends Controller {
+    
     public function index() {
         $data = Theme::language('report/sale_return');
         
@@ -104,9 +106,9 @@ class SaleReturn extends Controller {
         
         $data['token'] = $this->session->data['token'];
         
-        Theme::model('localization/return_status');
+        Theme::model('locale/return_status');
         
-        $data['return_statuses'] = $this->model_localization_return_status->getReturnStatuses();
+        $data['return_statuses'] = $this->model_locale_return_status->getReturnStatuses();
         
         $data['groups'] = array();
         
@@ -163,7 +165,7 @@ class SaleReturn extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('report/sale_return', $data));
     }

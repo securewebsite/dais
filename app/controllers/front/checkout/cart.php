@@ -302,9 +302,9 @@ class Cart extends Controller {
                 $data['country_id'] = $this->config->get('config_country_id');
             }
             
-            $this->theme->model('localization/country');
+            $this->theme->model('locale/country');
             
-            $data['countries'] = $this->model_localization_country->getCountries();
+            $data['countries'] = $this->model_locale_country->getCountries();
             
             if (isset($this->request->post['zone_id'])) {
                 $data['zone_id'] = $this->request->post['zone_id'];
@@ -382,10 +382,10 @@ class Cart extends Controller {
             
             $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
             
-            $this->theme->set_controller('header', 'shop/header');
-            $this->theme->set_controller('footer', 'shop/footer');
+            $this->theme->setController('header', 'shop/header');
+            $this->theme->setController('footer', 'shop/footer');
             
-            $data = $this->theme->render_controllers($data);
+            $data = $this->theme->renderControllers($data);
             
             $this->response->setOutput($this->theme->view('checkout/cart', $data));
         } else {
@@ -401,10 +401,10 @@ class Cart extends Controller {
             
             $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
             
-            $this->theme->set_controller('header', 'shop/header');
-            $this->theme->set_controller('footer', 'shop/footer');
+            $this->theme->setController('header', 'shop/header');
+            $this->theme->setController('footer', 'shop/footer');
             
-            $data = $this->theme->render_controllers($data);
+            $data = $this->theme->renderControllers($data);
             
             $this->response->setOutput($this->theme->view('error/not_found', $data));
         }
@@ -689,9 +689,9 @@ class Cart extends Controller {
             $json['error']['zone'] = $this->language->get('lang_error_zone');
         }
         
-        $this->theme->model('localization/country');
+        $this->theme->model('locale/country');
         
-        $country_info = $this->model_localization_country->getCountry($this->request->post['country_id']);
+        $country_info = $this->model_locale_country->getCountry($this->request->post['country_id']);
         
         if ($country_info && $country_info['postcode_required'] && ($this->encode->strlen($this->request->post['postcode']) < 2) || ($this->encode->strlen($this->request->post['postcode']) > 10)) {
             $json['error']['postcode'] = $this->language->get('lang_error_postcode');
@@ -717,9 +717,9 @@ class Cart extends Controller {
                 $address_format = '';
             }
             
-            $this->theme->model('localization/zone');
+            $this->theme->model('locale/zone');
             
-            $zone_info = $this->model_localization_zone->getZone($this->request->post['zone_id']);
+            $zone_info = $this->model_locale_zone->getZone($this->request->post['zone_id']);
             
             if ($zone_info) {
                 $zone = $zone_info['name'];
@@ -795,12 +795,12 @@ class Cart extends Controller {
     public function country() {
         $json = array();
         
-        $this->theme->model('localization/country');
+        $this->theme->model('locale/country');
         
-        $country_info = $this->model_localization_country->getCountry($this->request->get['country_id']);
+        $country_info = $this->model_locale_country->getCountry($this->request->get['country_id']);
         
         if ($country_info) {
-            $this->theme->model('localization/zone');
+            $this->theme->model('locale/zone');
             
             $json = array(
                 'country_id'        => $country_info['country_id'], 
@@ -809,7 +809,7 @@ class Cart extends Controller {
                 'iso_code_3'        => $country_info['iso_code_3'], 
                 'address_format'    => $country_info['address_format'], 
                 'postcode_required' => $country_info['postcode_required'], 
-                'zone'              => $this->model_localization_zone->getZonesByCountryId($this->request->get['country_id']), 
+                'zone'              => $this->model_locale_zone->getZonesByCountryId($this->request->get['country_id']), 
                 'status'            => $country_info['status']
             );
         }

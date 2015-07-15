@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Sale;
+
 use App\Controllers\Controller;
 
 class Returns extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -496,16 +498,16 @@ class Returns extends Controller {
         $data['filter_date_added']       = $filter_date_added;
         $data['filter_date_modified']    = $filter_date_modified;
         
-        Theme::model('localization/return_status');
+        Theme::model('locale/return_status');
         
-        $data['return_statuses'] = $this->model_localization_return_status->getReturnStatuses();
+        $data['return_statuses'] = $this->model_locale_return_status->getReturnStatuses();
         
         $data['sort'] = $sort;
         $data['order'] = $order;
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('sale/return_list', $data));
     }
@@ -735,9 +737,9 @@ class Returns extends Controller {
             $data['return_reason_id'] = '';
         }
         
-        Theme::model('localization/return_reason');
+        Theme::model('locale/return_reason');
         
-        $data['return_reasons'] = $this->model_localization_return_reason->getReturnReasons();
+        $data['return_reasons'] = $this->model_locale_return_reason->getReturnReasons();
         
         if (isset($this->request->post['return_action_id'])) {
             $data['return_action_id'] = $this->request->post['return_action_id'];
@@ -747,9 +749,9 @@ class Returns extends Controller {
             $data['return_action_id'] = '';
         }
         
-        Theme::model('localization/return_action');
+        Theme::model('locale/return_action');
         
-        $data['return_actions'] = $this->model_localization_return_action->getReturnActions();
+        $data['return_actions'] = $this->model_locale_return_action->getReturnActions();
         
         if (isset($this->request->post['comment'])) {
             $data['comment'] = $this->request->post['comment'];
@@ -767,13 +769,13 @@ class Returns extends Controller {
             $data['return_status_id'] = '';
         }
         
-        Theme::model('localization/return_status');
+        Theme::model('locale/return_status');
         
-        $data['return_statuses'] = $this->model_localization_return_status->getReturnStatuses();
+        $data['return_statuses'] = $this->model_locale_return_status->getReturnStatuses();
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('sale/return_form', $data));
     }
@@ -872,9 +874,9 @@ class Returns extends Controller {
             $data['email'] = $return_info['email'];
             $data['telephone'] = $return_info['telephone'];
             
-            Theme::model('localization/return_status');
+            Theme::model('locale/return_status');
             
-            $return_status_info = $this->model_localization_return_status->getReturnStatus($return_info['return_status_id']);
+            $return_status_info = $this->model_locale_return_status->getReturnStatus($return_info['return_status_id']);
             
             if ($return_status_info) {
                 $data['return_status'] = $return_status_info['name'];
@@ -888,9 +890,9 @@ class Returns extends Controller {
             $data['model'] = $return_info['model'];
             $data['quantity'] = $return_info['quantity'];
             
-            Theme::model('localization/return_reason');
+            Theme::model('locale/return_reason');
             
-            $return_reason_info = $this->model_localization_return_reason->getReturnReason($return_info['return_reason_id']);
+            $return_reason_info = $this->model_locale_return_reason->getReturnReason($return_info['return_reason_id']);
             
             if ($return_reason_info) {
                 $data['return_reason'] = $return_reason_info['name'];
@@ -901,13 +903,13 @@ class Returns extends Controller {
             $data['opened'] = $return_info['opened'] ? Lang::get('lang_text_yes') : Lang::get('lang_text_no');
             $data['comment'] = nl2br($return_info['comment']);
             
-            Theme::model('localization/return_action');
+            Theme::model('locale/return_action');
             
-            $data['return_actions'] = $this->model_localization_return_action->getReturnActions();
+            $data['return_actions'] = $this->model_locale_return_action->getReturnActions();
             
             $data['return_action_id'] = $return_info['return_action_id'];
             
-            $data['return_statuses'] = $this->model_localization_return_status->getReturnStatuses();
+            $data['return_statuses'] = $this->model_locale_return_status->getReturnStatuses();
             
             $data['return_status_id'] = $return_info['return_status_id'];
             
@@ -915,7 +917,7 @@ class Returns extends Controller {
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $data = Theme::render_controllers($data);
+            $data = Theme::renderControllers($data);
             
             Response::setOutput(Theme::view('sale/return_info', $data));
         } else {
@@ -927,7 +929,7 @@ class Returns extends Controller {
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $data = Theme::render_controllers($data);
+            $data = Theme::renderControllers($data);
             
             Response::setOutput(Theme::view('error/not_found', $data));
         }

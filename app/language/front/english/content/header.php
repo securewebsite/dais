@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Front\Language\English\Content;
+namespace App\Language\Front\English\Content;
 
 class Header {
 	public static function lang() {

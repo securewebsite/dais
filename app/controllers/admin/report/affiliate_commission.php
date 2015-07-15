@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Report;
+
 use App\Controllers\Controller;
 
 class AffiliateCommission extends Controller {
+    
     public function index() {
         $data = Theme::language('report/affiliate_commission');
         Theme::setTitle(Lang::get('lang_heading_title'));
@@ -113,7 +115,7 @@ class AffiliateCommission extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('report/affiliate_commission', $data));
     }

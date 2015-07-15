@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Catalog;
-use Dais\Base\Model;
+namespace App\Models\Admin\Catalog;
+
+use App\Models\Model;
 
 class Attribute extends Model {
+    
     public function addAttribute($data) {
         $this->db->query("
 			INSERT INTO {$this->db->prefix}attribute 

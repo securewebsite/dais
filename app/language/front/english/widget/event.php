@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Front\Language\English\Widget;
+namespace App\Language\Front\English\Widget;
 
 class Event {
 	public static function lang() {

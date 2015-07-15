@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\People;
+namespace App\Language\Admin\English\People;
 
 class UserGroup {
 	public static function lang() {

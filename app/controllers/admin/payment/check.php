@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Payment;
+
 use App\Controllers\Controller;
 
 class Check extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -69,9 +71,9 @@ class Check extends Controller {
             $data['check_order_status_id'] = Config::get('check_order_status_id');
         }
         
-        Theme::model('localization/order_status');
+        Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
+        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
         
         if (isset($this->request->post['check_geo_zone_id'])) {
             $data['check_geo_zone_id'] = $this->request->post['check_geo_zone_id'];
@@ -79,9 +81,9 @@ class Check extends Controller {
             $data['check_geo_zone_id'] = Config::get('check_geo_zone_id');
         }
         
-        Theme::model('localization/geo_zone');
+        Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
+        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
         
         if (isset($this->request->post['check_status'])) {
             $data['check_status'] = $this->request->post['check_status'];
@@ -97,7 +99,7 @@ class Check extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('payment/check', $data));
     }

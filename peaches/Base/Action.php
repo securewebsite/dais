@@ -64,7 +64,7 @@ final class Action {
     public function preControl() {
         
         $callable = false;
-        $hook_key = trim(strtolower(Config::get('prefix.facade')), '/') . '_controllers';
+        $hook_key = trim(Config::get('prefix.facade'), '/') . '_controller';
         $hooks    = App::get('plugin_hooks');
         
         if (array_key_exists($hook_key, $hooks)):

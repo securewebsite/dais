@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Report;
-use Dais\Base\Model;
+namespace App\Models\Admin\Report;
+
+use App\Models\Model;
 
 class Returns extends Model {
+    
     public function getReturns($data = array()) {
         $sql = "SELECT MIN(r.date_added) AS date_start, MAX(r.date_added) AS date_end, COUNT(r.return_id) AS `returns` FROM `{$this->db->prefix}return` r";
         

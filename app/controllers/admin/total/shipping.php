@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Total;
+
 use App\Controllers\Controller;
 
 class Shipping extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -64,7 +66,7 @@ class Shipping extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('total/shipping', $data));
     }

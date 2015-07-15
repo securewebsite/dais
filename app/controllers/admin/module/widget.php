@@ -20,6 +20,7 @@ use App\Controllers\Controller;
 use Dais\Support\Naming;
 
 class Widget extends Controller {
+    
     public function index() {
         $data = Theme::language('module/widget');
         Theme::setTitle(Lang::get('lang_heading_widget'));
@@ -48,7 +49,7 @@ class Widget extends Controller {
         
         foreach ($modules as $key => $value) {
             $theme_file = Theme::getPath() . 'controller/widget/' . $value . '.php';
-            $core_file  = Config::get('path.application') . 'controller/widget/' . $value . '.php';
+            $core_file  = Config::get('path.application') . 'widget/' . $value . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {
                 $this->model_setting_module->uninstall('widget', $value);
@@ -92,7 +93,7 @@ class Widget extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('module/widget', $data));
     }
@@ -116,7 +117,7 @@ class Widget extends Controller {
             $this->model_people_user_group->addPermission(User::getId(), 'access', 'widget/' . $this->request->get['module']);
             $this->model_people_user_group->addPermission(User::getId(), 'modify', 'widget/' . $this->request->get['module']);
             
-            $base_path  = App::appPath() . Config::get('prefix.facade') . 'controller' . SEP . 'widget' . SEP;
+            $base_path  = Config::get('path.application') . 'widget' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'widget' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
@@ -153,7 +154,7 @@ class Widget extends Controller {
             $this->model_setting_module->uninstall('widget', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
-            $base_path  = App::appPath() . Config::get('prefix.facade') . 'controller' . SEP . 'widget' . SEP;
+            $base_path  = Config::get('path.application') . 'widget' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'widget' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):

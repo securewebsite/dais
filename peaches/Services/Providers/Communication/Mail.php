@@ -21,12 +21,12 @@
 
 namespace Dais\Services\Providers\Communication;
 
-use Swift_MailTransport;
-use Swift_SmtpTransport;
 use Swift_Mailer;
 use Swift_Message;
-use Swift_Plugins_Loggers_EchoLogger;
+use Swift_MailTransport;
+use Swift_SmtpTransport;
 use Swift_Plugins_LoggerPlugin;
+use Swift_Plugins_Loggers_EchoLogger;
 
 class Mail {
 

@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Error;
+
 use App\Controllers\Controller;
 
 class Permission extends Controller {
+    
     public function index() {
         $data = Theme::language('error/permission');
         
@@ -27,7 +29,7 @@ class Permission extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('error/permission', $data));
     }

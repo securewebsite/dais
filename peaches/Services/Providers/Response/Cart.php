@@ -17,6 +17,7 @@
 namespace Dais\Services\Providers\Response;
 
 class Cart {
+    
     private $data = array();
     
     public function __construct() {

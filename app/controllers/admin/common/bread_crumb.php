@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Common;
+
 use App\Controllers\Controller;
 
 class BreadCrumb extends Controller {
+    
     public function index() {
         
         $data['breadcrumbs'] = \Breadcrumb::fetch();

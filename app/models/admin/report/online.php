@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Report;
-use Dais\Base\Model;
+namespace App\Models\Admin\Report;
+
+use App\Models\Model;
 
 class Online extends Model {
+    
     public function getCustomersOnline($data = array()) {
         $sql = "SELECT co.ip, co.customer_id, co.url, co.referer, co.date_added FROM {$this->db->prefix}customer_online co LEFT JOIN {$this->db->prefix}customer c ON (co.customer_id = c.customer_id)";
         

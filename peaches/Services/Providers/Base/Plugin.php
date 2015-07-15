@@ -16,9 +16,9 @@
 
 namespace Dais\Services\Providers\Base;
 
-use Dais\Base\Controller;
 use Dais\Base\View;
 use Dais\Support\Naming;
+use Dais\Base\Controller;
 
 class Plugin {
     
@@ -50,12 +50,12 @@ class Plugin {
         
         unset($files);
         
-        $files = glob($this->directory . '*' . SEP . '*' . SEP . 'Controller' . SEP . '*.php');
+        $files = glob($this->directory . '*' . SEP . '*' . SEP . 'controller' . SEP . '*.php');
         
         foreach ($files as $key => $file):
-            $path  = str_replace(Config::get('path.app'), '', rtrim($file, '.php'));
-            $slugs = explode(SEP, $path);
             
+            $path   = str_replace(Config::get('path.app'), '', rtrim($file, '.php'));
+            $slugs  = explode(SEP, $path);
             $facade = trim(Config::get('prefix.facade'), '/');
             
             if ($slugs[0] !== end($slugs) && $slugs[2] === $facade):
@@ -75,20 +75,18 @@ class Plugin {
     }
     
     public function install($plugin) {
-        $class      = 'App\\Plugin\\' . $this->format($plugin) . '\Register';
-        $controller = new $class;
+        $class = 'App\\Plugin\\' . $this->format($plugin) . '\Register';
         
-        if (is_callable(array($controller, 'add'))):
-            $controller->add();
+        if (is_callable(array($class, 'add'))):
+            call_user_func(array($class, 'add'));
         endif;
     }
     
     public function uninstall($plugin) {
-        $class      = 'App\\Plugin\\' . $this->format($plugin) . '\Register';
-        $controller = new $class;
+        $class = 'App\\Plugin\\' . $this->format($plugin) . '\Register';
         
-        if (is_callable(array($controller, 'remove'))):
-            $controller->remove();
+        if (is_callable(array($class, 'remove'))):
+            call_user_func(array($class, 'remove'));
         endif;
     }
     

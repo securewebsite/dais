@@ -405,10 +405,10 @@ class Category extends Controller {
             
             $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
             
-            $this->theme->set_controller('header', 'shop/header');
-            $this->theme->set_controller('footer', 'shop/footer');
+            $this->theme->setController('header', 'shop/header');
+            $this->theme->setController('footer', 'shop/footer');
             
-            $data = $this->theme->render_controllers($data);
+            $data = $this->theme->renderControllers($data);
             
             $this->response->setOutput($this->theme->view('catalog/category', $data));
         } else {
@@ -450,10 +450,10 @@ class Category extends Controller {
             
             $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
             
-            $this->theme->set_controller('header', 'shop/header');
-            $this->theme->set_controller('footer', 'shop/footer');
+            $this->theme->setController('header', 'shop/header');
+            $this->theme->setController('footer', 'shop/footer');
             
-            $data = $this->theme->render_controllers($data);
+            $data = $this->theme->renderControllers($data);
             
             $this->response->setOutput($this->theme->view('error/not_found', $data));
         }

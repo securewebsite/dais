@@ -244,7 +244,7 @@ class Event extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('calendar/waitlist', $data));
     }
@@ -344,7 +344,7 @@ class Event extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('calendar/event_list', $data));
     }
@@ -533,9 +533,9 @@ class Event extends Controller {
             $data['page_store'] = array(0);
         }
 
-        Theme::model('localization/stock_status');
+        Theme::model('locale/stock_status');
         
-        $data['stock_statuses'] = $this->model_localization_stock_status->getStockStatuses();
+        $data['stock_statuses'] = $this->model_locale_stock_status->getStockStatuses();
         
         if (isset($this->request->post['stock_status_id'])) {
             $data['stock_status_id'] = $this->request->post['stock_status_id'];
@@ -750,7 +750,7 @@ class Event extends Controller {
 
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('calendar/event_form', $data));
     }
@@ -821,7 +821,7 @@ class Event extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('calendar/presenter_list', $data));
     }
@@ -917,7 +917,7 @@ class Event extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('calendar/presenter_form', $data));
     }
@@ -981,7 +981,7 @@ class Event extends Controller {
         
         Theme::loadjs('javascript/calendar/roster', $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('calendar/roster', $data));
     }

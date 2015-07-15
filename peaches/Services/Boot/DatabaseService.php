@@ -16,10 +16,10 @@
 
 namespace Dais\Services\Boot;
 
-use Dais\Services\Providers\Boot\Db;
+use Pimple\Container;
 use Dais\Driver\Database\Mpdo;
 use Dais\Driver\Database\Mysqli;
-use Pimple\Container;
+use Dais\Services\Providers\Boot\Db;
 use Pimple\ServiceProviderInterface;
 
 class DatabaseService implements ServiceProviderInterface {

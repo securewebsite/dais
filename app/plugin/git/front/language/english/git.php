@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Plugin\Git\Front\Language\English;
+namespace App\Plugin\Git\Front\Language\English;
 
 class Git {
 	public static function lang() {

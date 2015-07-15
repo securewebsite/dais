@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Total;
+
 use App\Controllers\Controller;
 
 class LowOrderFee extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -62,9 +64,9 @@ class LowOrderFee extends Controller {
             $data['low_order_fee_tax_class_id'] = Config::get('low_order_fee_tax_class_id');
         }
         
-        Theme::model('localization/tax_class');
+        Theme::model('locale/tax_class');
         
-        $data['tax_classes'] = $this->model_localization_tax_class->getTaxClasses();
+        $data['tax_classes'] = $this->model_locale_tax_class->getTaxClasses();
         
         if (isset($this->request->post['low_order_fee_status'])) {
             $data['low_order_fee_status'] = $this->request->post['low_order_fee_status'];
@@ -80,7 +82,7 @@ class LowOrderFee extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('total/low_order_fee', $data));
     }

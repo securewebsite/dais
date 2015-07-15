@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Front\Language\English\Event;
+namespace App\Language\Front\English\Event;
 
 class Page {
 	public static function lang() {

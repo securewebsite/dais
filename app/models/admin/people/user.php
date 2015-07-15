@@ -13,11 +13,12 @@
 |	file that was distributed with this source code.
 |	
 */
+namespace App\Models\Admin\People;
 
-namespace Admin\Model\People;
-use Dais\Base\Model;
+use App\Models\Model;
 
 class User extends Model {
+    
     public function addUser($data) {
         $this->db->query("
             INSERT INTO `{$this->db->prefix}user` 

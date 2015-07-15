@@ -56,10 +56,10 @@ class Checkout extends Controller {
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->set_controller('header', 'shop/header');
-        $this->theme->set_controller('footer', 'shop/footer');
+        $this->theme->setController('header', 'shop/header');
+        $this->theme->setController('footer', 'shop/footer');
         
-        $data = $this->theme->render_controllers($data);
+        $data = $this->theme->renderControllers($data);
         
         if (isset($this->request->get['quickconfirm'])) {
             $data['quickconfirm'] = $this->request->get['quickconfirm'];
@@ -71,14 +71,14 @@ class Checkout extends Controller {
     public function country() {
         $json = array();
         
-        $this->theme->model('localization/country');
+        $this->theme->model('locale/country');
         
-        $country_info = $this->model_localization_country->getCountry($this->request->get['country_id']);
+        $country_info = $this->model_locale_country->getCountry($this->request->get['country_id']);
         
         if ($country_info) {
-            $this->theme->model('localization/zone');
+            $this->theme->model('locale/zone');
             
-            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => $this->model_localization_zone->getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
+            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => $this->model_locale_zone->getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
         }
         
         $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);

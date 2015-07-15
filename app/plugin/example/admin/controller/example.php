@@ -14,27 +14,28 @@
 |	
 */
 
-namespace Plugin\Example\Admin\Controller;
-use Dais\Base\Container;
-use Dais\Base\Plugin;
+namespace App\Plugin\Example\Admin\Controller;
 
-class Example extends Plugin {
+use App\Controllers\Controller;
+
+class Example extends Controller {
+    
     public function __construct() {
-        parent::setPlugin('example');
+        Plugin::setPlugin('example');
     }
     
     public function index() {
-        $data = $this->language('example');
+        $data = Plugin::language('example');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle($this->language->get('lang_heading_title'));
         
-        $this->breadcrumb->add('lang_text_plugin', 'module/plugin');
-        $this->breadcrumb->add('lang_heading_title', 'plugin/example');
+        Breadcrumb::add('lang_text_plugin', 'module/plugin');
+        Breadcrumb::add('lang_heading_title', 'plugin/example');
         
-        $data['header']     = $this->theme->controller('common/header');
-        $data['breadcrumb'] = $this->theme->controller('common/bread_crumb');
-        $data['footer']     = $this->theme->controller('common/footer');
+        $data['header']     = Theme::controller('common/header');
+        $data['breadcrumb'] = Theme::controller('common/bread_crumb');
+        $data['footer']     = Theme::controller('common/footer');
         
-        $this->response->setOutput($this->view('example', $data));
+        Response::setOutput(Plugin::view('example', $data));
     }
 }

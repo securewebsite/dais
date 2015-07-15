@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Shipping;
+
 use App\Controllers\Controller;
 
 class Pickup extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -51,9 +53,9 @@ class Pickup extends Controller {
             $data['pickup_geo_zone_id'] = Config::get('pickup_geo_zone_id');
         }
         
-        Theme::model('localization/geo_zone');
+        Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
+        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
         
         if (isset($this->request->post['pickup_status'])) {
             $data['pickup_status'] = $this->request->post['pickup_status'];
@@ -69,7 +71,7 @@ class Pickup extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('shipping/pickup', $data));
     }

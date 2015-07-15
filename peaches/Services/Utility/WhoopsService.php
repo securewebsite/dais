@@ -16,10 +16,10 @@
 
 namespace Dais\Services\Utility;
 
-use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Whoops\Handler\PrettyPageHandler;
 
 class WhoopsService implements ServiceProviderInterface {
 

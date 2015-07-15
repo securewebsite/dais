@@ -15,10 +15,12 @@
 */
 
 namespace App\Controllers\Admin\Module;
+
 use App\Controllers\Controller;
 
 class Notification extends Controller {
-	private $error;
+	
+    private $error;
 
 	public function index() {
 		Lang::load('module/notification');
@@ -190,7 +192,7 @@ class Notification extends Controller {
 
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('module/notification_list', $data));
 	}
@@ -257,9 +259,9 @@ class Notification extends Controller {
         
         $data['token'] = $this->session->data['token'];
         
-        Theme::model('localization/language');
+        Theme::model('locale/language');
         
-        $data['languages'] = $this->model_localization_language->getLanguages();
+        $data['languages'] = $this->model_locale_language->getLanguages();
         
         if (isset($this->request->post['email_content'])):
             $data['email_content'] = $this->request->post['email_content'];
@@ -322,7 +324,7 @@ class Notification extends Controller {
 
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('module/notification_form', $data));
 

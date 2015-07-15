@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Account;
-use Dais\Base\Model;
+namespace App\Models\Front\Account;
+use App\Models\Model;
 
 class Reward extends Model {
     public function getRewards($data = array()) {

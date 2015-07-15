@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Front\Language\English\Search;
+namespace App\Language\Front\English\Search;
 
 class Search {
 	public static function lang() {

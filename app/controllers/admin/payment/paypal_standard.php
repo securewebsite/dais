@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Payment;
+
 use App\Controllers\Controller;
 
 class PaypalStandard extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -141,9 +143,9 @@ class PaypalStandard extends Controller {
             $data['paypal_standard_voided_status_id'] = Config::get('paypal_standard_voided_status_id');
         }
         
-        Theme::model('localization/order_status');
+        Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
+        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
         
         if (isset($this->request->post['paypal_standard_geo_zone_id'])) {
             $data['paypal_standard_geo_zone_id'] = $this->request->post['paypal_standard_geo_zone_id'];
@@ -151,9 +153,9 @@ class PaypalStandard extends Controller {
             $data['paypal_standard_geo_zone_id'] = Config::get('paypal_standard_geo_zone_id');
         }
         
-        Theme::model('localization/geo_zone');
+        Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
+        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
         
         if (isset($this->request->post['paypal_standard_status'])) {
             $data['paypal_standard_status'] = $this->request->post['paypal_standard_status'];
@@ -169,7 +171,7 @@ class PaypalStandard extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('payment/paypal_standard', $data));
     }

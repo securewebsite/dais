@@ -16,9 +16,9 @@
 
 namespace Dais\Services\Response;
 
-use Dais\Services\Providers\Response\Paginate;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Response\Paginate;
 
 class PaginateService implements ServiceProviderInterface {
 

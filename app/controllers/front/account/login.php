@@ -172,7 +172,7 @@ class Login extends Controller {
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->render_controllers($data);
+        $data = $this->theme->renderControllers($data);
         
         $this->response->setOutput($this->theme->view('account/login', $data));
     }

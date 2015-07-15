@@ -16,8 +16,8 @@
 
 namespace Dais\Services\Providers\Base;
 
-use Dais\Support\Naming;
 use Dais\Base\Action;
+use Dais\Support\Naming;
 
 class Router {
 

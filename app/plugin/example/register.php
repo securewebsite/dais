@@ -14,30 +14,26 @@
 |   
 */
 
-namespace Plugin\Example;
-use Dais\Base\Container;
-use Dais\Base\Plugin;
-use Dais\Service\PluginServiceModel;
+namespace App\Plugin\Example;
 
-class Register extends Plugin {
+use Dais\Contracts\PluginRegistryContract;
+
+class Register extends Plugin implements PluginRegistryContract {
     
-    public function __construct(Container $app) {
-        parent::__construct($app);
-        parent::setPlugin('example');
+    public function __construct() {
+        Plugin::setPlugin('example');
     }
     
     public function add() {
-        $model = new PluginServiceModel($this->app);
-        
         // set all event handlers
-        $model->setEventHandler('admin_edit_product', array(
+        PluginModel::setEventHandler('admin_edit_product', array(
             'plugin' => 'example',
             'file'   => 'admin/events/admin_event',
             'method' => 'editProduct'
         ));
         
         // set all hooks handlers
-        $model->setHookHandler('admin_controller', array(
+        PluginModel::setHookHandler('admin_controllers', array(
             'class'    => 'tool/test',
             'method'   => 'index',
             'type'     => 'post',
@@ -50,7 +46,7 @@ class Register extends Plugin {
             )
         ));
         
-        $model->setHookHandler('admin_controller', array(
+        PluginModel::setHookHandler('admin_controllers', array(
             'class'    => 'tool/test',
             'method'   => 'index',
             'type'     => 'pre',
@@ -61,17 +57,15 @@ class Register extends Plugin {
     }
     
     public function remove() {
-        $model = new PluginServiceModel($this->app);
-        
         // remove all event handlers
-        $model->removeEventHandler('admin_edit_product', array(
+        PluginModel::removeEventHandler('admin_edit_product', array(
             'plugin' => 'example',
             'file'   => 'admin/events/admin_event',
             'method' => 'editProduct'
         ));
         
         // remove all hook handlers
-        $model->removeHookHandler('admin_controller', array(
+        PluginModel::removeHookHandler('admin_controllers', array(
             'class'    => 'tool/test',
             'method'   => 'index',
             'type'     => 'post',
@@ -84,7 +78,7 @@ class Register extends Plugin {
             )
         ));
         
-        $model->removeHookHandler('admin_controller', array(
+        PluginModel::removeHookHandler('admin_controllers', array(
             'class'    => 'tool/test',
             'method'   => 'index',
             'type'     => 'pre',

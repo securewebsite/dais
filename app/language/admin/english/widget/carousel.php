@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Widget;
+namespace App\Language\Admin\English\Widget;
 
 class Carousel {
 	public static function lang() {

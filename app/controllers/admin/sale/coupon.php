@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Sale;
+
 use App\Controllers\Controller;
 
 class Coupon extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -232,7 +234,7 @@ class Coupon extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('sale/coupon_list', $data));
     }
@@ -444,7 +446,7 @@ class Coupon extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('sale/coupon_form', $data));
     }

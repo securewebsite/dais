@@ -14,11 +14,13 @@
 |	
 */
 
-namespace Admin\Model\Tool;
-use Dais\Base\Model;
-use Dais\Library\Image as NewImage;
+namespace App\Models\Admin\Tool;
+
+use App\Models\Model;
+use Dais\Support\Image as NewImage;
 
 class Image extends Model {
+    
     public function resize($filename, $width, $height) {
         if (!file_exists(Config::get('path.image') . $filename) || !is_file(Config::get('path.image') . $filename)) {
             return;

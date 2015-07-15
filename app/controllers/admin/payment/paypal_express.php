@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Payment;
+
 use App\Controllers\Controller;
 
 class PaypalExpress extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -101,9 +103,9 @@ class PaypalExpress extends Controller {
         
         $data['currency_codes'] = $this->model_payment_paypal_express->currencyCodes();
         
-        Theme::model('localization/order_status');
+        Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_localization_order_status->getOrderStatuses();
+        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
         
         if (isset($this->request->post['paypal_express_canceled_reversal_status_id'])) {
             $data['paypal_express_canceled_reversal_status_id'] = $this->request->post['paypal_express_canceled_reversal_status_id'];
@@ -209,9 +211,9 @@ class PaypalExpress extends Controller {
             $data['paypal_express_geo_zone_id'] = Config::get('paypal_express_geo_zone_id');
         }
         
-        Theme::model('localization/geo_zone');
+        Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
+        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
         
         if (isset($this->request->post['paypal_express_status'])) {
             $data['paypal_express_status'] = $this->request->post['paypal_express_status'];
@@ -229,7 +231,7 @@ class PaypalExpress extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('payment/paypal_express', $data));
     }
@@ -559,7 +561,7 @@ class PaypalExpress extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('payment/paypal_express_refund', $data));
     }
@@ -734,7 +736,7 @@ class PaypalExpress extends Controller {
         
         Theme::loadjs('javascript/payment/paypal_express_search', $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('payment/paypal_express_search', $data));
     }
@@ -856,7 +858,7 @@ class PaypalExpress extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('payment/paypal_express_view', $data));
     }

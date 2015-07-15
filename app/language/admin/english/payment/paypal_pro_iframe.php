@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Payment;
+namespace App\Language\Admin\English\Payment;
 
 class PaypalProIframe {
 	public static function lang() {

@@ -16,18 +16,18 @@
 
 namespace Dais\Services\Storage;
 
-use Dais\Services\Providers\Storage\Cache;
-use Dais\Driver\Cache\Apc;
-use Dais\Driver\Cache\File;
-use Dais\Driver\Cache\Mem;
 use Pimple\Container;
+use Dais\Driver\Cache\Apc;
+use Dais\Driver\Cache\Mem;
+use Dais\Driver\Cache\File;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Storage\Cache;
 
 class CacheService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
         $app['cache'] = function($app) {
-            switch (Config::get('config_cache_type_id')):
+            switch ($app['config']->get('config_cache_type_id')):
                 case 'apc':
                     $driver = new Apc;
                     break;

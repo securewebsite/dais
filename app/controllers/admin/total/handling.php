@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Total;
+
 use App\Controllers\Controller;
 
 class Handling extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -62,9 +64,9 @@ class Handling extends Controller {
             $data['handling_tax_class_id'] = Config::get('handling_tax_class_id');
         }
         
-        Theme::model('localization/tax_class');
+        Theme::model('locale/tax_class');
         
-        $data['tax_classes'] = $this->model_localization_tax_class->getTaxClasses();
+        $data['tax_classes'] = $this->model_locale_tax_class->getTaxClasses();
         
         if (isset($this->request->post['handling_status'])) {
             $data['handling_status'] = $this->request->post['handling_status'];
@@ -80,7 +82,7 @@ class Handling extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('total/handling', $data));
     }

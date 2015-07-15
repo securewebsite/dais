@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Design;
-use Dais\Base\Model;
+namespace App\Models\Admin\Design;
+
+use App\Models\Model;
 
 class Route extends Model {
+    
     public function editRoutes($data) {
         $this->db->query("
             DELETE FROM {$this->db->prefix}custom_route

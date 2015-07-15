@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Content;
-use Dais\Base\Model;
+namespace App\Models\Admin\Content;
+
+use App\Models\Model;
 
 class Page extends Model {
+    
     public function addPage($data) {
         $this->db->query("
 			INSERT INTO {$this->db->prefix}page 

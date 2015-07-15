@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\People;
-use Dais\Base\Model;
+namespace App\Models\Admin\People;
+
+use App\Models\Model;
 
 class CustomerBanIp extends Model {
+    
     public function addCustomerBanIp($data) {
         $this->db->query("
             INSERT INTO `{$this->db->prefix}customer_ban_ip` 

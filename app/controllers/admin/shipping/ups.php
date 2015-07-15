@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Shipping;
+
 use App\Controllers\Controller;
 
 class Ups extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -541,9 +543,9 @@ class Ups extends Controller {
             $data['ups_weight_class_id'] = Config::get('ups_weight_class_id');
         }
         
-        Theme::model('localization/weight_class');
+        Theme::model('locale/weight_class');
         
-        $data['weight_classes'] = $this->model_localization_weight_class->getWeightClasses();
+        $data['weight_classes'] = $this->model_locale_weight_class->getWeightClasses();
         
         if (isset($this->request->post['ups_length_code'])) {
             $data['ups_length_code'] = $this->request->post['ups_length_code'];
@@ -557,9 +559,9 @@ class Ups extends Controller {
             $data['ups_length_class_id'] = Config::get('ups_length_class_id');
         }
         
-        Theme::model('localization/length_class');
+        Theme::model('locale/length_class');
         
-        $data['length_classes'] = $this->model_localization_length_class->getLengthClasses();
+        $data['length_classes'] = $this->model_locale_length_class->getLengthClasses();
         
         if (isset($this->request->post['ups_length'])) {
             $data['ups_length'] = $this->request->post['ups_length'];
@@ -585,9 +587,9 @@ class Ups extends Controller {
             $data['ups_tax_class_id'] = Config::get('ups_tax_class_id');
         }
         
-        Theme::model('localization/tax_class');
+        Theme::model('locale/tax_class');
         
-        $data['tax_classes'] = $this->model_localization_tax_class->getTaxClasses();
+        $data['tax_classes'] = $this->model_locale_tax_class->getTaxClasses();
         
         if (isset($this->request->post['ups_geo_zone_id'])) {
             $data['ups_geo_zone_id'] = $this->request->post['ups_geo_zone_id'];
@@ -595,9 +597,9 @@ class Ups extends Controller {
             $data['ups_geo_zone_id'] = Config::get('ups_geo_zone_id');
         }
         
-        Theme::model('localization/geo_zone');
+        Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
+        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
         
         if (isset($this->request->post['ups_status'])) {
             $data['ups_status'] = $this->request->post['ups_status'];
@@ -621,7 +623,7 @@ class Ups extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('shipping/ups', $data));
     }

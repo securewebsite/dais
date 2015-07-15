@@ -292,17 +292,17 @@ class Manual extends Controller {
             
             $this->theme->model('setting/module');
             
-            $this->theme->model('localization/country');
+            $this->theme->model('locale/country');
             
-            $this->theme->model('localization/zone');
+            $this->theme->model('locale/zone');
             
             // Shipping
             $json['shipping_method'] = array();
             
             if ($this->cart->hasShipping()) {
-                $this->theme->model('localization/country');
+                $this->theme->model('locale/country');
                 
-                $country_info = $this->model_localization_country->getCountry($this->request->post['shipping_country_id']);
+                $country_info = $this->model_locale_country->getCountry($this->request->post['shipping_country_id']);
                 
                 if ($country_info && $country_info['postcode_required'] && ($this->encode->strlen($this->request->post['shipping_postcode']) < 2) || ($this->encode->strlen($this->request->post['shipping_postcode']) > 10)) {
                     $json['error']['shipping']['postcode'] = $this->language->get('lang_error_postcode');
@@ -316,9 +316,9 @@ class Manual extends Controller {
                     $json['error']['shipping']['zone'] = $this->language->get('lang_error_zone');
                 }
                 
-                $this->theme->model('localization/country');
+                $this->theme->model('locale/country');
                 
-                $country_info = $this->model_localization_country->getCountry($this->request->post['shipping_country_id']);
+                $country_info = $this->model_locale_country->getCountry($this->request->post['shipping_country_id']);
                 
                 if ($country_info && $country_info['postcode_required'] && ($this->encode->strlen($this->request->post['shipping_postcode']) < 2) || ($this->encode->strlen($this->request->post['shipping_postcode']) > 10)) {
                     $json['error']['shipping']['postcode'] = $this->language->get('lang_error_postcode');
@@ -337,7 +337,7 @@ class Manual extends Controller {
                         $address_format = '';
                     }
                     
-                    $zone_info = $this->model_localization_zone->getZone($this->request->post['shipping_zone_id']);
+                    $zone_info = $this->model_locale_zone->getZone($this->request->post['shipping_zone_id']);
                     
                     if ($zone_info) {
                         $zone      = $zone_info['name'];
@@ -503,7 +503,7 @@ class Manual extends Controller {
             if (!isset($json['error']['payment'])) {
                 $json['payment_methods'] = array();
                 
-                $country_info = $this->model_localization_country->getCountry($this->request->post['payment_country_id']);
+                $country_info = $this->model_locale_country->getCountry($this->request->post['payment_country_id']);
                 
                 if ($country_info) {
                     $country        = $country_info['name'];
@@ -517,7 +517,7 @@ class Manual extends Controller {
                     $address_format = '';
                 }
                 
-                $zone_info = $this->model_localization_zone->getZone($this->request->post['payment_zone_id']);
+                $zone_info = $this->model_locale_zone->getZone($this->request->post['payment_zone_id']);
                 
                 if ($zone_info) {
                     $zone = $zone_info['name'];

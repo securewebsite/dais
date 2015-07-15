@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Front\Language\English\Shipping;
+namespace App\Language\Front\English\Shipping;
 
 class Fedex {
 	public static function lang() {

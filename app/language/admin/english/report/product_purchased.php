@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Report;
+namespace App\Language\Admin\English\Report;
 
 class ProductPurchased {
 	public static function lang() {

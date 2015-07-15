@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Content;
-use Dais\Base\Model;
+namespace App\Models\Front\Content;
+use App\Models\Model;
 
 class Post extends Model {
     public function updateViewed($post_id) {

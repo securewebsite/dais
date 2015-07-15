@@ -44,11 +44,11 @@ class Currency extends Controller {
         
         $data['currency_code'] = $this->currency->getCode();
         
-        $this->theme->model('localization/currency');
+        $this->theme->model('locale/currency');
         
         $data['currencies'] = array();
         
-        $results = $this->model_localization_currency->getCurrencies();
+        $results = $this->model_locale_currency->getCurrencies();
         
         foreach ($results as $result) {
             if ($result['status']) {

@@ -14,9 +14,9 @@
 |	
 */
 
-namespace Front\Model\Tool;
+namespace App\Models\Front\Tool;
 
-use Dais\Base\Model;
+use App\Models\Model;
 use Dais\Support\Image as LibraryImage;
 
 class Image extends Model {

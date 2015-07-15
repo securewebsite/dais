@@ -625,14 +625,14 @@
 												<td class="text-right"><div class="input-group">
 													<span class="input-group-btn" data-toggle="buttons">
 														<?php if ($product_option_value['price_prefix'] == '+') { ?>
-															<label class="btn btn-default active"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][price_prefix]" value="+" checked=""><i class="glyphicon glyphicon-plus"></i></label>
+															<label class="btn btn-default active"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][price_prefix]" value="+" checked=""><i class="fa fa-plus"></i></label>
 														<?php } else { ?>
-															<label class="btn btn-default"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][price_prefix]" value="+"><i class="glyphicon glyphicon-plus"></i></label>
+															<label class="btn btn-default"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][price_prefix]" value="+"><i class="fa fa-plus"></i></label>
 														<?php } ?>
 														<?php if ($product_option_value['price_prefix'] == '-') { ?>
-															<label class="btn btn-default active"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][price_prefix]" value="-" checked=""><i class="glyphicon glyphicon-minus"></i></label>
+															<label class="btn btn-default active"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][price_prefix]" value="-" checked=""><i class="fa fa-minus"></i></label>
 														<?php } else { ?>
-															<label class="btn btn-default"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][price_prefix]" value="-"><i class="glyphicon glyphicon-minus"></i></label>
+															<label class="btn btn-default"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][price_prefix]" value="-"><i class="fa fa-minus"></i></label>
 														<?php } ?>
 													</span>
 													<input type="text" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][price]" value="<?= $product_option_value['price']; ?>" class="form-control">
@@ -640,14 +640,14 @@
 												<td class="text-right"><div class="input-group">
 													<span class="input-group-btn" data-toggle="buttons">
 														<?php if ($product_option_value['points_prefix'] == '+') { ?>
-															<label class="btn btn-default active"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][points_prefix]" value="+" checked=""><i class="glyphicon glyphicon-plus"></i></label>
+															<label class="btn btn-default active"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][points_prefix]" value="+" checked=""><i class="fa fa-plus"></i></label>
 														<?php } else { ?>
-															<label class="btn btn-default"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][points_prefix]" value="+"><i class="glyphicon glyphicon-plus"></i></label>
+															<label class="btn btn-default"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][points_prefix]" value="+"><i class="fa fa-plus"></i></label>
 														<?php } ?>
 														<?php if ($product_option_value['points_prefix'] == '-') { ?>
-															<label class="btn btn-default active"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][points_prefix]" value="-" checked=""><i class="glyphicon glyphicon-minus"></i></label>
+															<label class="btn btn-default active"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][points_prefix]" value="-" checked=""><i class="fa fa-minus"></i></label>
 														<?php } else { ?>
-															<label class="btn btn-default"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][points_prefix]" value="-"><i class="glyphicon glyphicon-minus"></i></label>
+															<label class="btn btn-default"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][points_prefix]" value="-"><i class="fa fa-minus"></i></label>
 														<?php } ?>
 													</span>
 													<input type="text" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][points]" value="<?= $product_option_value['points']; ?>" class="form-control">
@@ -655,14 +655,14 @@
 												<td class="text-right"><div class="input-group">
 													<span class="input-group-btn" data-toggle="buttons">
 														<?php if ($product_option_value['weight_prefix'] == '+') { ?>
-															<label class="btn btn-default active"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][weight_prefix]" value="+" checked=""><i class="glyphicon glyphicon-plus"></i></label>
+															<label class="btn btn-default active"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][weight_prefix]" value="+" checked=""><i class="fa fa-plus"></i></label>
 														<?php } else { ?>
-															<label class="btn btn-default"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][weight_prefix]" value="+"><i class="glyphicon glyphicon-plus"></i></label>
+															<label class="btn btn-default"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][weight_prefix]" value="+"><i class="fa fa-plus"></i></label>
 														<?php } ?>
 														<?php if ($product_option_value['weight_prefix'] == '-') { ?>
-															<label class="btn btn-default active"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][weight_prefix]" value="-" checked=""><i class="glyphicon glyphicon-minus"></i></label>
+															<label class="btn btn-default active"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][weight_prefix]" value="-" checked=""><i class="fa fa-minus"></i></label>
 														<?php } else { ?>
-															<label class="btn btn-default"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][weight_prefix]" value="-"><i class="glyphicon glyphicon-minus"></i></label>
+															<label class="btn btn-default"><input type="radio" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][weight_prefix]" value="-"><i class="fa fa-minus"></i></label>
 														<?php } ?>
 													</span>
 													<input type="text" name="product_option[<?= $option_row; ?>][product_option_value][<?= $option_value_row; ?>][weight]" value="<?= $product_option_value['weight']; ?>" class="form-control">

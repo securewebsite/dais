@@ -15,10 +15,12 @@
 */
 
 namespace App\Controllers\Admin\Module;
+
 use App\Controllers\Controller;
-use Dais\Library\Naming;
+use Dais\Support\Naming;
 
 class Total extends Controller {
+    
     public function index() {
         $data = Theme::language('module/total');
         Theme::setTitle(Lang::get('lang_heading_total'));
@@ -47,7 +49,7 @@ class Total extends Controller {
         
         foreach ($modules as $key => $value) {
             $theme_file = Theme::getPath() . 'controller/total/' . $value . '.php';
-            $core_file = Config::get('path.application') . 'controller/total/' . $value . '.php';
+            $core_file  = Config::get('path.application') . 'total/' . $value . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {
                 $this->model_setting_module->uninstall('total', $value);
@@ -82,7 +84,7 @@ class Total extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('module/total', $data));
     }
@@ -106,7 +108,7 @@ class Total extends Controller {
             $this->model_people_user_group->addPermission(User::getId(), 'access', 'total/' . $this->request->get['module']);
             $this->model_people_user_group->addPermission(User::getId(), 'modify', 'total/' . $this->request->get['module']);
             
-            $base_path  = App::appPath() . Config::get('prefix.facade') . 'controller' . SEP . 'total' . SEP;
+            $base_path  = Config::get('path.application') . 'total' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'total' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
@@ -143,7 +145,7 @@ class Total extends Controller {
             $this->model_setting_module->uninstall('total', $this->request->get['module']);
             $this->model_setting_setting->deleteSetting($this->request->get['module']);
             
-            $base_path  = App::appPath() . Config::get('prefix.facade') . 'controller' . SEP . 'total' . SEP;
+            $base_path  = Config::get('path.application') . 'total' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'total' . SEP;
             
             if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):

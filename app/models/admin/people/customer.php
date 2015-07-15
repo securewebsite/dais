@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\People;
-use Dais\Base\Model;
+namespace App\Models\Admin\People;
+
+use App\Models\Model;
 
 class Customer extends Model {
+    
     public function addCustomer($data) {
         $this->db->query("
 			INSERT INTO {$this->db->prefix}customer 

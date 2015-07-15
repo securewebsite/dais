@@ -75,9 +75,9 @@ class PaymentAddress extends Controller {
         
         $data['params'] = htmlentities('{"zone_id":"' . $data['zone_id'] . '","select":"' . $this->language->get('lang_text_select') . '","none":"' . $this->language->get('lang_text_none') . '"}');
         
-        $this->theme->model('localization/country');
+        $this->theme->model('locale/country');
         
-        $data['countries'] = $this->model_localization_country->getCountries();
+        $data['countries'] = $this->model_locale_country->getCountries();
         
         $this->theme->loadjs('javascript/checkout/payment_address', $data);
         
@@ -200,9 +200,9 @@ class PaymentAddress extends Controller {
                     $json['error']['city'] = $this->language->get('lang_error_city');
                 }
                 
-                $this->theme->model('localization/country');
+                $this->theme->model('locale/country');
                 
-                $country_info = $this->model_localization_country->getCountry($this->request->post['country_id']);
+                $country_info = $this->model_locale_country->getCountry($this->request->post['country_id']);
                 
                 if ($country_info) {
                     if ($country_info['postcode_required'] && ($this->encode->strlen($this->request->post['postcode']) < 2) || ($this->encode->strlen($this->request->post['postcode']) > 10)) {

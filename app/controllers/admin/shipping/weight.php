@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Shipping;
+
 use App\Controllers\Controller;
 
 class Weight extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -45,9 +47,9 @@ class Weight extends Controller {
         
         $data['cancel'] = Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
         
-        Theme::model('localization/geo_zone');
+        Theme::model('locale/geo_zone');
         
-        $geo_zones = $this->model_localization_geo_zone->getGeoZones();
+        $geo_zones = $this->model_locale_geo_zone->getGeoZones();
         
         foreach ($geo_zones as $geo_zone) {
             if (isset($this->request->post['weight_' . $geo_zone['geo_zone_id'] . '_rate'])) {
@@ -71,9 +73,9 @@ class Weight extends Controller {
             $data['weight_tax_class_id'] = Config::get('weight_tax_class_id');
         }
         
-        Theme::model('localization/tax_class');
+        Theme::model('locale/tax_class');
         
-        $data['tax_classes'] = $this->model_localization_tax_class->getTaxClasses();
+        $data['tax_classes'] = $this->model_locale_tax_class->getTaxClasses();
         
         if (isset($this->request->post['weight_status'])) {
             $data['weight_status'] = $this->request->post['weight_status'];
@@ -89,7 +91,7 @@ class Weight extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('shipping/weight', $data));
     }

@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Common;
+
 use App\Controllers\Controller;
 
 class Login extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -99,9 +101,9 @@ class Login extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Theme::unset_controller('breadcrumb');
+        Theme::unsetController('breadcrumb');
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('common/login', $data));
     }

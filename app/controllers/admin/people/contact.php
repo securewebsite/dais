@@ -15,6 +15,7 @@
 */
 
 namespace App\Controllers\Admin\People;
+
 use App\Controllers\Controller;
 
 class Contact extends Controller {
@@ -43,7 +44,7 @@ class Contact extends Controller {
         $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups(0);
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('people/contact', $data));
     }
@@ -54,7 +55,7 @@ class Contact extends Controller {
         $json = array();
         
         if ($this->request->server['REQUEST_METHOD'] == 'POST'):
-            if (!User::hasPermission('modify', 'people/contact')):
+            if (!\User::hasPermission('modify', 'people/contact')):
                 $json['error']['warning'] = Lang::get('lang_error_permission');
             endif;
             

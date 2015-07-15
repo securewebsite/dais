@@ -22,7 +22,7 @@
 |
 */
 
-require dirname(__DIR__) . '/bootstrap/start.php';
+require dirname(__DIR__) . '/bootstrap/app.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -33,9 +33,20 @@ require dirname(__DIR__) . '/bootstrap/start.php';
 |
 */
 
-if ($app['config']->get('config_cache_status')):
-    $app['cache']->flush_cache();
+if (Config::get('config_cache_status')):
+    Cache::flush_cache();
 endif;
+
+/*
+|--------------------------------------------------------------------------
+|   Error Handler
+|--------------------------------------------------------------------------
+|
+|   Let's set our error handler to use our staic error class.
+|
+*/
+
+set_error_handler(array('Dais\Support\Error', 'error_handler'));
 
 /*
 |--------------------------------------------------------------------------
@@ -46,4 +57,4 @@ endif;
 |
 */
 
-$app->fire();
+App::fire();

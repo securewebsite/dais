@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\People;
+
 use App\Controllers\Controller;
 
 class User extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -250,7 +252,7 @@ class User extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('people/user_list', $data));
     }
@@ -394,13 +396,13 @@ class User extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('people/user_form', $data));
     }
     
     protected function validateForm() {
-        if (!User::hasPermission('modify', 'people/user')) {
+        if (!\User::hasPermission('modify', 'people/user')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
@@ -448,12 +450,12 @@ class User extends Controller {
     }
     
     protected function validateDelete() {
-        if (!User::hasPermission('modify', 'people/user')) {
+        if (!\User::hasPermission('modify', 'people/user')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
         foreach ($this->request->post['selected'] as $user_id) {
-            if (User::getId() == $user_id) {
+            if (\User::getId() == $user_id) {
                 $this->error['warning'] = Lang::get('lang_error_account');
             }
         }

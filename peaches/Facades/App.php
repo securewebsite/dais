@@ -16,16 +16,24 @@
 
 namespace Dais\Facades;
 
+use Dais\Support\Facade;
+
 class App extends Facade {
-    public static function getInstanceIdentifier() {
+    
+    protected static function getFacadeAccessor() {
         return 'app';
     }
 
-    /**
-     * Allows us to return properties
-     * with Facade::p()->property
-     */
+    /*
+    |--------------------------------------------------------------------------
+    |   Magic p() Method
+    |-------------------------------------------------------------------------- 
+    |
+    |	This method allows us to access properties in our facaded service
+    |	via: Facade::p()->property 
+    */
+   
     public static function p() {
-    	return parent::getInstance();
+    	return static::getFacadeRoot();
     }
 }

@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Tool;
-use Dais\Base\Model;
+namespace App\Models\Front\Tool;
+use App\Models\Model;
 
 class Utility extends Model {
 	public function getUnreadCustomerNotifications($customer_id) {

@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Setting;
-use Dais\Base\Model;
+namespace App\Models\Admin\Setting;
+
+use App\Models\Model;
 
 class Setting extends Model {
+    
     public function getSetting($group, $store_id = 0) {
         $data = array();
         

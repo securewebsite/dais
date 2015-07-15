@@ -16,9 +16,9 @@
 
 namespace Dais\Services\Utility;
 
-use Dais\Services\Providers\Utility\Length;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Utility\Length;
 
 class LengthService implements ServiceProviderInterface {
 

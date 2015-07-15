@@ -15,6 +15,7 @@
 */
 
 namespace App\Controllers\Admin\Widget;
+
 use App\Controllers\Controller;
 
 class Event extends Controller {
@@ -60,7 +61,7 @@ class Event extends Controller {
         
         Theme::loadjs('javascript/widget/event', $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('widget/event', $data));
     }

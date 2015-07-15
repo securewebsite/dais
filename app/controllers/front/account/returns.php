@@ -79,10 +79,10 @@ class Returns extends Controller {
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->set_controller('header', 'shop/header');
-        $this->theme->set_controller('footer', 'shop/footer');
+        $this->theme->setController('header', 'shop/header');
+        $this->theme->setController('footer', 'shop/footer');
         
-        $data = $this->theme->render_controllers($data);
+        $data = $this->theme->renderControllers($data);
         
         $this->response->setOutput($this->theme->view('account/return_list', $data));
     }
@@ -152,10 +152,10 @@ class Returns extends Controller {
             
             $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
             
-            $this->theme->set_controller('header', 'shop/header');
-            $this->theme->set_controller('footer', 'shop/footer');
+            $this->theme->setController('header', 'shop/header');
+            $this->theme->setController('footer', 'shop/footer');
             
-            $data = $this->theme->render_controllers($data);
+            $data = $this->theme->renderControllers($data);
             
             $this->response->setOutput($this->theme->view('account/return_info', $data));
         } else {
@@ -179,10 +179,10 @@ class Returns extends Controller {
             
             $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
             
-            $this->theme->set_controller('header', 'shop/header');
-            $this->theme->set_controller('footer', 'shop/footer');
+            $this->theme->setController('header', 'shop/header');
+            $this->theme->setController('footer', 'shop/footer');
             
-            $data = $this->theme->render_controllers($data);
+            $data = $this->theme->renderControllers($data);
             
             $this->response->setOutput($this->theme->view('error/not_found', $data));
         }
@@ -362,9 +362,9 @@ class Returns extends Controller {
             $data['return_reason_id'] = '';
         }
         
-        $this->theme->model('localization/return_reason');
+        $this->theme->model('locale/return_reason');
         
-        $data['return_reasons'] = $this->model_localization_return_reason->getReturnReasons();
+        $data['return_reasons'] = $this->model_locale_return_reason->getReturnReasons();
         
         if (isset($this->request->post['comment'])) {
             $data['comment'] = $this->request->post['comment'];
@@ -406,10 +406,10 @@ class Returns extends Controller {
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->set_controller('header', 'shop/header');
-        $this->theme->set_controller('footer', 'shop/footer');
+        $this->theme->setController('header', 'shop/header');
+        $this->theme->setController('footer', 'shop/footer');
         
-        $data = $this->theme->render_controllers($data);
+        $data = $this->theme->renderControllers($data);
         
         $this->response->setOutput($this->theme->view('account/return_form', $data));
     }
@@ -426,10 +426,10 @@ class Returns extends Controller {
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->set_controller('header', 'shop/header');
-        $this->theme->set_controller('footer', 'shop/footer');
+        $this->theme->setController('header', 'shop/header');
+        $this->theme->setController('footer', 'shop/footer');
         
-        $data = $this->theme->render_controllers($data);
+        $data = $this->theme->renderControllers($data);
         
         $this->response->setOutput($this->theme->view('common/success', $data));
     }

@@ -14,9 +14,9 @@
 |	
 */
 
-namespace Admin\Model\Calendar;
+namespace App\Models\Admin\Calendar;
 
-use Dais\Base\Model;
+use App\Models\Model;
 use Dais\Support\Template;
 use Dais\Support\Text;
 

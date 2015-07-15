@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Feed;
+
 use App\Controllers\Controller;
 
 class GoogleSiteMap extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -58,7 +60,7 @@ class GoogleSiteMap extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('feed/google_site_map', $data));
     }

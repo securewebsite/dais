@@ -16,15 +16,15 @@
 
 namespace Dais\Services\Utility;
 
-use Dais\Services\Providers\Utility\Currency;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Utility\Currency;
 
 class CurrencyService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		$app['currency'] = function($app) {
-            return new Currency($app['request'], $app['session']);
+            return new Currency;
         };
 	}
 }

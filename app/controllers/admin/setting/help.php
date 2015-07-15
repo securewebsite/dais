@@ -15,6 +15,7 @@
 */
 
 namespace App\Controllers\Admin\Setting;
+
 use App\Controllers\Controller;
 
 class Help extends Controller {
@@ -28,7 +29,7 @@ class Help extends Controller {
 
 		$data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('setting/help', $data));
 	}

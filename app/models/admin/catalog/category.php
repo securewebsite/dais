@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Catalog;
-use Dais\Base\Model;
+namespace App\Models\Admin\Catalog;
+
+use App\Models\Model;
 
 class Category extends Model {
+    
     public function addCategory($data) {
         $this->db->query("
 			INSERT INTO {$this->db->prefix}category 

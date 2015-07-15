@@ -16,10 +16,10 @@
 
 namespace Dais\Services\Storage;
 
-use Dais\Services\Providers\Storage\Cache;
-use Dais\Driver\Cache\Asset;
 use Pimple\Container;
+use Dais\Driver\Cache\Asset;
 use Pimple\ServiceProviderInterface;
+use Dais\Services\Providers\Storage\Cache;
 
 class FilecacheService implements ServiceProviderInterface {
 

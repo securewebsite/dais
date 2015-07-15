@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Total;
-use Dais\Base\Model;
+namespace App\Models\Front\Total;
+use App\Models\Model;
 
 class Handling extends Model {
     public function getTotal(&$total_data, &$total, &$taxes) {

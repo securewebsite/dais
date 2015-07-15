@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Report;
+
 use App\Controllers\Controller;
 
 class ProductViewed extends Controller {
+    
     public function index() {
         $data = Theme::language('report/product_viewed');
         
@@ -79,7 +81,7 @@ class ProductViewed extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('report/product_viewed', $data));
     }

@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Admin\Language\English\Common;
+namespace App\Language\Admin\English\Common;
 
 class Menu {
 	public static function lang() {
@@ -61,7 +61,7 @@ class Menu {
 		$_['lang_text_page']                        = 'Pages';
 		$_['lang_text_language']                    = 'Languages';
 		$_['lang_text_layout']                      = 'Layouts';
-		$_['lang_text_localization']                = 'Localization';
+		$_['lang_text_locale']                = 'Locale';
 		$_['lang_text_logged']                      = 'You are logged in as %s';
 		$_['lang_text_logout']                      = 'Logout';
 		$_['lang_text_contact']                     = 'Mailer';

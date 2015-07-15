@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Report;
-use Dais\Base\Model;
+namespace App\Models\Admin\Report;
+
+use App\Models\Model;
 
 class Coupon extends Model {
+    
     public function getCoupons($data = array()) {
         $sql = "SELECT ch.coupon_id, c.name, c.code, COUNT(DISTINCT ch.order_id) AS `orders`, SUM(ch.amount) AS total FROM `{$this->db->prefix}coupon_history` ch LEFT JOIN `{$this->db->prefix}coupon` c ON (ch.coupon_id = c.coupon_id)";
         

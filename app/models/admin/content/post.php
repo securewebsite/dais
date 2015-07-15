@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Content;
-use Dais\Base\Model;
+namespace App\Models\Admin\Content;
+
+use App\Models\Model;
 
 class Post extends Model {
+    
     public function addPost($data) {
         $this->db->query("
 			INSERT INTO {$this->db->prefix}blog_post 

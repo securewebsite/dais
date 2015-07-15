@@ -18,4 +18,4 @@ namespace App\Models;
 
 use Dais\Base\Model as BaseModel;
 
-class Model extends BaseModel {}
+abstract class Model extends BaseModel {}

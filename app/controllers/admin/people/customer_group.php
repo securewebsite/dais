@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\People;
+
 use App\Controllers\Controller;
 
 class CustomerGroup extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -228,7 +230,7 @@ class CustomerGroup extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('people/customer_group_list', $data));
     }
@@ -276,9 +278,9 @@ class CustomerGroup extends Controller {
             $customer_group_info = $this->model_people_customer_group->getCustomerGroup($this->request->get['customer_group_id']);
         }
         
-        Theme::model('localization/language');
+        Theme::model('locale/language');
         
-        $data['languages'] = $this->model_localization_language->getLanguages();
+        $data['languages'] = $this->model_locale_language->getLanguages();
         
         if (isset($this->request->post['customer_group_description'])) {
             $data['customer_group_description'] = $this->request->post['customer_group_description'];
@@ -338,13 +340,13 @@ class CustomerGroup extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('people/customer_group_form', $data));
     }
     
     protected function validateForm() {
-        if (!User::hasPermission('modify', 'people/customer_group')) {
+        if (!\User::hasPermission('modify', 'people/customer_group')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
@@ -360,7 +362,7 @@ class CustomerGroup extends Controller {
     }
     
     protected function validateDelete() {
-        if (!User::hasPermission('modify', 'people/customer_group')) {
+        if (!\User::hasPermission('modify', 'people/customer_group')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         

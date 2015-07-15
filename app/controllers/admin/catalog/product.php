@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Catalog;
+
 use App\Controllers\Controller;
 
 class Product extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -490,7 +492,7 @@ class Product extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('catalog/product_list', $data));
     }
@@ -590,9 +592,9 @@ class Product extends Controller {
         
         $data['token'] = $this->session->data['token'];
         
-        Theme::model('localization/language');
+        Theme::model('locale/language');
         
-        $data['languages'] = $this->model_localization_language->getLanguages();
+        $data['languages'] = $this->model_locale_language->getLanguages();
         
         if (isset($this->request->post['product_description'])) {
             $data['product_description'] = $this->request->post['product_description'];
@@ -732,9 +734,9 @@ class Product extends Controller {
             $data['product_recurrings'] = array();
         }
         
-        Theme::model('localization/tax_class');
+        Theme::model('locale/tax_class');
         
-        $data['tax_classes'] = $this->model_localization_tax_class->getTaxClasses();
+        $data['tax_classes'] = $this->model_locale_tax_class->getTaxClasses();
         
         if (isset($this->request->post['tax_class_id'])) {
             $data['tax_class_id'] = $this->request->post['tax_class_id'];
@@ -784,9 +786,9 @@ class Product extends Controller {
             $data['sort_order'] = 1;
         }
         
-        Theme::model('localization/stock_status');
+        Theme::model('locale/stock_status');
         
-        $data['stock_statuses'] = $this->model_localization_stock_status->getStockStatuses();
+        $data['stock_statuses'] = $this->model_locale_stock_status->getStockStatuses();
         
         if (isset($this->request->post['stock_status_id'])) {
             $data['stock_status_id'] = $this->request->post['stock_status_id'];
@@ -820,9 +822,9 @@ class Product extends Controller {
             $data['weight'] = '';
         }
         
-        Theme::model('localization/weight_class');
+        Theme::model('locale/weight_class');
         
-        $data['weight_classes'] = $this->model_localization_weight_class->getWeightClasses();
+        $data['weight_classes'] = $this->model_locale_weight_class->getWeightClasses();
         
         if (isset($this->request->post['weight_class_id'])) {
             $data['weight_class_id'] = $this->request->post['weight_class_id'];
@@ -856,9 +858,9 @@ class Product extends Controller {
             $data['height'] = '';
         }
         
-        Theme::model('localization/length_class');
+        Theme::model('locale/length_class');
         
-        $data['length_classes'] = $this->model_localization_length_class->getLengthClasses();
+        $data['length_classes'] = $this->model_locale_length_class->getLengthClasses();
         
         if (isset($this->request->post['length_class_id'])) {
             $data['length_class_id'] = $this->request->post['length_class_id'];
@@ -1123,7 +1125,7 @@ class Product extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('catalog/product_form', $data));
     }

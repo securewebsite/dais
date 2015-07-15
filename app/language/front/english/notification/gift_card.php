@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Front\Language\English\Notification;
+namespace App\Language\Front\English\Notification;
 
 class GiftCard {
 	public static function lang() {

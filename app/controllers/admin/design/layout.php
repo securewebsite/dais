@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Design;
+
 use App\Controllers\Controller;
 
 class Layout extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -237,7 +239,7 @@ class Layout extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('design/layout_list', $data));
     }
@@ -309,7 +311,7 @@ class Layout extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('design/layout_form', $data));
     }

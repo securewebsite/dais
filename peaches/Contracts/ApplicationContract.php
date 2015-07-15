@@ -28,7 +28,7 @@ interface ApplicationContract {
 
 	public function listLoadedServices();
 
-	public function loadProxy($key, $class);
+	public function loadAlias($class, $key);
 
 	public function setBasePath($basePath);
 

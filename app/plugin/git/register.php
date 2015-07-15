@@ -14,13 +14,17 @@
 |	
 */
 
-namespace Plugin\Git;
-use Dais\Base\Container;
-use Dais\Base\Plugin;
+namespace App\Plugin\Git;
 
-class Register extends Plugin {
-    public function __construct(Container $app) {
-        parent::__construct($app);
-        parent::setPlugin('git');
+use Dais\Contracts\PluginRegistryContract;
+
+class Register extends Plugin implements PluginRegistryContract {
+
+    public function __construct() {
+        Plugin::setPlugin('git');
     }
+
+    public function add() {}
+
+    public function remove() {}
 }

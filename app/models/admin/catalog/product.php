@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Catalog;
-use Dais\Base\Model;
+namespace App\Models\Admin\Catalog;
+
+use App\Models\Model;
 
 class Product extends Model {
+    
     public function addProduct($data) {
         $this->db->query("
 			INSERT INTO {$this->db->prefix}product 

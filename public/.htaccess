@@ -1,4 +1,4 @@
-<FilesMatch "\.(tpl|ini|log)">
+<FilesMatch "\.(ini|log)">
 	Order deny,allow
 	Deny from all
 </FilesMatch>
@@ -21,6 +21,6 @@
 	RewriteRule ^download/(.*) error/notfound [L]
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond %{REQUEST_URI} !.*\.(ico|gif|jpg|jpeg|png|txt|html|woff|ttf|eot|svg|css|js)
+	RewriteCond %{REQUEST_URI} !.*\.(ico|gif|jpg|jpeg|png|txt|html|tpl|woff|ttf|eot|svg|css|js)
 	RewriteRule ^([^?]*) index.php?_route_=$1 [L,QSA]
 </IfModule>

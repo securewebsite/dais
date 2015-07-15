@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Shipping;
+
 use App\Controllers\Controller;
 
 class Free extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -57,9 +59,9 @@ class Free extends Controller {
             $data['free_geo_zone_id'] = Config::get('free_geo_zone_id');
         }
         
-        Theme::model('localization/geo_zone');
+        Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_localization_geo_zone->getGeoZones();
+        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
         
         if (isset($this->request->post['free_status'])) {
             $data['free_status'] = $this->request->post['free_status'];
@@ -75,7 +77,7 @@ class Free extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('shipping/free', $data));
     }

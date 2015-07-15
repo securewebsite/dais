@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Tool;
+
 use App\Controllers\Controller;
 
 class Backup extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -68,7 +70,7 @@ class Backup extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('tool/backup', $data));
     }

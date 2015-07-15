@@ -41,11 +41,11 @@ class Language extends Controller {
         
         $data['language_code'] = $this->session->data['language'];
         
-        $this->theme->model('localization/language');
+        $this->theme->model('locale/language');
         
         $data['languages'] = array();
         
-        $results = $this->model_localization_language->getLanguages();
+        $results = $this->model_locale_language->getLanguages();
         
         foreach ($results as $result) {
             if ($result['status']) {

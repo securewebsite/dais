@@ -14,7 +14,7 @@
 |	
 */
 
-namespace Front\Language\English\Shipping;
+namespace App\Language\Front\English\Shipping;
 
 class Pickup {
 	public static function lang() {

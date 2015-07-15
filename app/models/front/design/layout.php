@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Design;
-use Dais\Base\Model;
+namespace App\Models\Front\Design;
+use App\Models\Model;
 
 class Layout extends Model {
     public function getLayout($route) {

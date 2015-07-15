@@ -14,8 +14,8 @@
 |	
 */
 
-namespace Front\Model\Tool;
-use Dais\Base\Model;
+namespace App\Models\Front\Tool;
+use App\Models\Model;
 
 class Online extends Model {
     public function whosonline($ip, $customer_id, $url, $referer) {

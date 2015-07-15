@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Tool;
-use Dais\Base\Model;
+namespace App\Models\Admin\Tool;
+
+use App\Models\Model;
 
 class Backup extends Model {
+    
     public function restore($sql) {
         foreach (explode(";\n", $sql) as $sql) {
             $sql = trim($sql);

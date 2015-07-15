@@ -14,10 +14,12 @@
 |	
 */
 
-namespace Admin\Model\Module;
-use Dais\Base\Model;
+namespace App\Models\Admin\Module;
+
+use App\Models\Model;
 
 class Menu extends Model {
+    
     public function addMenu($data) {
         $this->db->query("
 			INSERT INTO {$this->db->prefix}menu 

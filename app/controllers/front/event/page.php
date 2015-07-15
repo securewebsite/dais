@@ -167,7 +167,7 @@ class Page extends Controller {
             
             $data             = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
             $data['share_bar'] = $this->theme->controller('common/share_bar', array('event', $data));
-            $data             = $this->theme->render_controllers($data);
+            $data             = $this->theme->renderControllers($data);
             
             $this->response->setOutput($this->theme->view('event/page', $data));
         else:
@@ -180,7 +180,7 @@ class Page extends Controller {
             $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
             
             $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-            $data = $this->theme->render_controllers($data);
+            $data = $this->theme->renderControllers($data);
             
             $this->response->setOutput($this->theme->view('error/not_found', $data));
         endif;

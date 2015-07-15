@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Widget;
+
 use App\Controllers\Controller;
 
 class BlogCategory extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -60,7 +62,7 @@ class BlogCategory extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('widget/blog_category', $data));
     }

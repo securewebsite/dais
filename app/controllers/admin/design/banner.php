@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Design;
+
 use App\Controllers\Controller;
 
 class Banner extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -238,7 +240,7 @@ class Banner extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('design/banner_list', $data));
     }
@@ -310,9 +312,9 @@ class Banner extends Controller {
             $data['status'] = true;
         }
         
-        Theme::model('localization/language');
+        Theme::model('locale/language');
         
-        $data['languages'] = $this->model_localization_language->getLanguages();
+        $data['languages'] = $this->model_locale_language->getLanguages();
         
         Theme::model('tool/image');
         
@@ -342,7 +344,7 @@ class Banner extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('design/banner_form', $data));
     }

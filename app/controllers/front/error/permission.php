@@ -48,7 +48,7 @@ class Permission extends Controller {
         $data['continue'] = $this->url->link(Theme::getstyle() . '/home');
         
         $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-        $data = $this->theme->render_controllers($data);
+        $data = $this->theme->renderControllers($data);
 
         $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 401 Unauthorized');
         $this->response->setOutput($this->theme->view('error/permission', $data));

@@ -15,9 +15,11 @@
 */
 
 namespace App\Controllers\Admin\Content;
+
 use App\Controllers\Controller;
 
 class Comment extends Controller {
+    
     private $error = array();
     
     public function index() {
@@ -230,7 +232,7 @@ class Comment extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('content/comment_list', $data));
     }
@@ -350,7 +352,7 @@ class Comment extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = Theme::render_controllers($data);
+        $data = Theme::renderControllers($data);
         
         Response::setOutput(Theme::view('content/comment_form', $data));
     }

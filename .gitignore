@@ -2,7 +2,8 @@
 /database/config
 # change this to /public/image/* once installed
 /public/image/cache/*
-/public/asset/*/compiled/*
+/public/asset/js/*.js
+/public/asset/css/*.css
 /storage/app/*
 /storage/logs/*
 /storage/framework/cache/*
