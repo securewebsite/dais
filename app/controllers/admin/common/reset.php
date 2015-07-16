@@ -39,13 +39,13 @@ class Reset extends Controller {
         
         Theme::model('people/user');
         
-        $user_info = $this->model_people_user->getUserByCode($code);
+        $user_info = PeopleUser::getUserByCode($code);
         
         if ($user_info):
             $data = Theme::language('common/reset');
             
             if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
-                $this->model_people_user->editPassword($user_info['user_id'], $this->request->post['password']);
+                PeopleUser::editPassword($user_info['user_id'], $this->request->post['password']);
                 $this->session->data['success'] = Lang::get('lang_text_success');
                 Response::redirect(Url::link('common/login', '', 'SSL'));
             endif;
@@ -95,10 +95,10 @@ class Reset extends Controller {
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(Theme::view('common/reset', $data));
+            Response::setOutput(View::render('common/reset', $data));
         else:
             Theme::model('setting/setting');
-            $this->model_setting_setting->editSettingValue('config', 'config_password', '0');
+            SettingSetting::editSettingValue('config', 'config_password', '0');
             
             Theme::listen(__CLASS__, __FUNCTION__);
             

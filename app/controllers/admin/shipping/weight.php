@@ -28,10 +28,10 @@ class Weight extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('weight', $this->request->post);
+            SettingSetting::editSetting('weight', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -43,13 +43,13 @@ class Weight extends Controller {
         Breadcrumb::add('lang_text_shipping', 'module/shipping');
         Breadcrumb::add('lang_heading_title', 'shipping/weight');
         
-        $data['action'] = Url::link('shipping/weight', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('shipping/weight', '', 'SSL');
         
-        $data['cancel'] = Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/shipping', '', 'SSL');
         
         Theme::model('locale/geo_zone');
         
-        $geo_zones = $this->model_locale_geo_zone->getGeoZones();
+        $geo_zones = LocaleGeoZone::getGeoZones();
         
         foreach ($geo_zones as $geo_zone) {
             if (isset($this->request->post['weight_' . $geo_zone['geo_zone_id'] . '_rate'])) {
@@ -75,7 +75,7 @@ class Weight extends Controller {
         
         Theme::model('locale/tax_class');
         
-        $data['tax_classes'] = $this->model_locale_tax_class->getTaxClasses();
+        $data['tax_classes'] = LocaleTaxClass::getTaxClasses();
         
         if (isset($this->request->post['weight_status'])) {
             $data['weight_status'] = $this->request->post['weight_status'];
@@ -93,7 +93,7 @@ class Weight extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('shipping/weight', $data));
+        Response::setOutput(View::render('shipping/weight', $data));
     }
     
     protected function validate() {

@@ -21,462 +21,462 @@ use App\Models\Model;
 class Language extends Model {
     
     public function addLanguage($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}language 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "language 
 			SET 
-				name = '" . $this->db->escape($data['name']) . "', 
-				code = '" . $this->db->escape($data['code']) . "', 
-				locale = '" . $this->db->escape($data['locale']) . "', 
-				directory = '" . $this->db->escape($data['directory']) . "', 
-				filename = '" . $this->db->escape($data['filename']) . "', 
-				image = '" . $this->db->escape($data['image']) . "', 
-				sort_order = '" . $this->db->escape($data['sort_order']) . "', 
+				name = '" . DB::escape($data['name']) . "', 
+				code = '" . DB::escape($data['code']) . "', 
+				locale = '" . DB::escape($data['locale']) . "', 
+				directory = '" . DB::escape($data['directory']) . "', 
+				filename = '" . DB::escape($data['filename']) . "', 
+				image = '" . DB::escape($data['image']) . "', 
+				sort_order = '" . DB::escape($data['sort_order']) . "', 
 				status = '" . (int)$data['status'] . "'
 		");
         
-        $language_id = $this->db->getLastId();
+        $language_id = DB::getLastId();
         
         // Attribute
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}attribute_description 
+			FROM " . DB::prefix() . "attribute_description 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $attribute) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}attribute_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "attribute_description 
 				SET 
 					attribute_id = '" . (int)$attribute['attribute_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($attribute['name']) . "'
+					name = '" . DB::escape($attribute['name']) . "'
 			");
         }
         
         // Attribute Group
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}attribute_group_description 
+			FROM " . DB::prefix() . "attribute_group_description 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $attribute_group) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}attribute_group_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "attribute_group_description 
 				SET 
 					attribute_group_id = '" . (int)$attribute_group['attribute_group_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($attribute_group['name']) . "'
+					name = '" . DB::escape($attribute_group['name']) . "'
 			");
         }
         
         // Banner
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}banner_image_description 
+			FROM " . DB::prefix() . "banner_image_description 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $banner_image) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}banner_image_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "banner_image_description 
 				SET 
 					banner_image_id = '" . (int)$banner_image['banner_image_id'] . "', 
 					banner_id = '" . (int)$banner_image['banner_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					title = '" . $this->db->escape($banner_image['title']) . "'
+					title = '" . DB::escape($banner_image['title']) . "'
 			");
         }
         
         // Category
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}category_description 
+			FROM " . DB::prefix() . "category_description 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $category) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}category_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "category_description 
 				SET 
 					category_id = '" . (int)$category['category_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($category['name']) . "', 
-					meta_description = '" . $this->db->escape($category['meta_description']) . "', 
-					meta_keyword = '" . $this->db->escape($category['meta_keyword']) . "', 
-					description = '" . $this->db->escape($category['description']) . "'
+					name = '" . DB::escape($category['name']) . "', 
+					meta_description = '" . DB::escape($category['meta_description']) . "', 
+					meta_keyword = '" . DB::escape($category['meta_keyword']) . "', 
+					description = '" . DB::escape($category['description']) . "'
 			");
         }
         
         // Customer Group
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}customer_group_description 
+			FROM " . DB::prefix() . "customer_group_description 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $customer_group) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}customer_group_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "customer_group_description 
 				SET 
 					customer_group_id = '" . (int)$customer_group['customer_group_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($customer_group['name']) . "', 
-					description = '" . $this->db->escape($customer_group['description']) . "'
+					name = '" . DB::escape($customer_group['name']) . "', 
+					description = '" . DB::escape($customer_group['description']) . "'
 			");
         }
         
         // Download
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}download_description 
+			FROM " . DB::prefix() . "download_description 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $download) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}download_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "download_description 
 				SET 
 					download_id = '" . (int)$download['download_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($download['name']) . "'
+					name = '" . DB::escape($download['name']) . "'
 			");
         }
         
         // Filter
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}filter_description 
+			FROM " . DB::prefix() . "filter_description 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $filter) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}filter_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "filter_description 
 				SET 
 					filter_id = '" . (int)$filter['filter_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
 					filter_group_id = '" . (int)$filter['filter_group_id'] . "', 
-					name = '" . $this->db->escape($filter['name']) . "'
+					name = '" . DB::escape($filter['name']) . "'
 			");
         }
         
         // Filter Group
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}filter_group_description 
+			FROM " . DB::prefix() . "filter_group_description 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $filter_group) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}filter_group_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "filter_group_description 
 				SET 
 					filter_group_id = '" . (int)$filter_group['filter_group_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($filter_group['name']) . "'
+					name = '" . DB::escape($filter_group['name']) . "'
 			");
         }
         
         // Page
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}page_description 
+			FROM " . DB::prefix() . "page_description 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $page) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}page_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "page_description 
 				SET 
 					page_id = '" . (int)$page['page_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					title = '" . $this->db->escape($page['title']) . "', 
-					description = '" . $this->db->escape($page['description']) . "'
+					title = '" . DB::escape($page['title']) . "', 
+					description = '" . DB::escape($page['description']) . "'
 			");
         }
         
         // Length
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}length_class_description 
+			FROM " . DB::prefix() . "length_class_description 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $length) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}length_class_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "length_class_description 
 				SET 
 					length_class_id = '" . (int)$length['length_class_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					title = '" . $this->db->escape($length['title']) . "', 
-					unit = '" . $this->db->escape($length['unit']) . "'
+					title = '" . DB::escape($length['title']) . "', 
+					unit = '" . DB::escape($length['unit']) . "'
 			");
         }
         
         // Option
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}option_description 
+			FROM " . DB::prefix() . "option_description 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $option) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}option_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "option_description 
 				SET 
 					option_id = '" . (int)$option['option_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($option['name']) . "'
+					name = '" . DB::escape($option['name']) . "'
 			");
         }
         
         // Option Value
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}option_value_description 
+			FROM " . DB::prefix() . "option_value_description 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $option_value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}option_value_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "option_value_description 
 				SET 
 					option_value_id = '" . (int)$option_value['option_value_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
 					option_id = '" . (int)$option_value['option_id'] . "', 
-					name = '" . $this->db->escape($option_value['name']) . "'
+					name = '" . DB::escape($option_value['name']) . "'
 			");
         }
         
         // Order Status
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}order_status 
+			FROM " . DB::prefix() . "order_status 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $order_status) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}order_status 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "order_status 
 				SET 
 					order_status_id = '" . (int)$order_status['order_status_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($order_status['name']) . "'
+					name = '" . DB::escape($order_status['name']) . "'
 			");
         }
         
         // Product
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}product_description 
+			FROM " . DB::prefix() . "product_description 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $product) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}product_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "product_description 
 				SET 
 					product_id = '" . (int)$product['product_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($product['name']) . "', 
-					meta_description = '" . $this->db->escape($product['meta_description']) . "', 
-					meta_keyword = '" . $this->db->escape($product['meta_keyword']) . "', 
-					description = '" . $this->db->escape($product['description']) . "', 
-					tag = '" . $this->db->escape($product['tag']) . "'
+					name = '" . DB::escape($product['name']) . "', 
+					meta_description = '" . DB::escape($product['meta_description']) . "', 
+					meta_keyword = '" . DB::escape($product['meta_keyword']) . "', 
+					description = '" . DB::escape($product['description']) . "', 
+					tag = '" . DB::escape($product['tag']) . "'
 			");
         }
         
         // Product Attribute
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}product_attribute 
+			FROM " . DB::prefix() . "product_attribute 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $product_attribute) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}product_attribute 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "product_attribute 
 				SET 
 					product_id = '" . (int)$product_attribute['product_id'] . "', 
 					attribute_id = '" . (int)$product_attribute['attribute_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					text = '" . $this->db->escape($product_attribute['text']) . "'
+					text = '" . DB::escape($product_attribute['text']) . "'
 			");
         }
         
         // Return Action
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}return_action 
+			FROM " . DB::prefix() . "return_action 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $return_action) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}return_action 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "return_action 
 				SET 
 					return_action_id = '" . (int)$return_action['return_action_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($return_action['name']) . "'
+					name = '" . DB::escape($return_action['name']) . "'
 			");
         }
         
         // Return Reason
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}return_reason 
+			FROM " . DB::prefix() . "return_reason 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $return_reason) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}return_reason 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "return_reason 
 				SET 
 					return_reason_id = '" . (int)$return_reason['return_reason_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($return_reason['name']) . "'
+					name = '" . DB::escape($return_reason['name']) . "'
 			");
         }
         
         // Return Status
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}return_status 
+			FROM " . DB::prefix() . "return_status 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $return_status) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}return_status 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "return_status 
 				SET 
 					return_status_id = '" . (int)$return_status['return_status_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($return_status['name']) . "'
+					name = '" . DB::escape($return_status['name']) . "'
 			");
         }
         
         // Stock Status
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}stock_status 
+			FROM " . DB::prefix() . "stock_status 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $stock_status) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}stock_status 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "stock_status 
 				SET 
 					stock_status_id = '" . (int)$stock_status['stock_status_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($stock_status['name']) . "'
+					name = '" . DB::escape($stock_status['name']) . "'
 			");
         }
         
         // Giftcard Theme
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}gift_card_theme_description 
+			FROM " . DB::prefix() . "gift_card_theme_description 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $gift_card_theme) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}gift_card_theme_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "gift_card_theme_description 
 				SET 
 					gift_card_theme_id = '" . (int)$gift_card_theme['gift_card_theme_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($gift_card_theme['name']) . "'
+					name = '" . DB::escape($gift_card_theme['name']) . "'
 			");
         }
         
         // Weight Class
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}weight_class_description 
+			FROM " . DB::prefix() . "weight_class_description 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
         foreach ($query->rows as $weight_class) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}weight_class_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "weight_class_description 
 				SET 
 					weight_class_id = '" . (int)$weight_class['weight_class_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					title = '" . $this->db->escape($weight_class['title']) . "', 
-					unit = '" . $this->db->escape($weight_class['unit']) . "'
+					title = '" . DB::escape($weight_class['title']) . "', 
+					unit = '" . DB::escape($weight_class['unit']) . "'
 			");
         }
         
         // Recurring
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}recurring_description 
+			FROM " . DB::prefix() . "recurring_description 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'");
         
         foreach ($query->rows as $recurring) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}recurring_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "recurring_description 
 				SET 
 					recurring_id = '" . (int)$recurring['recurring_id'] . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($recurring['name']));
+					name = '" . DB::escape($recurring['name']));
         }
         
-        $this->cache->flush_cache();
+        Cache::flush_cache();
     }
     
     public function editLanguage($language_id, $data) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}language 
+        DB::query("
+			UPDATE " . DB::prefix() . "language 
 			SET 
-				name = '" . $this->db->escape($data['name']) . "', 
-				code = '" . $this->db->escape($data['code']) . "', 
-				locale = '" . $this->db->escape($data['locale']) . "', 
-				directory = '" . $this->db->escape($data['directory']) . "', 
-				filename = '" . $this->db->escape($data['filename']) . "', 
-				image = '" . $this->db->escape($data['image']) . "', 
-				sort_order = '" . $this->db->escape($data['sort_order']) . "', 
+				name = '" . DB::escape($data['name']) . "', 
+				code = '" . DB::escape($data['code']) . "', 
+				locale = '" . DB::escape($data['locale']) . "', 
+				directory = '" . DB::escape($data['directory']) . "', 
+				filename = '" . DB::escape($data['filename']) . "', 
+				image = '" . DB::escape($data['image']) . "', 
+				sort_order = '" . DB::escape($data['sort_order']) . "', 
 				status = '" . (int)$data['status'] . "' 
 			WHERE language_id = '" . (int)$language_id . "'
 		");
         
-        $this->cache->delete('language');
-        $this->cache->delete('languages');
+        Cache::delete('language');
+        Cache::delete('languages');
     }
     
     public function deleteLanguage($language_id) {
-        $this->db->query("DELETE FROM {$this->db->prefix}language WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}attribute_description WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}attribute_group_description WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}banner_image_description WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}category_description WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}customer_group_description WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}download_description WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}filter_description WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}filter_group_description WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}page_description WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}length_class_description WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}option_description WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}option_value_description WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}order_status WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}product_attribute WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}product_description WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}return_action WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}return_reason WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}return_status WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}stock_status WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}gift_card_theme_description WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}weight_class_description WHERE language_id = '" . (int)$language_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}recurring_description WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "language WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "attribute_description WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "attribute_group_description WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "banner_image_description WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "category_description WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "customer_group_description WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "download_description WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "filter_description WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "filter_group_description WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "page_description WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "length_class_description WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "option_description WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "option_value_description WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "order_status WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "product_attribute WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "product_description WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "return_action WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "return_reason WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "return_status WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "stock_status WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "gift_card_theme_description WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "weight_class_description WHERE language_id = '" . (int)$language_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "recurring_description WHERE language_id = '" . (int)$language_id . "'");
         
-        $this->cache->flush_cache();
+        Cache::flush_cache();
     }
     
     public function getLanguage($language_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT DISTINCT * 
-			FROM {$this->db->prefix}language 
+			FROM " . DB::prefix() . "language 
 			WHERE language_id = '" . (int)$language_id . "'
 		");
         
@@ -487,7 +487,7 @@ class Language extends Model {
         if ($data) {
             $sql = "
 				SELECT * 
-				FROM {$this->db->prefix}language";
+				FROM " . DB::prefix() . "language";
             
             $sort_data = array('name', 'code', 'sort_order');
             
@@ -515,16 +515,16 @@ class Language extends Model {
                 $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
             }
             
-            $query = $this->db->query($sql);
+            $query = DB::query($sql);
             
             return $query->rows;
         } else {
             
             $language_data = array();
             
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}language 
+				FROM " . DB::prefix() . "language 
 				ORDER BY sort_order, name
 			");
             
@@ -537,9 +537,9 @@ class Language extends Model {
     }
     
     public function getTotalLanguages() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}language");
+			FROM " . DB::prefix() . "language");
         
         return $query->row['total'];
     }

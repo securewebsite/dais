@@ -21,15 +21,15 @@ use App\Models\Model;
 class Currency extends Model {
     
     public function addCurrency($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}currency 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "currency 
 			SET 
-                title         = '" . $this->db->escape($data['title']) . "', 
-                code          = '" . $this->db->escape($data['code']) . "', 
-                symbol_left   = '" . $this->db->escape($data['symbol_left']) . "', 
-                symbol_right  = '" . $this->db->escape($data['symbol_right']) . "', 
-                decimal_place = '" . $this->db->escape($data['decimal_place']) . "', 
-                value         = '" . $this->db->escape($data['value']) . "', 
+                title         = '" . DB::escape($data['title']) . "', 
+                code          = '" . DB::escape($data['code']) . "', 
+                symbol_left   = '" . DB::escape($data['symbol_left']) . "', 
+                symbol_right  = '" . DB::escape($data['symbol_right']) . "', 
+                decimal_place = '" . DB::escape($data['decimal_place']) . "', 
+                value         = '" . DB::escape($data['value']) . "', 
                 status        = '" . (int)$data['status'] . "', 
                 date_modified = NOW()
 		");
@@ -38,42 +38,42 @@ class Currency extends Model {
             $this->updateCurrencies(true);
         endif;
         
-        $this->cache->delete('currency');
-        $this->cache->delete('default.store.currency');
+        Cache::delete('currency');
+        Cache::delete('default.store.currency');
     }
     
     public function editCurrency($currency_id, $data) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}currency 
+        DB::query("
+			UPDATE " . DB::prefix() . "currency 
 			SET 
-                title         = '" . $this->db->escape($data['title']) . "', 
-                code          = '" . $this->db->escape($data['code']) . "', 
-                symbol_left   = '" . $this->db->escape($data['symbol_left']) . "', 
-                symbol_right  = '" . $this->db->escape($data['symbol_right']) . "', 
-                decimal_place = '" . $this->db->escape($data['decimal_place']) . "', 
-                value         = '" . $this->db->escape($data['value']) . "', 
+                title         = '" . DB::escape($data['title']) . "', 
+                code          = '" . DB::escape($data['code']) . "', 
+                symbol_left   = '" . DB::escape($data['symbol_left']) . "', 
+                symbol_right  = '" . DB::escape($data['symbol_right']) . "', 
+                decimal_place = '" . DB::escape($data['decimal_place']) . "', 
+                value         = '" . DB::escape($data['value']) . "', 
                 status        = '" . (int)$data['status'] . "', 
                 date_modified = NOW() 
 			WHERE currency_id = '" . (int)$currency_id . "'
 		");
         
-        $this->cache->delete('currency');
-        $this->cache->delete('default.store.currency');
+        Cache::delete('currency');
+        Cache::delete('default.store.currency');
     }
     
     public function deleteCurrency($currency_id) {
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}currency 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "currency 
             WHERE currency_id = '" . (int)$currency_id . "'");
         
-        $this->cache->delete('currency');
-        $this->cache->delete('default.store.currency');
+        Cache::delete('currency');
+        Cache::delete('default.store.currency');
     }
     
     public function getCurrency($currency_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT DISTINCT * 
-			FROM {$this->db->prefix}currency 
+			FROM " . DB::prefix() . "currency 
 			WHERE currency_id = '" . (int)$currency_id . "'
 		");
         
@@ -81,10 +81,10 @@ class Currency extends Model {
     }
     
     public function getCurrencyByCode($currency) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT DISTINCT * 
-			FROM {$this->db->prefix}currency 
-			WHERE code = '" . $this->db->escape($currency) . "'
+			FROM " . DB::prefix() . "currency 
+			WHERE code = '" . DB::escape($currency) . "'
 		");
         
         return $query->row;
@@ -94,7 +94,7 @@ class Currency extends Model {
         if ($data):
             $sql = "
 				SELECT * 
-				FROM {$this->db->prefix}currency";
+				FROM " . DB::prefix() . "currency";
             
             $sort_data = array('title', 'code', 'value', 'date_modified');
             
@@ -122,15 +122,15 @@ class Currency extends Model {
                 $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
             endif;
             
-            $query = $this->db->query($sql);
+            $query = DB::query($sql);
             
             return $query->rows;
         else:
             $currency_data = array();
             
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}currency 
+				FROM " . DB::prefix() . "currency 
 				ORDER BY title ASC
 			");
             
@@ -156,17 +156,17 @@ class Currency extends Model {
             $data = array();
             
             if ($force):
-                $query = $this->db->query("
+                $query = DB::query("
 					SELECT * 
-					FROM {$this->db->prefix}currency 
-					WHERE code != '" . $this->db->escape(Config::get('config_currency')) . "'
+					FROM " . DB::prefix() . "currency 
+					WHERE code != '" . DB::escape(Config::get('config_currency')) . "'
 				");
             else:
-                $query = $this->db->query("
+                $query = DB::query("
 					SELECT * 
-					FROM {$this->db->prefix}currency 
-					WHERE code != '" . $this->db->escape(Config::get('config_currency')) . "' 
-					AND date_modified < '" . $this->db->escape(date('Y-m-d H:i:s', strtotime('-1 day'))) . "'
+					FROM " . DB::prefix() . "currency 
+					WHERE code != '" . DB::escape(Config::get('config_currency')) . "' 
+					AND date_modified < '" . DB::escape(date('Y-m-d H:i:s', strtotime('-1 day'))) . "'
 				");
             endif;
             
@@ -193,32 +193,32 @@ class Currency extends Model {
                 $value = Encode::substr($line, 11, 6);
                 
                 if ((float)$value):
-                    $this->db->query("
-						UPDATE {$this->db->prefix}currency 
+                    DB::query("
+						UPDATE " . DB::prefix() . "currency 
 						SET 
 							value = '" . (float)$value . "', 
-							date_modified = '" . $this->db->escape(date('Y-m-d H:i:s')) . "' 
-						WHERE code = '" . $this->db->escape($currency) . "'
+							date_modified = '" . DB::escape(date('Y-m-d H:i:s')) . "' 
+						WHERE code = '" . DB::escape($currency) . "'
 					");
                 endif;
             endforeach;
             
-            $this->db->query("
-				UPDATE {$this->db->prefix}currency 
+            DB::query("
+				UPDATE " . DB::prefix() . "currency 
 				SET 
 					value = '1.00000', 
-					date_modified = '" . $this->db->escape(date('Y-m-d H:i:s')) . "' 
-				WHERE code = '" . $this->db->escape(Config::get('config_currency')) . "'
+					date_modified = '" . DB::escape(date('Y-m-d H:i:s')) . "' 
+				WHERE code = '" . DB::escape(Config::get('config_currency')) . "'
 			");
             
-            $this->cache->delete('currency');
+            Cache::delete('currency');
         endif;
     }
     
     public function getTotalCurrencies() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}currency");
+			FROM " . DB::prefix() . "currency");
         
         return $query->row['total'];
     }

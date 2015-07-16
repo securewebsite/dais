@@ -2,7 +2,7 @@
 var mapped={};
 $('input[name="post"]').typeahead({
 	source:function(q,process){
-		return $.getJSON('index.php?route=content/post/autocomplete&token='+token+'&filter_name='+encodeURIComponent(q),function(json){
+		return $.getJSON('index.php?route=content/post/autocomplete&filter_name='+encodeURIComponent(q),function(json){
 			var data=[];
 			$.each(json,function(i,item){
 				mapped[item.name]=item.post_id;

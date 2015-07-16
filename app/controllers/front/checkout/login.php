@@ -15,13 +15,15 @@
 */
 
 namespace App\Controllers\Front\Checkout;
+
 use App\Controllers\Controller;
 
 class Login extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('checkout/checkout');
+        $data = Theme::language('checkout/checkout');
         
-        $data['guest_checkout'] = ($this->config->get('config_guest_checkout') && !$this->config->get('config_customer_price') && !$this->cart->hasDownload());
+        $data['guest_checkout'] = (Config::get('config_guest_checkout') && !Config::get('config_customer_price') && !Cart::hasDownload());
         
         if (isset($this->session->data['account'])) {
             $data['account'] = $this->session->data['account'];
@@ -30,41 +32,41 @@ class Login extends Controller {
             $data['account'] = 'register';
         }
         
-        $data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
+        $data['forgotten'] = Url::link('account/forgotten', '', 'SSL');
         
-        $this->theme->loadjs('javascript/checkout/login', $data);
+        Theme::loadjs('javascript/checkout/login', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data['javascript'] = $this->theme->controller('common/javascript');
+        $data['javascript'] = Theme::controller('common/javascript');
         
-        $this->response->setOutput($this->theme->view('checkout/login', $data));
+        Response::setOutput(View::render('checkout/login', $data));
     }
     
     public function validate() {
-        $this->theme->language('checkout/checkout');
+        Theme::language('checkout/checkout');
         
         $json = array();
         
-        if ($this->customer->isLogged()) {
-            $json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
+        if (Customer::isLogged()) {
+            $json['redirect'] = Url::link('checkout/checkout', '', 'SSL');
         }
         
-        if ((!$this->cart->hasProducts() && empty($this->session->data['gift_cards'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
-            $json['redirect'] = $this->url->link('checkout/cart');
+        if ((!Cart::hasProducts() && empty($this->session->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
+            $json['redirect'] = Url::link('checkout/cart');
         }
         
         if (!$json) {
-            if (!$this->customer->login($this->request->post['email'], $this->request->post['password'])) {
-                $json['error']['warning'] = $this->language->get('lang_error_login');
+            if (!Customer::login($this->request->post['email'], $this->request->post['password'])) {
+                $json['error']['warning'] = Lang::get('lang_error_login');
             }
             
-            $this->theme->model('account/customer');
+            Theme::model('account/customer');
             
-            $customer_info = $this->model_account_customer->getCustomerByEmail($this->request->post['email']);
+            $customer_info = AccountCustomer::getCustomerByEmail($this->request->post['email']);
             
             if ($customer_info && !$customer_info['approved']) {
-                $json['error']['warning'] = $this->language->get('lang_error_approved');
+                $json['error']['warning'] = Lang::get('lang_error_approved');
             }
         }
         
@@ -72,18 +74,18 @@ class Login extends Controller {
             unset($this->session->data['guest']);
             
             // Default Addresses
-            $this->theme->model('account/address');
+            Theme::model('account/address');
             
-            $address_info = $this->model_account_address->getAddress($this->customer->getAddressId());
+            $address_info = AccountAddress::getAddress(Customer::getAddressId());
             
             if ($address_info) {
-                if ($this->config->get('config_tax_customer') == 'shipping') {
+                if (Config::get('config_tax_customer') == 'shipping') {
                     $this->session->data['shipping_country_id'] = $address_info['country_id'];
                     $this->session->data['shipping_zone_id'] = $address_info['zone_id'];
                     $this->session->data['shipping_postcode'] = $address_info['postcode'];
                 }
                 
-                if ($this->config->get('config_tax_customer') == 'payment') {
+                if (Config::get('config_tax_customer') == 'payment') {
                     $this->session->data['payment_country_id'] = $address_info['country_id'];
                     $this->session->data['payment_zone_id'] = $address_info['zone_id'];
                 }
@@ -95,11 +97,11 @@ class Login extends Controller {
                 unset($this->session->data['payment_zone_id']);
             }
             
-            $json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
+            $json['redirect'] = Url::link('checkout/checkout', '', 'SSL');
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

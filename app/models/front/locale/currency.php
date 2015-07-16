@@ -23,10 +23,10 @@ class Currency extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT DISTINCT * 
-				FROM {$this->db->prefix}currency 
-				WHERE code = '" . $this->db->escape($currency) . "'
+				FROM " . DB::prefix() . "currency 
+				WHERE code = '" . DB::escape($currency) . "'
 			");
             
             if ($query->num_rows):
@@ -42,13 +42,13 @@ class Currency extends Model {
     }
     
     public function getCurrencies() {
-        $key = 'currency.all.' . (int)$this->config->get('config_store_id');
+        $key = 'currency.all.' . (int)Config::get('config_store_id');
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)) {
             $currency_data = array();
             
-            $query = $this->db->query("SELECT * FROM {$this->db->prefix}currency ORDER BY title ASC");
+            $query = DB::query("SELECT * FROM " . DB::prefix() . "currency ORDER BY title ASC");
             
             foreach ($query->rows as $result) {
                 $currency_data[$result['code']] = array('currency_id' => $result['currency_id'], 'title' => $result['title'], 'code' => $result['code'], 'symbol_left' => $result['symbol_left'], 'symbol_right' => $result['symbol_right'], 'decimal_place' => $result['decimal_place'], 'value' => $result['value'], 'status' => $result['status'], 'date_modified' => $result['date_modified']);

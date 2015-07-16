@@ -23,9 +23,9 @@ class Author extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
                 SELECT * 
-                FROM {$this->db->prefix}user 
+                FROM " . DB::prefix() . "user 
                 WHERE user_id = '" . (int)$author_id . "' LIMIT 0,1
             ");
             
@@ -43,11 +43,11 @@ class Author extends Model {
     public function getAuthorNameRelatedToPostedBy($user_info) {
         $posted_by = $user_info['firstname'] . ' ' . $user_info['lastname'];
         
-        if ($this->config->get('blog_posted_by') == 'firstname lastname'):
+        if (Config::get('blog_posted_by') == 'firstname lastname'):
             $posted_by = $user_info['firstname'] . ' ' . $user_info['lastname'];
-        elseif ($this->config->get('blog_posted_by') == 'lastname firstname'):
+        elseif (Config::get('blog_posted_by') == 'lastname firstname'):
             $posted_by = $user_info['lastname'] . ' ' . $user_info['firstname'];
-        elseif ($this->config->get('blog_posted_by') == 'user_name'):
+        elseif (Config::get('blog_posted_by') == 'user_name'):
             $posted_by = $user_info['user_name'];
         endif;
         
@@ -59,9 +59,9 @@ class Author extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
                 SELECT COUNT(*) AS total 
-                FROM {$this->db->prefix}blog_post 
+                FROM " . DB::prefix() . "blog_post 
                 WHERE author_id = '" . (int)$author_id . "' 
                 AND status=1
             ");

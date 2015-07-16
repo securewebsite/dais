@@ -31,6 +31,6 @@ class Permission extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('error/permission', $data));
+        Response::setOutput(View::render('error/permission', $data));
     }
 }

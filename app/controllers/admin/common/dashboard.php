@@ -69,19 +69,19 @@ class Dashboard extends Controller {
         
         Theme::model('sale/order');
         
-        $data['total_sale']      = Currency::format($this->model_sale_order->getTotalSales() , Config::get('config_currency'));
-        $data['total_sale_year'] = Currency::format($this->model_sale_order->getTotalSalesByYear(date('Y')) , Config::get('config_currency'));
-        $data['total_order']     = $this->model_sale_order->getTotalOrders();
+        $data['total_sale']      = Currency::format(SaleOrder::getTotalSales() , Config::get('config_currency'));
+        $data['total_sale_year'] = Currency::format(SaleOrder::getTotalSalesByYear(date('Y')) , Config::get('config_currency'));
+        $data['total_order']     = SaleOrder::getTotalOrders();
         
         Theme::model('people/customer');
         
-        $data['total_customer']          = $this->model_people_customer->getTotalCustomers();
-        $data['total_customer_approval'] = $this->model_people_customer->getTotalCustomersAwaitingApproval();
+        $data['total_customer']          = PeopleCustomer::getTotalCustomers();
+        $data['total_customer_approval'] = PeopleCustomer::getTotalCustomersAwaitingApproval();
         
         Theme::model('catalog/review');
         
-        $data['total_review']          = $this->model_catalog_review->getTotalReviews();
-        $data['total_review_approval'] = $this->model_catalog_review->getTotalReviewsAwaitingApproval();
+        $data['total_review']          = CatalogReview::getTotalReviews();
+        $data['total_review_approval'] = CatalogReview::getTotalReviewsAwaitingApproval();
         
         $data['orders'] = array();
         
@@ -92,14 +92,14 @@ class Dashboard extends Controller {
             'limit' => 10
         );
         
-        $results = $this->model_sale_order->getOrders($filter);
+        $results = SaleOrder::getOrders($filter);
         
         foreach ($results as $result) {
             $action = array();
             
             $action[] = array(
                 'text' => Lang::get('lang_text_view') ,
-                'href' => Url::link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'], 'SSL')
+                'href' => Url::link('sale/order/info', 'order_id=' . $result['order_id'], 'SSL')
             );
             
             $data['orders'][] = array(
@@ -115,7 +115,7 @@ class Dashboard extends Controller {
         if (Config::get('config_currency_auto')) {
             Theme::model('locale/currency');
             
-            $this->model_locale_currency->updateCurrencies();
+            LocaleCurrency::updateCurrencies();
         }
         
         Theme::loadjs('javascript/common/dashboard', $data);
@@ -124,7 +124,7 @@ class Dashboard extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('common/dashboard', $data));
+        Response::setOutput(View::render('common/dashboard', $data));
     }
     
     public function sale() {
@@ -150,13 +150,13 @@ class Dashboard extends Controller {
         switch ($range) {
             default:
             case 'day':
-                $results = $this->model_report_dashboard->getTotalOrdersByDay();
+                $results = ReportDashboard::getTotalOrdersByDay();
                 
                 foreach ($results as $key => $value) {
                     $json['order']['data'][] = array($key, $value['total']);
                 }
                 
-                $results = $this->model_report_dashboard->getTotalCustomersByDay();
+                $results = ReportDashboard::getTotalCustomersByDay();
                 
                 foreach ($results as $key => $value) {
                     $json['customer']['data'][] = array($key,$value['total']);
@@ -168,13 +168,13 @@ class Dashboard extends Controller {
                 break;
 
             case 'week':
-                $results = $this->model_report_dashboard->getTotalOrdersByWeek();
+                $results = ReportDashboard::getTotalOrdersByWeek();
                 
                 foreach ($results as $key => $value) {
                     $json['order']['data'][] = array($key, $value['total']);
                 }
                 
-                $results = $this->model_report_dashboard->getTotalCustomersByWeek();
+                $results = ReportDashboard::getTotalCustomersByWeek();
                 
                 foreach ($results as $key => $value) {
                     $json['customer']['data'][] = array($key, $value['total']);
@@ -190,13 +190,13 @@ class Dashboard extends Controller {
                 break;
 
             case 'month':
-                $results = $this->model_report_dashboard->getTotalOrdersByMonth();
+                $results = ReportDashboard::getTotalOrdersByMonth();
                 
                 foreach ($results as $key => $value) {
                     $json['order']['data'][] = array($key, $value['total']);
                 }
                 
-                $results = $this->model_report_dashboard->getTotalCustomersByMonth();
+                $results = ReportDashboard::getTotalCustomersByMonth();
                 
                 foreach ($results as $key => $value) {
                     $json['customer']['data'][] = array($key, $value['total']);
@@ -211,13 +211,13 @@ class Dashboard extends Controller {
                 break;
 
             case 'year':
-                $results = $this->model_report_dashboard->getTotalOrdersByYear();
+                $results = ReportDashboard::getTotalOrdersByYear();
                 
                 foreach ($results as $key => $value) {
                     $json['order']['data'][] = array($key, $value['total']);
                 }
                 
-                $results = $this->model_report_dashboard->getTotalCustomersByYear();
+                $results = ReportDashboard::getTotalCustomersByYear();
                 
                 foreach ($results as $key => $value) {
                     $json['customer']['data'][] = array($key, $value['total']);
@@ -279,11 +279,11 @@ class Dashboard extends Controller {
             
             $ignore = array_merge($ignore, $config_ignore);
             
-            if (!in_array($route, $ignore) && (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token']))) {
+            if (!in_array($route, $ignore) && !Response::match()) {
                 return new Action('common/login');
             }
         } else {
-            if (!isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])) {
+            if (!Response::match()) {
                 return new Action('common/login');
             }
         }
@@ -398,7 +398,7 @@ class Dashboard extends Controller {
         
         if (!$this->error):
             Theme::model('report/dashboard');
-            $this->model_report_dashboard->setLastAccess(User::getId());
+            ReportDashboard::setLastAccess(User::getId());
             $this->session->data['user_last_access'] = time();
         endif;
         

@@ -15,15 +15,17 @@
 */
 
 namespace App\Controllers\Front\Catalog;
+
 use App\Controllers\Controller;
 
 class Compare extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('catalog/compare');
+        $data = Theme::language('catalog/compare');
         
-        $this->theme->model('catalog/product');
+        Theme::model('catalog/product');
         
-        $this->theme->model('tool/image');
+        Theme::model('tool/image');
         
         if (!isset($this->session->data['compare'])) {
             $this->session->data['compare'] = array();
@@ -36,14 +38,14 @@ class Compare extends Controller {
                 unset($this->session->data['compare'][$key]);
             }
             
-            $this->session->data['success'] = $this->language->get('lang_text_remove');
+            $this->session->data['success'] = Lang::get('lang_text_remove');
             
-            $this->response->redirect($this->url->link('catalog/compare'));
+            Response::redirect(Url::link('catalog/compare'));
         }
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
-        $this->breadcrumb->add('lang_heading_title', 'catalog/compare');
+        Breadcrumb::add('lang_heading_title', 'catalog/compare');
         
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
@@ -53,45 +55,45 @@ class Compare extends Controller {
             $data['success'] = '';
         }
         
-        $data['review_status'] = $this->config->get('config_review_status');
+        $data['review_status'] = Config::get('config_review_status');
         
         $data['products'] = array();
         
         $data['attribute_groups'] = array();
         
         foreach ($this->session->data['compare'] as $key => $product_id) {
-            $product_info = $this->model_catalog_product->getProduct($product_id);
+            $product_info = CatalogProduct::getProduct($product_id);
             
             if ($product_info) {
                 if ($product_info['image']) {
-                    $image = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_compare_width'), $this->config->get('config_image_compare_height'));
+                    $image = ToolImage::resize($product_info['image'], Config::get('config_image_compare_width'), Config::get('config_image_compare_height'));
                 } else {
                     $image = false;
                 }
                 
-                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                    $price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+                if ((Config::get('config_customer_price') && Customer::isLogged()) || !Config::get('config_customer_price')) {
+                    $price = Currency::format(Tax::calculate($product_info['price'], $product_info['tax_class_id'], Config::get('config_tax')));
                 } else {
                     $price = false;
                 }
                 
                 if ((float)$product_info['special']) {
-                    $special = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')));
+                    $special = Currency::format(Tax::calculate($product_info['special'], $product_info['tax_class_id'], Config::get('config_tax')));
                 } else {
                     $special = false;
                 }
                 
                 if ($product_info['quantity'] <= 0) {
                     $availability = $product_info['stock_status'];
-                } elseif ($this->config->get('config_stock_display')) {
+                } elseif (Config::get('config_stock_display')) {
                     $availability = $product_info['quantity'];
                 } else {
-                    $availability = $this->language->get('lang_text_instock');
+                    $availability = Lang::get('lang_text_instock');
                 }
                 
                 $attribute_data = array();
                 
-                $attribute_groups = $this->model_catalog_product->getProductAttributes($product_id);
+                $attribute_groups = CatalogProduct::getProductAttributes($product_id);
                 
                 foreach ($attribute_groups as $attribute_group) {
                     foreach ($attribute_group['attribute'] as $attribute) {
@@ -99,7 +101,7 @@ class Compare extends Controller {
                     }
                 }
                 
-                $data['products'][$product_id] = array('product_id' => $product_info['product_id'], 'event_id' => $product_info['event_id'], 'name' => $product_info['name'], 'thumb' => $image, 'price' => $price, 'special' => $special, 'description' => $this->encode->substr(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8')), 0, 200) . '..', 'model' => $product_info['model'], 'manufacturer' => $product_info['manufacturer'], 'availability' => $availability, 'rating' => (int)$product_info['rating'], 'reviews' => sprintf($this->language->get('lang_text_reviews'), (int)$product_info['reviews']), 'weight' => $this->weight->format($product_info['weight'], $product_info['weight_class_id']), 'length' => $this->length->format($product_info['length'], $product_info['length_class_id']), 'width' => $this->length->format($product_info['width'], $product_info['length_class_id']), 'height' => $this->length->format($product_info['height'], $product_info['length_class_id']), 'attribute' => $attribute_data, 'href' => $this->url->link('catalog/product', 'product_id=' . $product_id), 'remove' => $this->url->link('catalog/compare', 'remove=' . $product_id));
+                $data['products'][$product_id] = array('product_id' => $product_info['product_id'], 'event_id' => $product_info['event_id'], 'name' => $product_info['name'], 'thumb' => $image, 'price' => $price, 'special' => $special, 'description' => Encode::substr(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8')), 0, 200) . '..', 'model' => $product_info['model'], 'manufacturer' => $product_info['manufacturer'], 'availability' => $availability, 'rating' => (int)$product_info['rating'], 'reviews' => sprintf(Lang::get('lang_text_reviews'), (int)$product_info['reviews']), 'weight' => $this->weight->format($product_info['weight'], $product_info['weight_class_id']), 'length' => $this->length->format($product_info['length'], $product_info['length_class_id']), 'width' => $this->length->format($product_info['width'], $product_info['length_class_id']), 'height' => $this->length->format($product_info['height'], $product_info['length_class_id']), 'attribute' => $attribute_data, 'href' => Url::link('catalog/product', 'product_id=' . $product_id), 'remove' => Url::link('catalog/compare', 'remove=' . $product_id));
                 
                 foreach ($attribute_groups as $attribute_group) {
                     $data['attribute_groups'][$attribute_group['attribute_group_id']]['name'] = $attribute_group['name'];
@@ -113,20 +115,20 @@ class Compare extends Controller {
             }
         }
         
-        $data['continue'] = $this->url->link('shop/home');
+        $data['continue'] = Url::link('shop/home');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->setController('header', 'shop/header');
-        $this->theme->setController('footer', 'shop/footer');
+        Theme::setController('header', 'shop/header');
+        Theme::setController('footer', 'shop/footer');
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('catalog/compare', $data));
+        Response::setOutput(View::render('catalog/compare', $data));
     }
     
     public function add() {
-        $this->theme->language('catalog/compare');
+        Theme::language('catalog/compare');
         
         $json = array();
         
@@ -140,9 +142,9 @@ class Compare extends Controller {
             $product_id = 0;
         }
         
-        $this->theme->model('catalog/product');
+        Theme::model('catalog/product');
         
-        $product_info = $this->model_catalog_product->getProduct($product_id);
+        $product_info = CatalogProduct::getProduct($product_id);
         
         if ($product_info) {
             if (!in_array($this->request->post['product_id'], $this->session->data['compare'])) {
@@ -153,13 +155,13 @@ class Compare extends Controller {
                 $this->session->data['compare'][] = $this->request->post['product_id'];
             }
             
-            $json['success'] = sprintf($this->language->get('lang_text_success'), $this->url->link('catalog/product', 'product_id=' . $this->request->post['product_id']), $product_info['name'], $this->url->link('catalog/compare'));
+            $json['success'] = sprintf(Lang::get('lang_text_success'), Url::link('catalog/product', 'product_id=' . $this->request->post['product_id']), $product_info['name'], Url::link('catalog/compare'));
             
-            $json['total'] = sprintf($this->language->get('lang_text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
+            $json['total'] = sprintf(Lang::get('lang_text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

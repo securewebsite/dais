@@ -20,17 +20,17 @@ use DOMDocument;
 
 class Usps extends Model {
     public function getQuote($address) {
-        $this->language->load('shipping/usps');
+        Lang::load('shipping/usps');
         
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}zone_to_geo_zone 
-            WHERE geo_zone_id = '" . (int)$this->config->get('usps_geo_zone_id') . "' 
+            FROM " . DB::prefix() . "zone_to_geo_zone 
+            WHERE geo_zone_id = '" . (int)Config::get('usps_geo_zone_id') . "' 
             AND country_id    = '" . (int)$address['country_id'] . "' 
             AND (zone_id      = '" . (int)$address['zone_id'] . "' OR zone_id = '0')"
         );
         
-        if (!$this->config->get('usps_geo_zone_id')):
+        if (!Config::get('usps_geo_zone_id')):
             $status = true;
         elseif ($query->num_rows):
             $status = true;
@@ -41,11 +41,11 @@ class Usps extends Model {
         $method_data = array();
         
         if ($status):
-            $this->theme->model('locale/country');
+            Theme::model('locale/country');
             
             $quote_data = array();
             
-            $weight     = $this->weight->convert($this->cart->getWeight(), $this->config->get('config_weight_class_id'), $this->config->get('usps_weight_class_id'));
+            $weight     = $this->weight->convert(Cart::getWeight(), Config::get('config_weight_class_id'), Config::get('usps_weight_class_id'));
             $weight     = ($weight < 0.1 ? 0.1 : $weight);
             $pounds     = floor($weight);
             $ounces     = round(16 * ($weight - $pounds), 2);
@@ -54,28 +54,28 @@ class Usps extends Model {
             $postcode   = str_replace(' ', '', $address['postcode']);
             
             if ($address['iso_code_2'] == 'US'):
-                $xml = '<RateV4Request USERID="' . $this->config->get('usps_user_id') . '">';
+                $xml = '<RateV4Request USERID="' . Config::get('usps_user_id') . '">';
                 $xml.= '	<Package ID="1">';
                 $xml.= '		<Service>ALL</Service>';
-                $xml.= '		<ZipOrigination>' . substr($this->config->get('usps_postcode'), 0, 5) . '</ZipOrigination>';
+                $xml.= '		<ZipOrigination>' . substr(Config::get('usps_postcode'), 0, 5) . '</ZipOrigination>';
                 $xml.= '		<ZipDestination>' . substr($postcode, 0, 5) . '</ZipDestination>';
                 $xml.= '		<Pounds>' . $pounds . '</Pounds>';
                 $xml.= '		<Ounces>' . $ounces . '</Ounces>';
                 
                 // Prevent common size mismatch error from USPS (Size cannot be Regular if Container is Rectangular for some reason)
-                if ($this->config->get('usps_container') == 'RECTANGULAR' && $this->config->get('usps_size') == 'REGULAR'):
-                    $this->config->set('usps_container', 'VARIABLE');
+                if (Config::get('usps_container') == 'RECTANGULAR' && Config::get('usps_size') == 'REGULAR'):
+                    Config::set('usps_container', 'VARIABLE');
                 endif;
                 
-                $xml.= '		<Container>' . $this->config->get('usps_container') . '</Container>';
-                $xml.= '		<Size>' . $this->config->get('usps_size') . '</Size>';
-                $xml.= '		<Width>' . $this->config->get('usps_width') . '</Width>';
-                $xml.= '		<Length>' . $this->config->get('usps_length') . '</Length>';
-                $xml.= '		<Height>' . $this->config->get('usps_height') . '</Height>';
+                $xml.= '		<Container>' . Config::get('usps_container') . '</Container>';
+                $xml.= '		<Size>' . Config::get('usps_size') . '</Size>';
+                $xml.= '		<Width>' . Config::get('usps_width') . '</Width>';
+                $xml.= '		<Length>' . Config::get('usps_length') . '</Length>';
+                $xml.= '		<Height>' . Config::get('usps_height') . '</Height>';
                 
                 // Calculate girth based on usps calculation
-                $xml.= '		<Girth>' . (round(((float)$this->config->get('usps_length') + (float)$this->config->get('usps_width') * 2 + (float)$this->config->get('usps_height') * 2), 1)) . '</Girth>';
-                $xml.= '		<Machinable>' . ($this->config->get('usps_machinable') ? 'true' : 'false') . '</Machinable>';
+                $xml.= '		<Girth>' . (round(((float)Config::get('usps_length') + (float)Config::get('usps_width') * 2 + (float)Config::get('usps_height') * 2), 1)) . '</Girth>';
+                $xml.= '		<Machinable>' . (Config::get('usps_machinable') ? 'true' : 'false') . '</Machinable>';
                 $xml.= '	</Package>';
                 $xml.= '</RateV4Request>';
                 
@@ -84,7 +84,7 @@ class Usps extends Model {
                 $country = array('AF' => 'Afghanistan', 'AL' => 'Albania', 'DZ' => 'Algeria', 'AD' => 'Andorra', 'AO' => 'Angola', 'AI' => 'Anguilla', 'AG' => 'Antigua and Barbuda', 'AR' => 'Argentina', 'AM' => 'Armenia', 'AW' => 'Aruba', 'AU' => 'Australia', 'AT' => 'Austria', 'AZ' => 'Azerbaijan', 'BS' => 'Bahamas', 'BH' => 'Bahrain', 'BD' => 'Bangladesh', 'BB' => 'Barbados', 'BY' => 'Belarus', 'BE' => 'Belgium', 'BZ' => 'Belize', 'BJ' => 'Benin', 'BM' => 'Bermuda', 'BT' => 'Bhutan', 'BO' => 'Bolivia', 'BA' => 'Bosnia-Herzegovina', 'BW' => 'Botswana', 'BR' => 'Brazil', 'VG' => 'British Virgin Islands', 'BN' => 'Brunei Darussalam', 'BG' => 'Bulgaria', 'BF' => 'Burkina Faso', 'MM' => 'Burma', 'BI' => 'Burundi', 'KH' => 'Cambodia', 'CM' => 'Cameroon', 'CA' => 'Canada', 'CV' => 'Cape Verde', 'KY' => 'Cayman Islands', 'CF' => 'Central African Republic', 'TD' => 'Chad', 'CL' => 'Chile', 'CN' => 'China', 'CX' => 'Christmas Island (Australia)', 'CC' => 'Cocos Island (Australia)', 'CO' => 'Colombia', 'KM' => 'Comoros', 'CG' => 'Congo (Brazzaville),Republic of the', 'ZR' => 'Congo, Democratic Republic of the', 'CK' => 'Cook Islands (New Zealand)', 'CR' => 'Costa Rica', 'CI' => 'Cote d\'Ivoire (Ivory Coast)', 'HR' => 'Croatia', 'CU' => 'Cuba', 'CY' => 'Cyprus', 'CZ' => 'Czech Republic', 'DK' => 'Denmark', 'DJ' => 'Djibouti', 'DM' => 'Dominica', 'DO' => 'Dominican Republic', 'TP' => 'East Timor (Indonesia)', 'EC' => 'Ecuador', 'EG' => 'Egypt', 'SV' => 'El Salvador', 'GQ' => 'Equatorial Guinea', 'ER' => 'Eritrea', 'EE' => 'Estonia', 'ET' => 'Ethiopia', 'FK' => 'Falkland Islands', 'FO' => 'Faroe Islands', 'FJ' => 'Fiji', 'FI' => 'Finland', 'FR' => 'France', 'GF' => 'French Guiana', 'PF' => 'French Polynesia', 'GA' => 'Gabon', 'GM' => 'Gambia', 'GE' => 'Georgia, Republic of', 'DE' => 'Germany', 'GH' => 'Ghana', 'GI' => 'Gibraltar', 'GB' => 'Great Britain and Northern Ireland', 'GR' => 'Greece', 'GL' => 'Greenland', 'GD' => 'Grenada', 'GP' => 'Guadeloupe', 'GT' => 'Guatemala', 'GN' => 'Guinea', 'GW' => 'Guinea-Bissau', 'GY' => 'Guyana', 'HT' => 'Haiti', 'HN' => 'Honduras', 'HK' => 'Hong Kong', 'HU' => 'Hungary', 'IS' => 'Iceland', 'IN' => 'India', 'ID' => 'Indonesia', 'IR' => 'Iran', 'IQ' => 'Iraq', 'IE' => 'Ireland', 'IL' => 'Israel', 'IT' => 'Italy', 'JM' => 'Jamaica', 'JP' => 'Japan', 'JO' => 'Jordan', 'KZ' => 'Kazakhstan', 'KE' => 'Kenya', 'KI' => 'Kiribati', 'KW' => 'Kuwait', 'KG' => 'Kyrgyzstan', 'LA' => 'Laos', 'LV' => 'Latvia', 'LB' => 'Lebanon', 'LS' => 'Lesotho', 'LR' => 'Liberia', 'LY' => 'Libya', 'LI' => 'Liechtenstein', 'LT' => 'Lithuania', 'LU' => 'Luxembourg', 'MO' => 'Macao', 'MK' => 'Macedonia, Republic of', 'MG' => 'Madagascar', 'MW' => 'Malawi', 'MY' => 'Malaysia', 'MV' => 'Maldives', 'ML' => 'Mali', 'MT' => 'Malta', 'MQ' => 'Martinique', 'MR' => 'Mauritania', 'MU' => 'Mauritius', 'YT' => 'Mayotte (France)', 'MX' => 'Mexico', 'MD' => 'Moldova', 'MC' => 'Monaco (France)', 'MN' => 'Mongolia', 'MS' => 'Montserrat', 'MA' => 'Morocco', 'MZ' => 'Mozambique', 'NA' => 'Namibia', 'NR' => 'Nauru', 'NP' => 'Nepal', 'NL' => 'Netherlands', 'AN' => 'Netherlands Antilles', 'NC' => 'New Caledonia', 'NZ' => 'New Zealand', 'NI' => 'Nicaragua', 'NE' => 'Niger', 'NG' => 'Nigeria', 'KP' => 'North Korea (Korea, Democratic People\'s Republic of)', 'NO' => 'Norway', 'OM' => 'Oman', 'PK' => 'Pakistan', 'PA' => 'Panama', 'PG' => 'Papua New Guinea', 'PY' => 'Paraguay', 'PE' => 'Peru', 'PH' => 'Philippines', 'PN' => 'Pitcairn Island', 'PL' => 'Poland', 'PT' => 'Portugal', 'QA' => 'Qatar', 'RE' => 'Reunion', 'RO' => 'Romania', 'RU' => 'Russia', 'RW' => 'Rwanda', 'SH' => 'Saint Helena', 'KN' => 'Saint Kitts (St. Christopher and Nevis)', 'LC' => 'Saint Lucia', 'PM' => 'Saint Pierre and Miquelon', 'VC' => 'Saint Vincent and the Grenadines', 'SM' => 'San Marino', 'ST' => 'Sao Tome and Principe', 'SA' => 'Saudi Arabia', 'SN' => 'Senegal', 'YU' => 'Serbia-Montenegro', 'SC' => 'Seychelles', 'SL' => 'Sierra Leone', 'SG' => 'Singapore', 'SK' => 'Slovak Republic', 'SI' => 'Slovenia', 'SB' => 'Solomon Islands', 'SO' => 'Somalia', 'ZA' => 'South Africa', 'GS' => 'South Georgia (Falkland Islands)', 'KR' => 'South Korea (Korea, Republic of)', 'ES' => 'Spain', 'LK' => 'Sri Lanka', 'SD' => 'Sudan', 'SR' => 'Suriname', 'SZ' => 'Swaziland', 'SE' => 'Sweden', 'CH' => 'Switzerland', 'SY' => 'Syrian Arab Republic', 'TW' => 'Taiwan', 'TJ' => 'Tajikistan', 'TZ' => 'Tanzania', 'TH' => 'Thailand', 'TG' => 'Togo', 'TK' => 'Tokelau (Union) Group (Western Samoa)', 'TO' => 'Tonga', 'TT' => 'Trinidad and Tobago', 'TN' => 'Tunisia', 'TR' => 'Turkey', 'TM' => 'Turkmenistan', 'TC' => 'Turks and Caicos Islands', 'TV' => 'Tuvalu', 'UG' => 'Uganda', 'UA' => 'Ukraine', 'AE' => 'United Arab Emirates', 'UY' => 'Uruguay', 'UZ' => 'Uzbekistan', 'VU' => 'Vanuatu', 'VA' => 'Vatican City', 'VE' => 'Venezuela', 'VN' => 'Vietnam', 'WF' => 'Wallis and Futuna Islands', 'WS' => 'Western Samoa', 'YE' => 'Yemen', 'ZM' => 'Zambia', 'ZW' => 'Zimbabwe');
                 
                 if (isset($country[$address['iso_code_2']])):
-                    $xml = '<IntlRateV2Request USERID="' . $this->config->get('usps_user_id') . '">';
+                    $xml = '<IntlRateV2Request USERID="' . Config::get('usps_user_id') . '">';
                     $xml.= '	<Package ID="1">';
                     $xml.= '		<Pounds>' . $pounds . '</Pounds>';
                     $xml.= '		<Ounces>' . $ounces . '</Ounces>';
@@ -93,20 +93,20 @@ class Usps extends Model {
                     $xml.= '		  <POBoxFlag>N</POBoxFlag>';
                     $xml.= '		  <GiftFlag>N</GiftFlag>';
                     $xml.= '		</GXG>';
-                    $xml.= '		<ValueOfContents>' . $this->cart->getSubTotal() . '</ValueOfContents>';
+                    $xml.= '		<ValueOfContents>' . Cart::getSubTotal() . '</ValueOfContents>';
                     $xml.= '		<Country>' . $country[$address['iso_code_2']] . '</Country>';
                     
                     // Intl only supports RECT and NONRECT
-                    if ($this->config->get('usps_container') == 'VARIABLE'):
-                        $this->config->set('usps_container', 'NONRECTANGULAR');
+                    if (Config::get('usps_container') == 'VARIABLE'):
+                        Config::set('usps_container', 'NONRECTANGULAR');
                     endif;
                     
-                    $xml.= '		<Container>' . $this->config->get('usps_container') . '</Container>';
-                    $xml.= '		<Size>' . $this->config->get('usps_size') . '</Size>';
-                    $xml.= '		<Width>' . $this->config->get('usps_width') . '</Width>';
-                    $xml.= '		<Length>' . $this->config->get('usps_length') . '</Length>';
-                    $xml.= '		<Height>' . $this->config->get('usps_height') . '</Height>';
-                    $xml.= '		<Girth>' . $this->config->get('usps_girth') . '</Girth>';
+                    $xml.= '		<Container>' . Config::get('usps_container') . '</Container>';
+                    $xml.= '		<Size>' . Config::get('usps_size') . '</Size>';
+                    $xml.= '		<Width>' . Config::get('usps_width') . '</Width>';
+                    $xml.= '		<Length>' . Config::get('usps_length') . '</Length>';
+                    $xml.= '		<Height>' . Config::get('usps_height') . '</Height>';
+                    $xml.= '		<Girth>' . Config::get('usps_girth') . '</Girth>';
                     $xml.= '		<CommercialFlag>N</CommercialFlag>';
                     $xml.= '	</Package>';
                     $xml.= '</IntlRateV2Request>';
@@ -136,7 +136,7 @@ class Usps extends Model {
                 $result = str_replace('\"', '"', $result);
                 
                 if ($result):
-                    if ($this->config->get('usps_debug')):
+                    if (Config::get('usps_debug')):
                         $this->log->write("USPS DATA SENT: " . urldecode($request));
                         $this->log->write("USPS DATA RECV: " . $result);
                     endif;
@@ -176,19 +176,19 @@ class Usps extends Model {
                                                 endif;
                                             endforeach;
                                             
-                                            if (($this->config->get('usps_domestic_' . $classid))):
+                                            if ((Config::get('usps_domestic_' . $classid))):
                                                 $cost = $postage->getElementsByTagName('Rate')->item(0)->nodeValue;
-                                                $quote_data[$classid] = array('code' => 'usps.' . $classid, 'title' => $postage->getElementsByTagName('MailService')->item(0)->nodeValue, 'cost' => $this->currency->convert($cost, 'USD', $this->config->get('config_currency')), 'tax_class_id' => $this->config->get('usps_tax_class_id'), 'text' => $this->currency->format($this->tax->calculate($this->currency->convert($cost, 'USD', $this->currency->getCode()), $this->config->get('usps_tax_class_id'), $this->config->get('config_tax')), $this->currency->getCode(), 1.0000000));
+                                                $quote_data[$classid] = array('code' => 'usps.' . $classid, 'title' => $postage->getElementsByTagName('MailService')->item(0)->nodeValue, 'cost' => Currency::convert($cost, 'USD', Config::get('config_currency')), 'tax_class_id' => Config::get('usps_tax_class_id'), 'text' => Currency::format(Tax::calculate(Currency::convert($cost, 'USD', Currency::getCode()), Config::get('usps_tax_class_id'), Config::get('config_tax')), Currency::getCode(), 1.0000000));
                                             endif;
-                                        elseif ($this->config->get('usps_domestic_' . $classid)):
+                                        elseif (Config::get('usps_domestic_' . $classid)):
                                             $cost = $postage->getElementsByTagName('Rate')->item(0)->nodeValue;
                                             
                                             $quote_data[$classid] = array(
                                                 'code'         => 'usps.' . $classid, 
                                                 'title'        => $postage->getElementsByTagName('MailService')->item(0)->nodeValue, 
-                                                'cost'         => $this->currency->convert($cost, 'USD', $this->config->get('config_currency')), 
-                                                'tax_class_id' => $this->config->get('usps_tax_class_id'), 
-                                                'text'         => $this->currency->format($this->tax->calculate($this->currency->convert($cost, 'USD', $this->currency->getCode()), $this->config->get('usps_tax_class_id'), $this->config->get('config_tax')), $this->currency->getCode(), 1.0000000)
+                                                'cost'         => Currency::convert($cost, 'USD', Config::get('config_currency')), 
+                                                'tax_class_id' => Config::get('usps_tax_class_id'), 
+                                                'text'         => Currency::format(Tax::calculate(Currency::convert($cost, 'USD', Currency::getCode()), Config::get('usps_tax_class_id'), Config::get('config_tax')), Currency::getCode(), 1.0000000)
                                             );
                                         endif;
                                     endif;
@@ -198,9 +198,9 @@ class Usps extends Model {
                                 
                                 $method_data = array(
                                     'code'       => 'usps', 
-                                    'title'      => $this->language->get('lang_text_title'), 
+                                    'title'      => Lang::get('lang_text_title'), 
                                     'quote'      => $quote_data, 
-                                    'sort_order' => $this->config->get('usps_sort_order'), 
+                                    'sort_order' => Config::get('usps_sort_order'), 
                                     'error'      => $error->getElementsByTagName('Description')->item(0)->nodeValue
                                 );
                             endif;
@@ -212,11 +212,11 @@ class Usps extends Model {
                             foreach ($services as $service):
                                 $id = $service->getAttribute('ID');
                                 
-                                if (in_array($id, $allowed) && $this->config->get('usps_international_' . $id)):
+                                if (in_array($id, $allowed) && Config::get('usps_international_' . $id)):
                                     $title = $service->getElementsByTagName('SvcDescription')->item(0)->nodeValue;
                                     
-                                    if ($this->config->get('usps_display_time')):
-                                        $title.= ' (' . $this->language->get('lang_text_eta') . ' ' . $service->getElementsByTagName('SvcCommitments')->item(0)->nodeValue . ')';
+                                    if (Config::get('usps_display_time')):
+                                        $title.= ' (' . Lang::get('lang_text_eta') . ' ' . $service->getElementsByTagName('SvcCommitments')->item(0)->nodeValue . ')';
                                     endif;
                                     
                                     $cost = $service->getElementsByTagName('Postage')->item(0)->nodeValue;
@@ -224,9 +224,9 @@ class Usps extends Model {
                                     $quote_data[$id] = array(
                                         'code'         => 'usps.' . $id, 
                                         'title'        => $title, 
-                                        'cost'         => $this->currency->convert($cost, 'USD', $this->config->get('config_currency')), 
-                                        'tax_class_id' => $this->config->get('usps_tax_class_id'), 
-                                        'text'         => $this->currency->format($this->tax->calculate($this->currency->convert($cost, 'USD', $this->currency->getCode()), $this->config->get('usps_tax_class_id'), $this->config->get('config_tax')), $this->currency->getCode(), 1.0000000)
+                                        'cost'         => Currency::convert($cost, 'USD', Config::get('config_currency')), 
+                                        'tax_class_id' => Config::get('usps_tax_class_id'), 
+                                        'text'         => Currency::format(Tax::calculate(Currency::convert($cost, 'USD', Currency::getCode()), Config::get('usps_tax_class_id'), Config::get('config_tax')), Currency::getCode(), 1.0000000)
                                     );
                                 endif;
                             endforeach;
@@ -234,9 +234,9 @@ class Usps extends Model {
                     elseif ($error):
                         $method_data = array(
                             'code'       => 'usps', 
-                            'title'      => $this->language->get('lang_text_title'), 
+                            'title'      => Lang::get('lang_text_title'), 
                             'quote'      => $quote_data, 
-                            'sort_order' => $this->config->get('usps_sort_order'), 
+                            'sort_order' => Config::get('usps_sort_order'), 
                             'error'      => $error->getElementsByTagName('Description')->item(0)->nodeValue
                         );
                     endif;
@@ -244,17 +244,17 @@ class Usps extends Model {
             endif;
             
             if ($quote_data):
-                $title = $this->language->get('lang_text_title');
+                $title = Lang::get('lang_text_title');
                 
-                if ($this->config->get('usps_display_weight')):
-                    $title.= ' (' . $this->language->get('lang_text_weight') . ' ' . $this->weight->format($weight, $this->config->get('usps_weight_class_id')) . ')';
+                if (Config::get('usps_display_weight')):
+                    $title.= ' (' . Lang::get('lang_text_weight') . ' ' . $this->weight->format($weight, Config::get('usps_weight_class_id')) . ')';
                 endif;
                 
                 $method_data = array(
                     'code'       => 'usps', 
                     'title'      => $title, 
                     'quote'      => $quote_data, 
-                    'sort_order' => $this->config->get('usps_sort_order'), 
+                    'sort_order' => Config::get('usps_sort_order'), 
                     'error'      => false
                 );
             endif;

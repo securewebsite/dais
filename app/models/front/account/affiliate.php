@@ -22,13 +22,13 @@ class Affiliate extends Model {
 	public function getSettings() {
 		$data = array();
 
-		$query = $this->db->query("
+		$query = DB::query("
 			SELECT DISTINCT *, 
 			(SELECT slug 
-				FROM {$this->db->prefix}affiliate_route 
-				WHERE query = 'affiliate_id:" . (int)$this->customer->getId() . "') AS slug 
-			FROM {$this->db->prefix}customer 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "'
+				FROM " . DB::prefix() . "affiliate_route 
+				WHERE query = 'affiliate_id:" . (int)\Customer::getId() . "') AS slug 
+			FROM " . DB::prefix() . "customer 
+			WHERE customer_id = '" . (int)\Customer::getId() . "'
 		");
 
 		$data['affiliate_status']    = $query->row['affiliate_status'];
@@ -51,37 +51,37 @@ class Affiliate extends Model {
 	}
 
 	public function editSettings($data = array()) {
-		$this->db->query("
-			UPDATE {$this->db->prefix}customer 
+		DB::query("
+			UPDATE " . DB::prefix() . "customer 
 			SET 
 				affiliate_status    = '" . (int)$data['affiliate_status'] . "', 
-				code                = '" . $this->db->escape($data['code']) . "', 
-				company             = '" . $this->db->escape($data['company']) . "', 
-				website             = '" . $this->db->escape($data['website']) . "', 
-				tax_id              = '" . $this->db->escape($data['tax_id']) . "',
-				payment_method      = '" . $this->db->escape($data['payment_method']) . "', 
-				cheque              = '" . $this->db->escape($data['cheque']) . "', 
-				paypal              = '" . $this->db->escape($data['paypal']) . "', 
-				bank_name           = '" . $this->db->escape($data['bank_name']) . "', 
-				bank_branch_number  = '" . $this->db->escape($data['bank_branch_number']) . "', 
-				bank_swift_code     = '" . $this->db->escape($data['bank_swift_code']) . "', 
-				bank_account_name   = '" . $this->db->escape($data['bank_account_name']) . "', 
-				bank_account_number = '" . $this->db->escape($data['bank_account_number']) . "' 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "'"
+				code                = '" . DB::escape($data['code']) . "', 
+				company             = '" . DB::escape($data['company']) . "', 
+				website             = '" . DB::escape($data['website']) . "', 
+				tax_id              = '" . DB::escape($data['tax_id']) . "',
+				payment_method      = '" . DB::escape($data['payment_method']) . "', 
+				cheque              = '" . DB::escape($data['cheque']) . "', 
+				paypal              = '" . DB::escape($data['paypal']) . "', 
+				bank_name           = '" . DB::escape($data['bank_name']) . "', 
+				bank_branch_number  = '" . DB::escape($data['bank_branch_number']) . "', 
+				bank_swift_code     = '" . DB::escape($data['bank_swift_code']) . "', 
+				bank_account_name   = '" . DB::escape($data['bank_account_name']) . "', 
+				bank_account_number = '" . DB::escape($data['bank_account_number']) . "' 
+			WHERE customer_id = '" . (int)\Customer::getId() . "'"
 		);
 
-		$this->db->query("
-            DELETE FROM {$this->db->prefix}affiliate_route 
-            WHERE query = 'affiliate_id:" . (int)$this->customer->getId() . "'
+		DB::query("
+            DELETE FROM " . DB::prefix() . "affiliate_route 
+            WHERE query = 'affiliate_id:" . (int)\Customer::getId() . "'
         ");
 		
 		if ($data['slug']):
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}affiliate_route 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "affiliate_route 
 				SET 
 					route = '" . Theme::getstyle() . "/home', 
-					query = 'affiliate_id:" . (int)$this->customer->getId() . "', 
-					slug  = '" . $this->db->escape($data['slug']) . "'
+					query = 'affiliate_id:" . (int)\Customer::getId() . "', 
+					slug  = '" . DB::escape($data['slug']) . "'
 			");
         endif;
 
@@ -89,26 +89,26 @@ class Affiliate extends Model {
 	}
 
 	public function addAffiliate() {
-		$this->db->query("
-			UPDATE {$this->db->prefix}customer 
+		DB::query("
+			UPDATE " . DB::prefix() . "customer 
 			SET 
 				is_affiliate     = '1', 
 				affiliate_status = '1', 
-				code             = '" . $this->db->escape($code) . "', 
-				commission       = '" . (float)$this->config->get('config_commission') . "' 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "'
+				code             = '" . DB::escape($code) . "', 
+				commission       = '" . (float)Config::get('config_commission') . "' 
+			WHERE customer_id = '" . (int)\Customer::getId() . "'
 		");
 
-		$this->customer->setAffiliate();
-		$this->customer->setCode($code);
+		\Customer::setAffiliate();
+		\Customer::setCode($code);
 
 		return true;
 	}
 
 	public function getAffiliate($affiliate_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}customer 
+			FROM " . DB::prefix() . "customer 
 			WHERE customer_id = '" . (int)$affiliate_id . "'
 		");
         
@@ -118,8 +118,8 @@ class Affiliate extends Model {
 	public function getCommissions($data = array()) {
         $sql = "
 			SELECT * 
-			FROM {$this->db->prefix}customer_commission 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "'";
+			FROM " . DB::prefix() . "customer_commission 
+			WHERE customer_id = '" . (int)\Customer::getId() . "'";
         
         $sort_data = array(
         	'amount', 
@@ -151,26 +151,26 @@ class Affiliate extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         endif;
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
     
     public function getTotalCommissions() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}customer_commission 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "'
+			FROM " . DB::prefix() . "customer_commission 
+			WHERE customer_id = '" . (int)\Customer::getId() . "'
 		");
         
         return $query->row['total'];
     }
     
     public function getBalance() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT SUM(amount) AS total 
-			FROM {$this->db->prefix}customer_commission 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "' 
+			FROM " . DB::prefix() . "customer_commission 
+			WHERE customer_id = '" . (int)\Customer::getId() . "' 
 			GROUP BY customer_id
 		");
         
@@ -178,9 +178,9 @@ class Affiliate extends Model {
     }
 
     public function getAffiliateCommission($customer_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT commission 
-			FROM {$this->db->prefix}customer 
+			FROM " . DB::prefix() . "customer 
 			WHERE customer_id = '" . (int)$customer_id . "' 
 			AND is_affiliate = '1' 
 			AND affiliate_status = '1'
@@ -192,10 +192,10 @@ class Affiliate extends Model {
     public function generateId() {
     	$code = uniqid();
 
-    	$query = $this->db->query("
+    	$query = DB::query("
     		SELECT COUNT(customer_id) AS total 
-    		FROM {$this->db->prefix}customer 
-    		WHERE code = '" . $this->db->escape($code) . "'
+    		FROM " . DB::prefix() . "customer 
+    		WHERE code = '" . DB::escape($code) . "'
     	");
 
     	if ($query->row['total']):

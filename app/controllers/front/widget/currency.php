@@ -15,24 +15,26 @@
 */
 
 namespace App\Controllers\Front\Widget;
+
 use App\Controllers\Controller;
 
 class Currency extends Controller {
+    
     public function index() {
         if (isset($this->request->post['currency_code'])) {
-            $this->currency->set($this->request->post['currency_code']);
+            \Currency::set($this->request->post['currency_code']);
             
             unset($this->session->data['shipping_method']);
             unset($this->session->data['shipping_methods']);
             
             if (isset($this->request->post['redirect'])) {
-                $this->response->redirect($this->request->post['redirect']);
+                Response::redirect($this->request->post['redirect']);
             } else {
-                $this->response->redirect($this->url->link('shop/home'));
+                Response::redirect(Url::link('shop/home'));
             }
         }
         
-        $data = $this->theme->language('widget/currency');
+        $data = Theme::language('widget/currency');
         
         if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
             $connection = 'SSL';
@@ -40,15 +42,15 @@ class Currency extends Controller {
             $connection = 'NONSSL';
         }
         
-        $data['action'] = $this->url->link('widget/currency', '', $connection);
+        $data['action'] = Url::link('widget/currency', '', $connection);
         
-        $data['currency_code'] = $this->currency->getCode();
+        $data['currency_code'] = \Currency::getCode();
         
-        $this->theme->model('locale/currency');
+        Theme::model('locale/currency');
         
         $data['currencies'] = array();
         
-        $results = $this->model_locale_currency->getCurrencies();
+        $results = LocaleCurrency::getCurrencies();
         
         foreach ($results as $result) {
             if ($result['status']) {
@@ -57,7 +59,7 @@ class Currency extends Controller {
         }
         
         if (!isset($this->request->get['route'])) {
-            $data['redirect'] = $this->url->link('shop/home');
+            $data['redirect'] = Url::link('shop/home');
         } else {
             $routes = $this->request->get;
             
@@ -73,11 +75,11 @@ class Currency extends Controller {
                 $url = '&' . urldecode(http_build_query($routes, '', '&'));
             }
             
-            $data['redirect'] = $this->url->link($route, $url, $connection);
+            $data['redirect'] = Url::link($route, $url, $connection);
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('widget/currency', $data);
+        return View::render('widget/currency', $data);
     }
 }

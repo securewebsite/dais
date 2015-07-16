@@ -23,11 +23,11 @@ class ReturnReason extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}return_reason 
+				FROM " . DB::prefix() . "return_reason 
 				WHERE return_reason_id = '" . (int)$return_reason_id . "' 
-				AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+				AND language_id = '" . (int)Config::get('config_language_id') . "'
 			");
             
             if ($query->num_rows):
@@ -45,8 +45,8 @@ class ReturnReason extends Model {
     public function getReturnReasons($data = array()) {
         if ($data) {
             $sql = "SELECT * 
-				    FROM {$this->db->prefix}return_reason 
-					WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'";
+				    FROM " . DB::prefix() . "return_reason 
+					WHERE language_id = '" . (int)Config::get('config_language_id') . "'";
             
             $sql.= " ORDER BY name";
             
@@ -68,18 +68,18 @@ class ReturnReason extends Model {
                 $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
             }
             
-            $query = $this->db->query($sql);
+            $query = DB::query($sql);
             
             $cachefile = $query->rows;
         } else {
-            $key = 'return.reasons.all.' . (int)$this->config->get('config_store_id');
+            $key = 'return.reasons.all.' . (int)Config::get('config_store_id');
             $cachefile = $this->cache->get($key);
             
             if (is_bool($cachefile)) {
-                $query = $this->db->query("
+                $query = DB::query("
 					SELECT return_reason_id, name 
-					FROM {$this->db->prefix}return_reason 
-					WHERE language_id = '" . (int)$this->config->get('config_language_id') . "' 
+					FROM " . DB::prefix() . "return_reason 
+					WHERE language_id = '" . (int)Config::get('config_language_id') . "' 
 					ORDER BY name
 				");
                 
@@ -103,9 +103,9 @@ class ReturnReason extends Model {
         if (is_bool($cachefile)):
             $return_reason_data = array();
             
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}return_reason 
+				FROM " . DB::prefix() . "return_reason 
 				WHERE return_reason_id = '" . (int)$return_reason_id . "'
 			");
             
@@ -121,14 +121,14 @@ class ReturnReason extends Model {
     }
     
     public function getTotalReturnReasons() {
-        $key = 'return.reasons.total.' . (int)$this->config->get('config_store_id');
+        $key = 'return.reasons.total.' . (int)Config::get('config_store_id');
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT COUNT(*) AS total 
-				FROM {$this->db->prefix}return_reason 
-				WHERE language_id = '" . (int)$this->config->get('config_language_id') . "'
+				FROM " . DB::prefix() . "return_reason 
+				WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 			");
             $cachefile = $query->row['total'];
             $this->cache->set($key, $cachefile);

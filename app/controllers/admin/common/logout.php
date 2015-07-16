@@ -23,7 +23,7 @@ class Logout extends Controller {
     public function index() {
         User::logout();
         
-        unset($this->session->data['token']);
+        unset(Session::p()->data['token']);
         
         Theme::listen(__CLASS__, __FUNCTION__);
         

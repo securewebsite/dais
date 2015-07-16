@@ -15,13 +15,14 @@
 */
 
 namespace App\Controllers\Front\Error;
+
 use App\Controllers\Controller;
 
 class Permission extends Controller {
     
     public function index() {
-        $data = $this->theme->language('error/permission');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        $data = Theme::language('error/permission');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         if (isset($this->request->get['route'])):
             $routes = $this->request->get;
@@ -42,15 +43,15 @@ class Permission extends Controller {
                 $connection = 'nonssl';
             endif;
             
-            $this->breadcrumb->add('lang_heading_title', $route, $url, true, $connection);
+            Breadcrumb::add('lang_heading_title', $route, $url, true, $connection);
         endif;
         
-        $data['continue'] = $this->url->link(Theme::getstyle() . '/home');
+        $data['continue'] = Url::link(Theme::getstyle() . '/home');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::renderControllers($data);
 
-        $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 401 Unauthorized');
-        $this->response->setOutput($this->theme->view('error/permission', $data));
+        Response::addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 401 Unauthorized');
+        Response::setOutput(View::render('error/permission', $data));
     }
 }

@@ -15,14 +15,16 @@
 */
 
 namespace App\Controllers\Front\Common;
+
 use App\Controllers\Controller;
 
 class ContentBottom extends Controller {
+    
     public function index() {
-        $this->theme->model('design/layout');
-        $this->theme->model('catalog/category');
-        $this->theme->model('catalog/product');
-        $this->theme->model('content/page');
+        Theme::model('design/layout');
+        Theme::model('catalog/category');
+        Theme::model('catalog/product');
+        Theme::model('content/page');
         
         if (isset($this->request->get['route'])) {
             $route = (string)$this->request->get['route'];
@@ -35,33 +37,33 @@ class ContentBottom extends Controller {
         if ($route == 'catalog/category' && isset($this->request->get['path'])) {
             $path = explode('_', (string)$this->request->get['path']);
             
-            $layout_id = $this->model_catalog_category->getCategoryLayoutId(end($path));
+            $layout_id = CatalogCategory::getCategoryLayoutId(end($path));
         }
         
         if ($route == 'catalog/product' && isset($this->request->get['product_id'])) {
-            $layout_id = $this->model_catalog_product->getProductLayoutId($this->request->get['product_id']);
+            $layout_id = CatalogProduct::getProductLayoutId($this->request->get['product_id']);
         }
         
         if ($route == 'content/page' && isset($this->request->get['page_id'])) {
-            $layout_id = $this->model_content_page->getPageLayoutId($this->request->get['page_id']);
+            $layout_id = ContentPage::getPageLayoutId($this->request->get['page_id']);
         }
         
         if (!$layout_id) {
-            $layout_id = $this->model_design_layout->getLayout($route);
+            $layout_id = DesignLayout::getLayout($route);
         }
         
         if (!$layout_id) {
-            $layout_id = $this->config->get('config_layout_id');
+            $layout_id = Config::get('config_layout_id');
         }
         
         $widget_data = array();
         
-        $this->theme->model('setting/module');
+        Theme::model('setting/module');
         
-        $modules = $this->model_setting_module->getModules('widget');
+        $modules = SettingModule::getModules('widget');
         
         foreach ($modules as $module) {
-            $widgets = $this->config->get($module['code'] . '_widget');
+            $widgets = Config::get($module['code'] . '_widget');
             
             if ($widgets) {
                 foreach ($widgets as $widget) {
@@ -86,7 +88,7 @@ class ContentBottom extends Controller {
         $data['widgets'] = array();
         
         foreach ($widget_data as $widget) {
-            $widget = $this->theme->controller('widget/' . $widget['code'], $widget['setting']);
+            $widget = Theme::controller('widget/' . $widget['code'], $widget['setting']);
             
             if ($widget) {
                 $data['widgets'][] = $widget;
@@ -120,8 +122,8 @@ class ContentBottom extends Controller {
         
         $data['class'] = $count;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('common/content_bottom', $data);
+        return View::render('common/content_bottom', $data);
     }
 }

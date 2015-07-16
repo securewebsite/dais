@@ -15,15 +15,17 @@
 */
 
 namespace App\Controllers\Front\Payment;
+
 use App\Controllers\Controller;
 
 class PaypalProPf extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('payment/paypal_pro_pf');
+        $data = Theme::language('payment/paypal_pro_pf');
         
-        $this->theme->model('checkout/order');
+        Theme::model('checkout/order');
         
-        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        $order_info = CheckoutOrder::getOrder($this->session->data['order_id']);
         
         $data['owner'] = $order_info['payment_firstname'] . ' ' . $order_info['payment_lastname'];
         
@@ -57,35 +59,35 @@ class PaypalProPf extends Controller {
             $data['year_expire'][] = array('text' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)), 'value' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)));
         }
         
-        $this->theme->loadjs('javascript/payment/paypal_pro_pf', $data);
+        Theme::loadjs('javascript/payment/paypal_pro_pf', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data['javascript'] = $this->theme->controller('common/javascript');
+        $data['javascript'] = Theme::controller('common/javascript');
         
-        return $this->theme->view('payment/paypal_pro_pf', $data);
+        return View::render('payment/paypal_pro_pf', $data);
     }
     
     public function send() {
-        $this->theme->language('payment/paypal_pro_pf');
+        Theme::language('payment/paypal_pro_pf');
         
-        $this->theme->model('checkout/order');
+        Theme::model('checkout/order');
         
-        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        $order_info = CheckoutOrder::getOrder($this->session->data['order_id']);
         
-        if (!$this->config->get('paypal_pro_pf_transaction')) {
+        if (!Config::get('paypal_pro_pf_transaction')) {
             $payment_type = 'A';
         } else {
             $payment_type = 'S';
         }
         
-        $request = 'USER=' . urlencode($this->config->get('paypal_pro_pf_user'));
-        $request.= '&VENDOR=' . urlencode($this->config->get('paypal_pro_pf_vendor'));
-        $request.= '&PARTNER=' . urlencode($this->config->get('paypal_pro_pf_partner'));
-        $request.= '&PWD=' . urlencode($this->config->get('paypal_pro_pf_password'));
+        $request = 'USER=' . urlencode(Config::get('paypal_pro_pf_user'));
+        $request.= '&VENDOR=' . urlencode(Config::get('paypal_pro_pf_vendor'));
+        $request.= '&PARTNER=' . urlencode(Config::get('paypal_pro_pf_partner'));
+        $request.= '&PWD=' . urlencode(Config::get('paypal_pro_pf_password'));
         $request.= '&TENDER=C';
         $request.= '&TRXTYPE=' . $payment_type;
-        $request.= '&AMT=' . $this->currency->format($order_info['total'], $order_info['currency_code'], false, false);
+        $request.= '&AMT=' . Currency::format($order_info['total'], $order_info['currency_code'], false, false);
         $request.= '&CURRENCY=' . urlencode($order_info['currency_code']);
         $request.= '&NAME=' . urlencode($this->request->post['cc_owner']);
         $request.= '&STREET=' . urlencode($order_info['payment_address_1']);
@@ -103,7 +105,7 @@ class PaypalProPf extends Controller {
         $request.= '&CARDISSUE=' . urlencode($this->request->post['cc_issue']);
         $request.= '&BUTTONSOURCE=' . urlencode('Dais_Cart_PFP');
         
-        if (!$this->config->get('paypal_pro_pf_test')) {
+        if (!Config::get('paypal_pro_pf_test')) {
             $curl = curl_init('https://payflowpro.paypal.com');
         } else {
             $curl = curl_init('https://pilot-payflowpro.paypal.com');
@@ -134,7 +136,7 @@ class PaypalProPf extends Controller {
         $json = array();
         
         if ($response_info['RESULT'] == '0') {
-            $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('config_order_status_id'));
+            CheckoutOrder::confirm($this->session->data['order_id'], Config::get('config_order_status_id'));
             
             $message = '';
             
@@ -150,37 +152,37 @@ class PaypalProPf extends Controller {
                 $message.= 'TRANSACTIONID: ' . $response_info['TRANSACTIONID'] . "\n";
             }
             
-            $this->model_checkout_order->update($this->session->data['order_id'], $this->config->get('paypal_pro_pf_order_status_id'), $message);
+            CheckoutOrder::update($this->session->data['order_id'], Config::get('paypal_pro_pf_order_status_id'), $message);
             
-            $json['success'] = $this->url->link('checkout/success');
+            $json['success'] = Url::link('checkout/success');
         } else {
             switch ($response_info['RESULT']) {
                 case '1':
                 case '26':
-                    $json['error'] = $this->language->get('lang_error_config');
+                    $json['error'] = Lang::get('lang_error_config');
                     break;
 
                 case '7':
-                    $json['error'] = $this->language->get('lang_error_address');
+                    $json['error'] = Lang::get('lang_error_address');
                     break;
 
                 case '12':
-                    $json['error'] = $this->language->get('lang_error_declined');
+                    $json['error'] = Lang::get('lang_error_declined');
                     break;
 
                 case '23':
                 case '24':
-                    $json['error'] = $this->language->get('lang_error_invalid');
+                    $json['error'] = Lang::get('lang_error_invalid');
                     break;
 
                 default:
-                    $json['error'] = $this->language->get('lang_error_general');
+                    $json['error'] = Lang::get('lang_error_general');
                     break;
             }
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

@@ -22,20 +22,20 @@ class Dashboard extends Model {
     
     // Sales
     public function getTotalSales($data = array()) {
-        $sql = "SELECT SUM(total) AS total FROM `{$this->db->prefix}order` WHERE order_status_id > '0'";
+        $sql = "SELECT SUM(total) AS total FROM `" . DB::prefix() . "order` WHERE order_status_id > '0'";
         
         if (!empty($data['filter_date_added'])) {
-            $sql.= " AND DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $sql.= " AND DATE(date_added) = DATE('" . DB::escape($data['filter_date_added']) . "')";
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->row['total'];
     }
     
     // Customers Online
     public function getTotalCustomersOnline() {
-        $query = $this->db->query("SELECT COUNT(*) AS total FROM `{$this->db->prefix}customer_online`");
+        $query = DB::query("SELECT COUNT(*) AS total FROM `" . DB::prefix() . "customer_online`");
         
         return $query->row['total'];
     }
@@ -52,11 +52,11 @@ class Dashboard extends Model {
             $online_data[$time] = array('time' => $time, 'total' => 0);
         }
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT 
 				COUNT(*) AS total, 
 				DATE_FORMAT(date_added, '%Y-%m-%d %H:%i:00') AS date_added 
-			FROM `{$this->db->prefix}customer_online` 
+			FROM `" . DB::prefix() . "customer_online` 
 			WHERE date_added > '" . date('Y-m-d H:i:s', strtotime('-1 hour')) . "' 
 			AND date_added < '" . date('Y-m-d H:i:s') . "' 
 			GROUP BY MINUTE(date_added) 
@@ -78,11 +78,11 @@ class Dashboard extends Model {
             $order_data[$i] = array('hour' => $i, 'total' => 0);
         }
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT 
 				COUNT(*) AS total, 
 				HOUR(date_added) AS hour 
-			FROM `{$this->db->prefix}order` 
+			FROM `" . DB::prefix() . "order` 
 			WHERE order_status_id >= '" . (int)Config::get('config_order_status_id') . "' 
 			AND DATE(date_added) = DATE(NOW()) 
 			GROUP BY HOUR(date_added) 
@@ -107,13 +107,13 @@ class Dashboard extends Model {
             $order_data[date('w', strtotime($date)) ] = array('day' => date('D', strtotime($date)), 'total' => 0);
         }
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT 
 				COUNT(*) AS total, 
 				date_added 
-			FROM `{$this->db->prefix}order` 
+			FROM `" . DB::prefix() . "order` 
 			WHERE order_status_id >= '" . (int)Config::get('config_order_status_id') . "' 
-			AND DATE(date_added) >= DATE('" . $this->db->escape(date('Y-m-d', $date_start)) . "') 
+			AND DATE(date_added) >= DATE('" . DB::escape(date('Y-m-d', $date_start)) . "') 
 			GROUP BY DAYNAME(date_added)
 		");
         
@@ -135,13 +135,13 @@ class Dashboard extends Model {
             $order_data[date('j', strtotime($date)) ] = array('day' => date('d', strtotime($date)), 'total' => 0);
         }
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT 
 				COUNT(*) AS total, 
 				date_added 
-			FROM `{$this->db->prefix}order` 
+			FROM `" . DB::prefix() . "order` 
 			WHERE order_status_id >= '" . (int)Config::get('config_order_status_id') . "' 
-			AND DATE(date_added) >= '" . $this->db->escape(date('Y') . '-' . date('m') . '-1') . "' 
+			AND DATE(date_added) >= '" . DB::escape(date('Y') . '-' . date('m') . '-1') . "' 
 			GROUP BY DATE(date_added)
 		");
         
@@ -159,11 +159,11 @@ class Dashboard extends Model {
             $order_data[$i] = array('month' => date('M', mktime(0, 0, 0, $i)), 'total' => 0);
         }
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT 
 				COUNT(*) AS total, 
 				date_added 
-			FROM `{$this->db->prefix}order` 
+			FROM `" . DB::prefix() . "order` 
 			WHERE order_status_id >= '" . (int)Config::get('config_order_status_id') . "' 
 			AND YEAR(date_added) = YEAR(NOW()) 
 			GROUP BY MONTH(date_added)
@@ -184,11 +184,11 @@ class Dashboard extends Model {
             $customer_data[$i] = array('hour' => $i, 'total' => 0);
         }
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT 
 				COUNT(*) AS total, 
 				HOUR(date_added) AS hour 
-			FROM `{$this->db->prefix}customer` 
+			FROM `" . DB::prefix() . "customer` 
 			WHERE DATE(date_added) = DATE(NOW()) 
 			GROUP BY HOUR(date_added) 
 			ORDER BY date_added ASC
@@ -212,12 +212,12 @@ class Dashboard extends Model {
             $customer_data[date('w', strtotime($date)) ] = array('day' => date('D', strtotime($date)), 'total' => 0);
         }
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT 
 				COUNT(*) AS total, 
 				date_added 
-			FROM `{$this->db->prefix}customer` 
-			WHERE DATE(date_added) >= DATE('" . $this->db->escape(date('Y-m-d', $date_start)) . "') 
+			FROM `" . DB::prefix() . "customer` 
+			WHERE DATE(date_added) >= DATE('" . DB::escape(date('Y-m-d', $date_start)) . "') 
 			GROUP BY DAYNAME(date_added)
 		");
         
@@ -239,12 +239,12 @@ class Dashboard extends Model {
             $customer_data[date('j', strtotime($date)) ] = array('day' => date('d', strtotime($date)), 'total' => 0);
         }
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT 
 				COUNT(*) AS total, 
 				date_added 
-			FROM `{$this->db->prefix}customer` 
-			WHERE DATE(date_added) >= '" . $this->db->escape(date('Y') . '-' . date('m') . '-1') . "' 
+			FROM `" . DB::prefix() . "customer` 
+			WHERE DATE(date_added) >= '" . DB::escape(date('Y') . '-' . date('m') . '-1') . "' 
 			GROUP BY DATE(date_added)
 		");
         
@@ -262,11 +262,11 @@ class Dashboard extends Model {
             $customer_data[$i] = array('month' => date('M', mktime(0, 0, 0, $i)), 'total' => 0);
         }
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT 
 				COUNT(*) AS total, 
 				date_added 
-			FROM `{$this->db->prefix}customer` 
+			FROM `" . DB::prefix() . "customer` 
 			WHERE YEAR(date_added) = YEAR(NOW()) 
 			GROUP BY MONTH(date_added)
 		");
@@ -279,7 +279,7 @@ class Dashboard extends Model {
     }
     
     public function getActivities() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT 
 				a.key, 
 				a.data, 
@@ -288,12 +288,12 @@ class Dashboard extends Model {
 				(SELECT CONCAT('customer_', ca.key) AS `key`, 
 				ca.data, 
 				ca.date_added 
-				FROM `{$this->db->prefix}customer_activity` ca) 
+				FROM `" . DB::prefix() . "customer_activity` ca) 
 			UNION (
 				SELECT CONCAT('affiliate_', aa.key) AS `key`, 
 				aa.data, 
 				aa.date_added 
-			FROM `{$this->db->prefix}affiliate_activity` aa)) a 
+			FROM `" . DB::prefix() . "affiliate_activity` aa)) a 
 			ORDER BY a.date_added DESC LIMIT 0,5
 		");
         
@@ -301,7 +301,7 @@ class Dashboard extends Model {
     }
     
     public function setLastAccess($user_id) {
-        $this->db->query("
+        DB::query("
 			UPDATE {$db->prefix}user 
 			SET last_access = NOW() 
 			WHERE user_id = '" . (int)$user_id . "'

@@ -85,19 +85,17 @@ class SaleShipping extends Controller {
         
         $filter = array('filter_date_start' => $filter_date_start, 'filter_date_end' => $filter_date_end, 'filter_group' => $filter_group, 'filter_order_status_id' => $filter_order_status_id, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $order_total = $this->model_report_sale->getTotalShipping($filter);
+        $order_total = ReportSale::getTotalShipping($filter);
         
-        $results = $this->model_report_sale->getShipping($filter);
+        $results = ReportSale::getShipping($filter);
         
         foreach ($results as $result) {
             $data['orders'][] = array('date_start' => date(Lang::get('lang_date_format_short'), strtotime($result['date_start'])), 'date_end' => date(Lang::get('lang_date_format_short'), strtotime($result['date_end'])), 'title' => $result['title'], 'orders' => $result['orders'], 'total' => Currency::format($result['total'], Config::get('config_currency')));
         }
         
-        $data['token'] = $this->session->data['token'];
-        
         Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
+        $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
         $data['groups'] = array();
         
@@ -127,7 +125,7 @@ class SaleShipping extends Controller {
             $url.= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
         }
         
-        $data['pagination'] = Theme::paginate($order_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/sale_shipping', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($order_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/sale_shipping', '' . $url . '&page={page}', 'SSL'));
         
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
@@ -138,6 +136,6 @@ class SaleShipping extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('report/sale_shipping', $data));
+        Response::setOutput(View::render('report/sale_shipping', $data));
     }
 }

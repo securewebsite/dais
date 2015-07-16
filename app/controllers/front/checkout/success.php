@@ -15,12 +15,14 @@
 */
 
 namespace App\Controllers\Front\Checkout;
+
 use App\Controllers\Controller;
 
 class Success extends Controller {
+    
     public function index() {
         if (isset($this->session->data['order_id'])) {
-            $this->cart->clear();
+            Cart::clear();
             
             unset($this->session->data['shipping_method']);
             unset($this->session->data['shipping_methods']);
@@ -37,29 +39,29 @@ class Success extends Controller {
             unset($this->session->data['paypal']);
         }
         
-        $data = $this->theme->language('checkout/success');
+        $data = Theme::language('checkout/success');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
-        $this->breadcrumb->add('lang_text_basket', 'checkout/cart');
-        $this->breadcrumb->add('lang_text_checkout', 'checkout/checkout', null, true, 'SSL');
-        $this->breadcrumb->add('lang_text_success', 'checkout/success');
+        Breadcrumb::add('lang_text_basket', 'checkout/cart');
+        Breadcrumb::add('lang_text_checkout', 'checkout/checkout', null, true, 'SSL');
+        Breadcrumb::add('lang_text_success', 'checkout/success');
         
-        if ($this->customer->isLogged()) {
-            $data['text_message'] = sprintf($this->language->get('lang_text_customer'), $this->url->link('account/dashboard', '', 'SSL'), $this->url->link('account/order', '', 'SSL'), $this->url->link('account/download', '', 'SSL'), $this->url->link('content/contact'));
+        if (Customer::isLogged()) {
+            $data['text_message'] = sprintf(Lang::get('lang_text_customer'), Url::link('account/dashboard', '', 'SSL'), Url::link('account/order', '', 'SSL'), Url::link('account/download', '', 'SSL'), Url::link('content/contact'));
         } else {
-            $data['text_message'] = sprintf($this->language->get('lang_text_guest'), $this->url->link('content/contact'));
+            $data['text_message'] = sprintf(Lang::get('lang_text_guest'), Url::link('content/contact'));
         }
         
-        $data['continue'] = $this->url->link('shop/home');
+        $data['continue'] = Url::link('shop/home');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->setController('header', 'shop/header');
-        $this->theme->setController('footer', 'shop/footer');
+        Theme::setController('header', 'shop/header');
+        Theme::setController('footer', 'shop/footer');
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('common/success', $data));
+        Response::setOutput(View::render('common/success', $data));
     }
 }

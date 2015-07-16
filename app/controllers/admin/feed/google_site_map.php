@@ -30,11 +30,11 @@ class GoogleSiteMap extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('google_site_map', $this->request->post);
+            SettingSetting::editSetting('google_site_map', $this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/feed', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -46,9 +46,9 @@ class GoogleSiteMap extends Controller {
         Breadcrumb::add('lang_text_feed', 'module/feed');
         Breadcrumb::add('lang_heading_title', 'feed/google_site_map');
         
-        $data['action'] = Url::link('feed/google_site_map', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('feed/google_site_map', '', 'SSL');
         
-        $data['cancel'] = Url::link('module/feed', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/feed', '', 'SSL');
         
         if (isset($this->request->post['google_site_map_status'])) {
             $data['google_site_map_status'] = $this->request->post['google_site_map_status'];
@@ -62,7 +62,7 @@ class GoogleSiteMap extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('feed/google_site_map', $data));
+        Response::setOutput(View::render('feed/google_site_map', $data));
     }
     
     protected function validate() {

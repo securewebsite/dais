@@ -21,7 +21,7 @@ use App\Models\Model;
 class Sale extends Model {
     
     public function getOrders($data = array()) {
-        $sql = "SELECT MIN(tmp.date_added) AS date_start, MAX(tmp.date_added) AS date_end, COUNT(tmp.order_id) AS `orders`, SUM(tmp.products) AS products, SUM(tmp.tax) AS tax, SUM(tmp.total) AS total FROM (SELECT o.order_id, (SELECT SUM(op.quantity) FROM `{$this->db->prefix}order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id) AS products, (SELECT SUM(ot.value) FROM `{$this->db->prefix}order_total` ot WHERE ot.order_id = o.order_id AND ot.code = 'tax' GROUP BY ot.order_id) AS tax, o.total, o.date_added FROM `{$this->db->prefix}order` o";
+        $sql = "SELECT MIN(tmp.date_added) AS date_start, MAX(tmp.date_added) AS date_end, COUNT(tmp.order_id) AS `orders`, SUM(tmp.products) AS products, SUM(tmp.tax) AS tax, SUM(tmp.total) AS total FROM (SELECT o.order_id, (SELECT SUM(op.quantity) FROM `" . DB::prefix() . "order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id) AS products, (SELECT SUM(ot.value) FROM `" . DB::prefix() . "order_total` ot WHERE ot.order_id = o.order_id AND ot.code = 'tax' GROUP BY ot.order_id) AS tax, o.total, o.date_added FROM `" . DB::prefix() . "order` o";
         
         if (!empty($data['filter_order_status_id'])) {
             $sql.= " WHERE o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -30,11 +30,11 @@ class Sale extends Model {
         }
         
         if (!empty($data['filter_date_start'])) {
-            $sql.= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $sql.= " AND DATE(o.date_added) >= '" . DB::escape($data['filter_date_start']) . "'";
         }
         
         if (!empty($data['filter_date_end'])) {
-            $sql.= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql.= " AND DATE(o.date_added) <= '" . DB::escape($data['filter_date_end']) . "'";
         }
         
         $sql.= " GROUP BY o.order_id) tmp";
@@ -78,7 +78,7 @@ class Sale extends Model {
         $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
     }
     
-    $query = $this->db->query($sql);
+    $query = DB::query($sql);
     
     return $query->rows;
 }
@@ -92,20 +92,20 @@ public function getTotalOrders($data = array()) {
     
     switch ($group) {
         case 'day';
-        $sql = "SELECT COUNT(DISTINCT DAY(date_added)) AS total FROM `{$this->db->prefix}order`";
+        $sql = "SELECT COUNT(DISTINCT DAY(date_added)) AS total FROM `" . DB::prefix() . "order`";
         break;
 
     default:
     case 'week':
-        $sql = "SELECT COUNT(DISTINCT WEEK(date_added)) AS total FROM `{$this->db->prefix}order`";
+        $sql = "SELECT COUNT(DISTINCT WEEK(date_added)) AS total FROM `" . DB::prefix() . "order`";
         break;
 
     case 'month':
-        $sql = "SELECT COUNT(DISTINCT MONTH(date_added)) AS total FROM `{$this->db->prefix}order`";
+        $sql = "SELECT COUNT(DISTINCT MONTH(date_added)) AS total FROM `" . DB::prefix() . "order`";
         break;
 
     case 'year':
-        $sql = "SELECT COUNT(DISTINCT YEAR(date_added)) AS total FROM `{$this->db->prefix}order`";
+        $sql = "SELECT COUNT(DISTINCT YEAR(date_added)) AS total FROM `" . DB::prefix() . "order`";
         break;
 }
 
@@ -116,20 +116,20 @@ if (!empty($data['filter_order_status_id'])) {
 }
 
 if (!empty($data['filter_date_start'])) {
-    $sql.= " AND DATE(date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+    $sql.= " AND DATE(date_added) >= '" . DB::escape($data['filter_date_start']) . "'";
 }
 
 if (!empty($data['filter_date_end'])) {
-    $sql.= " AND DATE(date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+    $sql.= " AND DATE(date_added) <= '" . DB::escape($data['filter_date_end']) . "'";
 }
 
-$query = $this->db->query($sql);
+$query = DB::query($sql);
 
 return $query->row['total'];
 }
 
 public function getTaxes($data = array()) {
-    $sql = "SELECT MIN(o.date_added) AS date_start, MAX(o.date_added) AS date_end, ot.title, SUM(ot.value) AS total, COUNT(o.order_id) AS `orders` FROM `{$this->db->prefix}order_total` ot LEFT JOIN `{$this->db->prefix}order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'tax'";
+    $sql = "SELECT MIN(o.date_added) AS date_start, MAX(o.date_added) AS date_end, ot.title, SUM(ot.value) AS total, COUNT(o.order_id) AS `orders` FROM `" . DB::prefix() . "order_total` ot LEFT JOIN `" . DB::prefix() . "order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'tax'";
     
     if (!empty($data['filter_order_status_id'])) {
         $sql.= " AND o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -138,11 +138,11 @@ public function getTaxes($data = array()) {
     }
     
     if (!empty($data['filter_date_start'])) {
-        $sql.= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        $sql.= " AND DATE(o.date_added) >= '" . DB::escape($data['filter_date_start']) . "'";
     }
     
     if (!empty($data['filter_date_end'])) {
-        $sql.= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        $sql.= " AND DATE(o.date_added) <= '" . DB::escape($data['filter_date_end']) . "'";
     }
     
     if (!empty($data['filter_group'])) {
@@ -182,13 +182,13 @@ if (isset($data['start']) || isset($data['limit'])) {
     $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 }
 
-$query = $this->db->query($sql);
+$query = DB::query($sql);
 
 return $query->rows;
 }
 
 public function getTotalTaxes($data = array()) {
-    $sql = "SELECT COUNT(*) AS total FROM (SELECT COUNT(*) AS total FROM `{$this->db->prefix}order_total` ot LEFT JOIN `{$this->db->prefix}order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'tax'";
+    $sql = "SELECT COUNT(*) AS total FROM (SELECT COUNT(*) AS total FROM `" . DB::prefix() . "order_total` ot LEFT JOIN `" . DB::prefix() . "order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'tax'";
     
     if (!empty($data['filter_order_status_id'])) {
         $sql.= " AND order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -197,11 +197,11 @@ public function getTotalTaxes($data = array()) {
     }
     
     if (!empty($data['filter_date_start'])) {
-        $sql.= " AND DATE(date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        $sql.= " AND DATE(date_added) >= '" . DB::escape($data['filter_date_start']) . "'";
     }
     
     if (!empty($data['filter_date_end'])) {
-        $sql.= " AND DATE(date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        $sql.= " AND DATE(date_added) <= '" . DB::escape($data['filter_date_end']) . "'";
     }
     
     if (!empty($data['filter_group'])) {
@@ -231,13 +231,13 @@ public function getTotalTaxes($data = array()) {
 
 $sql.= ") tmp";
 
-$query = $this->db->query($sql);
+$query = DB::query($sql);
 
 return $query->row['total'];
 }
 
 public function getShipping($data = array()) {
-    $sql = "SELECT MIN(o.date_added) AS date_start, MAX(o.date_added) AS date_end, ot.title, SUM(ot.value) AS total, COUNT(o.order_id) AS `orders` FROM `{$this->db->prefix}order_total` ot LEFT JOIN `{$this->db->prefix}order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'shipping'";
+    $sql = "SELECT MIN(o.date_added) AS date_start, MAX(o.date_added) AS date_end, ot.title, SUM(ot.value) AS total, COUNT(o.order_id) AS `orders` FROM `" . DB::prefix() . "order_total` ot LEFT JOIN `" . DB::prefix() . "order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'shipping'";
     
     if (!empty($data['filter_order_status_id'])) {
         $sql.= " AND o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -246,11 +246,11 @@ public function getShipping($data = array()) {
     }
     
     if (!empty($data['filter_date_start'])) {
-        $sql.= " AND DATE(date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        $sql.= " AND DATE(date_added) >= '" . DB::escape($data['filter_date_start']) . "'";
     }
     
     if (!empty($data['filter_date_end'])) {
-        $sql.= " AND DATE(date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        $sql.= " AND DATE(date_added) <= '" . DB::escape($data['filter_date_end']) . "'";
     }
     
     if (!empty($data['filter_group'])) {
@@ -290,13 +290,13 @@ if (isset($data['start']) || isset($data['limit'])) {
     $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 }
 
-$query = $this->db->query($sql);
+$query = DB::query($sql);
 
 return $query->rows;
 }
 
 public function getTotalShipping($data = array()) {
-    $sql = "SELECT COUNT(*) AS total FROM (SELECT COUNT(*) AS total FROM `{$this->db->prefix}order_total` ot LEFT JOIN `{$this->db->prefix}order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'shipping'";
+    $sql = "SELECT COUNT(*) AS total FROM (SELECT COUNT(*) AS total FROM `" . DB::prefix() . "order_total` ot LEFT JOIN `" . DB::prefix() . "order` o ON (ot.order_id = o.order_id) WHERE ot.code = 'shipping'";
     
     if (!empty($data['filter_order_status_id'])) {
         $sql.= " AND order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -305,11 +305,11 @@ public function getTotalShipping($data = array()) {
     }
     
     if (!empty($data['filter_date_start'])) {
-        $sql.= " AND DATE(date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        $sql.= " AND DATE(date_added) >= '" . DB::escape($data['filter_date_start']) . "'";
     }
     
     if (!empty($data['filter_date_end'])) {
-        $sql.= " AND DATE(date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        $sql.= " AND DATE(date_added) <= '" . DB::escape($data['filter_date_end']) . "'";
     }
     
     if (!empty($data['filter_group'])) {
@@ -339,7 +339,7 @@ public function getTotalShipping($data = array()) {
 
 $sql.= ") tmp";
 
-$query = $this->db->query($sql);
+$query = DB::query($sql);
 
 return $query->row['total'];
 }

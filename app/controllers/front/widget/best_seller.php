@@ -15,50 +15,52 @@
 */
 
 namespace App\Controllers\Front\Widget;
+
 use App\Controllers\Controller;
 
 class BestSeller extends Controller {
+    
     public function index($setting) {
-        $data = $this->theme->language('widget/best_seller');
+        $data = Theme::language('widget/best_seller');
         
-        $this->theme->model('catalog/product');
+        Theme::model('catalog/product');
         
-        $this->theme->model('tool/image');
+        Theme::model('tool/image');
         
         $data['products'] = array();
         
-        $results = $this->model_catalog_product->getBestSellerProducts($setting['limit']);
+        $results = CatalogProduct::getBestSellerProducts($setting['limit']);
         
         foreach ($results as $result) {
             if ($result['image']) {
-                $image = $this->model_tool_image->resize($result['image'], $setting['image_width'], $setting['image_height']);
+                $image = ToolImage::resize($result['image'], $setting['image_width'], $setting['image_height']);
             } else {
                 $image = false;
             }
             
-            if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                $price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+            if ((Config::get('config_customer_price') && Customer::isLogged()) || !Config::get('config_customer_price')) {
+                $price = \Currency::format(Tax::calculate($result['price'], $result['tax_class_id'], Config::get('config_tax')));
             } else {
                 $price = false;
             }
             
             if ((float)$result['special']) {
-                $special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')));
+                $special = \Currency::format(Tax::calculate($result['special'], $result['tax_class_id'], Config::get('config_tax')));
             } else {
                 $special = false;
             }
             
-            if ($this->config->get('config_review_status')) {
+            if (Config::get('config_review_status')) {
                 $rating = $result['rating'];
             } else {
                 $rating = false;
             }
             
-            $data['products'][] = array('product_id' => $result['product_id'], 'event_id' => $result['event_id'], 'thumb' => $image, 'name' => $result['name'], 'price' => $price, 'special' => $special, 'rating' => $rating, 'reviews' => sprintf($this->language->get('lang_text_reviews'), (int)$result['reviews']), 'href' => $this->url->link('catalog/product', 'product_id=' . $result['product_id']),);
+            $data['products'][] = array('product_id' => $result['product_id'], 'event_id' => $result['event_id'], 'thumb' => $image, 'name' => $result['name'], 'price' => $price, 'special' => $special, 'rating' => $rating, 'reviews' => sprintf(Lang::get('lang_text_reviews'), (int)$result['reviews']), 'href' => Url::link('catalog/product', 'product_id=' . $result['product_id']),);
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('widget/best_seller', $data);
+        return View::render('widget/best_seller', $data);
     }
 }

@@ -21,80 +21,80 @@ use App\Models\Model;
 class Returns extends Model {
     
     public function addReturn($data) {
-        $this->db->query("
-            INSERT INTO `{$this->db->prefix}return` 
+        DB::query("
+            INSERT INTO `" . DB::prefix() . "return` 
             SET 
                 order_id         = '" . (int)$data['order_id'] . "', 
                 product_id       = '" . (int)$data['product_id'] . "', 
                 customer_id      = '" . (int)$data['customer_id'] . "', 
-                firstname        = '" . $this->db->escape($data['firstname']) . "', 
-                lastname         = '" . $this->db->escape($data['lastname']) . "', 
-                email            = '" . $this->db->escape($data['email']) . "', 
-                telephone        = '" . $this->db->escape($data['telephone']) . "', 
-                product          = '" . $this->db->escape($data['product']) . "', 
-                model            = '" . $this->db->escape($data['model']) . "', 
+                firstname        = '" . DB::escape($data['firstname']) . "', 
+                lastname         = '" . DB::escape($data['lastname']) . "', 
+                email            = '" . DB::escape($data['email']) . "', 
+                telephone        = '" . DB::escape($data['telephone']) . "', 
+                product          = '" . DB::escape($data['product']) . "', 
+                model            = '" . DB::escape($data['model']) . "', 
                 quantity         = '" . (int)$data['quantity'] . "', 
                 opened           = '" . (int)$data['opened'] . "', 
                 return_reason_id = '" . (int)$data['return_reason_id'] . "', 
                 return_action_id = '" . (int)$data['return_action_id'] . "', 
                 return_status_id = '" . (int)$data['return_status_id'] . "', 
-                comment          = '" . $this->db->escape($data['comment']) . "', 
-                date_ordered     = '" . $this->db->escape($data['date_ordered']) . "', 
+                comment          = '" . DB::escape($data['comment']) . "', 
+                date_ordered     = '" . DB::escape($data['date_ordered']) . "', 
                 date_added       = NOW(), 
                 date_modified    = NOW()
         ");
     }
     
     public function editReturn($return_id, $data) {
-        $this->db->query("
-            UPDATE `{$this->db->prefix}return` 
+        DB::query("
+            UPDATE `" . DB::prefix() . "return` 
             SET 
                 order_id         = '" . (int)$data['order_id'] . "', 
                 product_id       = '" . (int)$data['product_id'] . "', 
                 customer_id      = '" . (int)$data['customer_id'] . "', 
-                firstname        = '" . $this->db->escape($data['firstname']) . "', 
-                lastname         = '" . $this->db->escape($data['lastname']) . "', 
-                email            = '" . $this->db->escape($data['email']) . "', 
-                telephone        = '" . $this->db->escape($data['telephone']) . "', 
-                product          = '" . $this->db->escape($data['product']) . "', 
-                model            = '" . $this->db->escape($data['model']) . "', 
+                firstname        = '" . DB::escape($data['firstname']) . "', 
+                lastname         = '" . DB::escape($data['lastname']) . "', 
+                email            = '" . DB::escape($data['email']) . "', 
+                telephone        = '" . DB::escape($data['telephone']) . "', 
+                product          = '" . DB::escape($data['product']) . "', 
+                model            = '" . DB::escape($data['model']) . "', 
                 quantity         = '" . (int)$data['quantity'] . "', 
                 opened           = '" . (int)$data['opened'] . "', 
                 return_reason_id = '" . (int)$data['return_reason_id'] . "', 
                 return_action_id = '" . (int)$data['return_action_id'] . "', 
                 return_status_id = '" . (int)$data['return_status_id'] . "', 
-                comment          = '" . $this->db->escape($data['comment']) . "', 
-                date_ordered     = '" . $this->db->escape($data['date_ordered']) . "', 
+                comment          = '" . DB::escape($data['comment']) . "', 
+                date_ordered     = '" . DB::escape($data['date_ordered']) . "', 
                 date_modified    = NOW() 
             WHERE return_id = '" . (int)$return_id . "'
         ");
     }
     
     public function editReturnAction($return_id, $return_action_id) {
-        $this->db->query("
-            UPDATE `{$this->db->prefix}return` 
+        DB::query("
+            UPDATE `" . DB::prefix() . "return` 
             SET return_action_id = '" . (int)$return_action_id . "' 
             WHERE return_id = '" . (int)$return_id . "'
         ");
     }
     
     public function deleteReturn($return_id) {
-        $this->db->query("
-            DELETE FROM `{$this->db->prefix}return` 
+        DB::query("
+            DELETE FROM `" . DB::prefix() . "return` 
             WHERE return_id = '" . (int)$return_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}return_history 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "return_history 
             WHERE return_id = '" . (int)$return_id . "'");
     }
     
     public function getReturn($return_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT DISTINCT *, 
                 (SELECT CONCAT(c.firstname, ' ', c.lastname) 
-                    FROM {$this->db->prefix}customer c 
+                    FROM " . DB::prefix() . "customer c 
                     WHERE c.customer_id = r.customer_id) AS customer 
-            FROM `{$this->db->prefix}return` r 
+            FROM `" . DB::prefix() . "return` r 
             WHERE r.return_id = '" . (int)$return_id . "'
         ");
         
@@ -106,10 +106,10 @@ class Returns extends Model {
             SELECT *, 
                 CONCAT(r.firstname, ' ', r.lastname) AS customer, 
                 (SELECT rs.name 
-                    FROM {$this->db->prefix}return_status rs 
+                    FROM " . DB::prefix() . "return_status rs 
                     WHERE rs.return_status_id = r.return_status_id 
                     AND rs.language_id = '" . (int)Config::get('config_language_id') . "') AS status 
-            FROM `{$this->db->prefix}return` r";
+            FROM `" . DB::prefix() . "return` r";
         
         $implode = array();
         
@@ -122,15 +122,15 @@ class Returns extends Model {
         }
         
         if (!empty($data['filter_customer'])) {
-            $implode[] = "CONCAT(r.firstname, ' ', r.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "%'";
+            $implode[] = "CONCAT(r.firstname, ' ', r.lastname) LIKE '" . DB::escape($data['filter_customer']) . "%'";
         }
         
         if (!empty($data['filter_product'])) {
-            $implode[] = "r.product = '" . $this->db->escape($data['filter_product']) . "'";
+            $implode[] = "r.product = '" . DB::escape($data['filter_product']) . "'";
         }
         
         if (!empty($data['filter_model'])) {
-            $implode[] = "r.model = '" . $this->db->escape($data['filter_model']) . "'";
+            $implode[] = "r.model = '" . DB::escape($data['filter_model']) . "'";
         }
         
         if (!empty($data['filter_return_status_id'])) {
@@ -138,11 +138,11 @@ class Returns extends Model {
         }
         
         if (!empty($data['filter_date_added'])) {
-            $implode[] = "DATE(r.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $implode[] = "DATE(r.date_added) = DATE('" . DB::escape($data['filter_date_added']) . "')";
         }
         
         if (!empty($data['filter_date_modified'])) {
-            $implode[] = "DATE(r.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified']) . "')";
+            $implode[] = "DATE(r.date_modified) = DATE('" . DB::escape($data['filter_date_modified']) . "')";
         }
         
         if ($implode) {
@@ -185,7 +185,7 @@ class Returns extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
@@ -193,7 +193,7 @@ class Returns extends Model {
     public function getTotalReturns($data = array()) {
         $sql = "
             SELECT COUNT(*) AS total 
-            FROM `{$this->db->prefix}return` r";
+            FROM `" . DB::prefix() . "return` r";
         
         $implode = array();
         
@@ -202,19 +202,19 @@ class Returns extends Model {
         }
         
         if (!empty($data['filter_customer'])) {
-            $implode[] = "CONCAT(r.firstname, ' ', r.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "%'";
+            $implode[] = "CONCAT(r.firstname, ' ', r.lastname) LIKE '" . DB::escape($data['filter_customer']) . "%'";
         }
         
         if (!empty($data['filter_order_id'])) {
-            $implode[] = "r.order_id = '" . $this->db->escape($data['filter_order_id']) . "'";
+            $implode[] = "r.order_id = '" . DB::escape($data['filter_order_id']) . "'";
         }
         
         if (!empty($data['filter_product'])) {
-            $implode[] = "r.product = '" . $this->db->escape($data['filter_product']) . "'";
+            $implode[] = "r.product = '" . DB::escape($data['filter_product']) . "'";
         }
         
         if (!empty($data['filter_model'])) {
-            $implode[] = "r.model = '" . $this->db->escape($data['filter_model']) . "'";
+            $implode[] = "r.model = '" . DB::escape($data['filter_model']) . "'";
         }
         
         if (!empty($data['filter_return_status_id'])) {
@@ -222,11 +222,11 @@ class Returns extends Model {
         }
         
         if (!empty($data['filter_date_added'])) {
-            $implode[] = "DATE(r.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $implode[] = "DATE(r.date_added) = DATE('" . DB::escape($data['filter_date_added']) . "')";
         }
         
         if (!empty($data['filter_date_modified'])) {
-            $implode[] = "DATE(r.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified']) . "')";
+            $implode[] = "DATE(r.date_modified) = DATE('" . DB::escape($data['filter_date_modified']) . "')";
         }
         
         if ($implode) {
@@ -234,15 +234,15 @@ class Returns extends Model {
             $sql.= " WHERE {$imp}";
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->row['total'];
     }
     
     public function getTotalReturnsByReturnStatusId($return_status_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT COUNT(*) AS total 
-            FROM `{$this->db->prefix}return` 
+            FROM `" . DB::prefix() . "return` 
             WHERE return_status_id = '" . (int)$return_status_id . "'
         ");
         
@@ -250,9 +250,9 @@ class Returns extends Model {
     }
     
     public function getTotalReturnsByReturnReasonId($return_reason_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT COUNT(*) AS total 
-            FROM `{$this->db->prefix}return` 
+            FROM `" . DB::prefix() . "return` 
             WHERE return_reason_id = '" . (int)$return_reason_id . "'
         ");
         
@@ -260,9 +260,9 @@ class Returns extends Model {
     }
     
     public function getTotalReturnsByReturnActionId($return_action_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT COUNT(*) AS total 
-            FROM `{$this->db->prefix}return` 
+            FROM `" . DB::prefix() . "return` 
             WHERE return_action_id = '" . (int)$return_action_id . "'
         ");
         
@@ -270,21 +270,21 @@ class Returns extends Model {
     }
     
     public function addReturnHistory($return_id, $data) {
-        $this->db->query("
-            UPDATE `{$this->db->prefix}return` 
+        DB::query("
+            UPDATE `" . DB::prefix() . "return` 
             SET 
                 return_status_id = '" . (int)$data['return_status_id'] . "', 
                 date_modified    = NOW() 
             WHERE return_id = '" . (int)$return_id . "'
         ");
         
-        $this->db->query("
-            INSERT INTO {$this->db->prefix}return_history 
+        DB::query("
+            INSERT INTO " . DB::prefix() . "return_history 
             SET 
                 return_id        = '" . (int)$return_id . "', 
                 return_status_id = '" . (int)$data['return_status_id'] . "', 
                 notify           = '" . (isset($data['notify']) ? (int)$data['notify'] : 0) . "', 
-                comment          = '" . $this->db->escape(strip_tags($data['comment'])) . "', 
+                comment          = '" . DB::escape(strip_tags($data['comment'])) . "', 
                 date_added       = NOW()
         ");
         
@@ -330,14 +330,14 @@ class Returns extends Model {
             $limit = 10;
         }
         
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT 
                 rh.date_added, 
                 rs.name AS status, 
                 rh.comment, 
                 rh.notify 
-            FROM {$this->db->prefix}return_history rh 
-            LEFT JOIN {$this->db->prefix}return_status rs 
+            FROM " . DB::prefix() . "return_history rh 
+            LEFT JOIN " . DB::prefix() . "return_status rs 
             ON rh.return_status_id = rs.return_status_id 
             WHERE rh.return_id = '" . (int)$return_id . "' 
             AND rs.language_id = '" . (int)Config::get('config_language_id') . "' 
@@ -348,9 +348,9 @@ class Returns extends Model {
     }
     
     public function getTotalReturnHistories($return_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT COUNT(*) AS total 
-            FROM {$this->db->prefix}return_history 
+            FROM " . DB::prefix() . "return_history 
             WHERE return_id = '" . (int)$return_id . "'
         ");
         
@@ -358,9 +358,9 @@ class Returns extends Model {
     }
     
     public function getTotalReturnHistoriesByReturnStatusId($return_status_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT COUNT(*) AS total 
-            FROM {$this->db->prefix}return_history 
+            FROM " . DB::prefix() . "return_history 
             WHERE return_status_id = '" . (int)$return_status_id . "' 
             GROUP BY return_id
         ");
@@ -369,9 +369,9 @@ class Returns extends Model {
     }
 
     public function getStatusNameById($status_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT name 
-            FROM {$this->db->prefix}return_status 
+            FROM " . DB::prefix() . "return_status 
             WHERE return_status_id = '" . (int)$status_id . "'
         ");
 

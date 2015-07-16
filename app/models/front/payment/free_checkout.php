@@ -19,7 +19,7 @@ use App\Models\Model;
 
 class FreeCheckout extends Model {
     public function getMethod($address, $total) {
-        $this->language->load('payment/free_checkout');
+        Lang::load('payment/free_checkout');
         
         if ($total == 0) {
             $status = true;
@@ -30,7 +30,7 @@ class FreeCheckout extends Model {
         $method_data = array();
         
         if ($status) {
-            $method_data = array('code' => 'free_checkout', 'title' => $this->language->get('lang_text_title'), 'sort_order' => $this->config->get('free_checkout_sort_order'));
+            $method_data = array('code' => 'free_checkout', 'title' => Lang::get('lang_text_title'), 'sort_order' => Config::get('free_checkout_sort_order'));
         }
         
         return $method_data;

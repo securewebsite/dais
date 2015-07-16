@@ -21,64 +21,64 @@ use App\Models\Model;
 class WeightClass extends Model {
     
     public function addWeightClass($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}weight_class 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "weight_class 
 			SET 
 				value = '" . (float)$data['value'] . "'");
         
-        $weight_class_id = $this->db->getLastId();
+        $weight_class_id = DB::getLastId();
         
         foreach ($data['weight_class_description'] as $language_id => $value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}weight_class_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "weight_class_description 
 				SET 
 					weight_class_id = '" . (int)$weight_class_id . "', 
 					language_id = '" . (int)$language_id . "', 
-					title = '" . $this->db->escape($value['title']) . "', 
-					unit = '" . $this->db->escape($value['unit']) . "'
+					title = '" . DB::escape($value['title']) . "', 
+					unit = '" . DB::escape($value['unit']) . "'
 			");
         }
         
-        $this->cache->delete('default.store.weights');
+        Cache::delete('default.store.weights');
     }
     
     public function editWeightClass($weight_class_id, $data) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}weight_class 
+        DB::query("
+			UPDATE " . DB::prefix() . "weight_class 
 			SET 
 				value = '" . (float)$data['value'] . "' 
 			WHERE weight_class_id = '" . (int)$weight_class_id . "'
 		");
         
-        $this->db->query("DELETE FROM {$this->db->prefix}weight_class_description WHERE weight_class_id = '" . (int)$weight_class_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "weight_class_description WHERE weight_class_id = '" . (int)$weight_class_id . "'");
         
         foreach ($data['weight_class_description'] as $language_id => $value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}weight_class_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "weight_class_description 
 				SET 
 					weight_class_id = '" . (int)$weight_class_id . "', 
 					language_id = '" . (int)$language_id . "', 
-					title = '" . $this->db->escape($value['title']) . "', 
-					unit = '" . $this->db->escape($value['unit']) . "'
+					title = '" . DB::escape($value['title']) . "', 
+					unit = '" . DB::escape($value['unit']) . "'
 			");
         }
         
-        $this->cache->delete('default.store.weights');
+        Cache::delete('default.store.weights');
     }
     
     public function deleteWeightClass($weight_class_id) {
-        $this->db->query("DELETE FROM {$this->db->prefix}weight_class WHERE weight_class_id = '" . (int)$weight_class_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}weight_class_description WHERE weight_class_id = '" . (int)$weight_class_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "weight_class WHERE weight_class_id = '" . (int)$weight_class_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "weight_class_description WHERE weight_class_id = '" . (int)$weight_class_id . "'");
         
-        $this->cache->delete('default.store.weights');
+        Cache::delete('default.store.weights');
     }
     
     public function getWeightClasses($data = array()) {
         if ($data) {
             $sql = "
 				SELECT * 
-				FROM {$this->db->prefix}weight_class wc 
-				LEFT JOIN {$this->db->prefix}weight_class_description wcd 
+				FROM " . DB::prefix() . "weight_class wc 
+				LEFT JOIN " . DB::prefix() . "weight_class_description wcd 
 					ON (wc.weight_class_id = wcd.weight_class_id) 
 				WHERE wcd.language_id = '" . (int)Config::get('config_language_id') . "'";
             
@@ -108,14 +108,14 @@ class WeightClass extends Model {
                 $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
             }
             
-            $query = $this->db->query($sql);
+            $query = DB::query($sql);
             
             return $query->rows;
         } else {
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}weight_class wc 
-				LEFT JOIN {$this->db->prefix}weight_class_description wcd 
+				FROM " . DB::prefix() . "weight_class wc 
+				LEFT JOIN " . DB::prefix() . "weight_class_description wcd 
 					ON (wc.weight_class_id = wcd.weight_class_id) 
 				WHERE wcd.language_id = '" . (int)Config::get('config_language_id') . "'
 			");
@@ -125,10 +125,10 @@ class WeightClass extends Model {
     }
     
     public function getWeightClass($weight_class_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}weight_class wc 
-			LEFT JOIN {$this->db->prefix}weight_class_description wcd 
+			FROM " . DB::prefix() . "weight_class wc 
+			LEFT JOIN " . DB::prefix() . "weight_class_description wcd 
 				ON (wc.weight_class_id = wcd.weight_class_id) 
 			WHERE wc.weight_class_id = '" . (int)$weight_class_id . "' 
 			AND wcd.language_id = '" . (int)Config::get('config_language_id') . "'
@@ -138,10 +138,10 @@ class WeightClass extends Model {
     }
     
     public function getWeightClassDescriptionByUnit($unit) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}weight_class_description 
-			WHERE unit = '" . $this->db->escape($unit) . "' 
+			FROM " . DB::prefix() . "weight_class_description 
+			WHERE unit = '" . DB::escape($unit) . "' 
 			AND language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
@@ -151,9 +151,9 @@ class WeightClass extends Model {
     public function getWeightClassDescriptions($weight_class_id) {
         $weight_class_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}weight_class_description 
+			FROM " . DB::prefix() . "weight_class_description 
 			WHERE weight_class_id = '" . (int)$weight_class_id . "'
 		");
         
@@ -165,9 +165,9 @@ class WeightClass extends Model {
     }
     
     public function getTotalWeightClasses() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}weight_class");
+			FROM " . DB::prefix() . "weight_class");
         
         return $query->row['total'];
     }

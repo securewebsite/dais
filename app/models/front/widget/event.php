@@ -21,9 +21,9 @@ class Event extends Model {
     public function getEvents($customer_id) {
         $events_data = array();
         
-        $events = $this->db->query("
+        $events = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}event_manager 
+			FROM " . DB::prefix() . "event_manager 
 			WHERE date_end > NOW()");
         
         if ($events):

@@ -23,9 +23,9 @@ class Zone extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}zone 
+				FROM " . DB::prefix() . "zone 
 				WHERE zone_id = '" . (int)$zone_id . "' 
 				AND status = '1'
 			");
@@ -46,9 +46,9 @@ class Zone extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}zone 
+				FROM " . DB::prefix() . "zone 
 				WHERE country_id = '" . (int)$country_id . "' 
 				AND status = '1' 
 				ORDER BY name

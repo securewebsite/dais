@@ -21,7 +21,7 @@ use App\Models\Model;
 class Returns extends Model {
     
     public function getReturns($data = array()) {
-        $sql = "SELECT MIN(r.date_added) AS date_start, MAX(r.date_added) AS date_end, COUNT(r.return_id) AS `returns` FROM `{$this->db->prefix}return` r";
+        $sql = "SELECT MIN(r.date_added) AS date_start, MAX(r.date_added) AS date_end, COUNT(r.return_id) AS `returns` FROM `" . DB::prefix() . "return` r";
         
         if (!empty($data['filter_return_status_id'])) {
             $sql.= " WHERE r.return_status_id = '" . (int)$data['filter_return_status_id'] . "'";
@@ -30,11 +30,11 @@ class Returns extends Model {
         }
         
         if (!empty($data['filter_date_start'])) {
-            $sql.= " AND DATE(r.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $sql.= " AND DATE(r.date_added) >= '" . DB::escape($data['filter_date_start']) . "'";
         }
         
         if (!empty($data['filter_date_end'])) {
-            $sql.= " AND DATE(r.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql.= " AND DATE(r.date_added) <= '" . DB::escape($data['filter_date_end']) . "'";
         }
         
         if (isset($data['filter_group'])) {
@@ -74,7 +74,7 @@ class Returns extends Model {
         $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
     }
     
-    $query = $this->db->query($sql);
+    $query = DB::query($sql);
     
     return $query->rows;
 }
@@ -88,20 +88,20 @@ public function getTotalReturns($data = array()) {
     
     switch ($group) {
         case 'day';
-        $sql = "SELECT COUNT(DISTINCT DAY(date_added)) AS total FROM `{$this->db->prefix}return`";
+        $sql = "SELECT COUNT(DISTINCT DAY(date_added)) AS total FROM `" . DB::prefix() . "return`";
         break;
 
     default:
     case 'week':
-        $sql = "SELECT COUNT(DISTINCT WEEK(date_added)) AS total FROM `{$this->db->prefix}return`";
+        $sql = "SELECT COUNT(DISTINCT WEEK(date_added)) AS total FROM `" . DB::prefix() . "return`";
         break;
 
     case 'month':
-        $sql = "SELECT COUNT(DISTINCT MONTH(date_added)) AS total FROM `{$this->db->prefix}return`";
+        $sql = "SELECT COUNT(DISTINCT MONTH(date_added)) AS total FROM `" . DB::prefix() . "return`";
         break;
 
     case 'year':
-        $sql = "SELECT COUNT(DISTINCT YEAR(date_added)) AS total FROM `{$this->db->prefix}return`";
+        $sql = "SELECT COUNT(DISTINCT YEAR(date_added)) AS total FROM `" . DB::prefix() . "return`";
         break;
 }
 
@@ -112,14 +112,14 @@ if (!empty($data['filter_return_status_id'])) {
 }
 
 if (!empty($data['filter_date_start'])) {
-    $sql.= " AND DATE(date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+    $sql.= " AND DATE(date_added) >= '" . DB::escape($data['filter_date_start']) . "'";
 }
 
 if (!empty($data['filter_date_end'])) {
-    $sql.= " AND DATE(date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+    $sql.= " AND DATE(date_added) <= '" . DB::escape($data['filter_date_end']) . "'";
 }
 
-$query = $this->db->query($sql);
+$query = DB::query($sql);
 
 return $query->row['total'];
 }

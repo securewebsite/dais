@@ -30,20 +30,20 @@ class Affiliate extends Model {
                 SUM(cc.amount) AS commission, 
                 COUNT(o.order_id) AS orders, 
                 SUM(o.total) AS total 
-            FROM {$this->db->prefix}customer_commission cc 
-            LEFT JOIN {$this->db->prefix}customer c 
+            FROM " . DB::prefix() . "customer_commission cc 
+            LEFT JOIN " . DB::prefix() . "customer c 
             ON (cc.customer_id = c.customer_id) 
-            LEFT JOIN `{$this->db->prefix}order` o 
+            LEFT JOIN `" . DB::prefix() . "order` o 
             ON (cc.order_id = o.order_id)";
         
         $implode = array();
         
         if (!empty($data['filter_date_start'])) {
-            $implode[] = "DATE(cc.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $implode[] = "DATE(cc.date_added) >= '" . DB::escape($data['filter_date_start']) . "'";
         }
         
         if (!empty($data['filter_date_end'])) {
-            $implode[] = "DATE(cc.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $implode[] = "DATE(cc.date_added) <= '" . DB::escape($data['filter_date_end']) . "'";
         }
         
         if ($implode) {
@@ -65,7 +65,7 @@ class Affiliate extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
@@ -73,16 +73,16 @@ class Affiliate extends Model {
     public function getTotalCommission() {
         $sql = "
             SELECT COUNT(DISTINCT customer_id) AS total 
-            FROM `{$this->db->prefix}customer_commission`";
+            FROM `" . DB::prefix() . "customer_commission`";
         
         $implode = array();
         
         if (!empty($data['filter_date_start'])) {
-            $implode[] = "DATE(date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $implode[] = "DATE(date_added) >= '" . DB::escape($data['filter_date_start']) . "'";
         }
         
         if (!empty($data['filter_date_end'])) {
-            $implode[] = "DATE(date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $implode[] = "DATE(date_added) <= '" . DB::escape($data['filter_date_end']) . "'";
         }
         
         if ($implode) {
@@ -102,7 +102,7 @@ class Affiliate extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->row['total'];
     }

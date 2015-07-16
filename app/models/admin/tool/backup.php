@@ -25,17 +25,17 @@ class Backup extends Model {
             $sql = trim($sql);
             
             if ($sql) {
-                $this->db->query($sql);
+                DB::query($sql);
             }
         }
         
-        $this->cache->flush_cache();
+        Cache::flush_cache();
     }
     
     public function getTables() {
         $table_data = array();
         
-        $query = $this->db->query("SHOW TABLES FROM `" . DB_DATABASE . "`");
+        $query = DB::query("SHOW TABLES FROM `" . DB_DATABASE . "`");
         
         foreach ($query->rows as $result) {
             if (Encode::substr($result['Tables_in_' . DB_DATABASE], 0, strlen(DB_PREFIX)) == DB_PREFIX) {
@@ -65,7 +65,7 @@ class Backup extends Model {
             if ($status) {
                 $output.= 'TRUNCATE TABLE `' . $table . '`;' . "\n\n";
                 
-                $query = $this->db->query("SELECT * FROM `{$table}`");
+                $query = DB::query("SELECT * FROM `{$table}`");
                 
                 foreach ($query->rows as $result) {
                     $fields = '';

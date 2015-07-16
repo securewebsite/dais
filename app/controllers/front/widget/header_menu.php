@@ -15,14 +15,16 @@
 */
 
 namespace App\Controllers\Front\Widget;
+
 use App\Controllers\Controller;
 
 class HeaderMenu extends Controller {
+    
     private $items = array();
     
     public function index() {
-        $this->theme->model('design/layout');
-        $this->theme->model('setting/menu');
+        Theme::model('design/layout');
+        Theme::model('setting/menu');
         
         if (isset($this->request->get['route'])):
             $route = (string)$this->request->get['route'];
@@ -30,7 +32,7 @@ class HeaderMenu extends Controller {
             $route = Theme::getstyle() . '/home';
         endif;
         
-        $layout_id = $this->model_design_layout->getLayout($route);
+        $layout_id = DesignLayout::getLayout($route);
         
         /**
          * All routes for headers should be either shop/ or content/ by default.
@@ -67,7 +69,7 @@ class HeaderMenu extends Controller {
         $widgets = array();
         $all_widgets = array();
         
-        $all_widgets = $this->config->get('header_menu_widget');
+        $all_widgets = Config::get('header_menu_widget');
         
         if ($all_widgets):
             foreach ($all_widgets as $widget):
@@ -78,7 +80,7 @@ class HeaderMenu extends Controller {
         endif;
         
         if (empty($widgets) && $all_widgets):
-            $layout_id = $this->model_setting_menu->getDefault();
+            $layout_id = SettingMenu::getDefault();
             
             foreach ($all_widgets as $widget):
                 if ($widget['position'] === $position && $widget['layout_id'] === $layout_id && $widget['status']):
@@ -90,7 +92,7 @@ class HeaderMenu extends Controller {
         if ($widgets):
             foreach ($widgets as $widget):
                 if ($widget['layout_id'] == $layout_id && $widget['position'] == $position && $widget['status']):
-                    $menus[] = $this->model_setting_menu->getMenu($widget['menu_id']);
+                    $menus[] = SettingMenu::getMenu($widget['menu_id']);
                 endif;
             endforeach;
         endif;
@@ -100,29 +102,29 @@ class HeaderMenu extends Controller {
             $data['menu_items'] = array_merge($data['menu_items'], call_user_func(array(__CLASS__, $menu['type'])));
         endforeach;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('widget/header_menu', $data);
+        return View::render('widget/header_menu', $data);
     }
     
     private function product_category() {
-        $this->theme->model('catalog/category');
+        Theme::model('catalog/category');
         
         $menu_items = array();
         
-        $categories = $this->model_catalog_category->getCategories(0);
+        $categories = CatalogCategory::getCategories(0);
         
         foreach ($categories as $category):
             $children_data = array();
             
-            $children = $this->model_catalog_category->getCategories($category['category_id']);
+            $children = CatalogCategory::getCategories($category['category_id']);
             
             foreach ($children as $child):
                 if (in_array($child['category_id'], $this->items['product_category'])):
                     $children_data[] = array(
                         'id'   => $child['category_id'], 
                         'name' => $child['name'], 
-                        'href' => $this->url->link('catalog/category', 'path=' . $category['category_id'] . '_' . $child['category_id'])
+                        'href' => Url::link('catalog/category', 'path=' . $category['category_id'] . '_' . $child['category_id'])
                     );
                 endif;
             endforeach;
@@ -133,7 +135,7 @@ class HeaderMenu extends Controller {
                     'name'     => $category['name'], 
                     'children' => $children_data, 
                     'column'   => $category['columns'] ? $category['columns'] : 1, 
-                    'href'     => $this->url->link('catalog/category', 'path=' . $category['category_id'])
+                    'href'     => Url::link('catalog/category', 'path=' . $category['category_id'])
                 );
             endif;
         endforeach;
@@ -142,23 +144,23 @@ class HeaderMenu extends Controller {
     }
     
     private function content_category() {
-        $this->theme->model('content/category');
+        Theme::model('content/category');
         
         $menu_items = array();
         
-        $categories = $this->model_content_category->getCategories(0);
+        $categories = ContentCategory::getCategories(0);
         
         foreach ($categories as $category):
             $children_data = array();
             
-            $children = $this->model_content_category->getCategories($category['category_id']);
+            $children = ContentCategory::getCategories($category['category_id']);
             
             foreach ($children as $child):
                 if (in_array($child['category_id'], $this->items['content_category'])):
                     $children_data[] = array(
                         'id'   => $child['category_id'], 
                         'name' => $child['name'], 
-                        'href' => $this->url->link('content/category', 'bpath=' . $category['category_id'] . '_' . $child['category_id'])
+                        'href' => Url::link('content/category', 'bpath=' . $category['category_id'] . '_' . $child['category_id'])
                     );
                 endif;
             endforeach;
@@ -169,7 +171,7 @@ class HeaderMenu extends Controller {
                     'name'     => $category['name'], 
                     'children' => $children_data, 
                     'column'   => $category['columns'] ? $category['columns'] : 1, 
-                    'href'     => $this->url->link('content/category', 'bpath=' . $category['category_id'])
+                    'href'     => Url::link('content/category', 'bpath=' . $category['category_id'])
                 );
             endif;
         endforeach;
@@ -178,17 +180,17 @@ class HeaderMenu extends Controller {
     }
     
     private function page() {
-        $this->theme->model('content/page');
+        Theme::model('content/page');
         
         $menu_items = array();
         
-        $pages = $this->model_content_page->getPages();
+        $pages = ContentPage::getPages();
         
         foreach ($pages as $page):
             if (in_array($page['page_id'], $this->items['page'])):
                 $menu_items[] = array(
                     'name' => $page['title'], 
-                    'href' => $this->url->link('content/page', 'page_id=' . $page['page_id'])
+                    'href' => Url::link('content/page', 'page_id=' . $page['page_id'])
                 );
             endif;
         endforeach;
@@ -197,17 +199,17 @@ class HeaderMenu extends Controller {
     }
     
     private function post() {
-        $this->theme->model('content/post');
+        Theme::model('content/post');
         
         $menu_items = array();
         
-        $posts = $this->model_content_post->getPosts();
+        $posts = ContentPost::getPosts();
         
         foreach ($posts as $post):
             if (in_array($post['post_id'], $this->items['post'])):
                 $menu_items[] = array(
                     'name' => $post['name'], 
-                    'href' => $this->url->link('content/post', 'post_id=' . $post['post_id'])
+                    'href' => Url::link('content/post', 'post_id=' . $post['post_id'])
                 );
             endif;
         endforeach;
@@ -221,7 +223,7 @@ class HeaderMenu extends Controller {
          * custom hack for changing Dashboard/Login text
          * safe to remove.
          */
-        $this->theme->language('shop/footer');
+        Theme::language('shop/footer');
         
         $menu_items = array();
         
@@ -234,15 +236,15 @@ class HeaderMenu extends Controller {
              * custom hack for changing Dashboard/Login text
              * safe to remove.
              */
-            if ($item['name'] === $this->language->get('lang_text_dashboard')):
-                $item['name'] = ($this->customer->isLogged()) ? $this->language->get('lang_text_dashboard') : $this->language->get('lang_text_login');
+            if ($item['name'] === Lang::get('lang_text_dashboard')):
+                $item['name'] = (Customer::isLogged()) ? Lang::get('lang_text_dashboard') : Lang::get('lang_text_login');
             endif;
             
             if (strpos($item['href'], 'http') === false && strpos($item['href'], 'https') === false):
-                $link['href'] = $this->url->link($item['href']);
+                $link['href'] = Url::link($item['href']);
                 $link['name'] = $item['name'];
             else:
-                $link['external'] = $this->url->external($item['href'], $item['name']);
+                $link['external'] = Url::external($item['href'], $item['name']);
             endif;
             $menu_items[] = $link;
         endforeach;

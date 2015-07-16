@@ -15,17 +15,19 @@
 */
 
 namespace App\Controllers\Front\Catalog;
+
 use App\Controllers\Controller;
 
 class Category extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('catalog/category');
+        $data = Theme::language('catalog/category');
         
-        $this->theme->model('catalog/category');
-        $this->theme->model('catalog/product');
-        $this->theme->model('tool/image');
+        Theme::model('catalog/category');
+        Theme::model('catalog/product');
+        Theme::model('tool/image');
         
-        $this->javascript->register('storage.min', 'jquery.min');
+        JS::register('storage.min', 'jquery.min');
         
         if (isset($this->request->get['filter'])) {
             $category_filter = $this->request->get['filter'];
@@ -54,7 +56,7 @@ class Category extends Controller {
         if (isset($this->request->get['limit'])) {
             $limit = $this->request->get['limit'];
         } else {
-            $limit = $this->config->get('config_catalog_limit');
+            $limit = Config::get('config_catalog_limit');
         }
         
         if (isset($this->request->get['path'])) {
@@ -85,28 +87,28 @@ class Category extends Controller {
                     $path.= '_' . (int)$path_id;
                 }
                 
-                $category_info = $this->model_catalog_category->getCategory($path_id);
+                $category_info = CatalogCategory::getCategory($path_id);
                 
                 if ($category_info) {
-                    $this->breadcrumb->add($category_info['name'], 'catalog/category', 'path=' . $path . $url);
+                    Breadcrumb::add($category_info['name'], 'catalog/category', 'path=' . $path . $url);
                 }
             }
         } else {
             $category_id = 0;
         }
         
-        $category_info = $this->model_catalog_category->getCategory($category_id);
+        $category_info = CatalogCategory::getCategory($category_id);
         
         if ($category_info) {
-            $this->theme->setTitle($category_info['name']);
-            $this->theme->setDescription($category_info['meta_description']);
-            $this->theme->setKeywords($category_info['meta_keyword']);
+            Theme::setTitle($category_info['name']);
+            Theme::setDescription($category_info['meta_description']);
+            Theme::setKeywords($category_info['meta_keyword']);
             
-            $this->theme->setOgType('product.group');
+            Theme::setOgType('product.group');
             
             $data['heading_title'] = $category_info['name'];
             
-            $data['text_compare'] = sprintf($this->language->get('lang_text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
+            $data['text_compare'] = sprintf(Lang::get('lang_text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
             
             // Set the last category breadcrumb
             $url = '';
@@ -127,23 +129,23 @@ class Category extends Controller {
                 $url.= '&limit=' . $this->request->get['limit'];
             }
             
-            $this->breadcrumb->add($category_info['name'], 'catalog/category', 'path=' . $this->request->get['path']);
+            Breadcrumb::add($category_info['name'], 'catalog/category', 'path=' . $this->request->get['path']);
             
             if ($category_info['image']) {
-                $data['thumb'] = $this->model_tool_image->resize($category_info['image'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
-                $this->theme->setOgImage($this->model_tool_image->resize($category_info['image'], 200, 200, 'h'));
+                $data['thumb'] = ToolImage::resize($category_info['image'], Config::get('config_image_category_width'), Config::get('config_image_category_height'));
+                Theme::setOgImage(ToolImage::resize($category_info['image'], 200, 200, 'h'));
             } else {
                 $data['thumb'] = false;
             }
             
             if ($category_info['description']):
                 $data['description'] = html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8');
-                $this->theme->setOgDescription(html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8'));
+                Theme::setOgDescription(html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8'));
             else:
                 $data['description'] = false;
             endif;
             
-            $data['compare'] = $this->url->link('catalog/compare');
+            $data['compare'] = Url::link('catalog/compare');
             
             $url = '';
             
@@ -171,14 +173,14 @@ class Category extends Controller {
                 foreach ($tags as $tag):
                     $data['tags'][] = array(
                         'name' => trim($tag), 
-                        'href' => $this->url->link('search/search', 'search=' . trim($tag))
+                        'href' => Url::link('search/search', 'search=' . trim($tag))
                     );
                 endforeach;
             endif;
             
             $data['categories'] = array();
             
-            $results = $this->model_catalog_category->getCategories($category_id);
+            $results = CatalogCategory::getCategories($category_id);
             
             foreach ($results as $result) {
                 $filter = array(
@@ -188,14 +190,14 @@ class Category extends Controller {
                 
                 $show_product = '';
                 
-                if ($this->config->get('config_product_count')):
-                    $product_total = $this->model_catalog_product->getTotalProducts($filter);
+                if (Config::get('config_product_count')):
+                    $product_total = CatalogProduct::getTotalProducts($filter);
                     $show_product  = ' (' . $product_total . ')';
                 endif;
                 
                 $data['categories'][] = array(
                     'name' => $result['name'] . $show_product, 
-                    'href' => $this->url->link('catalog/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url)
+                    'href' => Url::link('catalog/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url)
                 );
             }
             
@@ -210,35 +212,35 @@ class Category extends Controller {
                 'limit'              => $limit
             );
             
-            $product_total = $this->model_catalog_product->getTotalProducts($filter);
-            $results       = $this->model_catalog_product->getProducts($filter);
+            $product_total = CatalogProduct::getTotalProducts($filter);
+            $results       = CatalogProduct::getProducts($filter);
             
             foreach ($results as $result) {
                 if ($result['image']) {
-                    $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+                    $image = ToolImage::resize($result['image'], Config::get('config_image_product_width'), Config::get('config_image_product_height'));
                 } else {
                     $image = false;
                 }
                 
-                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                    $price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+                if ((Config::get('config_customer_price') && Customer::isLogged()) || !Config::get('config_customer_price')) {
+                    $price = Currency::format(Tax::calculate($result['price'], $result['tax_class_id'], Config::get('config_tax')));
                 } else {
                     $price = false;
                 }
                 
                 if ((float)$result['special']) {
-                    $special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')));
+                    $special = Currency::format(Tax::calculate($result['special'], $result['tax_class_id'], Config::get('config_tax')));
                 } else {
                     $special = false;
                 }
                 
-                if ($this->config->get('config_tax')) {
-                    $tax = $this->currency->format((float)$result['special'] ? $result['special'] : $result['price']);
+                if (Config::get('config_tax')) {
+                    $tax = Currency::format((float)$result['special'] ? $result['special'] : $result['price']);
                 } else {
                     $tax = false;
                 }
                 
-                if ($this->config->get('config_review_status')) {
+                if (Config::get('config_review_status')) {
                     $rating = (int)$result['rating'];
                 } else {
                     $rating = false;
@@ -249,13 +251,13 @@ class Category extends Controller {
                     'event_id'    => $result['event_id'], 
                     'thumb'       => $image, 
                     'name'        => $result['name'], 
-                    'description' => $this->encode->substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..', 
+                    'description' => Encode::substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..', 
                     'price'       => $price, 
                     'special'     => $special, 
                     'tax'         => $tax, 
                     'rating'      => $rating, 
-                    'reviews'     => sprintf($this->language->get('lang_text_reviews'), (int)$result['reviews']), 
-                    'href'        => $this->url->link('catalog/product', 'product_id=' . $result['product_id'] . $url)
+                    'reviews'     => sprintf(Lang::get('lang_text_reviews'), (int)$result['reviews']), 
+                    'href'        => Url::link('catalog/product', 'product_id=' . $result['product_id'] . $url)
                 );
             }
             
@@ -272,62 +274,62 @@ class Category extends Controller {
             $data['sorts'] = array();
             
             $data['sorts'][] = array(
-                'text'  => $this->language->get('lang_text_default'), 
+                'text'  => Lang::get('lang_text_default'), 
                 'value' => 'p.sort_order-ASC', 
-                'href'  => $this->url->link('catalog/category', 'path=' . $this->request->get['path'] . '&sort=p.sort_order&order=ASC' . $url)
+                'href'  => Url::link('catalog/category', 'path=' . $this->request->get['path'] . '&sort=p.sort_order&order=ASC' . $url)
             );
             
             $data['sorts'][] = array(
-                'text'  => $this->language->get('lang_text_name_asc'), 
+                'text'  => Lang::get('lang_text_name_asc'), 
                 'value' => 'pd.name-ASC', 
-                'href'  => $this->url->link('catalog/category', 'path=' . $this->request->get['path'] . '&sort=pd.name&order=ASC' . $url)
+                'href'  => Url::link('catalog/category', 'path=' . $this->request->get['path'] . '&sort=pd.name&order=ASC' . $url)
             );
             
             $data['sorts'][] = array(
-                'text'  => $this->language->get('lang_text_name_desc'), 
+                'text'  => Lang::get('lang_text_name_desc'), 
                 'value' => 'pd.name-DESC', 
-                'href'  => $this->url->link('catalog/category', 'path=' . $this->request->get['path'] . '&sort=pd.name&order=DESC' . $url)
+                'href'  => Url::link('catalog/category', 'path=' . $this->request->get['path'] . '&sort=pd.name&order=DESC' . $url)
             );
             
             $data['sorts'][] = array(
-                'text'  => $this->language->get('lang_text_price_asc'), 
+                'text'  => Lang::get('lang_text_price_asc'), 
                 'value' => 'p.price-ASC', 
-                'href'  => $this->url->link('catalog/category', 'path=' . $this->request->get['path'] . '&sort=p.price&order=ASC' . $url)
+                'href'  => Url::link('catalog/category', 'path=' . $this->request->get['path'] . '&sort=p.price&order=ASC' . $url)
             );
             
             $data['sorts'][] = array(
-                'text'  => $this->language->get('lang_text_price_desc'), 
+                'text'  => Lang::get('lang_text_price_desc'), 
                 'value' => 'p.price-DESC', 
-                'href'  => $this->url->link('catalog/category', 'path=' . $this->request->get['path'] . '&sort=p.price&order=DESC' . $url)
+                'href'  => Url::link('catalog/category', 'path=' . $this->request->get['path'] . '&sort=p.price&order=DESC' . $url)
             );
             
-            if ($this->config->get('config_review_status')) {
+            if (Config::get('config_review_status')) {
                 $data['sorts'][] = array(
-                    'text'  => $this->language->get('lang_text_rating_desc'), 
+                    'text'  => Lang::get('lang_text_rating_desc'), 
                     'value' => 'rating-DESC', 
-                    'href'  => $this->url->link('catalog/category', 'path=' . $this->request->get['path'] . '&sort=rating&order=DESC' . $url)
+                    'href'  => Url::link('catalog/category', 'path=' . $this->request->get['path'] . '&sort=rating&order=DESC' . $url)
                 );
                 
                 $data['sorts'][] = array(
-                    'text'  => $this->language->get('lang_text_rating_asc'), 
+                    'text'  => Lang::get('lang_text_rating_asc'), 
                     'value' => 'rating-ASC', 
-                    'href'  => $this->url->link('catalog/category', 'path=' . $this->request->get['path'] . '&sort=rating&order=ASC' . $url)
+                    'href'  => Url::link('catalog/category', 'path=' . $this->request->get['path'] . '&sort=rating&order=ASC' . $url)
                 );
             }
             
             $data['sorts'][] = array(
-                'text'  => $this->language->get('lang_text_model_asc'), 
+                'text'  => Lang::get('lang_text_model_asc'), 
                 'value' => 'p.model-ASC', 
-                'href'  => $this->url->link('catalog/category', 'path=' . $this->request->get['path'] . '&sort=p.model&order=ASC' . $url)
+                'href'  => Url::link('catalog/category', 'path=' . $this->request->get['path'] . '&sort=p.model&order=ASC' . $url)
             );
             
             $data['sorts'][] = array(
-                'text'  => $this->language->get('lang_text_model_desc'), 
+                'text'  => Lang::get('lang_text_model_desc'), 
                 'value' => 'p.model-DESC', 
-                'href'  => $this->url->link('catalog/category', 'path=' . $this->request->get['path'] . '&sort=p.model&order=DESC' . $url)
+                'href'  => Url::link('catalog/category', 'path=' . $this->request->get['path'] . '&sort=p.model&order=DESC' . $url)
             );
             
-            $data['image_width'] = $this->config->get('config_image_product_width');
+            $data['image_width'] = Config::get('config_image_product_width');
             
             $url = '';
             
@@ -346,7 +348,7 @@ class Category extends Controller {
             $data['limits'] = array();
             
             $limits = array_unique(array(
-                $this->config->get('config_catalog_limit'), 
+                Config::get('config_catalog_limit'), 
                 32, 
                 64, 
                 88, 
@@ -359,7 +361,7 @@ class Category extends Controller {
                 $data['limits'][] = array(
                     'text'  => $value, 
                     'value' => $value, 
-                    'href'  => $this->url->link('catalog/category', 'path=' . $this->request->get['path'] . $url . '&limit=' . $value)
+                    'href'  => Url::link('catalog/category', 'path=' . $this->request->get['path'] . $url . '&limit=' . $value)
                 );
             }
             
@@ -381,19 +383,19 @@ class Category extends Controller {
                 $url.= '&limit=' . $this->request->get['limit'];
             }
             
-            $data['pagination'] = $this->theme->paginate(
+            $data['pagination'] = Theme::paginate(
                 $product_total, 
                 $page, 
                 $limit, 
-                $this->language->get('lang_text_pagination'), 
-                $this->url->link('catalog/category', 'path=' . $this->request->get['path'] . $url . '&page={page}')
+                Lang::get('lang_text_pagination'), 
+                Url::link('catalog/category', 'path=' . $this->request->get['path'] . $url . '&page={page}')
             );
             
             $data['sort']  = $sort;
             $data['order'] = $order;
             $data['limit'] = $limit;
             
-            $data['continue'] = $this->url->link('shop/home');
+            $data['continue'] = Url::link('shop/home');
             
             $cookie = 'list';
             
@@ -403,14 +405,14 @@ class Category extends Controller {
             
             $data['display'] = $cookie;
             
-            $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+            $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $this->theme->setController('header', 'shop/header');
-            $this->theme->setController('footer', 'shop/footer');
+            Theme::setController('header', 'shop/header');
+            Theme::setController('footer', 'shop/footer');
             
-            $data = $this->theme->renderControllers($data);
+            $data = Theme::renderControllers($data);
             
-            $this->response->setOutput($this->theme->view('catalog/category', $data));
+            Response::setOutput(View::render('catalog/category', $data));
         } else {
             $url = '';
             
@@ -438,24 +440,24 @@ class Category extends Controller {
                 $url.= '&limit=' . $this->request->get['limit'];
             }
             
-            $this->breadcrumb->add('lang_text_error', 'catalog/category', $url);
+            Breadcrumb::add('lang_text_error', 'catalog/category', $url);
             
-            $this->theme->setTitle($this->language->get('lang_text_error'));
+            Theme::setTitle(Lang::get('lang_text_error'));
             
-            $data['heading_title'] = $this->language->get('lang_text_error');
+            $data['heading_title'] = Lang::get('lang_text_error');
             
-            $data['continue'] = $this->url->link('shop/home');
+            $data['continue'] = Url::link('shop/home');
             
-            $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
+            Response::addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
             
-            $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+            $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $this->theme->setController('header', 'shop/header');
-            $this->theme->setController('footer', 'shop/footer');
+            Theme::setController('header', 'shop/header');
+            Theme::setController('footer', 'shop/footer');
             
-            $data = $this->theme->renderControllers($data);
+            $data = Theme::renderControllers($data);
             
-            $this->response->setOutput($this->theme->view('error/not_found', $data));
+            Response::setOutput(View::render('error/not_found', $data));
         }
     }
 }

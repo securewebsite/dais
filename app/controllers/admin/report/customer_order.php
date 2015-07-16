@@ -74,23 +74,21 @@ class CustomerOrder extends Controller {
         
         $filter = array('filter_date_start' => $filter_date_start, 'filter_date_end' => $filter_date_end, 'filter_order_status_id' => $filter_order_status_id, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $customer_total = $this->model_report_customer->getTotalOrders($filter);
+        $customer_total = ReportCustomer::getTotalOrders($filter);
         
-        $results = $this->model_report_customer->getOrders($filter);
+        $results = ReportCustomer::getOrders($filter);
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/customer/update', '' . '&customer_id=' . $result['customer_id'] . $url, 'SSL'));
             
             $data['customers'][] = array('customer' => $result['customer'], 'email' => $result['email'], 'customer_group' => $result['customer_group'], 'status' => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 'orders' => $result['orders'], 'products' => $result['products'], 'total' => Currency::format($result['total'], Config::get('config_currency')), 'action' => $action);
         }
         
-        $data['token'] = $this->session->data['token'];
-        
         Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
+        $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
         $url = '';
         
@@ -106,7 +104,7 @@ class CustomerOrder extends Controller {
             $url.= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
         }
         
-        $data['pagination'] = Theme::paginate($customer_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/customer_order', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($customer_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/customer_order', '' . $url . '&page={page}', 'SSL'));
         
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
@@ -116,6 +114,6 @@ class CustomerOrder extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('report/customer_order', $data));
+        Response::setOutput(View::render('report/customer_order', $data));
     }
 }

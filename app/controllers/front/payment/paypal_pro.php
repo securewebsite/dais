@@ -15,11 +15,13 @@
 */
 
 namespace App\Controllers\Front\Payment;
+
 use App\Controllers\Controller;
 
 class PaypalPro extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('payment/paypal_pro');
+        $data = Theme::language('payment/paypal_pro');
         
         $data['cards'] = array();
         
@@ -55,34 +57,34 @@ class PaypalPro extends Controller {
             $data['year_expire'][] = array('text' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)), 'value' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)));
         }
         
-        $this->theme->loadjs('javascript/payment/paypal_pro', $data);
+        Theme::loadjs('javascript/payment/paypal_pro', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data['javascript'] = $this->theme->controller('common/javascript');
+        $data['javascript'] = Theme::controller('common/javascript');
         
-        return $this->theme->view('payment/paypal_pro', $data);
+        return View::render('payment/paypal_pro', $data);
     }
     
     public function send() {
-        if (!$this->config->get('paypal_pro_transaction')) {
+        if (!Config::get('paypal_pro_transaction')) {
             $payment_type = 'Authorization';
         } else {
             $payment_type = 'Sale';
         }
         
-        $this->theme->model('checkout/order');
+        Theme::model('checkout/order');
         
-        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        $order_info = CheckoutOrder::getOrder($this->session->data['order_id']);
         
         $request = 'METHOD=DoDirectPayment';
         $request.= '&VERSION=51.0';
-        $request.= '&USER=' . urlencode($this->config->get('paypal_pro_username'));
-        $request.= '&PWD=' . urlencode($this->config->get('paypal_pro_password'));
-        $request.= '&SIGNATURE=' . urlencode($this->config->get('paypal_pro_signature'));
+        $request.= '&USER=' . urlencode(Config::get('paypal_pro_username'));
+        $request.= '&PWD=' . urlencode(Config::get('paypal_pro_password'));
+        $request.= '&SIGNATURE=' . urlencode(Config::get('paypal_pro_signature'));
         $request.= '&CUSTREF=' . (int)$order_info['order_id'];
         $request.= '&PAYMENTACTION=' . $payment_type;
-        $request.= '&AMT=' . $this->currency->format($order_info['total'], $order_info['currency_code'], false, false);
+        $request.= '&AMT=' . Currency::format($order_info['total'], $order_info['currency_code'], false, false);
         $request.= '&CREDITCARDTYPE=' . $this->request->post['cc_type'];
         $request.= '&ACCT=' . urlencode(str_replace(' ', '', $this->request->post['cc_number']));
         $request.= '&CARDSTART=' . urlencode($this->request->post['cc_start_date_month'] . $this->request->post['cc_start_date_year']);
@@ -105,7 +107,7 @@ class PaypalPro extends Controller {
         $request.= '&COUNTRYCODE=' . urlencode($order_info['payment_iso_code_2']);
         $request.= '&CURRENCYCODE=' . urlencode($order_info['currency_code']);
         
-        if ($this->cart->hasShipping()) {
+        if (Cart::hasShipping()) {
             $request.= '&SHIPTONAME=' . urlencode($order_info['shipping_firstname'] . ' ' . $order_info['shipping_lastname']);
             $request.= '&SHIPTOSTREET=' . urlencode($order_info['shipping_address_1']);
             $request.= '&SHIPTOCITY=' . urlencode($order_info['shipping_city']);
@@ -121,7 +123,7 @@ class PaypalPro extends Controller {
             $request.= '&SHIPTOZIP=' . urlencode($order_info['payment_postcode']);
         }
         
-        if (!$this->config->get('paypal_pro_test')) {
+        if (!Config::get('paypal_pro_test')) {
             $curl = curl_init('https://api-3t.paypal.com/nvp');
         } else {
             $curl = curl_init('https://api-3t.sandbox.paypal.com/nvp');
@@ -151,7 +153,7 @@ class PaypalPro extends Controller {
         $json = array();
         
         if (($response_info['ACK'] == 'Success') || ($response_info['ACK'] == 'SuccessWithWarning')) {
-            $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('config_order_status_id'));
+            CheckoutOrder::confirm($this->session->data['order_id'], Config::get('config_order_status_id'));
             
             $message = '';
             
@@ -167,15 +169,15 @@ class PaypalPro extends Controller {
                 $message.= 'TRANSACTIONID: ' . $response_info['TRANSACTIONID'] . "\n";
             }
             
-            $this->model_checkout_order->update($this->session->data['order_id'], $this->config->get('paypal_pro_order_status_id'), $message);
+            CheckoutOrder::update($this->session->data['order_id'], Config::get('paypal_pro_order_status_id'), $message);
             
-            $json['success'] = $this->url->link('checkout/success');
+            $json['success'] = Url::link('checkout/success');
         } else {
             $json['error'] = $response_info['L_LONGMESSAGE0'];
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

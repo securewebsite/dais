@@ -21,22 +21,22 @@ use App\Models\Model;
 class Comment extends Model {
     
     public function addComment($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}blog_comment 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "blog_comment 
 			SET 
-				author = '" . $this->db->escape($data['author']) . "', 
-				post_id = '" . $this->db->escape($data['post_id']) . "', 
-				text = '" . $this->db->escape(strip_tags($data['text'])) . "', 
+				author = '" . DB::escape($data['author']) . "', 
+				post_id = '" . DB::escape($data['post_id']) . "', 
+				text = '" . DB::escape(strip_tags($data['text'])) . "', 
 				rating = '" . (int)$data['rating'] . "', 
 				status = '" . (int)$data['status'] . "', 
 				date_added = NOW()
 			");
         
-        $comment_id = $this->db->getLastId();
+        $comment_id = DB::getLastId();
         
-        $this->cache->delete('post.comment');
-        $this->cache->delete('posts.comment');
-        $this->cache->delete('post.average');
+        Cache::delete('post.comment');
+        Cache::delete('posts.comment');
+        Cache::delete('post.average');
         
         Theme::trigger('admin_blog_add_comment', array('blog_comment_id' => $comment_id));
         
@@ -46,21 +46,21 @@ class Comment extends Model {
     }
     
     public function editComment($comment_id, $data) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}blog_comment 
+        DB::query("
+			UPDATE " . DB::prefix() . "blog_comment 
 			SET 
-				author = '" . $this->db->escape($data['author']) . "', 
-				post_id = '" . $this->db->escape($data['post_id']) . "', 
-				text = '" . $this->db->escape(strip_tags($data['text'])) . "', 
+				author = '" . DB::escape($data['author']) . "', 
+				post_id = '" . DB::escape($data['post_id']) . "', 
+				text = '" . DB::escape(strip_tags($data['text'])) . "', 
 				rating = '" . (int)$data['rating'] . "', 
 				status = '" . (int)$data['status'] . "', 
 				date_added = NOW() 
 			WHERE comment_id = '" . (int)$comment_id . "'
 		");
         
-        $this->cache->delete('post.comment');
-        $this->cache->delete('posts.comment');
-        $this->cache->delete('post.average');
+        Cache::delete('post.comment');
+        Cache::delete('posts.comment');
+        Cache::delete('post.average');
         
         Theme::trigger('admin_blog_edit_comment', array('blog_comment_id' => $comment_id));
         
@@ -70,25 +70,25 @@ class Comment extends Model {
     }
     
     public function deleteComment($comment_id) {
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}blog_comment 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "blog_comment 
             WHERE comment_id = '" . (int)$comment_id . "'");
         
-        $this->cache->delete('post.comment');
-        $this->cache->delete('posts.comment');
-        $this->cache->delete('post.average');
+        Cache::delete('post.comment');
+        Cache::delete('posts.comment');
+        Cache::delete('post.average');
         
         Theme::trigger('admin_blog_delete_comment', array('blog_comment_id' => $comment_id));
     }
     
     public function getComment($comment_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT DISTINCT *, 
 			(SELECT pd.name 
-				FROM {$this->db->prefix}blog_post_description pd 
+				FROM " . DB::prefix() . "blog_post_description pd 
 				WHERE pd.post_id = c.post_id 
 				AND pd.language_id = '" . (int)Config::get('config_language_id') . "') AS post 
-			FROM {$this->db->prefix}blog_comment c 
+			FROM " . DB::prefix() . "blog_comment c 
 			WHERE c.comment_id = '" . (int)$comment_id . "'
 		");
         
@@ -98,8 +98,8 @@ class Comment extends Model {
     public function getComments($data = array()) {
         $sql = "
 			SELECT c.comment_id, pd.name, c.author, c.rating, c.status, c.date_added 
-			FROM {$this->db->prefix}blog_comment c 
-			LEFT JOIN {$this->db->prefix}blog_post_description pd 
+			FROM " . DB::prefix() . "blog_comment c 
+			LEFT JOIN " . DB::prefix() . "blog_post_description pd 
 				ON (c.post_id = pd.post_id) 
 			WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "'
 		";
@@ -130,24 +130,24 @@ class Comment extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
     
     public function getTotalComments() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}blog_comment
+			FROM " . DB::prefix() . "blog_comment
 		");
         
         return $query->row['total'];
     }
     
     public function getTotalCommentsAwaitingApproval() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}blog_comment 
+			FROM " . DB::prefix() . "blog_comment 
 			WHERE status = '0'
 		");
         

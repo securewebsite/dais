@@ -45,14 +45,14 @@ class Total extends Controller {
         
         Theme::model('setting/module');
         
-        $modules = $this->model_setting_module->getInstalled('total');
+        $modules = SettingModule::getInstalled('total');
         
         foreach ($modules as $key => $value) {
             $theme_file = Theme::getPath() . 'controller/total/' . $value . '.php';
             $core_file  = Config::get('path.application') . 'total/' . $value . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {
-                $this->model_setting_module->uninstall('total', $value);
+                SettingModule::uninstall('total', $value);
                 
                 unset($modules[$key]);
             }
@@ -71,11 +71,11 @@ class Total extends Controller {
                 $action = array();
                 
                 if (!in_array($module, $modules)) {
-                    $action[] = array('text' => Lang::get('lang_text_install'), 'href' => Url::link('module/total/install', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
+                    $action[] = array('text' => Lang::get('lang_text_install'), 'href' => Url::link('module/total/install', '' . '&module=' . $module, 'SSL'));
                 } else {
-                    $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('total/' . $module . '', 'token=' . $this->session->data['token'], 'SSL'));
+                    $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('total/' . $module . '', '', 'SSL'));
                     
-                    $action[] = array('text' => Lang::get('lang_text_uninstall'), 'href' => Url::link('module/total/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
+                    $action[] = array('text' => Lang::get('lang_text_uninstall'), 'href' => Url::link('module/total/uninstall', '' . '&module=' . $module, 'SSL'));
                 }
                 
                 $data['modules'][] = array('name' => Lang::get('lang_heading_title'), 'status' => Config::get($module . '_status') ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled'), 'sort_order' => Config::get($module . '_sort_order'), 'action' => $action);
@@ -86,7 +86,7 @@ class Total extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('module/total', $data));
+        Response::setOutput(View::render('module/total', $data));
     }
     
     public function install() {
@@ -97,16 +97,16 @@ class Total extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/total', '', 'SSL'));
         } else {
             Theme::model('setting/module');
             
-            $this->model_setting_module->install('total', $this->request->get['module']);
+            SettingModule::install('total', $this->request->get['module']);
             
             Theme::model('people/user_group');
             
-            $this->model_people_user_group->addPermission(User::getId(), 'access', 'total/' . $this->request->get['module']);
-            $this->model_people_user_group->addPermission(User::getId(), 'modify', 'total/' . $this->request->get['module']);
+            PeopleUserGroup::addPermission(User::getId(), 'access', 'total/' . $this->request->get['module']);
+            PeopleUserGroup::addPermission(User::getId(), 'modify', 'total/' . $this->request->get['module']);
             
             $base_path  = Config::get('path.application') . 'total' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'total' . SEP;
@@ -125,7 +125,7 @@ class Total extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/total', '', 'SSL'));
         }
     }
     
@@ -137,13 +137,13 @@ class Total extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/total', '', 'SSL'));
         } else {
             Theme::model('setting/module');
             Theme::model('setting/setting');
             
-            $this->model_setting_module->uninstall('total', $this->request->get['module']);
-            $this->model_setting_setting->deleteSetting($this->request->get['module']);
+            SettingModule::uninstall('total', $this->request->get['module']);
+            SettingSetting::deleteSetting($this->request->get['module']);
             
             $base_path  = Config::get('path.application') . 'total' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'total' . SEP;
@@ -162,7 +162,7 @@ class Total extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/total', '', 'SSL'));
         }
     }
 }

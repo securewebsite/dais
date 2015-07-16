@@ -42,7 +42,7 @@ class Returns extends Controller {
         Theme::model('sale/returns');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_sale_returns->addReturn($this->request->post);
+            SaleReturns::addReturn($this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -92,7 +92,7 @@ class Returns extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('sale/returns', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('sale/returns', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -108,7 +108,7 @@ class Returns extends Controller {
         Theme::model('sale/returns');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_sale_returns->editReturn($this->request->get['return_id'], $this->request->post);
+            SaleReturns::editReturn($this->request->get['return_id'], $this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -158,7 +158,7 @@ class Returns extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('sale/returns', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('sale/returns', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -175,7 +175,7 @@ class Returns extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $return_id) {
-                $this->model_sale_returns->deleteReturn($return_id);
+                SaleReturns::deleteReturn($return_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -226,7 +226,7 @@ class Returns extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('sale/returns', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('sale/returns', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -351,28 +351,26 @@ class Returns extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'sale/returns', $url);
         
-        $data['insert'] = Url::link('sale/returns/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('sale/returns/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('sale/returns/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('sale/returns/delete', '' . $url, 'SSL');
         
         $data['returns'] = array();
         
         $filter = array('filter_return_id' => $filter_return_id, 'filter_order_id' => $filter_order_id, 'filter_customer' => $filter_customer, 'filter_product' => $filter_product, 'filter_model' => $filter_model, 'filter_return_status_id' => $filter_return_status_id, 'filter_date_added' => $filter_date_added, 'filter_date_modified' => $filter_date_modified, 'sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $return_total = $this->model_sale_returns->getTotalReturns($filter);
+        $return_total = SaleReturns::getTotalReturns($filter);
         
-        $results = $this->model_sale_returns->getReturns($filter);
+        $results = SaleReturns::getReturns($filter);
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_view'), 'href' => Url::link('sale/returns/info', 'token=' . $this->session->data['token'] . '&return_id=' . $result['return_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_view'), 'href' => Url::link('sale/returns/info', '' . '&return_id=' . $result['return_id'] . $url, 'SSL'));
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('sale/returns/update', 'token=' . $this->session->data['token'] . '&return_id=' . $result['return_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('sale/returns/update', '' . '&return_id=' . $result['return_id'] . $url, 'SSL'));
             
             $data['returns'][] = array('return_id' => $result['return_id'], 'order_id' => $result['order_id'], 'customer' => $result['customer'], 'product' => $result['product'], 'model' => $result['model'], 'status' => $result['status'], 'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 'date_modified' => date(Lang::get('lang_date_format_short'), strtotime($result['date_modified'])), 'selected' => isset($this->request->post['selected']) && in_array($result['return_id'], $this->request->post['selected']), 'action' => $action);
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         if (isset($this->session->data['error'])) {
             $data['error_warning'] = $this->session->data['error'];
@@ -436,14 +434,14 @@ class Returns extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_return_id']     = Url::link('sale/returns', 'token=' . $this->session->data['token'] . '&sort=r.return_id' . $url, 'SSL');
-        $data['sort_order_id']      = Url::link('sale/returns', 'token=' . $this->session->data['token'] . '&sort=r.order_id' . $url, 'SSL');
-        $data['sort_customer']      = Url::link('sale/returns', 'token=' . $this->session->data['token'] . '&sort=customer' . $url, 'SSL');
-        $data['sort_product']       = Url::link('sale/returns', 'token=' . $this->session->data['token'] . '&sort=product' . $url, 'SSL');
-        $data['sort_model']         = Url::link('sale/returns', 'token=' . $this->session->data['token'] . '&sort=model' . $url, 'SSL');
-        $data['sort_status']        = Url::link('sale/returns', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
-        $data['sort_date_added']    = Url::link('sale/returns', 'token=' . $this->session->data['token'] . '&sort=r.date_added' . $url, 'SSL');
-        $data['sort_date_modified'] = Url::link('sale/returns', 'token=' . $this->session->data['token'] . '&sort=r.date_modified' . $url, 'SSL');
+        $data['sort_return_id']     = Url::link('sale/returns', '' . '&sort=r.return_id' . $url, 'SSL');
+        $data['sort_order_id']      = Url::link('sale/returns', '' . '&sort=r.order_id' . $url, 'SSL');
+        $data['sort_customer']      = Url::link('sale/returns', '' . '&sort=customer' . $url, 'SSL');
+        $data['sort_product']       = Url::link('sale/returns', '' . '&sort=product' . $url, 'SSL');
+        $data['sort_model']         = Url::link('sale/returns', '' . '&sort=model' . $url, 'SSL');
+        $data['sort_status']        = Url::link('sale/returns', '' . '&sort=status' . $url, 'SSL');
+        $data['sort_date_added']    = Url::link('sale/returns', '' . '&sort=r.date_added' . $url, 'SSL');
+        $data['sort_date_modified'] = Url::link('sale/returns', '' . '&sort=r.date_modified' . $url, 'SSL');
         
         $url = '';
         
@@ -487,7 +485,7 @@ class Returns extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($return_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('sale/returns', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($return_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('sale/returns', '' . $url . '&page={page}', 'SSL'));
         
         $data['filter_return_id']        = $filter_return_id;
         $data['filter_order_id']         = $filter_order_id;
@@ -500,7 +498,7 @@ class Returns extends Controller {
         
         Theme::model('locale/return_status');
         
-        $data['return_statuses'] = $this->model_locale_return_status->getReturnStatuses();
+        $data['return_statuses'] = LocaleReturnStatus::getReturnStatuses();
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -509,13 +507,11 @@ class Returns extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('sale/return_list', $data));
+        Response::setOutput(View::render('sale/return_list', $data));
     }
     
     protected function getForm() {
         $data = Theme::language('sale/returns');
-        
-        $data['token'] = $this->session->data['token'];
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -614,15 +610,15 @@ class Returns extends Controller {
         Breadcrumb::add('lang_heading_title', 'sale/returns', $url);
         
         if (!isset($this->request->get['return_id'])) {
-            $data['action'] = Url::link('sale/returns/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('sale/returns/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('sale/returns/update', 'token=' . $this->session->data['token'] . '&return_id=' . $this->request->get['return_id'] . $url, 'SSL');
+            $data['action'] = Url::link('sale/returns/update', '' . '&return_id=' . $this->request->get['return_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('sale/returns', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('sale/returns', '' . $url, 'SSL');
         
         if (isset($this->request->get['return_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $return_info = $this->model_sale_returns->getReturn($this->request->get['return_id']);
+            $return_info = SaleReturns::getReturn($this->request->get['return_id']);
         }
         
         if (isset($this->request->post['order_id'])) {
@@ -739,7 +735,7 @@ class Returns extends Controller {
         
         Theme::model('locale/return_reason');
         
-        $data['return_reasons'] = $this->model_locale_return_reason->getReturnReasons();
+        $data['return_reasons'] = LocaleReturnReason::getReturnReasons();
         
         if (isset($this->request->post['return_action_id'])) {
             $data['return_action_id'] = $this->request->post['return_action_id'];
@@ -751,7 +747,7 @@ class Returns extends Controller {
         
         Theme::model('locale/return_action');
         
-        $data['return_actions'] = $this->model_locale_return_action->getReturnActions();
+        $data['return_actions'] = LocaleReturnAction::getReturnActions();
         
         if (isset($this->request->post['comment'])) {
             $data['comment'] = $this->request->post['comment'];
@@ -771,13 +767,13 @@ class Returns extends Controller {
         
         Theme::model('locale/return_status');
         
-        $data['return_statuses'] = $this->model_locale_return_status->getReturnStatuses();
+        $data['return_statuses'] = LocaleReturnStatus::getReturnStatuses();
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('sale/return_form', $data));
+        Response::setOutput(View::render('sale/return_form', $data));
     }
     
     public function info() {
@@ -789,7 +785,7 @@ class Returns extends Controller {
             $return_id = 0;
         }
         
-        $return_info = $this->model_sale_returns->getReturn($return_id);
+        $return_info = SaleReturns::getReturn($return_id);
         
         if ($return_info) {
             $data = Theme::language('sale/returns');
@@ -844,19 +840,17 @@ class Returns extends Controller {
             
             Breadcrumb::add('lang_heading_title', 'sale/returns', $url);
             
-            $data['cancel'] = Url::link('sale/returns', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['cancel'] = Url::link('sale/returns', '' . $url, 'SSL');
             
             Theme::model('sale/order');
             
-            $order_info = $this->model_sale_order->getOrder($return_info['order_id']);
-            
-            $data['token'] = $this->session->data['token'];
+            $order_info = SaleOrder::getOrder($return_info['order_id']);
             
             $data['return_id'] = $return_info['return_id'];
             $data['order_id'] = $return_info['order_id'];
             
             if ($return_info['order_id'] && $order_info) {
-                $data['order'] = Url::link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $return_info['order_id'], 'SSL');
+                $data['order'] = Url::link('sale/order/info', '' . '&order_id=' . $return_info['order_id'], 'SSL');
             } else {
                 $data['order'] = '';
             }
@@ -866,7 +860,7 @@ class Returns extends Controller {
             $data['lastname'] = $return_info['lastname'];
             
             if ($return_info['customer_id']) {
-                $data['customer'] = Url::link('people/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $return_info['customer_id'], 'SSL');
+                $data['customer'] = Url::link('people/customer/update', '' . '&customer_id=' . $return_info['customer_id'], 'SSL');
             } else {
                 $data['customer'] = '';
             }
@@ -876,7 +870,7 @@ class Returns extends Controller {
             
             Theme::model('locale/return_status');
             
-            $return_status_info = $this->model_locale_return_status->getReturnStatus($return_info['return_status_id']);
+            $return_status_info = LocaleReturnStatus::getReturnStatus($return_info['return_status_id']);
             
             if ($return_status_info) {
                 $data['return_status'] = $return_status_info['name'];
@@ -892,7 +886,7 @@ class Returns extends Controller {
             
             Theme::model('locale/return_reason');
             
-            $return_reason_info = $this->model_locale_return_reason->getReturnReason($return_info['return_reason_id']);
+            $return_reason_info = LocaleReturnReason::getReturnReason($return_info['return_reason_id']);
             
             if ($return_reason_info) {
                 $data['return_reason'] = $return_reason_info['name'];
@@ -905,11 +899,11 @@ class Returns extends Controller {
             
             Theme::model('locale/return_action');
             
-            $data['return_actions'] = $this->model_locale_return_action->getReturnActions();
+            $data['return_actions'] = LocaleReturnAction::getReturnActions();
             
             $data['return_action_id'] = $return_info['return_action_id'];
             
-            $data['return_statuses'] = $this->model_locale_return_status->getReturnStatuses();
+            $data['return_statuses'] = LocaleReturnStatus::getReturnStatuses();
             
             $data['return_status_id'] = $return_info['return_status_id'];
             
@@ -919,7 +913,7 @@ class Returns extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(Theme::view('sale/return_info', $data));
+            Response::setOutput(View::render('sale/return_info', $data));
         } else {
             $data = Theme::language('error/not_found');
             
@@ -931,7 +925,7 @@ class Returns extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(Theme::view('error/not_found', $data));
+            Response::setOutput(View::render('error/not_found', $data));
         }
     }
     
@@ -1002,7 +996,7 @@ class Returns extends Controller {
                 
                 $json['success'] = Lang::get('lang_text_success');
                 
-                $this->model_sale_returns->editReturnAction($this->request->get['return_id'], $this->request->post['return_action_id']);
+                SaleReturns::editReturnAction($this->request->get['return_id'], $this->request->post['return_action_id']);
             }
         }
         
@@ -1025,7 +1019,7 @@ class Returns extends Controller {
             }
             
             if (!$data['error']) {
-                $this->model_sale_returns->addReturnHistory($this->request->get['return_id'], $this->request->post);
+                SaleReturns::addReturnHistory($this->request->get['return_id'], $this->request->post);
                 
                 $data['success'] = Lang::get('lang_text_success');
             }
@@ -1039,15 +1033,15 @@ class Returns extends Controller {
         
         $data['histories'] = array();
         
-        $results = $this->model_sale_returns->getReturnHistories($this->request->get['return_id'], ($page - 1) * 10, 10);
+        $results = SaleReturns::getReturnHistories($this->request->get['return_id'], ($page - 1) * 10, 10);
         
         foreach ($results as $result) {
             $data['histories'][] = array('notify' => $result['notify'] ? Lang::get('lang_text_yes') : Lang::get('lang_text_no'), 'status' => $result['status'], 'comment' => nl2br($result['comment']), 'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])));
         }
         
-        $history_total = $this->model_sale_returns->getTotalReturnHistories($this->request->get['return_id']);
+        $history_total = SaleReturns::getTotalReturnHistories($this->request->get['return_id']);
         
-        $data['pagination'] = Theme::paginate($history_total, $page, 10, Lang::get('lang_text_pagination'), Url::link('sale/returns/history', 'token=' . $this->session->data['token'] . '&return_id=' . $this->request->get['return_id'] . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($history_total, $page, 10, Lang::get('lang_text_pagination'), Url::link('sale/returns/history', '' . '&return_id=' . $this->request->get['return_id'] . '&page={page}', 'SSL'));
         
         Theme::loadjs('javascript/sale/return_history', $data);
         
@@ -1055,6 +1049,6 @@ class Returns extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        Response::setOutput(Theme::view('sale/return_history', $data));
+        Response::setOutput(View::render('sale/return_history', $data));
     }
 }

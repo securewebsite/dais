@@ -28,10 +28,10 @@ class Category extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('category', $this->request->post);
+            SettingSetting::editSetting('category', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/widget', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -43,8 +43,8 @@ class Category extends Controller {
         Breadcrumb::add('lang_text_widget', 'module/widget');
         Breadcrumb::add('lang_heading_title', 'widget/category');
         
-        $data['action'] = Url::link('widget/category', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('widget/category', '', 'SSL');
+        $data['cancel'] = Url::link('module/widget', '', 'SSL');
         
         $data['widgets'] = array();
         
@@ -56,7 +56,7 @@ class Category extends Controller {
         
         Theme::model('design/layout');
         
-        $data['layouts'] = $this->model_design_layout->getLayouts();
+        $data['layouts'] = DesignLayout::getLayouts();
         
         Theme::loadjs('javascript/widget/category', $data);
         
@@ -64,7 +64,7 @@ class Category extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('widget/category', $data));
+        Response::setOutput(View::render('widget/category', $data));
     }
     
     protected function validate() {

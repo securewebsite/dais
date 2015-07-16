@@ -15,30 +15,32 @@
 */
 
 namespace App\Controllers\Front\Account;
+
 use App\Controllers\Controller;
 
 class Edit extends Controller {
+    
     private $error = array();
     
     public function index() {
-        if (!$this->customer->isLogged()) {
-            $this->session->data['redirect'] = $this->url->link('account/edit', '', 'SSL');
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+        if (!Customer::isLogged()) {
+            $this->session->data['redirect'] = Url::link('account/edit', '', 'SSL');
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         }
         
-        $data = $this->theme->language('account/edit');
+        $data = Theme::language('account/edit');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('account/customer');
+        Theme::setTitle(Lang::get('lang_heading_title'));
+        Theme::model('account/customer');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_account_customer->editCustomer($this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
-            $this->response->redirect($this->url->link('account/dashboard', '', 'SSL'));
+            AccountCustomer::editCustomer($this->request->post);
+            $this->session->data['success'] = Lang::get('lang_text_success');
+            Response::redirect(Url::link('account/dashboard', '', 'SSL'));
         }
         
-        $this->breadcrumb->add('lang_text_account', 'account/dashboard', null, true, 'SSL');
-        $this->breadcrumb->add('lang_text_edit', 'account/edit', null, true, 'SSL');
+        Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
+        Breadcrumb::add('lang_text_edit', 'account/edit', null, true, 'SSL');
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -70,10 +72,10 @@ class Edit extends Controller {
             $data['error_telephone'] = '';
         }
         
-        $data['action'] = $this->url->link('account/edit', '', 'SSL');
+        $data['action'] = Url::link('account/edit', '', 'SSL');
         
         if ($this->request->server['REQUEST_METHOD'] != 'POST') {
-            $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+            $customer_info = AccountCustomer::getCustomer(Customer::getId());
         }
         
         if (isset($customer_info)):
@@ -114,40 +116,40 @@ class Edit extends Controller {
             $data['telephone'] = '';
         }
         
-        $data['back'] = $this->url->link('account/dashboard', '', 'SSL');
+        $data['back'] = Url::link('account/dashboard', '', 'SSL');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->setController('header', 'shop/header');
-        $this->theme->setController('footer', 'shop/footer');
+        Theme::setController('header', 'shop/header');
+        Theme::setController('footer', 'shop/footer');
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('account/edit', $data));
+        Response::setOutput(View::render('account/edit', $data));
     }
     
     protected function validate() {
-        if (($this->encode->strlen($this->request->post['firstname']) < 1) || ($this->encode->strlen($this->request->post['firstname']) > 32)) {
-            $this->error['firstname'] = $this->language->get('lang_error_firstname');
+        if ((Encode::strlen($this->request->post['firstname']) < 1) || (Encode::strlen($this->request->post['firstname']) > 32)) {
+            $this->error['firstname'] = Lang::get('lang_error_firstname');
         }
         
-        if (($this->encode->strlen($this->request->post['lastname']) < 1) || ($this->encode->strlen($this->request->post['lastname']) > 32)) {
-            $this->error['lastname'] = $this->language->get('lang_error_lastname');
+        if ((Encode::strlen($this->request->post['lastname']) < 1) || (Encode::strlen($this->request->post['lastname']) > 32)) {
+            $this->error['lastname'] = Lang::get('lang_error_lastname');
         }
         
-        if (($this->encode->strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['email'])) {
-            $this->error['email'] = $this->language->get('lang_error_email');
+        if ((Encode::strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['email'])) {
+            $this->error['email'] = Lang::get('lang_error_email');
         }
         
-        if (($this->customer->getEmail() != $this->request->post['email']) && $this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
-            $this->error['warning'] = $this->language->get('lang_error_exists');
+        if ((Customer::getEmail() != $this->request->post['email']) && AccountCustomer::getTotalCustomersByEmail($this->request->post['email'])) {
+            $this->error['warning'] = Lang::get('lang_error_exists');
         }
         
-        if (($this->encode->strlen($this->request->post['telephone']) < 3) || ($this->encode->strlen($this->request->post['telephone']) > 32)) {
-            $this->error['telephone'] = $this->language->get('lang_error_telephone');
+        if ((Encode::strlen($this->request->post['telephone']) < 3) || (Encode::strlen($this->request->post['telephone']) > 32)) {
+            $this->error['telephone'] = Lang::get('lang_error_telephone');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

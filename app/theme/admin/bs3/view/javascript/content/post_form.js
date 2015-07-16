@@ -24,7 +24,7 @@ var mapped={};
 <?php endif; ?>
 $('input[name="author"]').typeahead({
 	source:function(q,process){
-		return $.getJSON('index.php?route=content/post/autoauthor&token='+token+'&'+filter_name+'='+encodeURIComponent(q),function(json){
+		return $.getJSON('index.php?route=content/post/autoauthor&'+filter_name+'='+encodeURIComponent(q),function(json){
 			var data=[];
 			$.each(json,function(i,item){
 				<?php if ($posted_by == 'user_name'): ?>
@@ -56,7 +56,7 @@ $('#meta-description<?= $language["language_id"]; ?>').bind('click', function(e)
 	e.preventDefault();
 	$data = $('textarea[name="post_description[<?= $language["language_id"]; ?>][description]"]').code();
 	$.ajax({
-		url: 'index.php?route=content/post/description&token=<?= $token; ?>',
+		url: 'index.php?route=content/post/description',
 		type: 'post',
 		dataType: 'json',
 		data: {
@@ -74,7 +74,7 @@ $('#meta-keyword<?= $language["language_id"]; ?>').bind('click', function(e) {
 	e.preventDefault();
 	$data = $('textarea[name="post_description[<?= $language["language_id"]; ?>][description]"]').code();
 	$.ajax({
-		url: 'index.php?route=content/post/keyword&token=<?= $token; ?>',
+		url: 'index.php?route=content/post/keyword',
 		type: 'post',
 		dataType: 'json',
 		data: {

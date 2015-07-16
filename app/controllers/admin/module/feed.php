@@ -45,14 +45,14 @@ class Feed extends Controller {
         
         Theme::model('setting/module');
         
-        $modules = $this->model_setting_module->getInstalled('feed');
+        $modules = SettingModule::getInstalled('feed');
         
         foreach ($modules as $key => $value) {
             $theme_file = Theme::getPath() . 'controller/feed/' . $value . '.php';
             $core_file  = Config::get('path.application') . 'feed/' . $value . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {
-                $this->model_setting_module->uninstall('feed', $value);
+                SettingModule::uninstall('feed', $value);
                 
                 unset($modules[$key]);
             }
@@ -71,11 +71,11 @@ class Feed extends Controller {
                 $action = array();
                 
                 if (!in_array($module, $modules)) {
-                    $action[] = array('text' => Lang::get('lang_text_install'), 'href' => Url::link('module/feed/install', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
+                    $action[] = array('text' => Lang::get('lang_text_install'), 'href' => Url::link('module/feed/install', '' . '&module=' . $module, 'SSL'));
                 } else {
-                    $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('feed/' . $module . '', 'token=' . $this->session->data['token'], 'SSL'));
+                    $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('feed/' . $module . '', '', 'SSL'));
                     
-                    $action[] = array('text' => Lang::get('lang_text_uninstall'), 'href' => Url::link('module/feed/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
+                    $action[] = array('text' => Lang::get('lang_text_uninstall'), 'href' => Url::link('module/feed/uninstall', '' . '&module=' . $module, 'SSL'));
                 }
                 
                 $data['modules'][] = array('name' => Lang::get('lang_heading_title'), 'status' => Config::get($module . '_status') ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled'), 'action' => $action);
@@ -86,7 +86,7 @@ class Feed extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('module/feed', $data));
+        Response::setOutput(View::render('module/feed', $data));
     }
     
     public function install() {
@@ -97,16 +97,16 @@ class Feed extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/feed', '', 'SSL'));
         } else {
             Theme::model('setting/module');
             
-            $this->model_setting_module->install('feed', $this->request->get['module']);
+            SettingModule::install('feed', $this->request->get['module']);
             
             Theme::model('people/user_group');
             
-            $this->model_people_user_group->addPermission(User::getId(), 'access', 'feed/' . $this->request->get['module']);
-            $this->model_people_user_group->addPermission(User::getId(), 'modify', 'feed/' . $this->request->get['module']);
+            PeopleUserGroup::addPermission(User::getId(), 'access', 'feed/' . $this->request->get['module']);
+            PeopleUserGroup::addPermission(User::getId(), 'modify', 'feed/' . $this->request->get['module']);
             
             $base_path  = Config::get('path.application') . 'feed' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'feed' . SEP;
@@ -125,7 +125,7 @@ class Feed extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/feed', '', 'SSL'));
         }
     }
     
@@ -137,13 +137,13 @@ class Feed extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/feed', '', 'SSL'));
         } else {
             Theme::model('setting/module');
             Theme::model('setting/setting');
             
-            $this->model_setting_module->uninstall('feed', $this->request->get['module']);
-            $this->model_setting_setting->deleteSetting($this->request->get['module']);
+            SettingModule::uninstall('feed', $this->request->get['module']);
+            SettingSetting::deleteSetting($this->request->get['module']);
             
             $base_path  = Config::get('path.application') . 'feed' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'feed' . SEP;
@@ -162,7 +162,7 @@ class Feed extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/feed', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/feed', '', 'SSL'));
         }
     }
 }

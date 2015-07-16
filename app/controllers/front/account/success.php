@@ -16,38 +16,40 @@
 
 
 namespace App\Controllers\Front\Account;
+
 use App\Controllers\Controller;
 
 class Success extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('account/success');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('account/customer_group');
+        $data = Theme::language('account/success');
+        Theme::setTitle(Lang::get('lang_heading_title'));
+        Theme::model('account/customer_group');
         
-        $this->breadcrumb->add('lang_text_account', 'account/dashboard', null, true, 'SSL');
-        $this->breadcrumb->add('lang_text_success', 'account/success', null, true, 'SSL');
+        Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
+        Breadcrumb::add('lang_text_success', 'account/success', null, true, 'SSL');
         
-        $customer_group = $this->model_account_customer_group->getCustomerGroup($this->customer->getGroupId());
+        $customer_group = AccountCustomerGroup::getCustomerGroup(Customer::getGroupId());
         
         if ($customer_group && !$customer_group['approval']) {
-            $data['text_message'] = sprintf($this->language->get('lang_text_message'), $this->url->link('content/contact'));
+            $data['text_message'] = sprintf(Lang::get('lang_text_message'), Url::link('content/contact'));
         } else {
-            $data['text_message'] = sprintf($this->language->get('lang_text_approval'), $this->config->get('config_name'), $this->url->link('content/contact'));
+            $data['text_message'] = sprintf(Lang::get('lang_text_approval'), Config::get('config_name'), Url::link('content/contact'));
         }
         
-        if ($this->cart->hasProducts()) {
-            $data['continue'] = $this->url->link('checkout/cart', '', 'SSL');
+        if (Cart::hasProducts()) {
+            $data['continue'] = Url::link('checkout/cart', '', 'SSL');
         } else {
-            $data['continue'] = $this->url->link('account/dashboard', '', 'SSL');
+            $data['continue'] = Url::link('account/dashboard', '', 'SSL');
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->setController('header', 'shop/header');
-        $this->theme->setController('footer', 'shop/footer');
+        Theme::setController('header', 'shop/header');
+        Theme::setController('footer', 'shop/footer');
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('common/success', $data));
+        Response::setOutput(View::render('common/success', $data));
     }
 }

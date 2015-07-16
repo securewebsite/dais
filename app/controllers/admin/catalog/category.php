@@ -38,7 +38,7 @@ class Category extends Controller {
         Theme::model('catalog/category');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_catalog_category->addCategory($this->request->post);
+            CatalogCategory::addCategory($this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -47,7 +47,7 @@ class Category extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/category', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/category', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -61,7 +61,7 @@ class Category extends Controller {
         Theme::model('catalog/category');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_catalog_category->editCategory($this->request->get['category_id'], $this->request->post);
+            CatalogCategory::editCategory($this->request->get['category_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -70,7 +70,7 @@ class Category extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/category', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/category', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -85,7 +85,7 @@ class Category extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $category_id) {
-                $this->model_catalog_category->deleteCategory($category_id);
+                CatalogCategory::deleteCategory($category_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -96,7 +96,7 @@ class Category extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/category', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/category', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -110,10 +110,10 @@ class Category extends Controller {
         Theme::model('catalog/category');
         
         if ($this->validateRepair()) {
-            $this->model_catalog_category->repairCategories();
+            CatalogCategory::repairCategories();
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('catalog/category', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('catalog/category', '', 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -138,22 +138,22 @@ class Category extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'catalog/category', $url);
         
-        $data['insert'] = Url::link('catalog/category/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('catalog/category/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['repair'] = Url::link('catalog/category/repair', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('catalog/category/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('catalog/category/delete', '' . $url, 'SSL');
+        $data['repair'] = Url::link('catalog/category/repair', '' . $url, 'SSL');
         
         $data['categories'] = array();
         
         $filter = array('start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $category_total = $this->model_catalog_category->getTotalCategories();
+        $category_total = CatalogCategory::getTotalCategories();
         
-        $results = $this->model_catalog_category->getCategories($filter);
+        $results = CatalogCategory::getCategories($filter);
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/category/update', 'token=' . $this->session->data['token'] . '&category_id=' . $result['category_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/category/update', '' . '&category_id=' . $result['category_id'] . $url, 'SSL'));
             
             $data['categories'][] = array('category_id' => $result['category_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'selected' => isset($this->request->post['selected']) && in_array($result['category_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -172,13 +172,13 @@ class Category extends Controller {
             $data['success'] = '';
         }
         
-        $data['pagination'] = Theme::paginate($category_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/category', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($category_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/category', '' . $url . '&page={page}', 'SSL'));
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('catalog/category_list', $data));
+        Response::setOutput(View::render('catalog/category_list', $data));
     }
     
     protected function getForm() {
@@ -211,27 +211,25 @@ class Category extends Controller {
         Breadcrumb::add('lang_heading_title', 'catalog/category', $url);
         
         if (!isset($this->request->get['category_id'])) {
-            $data['action'] = Url::link('catalog/category/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/category/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/category/update', 'token=' . $this->session->data['token'] . '&category_id=' . $this->request->get['category_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/category/update', '' . '&category_id=' . $this->request->get['category_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('catalog/category', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('catalog/category', '' . $url, 'SSL');
         
         if (isset($this->request->get['category_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $category_info = $this->model_catalog_category->getCategory($this->request->get['category_id']);
+            $category_info = CatalogCategory::getCategory($this->request->get['category_id']);
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         Theme::model('locale/language');
         
-        $data['languages'] = $this->model_locale_language->getLanguages();
+        $data['languages'] = LocaleLanguage::getLanguages();
         
         if (isset($this->request->post['category_description'])) {
             $data['category_description'] = $this->request->post['category_description'];
         } elseif (isset($this->request->get['category_id'])) {
-            $data['category_description'] = $this->model_catalog_category->getCategoryDescriptions($this->request->get['category_id']);
+            $data['category_description'] = CatalogCategory::getCategoryDescriptions($this->request->get['category_id']);
         } else {
             $data['category_description'] = array();
         }
@@ -257,7 +255,7 @@ class Category extends Controller {
         if (isset($this->request->post['category_filter'])) {
             $filters = $this->request->post['category_filter'];
         } elseif (isset($this->request->get['category_id'])) {
-            $filters = $this->model_catalog_category->getCategoryFilters($this->request->get['category_id']);
+            $filters = CatalogCategory::getCategoryFilters($this->request->get['category_id']);
         } else {
             $filters = array();
         }
@@ -265,7 +263,7 @@ class Category extends Controller {
         $data['category_filters'] = array();
         
         foreach ($filters as $filter_id) {
-            $filter_info = $this->model_catalog_filter->getFilter($filter_id);
+            $filter_info = CatalogFilter::getFilter($filter_id);
             
             if ($filter_info) {
                 $data['category_filters'][] = array('filter_id' => $filter_info['filter_id'], 'name' => $filter_info['group'] . ' &gt; ' . $filter_info['name']);
@@ -274,12 +272,12 @@ class Category extends Controller {
         
         Theme::model('setting/store');
         
-        $data['stores'] = $this->model_setting_store->getStores();
+        $data['stores'] = SettingStore::getStores();
         
         if (isset($this->request->post['category_store'])) {
             $data['category_store'] = $this->request->post['category_store'];
         } elseif (isset($this->request->get['category_id'])) {
-            $data['category_store'] = $this->model_catalog_category->getCategoryStores($this->request->get['category_id']);
+            $data['category_store'] = CatalogCategory::getCategoryStores($this->request->get['category_id']);
         } else {
             $data['category_store'] = array(0);
         }
@@ -303,14 +301,14 @@ class Category extends Controller {
         Theme::model('tool/image');
         
         if (isset($this->request->post['image']) && file_exists(Config::get('path.image') . $this->request->post['image'])) {
-            $data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
+            $data['thumb'] = ToolImage::resize($this->request->post['image'], 100, 100);
         } elseif (!empty($category_info) && $category_info['image'] && file_exists(Config::get('path.image') . $category_info['image'])) {
-            $data['thumb'] = $this->model_tool_image->resize($category_info['image'], 100, 100);
+            $data['thumb'] = ToolImage::resize($category_info['image'], 100, 100);
         } else {
-            $data['thumb'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+            $data['thumb'] = ToolImage::resize('placeholder.png', 100, 100);
         }
         
-        $data['no_image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+        $data['no_image'] = ToolImage::resize('placeholder.png', 100, 100);
         
         if (isset($this->request->post['top'])) {
             $data['top'] = $this->request->post['top'];
@@ -347,14 +345,14 @@ class Category extends Controller {
         if (isset($this->request->post['category_layout'])) {
             $data['category_layout'] = $this->request->post['category_layout'];
         } elseif (isset($this->request->get['category_id'])) {
-            $data['category_layout'] = $this->model_catalog_category->getCategoryLayouts($this->request->get['category_id']);
+            $data['category_layout'] = CatalogCategory::getCategoryLayouts($this->request->get['category_id']);
         } else {
             $data['category_layout'] = array();
         }
         
         Theme::model('design/layout');
         
-        $data['layouts'] = $this->model_design_layout->getLayouts();
+        $data['layouts'] = DesignLayout::getLayouts();
 
         Theme::loadjs('javascript/catalog/category_form', $data);
         
@@ -362,7 +360,7 @@ class Category extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('catalog/category_form', $data));
+        Response::setOutput(View::render('catalog/category_form', $data));
     }
     
     protected function validateForm() {
@@ -378,7 +376,7 @@ class Category extends Controller {
         
         if (isset($this->request->post['slug']) && Encode::strlen($this->request->post['slug']) > 0):
             Theme::model('tool/utility');
-            $query = $this->model_tool_utility->findSlugByName($this->request->post['slug']);
+            $query = ToolUtility::findSlugByName($this->request->post['slug']);
             
             if (isset($this->request->get['category_id'])):
                 if ($query):
@@ -432,7 +430,7 @@ class Category extends Controller {
             
             $filter = array('filter_name' => $this->request->get['filter_name'], 'start' => 0, 'limit' => 20);
             
-            $results = $this->model_catalog_category->getCategories($filter);
+            $results = CatalogCategory::getCategories($filter);
             
             foreach ($results as $result) {
                 $json[] = array('category_id' => $result['category_id'], 'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')));
@@ -466,7 +464,7 @@ class Category extends Controller {
             $slug = Url::build_slug($this->request->get['name']);
             
             // check that the slug is globally unique
-            $query = $this->model_tool_utility->findSlugByName($slug);
+            $query = ToolUtility::findSlugByName($slug);
             
             if ($query):
                 if (isset($this->request->get['category_id'])):

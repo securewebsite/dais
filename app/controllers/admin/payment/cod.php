@@ -28,10 +28,10 @@ class Cod extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('cod', $this->request->post);
+            SettingSetting::editSetting('cod', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/payment', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -43,9 +43,9 @@ class Cod extends Controller {
         Breadcrumb::add('lang_text_payment', 'module/payment');
         Breadcrumb::add('lang_heading_title', 'payment/cod');
         
-        $data['action'] = Url::link('payment/cod', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('payment/cod', '', 'SSL');
         
-        $data['cancel'] = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/payment', '', 'SSL');
         
         if (isset($this->request->post['cod_total'])) {
             $data['cod_total'] = $this->request->post['cod_total'];
@@ -61,7 +61,7 @@ class Cod extends Controller {
         
         Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
+        $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
         if (isset($this->request->post['cod_geo_zone_id'])) {
             $data['cod_geo_zone_id'] = $this->request->post['cod_geo_zone_id'];
@@ -71,7 +71,7 @@ class Cod extends Controller {
         
         Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
+        $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
         if (isset($this->request->post['cod_status'])) {
             $data['cod_status'] = $this->request->post['cod_status'];
@@ -89,7 +89,7 @@ class Cod extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('payment/cod', $data));
+        Response::setOutput(View::render('payment/cod', $data));
     }
     
     protected function validate() {

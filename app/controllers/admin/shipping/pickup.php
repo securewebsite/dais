@@ -28,10 +28,10 @@ class Pickup extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('pickup', $this->request->post);
+            SettingSetting::editSetting('pickup', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -43,9 +43,9 @@ class Pickup extends Controller {
         Breadcrumb::add('lang_text_shipping', 'module/shipping');
         Breadcrumb::add('lang_heading_title', 'shipping/pickup');
         
-        $data['action'] = Url::link('shipping/pickup', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('shipping/pickup', '', 'SSL');
         
-        $data['cancel'] = Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/shipping', '', 'SSL');
         
         if (isset($this->request->post['pickup_geo_zone_id'])) {
             $data['pickup_geo_zone_id'] = $this->request->post['pickup_geo_zone_id'];
@@ -55,7 +55,7 @@ class Pickup extends Controller {
         
         Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
+        $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
         if (isset($this->request->post['pickup_status'])) {
             $data['pickup_status'] = $this->request->post['pickup_status'];
@@ -73,7 +73,7 @@ class Pickup extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('shipping/pickup', $data));
+        Response::setOutput(View::render('shipping/pickup', $data));
     }
     
     protected function validate() {

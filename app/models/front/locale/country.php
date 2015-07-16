@@ -23,9 +23,9 @@ class Country extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}country 
+				FROM " . DB::prefix() . "country 
 				WHERE country_id = '" . (int)$country_id . "' 
 				AND status = '1'
 			");
@@ -47,9 +47,9 @@ class Country extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}country 
+				FROM " . DB::prefix() . "country 
 				WHERE status = '1' 
 				ORDER BY name ASC
 			");

@@ -38,7 +38,7 @@ class Order extends Controller {
         Theme::model('sale/order');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_sale_order->addOrder($this->request->post);
+            SaleOrder::addOrder($this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -79,7 +79,7 @@ class Order extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('sale/order', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -93,7 +93,7 @@ class Order extends Controller {
         Theme::model('sale/order');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_sale_order->editOrder($this->request->get['order_id'], $this->request->post);
+            SaleOrder::editOrder($this->request->get['order_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -134,7 +134,7 @@ class Order extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('sale/order', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -149,7 +149,7 @@ class Order extends Controller {
         
         if (isset($this->request->post['selected']) && ($this->validateDelete())) {
             foreach ($this->request->post['selected'] as $order_id) {
-                $this->model_sale_order->deleteOrder($order_id);
+                SaleOrder::deleteOrder($order_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -192,7 +192,7 @@ class Order extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('sale/order', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -297,9 +297,9 @@ class Order extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'sale/order', $url);
         
-        $data['invoice'] = Url::link('sale/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
-        $data['insert']  = Url::link('sale/order/insert', 'token=' . $this->session->data['token'], 'SSL');
-        $data['delete']  = Url::link('sale/order/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['invoice'] = Url::link('sale/order/invoice', '', 'SSL');
+        $data['insert']  = Url::link('sale/order/insert', '', 'SSL');
+        $data['delete']  = Url::link('sale/order/delete', '' . $url, 'SSL');
         
         $data['orders'] = array();
         
@@ -316,22 +316,22 @@ class Order extends Controller {
             'limit'                  => Config::get('config_admin_limit')
         );
         
-        $order_total = $this->model_sale_order->getTotalOrders($filter);
+        $order_total = SaleOrder::getTotalOrders($filter);
         
-        $results = $this->model_sale_order->getOrders($filter);
+        $results = SaleOrder::getOrders($filter);
         
         foreach ($results as $result) {
             $action = array();
             
             $action[] = array(
                 'text' => Lang::get('lang_text_view'), 
-                'href' => Url::link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL')
+                'href' => Url::link('sale/order/info', '' . '&order_id=' . $result['order_id'] . $url, 'SSL')
             );
             
             if (strtotime($result['date_added']) > strtotime('-' . (int)Config::get('config_order_edit') . ' day')) {
                 $action[] = array(
                     'text' => Lang::get('lang_text_edit'), 
-                    'href' => Url::link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL')
+                    'href' => Url::link('sale/order/update', '' . '&order_id=' . $result['order_id'] . $url, 'SSL')
                 );
             }
             
@@ -346,8 +346,6 @@ class Order extends Controller {
                 'action'        => $action
             );
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -399,12 +397,12 @@ class Order extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_order']         = Url::link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.order_id' . $url, 'SSL');
-        $data['sort_customer']      = Url::link('sale/order', 'token=' . $this->session->data['token'] . '&sort=customer' . $url, 'SSL');
-        $data['sort_status']        = Url::link('sale/order', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
-        $data['sort_total']         = Url::link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.total' . $url, 'SSL');
-        $data['sort_date_added']    = Url::link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.date_added' . $url, 'SSL');
-        $data['sort_date_modified'] = Url::link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.date_modified' . $url, 'SSL');
+        $data['sort_order']         = Url::link('sale/order', '' . '&sort=o.order_id' . $url, 'SSL');
+        $data['sort_customer']      = Url::link('sale/order', '' . '&sort=customer' . $url, 'SSL');
+        $data['sort_status']        = Url::link('sale/order', '' . '&sort=status' . $url, 'SSL');
+        $data['sort_total']         = Url::link('sale/order', '' . '&sort=o.total' . $url, 'SSL');
+        $data['sort_date_added']    = Url::link('sale/order', '' . '&sort=o.date_added' . $url, 'SSL');
+        $data['sort_date_modified'] = Url::link('sale/order', '' . '&sort=o.date_modified' . $url, 'SSL');
         
         $url = '';
         
@@ -445,7 +443,7 @@ class Order extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('sale/order', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
+            Url::link('sale/order', '' . $url . '&page={page}', 'SSL')
         );
         
         $data['filter_order_id']        = $filter_order_id;
@@ -457,7 +455,7 @@ class Order extends Controller {
         
         Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
+        $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
         $data['sort']  = $sort;
         $data['order'] = $order;
@@ -466,7 +464,7 @@ class Order extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('sale/order_list', $data));
+        Response::setOutput(View::render('sale/order_list', $data));
     }
     
     public function getForm() {
@@ -649,18 +647,16 @@ class Order extends Controller {
         Breadcrumb::add('lang_heading_title', 'sale/order', $url);
         
         if (!isset($this->request->get['order_id'])) {
-            $data['action'] = Url::link('sale/order/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('sale/order/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . $url, 'SSL');
+            $data['action'] = Url::link('sale/order/update', '' . '&order_id=' . $this->request->get['order_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('sale/order', '' . $url, 'SSL');
         
         if (isset($this->request->get['order_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
+            $order_info = SaleOrder::getOrder($this->request->get['order_id']);
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         if (isset($this->request->get['order_id'])) {
             $data['order_id'] = $this->request->get['order_id'];
@@ -678,7 +674,7 @@ class Order extends Controller {
         
         Theme::model('setting/store');
         
-        $data['stores'] = $this->model_setting_store->getStores();
+        $data['stores'] = SettingStore::getStores();
         
         if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
             $data['store_url'] = Config::get('https.public');
@@ -712,7 +708,7 @@ class Order extends Controller {
         
         Theme::model('people/customer_group');
         
-        $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups();
+        $data['customer_groups'] = PeopleCustomerGroup::getCustomerGroups();
         
         if (isset($this->request->post['firstname'])) {
             $data['firstname'] = $this->request->post['firstname'];
@@ -772,7 +768,7 @@ class Order extends Controller {
         
         Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
+        $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
         if (isset($this->request->post['comment'])) {
             $data['comment'] = $this->request->post['comment'];
@@ -785,9 +781,9 @@ class Order extends Controller {
         Theme::model('people/customer');
         
         if (isset($this->request->post['customer_id'])) {
-            $data['addresses'] = $this->model_people_customer->getAddresses($this->request->post['customer_id']);
+            $data['addresses'] = PeopleCustomer::getAddresses($this->request->post['customer_id']);
         } elseif (!empty($order_info)) {
-            $data['addresses'] = $this->model_people_customer->getAddresses($order_info['customer_id']);
+            $data['addresses'] = PeopleCustomer::getAddresses($order_info['customer_id']);
         } else {
             $data['addresses'] = array();
         }
@@ -896,7 +892,7 @@ class Order extends Controller {
             $data['payment_code'] = '';
         }
 
-        $data['payments'] = $this->model_sale_order->getPaymentModules();
+        $data['payments'] = SaleOrder::getPaymentModules();
         
         if (isset($this->request->post['shipping_firstname'])) {
             $data['shipping_firstname'] = $this->request->post['shipping_firstname'];
@@ -972,7 +968,7 @@ class Order extends Controller {
         
         Theme::model('locale/country');
         
-        $data['countries'] = $this->model_locale_country->getCountries();
+        $data['countries'] = LocaleCountry::getCountries();
         
         if (isset($this->request->post['shipping_method'])) {
             $data['shipping_method'] = $this->request->post['shipping_method'];
@@ -990,12 +986,12 @@ class Order extends Controller {
             $data['shipping_code'] = '';
         }
 
-        $data['shippings'] = $this->model_sale_order->getShippingModules();
+        $data['shippings'] = SaleOrder::getShippingModules();
         
         if (isset($this->request->post['order_product'])) {
             $order_products = $this->request->post['order_product'];
         } elseif (isset($this->request->get['order_id'])) {
-            $order_products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);
+            $order_products = SaleOrder::getOrderProducts($this->request->get['order_id']);
         } else {
             $order_products = array();
         }
@@ -1010,7 +1006,7 @@ class Order extends Controller {
             if (isset($order_product['order_option'])) {
                 $order_option = $order_product['order_option'];
             } elseif (isset($this->request->get['order_id'])) {
-                $order_option = $this->model_sale_order->getOrderOptions($this->request->get['order_id'], $order_product['order_product_id']);
+                $order_option = SaleOrder::getOrderOptions($this->request->get['order_id'], $order_product['order_product_id']);
             } else {
                 $order_option = array();
             }
@@ -1018,7 +1014,7 @@ class Order extends Controller {
             if (isset($order_product['order_download'])) {
                 $order_download = $order_product['order_download'];
             } elseif (isset($this->request->get['order_id'])) {
-                $order_download = $this->model_sale_order->getOrderDownloads($this->request->get['order_id'], $order_product['order_product_id']);
+                $order_download = SaleOrder::getOrderDownloads($this->request->get['order_id'], $order_product['order_product_id']);
             } else {
                 $order_download = array();
             }
@@ -1041,19 +1037,19 @@ class Order extends Controller {
         if (isset($this->request->post['order_gift_card'])) {
             $data['order_gift_cards'] = $this->request->post['order_gift_card'];
         } elseif (isset($this->request->get['order_id'])) {
-            $data['order_gift_cards'] = $this->model_sale_order->getOrderGiftcards($this->request->get['order_id']);
+            $data['order_gift_cards'] = SaleOrder::getOrderGiftcards($this->request->get['order_id']);
         } else {
             $data['order_gift_cards'] = array();
         }
         
         Theme::model('sale/gift_card_theme');
         
-        $data['gift_card_themes'] = $this->model_sale_gift_card_theme->getGiftcardThemes();
+        $data['gift_card_themes'] = SaleGiftCardTheme::getGiftcardThemes();
         
         if (isset($this->request->post['order_total'])) {
             $data['order_totals'] = $this->request->post['order_total'];
         } elseif (isset($this->request->get['order_id'])) {
-            $data['order_totals'] = $this->model_sale_order->getOrderTotals($this->request->get['order_id']);
+            $data['order_totals'] = SaleOrder::getOrderTotals($this->request->get['order_id']);
         } else {
             $data['order_totals'] = array();
         }
@@ -1064,7 +1060,7 @@ class Order extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('sale/order_form', $data));
+        Response::setOutput(View::render('sale/order_form', $data));
     }
     
     protected function validateForm() {
@@ -1106,7 +1102,7 @@ class Order extends Controller {
         
         Theme::model('locale/country');
         
-        $country_info = $this->model_locale_country->getCountry($this->request->post['payment_country_id']);
+        $country_info = LocaleCountry::getCountry($this->request->post['payment_country_id']);
         
         if ($country_info) {
             if ($country_info['postcode_required'] && (Encode::strlen($this->request->post['payment_postcode']) < 2) || (Encode::strlen($this->request->post['payment_postcode']) > 10)) {
@@ -1137,7 +1133,7 @@ class Order extends Controller {
             Theme::model('catalog/product');
             
             foreach ($this->request->post['order_product'] as $order_product) {
-                $product_info = $this->model_catalog_product->getProduct($order_product['product_id']);
+                $product_info = CatalogProduct::getProduct($order_product['product_id']);
                 
                 if ($product_info && $product_info['shipping']) {
                     $shipping = true;
@@ -1164,7 +1160,7 @@ class Order extends Controller {
             
             Theme::model('locale/country');
             
-            $country_info = $this->model_locale_country->getCountry($this->request->post['shipping_country_id']);
+            $country_info = LocaleCountry::getCountry($this->request->post['shipping_country_id']);
             
             if ($country_info && $country_info['postcode_required'] && (Encode::strlen($this->request->post['shipping_postcode']) < 2) || (Encode::strlen($this->request->post['shipping_postcode']) > 10)) {
                 $this->error['shipping_postcode'] = Lang::get('lang_error_postcode');
@@ -1207,7 +1203,7 @@ class Order extends Controller {
         
         Theme::model('locale/country');
         
-        $country_info = $this->model_locale_country->getCountry($this->request->get['country_id']);
+        $country_info = LocaleCountry::getCountry($this->request->get['country_id']);
         
         if ($country_info) {
             Theme::model('locale/zone');
@@ -1219,7 +1215,7 @@ class Order extends Controller {
                 'iso_code_3'        => $country_info['iso_code_3'], 
                 'address_format'    => $country_info['address_format'], 
                 'postcode_required' => $country_info['postcode_required'], 
-                'zone'              => $this->model_locale_zone->getZonesByCountryId($this->request->get['country_id']), 
+                'zone'              => LocaleZone::getZonesByCountryId($this->request->get['country_id']), 
                 'status'            => $country_info['status']
             );
         }
@@ -1238,7 +1234,7 @@ class Order extends Controller {
             $order_id = 0;
         }
         
-        $order_info = $this->model_sale_order->getOrder($order_id);
+        $order_info = SaleOrder::getOrder($order_id);
         
         if ($order_info) {
             $data = Theme::language('sale/order');
@@ -1250,8 +1246,6 @@ class Order extends Controller {
             }
             
             Theme::setTitle(Lang::get('lang_heading_title'));
-            
-            $data['token'] = $this->session->data['token'];
             
             $url = '';
             
@@ -1293,8 +1287,8 @@ class Order extends Controller {
             
             Breadcrumb::add('lang_heading_title', 'sale/order', $url);
             
-            $data['invoice'] = Url::link('sale/order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
-            $data['cancel']  = Url::link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['invoice'] = Url::link('sale/order/invoice', '' . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
+            $data['cancel']  = Url::link('sale/order', '' . $url, 'SSL');
             
             $data['order_id'] = $this->request->get['order_id'];
             
@@ -1310,14 +1304,14 @@ class Order extends Controller {
             $data['lastname']   = $order_info['lastname'];
             
             if ($order_info['customer_id']) {
-                $data['customer'] = Url::link('people/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $order_info['customer_id'], 'SSL');
+                $data['customer'] = Url::link('people/customer/update', '' . '&customer_id=' . $order_info['customer_id'], 'SSL');
             } else {
                 $data['customer'] = '';
             }
             
             Theme::model('people/customer_group');
             
-            $customer_group_info = $this->model_people_customer_group->getCustomerGroup($order_info['customer_group_id']);
+            $customer_group_info = PeopleCustomerGroup::getCustomerGroup($order_info['customer_group_id']);
             
             if ($customer_group_info) {
                 $data['customer_group'] = $customer_group_info['name'];
@@ -1340,24 +1334,24 @@ class Order extends Controller {
             
             Theme::model('people/customer');
             
-            $data['credit_total']        = $this->model_people_customer->getTotalCreditsByOrderId($this->request->get['order_id']);
+            $data['credit_total']        = PeopleCustomer::getTotalCreditsByOrderId($this->request->get['order_id']);
             $data['reward']              = $order_info['reward'];
-            $data['reward_total']        = $this->model_people_customer->getTotalCustomerRewardsByOrderId($this->request->get['order_id']);
+            $data['reward_total']        = PeopleCustomer::getTotalCustomerRewardsByOrderId($this->request->get['order_id']);
             $data['affiliate_firstname'] = $order_info['affiliate_firstname'];
             $data['affiliate_lastname']  = $order_info['affiliate_lastname'];
             
             if ($order_info['affiliate_id']) {
-                $data['affiliate'] = Url::link('people/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $order_info['affiliate_id'], 'SSL');
+                $data['affiliate'] = Url::link('people/customer/update', '' . '&customer_id=' . $order_info['affiliate_id'], 'SSL');
             } else {
                 $data['affiliate'] = '';
             }
             
             $data['commission']       = Currency::format($order_info['commission'], $order_info['currency_code'], $order_info['currency_value']);
-            $data['commission_total'] = $this->model_people_customer->getTotalCommissionsByOrderId($this->request->get['order_id']);
+            $data['commission_total'] = PeopleCustomer::getTotalCommissionsByOrderId($this->request->get['order_id']);
             
             Theme::model('locale/order_status');
             
-            $order_status_info = $this->model_locale_order_status->getOrderStatus($order_info['order_status_id']);
+            $order_status_info = LocaleOrderStatus::getOrderStatus($order_info['order_status_id']);
             
             if ($order_status_info) {
                 $data['order_status'] = $order_status_info['name'];
@@ -1396,12 +1390,12 @@ class Order extends Controller {
             
             $data['products'] = array();
             
-            $products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);
+            $products = SaleOrder::getOrderProducts($this->request->get['order_id']);
             
             foreach ($products as $product) {
                 $option_data = array();
                 
-                $options = $this->model_sale_order->getOrderOptions($this->request->get['order_id'], $product['order_product_id']);
+                $options = SaleOrder::getOrderOptions($this->request->get['order_id'], $product['order_product_id']);
                 
                 foreach ($options as $option) {
                     if ($option['type'] != 'file') {
@@ -1415,7 +1409,7 @@ class Order extends Controller {
                             'name'  => $option['name'], 
                             'value' => Encode::substr($option['value'], 0, Encode::strrpos($option['value'], '.')), 
                             'type'  => $option['type'], 
-                            'href'  => Url::link('sale/order/download', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . '&order_option_id=' . $option['order_option_id'], 'SSL')
+                            'href'  => Url::link('sale/order/download', '' . '&order_id=' . $this->request->get['order_id'] . '&order_option_id=' . $option['order_option_id'], 'SSL')
                         );
                     }
                 }
@@ -1429,28 +1423,28 @@ class Order extends Controller {
                     'quantity'         => $product['quantity'], 
                     'price'            => Currency::format($product['price'] + (Config::get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']), 
                     'total'            => Currency::format($product['total'] + (Config::get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']), 
-                    'href'             => Url::link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL')
+                    'href'             => Url::link('catalog/product/update', '' . '&product_id=' . $product['product_id'], 'SSL')
                 );
             }
             
             $data['gift_cards'] = array();
             
-            $gift_cards = $this->model_sale_order->getOrderGiftcards($this->request->get['order_id']);
+            $gift_cards = SaleOrder::getOrderGiftcards($this->request->get['order_id']);
             
             foreach ($gift_cards as $gift_card) {
                 $data['gift_cards'][] = array(
                     'description' => $gift_card['description'], 
                     'amount'      => Currency::format($gift_card['amount'], $order_info['currency_code'], $order_info['currency_value']), 
-                    'href'        => Url::link('sale/gift_card/update', 'token=' . $this->session->data['token'] . '&gift_card_id=' . $gift_card['gift_card_id'], 'SSL')
+                    'href'        => Url::link('sale/gift_card/update', '' . '&gift_card_id=' . $gift_card['gift_card_id'], 'SSL')
                 );
             }
             
-            $data['totals'] = $this->model_sale_order->getOrderTotals($this->request->get['order_id']);
+            $data['totals'] = SaleOrder::getOrderTotals($this->request->get['order_id']);
             
             $data['downloads'] = array();
             
             foreach ($products as $product) {
-                $results = $this->model_sale_order->getOrderDownloads($this->request->get['order_id'], $product['order_product_id']);
+                $results = SaleOrder::getOrderDownloads($this->request->get['order_id'], $product['order_product_id']);
                 
                 foreach ($results as $result) {
                     $data['downloads'][] = array(
@@ -1461,13 +1455,13 @@ class Order extends Controller {
                 }
             }
             
-            $data['order_statuses']  = $this->model_locale_order_status->getOrderStatuses();
+            $data['order_statuses']  = LocaleOrderStatus::getOrderStatuses();
             $data['order_status_id'] = $order_info['order_status_id'];
             
             // Fraud
             Theme::model('sale/fraud');
             
-            $fraud_info = $this->model_sale_fraud->getFraud($order_info['order_id']);
+            $fraud_info = SaleFraud::getFraud($order_info['order_id']);
             
             if ($fraud_info) {
                 $data['country_match'] = $fraud_info['country_match'];
@@ -1679,7 +1673,7 @@ class Order extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(Theme::view('sale/order_info', $data));
+            Response::setOutput(View::render('sale/order_info', $data));
         } else {
             $data = Theme::language('error/not_found');
             
@@ -1691,7 +1685,7 @@ class Order extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(Theme::view('error/not_found', $data));
+            Response::setOutput(View::render('error/not_found', $data));
         }
     }
     
@@ -1705,7 +1699,7 @@ class Order extends Controller {
         } elseif (isset($this->request->get['order_id'])) {
             Theme::model('sale/order');
             
-            $invoice_no = $this->model_sale_order->createInvoiceNo($this->request->get['order_id']);
+            $invoice_no = SaleOrder::createInvoiceNo($this->request->get['order_id']);
             
             if ($invoice_no) {
                 $json['invoice_no'] = $invoice_no;
@@ -1729,15 +1723,15 @@ class Order extends Controller {
         } elseif (isset($this->request->get['order_id'])) {
             Theme::model('sale/order');
             
-            $order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
+            $order_info = SaleOrder::getOrder($this->request->get['order_id']);
             
             if ($order_info && $order_info['customer_id']) {
                 Theme::model('people/customer');
                 
-                $credit_total = $this->model_people_customer->getTotalCreditsByOrderId($this->request->get['order_id']);
+                $credit_total = PeopleCustomer::getTotalCreditsByOrderId($this->request->get['order_id']);
                 
                 if (!$credit_total) {
-                    $this->model_people_customer->addCredit($order_info['customer_id'], Lang::get('lang_text_order_id') . ' #' . $this->request->get['order_id'], $order_info['total'], $this->request->get['order_id']);
+                    PeopleCustomer::addCredit($order_info['customer_id'], Lang::get('lang_text_order_id') . ' #' . $this->request->get['order_id'], $order_info['total'], $this->request->get['order_id']);
                     
                     $json['success'] = Lang::get('lang_text_credit_added');
                 } else {
@@ -1761,12 +1755,12 @@ class Order extends Controller {
         } elseif (isset($this->request->get['order_id'])) {
             Theme::model('sale/order');
             
-            $order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
+            $order_info = SaleOrder::getOrder($this->request->get['order_id']);
             
             if ($order_info && $order_info['customer_id']) {
                 Theme::model('people/customer');
                 
-                $this->model_people_customer->deleteCredit($this->request->get['order_id']);
+                PeopleCustomer::deleteCredit($this->request->get['order_id']);
                 
                 $json['success'] = Lang::get('lang_text_credit_removed');
             } else {
@@ -1789,15 +1783,15 @@ class Order extends Controller {
         } elseif (isset($this->request->get['order_id'])) {
             Theme::model('sale/order');
             
-            $order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
+            $order_info = SaleOrder::getOrder($this->request->get['order_id']);
             
             if ($order_info && $order_info['customer_id']) {
                 Theme::model('people/customer');
                 
-                $reward_total = $this->model_people_customer->getTotalCustomerRewardsByOrderId($this->request->get['order_id']);
+                $reward_total = PeopleCustomer::getTotalCustomerRewardsByOrderId($this->request->get['order_id']);
                 
                 if (!$reward_total) {
-                    $this->model_people_customer->addReward($order_info['customer_id'], Lang::get('lang_text_order_id') . ' #' . $this->request->get['order_id'], $order_info['reward'], $this->request->get['order_id']);
+                    PeopleCustomer::addReward($order_info['customer_id'], Lang::get('lang_text_order_id') . ' #' . $this->request->get['order_id'], $order_info['reward'], $this->request->get['order_id']);
                     
                     $json['success'] = Lang::get('lang_text_reward_added');
                 } else {
@@ -1823,12 +1817,12 @@ class Order extends Controller {
         } elseif (isset($this->request->get['order_id'])) {
             Theme::model('sale/order');
             
-            $order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
+            $order_info = SaleOrder::getOrder($this->request->get['order_id']);
             
             if ($order_info && $order_info['customer_id']) {
                 Theme::model('people/customer');
                 
-                $this->model_people_customer->deleteReward($this->request->get['order_id']);
+                PeopleCustomer::deleteReward($this->request->get['order_id']);
                 
                 $json['success'] = Lang::get('lang_text_reward_removed');
             } else {
@@ -1851,15 +1845,15 @@ class Order extends Controller {
         } elseif (isset($this->request->get['order_id'])) {
             Theme::model('sale/order');
             
-            $order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
+            $order_info = SaleOrder::getOrder($this->request->get['order_id']);
             
             if ($order_info && $order_info['affiliate_id']) {
                 Theme::model('people/customer');
                 
-                $affiliate_total = $this->model_people_customer->getTotalCommissionsByOrderId($this->request->get['order_id']);
+                $affiliate_total = PeopleCustomer::getTotalCommissionsByOrderId($this->request->get['order_id']);
                 
                 if (!$affiliate_total) {
-                    $this->model_people_customer->addCommission($order_info['affiliate_id'], Lang::get('lang_text_order_id') . ' #' . $this->request->get['order_id'], $order_info['commission'], $this->request->get['order_id']);
+                    PeopleCustomer::addCommission($order_info['affiliate_id'], Lang::get('lang_text_order_id') . ' #' . $this->request->get['order_id'], $order_info['commission'], $this->request->get['order_id']);
                     
                     $json['success'] = Lang::get('lang_text_commission_added');
                 } else {
@@ -1885,12 +1879,12 @@ class Order extends Controller {
         } elseif (isset($this->request->get['order_id'])) {
             Theme::model('sale/order');
             
-            $order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
+            $order_info = SaleOrder::getOrder($this->request->get['order_id']);
             
             if ($order_info && $order_info['affiliate_id']) {
                 Theme::model('people/customer');
                 
-                $this->model_people_customer->deleteCommission($this->request->get['order_id']);
+                PeopleCustomer::deleteCommission($this->request->get['order_id']);
                 
                 $json['success'] = Lang::get('lang_text_commission_removed');
             } else {
@@ -1917,7 +1911,7 @@ class Order extends Controller {
             }
             
             if (!$data['error']) {
-                $this->model_sale_order->addOrderHistory($this->request->get['order_id'], $this->request->post);
+                SaleOrder::addOrderHistory($this->request->get['order_id'], $this->request->post);
                 
                 $data['success'] = Lang::get('lang_text_success');
             }
@@ -1931,7 +1925,7 @@ class Order extends Controller {
         
         $data['histories'] = array();
         
-        $results = $this->model_sale_order->getOrderHistories($this->request->get['order_id'], ($page - 1) * 10, 10);
+        $results = SaleOrder::getOrderHistories($this->request->get['order_id'], ($page - 1) * 10, 10);
         
         foreach ($results as $result) {
             $data['histories'][] = array(
@@ -1942,14 +1936,14 @@ class Order extends Controller {
             );
         }
         
-        $history_total = $this->model_sale_order->getTotalOrderHistories($this->request->get['order_id']);
+        $history_total = SaleOrder::getTotalOrderHistories($this->request->get['order_id']);
         
         $data['pagination'] = Theme::paginate(
             $history_total, 
             $page, 
             10, 
             Lang::get('lang_text_pagination'), 
-            Url::link('sale/order/history', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . '&page={page}', 'SSL')
+            Url::link('sale/order/history', '' . '&order_id=' . $this->request->get['order_id'] . '&page={page}', 'SSL')
         );
         
         Theme::loadjs('javascript/sale/order_history', $data);
@@ -1958,7 +1952,7 @@ class Order extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        Response::setOutput(Theme::view('sale/order_history', $data));
+        Response::setOutput(View::render('sale/order_history', $data));
     }
     
     public function download() {
@@ -1970,7 +1964,7 @@ class Order extends Controller {
             $order_option_id = 0;
         }
         
-        $option_info = $this->model_sale_order->getOrderOption($this->request->get['order_id'], $order_option_id);
+        $option_info = SaleOrder::getOrderOption($this->request->get['order_id'], $order_option_id);
         
         if ($option_info && $option_info['type'] == 'file') {
             $file = Config::get('path.download') . $option_info['value'];
@@ -2005,7 +1999,7 @@ class Order extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(Theme::view('error/not_found', $data));
+            Response::setOutput(View::render('error/not_found', $data));
         }
     }
     
@@ -2082,14 +2076,14 @@ class Order extends Controller {
     public function shipping() {
         Theme::model('setting/module');
         
-        $modules = $this->model_setting_module->getAll('shipping');
+        $modules = SettingModule::getAll('shipping');
         
         foreach ($modules as $key => $value) {
             $theme_file = Theme::getPath() . 'controller/shipping/' . $value . '.php';
             $core_file = Config::get('path.application') . 'controller/shipping/' . $value . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {
-                $this->model_setting_module->uninstall('shipping', $value);
+                SettingModule::uninstall('shipping', $value);
                 
                 unset($modules[$key]);
             }
@@ -2127,10 +2121,10 @@ class Order extends Controller {
         }
         
         foreach ($orders as $order_id) {
-            $order_info = $this->model_sale_order->getOrder($order_id);
+            $order_info = SaleOrder::getOrder($order_id);
             
             if ($order_info) {
-                $store_info = $this->model_setting_setting->getSetting('config', $order_info['store_id']);
+                $store_info = SettingSetting::getSetting('config', $order_info['store_id']);
                 
                 if ($store_info) {
                     $store_address = $store_info['config_address'];
@@ -2218,12 +2212,12 @@ class Order extends Controller {
                 
                 $product_data = array();
                 
-                $products = $this->model_sale_order->getOrderProducts($order_id);
+                $products = SaleOrder::getOrderProducts($order_id);
                 
                 foreach ($products as $product) {
                     $option_data = array();
                     
-                    $options = $this->model_sale_order->getOrderOptions($order_id, $product['order_product_id']);
+                    $options = SaleOrder::getOrderOptions($order_id, $product['order_product_id']);
                     
                     foreach ($options as $option) {
                         if ($option['type'] != 'file') {
@@ -2250,7 +2244,7 @@ class Order extends Controller {
                 
                 $gift_card_data = array();
                 
-                $gift_cards = $this->model_sale_order->getOrderGiftcards($order_id);
+                $gift_cards = SaleOrder::getOrderGiftcards($order_id);
                 
                 foreach ($gift_cards as $gift_card) {
                     $gift_card_data[] = array(
@@ -2259,7 +2253,7 @@ class Order extends Controller {
                     );
                 }
                 
-                $total_data = $this->model_sale_order->getOrderTotals($order_id);
+                $total_data = SaleOrder::getOrderTotals($order_id);
                 
                 $data['orders'][] = array(
                     'order_id'           => $order_id, 
@@ -2292,6 +2286,6 @@ class Order extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(Theme::view('sale/order_invoice', $data));
+        Response::setOutput(View::render('sale/order_invoice', $data));
     }
 }

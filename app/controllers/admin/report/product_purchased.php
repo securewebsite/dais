@@ -74,19 +74,17 @@ class ProductPurchased extends Controller {
         
         $filter = array('filter_date_start' => $filter_date_start, 'filter_date_end' => $filter_date_end, 'filter_order_status_id' => $filter_order_status_id, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $product_total = $this->model_report_product->getTotalPurchased($filter);
+        $product_total = ReportProduct::getTotalPurchased($filter);
         
-        $results = $this->model_report_product->getPurchased($filter);
+        $results = ReportProduct::getPurchased($filter);
         
         foreach ($results as $result) {
             $data['products'][] = array('name' => $result['name'], 'model' => $result['model'], 'quantity' => $result['quantity'], 'total' => Currency::format($result['total'], Config::get('config_currency')));
         }
         
-        $data['token'] = $this->session->data['token'];
-        
         Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
+        $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
         $url = '';
         
@@ -102,7 +100,7 @@ class ProductPurchased extends Controller {
             $url.= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
         }
         
-        $data['pagination'] = Theme::paginate($product_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/product_purchased', 'token=' . $this->session->data['token'] . $url . '&page={page}'));
+        $data['pagination'] = Theme::paginate($product_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/product_purchased', '' . $url . '&page={page}'));
         
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
@@ -112,6 +110,6 @@ class ProductPurchased extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('report/product_purchased', $data));
+        Response::setOutput(View::render('report/product_purchased', $data));
     }
 }

@@ -38,7 +38,7 @@ class User extends Controller {
         Theme::model('people/user');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_people_user->addUser($this->request->post);
+            PeopleUser::addUser($this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -55,7 +55,7 @@ class User extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('people/user', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('people/user', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -69,7 +69,7 @@ class User extends Controller {
         Theme::model('people/user');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_people_user->editUser($this->request->get['user_id'], $this->request->post);
+            PeopleUser::editUser($this->request->get['user_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -86,7 +86,7 @@ class User extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('people/user', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('people/user', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -101,7 +101,7 @@ class User extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $user_id) {
-                $this->model_people_user->deleteUser($user_id);
+                PeopleUser::deleteUser($user_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -120,7 +120,7 @@ class User extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('people/user', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('people/user', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,8 +165,8 @@ class User extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'people/user', $url);
         
-        $data['insert'] = Url::link('people/user/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('people/user/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('people/user/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('people/user/delete', '' . $url, 'SSL');
         
         $data['users'] = array();
         
@@ -177,16 +177,16 @@ class User extends Controller {
             'limit' => Config::get('config_admin_limit')
         );
         
-        $user_total = $this->model_people_user->getTotalUsers();
+        $user_total = PeopleUser::getTotalUsers();
         
-        $results = $this->model_people_user->getUsers($filter);
+        $results = PeopleUser::getUsers($filter);
         
         foreach ($results as $result) {
             $action = array();
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('people/user/update', 'token=' . $this->session->data['token'] . '&user_id=' . $result['user_id'] . $url, 'SSL')
+                'href' => Url::link('people/user/update', '' . '&user_id=' . $result['user_id'] . $url, 'SSL')
             );
             
             $data['users'][] = array(
@@ -225,9 +225,9 @@ class User extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_user_name']  = Url::link('people/user', 'token=' . $this->session->data['token'] . '&sort=user_name' . $url, 'SSL');
-        $data['sort_status']     = Url::link('people/user', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
-        $data['sort_date_added'] = Url::link('people/user', 'token=' . $this->session->data['token'] . '&sort=date_added' . $url, 'SSL');
+        $data['sort_user_name']  = Url::link('people/user', '' . '&sort=user_name' . $url, 'SSL');
+        $data['sort_status']     = Url::link('people/user', '' . '&sort=status' . $url, 'SSL');
+        $data['sort_date_added'] = Url::link('people/user', '' . '&sort=date_added' . $url, 'SSL');
         
         $url = '';
         
@@ -244,7 +244,7 @@ class User extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('people/user', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
+            Url::link('people/user', '' . $url . '&page={page}', 'SSL')
         );
         
         $data['sort']  = $sort;
@@ -254,7 +254,7 @@ class User extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('people/user_list', $data));
+        Response::setOutput(View::render('people/user_list', $data));
     }
     
     protected function getForm() {
@@ -319,15 +319,15 @@ class User extends Controller {
         Breadcrumb::add('lang_heading_title', 'people/user', $url);
         
         if (!isset($this->request->get['user_id'])) {
-            $data['action'] = Url::link('people/user/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('people/user/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('people/user/update', 'token=' . $this->session->data['token'] . '&user_id=' . $this->request->get['user_id'] . $url, 'SSL');
+            $data['action'] = Url::link('people/user/update', '' . '&user_id=' . $this->request->get['user_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('people/user', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('people/user', '' . $url, 'SSL');
         
         if (isset($this->request->get['user_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $user_info = $this->model_people_user->getUser($this->request->get['user_id']);
+            $user_info = PeopleUser::getUser($this->request->get['user_id']);
         }
         
         if (isset($this->request->post['user_name'])) {
@@ -384,7 +384,7 @@ class User extends Controller {
         
         Theme::model('people/user_group');
         
-        $data['user_groups'] = $this->model_people_user_group->getUserGroups();
+        $data['user_groups'] = PeopleUserGroup::getUserGroups();
         
         if (isset($this->request->post['status'])) {
             $data['status'] = $this->request->post['status'];
@@ -398,7 +398,7 @@ class User extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('people/user_form', $data));
+        Response::setOutput(View::render('people/user_form', $data));
     }
     
     protected function validateForm() {
@@ -410,7 +410,7 @@ class User extends Controller {
             $this->error['user_name'] = Lang::get('lang_error_user_name');
         }
         
-        $user_info = $this->model_people_user->getUserByUsername($this->request->post['user_name']);
+        $user_info = PeopleUser::getUserByUsername($this->request->post['user_name']);
         
         if (!isset($this->request->get['user_id'])) {
             if ($user_info) {

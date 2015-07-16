@@ -21,16 +21,16 @@ use App\Models\Model;
 class Route extends Model {
     
     public function editRoutes($data) {
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}custom_route
+        DB::query("
+            DELETE FROM " . DB::prefix() . "custom_route
         ");
 
         if (!empty($data['custom_route'])):
             foreach($data['custom_route'] as $route):
-                $this->db->query("
-                    INSERT INTO {$this->db->prefix}custom_route 
-                    SET route = '" . $this->db->escape($route['route']) . "', 
-                    slug      = '" . $this->db->escape($route['slug']) . "'
+                DB::query("
+                    INSERT INTO " . DB::prefix() . "custom_route 
+                    SET route = '" . DB::escape($route['route']) . "', 
+                    slug      = '" . DB::escape($route['slug']) . "'
                 ");
             endforeach;
         endif;
@@ -39,7 +39,7 @@ class Route extends Model {
     public function getCustomRoutes($data = array()) {
         $sql = "
             SELECT * 
-            FROM {$this->db->prefix}custom_route ORDER BY route ASC";
+            FROM " . DB::prefix() . "custom_route ORDER BY route ASC";
         
         if (isset($data['start']) || isset($data['limit'])):
             if ($data['start'] < 0):
@@ -53,15 +53,15 @@ class Route extends Model {
             $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         endif;
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
 
 	public function getTotalRoutes() {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT COUNT(*) AS total 
-            FROM {$this->db->prefix}custom_route");
+            FROM " . DB::prefix() . "custom_route");
         
         return $query->row['total'];
     }

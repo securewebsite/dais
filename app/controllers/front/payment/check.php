@@ -15,41 +15,43 @@
 */
 
 namespace App\Controllers\Front\Payment;
+
 use App\Controllers\Controller;
 
 class Check extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('payment/check');
+        $data = Theme::language('payment/check');
         
-        $data['payable'] = $this->config->get('check_payable');
-        $data['address'] = nl2br($this->config->get('config_address'));
+        $data['payable'] = Config::get('check_payable');
+        $data['address'] = nl2br(Config::get('config_address'));
         
-        $data['continue'] = $this->url->link('checkout/success');
+        $data['continue'] = Url::link('checkout/success');
         
-        $this->theme->loadjs('javascript/payment/check', $data);
+        Theme::loadjs('javascript/payment/check', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data['javascript'] = $this->theme->controller('common/javascript');
+        $data['javascript'] = Theme::controller('common/javascript');
         
-        return $this->theme->view('payment/check', $data);
+        return View::render('payment/check', $data);
     }
     
     public function confirm() {
-        $data = $this->theme->language('payment/check');
+        $data = Theme::language('payment/check');
         
-        $this->theme->model('checkout/order');
+        Theme::model('checkout/order');
         
-        $comment = $this->language->get('lang_text_payable') . "\n";
-        $comment.= $this->config->get('check_payable') . "\n\n";
-        $comment.= $this->language->get('lang_text_address') . "\n";
-        $comment.= $this->config->get('config_address') . "\n\n";
-        $comment.= $this->language->get('lang_text_payment') . "\n";
+        $comment = Lang::get('lang_text_payable') . "\n";
+        $comment.= Config::get('check_payable') . "\n\n";
+        $comment.= Lang::get('lang_text_address') . "\n";
+        $comment.= Config::get('config_address') . "\n\n";
+        $comment.= Lang::get('lang_text_payment') . "\n";
         
         $data['comment'] = $comment;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('check_order_status_id'), $data['comment'], true);
+        CheckoutOrder::confirm($this->session->data['order_id'], Config::get('check_order_status_id'), $data['comment'], true);
     }
 }

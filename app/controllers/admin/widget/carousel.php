@@ -28,10 +28,10 @@ class Carousel extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('carousel', $this->request->post);
+            SettingSetting::editSetting('carousel', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/widget', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -49,8 +49,8 @@ class Carousel extends Controller {
         Breadcrumb::add('lang_text_widget', 'module/widget');
         Breadcrumb::add('lang_heading_title', 'widget/carousel');
         
-        $data['action'] = Url::link('widget/carousel', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('widget/carousel', '', 'SSL');
+        $data['cancel'] = Url::link('module/widget', '', 'SSL');
         
         $data['widgets'] = array();
         
@@ -62,11 +62,11 @@ class Carousel extends Controller {
         
         Theme::model('design/layout');
         
-        $data['layouts'] = $this->model_design_layout->getLayouts();
+        $data['layouts'] = DesignLayout::getLayouts();
         
         Theme::model('design/banner');
         
-        $data['banners'] = $this->model_design_banner->getBanners();
+        $data['banners'] = DesignBanner::getBanners();
         
         Theme::loadjs('javascript/widget/carousel', $data);
         
@@ -74,7 +74,7 @@ class Carousel extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('widget/carousel', $data));
+        Response::setOutput(View::render('widget/carousel', $data));
     }
     
     protected function validate() {

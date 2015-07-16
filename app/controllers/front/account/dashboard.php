@@ -16,23 +16,25 @@
 
 
 namespace App\Controllers\Front\Account;
+
 use App\Controllers\Controller;
 
 class Dashboard extends Controller {
+    
     private $error = array();
     
     public function index() {
-        if (!$this->customer->isLogged()) {
-            $this->session->data['redirect'] = $this->url->link('account/dashboard', '', 'SSL');
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+        if (!Customer::isLogged()) {
+            $this->session->data['redirect'] = Url::link('account/dashboard', '', 'SSL');
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         }
         
-        $data = $this->theme->language('account/dashboard');
-        $this->theme->model('account/customer');
+        $data = Theme::language('account/dashboard');
+        Theme::model('account/customer');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
-        $this->breadcrumb->add('lang_text_account', 'account/dashboard', null, true, 'SSL');
+        Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
         
         if (isset($this->session->data['success'])):
             $data['success'] = $this->session->data['success'];
@@ -52,40 +54,40 @@ class Dashboard extends Controller {
         
         $data['affiliate'] = false;
 
-        if ($this->config->get('config_affiliate_allowed') && $this->customer->isAffiliate()):
-            $data['affiliate'] = $this->url->link('account/affiliate', '', 'SSL');
+        if (Config::get('config_affiliate_allowed') && Customer::isAffiliate()):
+            $data['affiliate'] = Url::link('account/affiliate', '', 'SSL');
         endif;
 
-        $data['edit']        = $this->url->link('account/edit', '', 'SSL');
-        $data['password']    = $this->url->link('account/password', '', 'SSL');
-        $data['address']     = $this->url->link('account/address', '', 'SSL');
-        $data['wishlist']    = $this->url->link('account/wishlist');
-        $data['order']       = $this->url->link('account/order', '', 'SSL');
-        $data['return']      = $this->url->link('account/returns', '', 'SSL');
-        $data['credit']      = $this->url->link('account/credit', '', 'SSL');
-        $data['newsletter']  = $this->url->link('account/newsletter', '', 'SSL');
-        $data['recurring']   = $this->url->link('account/recurring', '', 'SSL');
-        $data['waitlist']    = $this->url->link('account/waitlist', '', 'SSL');
+        $data['edit']        = Url::link('account/edit', '', 'SSL');
+        $data['password']    = Url::link('account/password', '', 'SSL');
+        $data['address']     = Url::link('account/address', '', 'SSL');
+        $data['wishlist']    = Url::link('account/wishlist');
+        $data['order']       = Url::link('account/order', '', 'SSL');
+        $data['return']      = Url::link('account/returns', '', 'SSL');
+        $data['credit']      = Url::link('account/credit', '', 'SSL');
+        $data['newsletter']  = Url::link('account/newsletter', '', 'SSL');
+        $data['recurring']   = Url::link('account/recurring', '', 'SSL');
+        $data['waitlist']    = Url::link('account/waitlist', '', 'SSL');
         
-        if ($this->config->get('reward_status')):
-            $data['reward'] = $this->url->link('account/reward', '', 'SSL');
+        if (Config::get('reward_status')):
+            $data['reward'] = Url::link('account/reward', '', 'SSL');
         else:
             $data['reward'] = false;
         endif;
         
-        if ($this->config->get('config_download')):
-            $data['download'] = $this->url->link('account/download', '', 'SSL');
+        if (Config::get('config_download')):
+            $data['download'] = Url::link('account/download', '', 'SSL');
         else:
             $data['download'] = false;
         endif;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->setController('header', 'shop/header');
-        $this->theme->setController('footer', 'shop/footer');
+        Theme::setController('header', 'shop/header');
+        Theme::setController('footer', 'shop/footer');
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('account/dashboard', $data));
+        Response::setOutput(View::render('account/dashboard', $data));
     }
 }

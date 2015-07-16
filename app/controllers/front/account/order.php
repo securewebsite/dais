@@ -16,31 +16,32 @@
 
 
 namespace App\Controllers\Front\Account;
+
 use App\Controllers\Controller;
 
 class Order extends Controller {
     
     public function index() {
-        if (!$this->customer->isLogged()) {
-            $this->session->data['redirect'] = $this->url->link('account/order', '', 'SSL');
+        if (!Customer::isLogged()) {
+            $this->session->data['redirect'] = Url::link('account/order', '', 'SSL');
             
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         }
         
-        $data = $this->theme->language('account/order');
+        $data = Theme::language('account/order');
         
-        $this->theme->model('account/order');
+        Theme::model('account/order');
         
         if (isset($this->request->get['order_id'])) {
-            $order_info = $this->model_account_order->getOrder($this->request->get['order_id']);
+            $order_info = AccountOrder::getOrder($this->request->get['order_id']);
             
             if ($order_info) {
-                $order_products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
+                $order_products = AccountOrder::getOrderProducts($this->request->get['order_id']);
                 
                 foreach ($order_products as $order_product) {
                     $option_data = array();
                     
-                    $order_options = $this->model_account_order->getOrderOptions($this->request->get['order_id'], $order_product['order_product_id']);
+                    $order_options = AccountOrder::getOrderOptions($this->request->get['order_id'], $order_product['order_product_id']);
                     
                     foreach ($order_options as $order_option) {
                         if ($order_option['type'] == 'select' || $order_option['type'] == 'radio') {
@@ -54,18 +55,18 @@ class Order extends Controller {
                         }
                     }
                     
-                    $this->session->data['success'] = sprintf($this->language->get('lang_text_success'), $this->request->get['order_id']);
+                    $this->session->data['success'] = sprintf(Lang::get('lang_text_success'), $this->request->get['order_id']);
                     
-                    $this->cart->add($order_product['product_id'], $order_product['quantity'], $option_data);
+                    Cart::add($order_product['product_id'], $order_product['quantity'], $option_data);
                 }
                 
-                $this->response->redirect($this->url->link('checkout/cart'));
+                Response::redirect(Url::link('checkout/cart'));
             }
         }
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
-        $this->breadcrumb->add('lang_text_account', 'account/dashboard', null, true, 'SSL');
+        Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
         
         $url = '';
         
@@ -73,7 +74,7 @@ class Order extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $this->breadcrumb->add('lang_heading_title', 'account/order', $url, true, 'SSL');
+        Breadcrumb::add('lang_heading_title', 'account/order', $url, true, 'SSL');
         
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
@@ -83,48 +84,48 @@ class Order extends Controller {
         
         $data['orders'] = array();
         
-        $order_total = $this->model_account_order->getTotalOrders();
+        $order_total = AccountOrder::getTotalOrders();
         
-        $results = $this->model_account_order->getOrders(($page - 1) * 10, 10);
+        $results = AccountOrder::getOrders(($page - 1) * 10, 10);
         
         foreach ($results as $result) {
-            $product_total  = $this->model_account_order->getTotalOrderProductsByOrderId($result['order_id']);
-            $gift_card_total = $this->model_account_order->getTotalOrderGiftcardsByOrderId($result['order_id']);
+            $product_total  = AccountOrder::getTotalOrderProductsByOrderId($result['order_id']);
+            $gift_card_total = AccountOrder::getTotalOrderGiftcardsByOrderId($result['order_id']);
             
             $data['orders'][] = array(
                 'order_id'   => $result['order_id'], 
                 'name'       => $result['firstname'] . ' ' . $result['lastname'], 
                 'status'     => $result['status'], 
-                'date_added' => date($this->language->get('lang_date_format_short'), strtotime($result['date_added'])), 
+                'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 
                 'products'   => ($product_total + $gift_card_total), 
-                'total'      => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']), 
-                'href'       => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'), 
-                'reorder'    => $this->url->link('account/order', 'order_id=' . $result['order_id'], 'SSL')
+                'total'      => Currency::format($result['total'], $result['currency_code'], $result['currency_value']), 
+                'href'       => Url::link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'), 
+                'reorder'    => Url::link('account/order', 'order_id=' . $result['order_id'], 'SSL')
             );
         }
         
-        $data['pagination'] = $this->theme->paginate(
+        $data['pagination'] = Theme::paginate(
             $order_total, 
             $page, 
             10, 
-            $this->language->get('lang_text_pagination'), 
-            $this->url->link('account/order', 'page={page}', 'SSL')
+            Lang::get('lang_text_pagination'), 
+            Url::link('account/order', 'page={page}', 'SSL')
         );
         
-        $data['continue'] = $this->url->link('account/dashboard', '', 'SSL');
+        $data['continue'] = Url::link('account/dashboard', '', 'SSL');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->setController('header', 'shop/header');
-        $this->theme->setController('footer', 'shop/footer');
+        Theme::setController('header', 'shop/header');
+        Theme::setController('footer', 'shop/footer');
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('account/order_list', $data));
+        Response::setOutput(View::render('account/order_list', $data));
     }
     
     public function info() {
-        $data = $this->theme->language('account/order');
+        $data = Theme::language('account/order');
         
         if (isset($this->request->get['order_id'])) {
             $order_id = $this->request->get['order_id'];
@@ -132,20 +133,20 @@ class Order extends Controller {
             $order_id = 0;
         }
         
-        if (!$this->customer->isLogged()) {
-            $this->session->data['redirect'] = $this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL');
+        if (!Customer::isLogged()) {
+            $this->session->data['redirect'] = Url::link('account/order/info', 'order_id=' . $order_id, 'SSL');
             
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         }
         
-        $this->theme->model('account/order');
+        Theme::model('account/order');
         
-        $order_info = $this->model_account_order->getOrder($order_id);
+        $order_info = AccountOrder::getOrder($order_id);
         
         if ($order_info) {
-            $this->theme->setTitle($this->language->get('lang_text_order'));
+            Theme::setTitle(Lang::get('lang_text_order'));
             
-            $this->breadcrumb->add('lang_text_account', 'account/dashboard', null, true, 'SSL');
+            Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
             
             $url = '';
             
@@ -153,8 +154,8 @@ class Order extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            $this->breadcrumb->add('lang_heading_title', 'account/order', $url, true, 'SSL');
-            $this->breadcrumb->add('lang_text_order', 'account/order/info', 'order_id=' . $this->request->get['order_id'] . $url, true, 'SSL');
+            Breadcrumb::add('lang_heading_title', 'account/order', $url, true, 'SSL');
+            Breadcrumb::add('lang_text_order', 'account/order/info', 'order_id=' . $this->request->get['order_id'] . $url, true, 'SSL');
             
             if ($order_info['invoice_no']) {
                 $data['invoice_no'] = $order_info['invoice_prefix'] . $order_info['invoice_no'];
@@ -163,7 +164,7 @@ class Order extends Controller {
             }
             
             $data['order_id'] = $this->request->get['order_id'];
-            $data['date_added'] = date($this->language->get('lang_date_format_short'), strtotime($order_info['date_added']));
+            $data['date_added'] = date(Lang::get('lang_date_format_short'), strtotime($order_info['date_added']));
             
             if ($order_info['payment_address_format']) {
                 $format = $order_info['payment_address_format'];
@@ -253,23 +254,23 @@ class Order extends Controller {
             
             $data['products'] = array();
             
-            $products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
+            $products = AccountOrder::getOrderProducts($this->request->get['order_id']);
             
             foreach ($products as $product) {
                 $option_data = array();
                 
-                $options = $this->model_account_order->getOrderOptions($this->request->get['order_id'], $product['order_product_id']);
+                $options = AccountOrder::getOrderOptions($this->request->get['order_id'], $product['order_product_id']);
                 
                 foreach ($options as $option) {
                     if ($option['type'] != 'file') {
                         $value = $option['value'];
                     } else {
-                        $value = $this->encode->substr($option['value'], 0, $this->encode->strrpos($option['value'], '.'));
+                        $value = Encode::substr($option['value'], 0, Encode::strrpos($option['value'], '.'));
                     }
                     
                     $option_data[] = array(
                         'name' => $option['name'], 
-                        'value' => ($this->encode->strlen($value) > 20 ? $this->encode->substr($value, 0, 20) . '..' : $value)
+                        'value' => (Encode::strlen($value) > 20 ? Encode::substr($value, 0, 20) . '..' : $value)
                     );
                 }
                 
@@ -278,71 +279,71 @@ class Order extends Controller {
                     'model'    => $product['model'], 
                     'option'   => $option_data, 
                     'quantity' => $product['quantity'], 
-                    'price'    => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']), 
-                    'total'    => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']), 
-                    'return'   => $this->url->link('account/returns/insert', 'order_id=' . $order_info['order_id'] . '&product_id=' . $product['product_id'], 'SSL')
+                    'price'    => Currency::format($product['price'] + (Config::get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']), 
+                    'total'    => Currency::format($product['total'] + (Config::get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']), 
+                    'return'   => Url::link('account/returns/insert', 'order_id=' . $order_info['order_id'] . '&product_id=' . $product['product_id'], 'SSL')
                 );
             }
             
             // Giftcard
             $data['gift_cards'] = array();
             
-            $gift_cards = $this->model_account_order->getOrderGiftcards($this->request->get['order_id']);
+            $gift_cards = AccountOrder::getOrderGiftcards($this->request->get['order_id']);
             
             foreach ($gift_cards as $gift_card) {
                 $data['gift_cards'][] = array(
                     'description' => $gift_card['description'], 
-                    'amount'      => $this->currency->format($gift_card['amount'], $order_info['currency_code'], $order_info['currency_value'])
+                    'amount'      => Currency::format($gift_card['amount'], $order_info['currency_code'], $order_info['currency_value'])
                 );
             }
             
-            $data['totals'] = $this->model_account_order->getOrderTotals($this->request->get['order_id']);
+            $data['totals'] = AccountOrder::getOrderTotals($this->request->get['order_id']);
             
             $data['comment'] = nl2br($order_info['comment']);
             
             $data['histories'] = array();
             
-            $results = $this->model_account_order->getOrderHistories($this->request->get['order_id']);
+            $results = AccountOrder::getOrderHistories($this->request->get['order_id']);
             
             foreach ($results as $result) {
                 $data['histories'][] = array(
-                    'date_added' => date($this->language->get('lang_date_format_short'), strtotime($result['date_added'])), 
+                    'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 
                     'status'     => $result['status'], 
                     'comment'    => nl2br($result['comment'])
                 );
             }
             
-            $data['continue'] = $this->url->link('account/order', '', 'SSL');
+            $data['continue'] = Url::link('account/order', '', 'SSL');
             
-            $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+            $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $this->theme->setController('header', 'shop/header');
-            $this->theme->setController('footer', 'shop/footer');
+            Theme::setController('header', 'shop/header');
+            Theme::setController('footer', 'shop/footer');
             
-            $data = $this->theme->renderControllers($data);
+            $data = Theme::renderControllers($data);
             
-            $this->response->setOutput($this->theme->view('account/order_info', $data));
+            Response::setOutput(View::render('account/order_info', $data));
         } else {
-            $this->theme->setTitle($this->language->get('lang_text_order'));
+            Theme::setTitle(Lang::get('lang_text_order'));
             
-            $data['heading_title'] = $this->language->get('lang_text_order');
+            $data['heading_title'] = Lang::get('lang_text_order');
             
-            $this->breadcrumb->add('lang_text_account', 'account/dashboard', null, true, 'SSL');
-            $this->breadcrumb->add('lang_heading_title', 'account/order', null, true, 'SSL');
-            $this->breadcrumb->add('lang_text_order', 'account/order/info', 'order_id=' . $order_id, true, 'SSL');
+            Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
+            Breadcrumb::add('lang_heading_title', 'account/order', null, true, 'SSL');
+            Breadcrumb::add('lang_text_order', 'account/order/info', 'order_id=' . $order_id, true, 'SSL');
             
-            $data['continue'] = $this->url->link('account/order', '', 'SSL');
+            $data['continue'] = Url::link('account/order', '', 'SSL');
             
-            $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
+            Response::addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
             
-            $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+            $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $this->theme->setController('header', 'shop/header');
-            $this->theme->setController('footer', 'shop/footer');
+            Theme::setController('header', 'shop/header');
+            Theme::setController('footer', 'shop/footer');
             
-            $data = $this->theme->renderControllers($data);
+            $data = Theme::renderControllers($data);
             
-            $this->response->setOutput($this->theme->view('error/not_found', $data));
+            Response::setOutput(View::render('error/not_found', $data));
         }
     }
 }

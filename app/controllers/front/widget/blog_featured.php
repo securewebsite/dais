@@ -15,22 +15,24 @@
 */
 
 namespace App\Controllers\Front\Widget;
+
 use App\Controllers\Controller;
 
 class BlogFeatured extends Controller {
+    
     public function index($setting) {
         static $widget = 0;
         
-        $data = $this->theme->language('widget/blog_featured');
+        $data = Theme::language('widget/blog_featured');
         
         $data['setting'] = $setting;
         
-        $this->theme->model('content/post');
-        $this->theme->model('tool/image');
+        Theme::model('content/post');
+        Theme::model('tool/image');
         
         $data['posts'] = array();
         
-        $posts = explode(',', $this->config->get('blog_featured_post'));
+        $posts = explode(',', Config::get('blog_featured_post'));
         
         if (empty($setting['limit'])) {
             $setting['limit'] = 5;
@@ -39,23 +41,23 @@ class BlogFeatured extends Controller {
         $posts = array_slice($posts, 0, (int)$setting['limit']);
         
         foreach ($posts as $post_id) {
-            $post_info = $this->model_content_post->getPost($post_id);
+            $post_info = ContentPost::getPost($post_id);
             
             if ($post_info) {
                 if ($post_info['image']) {
-                    $image = $this->model_tool_image->resize($post_info['image'], $setting['image_width'], $setting['image_height'], 'h');
+                    $image = ToolImage::resize($post_info['image'], $setting['image_width'], $setting['image_height'], 'h');
                 } else {
-                    $image = $this->model_tool_image->resize('placeholder.png', $setting['image_width'], $setting['image_height'], 'h');
+                    $image = ToolImage::resize('placeholder.png', $setting['image_width'], $setting['image_height'], 'h');
                 }
                 
-                $data['posts'][] = array('post_id' => $post_info['post_id'], 'thumb' => $image, 'name' => $post_info['name'], 'href' => $this->url->link('content/post', 'post_id=' . $post_info['post_id']));
+                $data['posts'][] = array('post_id' => $post_info['post_id'], 'thumb' => $image, 'name' => $post_info['name'], 'href' => Url::link('content/post', 'post_id=' . $post_info['post_id']));
             }
         }
         
         $data['widget'] = $widget++;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('widget/blog_featured', $data);
+        return View::render('widget/blog_featured', $data);
     }
 }

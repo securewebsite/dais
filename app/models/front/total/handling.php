@@ -19,13 +19,13 @@ use App\Models\Model;
 
 class Handling extends Model {
     public function getTotal(&$total_data, &$total, &$taxes) {
-        if (($this->cart->getSubTotal() < $this->config->get('handling_total')) && ($this->cart->getSubTotal() > 0)) {
-            $this->language->load('total/handling');
+        if ((Cart::getSubTotal() < Config::get('handling_total')) && (Cart::getSubTotal() > 0)) {
+            Lang::load('total/handling');
             
-            $total_data[] = array('code' => 'handling', 'title' => $this->language->get('lang_text_handling'), 'text' => $this->currency->format($this->config->get('handling_fee')), 'value' => $this->config->get('handling_fee'), 'sort_order' => $this->config->get('handling_sort_order'));
+            $total_data[] = array('code' => 'handling', 'title' => Lang::get('lang_text_handling'), 'text' => Currency::format(Config::get('handling_fee')), 'value' => Config::get('handling_fee'), 'sort_order' => Config::get('handling_sort_order'));
             
-            if ($this->config->get('handling_tax_class_id')) {
-                $tax_rates = $this->tax->getRates($this->config->get('handling_fee'), $this->config->get('handling_tax_class_id'));
+            if (Config::get('handling_tax_class_id')) {
+                $tax_rates = Tax::getRates(Config::get('handling_fee'), Config::get('handling_tax_class_id'));
                 
                 foreach ($tax_rates as $tax_rate) {
                     if (!isset($taxes[$tax_rate['tax_rate_id']])) {
@@ -36,7 +36,7 @@ class Handling extends Model {
                 }
             }
             
-            $total+= $this->config->get('handling_fee');
+            $total+= Config::get('handling_fee');
         }
     }
 }

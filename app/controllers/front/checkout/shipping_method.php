@@ -15,16 +15,18 @@
 */
 
 namespace App\Controllers\Front\Checkout;
+
 use App\Controllers\Controller;
 
 class ShippingMethod extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('checkout/checkout');
+        $data = Theme::language('checkout/checkout');
         
-        $this->theme->model('account/address');
+        Theme::model('account/address');
         
-        if ($this->customer->isLogged() && isset($this->session->data['shipping_address_id'])) {
-            $shipping_address = $this->model_account_address->getAddress($this->session->data['shipping_address_id']);
+        if (Customer::isLogged() && isset($this->session->data['shipping_address_id'])) {
+            $shipping_address = AccountAddress::getAddress($this->session->data['shipping_address_id']);
         } elseif (isset($this->session->data['guest'])) {
             $shipping_address = $this->session->data['guest']['shipping'];
         }
@@ -34,13 +36,13 @@ class ShippingMethod extends Controller {
             // Shipping Methods
             $quote_data = array();
             
-            $this->theme->model('setting/module');
+            Theme::model('setting/module');
             
-            $results = $this->model_setting_module->getModules('shipping');
+            $results = SettingModule::getModules('shipping');
             
             foreach ($results as $result) {
-                if ($this->config->get($result['code'] . '_status')) {
-                    $this->theme->model('shipping/' . $result['code']);
+                if (Config::get($result['code'] . '_status')) {
+                    Theme::model('shipping/' . $result['code']);
                     
                     $quote = $this->{'model_shipping_' . $result['code']}->getQuote($shipping_address);
                     
@@ -67,7 +69,7 @@ class ShippingMethod extends Controller {
         }
         
         if (empty($this->session->data['shipping_methods'])) {
-            $data['error_warning'] = sprintf($this->language->get('lang_error_no_shipping'), $this->url->link('content/contact'));
+            $data['error_warning'] = sprintf(Lang::get('lang_error_no_shipping'), Url::link('content/contact'));
         } else {
             $data['error_warning'] = '';
         }
@@ -90,41 +92,41 @@ class ShippingMethod extends Controller {
             $data['comment'] = '';
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->response->setOutput($this->theme->view('checkout/shipping_method', $data));
+        Response::setOutput(View::render('checkout/shipping_method', $data));
     }
     
     public function validate() {
-        $this->theme->language('checkout/checkout');
+        Theme::language('checkout/checkout');
         
         $json = array();
         
         // Validate if shipping is required. If not the customer should not have reached this page.
-        if (!$this->cart->hasShipping()) {
-            $json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
+        if (!Cart::hasShipping()) {
+            $json['redirect'] = Url::link('checkout/checkout', '', 'SSL');
         }
         
         // Validate if shipping address has been set.
-        $this->theme->model('account/address');
+        Theme::model('account/address');
         
-        if ($this->customer->isLogged() && isset($this->session->data['shipping_address_id'])) {
-            $shipping_address = $this->model_account_address->getAddress($this->session->data['shipping_address_id']);
+        if (Customer::isLogged() && isset($this->session->data['shipping_address_id'])) {
+            $shipping_address = AccountAddress::getAddress($this->session->data['shipping_address_id']);
         } elseif (isset($this->session->data['guest'])) {
             $shipping_address = $this->session->data['guest']['shipping'];
         }
         
         if (empty($shipping_address)) {
-            $json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
+            $json['redirect'] = Url::link('checkout/checkout', '', 'SSL');
         }
         
         // Validate cart has products and has stock.
-        if ((!$this->cart->hasProducts() && empty($this->session->data['gift_cards'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
-            $json['redirect'] = $this->url->link('checkout/cart');
+        if ((!Cart::hasProducts() && empty($this->session->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
+            $json['redirect'] = Url::link('checkout/cart');
         }
         
         // Validate minimum quantity requirments.
-        $products = $this->cart->getProducts();
+        $products = Cart::getProducts();
         
         foreach ($products as $product) {
             $product_total = 0;
@@ -136,7 +138,7 @@ class ShippingMethod extends Controller {
             }
             
             if ($product['minimum'] > $product_total) {
-                $json['redirect'] = $this->url->link('checkout/cart');
+                $json['redirect'] = Url::link('checkout/cart');
                 
                 break;
             }
@@ -144,12 +146,12 @@ class ShippingMethod extends Controller {
         
         if (!$json) {
             if (!isset($this->request->post['shipping_method'])) {
-                $json['error']['warning'] = $this->language->get('lang_error_shipping');
+                $json['error']['warning'] = Lang::get('lang_error_shipping');
             } else {
                 $shipping = explode('.', $this->request->post['shipping_method']);
                 
                 if (!isset($shipping[0]) || !isset($shipping[1]) || !isset($this->session->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]])) {
-                    $json['error']['warning'] = $this->language->get('lang_error_shipping');
+                    $json['error']['warning'] = Lang::get('lang_error_shipping');
                 }
             }
             
@@ -162,8 +164,8 @@ class ShippingMethod extends Controller {
             }
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

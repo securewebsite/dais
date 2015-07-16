@@ -38,7 +38,7 @@ class Menu extends Controller {
         Theme::model('module/menu');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_module_menu->addMenu($this->request->post);
+            ModuleMenu::addMenu($this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -47,7 +47,7 @@ class Menu extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('module/menu', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('module/menu', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -61,7 +61,7 @@ class Menu extends Controller {
         Theme::model('module/menu');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_module_menu->editMenu($this->request->get['menu_id'], $this->request->post);
+            ModuleMenu::editMenu($this->request->get['menu_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -70,7 +70,7 @@ class Menu extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('module/menu', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('module/menu', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -85,7 +85,7 @@ class Menu extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $menu_id) {
-                $this->model_module_menu->deleteMenu($menu_id);
+                ModuleMenu::deleteMenu($menu_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -96,7 +96,7 @@ class Menu extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('module/menu', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('module/menu', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -121,8 +121,8 @@ class Menu extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'module/menu');
         
-        $data['insert'] = Url::link('module/menu/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('module/menu/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('module/menu/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('module/menu/delete', '' . $url, 'SSL');
         
         $data['menus'] = array();
         
@@ -131,15 +131,15 @@ class Menu extends Controller {
             'limit' => Config::get('config_admin_limit')
         );
         
-        $menu_total = $this->model_module_menu->getTotalMenus();
-        $results = $this->model_module_menu->getMenus($filter);
+        $menu_total = ModuleMenu::getTotalMenus();
+        $results = ModuleMenu::getMenus($filter);
         
         foreach ($results as $result):
             $action = array();
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('module/menu/update', 'token=' . $this->session->data['token'] . '&menu_id=' . $result['menu_id'] . $url, 'SSL')
+                'href' => Url::link('module/menu/update', '' . '&menu_id=' . $result['menu_id'] . $url, 'SSL')
             );
             
             $data['menus'][] = array(
@@ -170,14 +170,14 @@ class Menu extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('module/menu', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
+            Url::link('module/menu', '' . $url . '&page={page}', 'SSL')
         );
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('module/menu_builder_list', $data));
+        Response::setOutput(View::render('module/menu_builder_list', $data));
     }
     
     public function getForm() {
@@ -207,21 +207,19 @@ class Menu extends Controller {
         Breadcrumb::add('lang_heading_title', 'module/menu', $url);
         
         if (!isset($this->request->get['menu_id'])):
-            $data['action'] = Url::link('module/menu/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('module/menu/insert', '' . $url, 'SSL');
         else:
-            $data['action'] = Url::link('module/menu/update', 'token=' . $this->session->data['token'] . '&menu_id=' . $this->request->get['menu_id'] . $url, 'SSL');
+            $data['action'] = Url::link('module/menu/update', '' . '&menu_id=' . $this->request->get['menu_id'] . $url, 'SSL');
         endif;
         
-        $data['cancel'] = Url::link('module/menu', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('module/menu', '' . $url, 'SSL');
         
         $data['menu_id'] = false;
         
         if (isset($this->request->get['menu_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $results = $this->model_module_menu->getMenu($this->request->get['menu_id']);
+            $results = ModuleMenu::getMenu($this->request->get['menu_id']);
             $data['menu_id'] = $this->request->get['menu_id'];
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         $fields = array(
             'name', 
@@ -267,7 +265,7 @@ class Menu extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('module/menu_builder_form', $data));
+        Response::setOutput(View::render('module/menu_builder_form', $data));
     }
     
     private function validateForm() {
@@ -315,7 +313,7 @@ class Menu extends Controller {
         $data['menu_items'] = array();
         
         if (isset($this->request->get['menu_id'])):
-            $result = $this->model_module_menu->getMenu($this->request->get['menu_id']);
+            $result = ModuleMenu::getMenu($this->request->get['menu_id']);
             if ($result['type'] === 'product_category'):
                 $data['menu_items'] = $result['items'];
             endif;
@@ -332,7 +330,7 @@ class Menu extends Controller {
         
         $data['lang_entry_category'] = Lang::get('lang_entry_product_category');
         
-        $results = $this->model_catalog_category->getCategories();
+        $results = CatalogCategory::getCategories();
         
         foreach ($results as $result):
             $data['categories'][] = array(
@@ -343,7 +341,7 @@ class Menu extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(Theme::view('module/menu_category', $data));
+        Response::setOutput(View::render('module/menu_category', $data));
     }
     
     public function content_category() {
@@ -355,7 +353,7 @@ class Menu extends Controller {
         $data['menu_items'] = array();
         
         if (isset($this->request->get['menu_id'])):
-            $result = $this->model_module_menu->getMenu($this->request->get['menu_id']);
+            $result = ModuleMenu::getMenu($this->request->get['menu_id']);
             if ($result['type'] === 'content_category'):
                 $data['menu_items'] = $result['items'];
             endif;
@@ -372,7 +370,7 @@ class Menu extends Controller {
         
         $data['lang_entry_category'] = Lang::get('lang_entry_content_category');
         
-        $results = $this->model_content_category->getCategories(0);
+        $results = ContentCategory::getCategories(0);
         
         foreach ($results as $result):
             $data['categories'][] = array(
@@ -383,7 +381,7 @@ class Menu extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(Theme::view('module/menu_category', $data));
+        Response::setOutput(View::render('module/menu_category', $data));
     }
     
     public function page() {
@@ -395,7 +393,7 @@ class Menu extends Controller {
         $data['menu_items'] = array();
         
         if (isset($this->request->get['menu_id'])):
-            $result = $this->model_module_menu->getMenu($this->request->get['menu_id']);
+            $result = ModuleMenu::getMenu($this->request->get['menu_id']);
             if ($result['type'] === 'page'):
                 $data['menu_items'] = $result['items'];
             endif;
@@ -405,7 +403,7 @@ class Menu extends Controller {
         
         $data['lang_entry_single'] = Lang::get('lang_entry_page');
         
-        $results = $this->model_content_page->getPages();
+        $results = ContentPage::getPages();
         
         foreach ($results as $result):
             $data['singles'][] = array(
@@ -416,7 +414,7 @@ class Menu extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(Theme::view('module/menu_single', $data));
+        Response::setOutput(View::render('module/menu_single', $data));
     }
     
     public function post() {
@@ -428,7 +426,7 @@ class Menu extends Controller {
         $data['menu_items'] = array();
         
         if (isset($this->request->get['menu_id'])):
-            $result = $this->model_module_menu->getMenu($this->request->get['menu_id']);
+            $result = ModuleMenu::getMenu($this->request->get['menu_id']);
             if ($result['type'] === 'post'):
                 $data['menu_items'] = $result['items'];
             endif;
@@ -438,7 +436,7 @@ class Menu extends Controller {
         
         $data['lang_entry_single'] = Lang::get('lang_entry_post');
         
-        $results = $this->model_content_post->getPosts();
+        $results = ContentPost::getPosts();
         
         foreach ($results as $result):
             $data['singles'][] = array(
@@ -449,7 +447,7 @@ class Menu extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(Theme::view('module/menu_single', $data));
+        Response::setOutput(View::render('module/menu_single', $data));
     }
     
     public function custom() {
@@ -460,7 +458,7 @@ class Menu extends Controller {
         $data['menu_items'] = array();
         
         if (isset($this->request->get['menu_id'])):
-            $result = $this->model_module_menu->getMenu($this->request->get['menu_id']);
+            $result = ModuleMenu::getMenu($this->request->get['menu_id']);
             if ($result['type'] === 'custom'):
                 $data['menu_items'] = $result['items'];
             endif;
@@ -479,6 +477,6 @@ class Menu extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        Response::setOutput(Theme::view('module/menu_custom', $data));
+        Response::setOutput(View::render('module/menu_custom', $data));
     }
 }

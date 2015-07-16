@@ -43,13 +43,13 @@ class ProductViewed extends Controller {
         
         $filter = array('start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $product_viewed_total = $this->model_report_product->getTotalProductsViewed($filter);
+        $product_viewed_total = ReportProduct::getTotalProductsViewed($filter);
         
-        $product_views_total = $this->model_report_product->getTotalProductViews();
+        $product_views_total = ReportProduct::getTotalProductViews();
         
         $data['products'] = array();
         
-        $results = $this->model_report_product->getProductsViewed($filter);
+        $results = ReportProduct::getProductsViewed($filter);
         
         foreach ($results as $result) {
             if ($result['viewed']) {
@@ -67,7 +67,7 @@ class ProductViewed extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['reset'] = Url::link('report/product_viewed/reset', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['reset'] = Url::link('report/product_viewed/reset', '' . $url, 'SSL');
         
         if (isset($this->session->data['success'])) {
             $data['success'] = $this->session->data['success'];
@@ -77,24 +77,24 @@ class ProductViewed extends Controller {
             $data['success'] = '';
         }
         
-        $data['pagination'] = Theme::paginate($product_viewed_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/product_viewed', 'token=' . $this->session->data['token'] . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($product_viewed_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/product_viewed', '' . '&page={page}', 'SSL'));
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('report/product_viewed', $data));
+        Response::setOutput(View::render('report/product_viewed', $data));
     }
     
     public function reset() {
         Lang::load('report/product_viewed');
         Theme::model('report/product');
-        $this->model_report_product->reset();
+        ReportProduct::reset();
         
         $this->session->data['success'] = Lang::get('lang_text_success');
         
         Theme::listen(__CLASS__, __FUNCTION__);
         
-        Response::redirect(Url::link('report/product_viewed', 'token=' . $this->session->data['token'], 'SSL'));
+        Response::redirect(Url::link('report/product_viewed', '', 'SSL'));
     }
 }

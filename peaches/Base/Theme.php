@@ -121,7 +121,7 @@ abstract class Theme {
     
     public function buildControllers() {
         if (Config::has('pre.controllers')):
-            $controllers = COnfig::get('pre.controllers');
+            $controllers = Config::get('pre.controllers');
             foreach ($controllers as $key => $file):
                 $this->controllers[$key] = $file;
             endforeach;
@@ -140,10 +140,10 @@ abstract class Theme {
     */
     
     public function model($model) {
-        $key = 'model_' . str_replace(SEP, '_', $model);
+        $key = Naming::model_key($model);
 
         if (!App::offsetExists($key)):
-            $class = Naming::class_for_model($model);    
+            $class = Naming::class_for_model($model);
             App::load($key, $class);
         endif;
     }
@@ -176,9 +176,9 @@ abstract class Theme {
     |
     */
     
-    public function view($template, $data = array()) {
-        $view = new View();
-        return $view->render($template, $data);
+    public function view($template, $data = []) {
+        //$view = new View();
+        return \View::render($template, $data); 
     }
     
     public function loadjs($file, $data, $path = '') {

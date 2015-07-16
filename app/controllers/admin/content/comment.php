@@ -38,7 +38,7 @@ class Comment extends Controller {
         Theme::model('content/comment');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_content_comment->addComment($this->request->post);
+            ContentComment::addComment($this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -55,7 +55,7 @@ class Comment extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('content/comment', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('content/comment', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -69,7 +69,7 @@ class Comment extends Controller {
         Theme::model('content/comment');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_content_comment->editComment($this->request->get['comment_id'], $this->request->post);
+            ContentComment::editComment($this->request->get['comment_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -86,7 +86,7 @@ class Comment extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('content/comment', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('content/comment', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -101,7 +101,7 @@ class Comment extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $comment_id) {
-                $this->model_content_comment->deleteComment($comment_id);
+                ContentComment::deleteComment($comment_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -120,7 +120,7 @@ class Comment extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('content/comment', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('content/comment', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,20 +165,20 @@ class Comment extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'content/comment');
         
-        $data['insert'] = Url::link('content/comment/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('content/comment/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('content/comment/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('content/comment/delete', '' . $url, 'SSL');
         
         $data['comments'] = array();
         
         $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $comment_total = $this->model_content_comment->getTotalComments();
-        $results = $this->model_content_comment->getComments($filter);
+        $comment_total = ContentComment::getTotalComments();
+        $results = ContentComment::getComments($filter);
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('content/comment/update', 'token=' . $this->session->data['token'] . '&comment_id=' . $result['comment_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('content/comment/update', '' . '&comment_id=' . $result['comment_id'] . $url, 'SSL'));
             
             $data['comments'][] = array('comment_id' => $result['comment_id'], 'name' => $result['name'], 'author' => $result['author'], 'rating' => $result['rating'], 'status' => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 'selected' => isset($this->request->post['selected']) && in_array($result['comment_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -209,11 +209,11 @@ class Comment extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_post'] = Url::link('content/comment', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
-        $data['sort_author'] = Url::link('content/comment', 'token=' . $this->session->data['token'] . '&sort=r.author' . $url, 'SSL');
-        $data['sort_rating'] = Url::link('content/comment', 'token=' . $this->session->data['token'] . '&sort=r.rating' . $url, 'SSL');
-        $data['sort_status'] = Url::link('content/comment', 'token=' . $this->session->data['token'] . '&sort=r.status' . $url, 'SSL');
-        $data['sort_date_added'] = Url::link('content/comment', 'token=' . $this->session->data['token'] . '&sort=r.date_added' . $url, 'SSL');
+        $data['sort_post'] = Url::link('content/comment', '' . '&sort=pd.name' . $url, 'SSL');
+        $data['sort_author'] = Url::link('content/comment', '' . '&sort=r.author' . $url, 'SSL');
+        $data['sort_rating'] = Url::link('content/comment', '' . '&sort=r.rating' . $url, 'SSL');
+        $data['sort_status'] = Url::link('content/comment', '' . '&sort=r.status' . $url, 'SSL');
+        $data['sort_date_added'] = Url::link('content/comment', '' . '&sort=r.date_added' . $url, 'SSL');
         
         $url = '';
         
@@ -225,7 +225,7 @@ class Comment extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($comment_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('content/comment', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($comment_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('content/comment', '' . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -234,7 +234,7 @@ class Comment extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('content/comment_list', $data));
+        Response::setOutput(View::render('content/comment_list', $data));
     }
     
     private function getForm() {
@@ -287,18 +287,16 @@ class Comment extends Controller {
         Breadcrumb::add('lang_heading_title', 'content/comment');
         
         if (!isset($this->request->get['comment_id'])) {
-            $data['action'] = Url::link('content/comment/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('content/comment/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('content/comment/update', 'token=' . $this->session->data['token'] . '&comment_id=' . $this->request->get['comment_id'] . $url, 'SSL');
+            $data['action'] = Url::link('content/comment/update', '' . '&comment_id=' . $this->request->get['comment_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('content/comment', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('content/comment', '' . $url, 'SSL');
         
         if (isset($this->request->get['comment_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $comment_info = $this->model_content_comment->getComment($this->request->get['comment_id']);
+            $comment_info = ContentComment::getComment($this->request->get['comment_id']);
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         Theme::model('content/post');
         
@@ -354,7 +352,7 @@ class Comment extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('content/comment_form', $data));
+        Response::setOutput(View::render('content/comment_form', $data));
     }
     
     private function validateForm() {

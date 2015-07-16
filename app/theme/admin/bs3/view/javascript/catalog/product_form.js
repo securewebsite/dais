@@ -22,7 +22,7 @@ function addAttribute(){
 var a=$('input[name="option"]'),mapped={};
 a.typeahead({
 	source:function(q,process){
-		return $.getJSON('index.php?route=catalog/option/autocomplete&token=<?= $token; ?>&filter_name='+encodeURIComponent(q),function(json){
+		return $.getJSON('index.php?route=catalog/option/autocomplete&filter_name='+encodeURIComponent(q),function(json){
 			var data=[];
 			$.each(json,function(i,item){
 				mapped[item.name]=item;
@@ -132,7 +132,7 @@ a.typeahead({
 var mapped={};
 $('input[name="customer"]').typeahead({
 	source:function(q,process){
-		return $.getJSON('index.php?route=catalog/product/autouser&token='+token+'&name='+encodeURIComponent(q),function(json){
+		return $.getJSON('index.php?route=catalog/product/autouser&name='+encodeURIComponent(q),function(json){
 			var data=[];
 			$.each(json,function(i,item){
 				mapped[item.name]=item;
@@ -261,7 +261,7 @@ $('#meta-description<?= $language["language_id"]; ?>').bind('click', function(e)
 	e.preventDefault();
 	$data = $('textarea[name="product_description[<?= $language["language_id"]; ?>][description]"]').code();
 	$.ajax({
-		url: 'index.php?route=catalog/product/description&token=<?= $token; ?>',
+		url: 'index.php?route=catalog/product/description',
 		type: 'post',
 		dataType: 'json',
 		data: {
@@ -279,7 +279,7 @@ $('#meta-keyword<?= $language["language_id"]; ?>').bind('click', function(e) {
 	e.preventDefault();
 	$data = $('textarea[name="product_description[<?= $language["language_id"]; ?>][description]"]').code();
 	$.ajax({
-		url: 'index.php?route=catalog/product/keyword&token=<?= $token; ?>',
+		url: 'index.php?route=catalog/product/keyword',
 		type: 'post',
 		dataType: 'json',
 		data: {

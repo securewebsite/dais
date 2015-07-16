@@ -6,7 +6,7 @@
 	var mapped={};
 	$('input[name="assign_to"]').typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=setting/setting/autocomplete&token='+token+'&filter_username='+encodeURIComponent(q),function(json){
+			return $.getJSON('index.php?route=setting/setting/autocomplete&filter_username='+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.username]=item;

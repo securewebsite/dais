@@ -23,13 +23,13 @@ class Manufacturer extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}manufacturer m 
-				LEFT JOIN {$this->db->prefix}manufacturer_to_store m2s 
+				FROM " . DB::prefix() . "manufacturer m 
+				LEFT JOIN " . DB::prefix() . "manufacturer_to_store m2s 
 					ON (m.manufacturer_id = m2s.manufacturer_id) 
 				WHERE m.manufacturer_id = '" . (int)$manufacturer_id . "' 
-				AND m2s.store_id = '" . (int)$this->config->get('config_store_id') . "'
+				AND m2s.store_id = '" . (int)Config::get('config_store_id') . "'
 			");
             
             if ($query->num_rows):
@@ -48,10 +48,10 @@ class Manufacturer extends Model {
         if ($data) {
             $sql = "
 				SELECT * 
-				FROM {$this->db->prefix}manufacturer m 
-				LEFT JOIN {$this->db->prefix}manufacturer_to_store m2s 
+				FROM " . DB::prefix() . "manufacturer m 
+				LEFT JOIN " . DB::prefix() . "manufacturer_to_store m2s 
 				ON (m.manufacturer_id = m2s.manufacturer_id) 
-				WHERE m2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+				WHERE m2s.store_id = '" . (int)Config::get('config_store_id') . "'";
             
             $sort_data = array('name', 'sort_order');
             
@@ -79,20 +79,20 @@ class Manufacturer extends Model {
                 $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
             }
             
-            $query = $this->db->query($sql);
+            $query = DB::query($sql);
             
             return $query->rows;
         } else {
-            $key = 'manufacturer.all.' . (int)$this->config->get('config_store_id');
+            $key = 'manufacturer.all.' . (int)Config::get('config_store_id');
             $manufacturer_data = $this->cache->get($key);
             
             if (!$manufacturer_data) {
-                $query = $this->db->query("
+                $query = DB::query("
 					SELECT * 
-					FROM {$this->db->prefix}manufacturer m 
-					LEFT JOIN {$this->db->prefix}manufacturer_to_store m2s 
+					FROM " . DB::prefix() . "manufacturer m 
+					LEFT JOIN " . DB::prefix() . "manufacturer_to_store m2s 
 					ON (m.manufacturer_id = m2s.manufacturer_id) 
-					WHERE m2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+					WHERE m2s.store_id = '" . (int)Config::get('config_store_id') . "' 
 					ORDER BY name
 				");
                 

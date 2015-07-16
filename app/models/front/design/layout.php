@@ -23,12 +23,12 @@ class Layout extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}layout_route 
-				WHERE '" . $this->db->escape($route) . "' 
+				FROM " . DB::prefix() . "layout_route 
+				WHERE '" . DB::escape($route) . "' 
 				LIKE CONCAT(route, '%') 
-				AND store_id = '" . (int)$this->config->get('config_store_id') . "' 
+				AND store_id = '" . (int)Config::get('config_store_id') . "' 
 				ORDER BY route DESC LIMIT 1");
             
             if ($query->num_rows):

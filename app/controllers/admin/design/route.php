@@ -42,7 +42,7 @@ class Route extends Controller {
         Theme::model('design/route');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
-            $this->model_design_route->editRoutes($this->request->post);
+            DesignRoute::editRoutes($this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -52,7 +52,7 @@ class Route extends Controller {
                 $url .= '&page=' . $this->request->get['page'];
             endif;
             
-            Response::redirect(Url::link('design/route', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('design/route', '' . $url, 'SSL'));
         endif;
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -77,7 +77,7 @@ class Route extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'design/route', $url);
         
-        $data['edit'] = Url::link('design/route/edit', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['edit'] = Url::link('design/route/edit', '' . $url, 'SSL');
         
         $data['routes'] = array();
         
@@ -86,9 +86,9 @@ class Route extends Controller {
 			'limit' => Config::get('config_admin_limit')
         );
         
-        $route_total = $this->model_design_route->getTotalRoutes();
+        $route_total = DesignRoute::getTotalRoutes();
         
-        $results = $this->model_design_route->getCustomRoutes($filter);
+        $results = DesignRoute::getCustomRoutes($filter);
         
         foreach ($results as $result):
             $data['routes'][] = array(
@@ -122,14 +122,14 @@ class Route extends Controller {
         	$page, 
         	Config::get('config_admin_limit'), 
         	Lang::get('lang_text_pagination'), 
-        	Url::link('design/route', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
+        	Url::link('design/route', '' . $url . '&page={page}', 'SSL')
         );
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('design/route_list', $data));
+        Response::setOutput(View::render('design/route_list', $data));
 	}
 
 	protected function getForm() {
@@ -149,13 +149,13 @@ class Route extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'design/route', $url);
         
-        $data['action'] = Url::link('design/route/edit', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['cancel'] = Url::link('design/route', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['action'] = Url::link('design/route/edit', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('design/route', '' . $url, 'SSL');
         
         if (isset($this->request->post['custom_route'])):
             $data['custom_routes'] = $this->request->post['custom_route'];
         else:
-            $data['custom_routes'] = $this->model_design_route->getCustomRoutes();
+            $data['custom_routes'] = DesignRoute::getCustomRoutes();
         endif;
         
         Theme::loadjs('javascript/design/route_form', $data);
@@ -164,7 +164,7 @@ class Route extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('design/route_form', $data));
+        Response::setOutput(View::render('design/route_form', $data));
 	}
 
 	protected function validateForm() {

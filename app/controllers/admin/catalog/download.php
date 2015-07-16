@@ -42,7 +42,7 @@ class Download extends Controller {
         Theme::model('catalog/download');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_catalog_download->addDownload($this->request->post);
+            CatalogDownload::addDownload($this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -60,7 +60,7 @@ class Download extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/download', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/download', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -76,7 +76,7 @@ class Download extends Controller {
         Theme::model('catalog/download');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_catalog_download->editDownload($this->request->get['download_id'], $this->request->post);
+            CatalogDownload::editDownload($this->request->get['download_id'], $this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -94,7 +94,7 @@ class Download extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/download', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/download', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -111,7 +111,7 @@ class Download extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $download_id) {
-                $this->model_catalog_download->deleteDownload($download_id);
+                CatalogDownload::deleteDownload($download_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -130,7 +130,7 @@ class Download extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/download', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/download', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -175,21 +175,21 @@ class Download extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'catalog/download', $url);
         
-        $data['insert'] = Url::link('catalog/download/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('catalog/download/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('catalog/download/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('catalog/download/delete', '' . $url, 'SSL');
         
         $data['downloads'] = array();
         
         $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $download_total = $this->model_catalog_download->getTotalDownloads();
+        $download_total = CatalogDownload::getTotalDownloads();
         
-        $results = $this->model_catalog_download->getDownloads($filter);
+        $results = CatalogDownload::getDownloads($filter);
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/download/update', 'token=' . $this->session->data['token'] . '&download_id=' . $result['download_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/download/update', '' . '&download_id=' . $result['download_id'] . $url, 'SSL'));
             
             $data['downloads'][] = array('download_id' => $result['download_id'], 'name' => $result['name'], 'remaining' => $result['remaining'], 'selected' => isset($this->request->post['selected']) && in_array($result['download_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -220,8 +220,8 @@ class Download extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_name'] = Url::link('catalog/download', 'token=' . $this->session->data['token'] . '&sort=dd.name' . $url, 'SSL');
-        $data['sort_remaining'] = Url::link('catalog/download', 'token=' . $this->session->data['token'] . '&sort=d.remaining' . $url, 'SSL');
+        $data['sort_name'] = Url::link('catalog/download', '' . '&sort=dd.name' . $url, 'SSL');
+        $data['sort_remaining'] = Url::link('catalog/download', '' . '&sort=d.remaining' . $url, 'SSL');
         
         $url = '';
         
@@ -233,7 +233,7 @@ class Download extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($download_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/download', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($download_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/download', '' . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -242,7 +242,7 @@ class Download extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('catalog/download_list', $data));
+        Response::setOutput(View::render('catalog/download_list', $data));
     }
     
     protected function getForm() {
@@ -291,22 +291,20 @@ class Download extends Controller {
         Breadcrumb::add('lang_heading_title', 'catalog/download', $url);
         
         if (!isset($this->request->get['download_id'])) {
-            $data['action'] = Url::link('catalog/download/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/download/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/download/update', 'token=' . $this->session->data['token'] . '&download_id=' . $this->request->get['download_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/download/update', '' . '&download_id=' . $this->request->get['download_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('catalog/download', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('catalog/download', '' . $url, 'SSL');
         
         Theme::model('locale/language');
         
-        $data['languages'] = $this->model_locale_language->getLanguages();
+        $data['languages'] = LocaleLanguage::getLanguages();
         
         if (isset($this->request->get['download_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $download_info = $this->model_catalog_download->getDownload($this->request->get['download_id']);
+            $download_info = CatalogDownload::getDownload($this->request->get['download_id']);
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         if (isset($this->request->get['download_id'])) {
             $data['download_id'] = $this->request->get['download_id'];
@@ -317,7 +315,7 @@ class Download extends Controller {
         if (isset($this->request->post['download_description'])) {
             $data['download_description'] = $this->request->post['download_description'];
         } elseif (isset($this->request->get['download_id'])) {
-            $data['download_description'] = $this->model_catalog_download->getDownloadDescriptions($this->request->get['download_id']);
+            $data['download_description'] = CatalogDownload::getDownloadDescriptions($this->request->get['download_id']);
         } else {
             $data['download_description'] = array();
         }
@@ -358,7 +356,7 @@ class Download extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('catalog/download_form', $data));
+        Response::setOutput(View::render('catalog/download_form', $data));
     }
     
     protected function validateForm() {
@@ -397,7 +395,7 @@ class Download extends Controller {
         Theme::model('catalog/product');
         
         foreach ($this->request->post['selected'] as $download_id) {
-            $product_total = $this->model_catalog_product->getTotalProductsByDownloadId($download_id);
+            $product_total = CatalogProduct::getTotalProductsByDownloadId($download_id);
             
             if ($product_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_product'), $product_total);
@@ -486,7 +484,7 @@ class Download extends Controller {
             
             $filter = array('filter_name' => $this->request->get['filter_name'], 'start' => 0, 'limit' => 20);
             
-            $results = $this->model_catalog_download->getDownloads($filter);
+            $results = CatalogDownload::getDownloads($filter);
             
             foreach ($results as $result) {
                 $json[] = array('download_id' => $result['download_id'], 'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')));

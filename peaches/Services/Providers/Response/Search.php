@@ -51,7 +51,7 @@ final class Search {
 
 		$count = DB::query("SELECT FOUND_ROWS() AS total");
 		$this->count = (int)$count->row['total'];
-
+		
 		/**
 		 * Our search_index table stores raw text info
 		 * to complete very fast searching. But we must now
@@ -65,6 +65,7 @@ final class Search {
 		 * Pass each result type to the corresponding callback
 		 * to ensure we have visibility and status.
 		 */
+		
 		if ($this->count):
 			foreach($query->rows as $row):
 				$method = $row['type'];
@@ -138,7 +139,7 @@ final class Search {
 
 	private function product($id) {
 		$visibility = $this->visibility();
-
+		
 		$query = DB::query("
 			SELECT p.product_id, pd.name, pd.description 
 			FROM " . DB::prefix() . "product p 
@@ -146,7 +147,7 @@ final class Search {
 			ON (p.product_id = pd.product_id) 
 			WHERE p.product_id = '" . (int)$id . "' 
 			AND p.status       = '1' 
-			AND p.visibility   >= '" . (int)$visibility . "' 
+			AND p.visibility   <= '" . (int)$visibility . "' 
 			AND pd.language_id = '" . (int)Config::get('config_language_id') . "'
 		");
 
@@ -166,7 +167,7 @@ final class Search {
 			ON (p.page_id = pd.page_id) 
 			WHERE p.page_id      = '" . (int)$id . "' 
 			AND p.status         = '1' 
-			AND p.visibility     >= '" . (int)$visibility . "' 
+			AND p.visibility     <= '" . (int)$visibility . "' 
 			AND pd.language_id = '" . (int)Config::get('config_language_id') . "'
 		");
 
@@ -203,7 +204,7 @@ final class Search {
 			ON (p.post_id = pd.post_id) 
 			WHERE p.post_id    = '" . (int)$id . "' 
 			AND p.status       = '1' 
-			AND p.visibility  >= '" . (int)$visibility . "' 
+			AND p.visibility  <= '" . (int)$visibility . "' 
 			AND pd.language_id = '" . (int)Config::get('config_language_id') . "'
 		");
 

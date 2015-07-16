@@ -19,9 +19,9 @@ use App\Models\Model;
 
 class SubTotal extends Model {
     public function getTotal(&$total_data, &$total, &$taxes) {
-        $this->language->load('total/sub_total');
+        Lang::load('total/sub_total');
         
-        $sub_total = $this->cart->getSubTotal();
+        $sub_total = Cart::getSubTotal();
 
         if (isset($this->session->data['gift_cards']) && $this->session->data['gift_cards']):
             foreach ($this->session->data['gift_cards'] as $gift_card):
@@ -31,10 +31,10 @@ class SubTotal extends Model {
         
         $total_data[] = array(
             'code'       => 'sub_total', 
-            'title'      => $this->language->get('lang_text_sub_total'), 
-            'text'       => $this->currency->format($sub_total), 
+            'title'      => Lang::get('lang_text_sub_total'), 
+            'text'       => Currency::format($sub_total), 
             'value'      => $sub_total, 
-            'sort_order' => $this->config->get('sub_total_sort_order')
+            'sort_order' => Config::get('sub_total_sort_order')
         );
         
         $total += $sub_total;

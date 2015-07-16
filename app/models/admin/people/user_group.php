@@ -21,10 +21,10 @@ use App\Models\Model;
 class UserGroup extends Model {
     
     public function addUserGroup($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}user_group 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "user_group 
 			SET 
-				name = '" . $this->db->escape($data['name']) . "', 
+				name = '" . DB::escape($data['name']) . "', 
 				permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "'
 		");
         
@@ -32,10 +32,10 @@ class UserGroup extends Model {
     }
     
     public function editUserGroup($user_group_id, $data) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}user_group 
+        DB::query("
+			UPDATE " . DB::prefix() . "user_group 
 			SET 
-				name = '" . $this->db->escape($data['name']) . "', 
+				name = '" . DB::escape($data['name']) . "', 
 				permission = '" . (isset($data['permission']) ? serialize($data['permission']) : '') . "' 
 			WHERE user_group_id = '" . (int)$user_group_id . "'
 		");
@@ -44,22 +44,22 @@ class UserGroup extends Model {
     }
     
     public function deleteUserGroup($user_group_id) {
-        $this->db->query("DELETE FROM {$this->db->prefix}user_group WHERE user_group_id = '" . (int)$user_group_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "user_group WHERE user_group_id = '" . (int)$user_group_id . "'");
         
         \User::reload_permissions();
     }
     
     public function addPermission($user_id, $type, $page) {
-        $user_query = $this->db->query("
+        $user_query = DB::query("
 			SELECT DISTINCT user_group_id 
-			FROM {$this->db->prefix}user 
+			FROM " . DB::prefix() . "user 
 			WHERE user_id = '" . (int)$user_id . "'
 		");
         
         if ($user_query->num_rows) {
-            $user_group_query = $this->db->query("
+            $user_group_query = DB::query("
 				SELECT DISTINCT * 
-				FROM {$this->db->prefix}user_group 
+				FROM " . DB::prefix() . "user_group 
 				WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'
 			");
             
@@ -68,8 +68,8 @@ class UserGroup extends Model {
                 
                 $data[$type][] = $page;
                 
-                $this->db->query("
-					UPDATE {$this->db->prefix}user_group 
+                DB::query("
+					UPDATE " . DB::prefix() . "user_group 
 					SET 
 						permission = '" . serialize($data) . "' 
 					WHERE user_group_id = '" . (int)$user_query->row['user_group_id'] . "'
@@ -81,9 +81,9 @@ class UserGroup extends Model {
     }
     
     public function getUserGroup($user_group_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT DISTINCT * 
-			FROM {$this->db->prefix}user_group 
+			FROM " . DB::prefix() . "user_group 
 			WHERE user_group_id = '" . (int)$user_group_id . "'
 		");
         
@@ -95,7 +95,7 @@ class UserGroup extends Model {
     public function getUserGroups($data = array()) {
         $sql = "
 			SELECT * 
-			FROM {$this->db->prefix}user_group";
+			FROM " . DB::prefix() . "user_group";
         
         $sql.= " ORDER BY name";
         
@@ -117,15 +117,15 @@ class UserGroup extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
     
     public function getTotalUserGroups() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}user_group");
+			FROM " . DB::prefix() . "user_group");
         
         return $query->row['total'];
     }

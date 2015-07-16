@@ -21,55 +21,55 @@ use Dais\Library\Text;
 
 class GiftCard extends Model {
     public function addGiftcard($order_id, $data) {
-        $this->db->query("
-            INSERT INTO {$this->db->prefix}gift_card 
+        DB::query("
+            INSERT INTO " . DB::prefix() . "gift_card 
             SET 
                 order_id          = '" . (int)$order_id . "', 
-                code              = '" . $this->db->escape($data['code']) . "', 
-                from_name         = '" . $this->db->escape($data['from_name']) . "', 
-                from_email        = '" . $this->db->escape($data['from_email']) . "', 
-                to_name           = '" . $this->db->escape($data['to_name']) . "', 
-                to_email          = '" . $this->db->escape($data['to_email']) . "', 
+                code              = '" . DB::escape($data['code']) . "', 
+                from_name         = '" . DB::escape($data['from_name']) . "', 
+                from_email        = '" . DB::escape($data['from_email']) . "', 
+                to_name           = '" . DB::escape($data['to_name']) . "', 
+                to_email          = '" . DB::escape($data['to_email']) . "', 
                 gift_card_theme_id = '" . (int)$data['gift_card_theme_id'] . "', 
-                message           = '" . $this->db->escape($data['message']) . "', 
+                message           = '" . DB::escape($data['message']) . "', 
                 amount            = '" . (float)$data['amount'] . "', 
                 status            = '1', 
                 date_added        = NOW()");
         
-        return $this->db->getLastId();
+        return DB::getLastId();
     }
     
     public function getGiftcard($code) {
         $status = true;
         
-        $gift_card_query = $this->db->query("
+        $gift_card_query = DB::query("
             SELECT 
                 *, 
                 vtd.name AS theme 
-            FROM {$this->db->prefix}gift_card v 
-            LEFT JOIN {$this->db->prefix}gift_card_theme vt 
+            FROM " . DB::prefix() . "gift_card v 
+            LEFT JOIN " . DB::prefix() . "gift_card_theme vt 
                 ON (v.gift_card_theme_id = vt.gift_card_theme_id) 
-            LEFT JOIN {$this->db->prefix}gift_card_theme_description vtd 
+            LEFT JOIN " . DB::prefix() . "gift_card_theme_description vtd 
                 ON (vt.gift_card_theme_id = vtd.gift_card_theme_id) 
-            WHERE v.code = '" . $this->db->escape($code) . "' 
-            AND vtd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+            WHERE v.code = '" . DB::escape($code) . "' 
+            AND vtd.language_id = '" . (int)Config::get('config_language_id') . "' 
             AND v.status = '1'");
         
         if ($gift_card_query->num_rows) {
             if ($gift_card_query->row['order_id']) {
-                $order_query = $this->db->query("
+                $order_query = DB::query("
                     SELECT * 
-                    FROM `{$this->db->prefix}order` 
+                    FROM `" . DB::prefix() . "order` 
                     WHERE order_id = '" . (int)$gift_card_query->row['order_id'] . "' 
-                    AND order_status_id = '" . (int)$this->config->get('config_complete_status_id') . "'");
+                    AND order_status_id = '" . (int)Config::get('config_complete_status_id') . "'");
                 
                 if (!$order_query->num_rows) {
                     $status = false;
                 }
                 
-                $order_gift_card_query = $this->db->query("
+                $order_gift_card_query = DB::query("
                     SELECT * 
-                    FROM `{$this->db->prefix}order_gift_card` 
+                    FROM `" . DB::prefix() . "order_gift_card` 
                     WHERE order_id = '" . (int)$gift_card_query->row['order_id'] . "' 
                     AND gift_card_id = '" . (int)$gift_card_query->row['gift_card_id'] . "'");
                 
@@ -78,9 +78,9 @@ class GiftCard extends Model {
                 }
             }
             
-            $gift_card_history_query = $this->db->query("
+            $gift_card_history_query = DB::query("
                 SELECT SUM(amount) AS total 
-                FROM `{$this->db->prefix}gift_card_history` vh 
+                FROM `" . DB::prefix() . "gift_card_history` vh 
                 WHERE vh.gift_card_id = '" . (int)$gift_card_query->row['gift_card_id'] . "' 
                 GROUP BY vh.gift_card_id");
             
@@ -117,19 +117,19 @@ class GiftCard extends Model {
     }
     
     public function confirm($order_id) {
-        $this->theme->model('checkout/order');
+        Theme::model('checkout/order');
         
-        $order_info = $this->model_checkout_order->getOrder($order_id);
+        $order_info = CheckoutOrder::getOrder($order_id);
         
         if ($order_info):
-            $gift_card_query = $this->db->query("
+            $gift_card_query = DB::query("
                 SELECT 
                     *, 
                     gtd.name AS theme 
-                FROM {$this->db->prefix}gift_card g 
-                LEFT JOIN {$this->db->prefix}gift_card_theme gt 
+                FROM " . DB::prefix() . "gift_card g 
+                LEFT JOIN " . DB::prefix() . "gift_card_theme gt 
                 ON (g.gift_card_theme_id = gt.gift_card_theme_id) 
-                LEFT JOIN {$this->db->prefix}gift_card_theme_description gtd 
+                LEFT JOIN " . DB::prefix() . "gift_card_theme_description gtd 
                 ON (gt.gift_card_theme_id = gtd.gift_card_theme_id) 
                 AND gtd.language_id = '" . (int)$order_info['language_id'] . "' 
                 WHERE g.order_id = '" . (int)$order_id . "'");
@@ -165,8 +165,8 @@ class GiftCard extends Model {
     }
     
     public function redeem($gift_card_id, $order_id, $amount) {
-        $this->db->query("
-            INSERT INTO `{$this->db->prefix}gift_card_history` 
+        DB::query("
+            INSERT INTO `" . DB::prefix() . "gift_card_history` 
             SET 
                 gift_card_id = '" . (int)$gift_card_id . "', 
                 order_id    = '" . (int)$order_id . "', 
@@ -178,11 +178,11 @@ class GiftCard extends Model {
         $call = $data;
         unset($data);
         
-        $data = $this->theme->language('notification/gift_card');
+        $data = Theme::language('notification/gift_card');
 
         $data['theme_image'] = Config::get('http.public') . 'image/' . $call['image'];
         $data['theme_name']  = $call['theme'];
-        $data['store_name']  = $this->config->get('config_name');
+        $data['store_name']  = Config::get('config_name');
         $data['to_name']     = $call['to_name'];
         $data['code']        = $call['code'];
 
@@ -194,7 +194,7 @@ class GiftCard extends Model {
             $data['html_message'] = nl2br($call['message']);
         endif;
 
-        $data['lang_text_message'] = sprintf($this->language->get('lang_text_message'), $call['from_name']);
+        $data['lang_text_message'] = sprintf(Lang::get('lang_text_message'), $call['from_name']);
 
         $search = array(
             '!amount!',
@@ -204,7 +204,7 @@ class GiftCard extends Model {
         );
 
         $replace = array(
-            $this->currency->format($call['amount']),
+            Currency::format($call['amount']),
             $call['from_name'],
             $call['from_email'],
             $call['code']

@@ -15,21 +15,23 @@
 */
 
 namespace App\Controllers\Front\Payment;
+
 use App\Controllers\Controller;
 
 class PaypalProIframe extends Controller {
+    
     public function index() {
-        $this->theme->model('checkout/order');
-        $this->theme->model('payment/paypal_pro_iframe');
+        Theme::model('checkout/order');
+        Theme::model('payment/paypal_pro_iframe');
         
-        $data = $this->theme->language('payment/paypal_pro_iframe');
+        $data = Theme::language('payment/paypal_pro_iframe');
         
-        if ($this->config->get('paypal_pro_iframe_checkout_method') == 'redirect') {
-            $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        if (Config::get('paypal_pro_iframe_checkout_method') == 'redirect') {
+            $order_info = CheckoutOrder::getOrder($this->session->data['order_id']);
             
             $hosted_button_id = $this->constructButtonData($order_info);
             
-            if ($this->config->get('paypal_pro_iframe_test')) {
+            if (Config::get('paypal_pro_iframe_test')) {
                 $data['url'] = 'https://securepayments.sandbox.paypal.com/cgi-bin/webscr';
             } else {
                 $data['url'] = 'https://securepayments.paypal.com/cgi-bin/webscr';
@@ -39,30 +41,30 @@ class PaypalProIframe extends Controller {
                 $data['code'] = $hosted_button_id;
                 $data['error_connection'] = '';
             } else {
-                $data['error_connection'] = $this->language->get('lang_error_connection');
+                $data['error_connection'] = Lang::get('lang_error_connection');
             }
         }
         
-        $data['checkout_method'] = $this->config->get('paypal_pro_iframe_checkout_method');
+        $data['checkout_method'] = Config::get('paypal_pro_iframe_checkout_method');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('payment/paypal_pro_iframe', $data);
+        return View::render('payment/paypal_pro_iframe', $data);
     }
     
     public function create() {
-        $data = $this->theme->language('payment/paypal_pro_iframe');
-        $this->theme->model('checkout/order');
-        $this->theme->model('payment/paypal_pro_iframe');
+        $data = Theme::language('payment/paypal_pro_iframe');
+        Theme::model('checkout/order');
+        Theme::model('payment/paypal_pro_iframe');
         
-        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        $order_info = CheckoutOrder::getOrder($this->session->data['order_id']);
         
         $hosted_button_id = $this->constructButtonData($order_info);
         
         if ($hosted_button_id) {
             $data['code'] = $hosted_button_id;
             
-            if ($this->config->get('paypal_pro_iframe_test')) {
+            if (Config::get('paypal_pro_iframe_test')) {
                 $data['url'] = 'https://securepayments.sandbox.paypal.com/cgi-bin/webscr';
             } else {
                 $data['url'] = 'https://securepayments.paypal.com/cgi-bin/webscr';
@@ -70,22 +72,22 @@ class PaypalProIframe extends Controller {
             
             $data['error_connection'] = '';
         } else {
-            $data['error_connection'] = $this->language->get('lang_error_connection');
+            $data['error_connection'] = Lang::get('lang_error_connection');
         }
         
-        if (file_exists(Config::get('path.public') . 'asset/' . $this->config->get('config_theme') . '/css/stylesheet.css')) {
-            $data['stylesheet'] = '/asset/' . $this->config->get('config_theme') . '/css/stylesheet.css';
+        if (file_exists(Config::get('path.public') . 'asset/' . Config::get('config_theme') . '/css/stylesheet.css')) {
+            $data['stylesheet'] = '/asset/' . Config::get('config_theme') . '/css/stylesheet.css';
         } else {
             $data['stylesheet'] = '/asset/default/css/stylesheet.css';
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->response->setOutput($this->theme->view('payment/paypal_pro_iframe_body', $data));
+        Response::setOutput(View::render('payment/paypal_pro_iframe_body', $data));
     }
     
     public function notify() {
-        $this->theme->model('payment/paypal_pro_iframe');
+        Theme::model('payment/paypal_pro_iframe');
         
         if (isset($this->request->post['custom'])) {
             $order_id = $this->encryption->decrypt($this->request->post['custom']);
@@ -93,9 +95,9 @@ class PaypalProIframe extends Controller {
             $order_id = 0;
         }
         
-        $this->theme->model('checkout/order');
+        Theme::model('checkout/order');
         
-        $order_info = $this->model_checkout_order->getOrder($order_id);
+        $order_info = CheckoutOrder::getOrder($order_id);
         
         if ($order_info) {
             $request = 'cmd=_notify-validate';
@@ -104,7 +106,7 @@ class PaypalProIframe extends Controller {
                 $request.= '&' . $key . '=' . urlencode(html_entity_decode($value, ENT_QUOTES, 'UTF-8'));
             }
             
-            if (!$this->config->get('paypal_pro_iframe_test')) {
+            if (!Config::get('paypal_pro_iframe_test')) {
                 $curl = curl_init('https://www.paypal.com/cgi-bin/webscr');
             } else {
                 $curl = curl_init('https://www.sandbox.paypal.com/cgi-bin/webscr');
@@ -120,77 +122,77 @@ class PaypalProIframe extends Controller {
             $response = curl_exec($curl);
             
             if (curl_errno($curl)) {
-                $this->model_payment_paypal_pro_iframe->log('paypal_pro_iframe_test :: CURL failed ' . curl_error($curl) . '(' . curl_errno($curl) . ')');
+                PaymentPaypalProIframe::log('paypal_pro_iframe_test :: CURL failed ' . curl_error($curl) . '(' . curl_errno($curl) . ')');
             } else {
-                $this->model_payment_paypal_pro_iframe->log('paypal_pro_iframe_test :: IPN REQUEST: ' . $request);
-                $this->model_payment_paypal_pro_iframe->log('paypal_pro_iframe_test :: IPN RESPONSE: ' . $response);
+                PaymentPaypalProIframe::log('paypal_pro_iframe_test :: IPN REQUEST: ' . $request);
+                PaymentPaypalProIframe::log('paypal_pro_iframe_test :: IPN RESPONSE: ' . $response);
                 
                 if ((strcmp($response, 'VERIFIED') == 0 || strcmp($response, 'UNVERIFIED') == 0) && isset($this->request->post['payment_status'])) {
-                    $order_status_id = $this->config->get('paypal_pro_iframe_canceled_reversal_status_id');
+                    $order_status_id = Config::get('paypal_pro_iframe_canceled_reversal_status_id');
                     
                     switch ($this->request->post['payment_status']) {
                         case 'Canceled_Reversal':
-                            $order_status_id = $this->config->get('paypal_pro_iframe_canceled_reversal_status_id');
+                            $order_status_id = Config::get('paypal_pro_iframe_canceled_reversal_status_id');
                             break;
 
                         case 'Completed':
-                            $order_status_id = $this->config->get('paypal_pro_iframe_completed_status_id');
+                            $order_status_id = Config::get('paypal_pro_iframe_completed_status_id');
                             break;
 
                         case 'Denied':
-                            $order_status_id = $this->config->get('paypal_pro_iframe_denied_status_id');
+                            $order_status_id = Config::get('paypal_pro_iframe_denied_status_id');
                             break;
 
                         case 'Expired':
-                            $order_status_id = $this->config->get('paypal_pro_iframe_expired_status_id');
+                            $order_status_id = Config::get('paypal_pro_iframe_expired_status_id');
                             break;
 
                         case 'Failed':
-                            $order_status_id = $this->config->get('paypal_pro_iframe_failed_status_id');
+                            $order_status_id = Config::get('paypal_pro_iframe_failed_status_id');
                             break;
 
                         case 'Pending':
-                            $order_status_id = $this->config->get('paypal_pro_iframe_pending_status_id');
+                            $order_status_id = Config::get('paypal_pro_iframe_pending_status_id');
                             break;
 
                         case 'Processed':
-                            $order_status_id = $this->config->get('paypal_pro_iframe_processed_status_id');
+                            $order_status_id = Config::get('paypal_pro_iframe_processed_status_id');
                             break;
 
                         case 'Refunded':
-                            $order_status_id = $this->config->get('paypal_pro_iframe_refunded_status_id');
+                            $order_status_id = Config::get('paypal_pro_iframe_refunded_status_id');
                             break;
 
                         case 'Reversed':
-                            $order_status_id = $this->config->get['paypal_pro_iframe_reversed_status_id'];
+                            $order_status_id = Config::get['paypal_pro_iframe_reversed_status_id'];
                             break;
 
                         case 'Voided':
-                            $order_status_id = $this->config->get('paypal_pro_iframe_voided_status_id');
+                            $order_status_id = Config::get('paypal_pro_iframe_voided_status_id');
                             break;
                     }
                     
                     if (!$order_info['order_status_id']) {
-                        $paypal_order_data = array('order_id' => $order_id, 'capture_status' => ($this->config->get('paypal_pro_iframe_transaction_method') == 'sale' ? 'Complete' : 'NotComplete'), 'currency_code' => $this->request->post['mc_currency'], 'authorization_id' => $this->request->post['txn_id'], 'total' => $this->request->post['mc_gross'],);
+                        $paypal_order_data = array('order_id' => $order_id, 'capture_status' => (Config::get('paypal_pro_iframe_transaction_method') == 'sale' ? 'Complete' : 'NotComplete'), 'currency_code' => $this->request->post['mc_currency'], 'authorization_id' => $this->request->post['txn_id'], 'total' => $this->request->post['mc_gross'],);
                         
-                        $paypal_iframe_order_id = $this->model_payment_paypal_pro_iframe->addOrder($paypal_order_data);
+                        $paypal_iframe_order_id = PaymentPaypalProIframe::addOrder($paypal_order_data);
                         
-                        $paypal_transaction_data = array('paypal_iframe_order_id' => $paypal_iframe_order_id, 'transaction_id' => $this->request->post['txn_id'], 'parent_transaction_id' => '', 'note' => '', 'msgsubid' => '', 'receipt_id' => $this->request->post['receipt_id'], 'payment_type' => $this->request->post['payment_type'], 'payment_status' => $this->request->post['payment_status'], 'pending_reason' => (isset($this->request->post['pending_reason']) ? $this->request->post['pending_reason'] : ''), 'transaction_entity' => ($this->config->get('paypal_pro_iframe_transaction_method') == 'sale' ? 'payment' : 'auth'), 'amount' => $this->request->post['mc_gross'], 'debug_data' => json_encode($this->request->post),);
+                        $paypal_transaction_data = array('paypal_iframe_order_id' => $paypal_iframe_order_id, 'transaction_id' => $this->request->post['txn_id'], 'parent_transaction_id' => '', 'note' => '', 'msgsubid' => '', 'receipt_id' => $this->request->post['receipt_id'], 'payment_type' => $this->request->post['payment_type'], 'payment_status' => $this->request->post['payment_status'], 'pending_reason' => (isset($this->request->post['pending_reason']) ? $this->request->post['pending_reason'] : ''), 'transaction_entity' => (Config::get('paypal_pro_iframe_transaction_method') == 'sale' ? 'payment' : 'auth'), 'amount' => $this->request->post['mc_gross'], 'debug_data' => json_encode($this->request->post),);
                         
-                        $this->model_payment_paypal_pro_iframe->addTransaction($paypal_transaction_data);
+                        PaymentPaypalProIframe::addTransaction($paypal_transaction_data);
                         
-                        $this->theme->listen(__CLASS__, __FUNCTION__);
+                        Theme::listen(__CLASS__, __FUNCTION__);
                         
-                        $this->model_checkout_order->confirm($order_id, $order_status_id);
+                        CheckoutOrder::confirm($order_id, $order_status_id);
                     } else {
-                        $this->theme->listen(__CLASS__, __FUNCTION__);
+                        Theme::listen(__CLASS__, __FUNCTION__);
                         
-                        $this->model_checkout_order->update($order_id, $order_status_id);
+                        CheckoutOrder::update($order_id, $order_status_id);
                     }
                 } else {
-                    $this->theme->listen(__CLASS__, __FUNCTION__);
+                    Theme::listen(__CLASS__, __FUNCTION__);
                     
-                    $this->model_checkout_order->confirm($order_id, $this->config->get('config_order_status_id'));
+                    CheckoutOrder::confirm($order_id, Config::get('config_order_status_id'));
                 }
             }
             
@@ -207,17 +209,17 @@ class PaypalProIframe extends Controller {
         $s_data['BUTTONLANGUAGE'] = 'en';
         $s_data['BUTTONSOURCE'] = 'Dais_Cart_WPP';
         
-        $s_data['USER'] = $this->config->get('paypal_pro_iframe_user');
-        $s_data['SIGNATURE'] = $this->config->get('paypal_pro_iframe_sig');
-        $s_data['PWD'] = $this->config->get('paypal_pro_iframe_password');
+        $s_data['USER'] = Config::get('paypal_pro_iframe_user');
+        $s_data['SIGNATURE'] = Config::get('paypal_pro_iframe_sig');
+        $s_data['PWD'] = Config::get('paypal_pro_iframe_password');
         
         $s_data['BUTTONTYPE'] = 'PAYMENT';
-        $s_data['L_BUTTONVAR0'] = 'sub_total=' . $this->currency->format($order_info['total'], $order_info['currency_code'], false, false);
+        $s_data['L_BUTTONVAR0'] = 'sub_total=' . Currency::format($order_info['total'], $order_info['currency_code'], false, false);
         $s_data['L_BUTTONVAR1'] = 'tax=0.00';
         $s_data['L_BUTTONVAR2'] = 'shipping=0.00';
         $s_data['L_BUTTONVAR3'] = 'handling=0.00';
         
-        if ($this->cart->hasShipping()) {
+        if (Cart::hasShipping()) {
             $s_data['L_BUTTONVAR4'] = 'first_name=' . urlencode($order_info['shipping_firstname']);
             $s_data['L_BUTTONVAR5'] = 'last_name=' . urlencode($order_info['shipping_lastname']);
             $s_data['L_BUTTONVAR6'] = 'address1=' . urlencode($order_info['shipping_address_1']);
@@ -246,9 +248,9 @@ class PaypalProIframe extends Controller {
         $s_data['L_BUTTONVAR18'] = 'billing_zip=' . urlencode($order_info['payment_postcode']);
         $s_data['L_BUTTONVAR19'] = 'billing_country=' . urlencode($order_info['payment_iso_code_2']);
         
-        $s_data['L_BUTTONVAR20'] = 'notify_url=' . $this->url->link('payment/paypal_pro_iframe/notify', '', 'SSL');
-        $s_data['L_BUTTONVAR21'] = 'cancel_return=' . $this->url->link('checkout/checkout', '', 'SSL');
-        $s_data['L_BUTTONVAR22'] = 'paymentaction=' . $this->config->get('paypal_pro_iframe_transaction_method');
+        $s_data['L_BUTTONVAR20'] = 'notify_url=' . Url::link('payment/paypal_pro_iframe/notify', '', 'SSL');
+        $s_data['L_BUTTONVAR21'] = 'cancel_return=' . Url::link('checkout/checkout', '', 'SSL');
+        $s_data['L_BUTTONVAR22'] = 'paymentaction=' . Config::get('paypal_pro_iframe_transaction_method');
         $s_data['L_BUTTONVAR23'] = 'currency_code=' . urlencode($order_info['currency_code']);
         $s_data['L_BUTTONVAR26'] = 'showBillingAddress=false';
         $s_data['L_BUTTONVAR27'] = 'showShippingAddress=false';
@@ -267,10 +269,10 @@ class PaypalProIframe extends Controller {
         $s_data['L_BUTTONVAR50'] = 'PageButtonBgColor=#AEAEAE';
         $s_data['L_BUTTONVAR51'] = 'orderSummaryBgColor=#AEAEAE';
         $s_data['L_BUTTONVAR55'] = 'template=templateD';
-        $s_data['L_BUTTONVAR56'] = 'return=' . $this->url->link('checkout/success', '', 'SSL');
+        $s_data['L_BUTTONVAR56'] = 'return=' . Url::link('checkout/success', '', 'SSL');
         $s_data['L_BUTTONVAR57'] = 'custom=' . $this->encryption->encrypt($order_info['order_id']);
         
-        if ($this->config->get('paypal_pro_iframe_test')) {
+        if (Config::get('paypal_pro_iframe_test')) {
             $url = 'https://api-3t.sandbox.paypal.com/nvp';
         } else {
             $url = 'https://api-3t.paypal.com/nvp';
@@ -294,9 +296,9 @@ class PaypalProIframe extends Controller {
         
         parse_str($response, $response_data);
         
-        $response_data = $this->theme->listen(__CLASS__, __FUNCTION__, $response_data);
+        $response_data = Theme::listen(__CLASS__, __FUNCTION__, $response_data);
         
-        $this->model_payment_paypal_pro_iframe->log(print_r(serialize($response_data), 1));
+        PaymentPaypalProIframe::log(print_r(serialize($response_data), 1));
         
         curl_close($curl);
         

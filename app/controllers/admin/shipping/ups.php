@@ -28,10 +28,10 @@ class Ups extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('ups', $this->request->post);
+            SettingSetting::editSetting('ups', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -85,9 +85,9 @@ class Ups extends Controller {
         Breadcrumb::add('lang_text_shipping', 'module/shipping');
         Breadcrumb::add('lang_heading_title', 'shipping/ups');
         
-        $data['action'] = Url::link('shipping/ups', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('shipping/ups', '', 'SSL');
         
-        $data['cancel'] = Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/shipping', '', 'SSL');
         
         if (isset($this->request->post['ups_key'])) {
             $data['ups_key'] = $this->request->post['ups_key'];
@@ -545,7 +545,7 @@ class Ups extends Controller {
         
         Theme::model('locale/weight_class');
         
-        $data['weight_classes'] = $this->model_locale_weight_class->getWeightClasses();
+        $data['weight_classes'] = LocaleWeightClass::getWeightClasses();
         
         if (isset($this->request->post['ups_length_code'])) {
             $data['ups_length_code'] = $this->request->post['ups_length_code'];
@@ -561,7 +561,7 @@ class Ups extends Controller {
         
         Theme::model('locale/length_class');
         
-        $data['length_classes'] = $this->model_locale_length_class->getLengthClasses();
+        $data['length_classes'] = LocaleLengthClass::getLengthClasses();
         
         if (isset($this->request->post['ups_length'])) {
             $data['ups_length'] = $this->request->post['ups_length'];
@@ -589,7 +589,7 @@ class Ups extends Controller {
         
         Theme::model('locale/tax_class');
         
-        $data['tax_classes'] = $this->model_locale_tax_class->getTaxClasses();
+        $data['tax_classes'] = LocaleTaxClass::getTaxClasses();
         
         if (isset($this->request->post['ups_geo_zone_id'])) {
             $data['ups_geo_zone_id'] = $this->request->post['ups_geo_zone_id'];
@@ -599,7 +599,7 @@ class Ups extends Controller {
         
         Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
+        $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
         if (isset($this->request->post['ups_status'])) {
             $data['ups_status'] = $this->request->post['ups_status'];
@@ -625,7 +625,7 @@ class Ups extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('shipping/ups', $data));
+        Response::setOutput(View::render('shipping/ups', $data));
     }
     
     protected function validate() {

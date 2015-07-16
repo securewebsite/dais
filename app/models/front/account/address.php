@@ -19,91 +19,91 @@ use App\Models\Model;
 
 class Address extends Model {
     public function addAddress($data) {
-        $this->db->query("
-            INSERT INTO {$this->db->prefix}address 
+        DB::query("
+            INSERT INTO " . DB::prefix() . "address 
             SET 
-                customer_id = '" . (int)$this->customer->getId() . "', 
-                firstname = '" . $this->db->escape($data['firstname']) . "', 
-                lastname = '" . $this->db->escape($data['lastname']) . "', 
-                company = '" . $this->db->escape($data['company']) . "', 
-                company_id = '" . $this->db->escape(isset($data['company_id']) ? $data['company_id'] : '') . "', 
-                tax_id = '" . $this->db->escape(isset($data['tax_id']) ? $data['tax_id'] : '') . "', 
-                address_1 = '" . $this->db->escape($data['address_1']) . "', 
-                address_2 = '" . $this->db->escape($data['address_2']) . "', 
-                postcode = '" . $this->db->escape($data['postcode']) . "', 
-                city = '" . $this->db->escape($data['city']) . "', 
-                zone_id = '" . (int)$data['zone_id'] . "', 
-                country_id = '" . (int)$data['country_id'] . "'
+                customer_id = '" . (int)\Customer::getId() . "', 
+                firstname   = '" . DB::escape($data['firstname']) . "', 
+                lastname    = '" . DB::escape($data['lastname']) . "', 
+                company     = '" . DB::escape($data['company']) . "', 
+                company_id  = '" . DB::escape(isset($data['company_id']) ? $data['company_id'] : '') . "', 
+                tax_id      = '" . DB::escape(isset($data['tax_id']) ? $data['tax_id'] : '') . "', 
+                address_1   = '" . DB::escape($data['address_1']) . "', 
+                address_2   = '" . DB::escape($data['address_2']) . "', 
+                postcode    = '" . DB::escape($data['postcode']) . "', 
+                city        = '" . DB::escape($data['city']) . "', 
+                zone_id     = '" . (int)$data['zone_id'] . "', 
+                country_id  = '" . (int)$data['country_id'] . "'
         ");
         
-        $address_id = $this->db->getLastId();
+        $address_id = DB::getLastId();
         
         if (!empty($data['default'])) {
-            $this->db->query("
-                UPDATE {$this->db->prefix}customer 
+            DB::query("
+                UPDATE " . DB::prefix() . "customer 
                 SET 
                     address_id = '" . (int)$address_id . "' 
-                WHERE customer_id = '" . (int)$this->customer->getId() . "'
+                WHERE customer_id = '" . (int)\Customer::getId() . "'
             ");
         }
         
-        $this->theme->trigger('front_customer_add_address', array('address_id' => $address_id));
+        Theme::trigger('front_customer_add_address', array('address_id' => $address_id));
         
         return $address_id;
     }
     
     public function editAddress($address_id, $data) {
-        $this->db->query("
-            UPDATE {$this->db->prefix}address 
+        DB::query("
+            UPDATE " . DB::prefix() . "address 
             SET 
-                firstname = '" . $this->db->escape($data['firstname']) . "', 
-                lastname = '" . $this->db->escape($data['lastname']) . "', 
-                company = '" . $this->db->escape($data['company']) . "', 
-                company_id = '" . $this->db->escape(isset($data['company_id']) ? $data['company_id'] : '') . "', 
-                tax_id = '" . $this->db->escape(isset($data['tax_id']) ? $data['tax_id'] : '') . "', 
-                address_1 = '" . $this->db->escape($data['address_1']) . "', 
-                address_2 = '" . $this->db->escape($data['address_2']) . "', 
-                postcode = '" . $this->db->escape($data['postcode']) . "', 
-                city = '" . $this->db->escape($data['city']) . "', 
+                firstname = '" . DB::escape($data['firstname']) . "', 
+                lastname = '" . DB::escape($data['lastname']) . "', 
+                company = '" . DB::escape($data['company']) . "', 
+                company_id = '" . DB::escape(isset($data['company_id']) ? $data['company_id'] : '') . "', 
+                tax_id = '" . DB::escape(isset($data['tax_id']) ? $data['tax_id'] : '') . "', 
+                address_1 = '" . DB::escape($data['address_1']) . "', 
+                address_2 = '" . DB::escape($data['address_2']) . "', 
+                postcode = '" . DB::escape($data['postcode']) . "', 
+                city = '" . DB::escape($data['city']) . "', 
                 zone_id = '" . (int)$data['zone_id'] . "', 
                 country_id = '" . (int)$data['country_id'] . "' 
             WHERE address_id  = '" . (int)$address_id . "' 
-            AND customer_id = '" . (int)$this->customer->getId() . "'
+            AND customer_id = '" . (int)\Customer::getId() . "'
         ");
         
         if (!empty($data['default'])) {
-            $this->db->query("
-                UPDATE {$this->db->prefix}customer 
+            DB::query("
+                UPDATE " . DB::prefix() . "customer 
                 SET address_id = '" . (int)$address_id . "' 
-                WHERE customer_id = '" . (int)$this->customer->getId() . "'
+                WHERE customer_id = '" . (int)\Customer::getId() . "'
             ");
         }
         
-        $this->theme->trigger('front_customer_edit_address', array('address_id' => $address_id));
+        Theme::trigger('front_customer_edit_address', array('address_id' => $address_id));
     }
     
     public function deleteAddress($address_id) {
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}address 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "address 
             WHERE address_id = '" . (int)$address_id . "' 
-            AND customer_id = '" . (int)$this->customer->getId() . "'
+            AND customer_id = '" . (int)\Customer::getId() . "'
         ");
         
-        $this->theme->trigger('front_customer_delete_address', array('address_id' => $address_id));
+        Theme::trigger('front_customer_delete_address', array('address_id' => $address_id));
     }
     
     public function getAddress($address_id) {
-        $address_query = $this->db->query("
+        $address_query = DB::query("
             SELECT DISTINCT * 
-            FROM {$this->db->prefix}address 
+            FROM " . DB::prefix() . "address 
             WHERE address_id = '" . (int)$address_id . "' 
-            AND customer_id = '" . (int)$this->customer->getId() . "'
+            AND customer_id = '" . (int)\Customer::getId() . "'
         ");
         
         if ($address_query->num_rows) {
-            $country_query = $this->db->query("
+            $country_query = DB::query("
                 SELECT * 
-                FROM `{$this->db->prefix}country` 
+                FROM `" . DB::prefix() . "country` 
                 WHERE country_id = '" . (int)$address_query->row['country_id'] . "'
             ");
             
@@ -119,9 +119,9 @@ class Address extends Model {
                 $address_format = '';
             }
             
-            $zone_query = $this->db->query("
+            $zone_query = DB::query("
                 SELECT * 
-                FROM `{$this->db->prefix}zone` 
+                FROM `" . DB::prefix() . "zone` 
                 WHERE zone_id = '" . (int)$address_query->row['zone_id'] . "'
             ");
             
@@ -162,16 +162,16 @@ class Address extends Model {
     public function getAddresses() {
         $address_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}address 
-            WHERE customer_id = '" . (int)$this->customer->getId() . "'
+            FROM " . DB::prefix() . "address 
+            WHERE customer_id = '" . (int)\Customer::getId() . "'
         ");
         
         foreach ($query->rows as $result) {
-            $country_query = $this->db->query("
+            $country_query = DB::query("
                 SELECT * 
-                FROM `{$this->db->prefix}country` 
+                FROM `" . DB::prefix() . "country` 
                 WHERE country_id = '" . (int)$result['country_id'] . "'
             ");
             
@@ -187,9 +187,9 @@ class Address extends Model {
                 $address_format = '';
             }
             
-            $zone_query = $this->db->query("
+            $zone_query = DB::query("
                 SELECT * 
-                FROM `{$this->db->prefix}zone` 
+                FROM `" . DB::prefix() . "zone` 
                 WHERE zone_id = '" . (int)$result['zone_id'] . "'
             ");
             
@@ -227,10 +227,10 @@ class Address extends Model {
     }
     
     public function getTotalAddresses() {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT COUNT(*) AS total 
-            FROM {$this->db->prefix}address 
-            WHERE customer_id = '" . (int)$this->customer->getId() . "'
+            FROM " . DB::prefix() . "address 
+            WHERE customer_id = '" . (int)\Customer::getId() . "'
         ");
         
         return $query->row['total'];

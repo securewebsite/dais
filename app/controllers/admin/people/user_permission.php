@@ -38,7 +38,7 @@ class UserPermission extends Controller {
         Theme::model('people/user_group');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_people_user_group->addUserGroup($this->request->post);
+            PeopleUserGroup::addUserGroup($this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -55,7 +55,7 @@ class UserPermission extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('people/user_permission', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('people/user_permission', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -69,7 +69,7 @@ class UserPermission extends Controller {
         Theme::model('people/user_group');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_people_user_group->editUserGroup($this->request->get['user_group_id'], $this->request->post);
+            PeopleUserGroup::editUserGroup($this->request->get['user_group_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -86,7 +86,7 @@ class UserPermission extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('people/user_permission', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('people/user_permission', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -101,7 +101,7 @@ class UserPermission extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $user_group_id) {
-                $this->model_people_user_group->deleteUserGroup($user_group_id);
+                PeopleUserGroup::deleteUserGroup($user_group_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -120,7 +120,7 @@ class UserPermission extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('people/user_permission', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('people/user_permission', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,21 +165,21 @@ class UserPermission extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'people/user_permission', $url);
         
-        $data['insert'] = Url::link('people/user_permission/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('people/user_permission/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('people/user_permission/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('people/user_permission/delete', '' . $url, 'SSL');
         
         $data['user_groups'] = array();
         
         $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $user_group_total = $this->model_people_user_group->getTotalUserGroups();
+        $user_group_total = PeopleUserGroup::getTotalUserGroups();
         
-        $results = $this->model_people_user_group->getUserGroups($filter);
+        $results = PeopleUserGroup::getUserGroups($filter);
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/user_permission/update', 'token=' . $this->session->data['token'] . '&user_group_id=' . $result['user_group_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/user_permission/update', '' . '&user_group_id=' . $result['user_group_id'] . $url, 'SSL'));
             
             $data['user_groups'][] = array('user_group_id' => $result['user_group_id'], 'name' => $result['name'], 'selected' => isset($this->request->post['selected']) && in_array($result['user_group_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -210,7 +210,7 @@ class UserPermission extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_name'] = Url::link('people/user_permission', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+        $data['sort_name'] = Url::link('people/user_permission', '' . '&sort=name' . $url, 'SSL');
         
         $url = '';
         
@@ -222,7 +222,7 @@ class UserPermission extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($user_group_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('people/user_permission', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($user_group_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('people/user_permission', '' . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -231,7 +231,7 @@ class UserPermission extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('people/user_group_list', $data));
+        Response::setOutput(View::render('people/user_group_list', $data));
     }
     
     protected function getForm() {
@@ -266,15 +266,15 @@ class UserPermission extends Controller {
         Breadcrumb::add('lang_heading_title', 'people/user_permission', $url);
         
         if (!isset($this->request->get['user_group_id'])) {
-            $data['action'] = Url::link('people/user_permission/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('people/user_permission/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('people/user_permission/update', 'token=' . $this->session->data['token'] . '&user_group_id=' . $this->request->get['user_group_id'] . $url, 'SSL');
+            $data['action'] = Url::link('people/user_permission/update', '' . '&user_group_id=' . $this->request->get['user_group_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('people/user_permission', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('people/user_permission', '' . $url, 'SSL');
         
         if (isset($this->request->get['user_group_id']) && $this->request->server['REQUEST_METHOD'] != 'POST') {
-            $user_group_info = $this->model_people_user_group->getUserGroup($this->request->get['user_group_id']);
+            $user_group_info = PeopleUserGroup::getUserGroup($this->request->get['user_group_id']);
         }
         
         if (isset($this->request->post['name'])) {
@@ -341,7 +341,7 @@ class UserPermission extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('people/user_group_form', $data));
+        Response::setOutput(View::render('people/user_group_form', $data));
     }
     
     protected function validateForm() {
@@ -366,7 +366,7 @@ class UserPermission extends Controller {
         Theme::model('people/user');
         
         foreach ($this->request->post['selected'] as $user_group_id) {
-            $user_total = $this->model_people_user->getTotalUsersByGroupId($user_group_id);
+            $user_total = PeopleUser::getTotalUsersByGroupId($user_group_id);
             
             if ($user_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_user'), $user_total);

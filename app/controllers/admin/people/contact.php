@@ -24,8 +24,6 @@ class Contact extends Controller {
         $data = Theme::language('people/contact');
         Theme::setTitle(Lang::get('lang_heading_title'));
         
-        $data['token'] = $this->session->data['token'];
-        
         if (isset($this->session->data['success'])):
             $data['success'] = $this->session->data['success'];
             unset($this->session->data['success']);
@@ -33,20 +31,20 @@ class Contact extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'people/contact');
         
-        $data['cancel'] = Url::link('people/contact', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('people/contact', '', 'SSL');
         
         Theme::model('setting/store');
         
-        $data['stores'] = $this->model_setting_store->getStores();
+        $data['stores'] = SettingStore::getStores();
         
         Theme::model('people/customer_group');
         
-        $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups(0);
+        $data['customer_groups'] = PeopleCustomerGroup::getCustomerGroups(0);
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('people/contact', $data));
+        Response::setOutput(View::render('people/contact', $data));
     }
     
     public function send() {
@@ -93,8 +91,8 @@ class Contact extends Controller {
                             'limit'             => 10
                         );
                         
-                        $email_total = $this->model_people_customer->getTotalCustomers($customer_data);
-                        $results     = $this->model_people_customer->getCustomers($customer_data);
+                        $email_total = PeopleCustomer::getTotalCustomers($customer_data);
+                        $results     = PeopleCustomer::getCustomers($customer_data);
                         
                         foreach ($results as $result):
                             $emails[] = $result['customer_id'];
@@ -106,8 +104,8 @@ class Contact extends Controller {
                             'limit' => 10
                         );
                         
-                        $email_total = $this->model_people_customer->getTotalCustomers($customer_data);
-                        $results     = $this->model_people_customer->getCustomers($customer_data);
+                        $email_total = PeopleCustomer::getTotalCustomers($customer_data);
+                        $results     = PeopleCustomer::getCustomers($customer_data);
                         
                         foreach ($results as $result):
                             $emails[] = $result['customer_id'];
@@ -120,8 +118,8 @@ class Contact extends Controller {
                             'limit'                    => 10
                         );
                         
-                        $email_total = $this->model_people_customer->getTotalCustomers($customer_data);
-                        $results     = $this->model_people_customer->getCustomers($customer_data);
+                        $email_total = PeopleCustomer::getTotalCustomers($customer_data);
+                        $results     = PeopleCustomer::getCustomers($customer_data);
                         
                         foreach ($results as $result):
                             $emails[] = $result['customer_id'];
@@ -130,7 +128,7 @@ class Contact extends Controller {
                     case 'customer':
                         if (!empty($this->request->post['customer'])):
                             foreach ($this->request->post['customer'] as $customer_id):
-                                $customer_info = $this->model_people_customer->getCustomer($customer_id);
+                                $customer_info = PeopleCustomer::getCustomer($customer_id);
                                 
                                 if ($customer_info):
                                     $emails[] = $customer_info['customer_id'];
@@ -144,8 +142,8 @@ class Contact extends Controller {
                             'limit' => 10
                         );
                         
-                        $email_total = $this->model_people_customer->getTotalAffiliates($affiliate_data);
-                        $results     = $this->model_people_customer->getAffiliates($affiliate_data);
+                        $email_total = PeopleCustomer::getTotalAffiliates($affiliate_data);
+                        $results     = PeopleCustomer::getAffiliates($affiliate_data);
                         
                         foreach ($results as $result):
                             $emails[] = $result['customer_id'];
@@ -154,7 +152,7 @@ class Contact extends Controller {
                     case 'affiliate':
                         if (!empty($this->request->post['affiliate'])):
                             foreach ($this->request->post['affiliate'] as $affiliate_id):
-                                $affiliate_info = $this->model_people_customer->getCustomer($affiliate_id);
+                                $affiliate_info = PeopleCustomer::getCustomer($affiliate_id);
                                 
                                 if ($affiliate_info):
                                     $emails[] = $affiliate_info['customer_id'];
@@ -164,8 +162,8 @@ class Contact extends Controller {
                         break;
                     case 'product':
                         if (isset($this->request->post['product'])):
-                            $email_total = $this->model_sale_order->getTotalCustomersByProductsOrdered($this->request->post['product']);
-                            $results     = $this->model_sale_order->getCustomersByProductsOrdered($this->request->post['product'], ($page - 1) * 10, 10);
+                            $email_total = SaleOrder::getTotalCustomersByProductsOrdered($this->request->post['product']);
+                            $results     = SaleOrder::getCustomersByProductsOrdered($this->request->post['product'], ($page - 1) * 10, 10);
                             
                             foreach ($results as $result):
                                 $emails[] = $result['customer_id'];
@@ -185,7 +183,7 @@ class Contact extends Controller {
                     endif;
                     
                     if ($end < $email_total):
-                        $json['next'] = str_replace('&amp;', '&', Url::link('people/contact/send', 'token=' . $this->session->data['token'] . '&page=' . ($page + 1), 'SSL'));
+                        $json['next'] = str_replace('&amp;', '&', Url::link('people/contact/send', '' . '&page=' . ($page + 1), 'SSL'));
                     else:
                         $json['next'] = '';
                     endif;
@@ -193,7 +191,7 @@ class Contact extends Controller {
                     if ($end < $email_total):
                         $json['redirect'] = '';
                     else:
-                        $json['redirect'] = str_replace('&amp;', '&', Url::link('people/contact', 'token=' . $this->session->data['token'], 'SSL'));
+                        $json['redirect'] = str_replace('&amp;', '&', Url::link('people/contact', '', 'SSL'));
                         $this->session->data['success'] = Lang::get('lang_text_success');
                     endif;
 

@@ -21,16 +21,16 @@ use App\Models\Model;
 class Coupon extends Model {
     
     public function getCoupons($data = array()) {
-        $sql = "SELECT ch.coupon_id, c.name, c.code, COUNT(DISTINCT ch.order_id) AS `orders`, SUM(ch.amount) AS total FROM `{$this->db->prefix}coupon_history` ch LEFT JOIN `{$this->db->prefix}coupon` c ON (ch.coupon_id = c.coupon_id)";
+        $sql = "SELECT ch.coupon_id, c.name, c.code, COUNT(DISTINCT ch.order_id) AS `orders`, SUM(ch.amount) AS total FROM `" . DB::prefix() . "coupon_history` ch LEFT JOIN `" . DB::prefix() . "coupon` c ON (ch.coupon_id = c.coupon_id)";
         
         $implode = array();
         
         if (!empty($data['filter_date_start'])) {
-            $implode[] = "DATE(ch.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $implode[] = "DATE(ch.date_added) >= '" . DB::escape($data['filter_date_start']) . "'";
         }
         
         if (!empty($data['filter_date_end'])) {
-            $implode[] = "DATE(ch.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $implode[] = "DATE(ch.date_added) <= '" . DB::escape($data['filter_date_end']) . "'";
         }
         
         if ($implode) {
@@ -52,22 +52,22 @@ class Coupon extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
     
     public function getTotalCoupons($data = array()) {
-        $sql = "SELECT COUNT(DISTINCT coupon_id) AS total FROM `{$this->db->prefix}coupon_history`";
+        $sql = "SELECT COUNT(DISTINCT coupon_id) AS total FROM `" . DB::prefix() . "coupon_history`";
         
         $implode = array();
         
         if (!empty($data['filter_date_start'])) {
-            $implode[] = "DATE(date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $implode[] = "DATE(date_added) >= '" . DB::escape($data['filter_date_start']) . "'";
         }
         
         if (!empty($data['filter_date_end'])) {
-            $implode[] = "DATE(date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $implode[] = "DATE(date_added) <= '" . DB::escape($data['filter_date_end']) . "'";
         }
         
         if ($implode) {
@@ -75,7 +75,7 @@ class Coupon extends Model {
             $sql.= " WHERE {$imp}";
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->row['total'];
     }

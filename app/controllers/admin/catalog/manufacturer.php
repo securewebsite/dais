@@ -42,7 +42,7 @@ class Manufacturer extends Controller {
         Theme::model('catalog/manufacturer');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_catalog_manufacturer->addManufacturer($this->request->post);
+            CatalogManufacturer::addManufacturer($this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -60,7 +60,7 @@ class Manufacturer extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/manufacturer', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -76,7 +76,7 @@ class Manufacturer extends Controller {
         Theme::model('catalog/manufacturer');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_catalog_manufacturer->editManufacturer($this->request->get['manufacturer_id'], $this->request->post);
+            CatalogManufacturer::editManufacturer($this->request->get['manufacturer_id'], $this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -94,7 +94,7 @@ class Manufacturer extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/manufacturer', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -111,7 +111,7 @@ class Manufacturer extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $manufacturer_id) {
-                $this->model_catalog_manufacturer->deleteManufacturer($manufacturer_id);
+                CatalogManufacturer::deleteManufacturer($manufacturer_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -130,7 +130,7 @@ class Manufacturer extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/manufacturer', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -175,21 +175,21 @@ class Manufacturer extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'catalog/manufacturer', $url);
         
-        $data['insert'] = Url::link('catalog/manufacturer/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('catalog/manufacturer/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('catalog/manufacturer/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('catalog/manufacturer/delete', '' . $url, 'SSL');
         
         $data['manufacturers'] = array();
         
         $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $manufacturer_total = $this->model_catalog_manufacturer->getTotalManufacturers();
+        $manufacturer_total = CatalogManufacturer::getTotalManufacturers();
         
-        $results = $this->model_catalog_manufacturer->getManufacturers($filter);
+        $results = CatalogManufacturer::getManufacturers($filter);
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/manufacturer/update', 'token=' . $this->session->data['token'] . '&manufacturer_id=' . $result['manufacturer_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/manufacturer/update', '' . '&manufacturer_id=' . $result['manufacturer_id'] . $url, 'SSL'));
             
             $data['manufacturers'][] = array('manufacturer_id' => $result['manufacturer_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'selected' => isset($this->request->post['selected']) && in_array($result['manufacturer_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -220,8 +220,8 @@ class Manufacturer extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_name'] = Url::link('catalog/manufacturer', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('catalog/manufacturer', 'token=' . $this->session->data['token'] . '&sort=sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('catalog/manufacturer', '' . '&sort=name' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('catalog/manufacturer', '' . '&sort=sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -233,7 +233,7 @@ class Manufacturer extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($manufacturer_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($manufacturer_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/manufacturer', '' . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -242,7 +242,7 @@ class Manufacturer extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('catalog/manufacturer_list', $data));
+        Response::setOutput(View::render('catalog/manufacturer_list', $data));
     }
     
     protected function getForm() {
@@ -283,18 +283,16 @@ class Manufacturer extends Controller {
         Breadcrumb::add('lang_heading_title', 'catalog/manufacturer', $url);
         
         if (!isset($this->request->get['manufacturer_id'])) {
-            $data['action'] = Url::link('catalog/manufacturer/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/manufacturer/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/manufacturer/update', 'token=' . $this->session->data['token'] . '&manufacturer_id=' . $this->request->get['manufacturer_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/manufacturer/update', '' . '&manufacturer_id=' . $this->request->get['manufacturer_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('catalog/manufacturer', '' . $url, 'SSL');
         
         if (isset($this->request->get['manufacturer_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($this->request->get['manufacturer_id']);
+            $manufacturer_info = CatalogManufacturer::getManufacturer($this->request->get['manufacturer_id']);
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         if (isset($this->request->post['name'])) {
             $data['name'] = $this->request->post['name'];
@@ -306,12 +304,12 @@ class Manufacturer extends Controller {
         
         Theme::model('setting/store');
         
-        $data['stores'] = $this->model_setting_store->getStores();
+        $data['stores'] = SettingStore::getStores();
         
         if (isset($this->request->post['manufacturer_store'])) {
             $data['manufacturer_store'] = $this->request->post['manufacturer_store'];
         } elseif (isset($this->request->get['manufacturer_id'])) {
-            $data['manufacturer_store'] = $this->model_catalog_manufacturer->getManufacturerStores($this->request->get['manufacturer_id']);
+            $data['manufacturer_store'] = CatalogManufacturer::getManufacturerStores($this->request->get['manufacturer_id']);
         } else {
             $data['manufacturer_store'] = array(0);
         }
@@ -335,14 +333,14 @@ class Manufacturer extends Controller {
         Theme::model('tool/image');
         
         if (isset($this->request->post['image']) && file_exists(Config::get('path.image') . $this->request->post['image'])) {
-            $data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
+            $data['thumb'] = ToolImage::resize($this->request->post['image'], 100, 100);
         } elseif (!empty($manufacturer_info) && $manufacturer_info['image'] && file_exists(Config::get('path.image') . $manufacturer_info['image'])) {
-            $data['thumb'] = $this->model_tool_image->resize($manufacturer_info['image'], 100, 100);
+            $data['thumb'] = ToolImage::resize($manufacturer_info['image'], 100, 100);
         } else {
-            $data['thumb'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+            $data['thumb'] = ToolImage::resize('placeholder.png', 100, 100);
         }
         
-        $data['no_image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+        $data['no_image'] = ToolImage::resize('placeholder.png', 100, 100);
         
         if (isset($this->request->post['sort_order'])) {
             $data['sort_order'] = $this->request->post['sort_order'];
@@ -356,7 +354,7 @@ class Manufacturer extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('catalog/manufacturer_form', $data));
+        Response::setOutput(View::render('catalog/manufacturer_form', $data));
     }
     
     protected function validateForm() {
@@ -370,7 +368,7 @@ class Manufacturer extends Controller {
         
         if (isset($this->request->post['slug']) && Encode::strlen($this->request->post['slug']) > 0):
             Theme::model('tool/utility');
-            $query = $this->model_tool_utility->findSlugByName($this->request->post['slug']);
+            $query = ToolUtility::findSlugByName($this->request->post['slug']);
             
             if (isset($this->request->get['manufacturer_id'])):
                 if ($query):
@@ -400,7 +398,7 @@ class Manufacturer extends Controller {
         Theme::model('catalog/product');
         
         foreach ($this->request->post['selected'] as $manufacturer_id) {
-            $product_total = $this->model_catalog_product->getTotalProductsByManufacturerId($manufacturer_id);
+            $product_total = CatalogProduct::getTotalProductsByManufacturerId($manufacturer_id);
             
             if ($product_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_product'), $product_total);
@@ -420,7 +418,7 @@ class Manufacturer extends Controller {
             
             $filter = array('filter_name' => $this->request->get['filter_name'], 'start' => 0, 'limit' => 20);
             
-            $results = $this->model_catalog_manufacturer->getManufacturers($filter);
+            $results = CatalogManufacturer::getManufacturers($filter);
             
             foreach ($results as $result) {
                 $json[] = array('manufacturer_id' => $result['manufacturer_id'], 'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')));
@@ -454,7 +452,7 @@ class Manufacturer extends Controller {
             $slug = Url::build_slug($this->request->get['name']);
             
             // check that the slug is globally unique
-            $query = $this->model_tool_utility->findSlugByName($slug);
+            $query = ToolUtility::findSlugByName($slug);
             
             if ($query):
                 if (isset($this->request->get['manufacturer_id'])):

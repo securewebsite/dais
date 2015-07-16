@@ -38,10 +38,10 @@ class Share extends Controller {
         Theme::model('setting/setting');
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
-            $this->model_setting_setting->editSetting('share_bar', $this->request->post);
+            SettingSetting::editSetting('share_bar', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/share', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/share', '', 'SSL'));
         endif;
 
         if (isset($this->error['warning'])):
@@ -50,7 +50,7 @@ class Share extends Controller {
             $data['error_warning'] = '';
         endif;
 
-        $settings = $this->model_setting_setting->getSetting('share_bar');
+        $settings = SettingSetting::getSetting('share_bar');
 
         if (isset($this->request->post['facebook_enabled'])):
         	$data['facebook_enabled'] = $this->request->post['facebook_enabled'];
@@ -124,13 +124,13 @@ class Share extends Controller {
         	$data['delicious_enabled'] = false;
         endif;
 
-        $data['action'] = Url::link('module/share', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = Url::link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('module/share', '', 'SSL');
+        $data['cancel'] = Url::link('common/dashboard', '', 'SSL');
 
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('module/share', $data));
+        Response::setOutput(View::render('module/share', $data));
 	}
 
 	protected function validate() {

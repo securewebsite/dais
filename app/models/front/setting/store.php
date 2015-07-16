@@ -19,13 +19,13 @@ use App\Models\Model;
 
 class Store extends Model {
     public function getStores($data = array()) {
-        $key = 'stores.' . (int)$this->config->get('config_store_id');
+        $key = 'stores.' . (int)Config::get('config_store_id');
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}store 
+				FROM " . DB::prefix() . "store 
 				ORDER BY url
 			");
             

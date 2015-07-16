@@ -28,10 +28,10 @@ class Usps extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('usps', $this->request->post);
+            SettingSetting::editSetting('usps', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -73,9 +73,9 @@ class Usps extends Controller {
         Breadcrumb::add('lang_text_shipping', 'module/shipping');
         Breadcrumb::add('lang_heading_title', 'shipping/usps');
         
-        $data['action'] = Url::link('shipping/usps', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('shipping/usps', '', 'SSL');
         
-        $data['cancel'] = Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/shipping', '', 'SSL');
         
         if (isset($this->request->post['usps_user_id'])) {
             $data['usps_user_id'] = $this->request->post['usps_user_id'];
@@ -393,7 +393,7 @@ class Usps extends Controller {
         
         Theme::model('locale/weight_class');
         
-        $data['weight_classes'] = $this->model_locale_weight_class->getWeightClasses();
+        $data['weight_classes'] = LocaleWeightClass::getWeightClasses();
         
         if (isset($this->request->post['usps_tax_class_id'])) {
             $data['usps_tax_class_id'] = $this->request->post['usps_tax_class_id'];
@@ -403,7 +403,7 @@ class Usps extends Controller {
         
         Theme::model('locale/tax_class');
         
-        $data['tax_classes'] = $this->model_locale_tax_class->getTaxClasses();
+        $data['tax_classes'] = LocaleTaxClass::getTaxClasses();
         
         if (isset($this->request->post['usps_geo_zone_id'])) {
             $data['usps_geo_zone_id'] = $this->request->post['usps_geo_zone_id'];
@@ -413,7 +413,7 @@ class Usps extends Controller {
         
         Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
+        $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
         if (isset($this->request->post['usps_debug'])) {
             $data['usps_debug'] = $this->request->post['usps_debug'];
@@ -437,7 +437,7 @@ class Usps extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('shipping/usps', $data));
+        Response::setOutput(View::render('shipping/usps', $data));
     }
     
     protected function validate() {

@@ -15,18 +15,20 @@
 */
 
 namespace App\Controllers\Front\Checkout;
+
 use App\Controllers\Controller;
 
 class Checkout extends Controller {
+    
     public function index() {
         
         // Validate cart has products and has stock.
-        if ((!$this->cart->hasProducts() && empty($this->session->data['gift_cards'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
-            $this->response->redirect($this->url->link('checkout/cart'));
+        if ((!Cart::hasProducts() && empty($this->session->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
+            Response::redirect(Url::link('checkout/cart'));
         }
         
         // Validate minimum quantity requirments.
-        $products = $this->cart->getProducts();
+        $products = Cart::getProducts();
         
         foreach ($products as $product) {
             $product_total = 0;
@@ -38,51 +40,51 @@ class Checkout extends Controller {
             }
             
             if ($product['minimum'] > $product_total) {
-                $this->response->redirect($this->url->link('checkout/cart'));
+                Response::redirect(Url::link('checkout/cart'));
             }
         }
         
-        $data = $this->theme->language('checkout/checkout');
+        $data = Theme::language('checkout/checkout');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
-        $this->breadcrumb->add('lang_text_cart', 'checkout/cart');
-        $this->breadcrumb->add('lang_heading_title', 'checkout/checkout', null, true, 'SSL');
+        Breadcrumb::add('lang_text_cart', 'checkout/cart');
+        Breadcrumb::add('lang_heading_title', 'checkout/checkout', null, true, 'SSL');
         
-        $data['logged'] = $this->customer->isLogged();
-        $data['shipping_required'] = $this->cart->hasShipping();
+        $data['logged'] = Customer::isLogged();
+        $data['shipping_required'] = Cart::hasShipping();
         
-        $this->theme->loadjs('javascript/checkout/checkout', $data);
+        Theme::loadjs('javascript/checkout/checkout', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->setController('header', 'shop/header');
-        $this->theme->setController('footer', 'shop/footer');
+        Theme::setController('header', 'shop/header');
+        Theme::setController('footer', 'shop/footer');
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
         if (isset($this->request->get['quickconfirm'])) {
             $data['quickconfirm'] = $this->request->get['quickconfirm'];
         }
         
-        $this->response->setOutput($this->theme->view('checkout/checkout', $data));
+        Response::setOutput(View::render('checkout/checkout', $data));
     }
     
     public function country() {
         $json = array();
         
-        $this->theme->model('locale/country');
+        Theme::model('locale/country');
         
-        $country_info = $this->model_locale_country->getCountry($this->request->get['country_id']);
+        $country_info = LocaleCountry::getCountry($this->request->get['country_id']);
         
         if ($country_info) {
-            $this->theme->model('locale/zone');
+            Theme::model('locale/zone');
             
-            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => $this->model_locale_zone->getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
+            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => LocaleZone::getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

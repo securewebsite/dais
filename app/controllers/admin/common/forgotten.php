@@ -38,7 +38,7 @@ class Forgotten extends Controller {
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
             $code    = sha1(uniqid(mt_rand(), true));
-            $user_id = $this->model_people_user->editCode($this->request->post['email'], $code);
+            $user_id = PeopleUser::editCode($this->request->post['email'], $code);
 
             $callback = array(
                 'user_id'  => $user_id,
@@ -75,13 +75,13 @@ class Forgotten extends Controller {
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('common/forgotten', $data));
+        Response::setOutput(View::render('common/forgotten', $data));
     }
     
     protected function validate() {
         if (!isset($this->request->post['email'])):
             $this->error['warning'] = Lang::get('lang_error_email');
-        elseif (!$this->model_people_user->getTotalUsersByEmail($this->request->post['email'])):
+        elseif (!PeopleUser::getTotalUsersByEmail($this->request->post['email'])):
             $this->error['warning'] = Lang::get('lang_error_email');
         endif;
         

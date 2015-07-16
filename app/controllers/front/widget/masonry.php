@@ -15,22 +15,24 @@
 */
 
 namespace App\Controllers\Front\Widget;
+
 use App\Controllers\Controller;
 
 class Masonry extends Controller {
+    
     public function index($setting) {
         static $widget = 0;
         
-        $data = $this->theme->language('widget/masonry');
+        $data = Theme::language('widget/masonry');
         
-        $this->javascript->register('masonry.min', 'bootstrap.min')->register('imagesloaded.min', 'masonry.min');
+        JS::register('masonry.min', 'bootstrap.min')->register('imagesloaded.min', 'masonry.min');
         
-        $data['heading_title'] = $this->language->get('lang_heading_' . $setting['product_type']);
+        $data['heading_title'] = Lang::get('lang_heading_' . $setting['product_type']);
         
-        $data['text_empty'] = sprintf($this->language->get('lang_text_empty') , $setting['product_type']);
+        $data['text_empty'] = sprintf(Lang::get('lang_text_empty') , $setting['product_type']);
         
-        $this->theme->model('catalog/product');
-        $this->theme->model('tool/image');
+        Theme::model('catalog/product');
+        Theme::model('tool/image');
         
         $data['button'] = $setting['button'];
         $data['span'] = $setting['span'];
@@ -68,7 +70,7 @@ class Masonry extends Controller {
             if ($setting['product_type'] == 'featured') {
                 $results = array();
                 
-                $products = explode(',', $this->config->get('featured_product'));
+                $products = explode(',', Config::get('featured_product'));
                 
                 if (empty($setting['limit'])) {
                     $setting['limit'] = 5;
@@ -77,23 +79,23 @@ class Masonry extends Controller {
                 $products = array_slice($products, 0, (int)$setting['limit']);
                 
                 foreach ($products as $product_id) {
-                    $product_info = $this->model_catalog_product->getProduct($product_id);
+                    $product_info = CatalogProduct::getProduct($product_id);
                     
                     if ($product_info) {
                         $results[] = $product_info;
                     }
                 }
             } elseif ($setting['product_type'] == 'special') {
-                $results = $this->model_catalog_product->getProductSpecials(array(
+                $results = CatalogProduct::getProductSpecials(array(
                     'sort' => 'pd.name',
                     'order' => 'ASC',
                     'start' => 0,
                     'limit' => $setting['limit']
                 ));
             } elseif ($setting['product_type'] == 'best_seller') {
-                $results = $this->model_catalog_product->getBestSellerProducts($setting['limit']);
+                $results = CatalogProduct::getBestSellerProducts($setting['limit']);
             } else {
-                $results = $this->model_catalog_product->getProducts(array(
+                $results = CatalogProduct::getProducts(array(
                     'sort' => 'p.date_added',
                     'order' => 'DESC',
                     'start' => 0,
@@ -101,7 +103,7 @@ class Masonry extends Controller {
                 ));
             }
             
-            $display_price = $this->config->get('config_customer_price') && $this->customer->isLogged() || !$this->config->get('config_customer_price');
+            $display_price = Config::get('config_customer_price') && Customer::isLogged() || !Config::get('config_customer_price');
             
             $chars = $setting['span'] * 40;
             
@@ -115,7 +117,7 @@ class Masonry extends Controller {
                         $height = ceil(((int)$image_width / $size[0]) * $size[1]);
                     }
                     
-                    $image = $this->model_tool_image->resize($result['image'], (int)$image_width, $height);
+                    $image = ToolImage::resize($result['image'], (int)$image_width, $height);
                     
                 } else {
                     $image = '';
@@ -128,20 +130,20 @@ class Masonry extends Controller {
                 }
                 
                 if ($display_price && !number_format($result['price'])) {
-                    $price = $this->language->get('lang_text_free');
+                    $price = Lang::get('lang_text_free');
                 } elseif ($display_price) {
-                    $price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+                    $price = \Currency::format(Tax::calculate($result['price'], $result['tax_class_id'], Config::get('config_tax')));
                 } else {
                     $price = false;
                 }
                 
                 if ($display_price && (float)$result['special']) {
-                    $special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')));
+                    $special = \Currency::format(Tax::calculate($result['special'], $result['tax_class_id'], Config::get('config_tax')));
                 } else {
                     $special = false;
                 }
                 
-                if ($this->config->get('config_review_status') && $setting['span'] > 1) {
+                if (Config::get('config_review_status') && $setting['span'] > 1) {
                     $rating = $result['rating'];
                 } else {
                     $rating = false;
@@ -156,8 +158,8 @@ class Masonry extends Controller {
                     'price'       => $price,
                     'special'     => $special,
                     'rating'      => $rating,
-                    'reviews'     => sprintf($this->language->get('lang_text_reviews') , (int)$result['reviews']) ,
-                    'href'        => $this->url->link('catalog/product', 'product_id=' . $result['product_id']) ,
+                    'reviews'     => sprintf(Lang::get('lang_text_reviews') , (int)$result['reviews']) ,
+                    'href'        => Url::link('catalog/product', 'product_id=' . $result['product_id']) ,
                 );
             }
             
@@ -169,16 +171,16 @@ class Masonry extends Controller {
         
         $data['widget'] = $widget++;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('widget/masonry', $data);
+        return View::render('widget/masonry', $data);
     }
     
     protected function formatDescription($description, $chars = 100) {
         $description = preg_replace('/<[^>]+>/i', ' ', html_entity_decode($description, ENT_QUOTES, 'UTF-8'));
         
-        if ($this->encode->strlen($description) > $chars) {
-            return trim($this->encode->substr($description, 0, $chars)) . '...';
+        if (Encode::strlen($description) > $chars) {
+            return trim(Encode::substr($description, 0, $chars)) . '...';
         } else {
             return $description;
         }

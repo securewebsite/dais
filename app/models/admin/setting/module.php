@@ -23,10 +23,10 @@ class Module extends Model {
     public function getInstalled($type) {
         $module_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}module 
-			WHERE `type` = '" . $this->db->escape($type) . "'
+			FROM " . DB::prefix() . "module 
+			WHERE `type` = '" . DB::escape($type) . "'
 		");
         
         foreach ($query->rows as $result):
@@ -39,20 +39,20 @@ class Module extends Model {
     public function getAll($type) {
         $modules = array();
 
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}module 
-            WHERE `type` = '" . $this->db->escape($type) . "'
+            FROM " . DB::prefix() . "module 
+            WHERE `type` = '" . DB::escape($type) . "'
         ");
         
         if ($query->num_rows):
             foreach($query->rows as $key => $row):
                 $modules[$key] = $row;
-                $q = $this->db->query("
+                $q = DB::query("
                     SELECT data 
-                    FROM {$this->db->prefix}setting 
-                    WHERE section = '" . $this->db->escape($row['code']) . "' 
-                    AND item = '" . $this->db->escape($row['code'] . '_status') . "'
+                    FROM " . DB::prefix() . "setting 
+                    WHERE section = '" . DB::escape($row['code']) . "' 
+                    AND item = '" . DB::escape($row['code'] . '_status') . "'
                 ");
                 if ($q->num_rows):
                     $modules[$key]['status'] = $q->row['data'];
@@ -66,20 +66,20 @@ class Module extends Model {
     }
     
     public function install($type, $code) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}module 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "module 
 			SET 
-				`type` = '" . $this->db->escape($type) . "', 
-				`code` = '" . $this->db->escape($code) . "'
+				`type` = '" . DB::escape($type) . "', 
+				`code` = '" . DB::escape($code) . "'
 		");
     }
     
     public function uninstall($type, $code) {
-        $this->db->query("
+        DB::query("
 			DELETE 
-			FROM {$this->db->prefix}module 
-			WHERE `type` = '" . $this->db->escape($type) . "' 
-			AND `code` = '" . $this->db->escape($code) . "'
+			FROM " . DB::prefix() . "module 
+			WHERE `type` = '" . DB::escape($type) . "' 
+			AND `code` = '" . DB::escape($code) . "'
 		");
     }
     

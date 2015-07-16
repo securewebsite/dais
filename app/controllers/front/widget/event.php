@@ -15,24 +15,25 @@
 */
 
 namespace App\Controllers\Front\Widget;
+
 use App\Controllers\Controller;
 
 class Event extends Controller {
     
     public function index() {
-        $data = $this->theme->language('widget/event');
-        $this->theme->model('widget/event');
+        $data = Theme::language('widget/event');
+        Theme::model('widget/event');
         
-        if ($this->customer->isLogged()):
-            $data['text_no_upcoming'] = $this->language->get('lang_text_no_upcoming');
+        if (Customer::isLogged()):
+            $data['text_no_upcoming'] = Lang::get('lang_text_no_upcoming');
         else:
-            $data['text_no_upcoming'] = $this->language->get('lang_text_login_registered');
+            $data['text_no_upcoming'] = Lang::get('lang_text_login_registered');
         endif;
         
         $data['events'] = array();
         
-        if ($this->customer->isLogged()):
-            $results = $this->model_widget_event->getEvents($this->customer->getId());
+        if (Customer::isLogged()):
+            $results = WidgetEvent::getEvents(Customer::getId());
             
             if ($results):
                 foreach ($results as $result):
@@ -47,11 +48,11 @@ class Event extends Controller {
                     $data['events'][] = array(
                         'event_id'   => $result['event_id'], 
                         'name'       => html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8'), 
-                        'start_date' => date($this->language->get('lang_date_format_short'), strtotime($result['date_time'])), 
-                        'start_time' => date($this->language->get('lang_time_format'), strtotime($result['date_time'])), 
+                        'start_date' => date(Lang::get('lang_date_format_short'), strtotime($result['date_time'])), 
+                        'start_time' => date(Lang::get('lang_time_format'), strtotime($result['date_time'])), 
                         'event_days' => $event_days, 
                         'online'     => $result['online'], 
-                        'link'       => $this->url->link('content/hangout', '&event_id=' . $result['event_id'], 'SSL'), 
+                        'link'       => Url::link('content/hangout', '&event_id=' . $result['event_id'], 'SSL'), 
                         'location'   => nl2br($result['location']), 
                         'telephone'  => $result['telephone'] ? $result['telephone'] : 'N/A'
                     );
@@ -59,8 +60,8 @@ class Event extends Controller {
             endif;
         endif;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('widget/event', $data);
+        return View::render('widget/event', $data);
     }
 }

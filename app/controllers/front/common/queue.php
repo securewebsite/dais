@@ -15,6 +15,7 @@
 */
 
 namespace App\Controllers\Front\Common;
+
 use App\Controllers\Controller;
 
 class Queue extends Controller {
@@ -23,13 +24,13 @@ class Queue extends Controller {
 
 	public function index() {
 		// /usr/bin/curl -s -L "http://dev.dais.io/queue" > /dev/null
-		$this->theme->model('tool/utility');
+		Theme::model('tool/utility');
 
 		// First let's delete all sent emails to ease the search query
 		// this -> model_tool_utility -> pruneQueue // future use
 
 		// Now we can just grab the first 50
-		$emails = $this->model_tool_utility->getQueue();
+		$emails = ToolUtility::getQueue();
 
 		if ($emails):
 			foreach($emails as $email):
@@ -46,7 +47,7 @@ class Queue extends Controller {
 				$this->mailer->build($email['subject'], $email['email'], $email['name'], $email['text'], $email['html'], true);
 				// comment previous and uncomment below to test text message
 				//$this->mailer->build($email['subject'], $email['email'], $email['name'], $email['text'], false, true);
-				$this->model_tool_utility->updateQueue($email['queue_id']);
+				ToolUtility::updateQueue($email['queue_id']);
 			endforeach;
 		endif;
 	}

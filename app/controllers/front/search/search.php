@@ -15,16 +15,17 @@
 */
 
 namespace App\Controllers\Front\Search;
+
 use App\Controllers\Controller;
 
 class Search extends Controller {
 
 	public function index() {
-		$data = $this->theme->language('search/search');
+		$data = Theme::language('search/search');
 
-		$this->javascript->register('storage.min', 'jquery.min');
+		JS::register('storage.min', 'jquery.min');
 
-		$this->breadcrumb->add('lang_heading_title', 'search/search');
+		Breadcrumb::add('lang_heading_title', 'search/search');
 
 		if (isset($this->request->post['search'])):
 			$search = $this->request->post['search'];
@@ -38,7 +39,7 @@ class Search extends Controller {
             $page = 1;
         endif;
 
-        $limit = $this->config->get('config_catalog_limit');
+        $limit = Config::get('config_catalog_limit');
         
         $filter = array(
             'start' => ($page - 1) * $limit,
@@ -46,16 +47,16 @@ class Search extends Controller {
         );
         
         if ($search):
-            $this->theme->setTitle($this->language->get('lang_heading_title') . ' - ' . $search);
-            $data['heading_title'] = $this->language->get('lang_heading_title') . ': ' . $search;
+            Theme::setTitle(Lang::get('lang_heading_title') . ' - ' . $search);
+            $data['heading_title'] = Lang::get('lang_heading_title') . ': ' . $search;
             $data['search'] = $search;
         else:
-        	$this->theme->setTitle($this->language->get('lang_heading_title'));
-            $data['heading_title'] = $this->language->get('lang_heading_title');
+        	Theme::setTitle(Lang::get('lang_heading_title'));
+            $data['heading_title'] = Lang::get('lang_heading_title');
             $data['search'] = '';
         endif;
 
-        $data['action'] = $this->url->link('search/search');
+        $data['action'] = Url::link('search/search');
 
         $data['results'] = array();
 
@@ -74,8 +75,8 @@ class Search extends Controller {
                                 $item = array(
                                     'title' => $value['name'],
                                     'text'  => $value['description'],
-                                    'url'   => $this->url->link('catalog/product', 'product_id=' . $value['product_id'], 'SSL'),
-                                    'type'  => $this->language->get('lang_product')
+                                    'url'   => Url::link('catalog/product', 'product_id=' . $value['product_id'], 'SSL'),
+                                    'type'  => Lang::get('lang_product')
                                 );
                                 $data['results'][] = $item;
                             endforeach;
@@ -87,8 +88,8 @@ class Search extends Controller {
                                 $item = array(
                                     'title' => $value['name'],
                                     'text'  => $value['description'],
-                                    'url'   => $this->url->link('catalog/category', 'path=' . $path, 'SSL'),
-                                    'type'  => $this->language->get('lang_product_category')
+                                    'url'   => Url::link('catalog/category', 'path=' . $path, 'SSL'),
+                                    'type'  => Lang::get('lang_product_category')
                                 );
                                 $data['results'][] = $item;
                             endforeach;
@@ -98,8 +99,8 @@ class Search extends Controller {
                                 $item = array(
                                     'title' => $value['name'],
                                     'text'  => $value['description'],
-                                    'url'   => $this->url->link('content/post', 'post_id=' . $value['post_id'], 'SSL'),
-                                    'type'  => $this->language->get('lang_article')
+                                    'url'   => Url::link('content/post', 'post_id=' . $value['post_id'], 'SSL'),
+                                    'type'  => Lang::get('lang_article')
                                 );
                                 $data['results'][] = $item;
                             endforeach;
@@ -111,20 +112,20 @@ class Search extends Controller {
                                 $item = array(
                                     'title' => $value['name'],
                                     'text'  => $value['description'],
-                                    'url'   => $this->url->link('content/category', 'bpath=' . $path, 'SSL'),
-                                    'type'  => $this->language->get('lang_blog_category')
+                                    'url'   => Url::link('content/category', 'bpath=' . $path, 'SSL'),
+                                    'type'  => Lang::get('lang_blog_category')
                                 );
                                 $data['results'][] = $item;
                             endforeach;
                             break;
                         case 'pages':
                            foreach ($result as $value):
-                                $url = ($value['event_id'] > 0) ? $this->url->link('event/page', 'event_page_id=' . $value['page_id'], 'SSL') : $this->url->link('content/page', 'page_id=' . $value['page_id'], 'SSL');
+                                $url = ($value['event_id'] > 0) ? Url::link('event/page', 'event_page_id=' . $value['page_id'], 'SSL') : Url::link('content/page', 'page_id=' . $value['page_id'], 'SSL');
                                 $item = array(
                                     'title' => $value['title'],
                                     'text'  => $value['description'],
                                     'url'   => $url,
-                                    'type'  => $this->language->get('lang_page')
+                                    'type'  => Lang::get('lang_page')
                                 );
                                 $data['results'][] = $item;
                             endforeach;
@@ -134,8 +135,8 @@ class Search extends Controller {
                                 $item = array(
                                     'title' => $value['name'],
                                     'text'  => '',
-                                    'url'   => $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $value['manufacturer_id'], 'SSL'),
-                                    'type'  => $this->language->get('lang_manufacturer')
+                                    'url'   => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $value['manufacturer_id'], 'SSL'),
+                                    'type'  => Lang::get('lang_manufacturer')
                                 );
                                 $data['results'][] = $item;
                             endforeach;
@@ -146,19 +147,19 @@ class Search extends Controller {
 
         endif;
 
-        $data['pagination'] = $this->theme->paginate(
+        $data['pagination'] = Theme::paginate(
             $result_total, 
             $page, 
-            $this->config->get('config_catalog_limit'), 
-            $this->language->get('lang_text_pagination'), 
-            $this->url->link('search/search', 'search=' . $search . '&page={page}')
+            Config::get('config_catalog_limit'), 
+            Lang::get('lang_text_pagination'), 
+            Url::link('search/search', 'search=' . $search . '&page={page}')
         );
         
-        $this->theme->loadjs('javascript/search/search', $data);
+        Theme::loadjs('javascript/search/search', $data);
 
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('search/search', $data));
+        Response::setOutput(View::render('search/search', $data));
 	}
 }

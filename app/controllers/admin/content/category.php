@@ -38,10 +38,10 @@ class Category extends Controller {
         Theme::model('content/category');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_content_category->addCategory($this->request->post);
+            ContentCategory::addCategory($this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('content/category', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('content/category', '', 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -55,10 +55,10 @@ class Category extends Controller {
         Theme::model('content/category');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_content_category->editCategory($this->request->get['category_id'], $this->request->post);
+            ContentCategory::editCategory($this->request->get['category_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('content/category', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('content/category', '', 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -73,11 +73,11 @@ class Category extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $category_id) {
-                $this->model_content_category->deleteCategory($category_id);
+                ContentCategory::deleteCategory($category_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
-            Response::redirect(Url::link('content/category', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('content/category', '', 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -90,19 +90,19 @@ class Category extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'content/category');
         
-        $data['insert'] = Url::link('content/category/insert', 'token=' . $this->session->data['token'], 'SSL');
-        $data['delete'] = Url::link('content/category/delete', 'token=' . $this->session->data['token'], 'SSL');
+        $data['insert'] = Url::link('content/category/insert', '', 'SSL');
+        $data['delete'] = Url::link('content/category/delete', '', 'SSL');
         
         $data['categories'] = array();
         
-        $results = $this->model_content_category->getCategories(0);
+        $results = ContentCategory::getCategories(0);
         
         foreach ($results as $result) {
             $action = array();
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('content/category/update', 'token=' . $this->session->data['token'] . '&category_id=' . $result['category_id'], 'SSL')
+                'href' => Url::link('content/category/update', '' . '&category_id=' . $result['category_id'], 'SSL')
             );
             
             $data['categories'][] = array(
@@ -132,7 +132,7 @@ class Category extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('content/category_list', $data));
+        Response::setOutput(View::render('content/category_list', $data));
     }
     
     private function getForm() {
@@ -159,32 +159,30 @@ class Category extends Controller {
         Breadcrumb::add('lang_heading_title', 'content/category');
         
         if (!isset($this->request->get['category_id'])) {
-            $data['action'] = Url::link('content/category/insert', 'token=' . $this->session->data['token'], 'SSL');
+            $data['action'] = Url::link('content/category/insert', '', 'SSL');
         } else {
-            $data['action'] = Url::link('content/category/update', 'token=' . $this->session->data['token'] . '&category_id=' . $this->request->get['category_id'], 'SSL');
+            $data['action'] = Url::link('content/category/update', '' . '&category_id=' . $this->request->get['category_id'], 'SSL');
         }
         
-        $data['cancel'] = Url::link('content/category', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('content/category', '', 'SSL');
         
         if (isset($this->request->get['category_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $category_info = $this->model_content_category->getCategory($this->request->get['category_id']);
+            $category_info = ContentCategory::getCategory($this->request->get['category_id']);
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         Theme::model('locale/language');
         
-        $data['languages'] = $this->model_locale_language->getLanguages();
+        $data['languages'] = LocaleLanguage::getLanguages();
         
         if (isset($this->request->post['category_description'])) {
             $data['category_description'] = $this->request->post['category_description'];
         } elseif (isset($this->request->get['category_id'])) {
-            $data['category_description'] = $this->model_content_category->getCategoryDescriptions($this->request->get['category_id']);
+            $data['category_description'] = ContentCategory::getCategoryDescriptions($this->request->get['category_id']);
         } else {
             $data['category_description'] = array();
         }
         
-        $categories = $this->model_content_category->getCategories(0);
+        $categories = ContentCategory::getCategories(0);
         
         // Remove own id from list
         if (!empty($category_info)) {
@@ -207,12 +205,12 @@ class Category extends Controller {
         
         Theme::model('setting/store');
         
-        $data['stores'] = $this->model_setting_store->getStores();
+        $data['stores'] = SettingStore::getStores();
         
         if (isset($this->request->post['category_store'])) {
             $data['category_store'] = $this->request->post['category_store'];
         } elseif (isset($this->request->get['category_id'])) {
-            $data['category_store'] = $this->model_content_category->getCategoryStores($this->request->get['category_id']);
+            $data['category_store'] = ContentCategory::getCategoryStores($this->request->get['category_id']);
         } else {
             $data['category_store'] = array(0);
         }
@@ -236,14 +234,14 @@ class Category extends Controller {
         Theme::model('tool/image');
         
         if (isset($this->request->post['image']) && file_exists(Config::get('path.image') . $this->request->post['image'])) {
-            $data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
+            $data['thumb'] = ToolImage::resize($this->request->post['image'], 100, 100);
         } elseif (!empty($category_info) && $category_info['image'] && file_exists(Config::get('path.image') . $category_info['image'])) {
-            $data['thumb'] = $this->model_tool_image->resize($category_info['image'], 100, 100);
+            $data['thumb'] = ToolImage::resize($category_info['image'], 100, 100);
         } else {
-            $data['thumb'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+            $data['thumb'] = ToolImage::resize('placeholder.png', 100, 100);
         }
         
-        $data['no_image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+        $data['no_image'] = ToolImage::resize('placeholder.png', 100, 100);
         
         if (isset($this->request->post['sort_order'])) {
             $data['sort_order'] = $this->request->post['sort_order'];
@@ -264,14 +262,14 @@ class Category extends Controller {
         if (isset($this->request->post['category_layout'])) {
             $data['category_layout'] = $this->request->post['category_layout'];
         } elseif (isset($this->request->get['category_id'])) {
-            $data['category_layout'] = $this->model_content_category->getCategoryLayouts($this->request->get['category_id']);
+            $data['category_layout'] = ContentCategory::getCategoryLayouts($this->request->get['category_id']);
         } else {
             $data['category_layout'] = array();
         }
         
         Theme::model('design/layout');
         
-        $data['layouts'] = $this->model_design_layout->getLayouts();
+        $data['layouts'] = DesignLayout::getLayouts();
 
         Theme::loadjs('javascript/content/category_form', $data);
         
@@ -279,7 +277,7 @@ class Category extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('content/category_form', $data));
+        Response::setOutput(View::render('content/category_form', $data));
     }
     
     private function validateForm() {
@@ -295,7 +293,7 @@ class Category extends Controller {
         
         if (isset($this->request->post['slug']) && Encode::strlen($this->request->post['slug']) > 0):
             Theme::model('tool/utility');
-            $query = $this->model_tool_utility->findSlugByName($this->request->post['slug']);
+            $query = ToolUtility::findSlugByName($this->request->post['slug']);
             
             if (isset($this->request->get['category_id'])):
                 if ($query):
@@ -345,7 +343,7 @@ class Category extends Controller {
             $slug = Url::build_slug($this->request->get['name']);
             
             // check that the slug is globally unique
-            $query = $this->model_tool_utility->findSlugByName($slug);
+            $query = ToolUtility::findSlugByName($slug);
             
             if ($query):
                 if (isset($this->request->get['category_id'])):

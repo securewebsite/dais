@@ -23,10 +23,10 @@ class Tax extends Model {
             if ($value > 0):
                 $total_data[] = array(
                     'code'       => 'tax', 
-                    'title'      => $this->tax->getRateName($key), 
-                    'text'       => $this->currency->format($value), 
+                    'title'      => Tax::getRateName($key), 
+                    'text'       => Currency::format($value), 
                     'value'      => $value, 
-                    'sort_order' => $this->config->get('tax_sort_order')
+                    'sort_order' => Config::get('tax_sort_order')
                 );
                 
                 $total+= $value;

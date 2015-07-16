@@ -16,7 +16,7 @@
 				type:'POST',
 				dataType:'json',
 				data: {'amount':amt, 'order_id':<?= $order_id ?>, 'complete': captureComplete},
-				url:'index.php?route=payment/paypal_pro_iframe/capture&token=<?= $token; ?>',
+				url:'index.php?route=payment/paypal_pro_iframe/capture',
 				beforeSend:function(){
 					$('#button-capture').hide();
 					$('#img_loading_capture').show();
@@ -83,7 +83,7 @@
 				type:'POST',
 				dataType:'json',
 				data: {'order_id':<?= $order_id ?> },
-				url:'index.php?route=payment/paypal_pro_iframe/void&token=<?= $token ?>',
+				url:'index.php?route=payment/paypal_pro_iframe/void',
 				beforeSend:function(){
 					$('#button-void').hide();
 					$('#img_loading_void').show();
@@ -118,7 +118,7 @@ function reauthorise() {
 		type:'POST',
 		dataType:'json',
 		data: {'order_id':<?= $order_id ?> },
-		url:'index.php?route=payment/paypal_pro_iframe/reauthorise&token=<?= $token; ?>',
+		url:'index.php?route=payment/paypal_pro_iframe/reauthorise',
 		beforeSend:function(){
 			$('#button-reauthorise').hide();
 			$('.icon-loading').remove();

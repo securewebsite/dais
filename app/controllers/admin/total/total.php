@@ -28,10 +28,10 @@ class Total extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('total', $this->request->post);
+            SettingSetting::editSetting('total', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/total', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -43,8 +43,8 @@ class Total extends Controller {
         Breadcrumb::add('lang_text_total', 'module/total');
         Breadcrumb::add('lang_heading_title', 'total/total');
         
-        $data['action'] = Url::link('total/total', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('total/total', '', 'SSL');
+        $data['cancel'] = Url::link('module/total', '', 'SSL');
         
         if (isset($this->request->post['total_status'])) {
             $data['total_status'] = $this->request->post['total_status'];
@@ -62,7 +62,7 @@ class Total extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('total/total', $data));
+        Response::setOutput(View::render('total/total', $data));
     }
     
     protected function validate() {

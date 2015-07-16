@@ -19,17 +19,17 @@ use App\Models\Model;
 
 class Item extends Model {
     function getQuote($address) {
-        $this->language->load('shipping/item');
+        Lang::load('shipping/item');
         
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}zone_to_geo_zone 
-            WHERE geo_zone_id = '" . (int)$this->config->get('item_geo_zone_id') . "' 
+            FROM " . DB::prefix() . "zone_to_geo_zone 
+            WHERE geo_zone_id = '" . (int)Config::get('item_geo_zone_id') . "' 
             AND country_id    = '" . (int)$address['country_id'] . "' 
             AND (zone_id      = '" . (int)$address['zone_id'] . "' OR zone_id = '0')"
         );
         
-        if (!$this->config->get('item_geo_zone_id')):
+        if (!Config::get('item_geo_zone_id')):
             $status = true;
         elseif ($query->num_rows):
             $status = true;
@@ -42,7 +42,7 @@ class Item extends Model {
         if ($status):
             $items = 0;
             
-            foreach ($this->cart->getProducts() as $product):
+            foreach (Cart::getProducts() as $product):
                 if ($product['shipping']) $items+= $product['quantity'];
             endforeach;
             
@@ -50,17 +50,17 @@ class Item extends Model {
             
             $quote_data['item'] = array(
                 'code'         => 'item.item', 
-                'title'        => $this->language->get('lang_text_description'), 
-                'cost'         => $this->config->get('item_cost') * $items, 
-                'tax_class_id' => $this->config->get('item_tax_class_id'), 
-                'text'         => $this->currency->format($this->tax->calculate($this->config->get('item_cost') * $items, $this->config->get('item_tax_class_id'), $this->config->get('config_tax')))
+                'title'        => Lang::get('lang_text_description'), 
+                'cost'         => Config::get('item_cost') * $items, 
+                'tax_class_id' => Config::get('item_tax_class_id'), 
+                'text'         => Currency::format(Tax::calculate(Config::get('item_cost') * $items, Config::get('item_tax_class_id'), Config::get('config_tax')))
             );
             
             $method_data = array(
                 'code'       => 'item', 
-                'title'      => $this->language->get('lang_text_title'), 
+                'title'      => Lang::get('lang_text_title'), 
                 'quote'      => $quote_data, 
-                'sort_order' => $this->config->get('item_sort_order'), 
+                'sort_order' => Config::get('item_sort_order'), 
                 'error'      => false
             );
         endif;

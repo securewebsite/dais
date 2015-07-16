@@ -38,7 +38,7 @@ class StockStatus extends Controller {
         Theme::model('locale/stock_status');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_locale_stock_status->addStockStatus($this->request->post);
+            LocaleStockStatus::addStockStatus($this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -55,7 +55,7 @@ class StockStatus extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('locale/stock_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('locale/stock_status', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -69,7 +69,7 @@ class StockStatus extends Controller {
         Theme::model('locale/stock_status');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_locale_stock_status->editStockStatus($this->request->get['stock_status_id'], $this->request->post);
+            LocaleStockStatus::editStockStatus($this->request->get['stock_status_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -86,7 +86,7 @@ class StockStatus extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('locale/stock_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('locale/stock_status', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -101,7 +101,7 @@ class StockStatus extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $stock_status_id) {
-                $this->model_locale_stock_status->deleteStockStatus($stock_status_id);
+                LocaleStockStatus::deleteStockStatus($stock_status_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -120,7 +120,7 @@ class StockStatus extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('locale/stock_status', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('locale/stock_status', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,21 +165,21 @@ class StockStatus extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'locale/stock_status', $url);
         
-        $data['insert'] = Url::link('locale/stock_status/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('locale/stock_status/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('locale/stock_status/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('locale/stock_status/delete', '' . $url, 'SSL');
         
         $data['stock_statuses'] = array();
         
         $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $stock_status_total = $this->model_locale_stock_status->getTotalStockStatuses();
+        $stock_status_total = LocaleStockStatus::getTotalStockStatuses();
         
-        $results = $this->model_locale_stock_status->getStockStatuses($filter);
+        $results = LocaleStockStatus::getStockStatuses($filter);
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/stock_status/update', 'token=' . $this->session->data['token'] . '&stock_status_id=' . $result['stock_status_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/stock_status/update', '' . '&stock_status_id=' . $result['stock_status_id'] . $url, 'SSL'));
             
             $data['stock_statuses'][] = array('stock_status_id' => $result['stock_status_id'], 'name' => $result['name'] . (($result['stock_status_id'] == Config::get('config_stock_status_id')) ? Lang::get('lang_text_default') : null), 'selected' => isset($this->request->post['selected']) && in_array($result['stock_status_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -210,7 +210,7 @@ class StockStatus extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_name'] = Url::link('locale/stock_status', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+        $data['sort_name'] = Url::link('locale/stock_status', '' . '&sort=name' . $url, 'SSL');
         
         $url = '';
         
@@ -222,7 +222,7 @@ class StockStatus extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($stock_status_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/stock_status', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($stock_status_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/stock_status', '' . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -231,7 +231,7 @@ class StockStatus extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('locale/stock_status_list', $data));
+        Response::setOutput(View::render('locale/stock_status_list', $data));
     }
     
     protected function getForm() {
@@ -266,21 +266,21 @@ class StockStatus extends Controller {
         Breadcrumb::add('lang_heading_title', 'locale/stock_status', $url);
         
         if (!isset($this->request->get['stock_status_id'])) {
-            $data['action'] = Url::link('locale/stock_status/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/stock_status/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/stock_status/update', 'token=' . $this->session->data['token'] . '&stock_status_id=' . $this->request->get['stock_status_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/stock_status/update', '' . '&stock_status_id=' . $this->request->get['stock_status_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('locale/stock_status', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('locale/stock_status', '' . $url, 'SSL');
         
         Theme::model('locale/language');
         
-        $data['languages'] = $this->model_locale_language->getLanguages();
+        $data['languages'] = LocaleLanguage::getLanguages();
         
         if (isset($this->request->post['stock_status'])) {
             $data['stock_status'] = $this->request->post['stock_status'];
         } elseif (isset($this->request->get['stock_status_id'])) {
-            $data['stock_status'] = $this->model_locale_stock_status->getStockStatusDescriptions($this->request->get['stock_status_id']);
+            $data['stock_status'] = LocaleStockStatus::getStockStatusDescriptions($this->request->get['stock_status_id']);
         } else {
             $data['stock_status'] = array();
         }
@@ -289,7 +289,7 @@ class StockStatus extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('locale/stock_status_form', $data));
+        Response::setOutput(View::render('locale/stock_status_form', $data));
     }
     
     protected function validateForm() {
@@ -321,7 +321,7 @@ class StockStatus extends Controller {
                 $this->error['warning'] = Lang::get('lang_error_default');
             }
             
-            $product_total = $this->model_catalog_product->getTotalProductsByStockStatusId($stock_status_id);
+            $product_total = CatalogProduct::getTotalProductsByStockStatusId($stock_status_id);
             
             if ($product_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_product'), $product_total);

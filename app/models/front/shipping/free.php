@@ -19,17 +19,17 @@ use App\Models\Model;
 
 class Free extends Model {
     function getQuote($address) {
-        $this->language->load('shipping/free');
+        Lang::load('shipping/free');
         
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}zone_to_geo_zone 
-            WHERE geo_zone_id = '" . (int)$this->config->get('free_geo_zone_id') . "' 
+            FROM " . DB::prefix() . "zone_to_geo_zone 
+            WHERE geo_zone_id = '" . (int)Config::get('free_geo_zone_id') . "' 
             AND country_id    = '" . (int)$address['country_id'] . "' 
             AND (zone_id      = '" . (int)$address['zone_id'] . "' OR zone_id = '0')"
         );
         
-        if (!$this->config->get('free_geo_zone_id')):
+        if (!Config::get('free_geo_zone_id')):
             $status = true;
         elseif ($query->num_rows):
             $status = true;
@@ -37,7 +37,7 @@ class Free extends Model {
             $status = false;
         endif;
         
-        if ($this->cart->getSubTotal() < $this->config->get('free_total')):
+        if (Cart::getSubTotal() < Config::get('free_total')):
             $status = false;
         endif;
         
@@ -48,16 +48,16 @@ class Free extends Model {
             
             $quote_data['free'] = array(
                 'code'  => 'free.free', 
-                'title' => $this->language->get('lang_text_description'), 
+                'title' => Lang::get('lang_text_description'), 
                 'cost'  => 0.00, 'tax_class_id' => 0, 
-                'text'  => $this->currency->format(0.00)
+                'text'  => Currency::format(0.00)
             );
             
             $method_data = array(
                 'code'       => 'free', 
-                'title'      => $this->language->get('lang_text_title'), 
+                'title'      => Lang::get('lang_text_title'), 
                 'quote'      => $quote_data, 
-                'sort_order' => $this->config->get('free_sort_order'), 
+                'sort_order' => Config::get('free_sort_order'), 
                 'error'      => false
             );
         endif;

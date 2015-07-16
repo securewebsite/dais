@@ -13,7 +13,7 @@
 	<div class="panel-heading">
 		<div class="pull-left h2"><i class="hidden-xs fa fa-envelope"></i><?= $lang_heading_title; ?></div>
 		<div class="pull-right">
-			<button type="button" id="button-send" data-url="index.php?route=people/contact/send&token=<?= $token; ?>" class="btn btn-primary load-left"><i class="fa fa-envelope"></i> <?= $lang_button_send; ?></button>
+			<button type="button" id="button-send" data-url="index.php?route=people/contact/send" class="btn btn-primary load-left"><i class="fa fa-envelope"></i> <?= $lang_button_send; ?></button>
 			<a class="btn btn-warning" href="<?= $cancel; ?>"><i class="fa fa-ban"></i> <?= $lang_button_cancel; ?></a>
 		</div>
 	</div>

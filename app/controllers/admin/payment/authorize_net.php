@@ -28,10 +28,10 @@ class AuthorizeNet extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('authorize_net', $this->request->post);
+            SettingSetting::editSetting('authorize_net', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/payment', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -55,9 +55,9 @@ class AuthorizeNet extends Controller {
         Breadcrumb::add('lang_text_payment', 'module/payment');
         Breadcrumb::add('lang_heading_title', 'payment/authorize_netaim');
         
-        $data['action'] = Url::link('payment/authorize_netaim', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('payment/authorize_netaim', '', 'SSL');
         
-        $data['cancel'] = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/payment', '', 'SSL');
         
         if (isset($this->request->post['authorize_net_login'])) {
             $data['authorize_net_login'] = $this->request->post['authorize_net_login'];
@@ -109,7 +109,7 @@ class AuthorizeNet extends Controller {
         
         Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
+        $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
         if (isset($this->request->post['authorize_net_geo_zone_id'])) {
             $data['authorize_net_geo_zone_id'] = $this->request->post['authorize_net_geo_zone_id'];
@@ -119,7 +119,7 @@ class AuthorizeNet extends Controller {
         
         Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
+        $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
         if (isset($this->request->post['authorize_net_status'])) {
             $data['authorize_net_status'] = $this->request->post['authorize_net_status'];
@@ -137,7 +137,7 @@ class AuthorizeNet extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('payment/authorize_net', $data));
+        Response::setOutput(View::render('payment/authorize_net', $data));
     }
     
     protected function validate() {

@@ -2,7 +2,7 @@
 function country(a,b,c){
 	var $this=$('select[name="address['+b+'][country_id]"]');
 	$.ajax({
-		url:'index.php?route=people/customer/country&token=<?= $token; ?>&country_id='+a.value,
+		url:'index.php?route=people/customer/country&country_id='+a.value,
 		dataType:'json',
 		beforeSend:function(){
 			$this.after($('<i>',{class:'icon-loading'}));
@@ -143,7 +143,7 @@ $(document).on('click', '#button-reward', function(e){
 	var btn=$(this);
 
 	$.ajax({
-		url:'index.php?route=people/customer/reward&token=<?= $token; ?>&customer_id=<?= $customer_id; ?>',
+		url:'index.php?route=people/customer/reward&customer_id=<?= $customer_id; ?>',
 		type:'post',
 		dataType:'html',
 		data:'description='+encodeURIComponent($('#tab-reward input[name="description"]').val())+'&points='+encodeURIComponent($('#tab-reward input[name="points"]').val()),
@@ -163,7 +163,7 @@ function addBanIP(ip){
 	var id = ip.replace(/\./g, '-');
 	
 	$.ajax({
-		url:'index.php?route=people/customer/addbanip&token=<?= $token; ?>',
+		url:'index.php?route=people/customer/addbanip',
 		type:'post',
 		dataType:'json',
 		data:'ip='+encodeURIComponent(ip),
@@ -186,7 +186,7 @@ function removeBanIP(ip) {
 	var id = ip.replace(/\./g, '-');
 	
 	$.ajax({
-		url:'index.php?route=people/customer/removebanip&token=<?= $token; ?>',
+		url:'index.php?route=people/customer/removebanip',
 		type:'post',
 		dataType:'json',
 		data:'ip='+encodeURIComponent(ip),

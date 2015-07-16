@@ -28,11 +28,11 @@ class Special extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('special', $this->request->post);
-            $this->cache->delete('products.special');
+            SettingSetting::editSetting('special', $this->request->post);
+            Cache::delete('products.special');
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/widget', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -50,8 +50,8 @@ class Special extends Controller {
         Breadcrumb::add('lang_text_widget', 'module/widget');
         Breadcrumb::add('lang_heading_title', 'widget/special');
         
-        $data['action'] = Url::link('widget/special', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('widget/special', '', 'SSL');
+        $data['cancel'] = Url::link('module/widget', '', 'SSL');
         
         $data['widgets'] = array();
         
@@ -63,7 +63,7 @@ class Special extends Controller {
         
         Theme::model('design/layout');
         
-        $data['layouts'] = $this->model_design_layout->getLayouts();
+        $data['layouts'] = DesignLayout::getLayouts();
         
         Theme::loadjs('javascript/widget/special', $data);
         
@@ -71,7 +71,7 @@ class Special extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('widget/special', $data));
+        Response::setOutput(View::render('widget/special', $data));
     }
     
     protected function validate() {

@@ -23,6 +23,7 @@ class User {
     private $user_group_id;
     private $user_last_access;
     private $permission = array();
+    private $user_token;
     
     public function __construct() {
         if (!is_null(Session::get('user_id'))):
@@ -31,6 +32,7 @@ class User {
             $this->user_group_id    = Session::get('user_group_id');
             $this->user_last_access = Session::get('user_last_access');
             $this->permission       = Session::get('permission');
+            $this->user_token       = Response::getToken();
         else:
             $this->logout();
         endif;
@@ -59,6 +61,12 @@ class User {
             Session::set('user_name', $user_query->row['user_name']);
             Session::set('user_group_id', $user_query->row['user_group_id']);
             Session::set('user_last_access', strtotime($user_query->row['last_access']));
+
+            if (isset(Session::p()->data['token'])):
+                $this->user_token = Session::p()->data['token'];
+            elseif(!is_null(Response::getToken())):
+                $this->user_token = Response::getToken();
+            endif;
             
             DB::query("
 				UPDATE " . DB::prefix() . "user 
@@ -82,7 +90,7 @@ class User {
                     Session::p()->data['permission'][$key] = $value;
                 endforeach;
             endif;
-            
+            //var_dump(Session::p()->data['token']);exit;
             return true;
         else:
             return false;
@@ -101,6 +109,7 @@ class User {
         $this->user_group_id    = '';
         $this->user_last_access = '';
         $this->permission       = array(null);
+        $this->user_token       = '';
     }
     
     public function hasPermission($key, $value) {
@@ -147,5 +156,17 @@ class User {
     
     public function getLastAccess() {
         return $this->user_last_access;
+    }
+
+    public function getToken() {
+        return $this->user_token;
+    }
+
+    public function setToken($token) {
+        $this->user_token = $token;
+    }
+
+    public function unsetToken() {
+        $this->user_token = '';
     }
 }

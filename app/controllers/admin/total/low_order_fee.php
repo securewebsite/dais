@@ -28,10 +28,10 @@ class LowOrderFee extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('low_order_fee', $this->request->post);
+            SettingSetting::editSetting('low_order_fee', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/total', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -43,8 +43,8 @@ class LowOrderFee extends Controller {
         Breadcrumb::add('lang_text_total', 'module/total');
         Breadcrumb::add('lang_heading_title', 'total/low_order_fee');
         
-        $data['action'] = Url::link('total/low_order_fee', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('total/low_order_fee', '', 'SSL');
+        $data['cancel'] = Url::link('module/total', '', 'SSL');
         
         if (isset($this->request->post['low_order_fee_total'])) {
             $data['low_order_fee_total'] = $this->request->post['low_order_fee_total'];
@@ -66,7 +66,7 @@ class LowOrderFee extends Controller {
         
         Theme::model('locale/tax_class');
         
-        $data['tax_classes'] = $this->model_locale_tax_class->getTaxClasses();
+        $data['tax_classes'] = LocaleTaxClass::getTaxClasses();
         
         if (isset($this->request->post['low_order_fee_status'])) {
             $data['low_order_fee_status'] = $this->request->post['low_order_fee_status'];
@@ -84,7 +84,7 @@ class LowOrderFee extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('total/low_order_fee', $data));
+        Response::setOutput(View::render('total/low_order_fee', $data));
     }
     
     protected function validate() {

@@ -38,7 +38,7 @@ class Language extends Controller {
         Theme::model('locale/language');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_locale_language->addLanguage($this->request->post);
+            LocaleLanguage::addLanguage($this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -55,7 +55,7 @@ class Language extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('locale/language', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('locale/language', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -69,7 +69,7 @@ class Language extends Controller {
         Theme::model('locale/language');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_locale_language->editLanguage($this->request->get['language_id'], $this->request->post);
+            LocaleLanguage::editLanguage($this->request->get['language_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -86,7 +86,7 @@ class Language extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('locale/language', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('locale/language', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -101,7 +101,7 @@ class Language extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $language_id) {
-                $this->model_locale_language->deleteLanguage($language_id);
+                LocaleLanguage::deleteLanguage($language_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -120,7 +120,7 @@ class Language extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('locale/language', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('locale/language', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,21 +165,21 @@ class Language extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'locale/language', $url);
         
-        $data['insert'] = Url::link('locale/language/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('locale/language/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('locale/language/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('locale/language/delete', '' . $url, 'SSL');
         
         $data['languages'] = array();
         
         $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $language_total = $this->model_locale_language->getTotalLanguages();
+        $language_total = LocaleLanguage::getTotalLanguages();
         
-        $results = $this->model_locale_language->getLanguages($filter);
+        $results = LocaleLanguage::getLanguages($filter);
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/language/update', 'token=' . $this->session->data['token'] . '&language_id=' . $result['language_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/language/update', '' . '&language_id=' . $result['language_id'] . $url, 'SSL'));
             
             $data['languages'][] = array('language_id' => $result['language_id'], 'name' => $result['name'] . (($result['code'] == Config::get('config_language')) ? Lang::get('lang_text_default') : null), 'code' => $result['code'], 'sort_order' => $result['sort_order'], 'selected' => isset($this->request->post['selected']) && in_array($result['language_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -210,9 +210,9 @@ class Language extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_name'] = Url::link('locale/language', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_code'] = Url::link('locale/language', 'token=' . $this->session->data['token'] . '&sort=code' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('locale/language', 'token=' . $this->session->data['token'] . '&sort=sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('locale/language', '' . '&sort=name' . $url, 'SSL');
+        $data['sort_code'] = Url::link('locale/language', '' . '&sort=code' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('locale/language', '' . '&sort=sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -224,7 +224,7 @@ class Language extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($language_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/language', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($language_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/language', '' . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -233,7 +233,7 @@ class Language extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('locale/language_list', $data));
+        Response::setOutput(View::render('locale/language_list', $data));
     }
     
     protected function getForm() {
@@ -298,15 +298,15 @@ class Language extends Controller {
         Breadcrumb::add('lang_heading_title', 'locale/language', $url);
         
         if (!isset($this->request->get['language_id'])) {
-            $data['action'] = Url::link('locale/language/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/language/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/language/update', 'token=' . $this->session->data['token'] . '&language_id=' . $this->request->get['language_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/language/update', '' . '&language_id=' . $this->request->get['language_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('locale/language', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('locale/language', '' . $url, 'SSL');
         
         if (isset($this->request->get['language_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $language_info = $this->model_locale_language->getLanguage($this->request->get['language_id']);
+            $language_info = LocaleLanguage::getLanguage($this->request->get['language_id']);
         }
         
         if (isset($this->request->post['name'])) {
@@ -377,7 +377,7 @@ class Language extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('locale/language_form', $data));
+        Response::setOutput(View::render('locale/language_form', $data));
     }
     
     protected function validateForm() {
@@ -423,7 +423,7 @@ class Language extends Controller {
         Theme::model('sale/order');
         
         foreach ($this->request->post['selected'] as $language_id) {
-            $language_info = $this->model_locale_language->getLanguage($language_id);
+            $language_info = LocaleLanguage::getLanguage($language_id);
             
             if ($language_info) {
                 if (Config::get('config_language') == $language_info['code']) {
@@ -434,14 +434,14 @@ class Language extends Controller {
                     $this->error['warning'] = Lang::get('lang_error_admin');
                 }
                 
-                $store_total = $this->model_setting_store->getTotalStoresByLanguage($language_info['code']);
+                $store_total = SettingStore::getTotalStoresByLanguage($language_info['code']);
                 
                 if ($store_total) {
                     $this->error['warning'] = sprintf(Lang::get('lang_error_store'), $store_total);
                 }
             }
             
-            $order_total = $this->model_sale_order->getTotalOrdersByLanguageId($language_id);
+            $order_total = SaleOrder::getTotalOrdersByLanguageId($language_id);
             
             if ($order_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_order'), $order_total);

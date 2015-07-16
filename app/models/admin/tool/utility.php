@@ -21,18 +21,18 @@ use App\Models\Model;
 class Utility extends Model {
     
     public function findSlugByName($slug) {
-		$query = $this->db->query("
+		$query = DB::query("
 			SELECT query 
-			FROM {$this->db->prefix}affiliate_route 
-			WHERE slug = '" . $this->db->escape($slug) . "' 
+			FROM " . DB::prefix() . "affiliate_route 
+			WHERE slug = '" . DB::escape($slug) . "' 
 			UNION ALL 
 			SELECT query 
-			FROM {$this->db->prefix}route 
-			WHERE slug = '" . $this->db->escape($slug) . "' 
+			FROM " . DB::prefix() . "route 
+			WHERE slug = '" . DB::escape($slug) . "' 
 			UNION ALL 
 			SELECT query 
-			FROM {$this->db->prefix}vanity_route 
-			WHERE slug = '" . $this->db->escape($slug) . "'
+			FROM " . DB::prefix() . "vanity_route 
+			WHERE slug = '" . DB::escape($slug) . "'
 		");
 
 		return ($query->num_rows) ? $query->row['query'] : false;

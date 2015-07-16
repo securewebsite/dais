@@ -15,40 +15,42 @@
 */
 
 namespace App\Controllers\Front\Shop;
+
 use App\Controllers\Controller;
 
 class Cart extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('shop/cart');
+        $data = Theme::language('shop/cart');
         
         if (isset($this->request->get['remove'])) {
-            $this->cart->remove($this->request->get['remove']);
+            \Cart::remove($this->request->get['remove']);
             
             unset($this->session->data['gift_cards'][$this->request->get['remove']]);
         }
         
         // Totals
-        $this->theme->model('setting/module');
+        Theme::model('setting/module');
         
         $total_data = array();
         $total = 0;
-        $taxes = $this->cart->getTaxes();
+        $taxes = \Cart::getTaxes();
         
         // Display prices
-        if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+        if ((Config::get('config_customer_price') && Customer::isLogged()) || !Config::get('config_customer_price')) {
             $sort_order = array();
             
-            $results = $this->model_setting_module->getModules('total');
+            $results = SettingModule::getModules('total');
             
             foreach ($results as $key => $value) {
-                $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
+                $sort_order[$key] = Config::get($value['code'] . '_sort_order');
             }
             
             array_multisort($sort_order, SORT_ASC, $results);
             
             foreach ($results as $result) {
-                if ($this->config->get($result['code'] . '_status')) {
-                    $this->theme->model('total/' . $result['code']);
+                if (Config::get($result['code'] . '_status')) {
+                    Theme::model('total/' . $result['code']);
                     
                     $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
                 }
@@ -65,15 +67,15 @@ class Cart extends Controller {
         
         $data['totals'] = $total_data;
         
-        $data['text_items'] = sprintf($this->language->get('lang_text_items'), $this->cart->countProducts() + (isset($this->session->data['gift_cards']) ? count($this->session->data['gift_cards']) : 0), $this->currency->format($total));
+        $data['text_items'] = sprintf(Lang::get('lang_text_items'), \Cart::countProducts() + (isset($this->session->data['gift_cards']) ? count($this->session->data['gift_cards']) : 0), Currency::format($total));
         
-        $this->theme->model('tool/image');
+        Theme::model('tool/image');
         
         $data['products'] = array();
         
-        foreach ($this->cart->getProducts() as $product) {
+        foreach (\Cart::getProducts() as $product) {
             if ($product['image']) {
-                $image = $this->model_tool_image->resize($product['image'], $this->config->get('config_image_cart_width'), $this->config->get('config_image_cart_height'));
+                $image = ToolImage::resize($product['image'], Config::get('config_image_cart_width'), Config::get('config_image_cart_height'));
             } else {
                 $image = '';
             }
@@ -86,26 +88,26 @@ class Cart extends Controller {
                 } else {
                     $filename = $this->encryption->decrypt($option['option_value']);
                     
-                    $value = $this->encode->substr($filename, 0, $this->encode->strrpos($filename, '.'));
+                    $value = Encode::substr($filename, 0, Encode::strrpos($filename, '.'));
                 }
                 
                 $option_data[] = array(
                     'name'  => $option['name'], 
-                    'value' => ($this->encode->strlen($value) > 20 ? $this->encode->substr($value, 0, 20) . '..' : $value), 
+                    'value' => (Encode::strlen($value) > 20 ? Encode::substr($value, 0, 20) . '..' : $value), 
                     'type'  => $option['type']
                 );
             }
             
             // Display prices
-            if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                $price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')));
+            if ((Config::get('config_customer_price') && Customer::isLogged()) || !Config::get('config_customer_price')) {
+                $price = Currency::format(Tax::calculate($product['price'], $product['tax_class_id'], Config::get('config_tax')));
             } else {
                 $price = false;
             }
             
             // Display prices
-            if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                $total = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']);
+            if ((Config::get('config_customer_price') && Customer::isLogged()) || !Config::get('config_customer_price')) {
+                $total = Currency::format(Tax::calculate($product['price'], $product['tax_class_id'], Config::get('config_tax')) * $product['quantity']);
             } else {
                 $total = false;
             }
@@ -119,7 +121,7 @@ class Cart extends Controller {
                 'quantity'  => $product['quantity'], 
                 'price'     => $price, 
                 'total'     => $total, 
-                'href'      => $this->url->link('catalog/product', 'product_id=' . $product['product_id']), 
+                'href'      => Url::link('catalog/product', 'product_id=' . $product['product_id']), 
                 'recurring' => ($product['recurring'] ? $product['recurring']['name'] : '')
             );
         }
@@ -132,21 +134,21 @@ class Cart extends Controller {
                 $data['gift_cards'][] = array(
                     'key'         => $key, 
                     'description' => $gift_card['description'], 
-                    'amount'      => $this->currency->format($gift_card['amount'])
+                    'amount'      => Currency::format($gift_card['amount'])
                 );
             }
         }
         
-        $data['cart'] = $this->url->link('checkout/cart');
+        $data['cart'] = Url::link('checkout/cart');
         
-        $data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
+        $data['checkout'] = Url::link('checkout/checkout', '', 'SSL');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('shop/cart', $data);
+        return View::render('shop/cart', $data);
     }
     
     public function info() {
-        $this->response->setOutput($this->index());
+        Response::setOutput($this->index());
     }
 }

@@ -15,18 +15,20 @@
 */
 
 namespace App\Controllers\Front\Widget;
+
 use App\Controllers\Controller;
 
 class Welcome extends Controller {
+    
     public function index($setting) {
-        $data = $this->theme->language('widget/welcome');
+        $data = Theme::language('widget/welcome');
         
-        $data['heading_title'] = sprintf($this->language->get('lang_heading_title'), $this->config->get('config_name'));
+        $data['heading_title'] = sprintf(Lang::get('lang_heading_title'), Config::get('config_name'));
         
-        $data['message'] = html_entity_decode($setting['description'][$this->config->get('config_language_id') ], ENT_QUOTES, 'UTF-8');
+        $data['message'] = html_entity_decode($setting['description'][Config::get('config_language_id') ], ENT_QUOTES, 'UTF-8');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('widget/welcome', $data);
+        return View::render('widget/welcome', $data);
     }
 }

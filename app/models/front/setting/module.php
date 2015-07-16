@@ -23,10 +23,10 @@ class Module extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}module 
-				WHERE `type` = '" . $this->db->escape($type) . "'
+				FROM " . DB::prefix() . "module 
+				WHERE `type` = '" . DB::escape($type) . "'
 			");
             
             if ($query->num_rows):

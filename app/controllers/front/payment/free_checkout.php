@@ -15,28 +15,30 @@
 */
 
 namespace App\Controllers\Front\Payment;
+
 use App\Controllers\Controller;
 
 class FreeCheckout extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('payment/free_checkout');
+        $data = Theme::language('payment/free_checkout');
         
-        $data['continue'] = $this->url->link('checkout/success');
+        $data['continue'] = Url::link('checkout/success');
         
-        $this->theme->loadjs('javascript/payment/free_checkout', $data);
+        Theme::loadjs('javascript/payment/free_checkout', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data['javascript'] = $this->theme->controller('common/javascript');
+        $data['javascript'] = Theme::controller('common/javascript');
         
-        return $this->theme->view('payment/free_checkout', $data);
+        return View::render('payment/free_checkout', $data);
     }
     
     public function confirm() {
-        $this->theme->model('checkout/order');
+        Theme::model('checkout/order');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
-        $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('free_checkout_order_status_id'));
+        CheckoutOrder::confirm($this->session->data['order_id'], Config::get('free_checkout_order_status_id'));
     }
 }

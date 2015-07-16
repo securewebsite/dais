@@ -28,10 +28,10 @@ class FooterBlocks extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('footer_blocks', $this->request->post);
+            SettingSetting::editSetting('footer_blocks', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/widget', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -43,8 +43,8 @@ class FooterBlocks extends Controller {
         Breadcrumb::add('lang_text_widget', 'module/widget');
         Breadcrumb::add('lang_heading_title', 'widget/footer_blocks');
         
-        $data['action'] = Url::link('widget/footer_blocks', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('widget/footer_blocks', '', 'SSL');
+        $data['cancel'] = Url::link('module/widget', '', 'SSL');
         
         $data['widgets'] = array();
         
@@ -58,7 +58,7 @@ class FooterBlocks extends Controller {
         
         $data['menus'] = array();
         
-        $menus = $this->model_module_menu->getMenus();
+        $menus = ModuleMenu::getMenus();
         
         foreach ($menus as $menu):
             $data['menus'][] = array('menu_id' => $menu['menu_id'], 'name' => $menu['name']);
@@ -66,7 +66,7 @@ class FooterBlocks extends Controller {
         
         Theme::model('design/layout');
         
-        $data['layouts'] = $this->model_design_layout->getLayouts();
+        $data['layouts'] = DesignLayout::getLayouts();
         
         Theme::loadjs('javascript/widget/footer_blocks', $data);
         
@@ -74,7 +74,7 @@ class FooterBlocks extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('widget/footer_blocks', $data));
+        Response::setOutput(View::render('widget/footer_blocks', $data));
     }
     
     protected function validate() {

@@ -28,10 +28,10 @@ class Item extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('item', $this->request->post);
+            SettingSetting::editSetting('item', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -43,9 +43,9 @@ class Item extends Controller {
         Breadcrumb::add('lang_text_shipping', 'module/shipping');
         Breadcrumb::add('lang_heading_title', 'shipping/item');
         
-        $data['action'] = Url::link('shipping/item', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('shipping/item', '', 'SSL');
         
-        $data['cancel'] = Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/shipping', '', 'SSL');
         
         if (isset($this->request->post['item_cost'])) {
             $data['item_cost'] = $this->request->post['item_cost'];
@@ -61,7 +61,7 @@ class Item extends Controller {
         
         Theme::model('locale/tax_class');
         
-        $data['tax_classes'] = $this->model_locale_tax_class->getTaxClasses();
+        $data['tax_classes'] = LocaleTaxClass::getTaxClasses();
         
         if (isset($this->request->post['item_geo_zone_id'])) {
             $data['item_geo_zone_id'] = $this->request->post['item_geo_zone_id'];
@@ -71,7 +71,7 @@ class Item extends Controller {
         
         Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
+        $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
         if (isset($this->request->post['item_status'])) {
             $data['item_status'] = $this->request->post['item_status'];
@@ -89,7 +89,7 @@ class Item extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('shipping/item', $data));
+        Response::setOutput(View::render('shipping/item', $data));
     }
     
     protected function validate() {

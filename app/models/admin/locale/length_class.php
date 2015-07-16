@@ -21,63 +21,63 @@ use App\Models\Model;
 class LengthClass extends Model {
     
     public function addLengthClass($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}length_class 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "length_class 
 			SET value = '" . (float)$data['value'] . "'");
         
-        $length_class_id = $this->db->getLastId();
+        $length_class_id = DB::getLastId();
         
         foreach ($data['length_class_description'] as $language_id => $value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}length_class_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "length_class_description 
 				SET 
 					length_class_id = '" . (int)$length_class_id . "', 
 					language_id = '" . (int)$language_id . "', 
-					title = '" . $this->db->escape($value['title']) . "', 
-					unit = '" . $this->db->escape($value['unit']) . "'
+					title = '" . DB::escape($value['title']) . "', 
+					unit = '" . DB::escape($value['unit']) . "'
 			");
         }
         
-        $this->cache->delete('default.store.lengths');
+        Cache::delete('default.store.lengths');
     }
     
     public function editLengthClass($length_class_id, $data) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}length_class 
+        DB::query("
+			UPDATE " . DB::prefix() . "length_class 
 			SET 
 				value = '" . (float)$data['value'] . "' 
 			WHERE length_class_id = '" . (int)$length_class_id . "'
 		");
         
-        $this->db->query("DELETE FROM {$this->db->prefix}length_class_description WHERE length_class_id = '" . (int)$length_class_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "length_class_description WHERE length_class_id = '" . (int)$length_class_id . "'");
         
         foreach ($data['length_class_description'] as $language_id => $value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}length_class_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "length_class_description 
 				SET 
 					length_class_id = '" . (int)$length_class_id . "', 
 					language_id = '" . (int)$language_id . "', 
-					title = '" . $this->db->escape($value['title']) . "', 
-					unit = '" . $this->db->escape($value['unit']) . "'
+					title = '" . DB::escape($value['title']) . "', 
+					unit = '" . DB::escape($value['unit']) . "'
 			");
         }
         
-        $this->cache->delete('default.store.lengths');
+        Cache::delete('default.store.lengths');
     }
     
     public function deleteLengthClass($length_class_id) {
-        $this->db->query("DELETE FROM {$this->db->prefix}length_class WHERE length_class_id = '" . (int)$length_class_id . "'");
-        $this->db->query("DELETE FROM {$this->db->prefix}length_class_description WHERE length_class_id = '" . (int)$length_class_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "length_class WHERE length_class_id = '" . (int)$length_class_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "length_class_description WHERE length_class_id = '" . (int)$length_class_id . "'");
         
-        $this->cache->delete('default.store.lengths');
+        Cache::delete('default.store.lengths');
     }
     
     public function getLengthClasses($data = array()) {
         if ($data) {
             $sql = "
 				SELECT * 
-				FROM {$this->db->prefix}length_class lc 
-				LEFT JOIN {$this->db->prefix}length_class_description lcd 
+				FROM " . DB::prefix() . "length_class lc 
+				LEFT JOIN " . DB::prefix() . "length_class_description lcd 
 					ON (lc.length_class_id = lcd.length_class_id) 
 				WHERE lcd.language_id = '" . (int)Config::get('config_language_id') . "'";
             
@@ -107,15 +107,15 @@ class LengthClass extends Model {
                 $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
             }
             
-            $query = $this->db->query($sql);
+            $query = DB::query($sql);
             
             return $query->rows;
         } else {
             
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}length_class lc 
-				LEFT JOIN {$this->db->prefix}length_class_description lcd 
+				FROM " . DB::prefix() . "length_class lc 
+				LEFT JOIN " . DB::prefix() . "length_class_description lcd 
 					ON (lc.length_class_id = lcd.length_class_id) 
 				WHERE lcd.language_id = '" . (int)Config::get('config_language_id') . "'
 			");
@@ -127,10 +127,10 @@ class LengthClass extends Model {
     }
     
     public function getLengthClass($length_class_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}length_class lc 
-			LEFT JOIN {$this->db->prefix}length_class_description lcd 
+			FROM " . DB::prefix() . "length_class lc 
+			LEFT JOIN " . DB::prefix() . "length_class_description lcd 
 				ON (lc.length_class_id = lcd.length_class_id) 
 			WHERE lc.length_class_id = '" . (int)$length_class_id . "' 
 			AND lcd.language_id = '" . (int)Config::get('config_language_id') . "'
@@ -140,10 +140,10 @@ class LengthClass extends Model {
     }
     
     public function getLengthClassDescriptionByUnit($unit) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}length_class_description 
-			WHERE unit = '" . $this->db->escape($unit) . "' 
+			FROM " . DB::prefix() . "length_class_description 
+			WHERE unit = '" . DB::escape($unit) . "' 
 			AND language_id = '" . (int)Config::get('config_language_id') . "'
 		");
         
@@ -153,9 +153,9 @@ class LengthClass extends Model {
     public function getLengthClassDescriptions($length_class_id) {
         $length_class_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}length_class_description 
+			FROM " . DB::prefix() . "length_class_description 
 			WHERE length_class_id = '" . (int)$length_class_id . "'
 		");
         
@@ -167,9 +167,9 @@ class LengthClass extends Model {
     }
     
     public function getTotalLengthClasses() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}length_class");
+			FROM " . DB::prefix() . "length_class");
         
         return $query->row['total'];
     }

@@ -45,14 +45,14 @@ class Shipping extends Controller {
         
         Theme::model('setting/module');
         
-        $modules = $this->model_setting_module->getInstalled('shipping');
+        $modules = SettingModule::getInstalled('shipping');
         
         foreach ($modules as $key => $value) {
             $theme_file = Theme::getPath() . 'controller/shipping/' . $value . '.php';
             $core_file  = Config::get('path.application') . 'shipping/' . $value . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {
-                $this->model_setting_module->uninstall('shipping', $value);
+                SettingModule::uninstall('shipping', $value);
                 
                 unset($modules[$key]);
             }
@@ -73,17 +73,17 @@ class Shipping extends Controller {
                 if (!in_array($module, $modules)) {
                     $action[] = array(
                         'text' => Lang::get('lang_text_install'), 
-                        'href' => Url::link('module/shipping/install', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL')
+                        'href' => Url::link('module/shipping/install', '' . '&module=' . $module, 'SSL')
                     );
                 } else {
                     $action[] = array(
                         'text' => Lang::get('lang_text_edit'), 
-                        'href' => Url::link('shipping/' . $module . '', 'token=' . $this->session->data['token'], 'SSL')
+                        'href' => Url::link('shipping/' . $module . '', '', 'SSL')
                     );
                     
                     $action[] = array(
                         'text' => Lang::get('lang_text_uninstall'), 
-                        'href' => Url::link('module/shipping/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL')
+                        'href' => Url::link('module/shipping/uninstall', '' . '&module=' . $module, 'SSL')
                     );
                 }
                 
@@ -100,7 +100,7 @@ class Shipping extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('module/shipping', $data));
+        Response::setOutput(View::render('module/shipping', $data));
     }
     
     public function install() {
@@ -111,16 +111,16 @@ class Shipping extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', '', 'SSL'));
         } else {
             Theme::model('setting/module');
             
-            $this->model_setting_module->install('shipping', $this->request->get['module']);
+            SettingModule::install('shipping', $this->request->get['module']);
             
             Theme::model('people/user_group');
             
-            $this->model_people_user_group->addPermission(User::getId(), 'access', 'shipping/' . $this->request->get['module']);
-            $this->model_people_user_group->addPermission(User::getId(), 'modify', 'shipping/' . $this->request->get['module']);
+            PeopleUserGroup::addPermission(User::getId(), 'access', 'shipping/' . $this->request->get['module']);
+            PeopleUserGroup::addPermission(User::getId(), 'modify', 'shipping/' . $this->request->get['module']);
             
             $base_path  = Config::get('path.application') . 'shipping' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'shipping' . SEP;
@@ -139,7 +139,7 @@ class Shipping extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', '', 'SSL'));
         }
     }
     
@@ -151,13 +151,13 @@ class Shipping extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', '', 'SSL'));
         } else {
             Theme::model('setting/module');
             Theme::model('setting/setting');
             
-            $this->model_setting_module->uninstall('shipping', $this->request->get['module']);
-            $this->model_setting_setting->deleteSetting($this->request->get['module']);
+            SettingModule::uninstall('shipping', $this->request->get['module']);
+            SettingSetting::deleteSetting($this->request->get['module']);
             
             $base_path  = Config::get('path.application') . 'shipping' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'shipping' . SEP;
@@ -176,7 +176,7 @@ class Shipping extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', '', 'SSL'));
         }
     }
 }

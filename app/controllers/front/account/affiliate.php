@@ -15,6 +15,7 @@
 */
 
 namespace App\Controllers\Front\Account;
+
 use App\Controllers\Controller;
 
 class Affiliate extends Controller {
@@ -34,76 +35,76 @@ class Affiliate extends Controller {
     );
 
 	public function index() {
-        if (!$this->customer->isLogged()):
-            $this->session->data['redirect'] = $this->url->link('account/affiliate', '', 'SSL');
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+        if (!Customer::isLogged()):
+            $this->session->data['redirect'] = Url::link('account/affiliate', '', 'SSL');
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
         
-        $this->theme->language('account/affiliate');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::language('account/affiliate');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
 
     public function update() {
-		if (!$this->customer->isLogged()):
-            $this->session->data['redirect'] = $this->url->link('account/affiliate', '', 'SSL');
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+		if (!Customer::isLogged()):
+            $this->session->data['redirect'] = Url::link('account/affiliate', '', 'SSL');
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
 
-		$this->theme->language('account/affiliate');
-        $this->theme->model('account/affiliate');
+		Theme::language('account/affiliate');
+        Theme::model('account/affiliate');
 
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
-        	$this->model_account_affiliate->editSettings($this->request->post);
+        	AccountAffiliate::editSettings($this->request->post);
 
-        	$this->session->data['success'] = $this->language->get('lang_text_success');
-        	$this->response->redirect($this->url->link('account/dashboard', '', 'SSL'));
+        	$this->session->data['success'] = Lang::get('lang_text_success');
+        	Response::redirect(Url::link('account/dashboard', '', 'SSL'));
         endif;
 
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
 	}
 
 	public function register() {
-		if (!$this->customer->isLogged()):
-            $this->session->data['redirect'] = $this->url->link('account/affiliate', '', 'SSL');
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+		if (!Customer::isLogged()):
+            $this->session->data['redirect'] = Url::link('account/affiliate', '', 'SSL');
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
 
-		$this->theme->language('account/affiliate');
-        $this->theme->model('account/affiliate');
+		Theme::language('account/affiliate');
+        Theme::model('account/affiliate');
 
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateRegister()):
-        	$this->model_account_affiliate->addAffiliate();
-        	$this->response->redirect($this->url->link('account/affiliate', '', 'SSL'));
+        	AccountAffiliate::addAffiliate();
+        	Response::redirect(Url::link('account/affiliate', '', 'SSL'));
         endif;
 
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
 	}
 
 	public function getForm() {
-		if (!$this->customer->isLogged()):
-            $this->session->data['redirect'] = $this->url->link('account/affiliate', '', 'SSL');
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+		if (!Customer::isLogged()):
+            $this->session->data['redirect'] = Url::link('account/affiliate', '', 'SSL');
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
         
-        $data = $this->theme->language('account/affiliate');
-        $this->theme->model('account/affiliate');
+        $data = Theme::language('account/affiliate');
+        Theme::model('account/affiliate');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
-        $this->breadcrumb->add('lang_text_account', 'account/dashboard', null, true, 'SSL');
-        $this->breadcrumb->add('lang_heading_title', 'account/affiliate', null, true, 'SSL');
+        Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
+        Breadcrumb::add('lang_heading_title', 'account/affiliate', null, true, 'SSL');
         
         if (isset($this->session->data['warning'])):
             $data['warning'] = $this->session->data['warning'];
@@ -114,15 +115,15 @@ class Affiliate extends Controller {
             $data['warning'] = '';
         endif;
 
-        $data['action'] = $this->url->link('account/affiliate/update', '', 'SSL');
-        $data['enroll'] = $this->url->link('account/affiliate/register', '', 'SSL');
+        $data['action'] = Url::link('account/affiliate/update', '', 'SSL');
+        $data['enroll'] = Url::link('account/affiliate/register', '', 'SSL');
 
 		if ($this->request->server['REQUEST_METHOD'] != 'POST'):
-			$customer_info = $this->model_account_affiliate->getSettings();
+			$customer_info = AccountAffiliate::getSettings();
 		endif;
         
-		$data['is_affiliate'] = $this->customer->isAffiliate();
-		$data['customer_id']  = $this->customer->getId();
+		$data['is_affiliate'] = Customer::isAffiliate();
+		$data['customer_id']  = Customer::getId();
 
 		foreach ($this->post_errors as $error):
             if (isset($this->error[$error])):
@@ -132,14 +133,14 @@ class Affiliate extends Controller {
             endif;
         endforeach;
 
-        $code = $this->model_account_affiliate->generateId();
+        $code = AccountAffiliate::generateId();
 
         $defaults = array(
             'affiliate_status'    => 0,
             'company'             => '',
             'website'             => '',
             'code'                => $code,
-            'commission'          => $this->config->get('config_commission'),
+            'commission'          => Config::get('config_commission'),
             'tax_id'              => '',
             'payment_method'      => '',
             'cheque'              => '',
@@ -152,13 +153,13 @@ class Affiliate extends Controller {
             'slug'                => ''
         );
 
-        if ($this->config->get('config_affiliate_terms')):
-            $this->theme->model('content/page');
+        if (Config::get('config_affiliate_terms')):
+            Theme::model('content/page');
             
-            $page_info = $this->model_content_page->getPage($this->config->get('config_affiliate_terms'));
+            $page_info = ContentPage::getPage(Config::get('config_affiliate_terms'));
             if ($page_info):
-				$data['text_agree']     = sprintf($this->language->get('lang_text_terms'), $this->url->link('content/page/info', 'page_id=' . $this->config->get('config_affiliate_terms'), 'SSL'), $page_info['title'], $page_info['title']);
-				$data['js_error_agree'] = sprintf($this->language->get('lang_error_agree'), $page_info['title']);
+				$data['text_agree']     = sprintf(Lang::get('lang_text_terms'), Url::link('content/page/info', 'page_id=' . Config::get('config_affiliate_terms'), 'SSL'), $page_info['title'], $page_info['title']);
+				$data['js_error_agree'] = sprintf(Lang::get('lang_error_agree'), $page_info['title']);
             else:
 				$data['text_agree']     = '';
 				$data['js_error_agree'] = '';
@@ -187,14 +188,14 @@ class Affiliate extends Controller {
         $data['vanity_base'] = Config::get('http.server');
 
         if (!empty($customer_info)):
-            $base_url = $this->url->link(Theme::getstyle() . '/home', 'affiliate_id=' . $this->customer->getId());
+            $base_url = Url::link(Theme::getstyle() . '/home', 'affiliate_id=' . Customer::getId());
         else:
-            $base_url = $this->url->link(Theme::getstyle() . '/home');
+            $base_url = Url::link(Theme::getstyle() . '/home');
         endif;
 
-		$data['lang_text_description'] = sprintf($this->language->get('lang_text_description'), $base_url);
-		$data['lang_text_enroll_now']  = sprintf($this->language->get('lang_text_enroll_now'), $this->customer->getFirstname());
-		$data['column_amount']         = sprintf($this->language->get('lang_column_amount'), $this->config->get('config_currency'));
+		$data['lang_text_description'] = sprintf(Lang::get('lang_text_description'), $base_url);
+		$data['lang_text_enroll_now']  = sprintf(Lang::get('lang_text_enroll_now'), Customer::getFirstname());
+		$data['column_amount']         = sprintf(Lang::get('lang_column_amount'), Config::get('config_currency'));
 
 		$data['commissions'] = array();
 
@@ -211,48 +212,48 @@ class Affiliate extends Controller {
 			'limit' => 10
         );
 
-		$total_commissions = $this->model_account_affiliate->getTotalCommissions();
-		$commissions       = $this->model_account_affiliate->getCommissions($filter);
-		$data['balance']   = $this->currency->format($this->model_account_affiliate->getBalance());
+		$total_commissions = AccountAffiliate::getTotalCommissions();
+		$commissions       = AccountAffiliate::getCommissions($filter);
+		$data['balance']   = Currency::format(AccountAffiliate::getBalance());
         
         foreach ($commissions as $commission):
             $data['commissions'][] = array(
-				'amount'      => $this->currency->format($commission['amount'], $this->config->get('config_currency')), 
+				'amount'      => Currency::format($commission['amount'], Config::get('config_currency')), 
 				'description' => $commission['description'], 
-				'date_added'  => date($this->language->get('lang_date_format_short'), strtotime($commission['date_added']))
+				'date_added'  => date(Lang::get('lang_date_format_short'), strtotime($commission['date_added']))
             );
         endforeach;
 
-        $data['pagination'] = $this->theme->paginate(
+        $data['pagination'] = Theme::paginate(
             $total_commissions, 
             $page, 
             10, 
-            $this->language->get('lang_text_pagination'), 
-            $this->url->link('account/affiliate#tab-commission', 'page={page}', 'SSL')
+            Lang::get('lang_text_pagination'), 
+            Url::link('account/affiliate#tab-commission', 'page={page}', 'SSL')
         );
 
-        $this->theme->loadjs('javascript/account/affiliate', $data);
+        Theme::loadjs('javascript/account/affiliate', $data);
 
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->setController('header', 'shop/header');
-        $this->theme->setController('footer', 'shop/footer');
+        Theme::setController('header', 'shop/header');
+        Theme::setController('footer', 'shop/footer');
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('account/affiliate', $data));
+        Response::setOutput(View::render('account/affiliate', $data));
 	}
 
 	public function autocomplete() {
-        if (!$this->customer->isLogged()):
-            $this->session->data['redirect'] = $this->url->link('account/affiliate', '', 'SSL');
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+        if (!Customer::isLogged()):
+            $this->session->data['redirect'] = Url::link('account/affiliate', '', 'SSL');
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
 
         $json = array();
         
         if (isset($this->request->get['filter_name'])):
-            $this->theme->model('catalog/product');
+            Theme::model('catalog/product');
             
             $filter = array(
 				'filter_name' => $this->request->get['filter_name'], 
@@ -260,107 +261,107 @@ class Affiliate extends Controller {
 				'limit'       => 20
             );
             
-            $results = $this->model_catalog_product->getProducts($filter);
+            $results = CatalogProduct::getProducts($filter);
             
             foreach ($results as $result):
                 $json[] = array(
                 	'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')), 
-                	'link' => str_replace('&amp;', '&', $this->url->link('catalog/product', 'product_id=' . $result['product_id'] . '&z=' . $this->customer->getCode()))
+                	'link' => str_replace('&amp;', '&', Url::link('catalog/product', 'product_id=' . $result['product_id'] . '&z=' . Customer::getCode()))
                 );
             endforeach;
         endif;
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 
     private function validateRegister() {
-    	if ($this->config->get('config_affiliate_terms')):
-            $this->theme->model('content/page');
+    	if (Config::get('config_affiliate_terms')):
+            Theme::model('content/page');
             
-            $page_info = $this->model_content_page->getPage($this->config->get('config_affiliate_terms'));
+            $page_info = ContentPage::getPage(Config::get('config_affiliate_terms'));
             
             if ($page_info && !isset($this->request->post['agree'])):
-                $this->error['warning'] = sprintf($this->language->get('lang_error_agree'), $page_info['title']);
+                $this->error['warning'] = sprintf(Lang::get('lang_error_agree'), $page_info['title']);
             endif;
         endif;
         
         if ($this->error && !isset($this->error['warning'])):
-            $this->error['warning'] = $this->language->get('lang_error_warning');
+            $this->error['warning'] = Lang::get('lang_error_warning');
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
 
 	private function validate() {
-        if ($this->encode->strlen($this->request->post['tax_id']) < 1):
-            $this->error['tax_id'] = $this->language->get('lang_error_tax_id');
+        if (Encode::strlen($this->request->post['tax_id']) < 1):
+            $this->error['tax_id'] = Lang::get('lang_error_tax_id');
         endif;
 
-        if ($this->encode->strlen($this->request->post['slug']) < 1):
-            $this->error['slug'] = $this->language->get('lang_error_slug');
+        if (Encode::strlen($this->request->post['slug']) < 1):
+            $this->error['slug'] = Lang::get('lang_error_slug');
         endif;
 
         if (!$this->request->post['payment_method']):
-            $this->error['payment'] = $this->language->get('lang_error_payment');
+            $this->error['payment'] = Lang::get('lang_error_payment');
         else:
-            if ($this->request->post['payment_method'] == 'cheque' && $this->encode->strlen($this->request->post['cheque']) < 1):
-                $this->error['cheque'] = $this->language->get('lang_error_cheque');
+            if ($this->request->post['payment_method'] == 'cheque' && Encode::strlen($this->request->post['cheque']) < 1):
+                $this->error['cheque'] = Lang::get('lang_error_cheque');
             endif;
 
-            if ($this->request->post['payment_method'] == 'paypal' && $this->encode->strlen($this->request->post['paypal']) < 1):
-                $this->error['paypal'] = $this->language->get('lang_error_paypal');
+            if ($this->request->post['payment_method'] == 'paypal' && Encode::strlen($this->request->post['paypal']) < 1):
+                $this->error['paypal'] = Lang::get('lang_error_paypal');
             endif;
 
-            if ($this->request->post['payment_method'] == 'bank' && $this->encode->strlen($this->request->post['bank_name']) < 1):
-                $this->error['bank_name'] = $this->language->get('lang_error_bank_name');
+            if ($this->request->post['payment_method'] == 'bank' && Encode::strlen($this->request->post['bank_name']) < 1):
+                $this->error['bank_name'] = Lang::get('lang_error_bank_name');
             endif;
 
-            if ($this->request->post['payment_method'] == 'bank' && $this->encode->strlen($this->request->post['bank_account_name']) < 1):
-                $this->error['bank_account_name'] = $this->language->get('lang_error_account_name');
+            if ($this->request->post['payment_method'] == 'bank' && Encode::strlen($this->request->post['bank_account_name']) < 1):
+                $this->error['bank_account_name'] = Lang::get('lang_error_account_name');
             endif;
 
-            if ($this->request->post['payment_method'] == 'bank' && $this->encode->strlen($this->request->post['bank_account_number']) < 1):
-                $this->error['bank_account_number'] = $this->language->get('lang_error_account_number');
+            if ($this->request->post['payment_method'] == 'bank' && Encode::strlen($this->request->post['bank_account_number']) < 1):
+                $this->error['bank_account_number'] = Lang::get('lang_error_account_number');
             endif;
         endif;
         
         if ($this->error && !isset($this->error['warning'])):
-            $this->error['warning'] = $this->language->get('lang_error_warning');
+            $this->error['warning'] = Lang::get('lang_error_warning');
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
 	}
 
     public function slug() {
-        if (!$this->customer->isLogged()):
-            $this->session->data['redirect'] = $this->url->link('account/affiliate', '', 'SSL');
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+        if (!Customer::isLogged()):
+            $this->session->data['redirect'] = Url::link('account/affiliate', '', 'SSL');
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
 
-        $this->language->load('account/affiliate');
-        $this->theme->model('tool/utility');
+        Lang::load('account/affiliate');
+        Theme::model('tool/utility');
         
         $json = array();
         
-        if (!isset($this->request->get['name']) || $this->encode->strlen($this->request->get['name']) < 1):
-            $json['error'] = $this->language->get('lang_error_slug');
+        if (!isset($this->request->get['name']) || Encode::strlen($this->request->get['name']) < 1):
+            $json['error'] = Lang::get('lang_error_slug');
         else:
             
             // build slug
-            $slug = $this->url->build_slug($this->request->get['name']);
+            $slug = Url::build_slug($this->request->get['name']);
             
             // check that the slug is globally unique
-            $query = $this->model_tool_utility->findSlugByName($slug);
+            $query = ToolUtility::findSlugByName($slug);
             
             if ($query):
-                if ($query != 'affiliate_id:' . $this->customer->getId()):
-                    $json['error'] = sprintf($this->language->get('lang_error_slug_found'), $slug);
+                if ($query != 'affiliate_id:' . Customer::getId()):
+                    $json['error'] = sprintf(Lang::get('lang_error_slug_found'), $slug);
                 else:
                     $json['slug'] = $slug;
                 endif;
@@ -369,8 +370,8 @@ class Affiliate extends Controller {
             endif;
         endif;
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

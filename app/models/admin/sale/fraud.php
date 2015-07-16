@@ -21,9 +21,9 @@ use App\Models\Model;
 class Fraud extends Model {
     
     public function getFraud($order_id) {
-        $query = $this->db->query("
+        $query = DB::query("
         	SELECT * 
-        	FROM `{$this->db->prefix}order_fraud` 
+        	FROM `" . DB::prefix() . "order_fraud` 
         	WHERE order_id = '" . (int)$order_id . "'
         ");
         

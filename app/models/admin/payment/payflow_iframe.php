@@ -21,8 +21,8 @@ use App\Models\Model;
 class PayflowIframe extends Model {
     
     public function install() {
-        $this->db->query("
-			CREATE TABLE `{$this->db->prefix}paypal_payflow_iframe_order` (
+        DB::query("
+			CREATE TABLE `" . DB::prefix() . "paypal_payflow_iframe_order` (
 				`order_id` int(11) DEFAULT NULL,
 				`secure_token_id` varchar(255) NOT NULL,
 				`transaction_reference` varchar(255) DEFAULT NULL,
@@ -32,8 +32,8 @@ class PayflowIframe extends Model {
 				KEY `secure_token_id` (`secure_token_id`)
 			) ENGINE=MyISAM DEFAULT COLLATE=utf8_general_ci");
         
-        $this->db->query("
-			CREATE TABLE `{$this->db->prefix}paypal_payflow_iframe_order_transaction` (
+        DB::query("
+			CREATE TABLE `" . DB::prefix() . "paypal_payflow_iframe_order_transaction` (
 				`order_id` int(11) NOT NULL,
 				`transaction_reference` varchar(255) NOT NULL,
 				`transaction_type` char(1) NOT NULL,
@@ -45,8 +45,8 @@ class PayflowIframe extends Model {
     }
     
     public function uninstall() {
-        $this->db->query("DROP TABLE IF EXISTS `{$this->db->prefix}paypal_payflow_iframe_order`;");
-        $this->db->query("DROP TABLE IF EXISTS `{$this->db->prefix}paypal_payflow_iframe_order_transaction`;");
+        DB::query("DROP TABLE IF EXISTS `" . DB::prefix() . "paypal_payflow_iframe_order`;");
+        DB::query("DROP TABLE IF EXISTS `" . DB::prefix() . "paypal_payflow_iframe_order_transaction`;");
     }
     
     public function log($message) {
@@ -57,7 +57,7 @@ class PayflowIframe extends Model {
     }
     
     public function getOrder($order_id) {
-        $result = $this->db->query("SELECT * FROM {$this->db->prefix}paypal_payflow_iframe_order WHERE order_id = " . (int)$order_id);
+        $result = DB::query("SELECT * FROM " . DB::prefix() . "paypal_payflow_iframe_order WHERE order_id = " . (int)$order_id);
         
         if ($result->num_rows) {
             $order = $result->row;
@@ -69,37 +69,37 @@ class PayflowIframe extends Model {
     }
     
     public function updateOrderStatus($order_id, $status) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}paypal_payflow_iframe_order
+        DB::query("
+			UPDATE " . DB::prefix() . "paypal_payflow_iframe_order
 			SET `complete` = " . (int)$status . "
 			WHERE order_id = '" . (int)$order_id . "'
 		");
     }
     
     public function addTransaction($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}paypal_payflow_iframe_order_transaction
+        DB::query("
+			INSERT INTO " . DB::prefix() . "paypal_payflow_iframe_order_transaction
 			SET order_id = " . (int)$data['order_id'] . ",
-				transaction_reference = '" . $this->db->escape($data['transaction_reference']) . "',
-				transaction_type = '" . $this->db->escape($data['type']) . "',
+				transaction_reference = '" . DB::escape($data['transaction_reference']) . "',
+				transaction_type = '" . DB::escape($data['type']) . "',
 				`time` = NOW(),
-				`amount` = '" . $this->db->escape($data['amount']) . "'
+				`amount` = '" . DB::escape($data['amount']) . "'
 		");
     }
     
     public function getTransactions($order_id) {
-        return $this->db->query("
+        return DB::query("
 			SELECT *
-			FROM {$this->db->prefix}paypal_payflow_iframe_order_transaction
+			FROM " . DB::prefix() . "paypal_payflow_iframe_order_transaction
 			WHERE order_id = " . (int)$order_id . "
 			ORDER BY `time` ASC")->rows;
     }
     
     public function getTransaction($transaction_reference) {
-        $result = $this->db->query("
+        $result = DB::query("
 			SELECT *
-			FROM {$this->db->prefix}paypal_payflow_iframe_order_transaction
-			WHERE transaction_reference = '" . $this->db->escape($transaction_reference) . "'")->row;
+			FROM " . DB::prefix() . "paypal_payflow_iframe_order_transaction
+			WHERE transaction_reference = '" . DB::escape($transaction_reference) . "'")->row;
         
         if ($result) {
             $transaction = $result;

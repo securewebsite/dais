@@ -35,10 +35,10 @@ class Backup extends Controller {
             }
             
             if ($content) {
-                $this->model_tool_backup->restore($content);
+                ToolBackup::restore($content);
                 $this->session->data['success'] = Lang::get('lang_text_success');
                 
-                Response::redirect(Url::link('tool/backup', 'token=' . $this->session->data['token'], 'SSL'));
+                Response::redirect(Url::link('tool/backup', '', 'SSL'));
             } else {
                 $this->error['warning'] = Lang::get('lang_error_empty');
             }
@@ -64,15 +64,15 @@ class Backup extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'tool/backup');
         
-        $data['restore'] = Url::link('tool/backup', 'token=' . $this->session->data['token'], 'SSL');
-        $data['backup'] = Url::link('tool/backup/backup', 'token=' . $this->session->data['token'], 'SSL');
-        $data['tables'] = $this->model_tool_backup->getTables();
+        $data['restore'] = Url::link('tool/backup', '', 'SSL');
+        $data['backup'] = Url::link('tool/backup/backup', '', 'SSL');
+        $data['tables'] = ToolBackup::getTables();
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('tool/backup', $data));
+        Response::setOutput(View::render('tool/backup', $data));
     }
     
     public function backup() {
@@ -83,7 +83,7 @@ class Backup extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('tool/backup', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('tool/backup', '', 'SSL'));
         } elseif (User::hasPermission('modify', 'tool/backup')) {
             Response::addheader('Pragma: public');
             Response::addheader('Expires: 0');
@@ -96,13 +96,13 @@ class Backup extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::setOutput($this->model_tool_backup->backup($this->request->post['backup']));
+            Response::setOutput(ToolBackup::backup($this->request->post['backup']));
         } else {
             $this->session->data['error'] = Lang::get('lang_error_permission');
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('tool/backup', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('tool/backup', '', 'SSL'));
         }
     }
 }

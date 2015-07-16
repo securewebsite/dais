@@ -26,7 +26,7 @@ class Breadcrumb {
             
             $this->breadcrumbs[] = array(
                 'text'      => Lang::get('lang_text_dashboard') ,
-                'href'      => \Url::link('common/dashboard', $query, 'SSL') ,
+                'href'      => \Url::link('common/dashboard', '', 'SSL') ,
                 'separator' => false
             );
         else:
@@ -46,7 +46,7 @@ class Breadcrumb {
         endif;
         
         if (Config::get('active.facade') === ADMIN_FACADE):
-            $query  = (!is_null(Session::get('token'))) ? 'token=' . Session::get('token') . $query : $query;
+            //$query  = (!is_null(Session::get('token'))) ? 'token=' . Session::get('token') . $query : $query;
             $url    = \Url::link($route, $query, 'SSL');
         else:
             if ($ssl == 'SSL'):

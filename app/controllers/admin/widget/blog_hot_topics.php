@@ -28,10 +28,10 @@ class BlogHotTopics extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('blog_hot_topics', $this->request->post);
+            SettingSetting::editSetting('blog_hot_topics', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/widget', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -43,8 +43,8 @@ class BlogHotTopics extends Controller {
         Breadcrumb::add('lang_text_widget', 'module/widget');
         Breadcrumb::add('lang_heading_title', 'widget/blog_hot_topics');
         
-        $data['action'] = Url::link('widget/blog_hot_topics', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('widget/blog_hot_topics', '', 'SSL');
+        $data['cancel'] = Url::link('module/widget', '', 'SSL');
         
         $data['widgets'] = array();
         
@@ -56,7 +56,7 @@ class BlogHotTopics extends Controller {
         
         Theme::model('design/layout');
         
-        $data['layouts'] = $this->model_design_layout->getLayouts();
+        $data['layouts'] = DesignLayout::getLayouts();
         
         Theme::loadjs('javascript/widget/blog_hot_topics', $data);
         
@@ -64,7 +64,7 @@ class BlogHotTopics extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('widget/blog_hot_topics', $data));
+        Response::setOutput(View::render('widget/blog_hot_topics', $data));
     }
     
     private function validate() {

@@ -29,16 +29,16 @@ class Setting extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('config', $this->request->post);
+            SettingSetting::editSetting('config', $this->request->post);
             
             if (Config::get('config_currency_auto')) {
                 Theme::model('locale/currency');
-                $this->model_locale_currency->updateCurrencies();
+                LocaleCurrency::updateCurrencies();
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('setting/store', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('setting/store', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -303,10 +303,9 @@ class Setting extends Controller {
             $data['success'] = '';
         }
         
-        $data['action'] = Url::link('setting/setting', 'token=' . $this->session->data['token'], 'SSL');
-        $data['flush']  = Url::link('setting/setting/flush', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = Url::link('setting/store', 'token=' . $this->session->data['token'], 'SSL');
-        $data['token']  = $this->session->data['token'];
+        $data['action'] = Url::link('setting/setting', '', 'SSL');
+        $data['flush']  = Url::link('setting/setting/flush', '', 'SSL');
+        $data['cancel'] = Url::link('setting/store', '', 'SSL');
         
         if (isset($this->request->post['config_name'])) {
             $data['config_name'] = $this->request->post['config_name'];
@@ -396,7 +395,7 @@ class Setting extends Controller {
         
         Theme::model('design/layout');
         
-        $data['layouts'] = $this->model_design_layout->getLayouts();
+        $data['layouts'] = DesignLayout::getLayouts();
         
         if (isset($this->request->post['config_theme'])) {
             $data['config_theme'] = $this->request->post['config_theme'];
@@ -436,7 +435,7 @@ class Setting extends Controller {
         
         Theme::model('locale/country');
         
-        $data['countries'] = $this->model_locale_country->getCountries();
+        $data['countries'] = LocaleCountry::getCountries();
         
         if (isset($this->request->post['config_zone_id'])) {
             $data['config_zone_id'] = $this->request->post['config_zone_id'];
@@ -452,7 +451,7 @@ class Setting extends Controller {
         
         Theme::model('locale/language');
         
-        $data['languages'] = $this->model_locale_language->getLanguages();
+        $data['languages'] = LocaleLanguage::getLanguages();
         
         if (isset($this->request->post['config_admin_language'])) {
             $data['config_admin_language'] = $this->request->post['config_admin_language'];
@@ -474,7 +473,7 @@ class Setting extends Controller {
         
         Theme::model('locale/currency');
         
-        $data['currencies'] = $this->model_locale_currency->getCurrencies();
+        $data['currencies'] = LocaleCurrency::getCurrencies();
         
         if (isset($this->request->post['config_length_class_id'])) {
             $data['config_length_class_id'] = $this->request->post['config_length_class_id'];
@@ -484,7 +483,7 @@ class Setting extends Controller {
         
         Theme::model('locale/length_class');
         
-        $data['length_classes'] = $this->model_locale_length_class->getLengthClasses();
+        $data['length_classes'] = LocaleLengthClass::getLengthClasses();
         
         if (isset($this->request->post['config_weight_class_id'])) {
             $data['config_weight_class_id'] = $this->request->post['config_weight_class_id'];
@@ -494,7 +493,7 @@ class Setting extends Controller {
         
         Theme::model('locale/weight_class');
         
-        $data['weight_classes'] = $this->model_locale_weight_class->getWeightClasses();
+        $data['weight_classes'] = LocaleWeightClass::getWeightClasses();
         
         if (isset($this->request->post['config_catalog_limit'])) {
             $data['config_catalog_limit'] = $this->request->post['config_catalog_limit'];
@@ -583,7 +582,7 @@ class Setting extends Controller {
         Theme::model('people/customer_group');
         
         // assign to local variable so we can use it later
-        $customer_groups = $this->model_people_customer_group->getCustomerGroups();
+        $customer_groups = PeopleCustomerGroup::getCustomerGroups();
         
         $data['customer_groups'] = $customer_groups;
         
@@ -693,7 +692,7 @@ class Setting extends Controller {
         
         Theme::model('people/user_group');
         
-        $data['user_groups'] = $this->model_people_user_group->getUserGroups();
+        $data['user_groups'] = PeopleUserGroup::getUserGroups();
         
         if (isset($this->request->post['config_account_id'])) {
             $data['config_account_id'] = $this->request->post['config_account_id'];
@@ -703,7 +702,7 @@ class Setting extends Controller {
         
         Theme::model('content/page');
         
-        $data['pages'] = $this->model_content_page->getPages();
+        $data['pages'] = ContentPage::getPages();
         
         if (isset($this->request->post['config_home_page'])) {
             $data['config_home_page'] = $this->request->post['config_home_page'];
@@ -759,7 +758,7 @@ class Setting extends Controller {
         
         Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
+        $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
         if (isset($this->request->post['config_stock_display'])) {
             $data['config_stock_display'] = $this->request->post['config_stock_display'];
@@ -787,7 +786,7 @@ class Setting extends Controller {
         
         Theme::model('locale/stock_status');
         
-        $data['stock_statuses'] = $this->model_locale_stock_status->getStockStatuses();
+        $data['stock_statuses'] = LocaleStockStatus::getStockStatuses();
         
         if (isset($this->request->post['config_affiliate_allowed'])) {
             $data['config_affiliate_allowed'] = $this->request->post['config_affiliate_allowed'];
@@ -823,7 +822,7 @@ class Setting extends Controller {
         
         Theme::model('locale/return_status');
         
-        $data['return_statuses'] = $this->model_locale_return_status->getReturnStatuses();
+        $data['return_statuses'] = LocaleReturnStatus::getReturnStatuses();
         
         Theme::model('tool/image');
         
@@ -834,9 +833,9 @@ class Setting extends Controller {
         }
         
         if (Config::get('config_logo') && file_exists(Config::get('path.image') . Config::get('config_logo')) && is_file(Config::get('path.image') . Config::get('config_logo'))) {
-            $data['logo'] = $this->model_tool_image->resize(Config::get('config_logo'), 100, 100);
+            $data['logo'] = ToolImage::resize(Config::get('config_logo'), 100, 100);
         } else {
-            $data['logo'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+            $data['logo'] = ToolImage::resize('placeholder.png', 100, 100);
         }
         
         if (isset($this->request->post['config_icon'])) {
@@ -846,12 +845,12 @@ class Setting extends Controller {
         }
         
         if (Config::get('config_icon') && file_exists(Config::get('path.image') . Config::get('config_icon')) && is_file(Config::get('path.image') . Config::get('config_icon'))) {
-            $data['icon'] = $this->model_tool_image->resize(Config::get('config_icon'), 100, 100);
+            $data['icon'] = ToolImage::resize(Config::get('config_icon'), 100, 100);
         } else {
-            $data['icon'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+            $data['icon'] = ToolImage::resize('placeholder.png', 100, 100);
         }
         
-        $data['no_image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+        $data['no_image'] = ToolImage::resize('placeholder.png', 100, 100);
         
         if (isset($this->request->post['config_image_category_width'])) {
             $data['config_image_category_width'] = $this->request->post['config_image_category_width'];
@@ -1049,7 +1048,7 @@ class Setting extends Controller {
 
         Theme::model('people/user');
 
-        $users = $this->model_people_user->getUsers();
+        $users = PeopleUser::getUsers();
 
         $data['users'] = array();
 
@@ -1259,7 +1258,7 @@ class Setting extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('setting/setting', $data));
+        Response::setOutput(View::render('setting/setting', $data));
     }
     
     protected function validate() {
@@ -1457,7 +1456,7 @@ class Setting extends Controller {
             
             $filter = array('filter_username' => $filter_username, 'filter_name' => $filter_name, 'filter_customer_group_id' => Config::get('config_top_customer'), 'filter_status' => 1, 'start' => 0, 'limit' => 20);
             
-            $results = $this->model_people_customer->getCustomers($filter);
+            $results = PeopleCustomer::getCustomers($filter);
             
             foreach ($results as $result) {
                 $json[] = array('customer_id' => $result['customer_id'], 'username' => $result['username'], 'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')));
@@ -1514,12 +1513,12 @@ class Setting extends Controller {
         
         Theme::model('locale/country');
         
-        $country_info = $this->model_locale_country->getCountry($this->request->get['country_id']);
+        $country_info = LocaleCountry::getCountry($this->request->get['country_id']);
         
         if ($country_info) {
             Theme::model('locale/zone');
             
-            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => $this->model_locale_zone->getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
+            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => LocaleZone::getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
         }
         
         $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
@@ -1530,11 +1529,11 @@ class Setting extends Controller {
     public function flush() {
         Lang::load('setting/setting');
         
-        $this->cache->flush_cache();
-        $this->filecache->flush_cache();
+        Cache::flush_cache();
+        Filecache::flush_cache();
         
         $this->session->data['success'] = Lang::get('lang_text_flush_success');
         
-        Response::redirect(Url::link('setting/setting', 'token=' . $this->session->data['token']));
+        Response::redirect(Url::link('setting/setting', ''));
     }
 }

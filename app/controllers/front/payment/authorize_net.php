@@ -15,11 +15,13 @@
 */
 
 namespace App\Controllers\Front\Payment;
+
 use App\Controllers\Controller;
 
 class AuthorizeNet extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('payment/authorize_net');
+        $data = Theme::language('payment/authorize_net');
         
         $data['months'] = array();
         
@@ -35,30 +37,30 @@ class AuthorizeNet extends Controller {
             $data['year_expire'][] = array('text' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)), 'value' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)));
         }
         
-        $this->theme->loadjs('javascript/payment/authorize_net', $data);
+        Theme::loadjs('javascript/payment/authorize_net', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data['javascript'] = $this->theme->controller('common/javascript');
+        $data['javascript'] = Theme::controller('common/javascript');
         
-        return $this->theme->view('payment/authorize_net', $data);
+        return View::render('payment/authorize_net', $data);
     }
     
     public function send() {
-        if ($this->config->get('authorize_net_server') == 'live') {
+        if (Config::get('authorize_net_server') == 'live') {
             $url = 'https://secure.authorize.net/gateway/transact.dll';
-        } elseif ($this->config->get('authorize_net_server') == 'test') {
+        } elseif (Config::get('authorize_net_server') == 'test') {
             $url = 'https://test.authorize.net/gateway/transact.dll';
         }
         
-        $this->theme->model('checkout/order');
+        Theme::model('checkout/order');
         
-        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        $order_info = CheckoutOrder::getOrder($this->session->data['order_id']);
         
         $send = array();
         
-        $send['x_login'] = $this->config->get('authorize_net_login');
-        $send['x_tran_key'] = $this->config->get('authorize_net_key');
+        $send['x_login'] = Config::get('authorize_net_login');
+        $send['x_tran_key'] = Config::get('authorize_net_key');
         $send['x_version'] = '3.1';
         $send['x_delim_data'] = 'true';
         $send['x_delim_char'] = ',';
@@ -75,11 +77,11 @@ class AuthorizeNet extends Controller {
         $send['x_phone'] = $order_info['telephone'];
         $send['x_customer_ip'] = $this->request->server['REMOTE_ADDR'];
         $send['x_email'] = $order_info['email'];
-        $send['x_description'] = html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8');
-        $send['x_amount'] = $this->currency->format($order_info['total'], $order_info['currency_code'], 1.00000, false);
-        $send['x_currency_code'] = $this->currency->getCode();
+        $send['x_description'] = html_entity_decode(Config::get('config_name'), ENT_QUOTES, 'UTF-8');
+        $send['x_amount'] = Currency::format($order_info['total'], $order_info['currency_code'], 1.00000, false);
+        $send['x_currency_code'] = Currency::getCode();
         $send['x_method'] = 'CC';
-        $send['x_type'] = ($this->config->get('authorize_net_method') == 'capture') ? 'AUTH_CAPTURE' : 'AUTH_ONLY';
+        $send['x_type'] = (Config::get('authorize_net_method') == 'capture') ? 'AUTH_CAPTURE' : 'AUTH_ONLY';
         $send['x_card_num'] = str_replace(' ', '', $this->request->post['cc_number']);
         $send['x_exp_date'] = $this->request->post['cc_expire_date_month'] . $this->request->post['cc_expire_date_year'];
         $send['x_card_code'] = $this->request->post['cc_cvv2'];
@@ -96,7 +98,7 @@ class AuthorizeNet extends Controller {
         $send['x_ship_to_zip'] = html_entity_decode($order_info['shipping_postcode'], ENT_QUOTES, 'UTF-8');
         $send['x_ship_to_country'] = html_entity_decode($order_info['shipping_country'], ENT_QUOTES, 'UTF-8');
         
-        if ($this->config->get('authorize_net_mode') == 'test') {
+        if (Config::get('authorize_net_mode') == 'test') {
             $send['x_test_request'] = 'true';
         }
         
@@ -135,8 +137,8 @@ class AuthorizeNet extends Controller {
             }
             
             if ($response_info[1] == '1') {
-                if (strtoupper($response_info[38]) == strtoupper(md5($this->config->get('authorize_net_hash') . $this->config->get('authorize_net_login') . $response_info[7] . $this->currency->format($order_info['total'], $order_info['currency_code'], 1.00000, false)))) {
-                    $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('config_order_status_id'));
+                if (strtoupper($response_info[38]) == strtoupper(md5(Config::get('authorize_net_hash') . Config::get('authorize_net_login') . $response_info[7] . Currency::format($order_info['total'], $order_info['currency_code'], 1.00000, false)))) {
+                    CheckoutOrder::confirm($this->session->data['order_id'], Config::get('config_order_status_id'));
                     
                     $message = '';
                     
@@ -160,10 +162,10 @@ class AuthorizeNet extends Controller {
                         $message.= 'Cardholder Authentication Verification Response: ' . $response_info['40'] . "\n";
                     }
                     
-                    $this->model_checkout_order->update($this->session->data['order_id'], $this->config->get('authorize_net_order_status_id'), $message);
+                    CheckoutOrder::update($this->session->data['order_id'], Config::get('authorize_net_order_status_id'), $message);
                 }
                 
-                $json['success'] = $this->url->link('checkout/success', '', 'SSL');
+                $json['success'] = Url::link('checkout/success', '', 'SSL');
             } else {
                 $json['error'] = $response_info[4];
             }
@@ -175,8 +177,8 @@ class AuthorizeNet extends Controller {
         
         curl_close($curl);
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

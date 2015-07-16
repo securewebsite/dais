@@ -30,11 +30,11 @@ class PaypalProUk extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('paypal_pro_uk', $this->request->post);
+            SettingSetting::editSetting('paypal_pro_uk', $this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/payment', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -64,9 +64,9 @@ class PaypalProUk extends Controller {
         Breadcrumb::add('lang_text_payment', 'module/payment');
         Breadcrumb::add('lang_heading_title', 'payment/paypal_pro_uk');
         
-        $data['action'] = Url::link('payment/paypal_pro_uk', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('payment/paypal_pro_uk', '', 'SSL');
         
-        $data['cancel'] = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/payment', '', 'SSL');
         
         if (isset($this->request->post['paypal_pro_uk_username'])) {
             $data['paypal_pro_uk_username'] = $this->request->post['paypal_pro_uk_username'];
@@ -112,7 +112,7 @@ class PaypalProUk extends Controller {
         
         Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
+        $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
         if (isset($this->request->post['paypal_pro_uk_geo_zone_id'])) {
             $data['paypal_pro_uk_geo_zone_id'] = $this->request->post['paypal_pro_uk_geo_zone_id'];
@@ -122,7 +122,7 @@ class PaypalProUk extends Controller {
         
         Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
+        $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
         if (isset($this->request->post['paypal_pro_uk_status'])) {
             $data['paypal_pro_uk_status'] = $this->request->post['paypal_pro_uk_status'];
@@ -140,7 +140,7 @@ class PaypalProUk extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('payment/paypal_pro_uk', $data));
+        Response::setOutput(View::render('payment/paypal_pro_uk', $data));
     }
     
     private function validate() {

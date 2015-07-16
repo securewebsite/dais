@@ -116,9 +116,9 @@ class Naming {
 		$theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'models' . SEP;
 
         if (is_readable($file = $theme_path . $model . '.php')):
-            return self::class_from_filename($file);
+            return static::class_from_filename($file);
         else:
-            return self::class_from_filename($base_path . $model . '.php');
+            return static::class_from_filename($base_path . $model . '.php');
         endif;
 	}
 
@@ -127,9 +127,9 @@ class Naming {
 		$plugin_path = Config::get('path.app') . Config::get('prefix.plugin') . SEP . $plugin . SEP . Config::get('prefix.facade') . 'model' . SEP;
 
 		if (is_readable($file = $plugin_path . $model . '.php')):
-            return self::class_from_filename($file);
+            return static::class_from_filename($file);
         else:
-            return self::class_from_filename($base_path . $model . '.php');
+            return static::class_from_filename($base_path . $model . '.php');
         endif;
 	}
 
@@ -138,9 +138,33 @@ class Naming {
 		$theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controllers' . SEP;
         
         if (is_readable($file = $theme_path . $route . '.php')):
-            return self::class_from_filename($file);
+            return static::class_from_filename($file);
         else:
-            return self::class_from_filename($base_path . $route . '.php');
+            return static::class_from_filename($base_path . $route . '.php');
         endif;
+	}
+
+	public static function studly_case($word) {
+		return str_replace(' ', '', ucwords(str_replace(['/', '_', '-'], ' ', $word)));
+	}
+
+	public static function train_case ($word) {
+		return strtolower(preg_replace('/(?|([a-z\d])([A-Z])|([^\^])([A-Z][a-z]))/', '$1_$2', $word));
+	}
+
+	public static function model_key($model) {
+		return 'model_' . str_replace(SEP, '_', $model);
+	}
+
+	public static function model_alias($class) {
+		$segments = explode('\\', $class);
+
+		$file   = array_pop($segments);
+		$prefix = array_pop($segments);
+
+		$segments[] = 'Facades';
+		$segments[] = $prefix . $file;
+
+		return implode('\\', $segments);
 	}
 }

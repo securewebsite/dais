@@ -16,68 +16,70 @@
 
 
 namespace App\Controllers\Front\Account;
+
 use App\Controllers\Controller;
 
 class Address extends Controller {
+    
     private $error = array();
     
     public function index() {
-        if (!$this->customer->isLogged()) {
-            $this->session->data['redirect'] = $this->url->link('account/address', '', 'SSL');
+        if (!Customer::isLogged()) {
+            $this->session->data['redirect'] = Url::link('account/address', '', 'SSL');
             
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         }
         
-        $this->theme->language('account/address');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('account/address');
+        Theme::language('account/address');
+        Theme::setTitle(Lang::get('lang_heading_title'));
+        Theme::model('account/address');
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     public function insert() {
-        if (!$this->customer->isLogged()) {
-            $this->session->data['redirect'] = $this->url->link('account/address', '', 'SSL');
+        if (!Customer::isLogged()) {
+            $this->session->data['redirect'] = Url::link('account/address', '', 'SSL');
             
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         }
         
-        $this->theme->language('account/address');
+        Theme::language('account/address');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
-        $this->theme->model('account/address');
+        Theme::model('account/address');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_account_address->addAddress($this->request->post);
+            AccountAddress::addAddress($this->request->post);
             
-            $this->session->data['success'] = $this->language->get('lang_text_insert');
+            $this->session->data['success'] = Lang::get('lang_text_insert');
             
-            $this->response->redirect($this->url->link('account/address', '', 'SSL'));
+            Response::redirect(Url::link('account/address', '', 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function update() {
-        if (!$this->customer->isLogged()) {
-            $this->session->data['redirect'] = $this->url->link('account/address', '', 'SSL');
+        if (!Customer::isLogged()) {
+            $this->session->data['redirect'] = Url::link('account/address', '', 'SSL');
             
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         }
         
-        $this->theme->language('account/address');
+        Theme::language('account/address');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
-        $this->theme->model('account/address');
+        Theme::model('account/address');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_account_address->editAddress($this->request->get['address_id'], $this->request->post);
+            AccountAddress::editAddress($this->request->get['address_id'], $this->request->post);
             
             // Default Shipping Address
             if (isset($this->session->data['shipping_address_id']) && ($this->request->get['address_id'] == $this->session->data['shipping_address_id'])) {
@@ -98,35 +100,35 @@ class Address extends Controller {
                 unset($this->session->data['payment_methods']);
             }
             
-            $this->session->data['success'] = $this->language->get('lang_text_update');
+            $this->session->data['success'] = Lang::get('lang_text_update');
             
             if (!$this->session->data['address_complete']):
                 $this->session->data['address_complete'] = true;
             endif;
             
-            $this->response->redirect($this->url->link('account/address', '', 'SSL'));
+            Response::redirect(Url::link('account/address', '', 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getForm();
     }
     
     public function delete() {
-        if (!$this->customer->isLogged()) {
-            $this->session->data['redirect'] = $this->url->link('account/address', '', 'SSL');
+        if (!Customer::isLogged()) {
+            $this->session->data['redirect'] = Url::link('account/address', '', 'SSL');
             
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         }
         
-        $this->theme->language('account/address');
+        Theme::language('account/address');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
-        $this->theme->model('account/address');
+        Theme::model('account/address');
         
         if (isset($this->request->get['address_id']) && $this->validateDelete()) {
-            $this->model_account_address->deleteAddress($this->request->get['address_id']);
+            AccountAddress::deleteAddress($this->request->get['address_id']);
             
             // Default Shipping Address
             if (isset($this->session->data['shipping_address_id']) && ($this->request->get['address_id'] == $this->session->data['shipping_address_id'])) {
@@ -147,21 +149,21 @@ class Address extends Controller {
                 unset($this->session->data['payment_methods']);
             }
             
-            $this->session->data['success'] = $this->language->get('lang_text_delete');
+            $this->session->data['success'] = Lang::get('lang_text_delete');
             
-            $this->response->redirect($this->url->link('account/address', '', 'SSL'));
+            Response::redirect(Url::link('account/address', '', 'SSL'));
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         $this->getList();
     }
     
     protected function getList() {
-        $data = $this->theme->language('account/address');
+        $data = Theme::language('account/address');
         
-        $this->breadcrumb->add('lang_text_account', 'account/dashboard', null, true, 'SSL');
-        $this->breadcrumb->add('lang_heading_title', 'account/address', null, true, 'SSL');
+        Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
+        Breadcrumb::add('lang_heading_title', 'account/address', null, true, 'SSL');
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -179,7 +181,7 @@ class Address extends Controller {
         
         $data['addresses'] = array();
         
-        $results = $this->model_account_address->getAddresses();
+        $results = AccountAddress::getAddresses();
         
         foreach ($results as $result) {
             if ($result['address_format']) {
@@ -217,34 +219,34 @@ class Address extends Controller {
             $data['addresses'][] = array(
                 'address_id' => $result['address_id'], 
                 'address'    => str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format)))), 
-                'update'     => $this->url->link('account/address/update', 'address_id=' . $result['address_id'], 'SSL'), 
-                'delete'     => $this->url->link('account/address/delete', 'address_id=' . $result['address_id'], 'SSL')
+                'update'     => Url::link('account/address/update', 'address_id=' . $result['address_id'], 'SSL'), 
+                'delete'     => Url::link('account/address/delete', 'address_id=' . $result['address_id'], 'SSL')
             );
         }
         
-        $data['insert'] = $this->url->link('account/address/insert', '', 'SSL');
-        $data['back']   = $this->url->link('account/dashboard', '', 'SSL');
+        $data['insert'] = Url::link('account/address/insert', '', 'SSL');
+        $data['back']   = Url::link('account/dashboard', '', 'SSL');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->setController('header', 'shop/header');
-        $this->theme->setController('footer', 'shop/footer');
+        Theme::setController('header', 'shop/header');
+        Theme::setController('footer', 'shop/footer');
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('account/address_list', $data));
+        Response::setOutput(View::render('account/address_list', $data));
     }
     
     protected function getForm() {
-        $data = $this->theme->language('account/address');
+        $data = Theme::language('account/address');
         
-        $this->breadcrumb->add('lang_text_account', 'account/dashboard', null, true, 'SSL');
-        $this->breadcrumb->add('lang_heading_title', 'account/address', null, true, 'SSL');
+        Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
+        Breadcrumb::add('lang_heading_title', 'account/address', null, true, 'SSL');
         
         if (!isset($this->request->get['address_id'])) {
-            $this->breadcrumb->add('lang_text_edit_address', 'account/address/edit', null, true, 'SSL');
+            Breadcrumb::add('lang_text_edit_address', 'account/address/edit', null, true, 'SSL');
         } else {
-            $this->breadcrumb->add('lang_text_edit_address', 'account/address/edit', 'address_id=' . $this->request->get['address_id'], true, 'SSL');
+            Breadcrumb::add('lang_text_edit_address', 'account/address/edit', 'address_id=' . $this->request->get['address_id'], true, 'SSL');
         }
         
         if (isset($this->error['firstname'])) {
@@ -302,13 +304,13 @@ class Address extends Controller {
         }
         
         if (!isset($this->request->get['address_id'])) {
-            $data['action'] = $this->url->link('account/address/insert', '', 'SSL');
+            $data['action'] = Url::link('account/address/insert', '', 'SSL');
         } else {
-            $data['action'] = $this->url->link('account/address/update', 'address_id=' . $this->request->get['address_id'], 'SSL');
+            $data['action'] = Url::link('account/address/update', 'address_id=' . $this->request->get['address_id'], 'SSL');
         }
         
         if (isset($this->request->get['address_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $address_info = $this->model_account_address->getAddress($this->request->get['address_id']);
+            $address_info = AccountAddress::getAddress($this->request->get['address_id']);
         }
         
         if (isset($this->request->post['firstname'])) {
@@ -351,9 +353,9 @@ class Address extends Controller {
             $data['tax_id'] = '';
         }
         
-        $this->theme->model('account/customer_group');
+        Theme::model('account/customer_group');
         
-        $customer_group_info = $this->model_account_customer_group->getCustomerGroup($this->customer->getGroupId());
+        $customer_group_info = AccountCustomerGroup::getCustomerGroup(Customer::getGroupId());
         
         if ($customer_group_info) {
             $data['company_id_display'] = $customer_group_info['company_id_display'];
@@ -404,7 +406,7 @@ class Address extends Controller {
         } elseif (!empty($address_info)) {
             $data['country_id'] = $address_info['country_id'];
         } else {
-            $data['country_id'] = $this->config->get('config_country_id');
+            $data['country_id'] = Config::get('config_country_id');
         }
         
         if (isset($this->request->post['zone_id'])) {
@@ -415,86 +417,86 @@ class Address extends Controller {
             $data['zone_id'] = '';
         }
         
-        $data['params'] = htmlentities('{"zone_id":"' . $data['zone_id'] . '","select":"' . $this->language->get('lang_text_select') . '","none":"' . $this->language->get('lang_text_none') . '"}');
+        $data['params'] = htmlentities('{"zone_id":"' . $data['zone_id'] . '","select":"' . Lang::get('lang_text_select') . '","none":"' . Lang::get('lang_text_none') . '"}');
         
-        $this->theme->model('locale/country');
+        Theme::model('locale/country');
         
-        $data['countries'] = $this->model_locale_country->getCountries();
+        $data['countries'] = LocaleCountry::getCountries();
         
         if (isset($this->request->post['default'])) {
             $data['default'] = $this->request->post['default'];
         } elseif (isset($this->request->get['address_id'])) {
-            $data['default'] = $this->customer->getAddressId() == $this->request->get['address_id'];
+            $data['default'] = Customer::getAddressId() == $this->request->get['address_id'];
         } else {
             $data['default'] = false;
         }
         
-        $data['back'] = $this->url->link('account/address', '', 'SSL');
+        $data['back'] = Url::link('account/address', '', 'SSL');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->setController('header', 'shop/header');
-        $this->theme->setController('footer', 'shop/footer');
+        Theme::setController('header', 'shop/header');
+        Theme::setController('footer', 'shop/footer');
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('account/address_form', $data));
+        Response::setOutput(View::render('account/address_form', $data));
     }
     
     protected function validateForm() {
-        if (($this->encode->strlen($this->request->post['firstname']) < 1) || ($this->encode->strlen($this->request->post['firstname']) > 32)) {
-            $this->error['firstname'] = $this->language->get('lang_error_firstname');
+        if ((Encode::strlen($this->request->post['firstname']) < 1) || (Encode::strlen($this->request->post['firstname']) > 32)) {
+            $this->error['firstname'] = Lang::get('lang_error_firstname');
         }
         
-        if (($this->encode->strlen($this->request->post['lastname']) < 1) || ($this->encode->strlen($this->request->post['lastname']) > 32)) {
-            $this->error['lastname'] = $this->language->get('lang_error_lastname');
+        if ((Encode::strlen($this->request->post['lastname']) < 1) || (Encode::strlen($this->request->post['lastname']) > 32)) {
+            $this->error['lastname'] = Lang::get('lang_error_lastname');
         }
         
-        if (($this->encode->strlen($this->request->post['address_1']) < 3) || ($this->encode->strlen($this->request->post['address_1']) > 128)) {
-            $this->error['address_1'] = $this->language->get('lang_error_address_1');
+        if ((Encode::strlen($this->request->post['address_1']) < 3) || (Encode::strlen($this->request->post['address_1']) > 128)) {
+            $this->error['address_1'] = Lang::get('lang_error_address_1');
         }
         
-        if (($this->encode->strlen($this->request->post['city']) < 2) || ($this->encode->strlen($this->request->post['city']) > 128)) {
-            $this->error['city'] = $this->language->get('lang_error_city');
+        if ((Encode::strlen($this->request->post['city']) < 2) || (Encode::strlen($this->request->post['city']) > 128)) {
+            $this->error['city'] = Lang::get('lang_error_city');
         }
         
-        $this->theme->model('locale/country');
+        Theme::model('locale/country');
         
-        $country_info = $this->model_locale_country->getCountry($this->request->post['country_id']);
+        $country_info = LocaleCountry::getCountry($this->request->post['country_id']);
         
         if ($country_info) {
-            if ($country_info['postcode_required'] && ($this->encode->strlen($this->request->post['postcode']) < 2) || ($this->encode->strlen($this->request->post['postcode']) > 10)) {
-                $this->error['postcode'] = $this->language->get('lang_error_postcode');
+            if ($country_info['postcode_required'] && (Encode::strlen($this->request->post['postcode']) < 2) || (Encode::strlen($this->request->post['postcode']) > 10)) {
+                $this->error['postcode'] = Lang::get('lang_error_postcode');
             }
             
-            if ($this->config->get('config_vat') && !empty($this->request->post['tax_id']) && ($this->vat->validate($country_info['iso_code_2'], $this->request->post['tax_id']) == 'invalid')) {
-                $this->error['tax_id'] = $this->language->get('lang_error_vat');
+            if (Config::get('config_vat') && !empty($this->request->post['tax_id']) && ($this->vat->validate($country_info['iso_code_2'], $this->request->post['tax_id']) == 'invalid')) {
+                $this->error['tax_id'] = Lang::get('lang_error_vat');
             }
         }
         
         if ($this->request->post['country_id'] == '') {
-            $this->error['country'] = $this->language->get('lang_error_country');
+            $this->error['country'] = Lang::get('lang_error_country');
         }
         
         if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] == '') {
-            $this->error['zone'] = $this->language->get('lang_error_zone');
+            $this->error['zone'] = Lang::get('lang_error_zone');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
     
     protected function validateDelete() {
-        if ($this->model_account_address->getTotalAddresses() == 1) {
-            $this->error['warning'] = $this->language->get('lang_error_delete');
+        if (AccountAddress::getTotalAddresses() == 1) {
+            $this->error['warning'] = Lang::get('lang_error_delete');
         }
         
-        if ($this->customer->getAddressId() == $this->request->get['address_id']) {
-            $this->error['warning'] = $this->language->get('lang_error_default');
+        if (Customer::getAddressId() == $this->request->get['address_id']) {
+            $this->error['warning'] = Lang::get('lang_error_default');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
@@ -502,18 +504,18 @@ class Address extends Controller {
     public function country() {
         $json = array();
         
-        $this->theme->model('locale/country');
+        Theme::model('locale/country');
         
-        $country_info = $this->model_locale_country->getCountry($this->request->get['country_id']);
+        $country_info = LocaleCountry::getCountry($this->request->get['country_id']);
         
         if ($country_info) {
-            $this->theme->model('locale/zone');
+            Theme::model('locale/zone');
             
-            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => $this->model_locale_zone->getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
+            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => LocaleZone::getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

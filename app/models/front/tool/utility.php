@@ -19,9 +19,9 @@ use App\Models\Model;
 
 class Utility extends Model {
 	public function getUnreadCustomerNotifications($customer_id) {
-		$query = $this->db->query("
+		$query = DB::query("
 			SELECT COUNT(notification_id) AS total 
-			FROM {$this->db->prefix}customer_inbox 
+			FROM " . DB::prefix() . "customer_inbox 
 			WHERE customer_id = '" . (int)$customer_id . "' 
 			AND is_read = '0'");
 
@@ -29,9 +29,9 @@ class Utility extends Model {
 	}
 
 	public function getUnreadAffiliateNotifications($affiliate_id) {
-		$query = $this->db->query("
+		$query = DB::query("
 			SELECT COUNT(notification_id) AS total 
-			FROM {$this->db->prefix}affiliate_inbox 
+			FROM " . DB::prefix() . "affiliate_inbox 
 			WHERE affiliate_id = '" . (int)$affiliate_id . "' 
 			AND is_read = '0'");
 
@@ -39,44 +39,44 @@ class Utility extends Model {
 	}
 
 	public function findSlugByName($slug) {
-		$query = $this->db->query("
+		$query = DB::query("
 			SELECT query 
-			FROM {$this->db->prefix}affiliate_route 
-			WHERE slug = '" . $this->db->escape($slug) . "' 
+			FROM " . DB::prefix() . "affiliate_route 
+			WHERE slug = '" . DB::escape($slug) . "' 
 			UNION ALL 
 			SELECT query 
-			FROM {$this->db->prefix}route 
-			WHERE slug = '" . $this->db->escape($slug) . "' 
+			FROM " . DB::prefix() . "route 
+			WHERE slug = '" . DB::escape($slug) . "' 
 			UNION ALL 
 			SELECT query 
-			FROM {$this->db->prefix}vanity_route 
-			WHERE slug = '" . $this->db->escape($slug) . "'
+			FROM " . DB::prefix() . "vanity_route 
+			WHERE slug = '" . DB::escape($slug) . "'
 		");
 
 		return ($query->num_rows) ? $query->row['query'] : false;
     }
 
     public function getNewCustomerDetail ($customer_id, $address_id) {
-    	$user = $this->db->query("
+    	$user = DB::query("
     		SELECT username, email 
-    		FROM {$this->db->prefix}customer 
+    		FROM " . DB::prefix() . "customer 
     		WHERE customer_id = '" . (int)$customer_id . "'
     	");
 
 		$username = $user->row['username'];
 		$email    = $user->row['email'];
 
-		$address_query = $this->db->query("
+		$address_query = DB::query("
             SELECT DISTINCT * 
-            FROM {$this->db->prefix}address 
+            FROM " . DB::prefix() . "address 
             WHERE address_id = '" . (int)$address_id . "' 
             AND customer_id  = '" . (int)$customer_id . "'
         ");
         
         if ($address_query->num_rows):
-            $country_query = $this->db->query("
+            $country_query = DB::query("
                 SELECT * 
-                FROM `{$this->db->prefix}country` 
+                FROM `" . DB::prefix() . "country` 
                 WHERE country_id = '" . (int)$address_query->row['country_id'] . "'
             ");
             
@@ -86,9 +86,9 @@ class Utility extends Model {
 				$country = '';
             endif;
             
-            $zone_query = $this->db->query("
+            $zone_query = DB::query("
                 SELECT * 
-                FROM `{$this->db->prefix}zone` 
+                FROM `" . DB::prefix() . "zone` 
                 WHERE zone_id = '" . (int)$address_query->row['zone_id'] . "'
             ");
             
@@ -123,8 +123,8 @@ class Utility extends Model {
      */
     
     public function pruneQueue() {
-    	$this->db->query("
-    		DELETE FROM {$this->db->prefix}notification_queue 
+    	DB::query("
+    		DELETE FROM " . DB::prefix() . "notification_queue 
     		WHERE sent = '1'");
     }
 
@@ -135,9 +135,9 @@ class Utility extends Model {
     		$status = 0;
     	endif;
 
-    	$query = $this->db->query("
+    	$query = DB::query("
     		SELECT * 
-    		FROM {$this->db->prefix}notification_queue 
+    		FROM " . DB::prefix() . "notification_queue 
     		WHERE sent = '" . (int)$status . "' LIMIT 0, 50
     	");
 
@@ -145,8 +145,8 @@ class Utility extends Model {
     }
 
     public function updateQueue($queue_id) {
-    	$this->db->query("
-    		UPDATE {$this->db->prefix}notification_queue 
+    	DB::query("
+    		UPDATE " . DB::prefix() . "notification_queue 
     		SET 
 				sent      = '1', 
 				date_sent = NOW() 

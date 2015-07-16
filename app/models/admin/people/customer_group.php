@@ -21,8 +21,8 @@ use App\Models\Model;
 class CustomerGroup extends Model {
     
     public function addCustomerGroup($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}customer_group 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "customer_group 
 			SET 
 				approval = '" . (int)$data['approval'] . "', 
 				company_id_display = '" . (int)$data['company_id_display'] . "', 
@@ -32,25 +32,25 @@ class CustomerGroup extends Model {
 				sort_order = '" . (int)$data['sort_order'] . "'
 		");
         
-        $customer_group_id = $this->db->getLastId();
+        $customer_group_id = DB::getLastId();
         
         foreach ($data['customer_group_description'] as $language_id => $value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}customer_group_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "customer_group_description 
 				SET 
 					customer_group_id = '" . (int)$customer_group_id . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($value['name']) . "', 
-					description = '" . $this->db->escape($value['description']) . "'
+					name = '" . DB::escape($value['name']) . "', 
+					description = '" . DB::escape($value['description']) . "'
 			");
         }
         
-        $this->cache->delete('customer_group');
+        Cache::delete('customer_group');
     }
     
     public function editCustomerGroup($customer_group_id, $data) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}customer_group 
+        DB::query("
+			UPDATE " . DB::prefix() . "customer_group 
 			SET 
 				approval = '" . (int)$data['approval'] . "', 
 				company_id_display = '" . (int)$data['company_id_display'] . "', 
@@ -61,53 +61,53 @@ class CustomerGroup extends Model {
 			WHERE customer_group_id = '" . (int)$customer_group_id . "'
 		");
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}customer_group_description 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "customer_group_description 
             WHERE customer_group_id = '" . (int)$customer_group_id . "'");
         
         foreach ($data['customer_group_description'] as $language_id => $value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}customer_group_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "customer_group_description 
 				SET 
 					customer_group_id = '" . (int)$customer_group_id . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($value['name']) . "', 
-					description = '" . $this->db->escape($value['description']) . "'
+					name = '" . DB::escape($value['name']) . "', 
+					description = '" . DB::escape($value['description']) . "'
 			");
         }
         
-        $this->cache->delete('customer_group');
+        Cache::delete('customer_group');
     }
     
     public function deleteCustomerGroup($customer_group_id) {
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}customer_group 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "customer_group 
             WHERE customer_group_id = '" . (int)$customer_group_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}customer_group_description 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "customer_group_description 
             WHERE customer_group_id = '" . (int)$customer_group_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}product_discount 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "product_discount 
             WHERE customer_group_id = '" . (int)$customer_group_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}product_special 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "product_special 
             WHERE customer_group_id = '" . (int)$customer_group_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}product_reward 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "product_reward 
             WHERE customer_group_id = '" . (int)$customer_group_id . "'");
         
-        $this->cache->delete('customer_group');
+        Cache::delete('customer_group');
     }
     
     public function getCustomerGroup($customer_group_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT DISTINCT * 
-			FROM {$this->db->prefix}customer_group cg 
-			LEFT JOIN {$this->db->prefix}customer_group_description cgd 
+			FROM " . DB::prefix() . "customer_group cg 
+			LEFT JOIN " . DB::prefix() . "customer_group_description cgd 
 				ON (cg.customer_group_id = cgd.customer_group_id) 
 			WHERE cg.customer_group_id = '" . (int)$customer_group_id . "' 
 			AND cgd.language_id = '" . (int)Config::get('config_language_id') . "'
@@ -119,8 +119,8 @@ class CustomerGroup extends Model {
     public function getCustomerGroups($data = array()) {
         $sql = "
 			SELECT * 
-			FROM {$this->db->prefix}customer_group cg 
-			LEFT JOIN {$this->db->prefix}customer_group_description cgd 
+			FROM " . DB::prefix() . "customer_group cg 
+			LEFT JOIN " . DB::prefix() . "customer_group_description cgd 
 				ON (cg.customer_group_id = cgd.customer_group_id) 
 			WHERE cgd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
@@ -150,7 +150,7 @@ class CustomerGroup extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
@@ -158,9 +158,9 @@ class CustomerGroup extends Model {
     public function getCustomerGroupDescriptions($customer_group_id) {
         $customer_group_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}customer_group_description 
+			FROM " . DB::prefix() . "customer_group_description 
 			WHERE customer_group_id = '" . (int)$customer_group_id . "'
 		");
         
@@ -172,17 +172,17 @@ class CustomerGroup extends Model {
     }
     
     public function getTotalCustomerGroups() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}customer_group");
+			FROM " . DB::prefix() . "customer_group");
         
         return $query->row['total'];
     }
     
     public function getCustomerGroupName($customer_group_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT name 
-			FROM {$this->db->prefix}customer_group_description 
+			FROM " . DB::prefix() . "customer_group_description 
 			WHERE customer_group_id = '" . (int)$customer_group_id . "'");
         
         return $query->row['name'];

@@ -21,8 +21,8 @@ use App\Models\Model;
 class PaypalProIframe extends Model {
     
     public function install() {
-        $this->db->query("
-			CREATE TABLE IF NOT EXISTS `{$this->db->prefix}paypal_iframe_order` (
+        DB::query("
+			CREATE TABLE IF NOT EXISTS `" . DB::prefix() . "paypal_iframe_order` (
 			  `paypal_iframe_order_id` int(11) NOT NULL AUTO_INCREMENT,
 			  `order_id` int(11) NOT NULL,
 			  `created` DATETIME NOT NULL,
@@ -34,8 +34,8 @@ class PaypalProIframe extends Model {
 			  PRIMARY KEY (`paypal_iframe_order_id`)
 			) ENGINE=MyISAM DEFAULT COLLATE=utf8_general_ci;");
         
-        $this->db->query("
-			CREATE TABLE IF NOT EXISTS `{$this->db->prefix}paypal_iframe_order_transaction` (
+        DB::query("
+			CREATE TABLE IF NOT EXISTS `" . DB::prefix() . "paypal_iframe_order_transaction` (
 			  `paypal_iframe_order_transaction_id` int(11) NOT NULL AUTO_INCREMENT,
 			  `paypal_iframe_order_id` int(11) NOT NULL,
 			  `transaction_id` CHAR(20) NOT NULL,
@@ -56,12 +56,12 @@ class PaypalProIframe extends Model {
     }
     
     public function uninstall() {
-        $this->db->query("DROP TABLE IF EXISTS `{$this->db->prefix}paypal_iframe_order_transaction`;");
-        $this->db->query("DROP TABLE IF EXISTS `{$this->db->prefix}paypal_iframe_order`;");
+        DB::query("DROP TABLE IF EXISTS `" . DB::prefix() . "paypal_iframe_order_transaction`;");
+        DB::query("DROP TABLE IF EXISTS `" . DB::prefix() . "paypal_iframe_order`;");
     }
     
     private function getTransactions($paypal_iframe_order_id) {
-        $qry = $this->db->query("SELECT `ot`.*, ( SELECT count(`ot2`.`paypal_iframe_order_id`) FROM `{$this->db->prefix}paypal_iframe_order_transaction` `ot2` WHERE `ot2`.`parent_transaction_id` = `ot`.`transaction_id` ) AS `children` FROM `{$this->db->prefix}paypal_iframe_order_transaction` `ot` WHERE `paypal_iframe_order_id` = '" . (int)$paypal_iframe_order_id . "'");
+        $qry = DB::query("SELECT `ot`.*, ( SELECT count(`ot2`.`paypal_iframe_order_id`) FROM `" . DB::prefix() . "paypal_iframe_order_transaction` `ot2` WHERE `ot2`.`parent_transaction_id` = `ot`.`transaction_id` ) AS `children` FROM `" . DB::prefix() . "paypal_iframe_order_transaction` `ot` WHERE `paypal_iframe_order_id` = '" . (int)$paypal_iframe_order_id . "'");
         
         if ($qry->num_rows) {
             return $qry->rows;
@@ -71,25 +71,25 @@ class PaypalProIframe extends Model {
     }
     
     public function totalCaptured($paypal_iframe_order_id) {
-        $qry = $this->db->query("SELECT SUM(`amount`) AS `amount` FROM `{$this->db->prefix}paypal_iframe_order_transaction` WHERE `paypal_iframe_order_id` = '" . (int)$paypal_iframe_order_id . "' AND `pending_reason` != 'authorization' AND (`payment_status` = 'Partially-Refunded' OR `payment_status` = 'Completed' OR `payment_status` = 'Pending') AND `transaction_entity` = 'payment'");
+        $qry = DB::query("SELECT SUM(`amount`) AS `amount` FROM `" . DB::prefix() . "paypal_iframe_order_transaction` WHERE `paypal_iframe_order_id` = '" . (int)$paypal_iframe_order_id . "' AND `pending_reason` != 'authorization' AND (`payment_status` = 'Partially-Refunded' OR `payment_status` = 'Completed' OR `payment_status` = 'Pending') AND `transaction_entity` = 'payment'");
         
         return $qry->row['amount'];
     }
     
     public function totalRefundedOrder($paypal_iframe_order_id) {
-        $qry = $this->db->query("SELECT SUM(`amount`) AS `amount` FROM `{$this->db->prefix}paypal_iframe_order_transaction` WHERE `paypal_iframe_order_id` = '" . (int)$paypal_iframe_order_id . "' AND `payment_status` = 'Refunded'");
+        $qry = DB::query("SELECT SUM(`amount`) AS `amount` FROM `" . DB::prefix() . "paypal_iframe_order_transaction` WHERE `paypal_iframe_order_id` = '" . (int)$paypal_iframe_order_id . "' AND `payment_status` = 'Refunded'");
         
         return $qry->row['amount'];
     }
     
     public function totalRefundedTransaction($transaction_id) {
-        $qry = $this->db->query("SELECT SUM(`amount`) AS `amount` FROM `{$this->db->prefix}paypal_iframe_order_transaction` WHERE `parent_transaction_id` = '" . $this->db->escape($transaction_id) . "' AND `payment_type` = 'refund'");
+        $qry = DB::query("SELECT SUM(`amount`) AS `amount` FROM `" . DB::prefix() . "paypal_iframe_order_transaction` WHERE `parent_transaction_id` = '" . DB::escape($transaction_id) . "' AND `payment_type` = 'refund'");
         
         return $qry->row['amount'];
     }
     
     public function getOrder($order_id) {
-        $qry = $this->db->query("SELECT * FROM `{$this->db->prefix}paypal_iframe_order` WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
+        $qry = DB::query("SELECT * FROM `" . DB::prefix() . "paypal_iframe_order` WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
         
         if ($qry->num_rows) {
             $order = $qry->row;
@@ -136,41 +136,41 @@ class PaypalProIframe extends Model {
     }
     
     public function updateOrder($capture_status, $order_id) {
-        $this->db->query("UPDATE `{$this->db->prefix}paypal_iframe_order` SET `modified` = now(), `capture_status` = '" . $this->db->escape($capture_status) . "' WHERE `order_id` = '" . (int)$order_id . "'");
+        DB::query("UPDATE `" . DB::prefix() . "paypal_iframe_order` SET `modified` = now(), `capture_status` = '" . DB::escape($capture_status) . "' WHERE `order_id` = '" . (int)$order_id . "'");
     }
     
     public function updateTransaction($transaction) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}paypal_iframe_order_transaction
+        DB::query("
+			UPDATE " . DB::prefix() . "paypal_iframe_order_transaction
 			SET paypal_iframe_order_id = " . (int)$transaction['paypal_iframe_order_id'] . ",
-				transaction_id = '" . $this->db->escape($transaction['transaction_id']) . "',
-				parent_transaction_id = '" . $this->db->escape($transaction['parent_transaction_id']) . "',
-				created = '" . $this->db->escape($transaction['created']) . "',
-				note = '" . $this->db->escape($transaction['note']) . "',
-				msgsubid = '" . $this->db->escape($transaction['msgsubid']) . "',
-				receipt_id = '" . $this->db->escape($transaction['receipt_id']) . "',
-				payment_type = '" . $this->db->escape($transaction['payment_type']) . "',
-				payment_status = '" . $this->db->escape($transaction['payment_status']) . "',
-				pending_reason = '" . $this->db->escape($transaction['pending_reason']) . "',
-				transaction_entity = '" . $this->db->escape($transaction['transaction_entity']) . "',
-				amount = '" . $this->db->escape($transaction['amount']) . "',
-				debug_data = '" . $this->db->escape($transaction['debug_data']) . "',
-				call_data = '" . $this->db->escape($transaction['call_data']) . "'
+				transaction_id = '" . DB::escape($transaction['transaction_id']) . "',
+				parent_transaction_id = '" . DB::escape($transaction['parent_transaction_id']) . "',
+				created = '" . DB::escape($transaction['created']) . "',
+				note = '" . DB::escape($transaction['note']) . "',
+				msgsubid = '" . DB::escape($transaction['msgsubid']) . "',
+				receipt_id = '" . DB::escape($transaction['receipt_id']) . "',
+				payment_type = '" . DB::escape($transaction['payment_type']) . "',
+				payment_status = '" . DB::escape($transaction['payment_status']) . "',
+				pending_reason = '" . DB::escape($transaction['pending_reason']) . "',
+				transaction_entity = '" . DB::escape($transaction['transaction_entity']) . "',
+				amount = '" . DB::escape($transaction['amount']) . "',
+				debug_data = '" . DB::escape($transaction['debug_data']) . "',
+				call_data = '" . DB::escape($transaction['call_data']) . "'
 			WHERE paypal_iframe_order_transaction_id = " . (int)$transaction['paypal_iframe_order_transaction_id'] . "
 		");
     }
     
     public function addTransaction($transaction_data, $request_data = array()) {
-        $this->db->query("INSERT INTO `{$this->db->prefix}paypal_iframe_order_transaction` SET `paypal_iframe_order_id` = '" . (int)$transaction_data['paypal_iframe_order_id'] . "', `transaction_id` = '" . $this->db->escape($transaction_data['transaction_id']) . "', `parent_transaction_id` = '" . $this->db->escape($transaction_data['parent_transaction_id']) . "', `created` = NOW(), `note` = '" . $this->db->escape($transaction_data['note']) . "', `msgsubid` = '" . $this->db->escape($transaction_data['msgsubid']) . "', `receipt_id` = '" . $this->db->escape($transaction_data['receipt_id']) . "', `payment_type` = '" . $this->db->escape($transaction_data['payment_type']) . "', `payment_status` = '" . $this->db->escape($transaction_data['payment_status']) . "', `pending_reason` = '" . $this->db->escape($transaction_data['pending_reason']) . "', `transaction_entity` = '" . $this->db->escape($transaction_data['transaction_entity']) . "', `amount` = '" . (double)$transaction_data['amount'] . "', `debug_data` = '" . $this->db->escape($transaction_data['debug_data']) . "'");
+        DB::query("INSERT INTO `" . DB::prefix() . "paypal_iframe_order_transaction` SET `paypal_iframe_order_id` = '" . (int)$transaction_data['paypal_iframe_order_id'] . "', `transaction_id` = '" . DB::escape($transaction_data['transaction_id']) . "', `parent_transaction_id` = '" . DB::escape($transaction_data['parent_transaction_id']) . "', `created` = NOW(), `note` = '" . DB::escape($transaction_data['note']) . "', `msgsubid` = '" . DB::escape($transaction_data['msgsubid']) . "', `receipt_id` = '" . DB::escape($transaction_data['receipt_id']) . "', `payment_type` = '" . DB::escape($transaction_data['payment_type']) . "', `payment_status` = '" . DB::escape($transaction_data['payment_status']) . "', `pending_reason` = '" . DB::escape($transaction_data['pending_reason']) . "', `transaction_entity` = '" . DB::escape($transaction_data['transaction_entity']) . "', `amount` = '" . (double)$transaction_data['amount'] . "', `debug_data` = '" . DB::escape($transaction_data['debug_data']) . "'");
         
-        $paypal_iframe_order_transaction_id = $this->db->getLastId();
+        $paypal_iframe_order_transaction_id = DB::getLastId();
         
         if ($request_data) {
             $serialized_data = serialize($request_data);
             
-            $this->db->query("
-				UPDATE {$this->db->prefix}paypal_iframe_order_transaction
-				SET call_data = '" . $this->db->escape($serialized_data) . "'
+            DB::query("
+				UPDATE " . DB::prefix() . "paypal_iframe_order_transaction
+				SET call_data = '" . DB::escape($serialized_data) . "'
 				WHERE paypal_iframe_order_transaction_id = " . (int)$paypal_iframe_order_transaction_id . "
 				LIMIT 1
 			");
@@ -193,7 +193,7 @@ class PaypalProIframe extends Model {
     }
     
     public function getOrderId($transaction_id) {
-        $qry = $this->db->query("SELECT `o`.`order_id` FROM `{$this->db->prefix}paypal_iframe_order_transaction` `ot` LEFT JOIN `{$this->db->prefix}paypal_iframe_order` `o`  ON `o`.`paypal_iframe_order_id` = `ot`.`paypal_iframe_order_id`  WHERE `ot`.`transaction_id` = '" . $this->db->escape($transaction_id) . "' LIMIT 1");
+        $qry = DB::query("SELECT `o`.`order_id` FROM `" . DB::prefix() . "paypal_iframe_order_transaction` `ot` LEFT JOIN `" . DB::prefix() . "paypal_iframe_order` `o`  ON `o`.`paypal_iframe_order_id` = `ot`.`paypal_iframe_order_id`  WHERE `ot`.`transaction_id` = '" . DB::escape($transaction_id) . "' LIMIT 1");
         
         if ($qry->num_rows) {
             return $qry->row['order_id'];
@@ -203,21 +203,21 @@ class PaypalProIframe extends Model {
     }
     
     public function updateAuthorizationId($paypal_iframe_order_id, $authorization_id) {
-        $this->db->query("
-			UPDATE `{$this->db->prefix}paypal_iframe_order`
-			SET `authorization_id` = '" . $this->db->escape($authorization_id) . "'
-			WHERE `paypal_iframe_order_id` = '" . $this->db->escape($paypal_iframe_order_id) . "'
+        DB::query("
+			UPDATE `" . DB::prefix() . "paypal_iframe_order`
+			SET `authorization_id` = '" . DB::escape($authorization_id) . "'
+			WHERE `paypal_iframe_order_id` = '" . DB::escape($paypal_iframe_order_id) . "'
 		");
     }
     
     public function updateRefundTransaction($transaction_id, $transaction_type) {
-        $this->db->query("UPDATE `{$this->db->prefix}paypal_iframe_order_transaction` SET `payment_status` = '" . $this->db->escape($transaction_type) . "' WHERE `transaction_id` = '" . $this->db->escape($transaction_id) . "' LIMIT 1");
+        DB::query("UPDATE `" . DB::prefix() . "paypal_iframe_order_transaction` SET `payment_status` = '" . DB::escape($transaction_type) . "' WHERE `transaction_id` = '" . DB::escape($transaction_id) . "' LIMIT 1");
     }
     
     public function getFailedTransaction($paypl_iframe_order_transaction_id) {
-        $result = $this->db->query("
+        $result = DB::query("
 			SELECT *
-			FROM {$this->db->prefix}paypal_iframe_order_transaction
+			FROM " . DB::prefix() . "paypal_iframe_order_transaction
 			WHERE paypal_iframe_order_transaction_id = " . (int)$paypl_iframe_order_transaction_id . "
 		")->row;
         
@@ -229,10 +229,10 @@ class PaypalProIframe extends Model {
     }
     
     public function getLocalTransaction($transaction_id) {
-        $result = $this->db->query("
+        $result = DB::query("
 			SELECT *
-			FROM {$this->db->prefix}paypal_iframe_order_transaction
-			WHERE transaction_id = '" . $this->db->escape($transaction_id) . "'
+			FROM " . DB::prefix() . "paypal_iframe_order_transaction
+			WHERE transaction_id = '" . DB::escape($transaction_id) . "'
 		")->row;
         
         if ($result) {

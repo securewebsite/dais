@@ -15,11 +15,13 @@
 */
 
 namespace App\Controllers\Front\Widget;
+
 use App\Controllers\Controller;
 
 class BlogCategory extends Controller {
+    
     public function index($setting) {
-        $data = $this->theme->language('widget/blog_category');
+        $data = Theme::language('widget/blog_category');
         
         if (isset($this->request->get['bpath'])) {
             $parts = explode('_', (string)$this->request->get['bpath']);
@@ -39,27 +41,27 @@ class BlogCategory extends Controller {
             $data['child_id'] = 0;
         }
         
-        $this->theme->model('content/category');
+        Theme::model('content/category');
         
         $data['blog_categories'] = array();
         
-        $blog_categories = $this->model_content_category->getCategories(0);
+        $blog_categories = ContentCategory::getCategories(0);
         
         foreach ($blog_categories as $blog_category) {
             
             $children_data = array();
             
-            $children = $this->model_content_category->getCategories($blog_category['category_id']);
+            $children = ContentCategory::getCategories($blog_category['category_id']);
             
             foreach ($children as $child) {
-                $children_data[] = array('category_id' => $child['category_id'], 'name' => $child['name'], 'href' => $this->url->link('content/category', 'bpath=' . $blog_category['category_id'] . '_' . $child['category_id']));
+                $children_data[] = array('category_id' => $child['category_id'], 'name' => $child['name'], 'href' => Url::link('content/category', 'bpath=' . $blog_category['category_id'] . '_' . $child['category_id']));
             }
             
-            $data['blog_categories'][] = array('category_id' => $blog_category['category_id'], 'name' => $blog_category['name'], 'children' => $children_data, 'href' => $this->url->link('content/category', 'bpath=' . $blog_category['category_id']));
+            $data['blog_categories'][] = array('category_id' => $blog_category['category_id'], 'name' => $blog_category['name'], 'children' => $children_data, 'href' => Url::link('content/category', 'bpath=' . $blog_category['category_id']));
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('widget/blog_category', $data);
+        return View::render('widget/blog_category', $data);
     }
 }

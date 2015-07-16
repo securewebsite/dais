@@ -28,10 +28,10 @@ class Handling extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('handling', $this->request->post);
+            SettingSetting::editSetting('handling', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/total', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -43,8 +43,8 @@ class Handling extends Controller {
         Breadcrumb::add('lang_text_total', 'module/total');
         Breadcrumb::add('lang_heading_title', 'total/handling');
         
-        $data['action'] = Url::link('total/handling', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('total/handling', '', 'SSL');
+        $data['cancel'] = Url::link('module/total', '', 'SSL');
         
         if (isset($this->request->post['handling_total'])) {
             $data['handling_total'] = $this->request->post['handling_total'];
@@ -66,7 +66,7 @@ class Handling extends Controller {
         
         Theme::model('locale/tax_class');
         
-        $data['tax_classes'] = $this->model_locale_tax_class->getTaxClasses();
+        $data['tax_classes'] = LocaleTaxClass::getTaxClasses();
         
         if (isset($this->request->post['handling_status'])) {
             $data['handling_status'] = $this->request->post['handling_status'];
@@ -84,7 +84,7 @@ class Handling extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('total/handling', $data));
+        Response::setOutput(View::render('total/handling', $data));
     }
     
     protected function validate() {

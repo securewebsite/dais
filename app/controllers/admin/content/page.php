@@ -36,7 +36,7 @@ class Page extends Controller {
         Theme::model('content/page');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_content_page->addPage($this->request->post);
+            ContentPage::addPage($this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -53,7 +53,7 @@ class Page extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('content/page', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('content/page', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -67,7 +67,7 @@ class Page extends Controller {
         Theme::model('content/page');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_content_page->editPage($this->request->get['page_id'], $this->request->post);
+            ContentPage::editPage($this->request->get['page_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -84,7 +84,7 @@ class Page extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('content/page', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('content/page', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -99,7 +99,7 @@ class Page extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $page_id) {
-                $this->model_content_page->deletePage($page_id);
+                ContentPage::deletePage($page_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -118,7 +118,7 @@ class Page extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('content/page', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('content/page', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -163,8 +163,8 @@ class Page extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'content/page', $url);
         
-        $data['insert'] = Url::link('content/page/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('content/page/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('content/page/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('content/page/delete', '' . $url, 'SSL');
         
         $data['pages'] = array();
         
@@ -175,16 +175,16 @@ class Page extends Controller {
             'limit' => Config::get('config_admin_limit')
         );
         
-        $page_total = $this->model_content_page->getTotalPages();
+        $page_total = ContentPage::getTotalPages();
         
-        $results = $this->model_content_page->getPages($filter);
+        $results = ContentPage::getPages($filter);
         
         foreach ($results as $result) {
             $action = array();
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('content/page/update', 'token=' . $this->session->data['token'] . '&page_id=' . $result['page_id'] . $url, 'SSL')
+                'href' => Url::link('content/page/update', '' . '&page_id=' . $result['page_id'] . $url, 'SSL')
             );
             
             $data['pages'][] = array(
@@ -222,8 +222,8 @@ class Page extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_title']      = Url::link('content/page', 'token=' . $this->session->data['token'] . '&sort=id.title' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('content/page', 'token=' . $this->session->data['token'] . '&sort=i.sort_order' . $url, 'SSL');
+        $data['sort_title']      = Url::link('content/page', '' . '&sort=id.title' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('content/page', '' . '&sort=i.sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -240,7 +240,7 @@ class Page extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('content/page', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
+            Url::link('content/page', '' . $url . '&page={page}', 'SSL')
         );
         
         $data['sort']  = $sort;
@@ -249,7 +249,7 @@ class Page extends Controller {
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('content/page_list', $data));
+        Response::setOutput(View::render('content/page_list', $data));
     }
     
     protected function getForm() {
@@ -302,39 +302,37 @@ class Page extends Controller {
         Breadcrumb::add('lang_heading_title', 'content/page', $url);
         
         if (!isset($this->request->get['page_id'])) {
-            $data['action'] = Url::link('content/page/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('content/page/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('content/page/update', 'token=' . $this->session->data['token'] . '&page_id=' . $this->request->get['page_id'] . $url, 'SSL');
+            $data['action'] = Url::link('content/page/update', '' . '&page_id=' . $this->request->get['page_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('content/page', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('content/page', '' . $url, 'SSL');
         
         if (isset($this->request->get['page_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $page_info = $this->model_content_page->getPage($this->request->get['page_id']);
+            $page_info = ContentPage::getPage($this->request->get['page_id']);
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         Theme::model('locale/language');
         
-        $data['languages'] = $this->model_locale_language->getLanguages();
+        $data['languages'] = LocaleLanguage::getLanguages();
         
         if (isset($this->request->post['page_description'])) {
             $data['page_description'] = $this->request->post['page_description'];
         } elseif (isset($this->request->get['page_id'])) {
-            $data['page_description'] = $this->model_content_page->getPageDescriptions($this->request->get['page_id']);
+            $data['page_description'] = ContentPage::getPageDescriptions($this->request->get['page_id']);
         } else {
             $data['page_description'] = array();
         }
         
         Theme::model('setting/store');
         
-        $data['stores'] = $this->model_setting_store->getStores();
+        $data['stores'] = SettingStore::getStores();
         
         if (isset($this->request->post['page_store'])) {
             $data['page_store'] = $this->request->post['page_store'];
         } elseif (isset($this->request->get['page_id'])) {
-            $data['page_store'] = $this->model_content_page->getPageStores($this->request->get['page_id']);
+            $data['page_store'] = ContentPage::getPageStores($this->request->get['page_id']);
         } else {
             $data['page_store'] = array(0);
         }
@@ -344,7 +342,7 @@ class Page extends Controller {
         } elseif (!empty($page_info) && $page_info['event_id'] == 0) {
             $data['slug'] = $page_info['slug'];
         } elseif (!empty($page_info) && $page_info['event_id'] > 0) {
-            $data['slug'] = $this->model_content_page->getEventSlug($this->request->get['page_id']);
+            $data['slug'] = ContentPage::getEventSlug($this->request->get['page_id']);
         } else {
             $data['slug'] = '';
         }
@@ -388,22 +386,22 @@ class Page extends Controller {
         $data['event_url']  = false;
 
         if ($data['event_id'] > 0):
-            $data['event_name'] = $this->model_content_page->getEventName($data['event_id']);
-            $data['event_url']  = Url::link('calendar/event/update', 'token=' . $this->session->data['token'] . '&event_id=' . $data['event_id'], 'SSL');
-            $data['slug']       = $this->model_content_page->getEventSlug($this->request->get['page_id']);
+            $data['event_name'] = ContentPage::getEventName($data['event_id']);
+            $data['event_url']  = Url::link('calendar/event/update', '' . '&event_id=' . $data['event_id'], 'SSL');
+            $data['slug']       = ContentPage::getEventSlug($this->request->get['page_id']);
         endif;
         
         if (isset($this->request->post['page_layout'])) {
             $data['page_layout'] = $this->request->post['page_layout'];
         } elseif (isset($this->request->get['page_id'])) {
-            $data['page_layout'] = $this->model_content_page->getPageLayouts($this->request->get['page_id']);
+            $data['page_layout'] = ContentPage::getPageLayouts($this->request->get['page_id']);
         } else {
             $data['page_layout'] = array();
         }
         
         Theme::model('design/layout');
         
-        $data['layouts'] = $this->model_design_layout->getLayouts();
+        $data['layouts'] = DesignLayout::getLayouts();
         
         if (isset($this->request->post['visibility'])) {
             $data['visibility'] = $this->request->post['visibility'];
@@ -415,14 +413,14 @@ class Page extends Controller {
         
         Theme::model('people/customer_group');
         
-        $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups();
+        $data['customer_groups'] = PeopleCustomerGroup::getCustomerGroups();
 
         Theme::loadjs('javascript/content/page_form', $data);
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('content/page_form', $data));
+        Response::setOutput(View::render('content/page_form', $data));
     }
     
     protected function validateForm() {
@@ -442,7 +440,7 @@ class Page extends Controller {
         
         if (isset($this->request->post['slug']) && Encode::strlen($this->request->post['slug']) > 0):
             Theme::model('tool/utility');
-            $query = $this->model_tool_utility->findSlugByName($this->request->post['slug']);
+            $query = ToolUtility::findSlugByName($this->request->post['slug']);
             
             if (isset($this->request->get['page_id'])):
                 if ($query):
@@ -491,13 +489,13 @@ class Page extends Controller {
                 endif;
             endif;
             
-            $store_total = $this->model_setting_store->getTotalStoresByPageId($page_id);
+            $store_total = SettingStore::getTotalStoresByPageId($page_id);
             
             if ($store_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_store'), $store_total);
             }
 
-            $event_total = $this->model_calendar_event->getTotalEventsByPageId($page_id);
+            $event_total = CalendarEvent::getTotalEventsByPageId($page_id);
 
             if ($event_total):
                 $this->error['warning'] = sprintf(Lang::get('lang_error_event'), $event_total);
@@ -523,7 +521,7 @@ class Page extends Controller {
             $slug = Url::build_slug($this->request->get['name']);
             
             // check that the slug is globally unique
-            $query = $this->model_tool_utility->findSlugByName($slug);
+            $query = ToolUtility::findSlugByName($slug);
             
             if ($query):
                 if (isset($this->request->get['page_id'])):

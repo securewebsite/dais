@@ -15,11 +15,13 @@
 */
 
 namespace App\Controllers\Front\Widget;
+
 use App\Controllers\Controller;
 
 class Category extends Controller {
+    
     public function index($setting) {
-        $data = $this->theme->language('widget/category');
+        $data = Theme::language('widget/category');
         
         if (isset($this->request->get['path'])):
             $parts = explode('_', (string)$this->request->get['path']);
@@ -39,23 +41,23 @@ class Category extends Controller {
             $data['child_id'] = 0;
         endif;
         
-        $this->theme->model('catalog/category');
-        $this->theme->model('catalog/product');
+        Theme::model('catalog/category');
+        Theme::model('catalog/product');
         
         $data['categories'] = array();
         
-        $categories = $this->model_catalog_category->getCategories(0);
+        $categories = CatalogCategory::getCategories(0);
 
         $show_total = false;
         
         foreach ($categories as $category):
-            if ($this->config->get('config_product_count')):
-                $total = $this->model_catalog_product->getTotalProducts(array('filter_category_id' => $category['category_id']));
+            if (Config::get('config_product_count')):
+                $total = CatalogProduct::getTotalProducts(array('filter_category_id' => $category['category_id']));
                 $show_total  = ' (' . $total . ')';
             endif;
 
             $children_data = array();
-            $children      = $this->model_catalog_category->getCategories($category['category_id']);
+            $children      = CatalogCategory::getCategories($category['category_id']);
             
             foreach ($children as $child):
                 $filter = array(
@@ -65,8 +67,8 @@ class Category extends Controller {
 
                 $show_product = false;
                 
-                if ($this->config->get('config_product_count')):
-                    $product_total = $this->model_catalog_product->getTotalProducts($filter);
+                if (Config::get('config_product_count')):
+                    $product_total = CatalogProduct::getTotalProducts($filter);
                     $total         += $product_total;
                     $show_product  = ' (' . $product_total . ')';
                 endif;
@@ -74,7 +76,7 @@ class Category extends Controller {
                 $children_data[] = array(
                     'category_id' => $child['category_id'], 
                     'name'        => $child['name'] . $show_product, 
-                    'href'        => $this->url->link('catalog/category', 'path=' . $category['category_id'] . '_' . $child['category_id'])
+                    'href'        => Url::link('catalog/category', 'path=' . $category['category_id'] . '_' . $child['category_id'])
                 );
             endforeach;
             
@@ -82,12 +84,12 @@ class Category extends Controller {
                 'category_id' => $category['category_id'], 
                 'name'        => $category['name'] . $show_total, 
                 'children'    => $children_data, 
-                'href'        => $this->url->link('catalog/category', 'path=' . $category['category_id'])
+                'href'        => Url::link('catalog/category', 'path=' . $category['category_id'])
             );
         endforeach;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('widget/category', $data);
+        return View::render('widget/category', $data);
     }
 }

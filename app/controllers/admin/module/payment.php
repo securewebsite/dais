@@ -45,14 +45,14 @@ class Payment extends Controller {
         
         Theme::model('setting/module');
         
-        $modules = $this->model_setting_module->getInstalled('payment');
+        $modules = SettingModule::getInstalled('payment');
         
         foreach ($modules as $key => $value) {
             $theme_file = Theme::getPath() . 'controller/payment/' . $value . '.php';
             $core_file  = Config::get('path.application') . 'payment/' . $value . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {
-                $this->model_setting_module->uninstall('payment', $value);
+                SettingModule::uninstall('payment', $value);
                 
                 unset($modules[$key]);
             }
@@ -71,11 +71,11 @@ class Payment extends Controller {
                 $action = array();
                 
                 if (!in_array($module, $modules)) {
-                    $action[] = array('text' => Lang::get('lang_text_install'), 'href' => Url::link('module/payment/install', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
+                    $action[] = array('text' => Lang::get('lang_text_install'), 'href' => Url::link('module/payment/install', '' . '&module=' . $module, 'SSL'));
                 } else {
-                    $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('payment/' . $module . '', 'token=' . $this->session->data['token'], 'SSL'));
+                    $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('payment/' . $module . '', '', 'SSL'));
                     
-                    $action[] = array('text' => Lang::get('lang_text_uninstall'), 'href' => Url::link('module/payment/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL'));
+                    $action[] = array('text' => Lang::get('lang_text_uninstall'), 'href' => Url::link('module/payment/uninstall', '' . '&module=' . $module, 'SSL'));
                 }
                 
                 $data['modules'][] = array('name' => Lang::get('lang_heading_title'), 'status' => Config::get($module . '_status') ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled'), 'sort_order' => Config::get($module . '_sort_order'), 'action' => $action);
@@ -86,7 +86,7 @@ class Payment extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('module/payment', $data));
+        Response::setOutput(View::render('module/payment', $data));
     }
     
     public function install() {
@@ -97,16 +97,16 @@ class Payment extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/payment', '', 'SSL'));
         } else {
             Theme::model('setting/module');
             
-            $this->model_setting_module->install('payment', $this->request->get['module']);
+            SettingModule::install('payment', $this->request->get['module']);
             
             Theme::model('people/user_group');
             
-            $this->model_people_user_group->addPermission(User::getId(), 'access', 'payment/' . $this->request->get['module']);
-            $this->model_people_user_group->addPermission(User::getId(), 'modify', 'payment/' . $this->request->get['module']);
+            PeopleUserGroup::addPermission(User::getId(), 'access', 'payment/' . $this->request->get['module']);
+            PeopleUserGroup::addPermission(User::getId(), 'modify', 'payment/' . $this->request->get['module']);
             
             $base_path  = Config::get('path.application') . 'payment' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'payment' . SEP;
@@ -125,7 +125,7 @@ class Payment extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/payment', '', 'SSL'));
         }
     }
     
@@ -137,13 +137,13 @@ class Payment extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/payment', '', 'SSL'));
         } else {
             Theme::model('setting/module');
             Theme::model('setting/setting');
             
-            $this->model_setting_module->uninstall('payment', $this->request->get['module']);
-            $this->model_setting_setting->deleteSetting($this->request->get['module']);
+            SettingModule::uninstall('payment', $this->request->get['module']);
+            SettingSetting::deleteSetting($this->request->get['module']);
             
             $base_path  = Config::get('path.application') . 'payment' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'payment' . SEP;
@@ -162,7 +162,7 @@ class Payment extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/payment', '', 'SSL'));
         }
     }
 }

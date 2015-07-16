@@ -15,25 +15,27 @@
 */
 
 namespace App\Controllers\Front\Widget;
+
 use App\Controllers\Controller;
 
 class Page extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('widget/page');
+        $data = Theme::language('widget/page');
         
-        $this->theme->model('content/page');
+        Theme::model('content/page');
         
         $data['pages'] = array();
         
-        foreach ($this->model_content_page->getPages() as $result) {
-            $data['pages'][] = array('title' => $result['title'], 'href' => $this->url->link('content/page', 'page_id=' . $result['page_id']));
+        foreach (ContentPage::getPages() as $result) {
+            $data['pages'][] = array('title' => $result['title'], 'href' => Url::link('content/page', 'page_id=' . $result['page_id']));
         }
         
-        $data['contact'] = $this->url->link('content/contact');
-        $data['site_map'] = $this->url->link('content/site_map');
+        $data['contact'] = Url::link('content/contact');
+        $data['site_map'] = Url::link('content/site_map');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('widget/page', $data);
+        return View::render('widget/page', $data);
     }
 }

@@ -15,17 +15,19 @@
 */
 
 namespace App\Controllers\Front\Widget;
+
 use App\Controllers\Controller;
 
 class SideBarMenu extends Controller {
+    
     private $items = array();
     
     public function index() {
         $settings = func_get_args();
         $settings = $settings[0];
         
-        $this->theme->model('setting/menu');
-        $menu = $this->model_setting_menu->getMenu($settings['menu_id']);
+        Theme::model('setting/menu');
+        $menu = SettingMenu::getMenu($settings['menu_id']);
         
         $data['menu_blocks'] = array();
         
@@ -80,29 +82,29 @@ class SideBarMenu extends Controller {
         $block['menu_items']   = call_user_func(array(__CLASS__, $menu['type']));
         $data['menu_blocks'][] = $block;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('widget/side_bar', $data);
+        return View::render('widget/side_bar', $data);
     }
     
     private function product_category() {
-        $this->theme->model('catalog/category');
+        Theme::model('catalog/category');
         
         $menu_items = array();
         
-        $categories = $this->model_catalog_category->getCategories(0);
+        $categories = CatalogCategory::getCategories(0);
         
         foreach ($categories as $category):
             $children_data = array();
             
-            $children = $this->model_catalog_category->getCategories($category['category_id']);
+            $children = CatalogCategory::getCategories($category['category_id']);
             
             foreach ($children as $child):
                 if (in_array($child['category_id'], $this->items['product_category'])):
                     $children_data[] = array(
                         'id'   => $child['category_id'], 
                         'name' => $child['name'], 
-                        'href' => $this->url->link('catalog/category', 'path=' . $category['category_id'] . '_' . $child['category_id'])
+                        'href' => Url::link('catalog/category', 'path=' . $category['category_id'] . '_' . $child['category_id'])
                     );
                 endif;
             endforeach;
@@ -113,7 +115,7 @@ class SideBarMenu extends Controller {
                     'name'     => $category['name'], 
                     'children' => $children_data, 
                     'column'   => $category['columns'] ? $category['columns'] : 1, 
-                    'href'     => $this->url->link('catalog/category', 'path=' . $category['category_id'])
+                    'href'     => Url::link('catalog/category', 'path=' . $category['category_id'])
                 );
             endif;
         endforeach;
@@ -122,23 +124,23 @@ class SideBarMenu extends Controller {
     }
     
     private function content_category() {
-        $this->theme->model('content/category');
+        Theme::model('content/category');
         
         $menu_items = array();
         
-        $categories = $this->model_content_category->getCategories(0);
+        $categories = ContentCategory::getCategories(0);
         
         foreach ($categories as $category):
             $children_data = array();
             
-            $children = $this->model_content_category->getCategories($category['category_id']);
+            $children = ContentCategory::getCategories($category['category_id']);
             
             foreach ($children as $child):
                 if (in_array($child['category_id'], $this->items['content_category'])):
                     $children_data[] = array(
                         'id'   => $child['category_id'], 
                         'name' => $child['name'], 
-                        'href' => $this->url->link('content/category', 'bpath=' . $category['category_id'] . '_' . $child['category_id'])
+                        'href' => Url::link('content/category', 'bpath=' . $category['category_id'] . '_' . $child['category_id'])
                     );
                 endif;
             endforeach;
@@ -149,7 +151,7 @@ class SideBarMenu extends Controller {
                     'name'     => $category['name'], 
                     'children' => $children_data, 
                     'column'   => $category['columns'] ? $category['columns'] : 1, 
-                    'href'     => $this->url->link('content/category', 'bpath=' . $category['category_id'])
+                    'href'     => Url::link('content/category', 'bpath=' . $category['category_id'])
                 );
             endif;
         endforeach;
@@ -158,17 +160,17 @@ class SideBarMenu extends Controller {
     }
     
     private function page() {
-        $this->theme->model('content/page');
+        Theme::model('content/page');
         
         $menu_items = array();
         
-        $pages = $this->model_content_page->getPages();
+        $pages = ContentPage::getPages();
         
         foreach ($pages as $page):
             if (in_array($page['page_id'], $this->items['page'])):
                 $menu_items[] = array(
                     'name' => $page['title'], 
-                    'href' => $this->url->link('content/page', 'page_id=' . $page['page_id'])
+                    'href' => Url::link('content/page', 'page_id=' . $page['page_id'])
                 );
             endif;
         endforeach;
@@ -177,17 +179,17 @@ class SideBarMenu extends Controller {
     }
     
     private function post() {
-        $this->theme->model('content/post');
+        Theme::model('content/post');
         
         $menu_items = array();
         
-        $posts = $this->model_content_post->getPosts();
+        $posts = ContentPost::getPosts();
         
         foreach ($posts as $post):
             if (in_array($post['post_id'], $this->items['post'])):
                 $menu_items[] = array(
                     'name' => $post['name'], 
-                    'href' => $this->url->link('content/post', 'post_id=' . $post['post_id'])
+                    'href' => Url::link('content/post', 'post_id=' . $post['post_id'])
                 );
             endif;
         endforeach;
@@ -201,7 +203,7 @@ class SideBarMenu extends Controller {
          * custom hack for changing Dashboard/Login text
          * safe to remove.
          */
-        $this->theme->language('shop/footer');
+        Theme::language('shop/footer');
         
         $menu_items = array();
         
@@ -214,12 +216,12 @@ class SideBarMenu extends Controller {
              * custom hack for changing Dashboard/Login text
              * safe to remove.
              */
-            if ($item['name'] === $this->language->get('lang_text_dashboard')):
-                $item['name'] = ($this->customer->isLogged()) ? $this->language->get('lang_text_dashboard') : $this->language->get('lang_text_login');
+            if ($item['name'] === Lang::get('lang_text_dashboard')):
+                $item['name'] = (Customer::isLogged()) ? Lang::get('lang_text_dashboard') : Lang::get('lang_text_login');
             endif;
             
             if (strpos($item['href'], 'http') === false && strpos($item['href'], 'https') === false):
-                $link['href'] = $this->url->link($item['href']);
+                $link['href'] = Url::link($item['href']);
                 $link['name'] = $item['name'];
             else:
                 $link['external'] = $this->externalSidebar($item['href'], $item['name']);

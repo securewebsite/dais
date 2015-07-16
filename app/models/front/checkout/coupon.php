@@ -21,22 +21,22 @@ class Coupon extends Model {
     public function getCoupon($code) {
         $status = true;
         
-        $coupon_query = $this->db->query("
+        $coupon_query = DB::query("
 			SELECT * 
-			FROM `{$this->db->prefix}coupon` 
-			WHERE code = '" . $this->db->escape($code) . "' 
+			FROM `" . DB::prefix() . "coupon` 
+			WHERE code = '" . DB::escape($code) . "' 
 			AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) 
 			AND status = '1'
 		");
         
         if ($coupon_query->num_rows):
-            if ($coupon_query->row['total'] >= $this->cart->getSubTotal()):
+            if ($coupon_query->row['total'] >= Cart::getSubTotal()):
                 $status = false;
             endif;
             
-            $coupon_history_query = $this->db->query("
+            $coupon_history_query = DB::query("
 				SELECT COUNT(*) AS total 
-				FROM `{$this->db->prefix}coupon_history` ch 
+				FROM `" . DB::prefix() . "coupon_history` ch 
 				WHERE ch.coupon_id = '" . (int)$coupon_query->row['coupon_id'] . "'
 			");
             
@@ -44,16 +44,16 @@ class Coupon extends Model {
                 $status = false;
             endif;
             
-            if ($coupon_query->row['logged'] && !$this->customer->getId()):
+            if ($coupon_query->row['logged'] && !Customer::getId()):
                 $status = false;
             endif;
             
-            if ($this->customer->getId()):
-                $coupon_history_query = $this->db->query("
+            if (Customer::getId()):
+                $coupon_history_query = DB::query("
 					SELECT COUNT(*) AS total 
-					FROM `{$this->db->prefix}coupon_history` ch 
+					FROM `" . DB::prefix() . "coupon_history` ch 
 					WHERE ch.coupon_id = '" . (int)$coupon_query->row['coupon_id'] . "' 
-					AND ch.customer_id = '" . (int)$this->customer->getId() . "'
+					AND ch.customer_id = '" . (int)Customer::getId() . "'
 				");
                 
                 if ($coupon_query->row['uses_customer'] > 0 && ($coupon_history_query->row['total'] >= $coupon_query->row['uses_customer'])):
@@ -64,9 +64,9 @@ class Coupon extends Model {
             // Products
             $coupon_product_data = array();
             
-            $coupon_product_query = $this->db->query("
+            $coupon_product_query = DB::query("
 				SELECT * 
-				FROM `{$this->db->prefix}coupon_product` 
+				FROM `" . DB::prefix() . "coupon_product` 
 				WHERE coupon_id = '" . (int)$coupon_query->row['coupon_id'] . "'
 			");
             
@@ -77,10 +77,10 @@ class Coupon extends Model {
             // Categories
             $coupon_category_data = array();
             
-            $coupon_category_query = $this->db->query("
+            $coupon_category_query = DB::query("
 				SELECT * 
-				FROM `{$this->db->prefix}coupon_category` cc 
-				LEFT JOIN `{$this->db->prefix}category_path` cp 
+				FROM `" . DB::prefix() . "coupon_category` cc 
+				LEFT JOIN `" . DB::prefix() . "category_path` cp 
 				ON (cc.category_id = cp.path_id) 
 				WHERE cc.coupon_id = '" . (int)$coupon_query->row['coupon_id'] . "'
 			");
@@ -92,16 +92,16 @@ class Coupon extends Model {
             $product_data = array();
             
             if ($coupon_product_data || $coupon_category_data):
-                foreach ($this->cart->getProducts() as $product):
+                foreach (Cart::getProducts() as $product):
                     if (in_array($product['product_id'], $coupon_product_data)):
                         $product_data[] = $product['product_id'];
                         continue;
                     endif;
                     
                     foreach ($coupon_category_data as $category_id):
-                        $coupon_category_query = $this->db->query("
+                        $coupon_category_query = DB::query("
 							SELECT COUNT(*) AS total 
-							FROM `{$this->db->prefix}product_to_category` 
+							FROM `" . DB::prefix() . "product_to_category` 
 							WHERE `product_id` = '" . (int)$product['product_id'] . "' 
 							AND category_id = '" . (int)$category_id . "'
 						");
@@ -127,8 +127,8 @@ class Coupon extends Model {
     }
     
     public function redeem($coupon_id, $order_id, $customer_id, $amount) {
-        $this->db->query("
-			INSERT INTO `{$this->db->prefix}coupon_history` 
+        DB::query("
+			INSERT INTO `" . DB::prefix() . "coupon_history` 
 			SET 
 				coupon_id = '" . (int)$coupon_id . "', 
 				order_id = '" . (int)$order_id . "', 

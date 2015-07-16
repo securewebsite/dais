@@ -15,35 +15,37 @@
 */
 
 namespace App\Controllers\Front\Content;
+
 use App\Controllers\Controller;
 
 class Contact extends Controller {
+    
     private $error = array();
     
     public function index() {
-        $data = $this->theme->language('content/contact');
+        $data = Theme::language('content/contact');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
-        $this->javascript->register('validation/validate.min', 'migrate.min')
+        JS::register('validation/validate.min', 'migrate.min')
             ->register('validation/validate.bootstrap.min', 'validate.min');
 
-        $this->breadcrumb->add('lang_heading_title', 'content/contact');
+        Breadcrumb::add('lang_heading_title', 'content/contact');
         
-        $data['action']    = $this->url->link('content/contact');
-        $data['store']     = $this->config->get('config_name');
-        $data['address']   = nl2br($this->config->get('config_address'));
-        $data['telephone'] = $this->config->get('config_telephone');
+        $data['action']    = Url::link('content/contact');
+        $data['store']     = Config::get('config_name');
+        $data['address']   = nl2br(Config::get('config_address'));
+        $data['telephone'] = Config::get('config_telephone');
         
-        if ($this->customer->isLogged()):
-            $data['name'] = $this->customer->getFirstName() . ' ' . $this->customer->getLastName();
+        if (Customer::isLogged()):
+            $data['name'] = Customer::getFirstName() . ' ' . Customer::getLastName();
         else:
             $data['name'] = '';
         endif;
         
        
-        if ($this->customer->isLogged()):
-            $data['email'] = $this->customer->getEmail();
+        if (Customer::isLogged()):
+            $data['email'] = Customer::getEmail();
         else:
             $data['email'] = '';
         endif;
@@ -51,25 +53,25 @@ class Contact extends Controller {
         $data['enquiry'] = '';
         $data['captcha'] = '';
        
-        $this->theme->loadjs('javascript/content/contact', $data);
+        Theme::loadjs('javascript/content/contact', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('content/contact', $data));
+        Response::setOutput(View::render('content/contact', $data));
     }
     
     public function send() {
-        $this->theme->language('content/contact');
+        Theme::language('content/contact');
         
         $json = array();
 
         if ($this->request->server['REQUEST_METHOD'] == 'POST'):
             unset($this->session->data['captcha']);
-            $json['success'] = $this->language->get('lang_text_message');
+            $json['success'] = Lang::get('lang_text_message');
 
             $callback = array(
-                'user_id'  => $this->config->get('config_admin_email_user'),
+                'user_id'  => Config::get('config_admin_email_user'),
                 'post'     => $this->request->post,
                 'callback' => array(
                     'class'  => __CLASS__,
@@ -77,7 +79,7 @@ class Contact extends Controller {
                 )
             );
 
-            $this->theme->notify('public_contact_admin', $callback);
+            Theme::notify('public_contact_admin', $callback);
 
             unset($callback);
 
@@ -111,9 +113,9 @@ class Contact extends Controller {
             $json['error'] = $this->error['captcha'];
         endif;
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function captcha() {

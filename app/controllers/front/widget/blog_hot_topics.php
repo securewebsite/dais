@@ -15,16 +15,18 @@
 */
 
 namespace App\Controllers\Front\Widget;
+
 use App\Controllers\Controller;
 
 class BlogHotTopics extends Controller {
+    
     public function index($setting) {
         static $widget = 0;
         
-        $data = $this->theme->language('widget/blog_hot_topics');
+        $data = Theme::language('widget/blog_hot_topics');
         
-        $this->theme->model('content/post');
-        $this->theme->model('tool/image');
+        Theme::model('content/post');
+        Theme::model('tool/image');
         
         $data['recent_posts'] = array();
         
@@ -34,58 +36,58 @@ class BlogHotTopics extends Controller {
             $limit = $setting['limit'];
         }
         
-        $results = $this->model_content_post->getLatestPosts($limit);
+        $results = ContentPost::getLatestPosts($limit);
         
         if ($results) {
             foreach ($results as $result) {
                 if ($result['image']) {
-                    $image = $this->model_tool_image->resize($result['image'], 40, 30, 'h');
+                    $image = ToolImage::resize($result['image'], 40, 30, 'h');
                 } else {
-                    $image = $this->model_tool_image->resize('placeholder.png', 40, 30, 'h');
+                    $image = ToolImage::resize('placeholder.png', 40, 30, 'h');
                 }
                 
-                $data['recent_posts'][] = array('post_id' => $result['post_id'], 'name' => $result['name'], 'pic' => $image, 'href' => $this->url->link('content/post', 'post_id=' . $result['post_id'], 'SSL'));
+                $data['recent_posts'][] = array('post_id' => $result['post_id'], 'name' => $result['name'], 'pic' => $image, 'href' => Url::link('content/post', 'post_id=' . $result['post_id'], 'SSL'));
             }
         }
         
         $data['most_viewed'] = array();
         
-        $results = $this->model_content_post->getPopularPosts($limit);
+        $results = ContentPost::getPopularPosts($limit);
         
         if ($results) {
             foreach ($results as $result) {
                 if ($result['image']) {
-                    $image = $this->model_tool_image->resize($result['image'], 40, 30, 'h');
+                    $image = ToolImage::resize($result['image'], 40, 30, 'h');
                 } else {
-                    $image = $this->model_tool_image->resize('placeholder.png', 40, 30, 'h');
+                    $image = ToolImage::resize('placeholder.png', 40, 30, 'h');
                 }
                 
-                $data['most_viewed'][] = array('post_id' => $result['post_id'], 'name' => $result['name'], 'pic' => $image, 'href' => $this->url->link('content/post', 'post_id=' . $result['post_id'], 'SSL'));
+                $data['most_viewed'][] = array('post_id' => $result['post_id'], 'name' => $result['name'], 'pic' => $image, 'href' => Url::link('content/post', 'post_id=' . $result['post_id'], 'SSL'));
             }
         }
         
         $data['most_discussed'] = array();
         
-        $results = $this->model_content_post->getMostCommentedPosts($limit);
+        $results = ContentPost::getMostCommentedPosts($limit);
         
         if ($results) {
             foreach ($results as $result) {
                 if ($result['image']) {
-                    $image = $this->model_tool_image->resize($result['image'], 40, 30, 'h');
+                    $image = ToolImage::resize($result['image'], 40, 30, 'h');
                 } else {
-                    $image = $this->model_tool_image->resize('placeholder.png', 40, 30, 'h');
+                    $image = ToolImage::resize('placeholder.png', 40, 30, 'h');
                 }
                 
-                $data['most_discussed'][] = array('post_id' => $result['post_id'], 'name' => $result['name'], 'pic' => $image, 'href' => $this->url->link('content/post', 'post_id=' . $result['post_id'], 'SSL'));
+                $data['most_discussed'][] = array('post_id' => $result['post_id'], 'name' => $result['name'], 'pic' => $image, 'href' => Url::link('content/post', 'post_id=' . $result['post_id'], 'SSL'));
             }
         }
         
         $data['widget'] = $widget++;
         
-        $this->theme->loadjs('javascript/widget/blog_hot_topics', $data);
+        Theme::loadjs('javascript/widget/blog_hot_topics', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('widget/blog_hot_topics', $data);
+        return View::render('widget/blog_hot_topics', $data);
     }
 }

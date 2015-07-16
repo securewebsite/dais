@@ -21,12 +21,12 @@ use App\Controllers\Controller;
 class Javascript extends Controller {
     
     public function index() {
-        $scripts         = $this->javascript->fetch();
+        $scripts         = JS::fetch();
         $data            = $scripts['data'];
         $data['scripts'] = $scripts['files'];
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('common/javascript', $data);
+        return View::render('common/javascript', $data);
     }
 }

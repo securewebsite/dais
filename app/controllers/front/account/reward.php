@@ -15,23 +15,25 @@
 */
 
 namespace App\Controllers\Front\Account;
+
 use App\Controllers\Controller;
 
 class Reward extends Controller {
+    
     public function index() {
-        if (!$this->customer->isLogged()) {
-            $this->session->data['redirect'] = $this->url->link('account/reward', '', 'SSL');
+        if (!Customer::isLogged()) {
+            $this->session->data['redirect'] = Url::link('account/reward', '', 'SSL');
             
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         }
         
-        $data = $this->theme->language('account/reward');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        $data = Theme::language('account/reward');
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
-        $this->breadcrumb->add('lang_text_account', 'account/dashboard', null, true, 'SSL');
-        $this->breadcrumb->add('lang_text_reward', 'account/reward', null, true, 'SSL');
+        Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
+        Breadcrumb::add('lang_text_reward', 'account/reward', null, true, 'SSL');
         
-        $this->theme->model('account/reward');
+        Theme::model('account/reward');
         
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
@@ -43,27 +45,27 @@ class Reward extends Controller {
         
         $filter = array('sort' => 'date_added', 'order' => 'DESC', 'start' => ($page - 1) * 10, 'limit' => 10);
         
-        $reward_total = $this->model_account_reward->getTotalRewards($filter);
+        $reward_total = AccountReward::getTotalRewards($filter);
         
-        $results = $this->model_account_reward->getRewards($filter);
+        $results = AccountReward::getRewards($filter);
         
         foreach ($results as $result) {
-            $data['rewards'][] = array('order_id' => $result['order_id'], 'points' => $result['points'], 'description' => $result['description'], 'date_added' => date($this->language->get('lang_date_format_short'), strtotime($result['date_added'])), 'href' => $this->url->link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'));
+            $data['rewards'][] = array('order_id' => $result['order_id'], 'points' => $result['points'], 'description' => $result['description'], 'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 'href' => Url::link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'));
         }
         
-        $data['pagination'] = $this->theme->paginate($reward_total, $page, 10, $this->language->get('lang_text_pagination'), $this->url->link('account/reward', 'page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($reward_total, $page, 10, Lang::get('lang_text_pagination'), Url::link('account/reward', 'page={page}', 'SSL'));
         
-        $data['total'] = (int)$this->customer->getRewardPoints();
+        $data['total'] = (int)Customer::getRewardPoints();
         
-        $data['continue'] = $this->url->link('account/dashboard', '', 'SSL');
+        $data['continue'] = Url::link('account/dashboard', '', 'SSL');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->setController('header', 'shop/header');
-        $this->theme->setController('footer', 'shop/footer');
+        Theme::setController('header', 'shop/header');
+        Theme::setController('footer', 'shop/footer');
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('account/reward', $data));
+        Response::setOutput(View::render('account/reward', $data));
     }
 }

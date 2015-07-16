@@ -15,13 +15,15 @@
 */
 
 namespace App\Controllers\Front\Content;
+
 use App\Controllers\Controller;
 
 class Page extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('content/page');
+        $data = Theme::language('content/page');
         
-        $this->theme->model('content/page');
+        Theme::model('content/page');
         
         if (isset($this->request->get['page_id'])) {
             $page_id = (int)$this->request->get['page_id'];
@@ -29,17 +31,17 @@ class Page extends Controller {
             $page_id = 0;
         }
         
-        $page_info = $this->model_content_page->getPage($page_id);
+        $page_info = ContentPage::getPage($page_id);
         
         if ($page_info) {
-            $this->theme->setTitle($page_info['title']);
-            $this->theme->setDescription($page_info['meta_description']);
-            $this->theme->setKeywords($page_info['meta_keywords']);
+            Theme::setTitle($page_info['title']);
+            Theme::setDescription($page_info['meta_description']);
+            Theme::setKeywords($page_info['meta_keywords']);
             
-            $this->theme->setOgType('article');
-            $this->theme->setOgDescription(html_entity_decode($page_info['description'], ENT_QUOTES, 'UTF-8'));
+            Theme::setOgType('article');
+            Theme::setOgDescription(html_entity_decode($page_info['description'], ENT_QUOTES, 'UTF-8'));
             
-            $this->breadcrumb->add($page_info['title'], 'content/page', 'page_id=' . $page_id);
+            Breadcrumb::add($page_info['title'], 'content/page', 'page_id=' . $page_id);
             
             $data['page_id']       = $page_id;
             $data['heading_title'] = $page_info['title'];
@@ -52,39 +54,39 @@ class Page extends Controller {
                 foreach ($tags as $tag):
                     $data['tags'][] = array(
                         'name' => trim($tag), 
-                        'href' => $this->url->link('search/search', 'search=' . trim($tag))
+                        'href' => Url::link('search/search', 'search=' . trim($tag))
                     );
                 endforeach;
             endif;
             
-            $data['continue'] = $this->url->link('content/home');
+            $data['continue'] = Url::link('content/home');
             
-            $data             = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-            $data['share_bar'] = $this->theme->controller('common/share_bar', array('page', $data));
-            $data             = $this->theme->renderControllers($data);
+            $data             = Theme::listen(__CLASS__, __FUNCTION__, $data);
+            $data['share_bar'] = Theme::controller('common/share_bar', array('page', $data));
+            $data             = Theme::renderControllers($data);
             
-            $this->response->setOutput($this->theme->view('content/page', $data));
+            Response::setOutput(View::render('content/page', $data));
         } else {
-            $this->breadcrumb->add('lang_text_error', 'content/page', 'page_id=' . $page_id);
+            Breadcrumb::add('lang_text_error', 'content/page', 'page_id=' . $page_id);
             
-            $this->theme->setTitle($this->language->get('lang_text_error'));
+            Theme::setTitle(Lang::get('lang_text_error'));
             
-            $data['heading_title'] = $this->language->get('lang_text_error');
+            $data['heading_title'] = Lang::get('lang_text_error');
             
-            $data['continue'] = $this->url->link('content/home');
+            $data['continue'] = Url::link('content/home');
             
-            $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
+            Response::addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
             
-            $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+            $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $data = $this->theme->renderControllers($data);
+            $data = Theme::renderControllers($data);
             
-            $this->response->setOutput($this->theme->view('error/not_found', $data));
+            Response::setOutput(View::render('error/not_found', $data));
         }
     }
     
     public function info() {
-        $this->theme->model('content/page');
+        Theme::model('content/page');
         
         if (isset($this->request->get['page_id'])) {
             $page_id = (int)$this->request->get['page_id'];
@@ -92,7 +94,7 @@ class Page extends Controller {
             $page_id = 0;
         }
         
-        $page_info = $this->model_content_page->getPage($page_id);
+        $page_info = ContentPage::getPage($page_id);
         
         if ($page_info) {
             $output = '<html dir="ltr" lang="en">' . "\n";
@@ -106,9 +108,9 @@ class Page extends Controller {
             $output.= '  </body>' . "\n";
             $output.= '</html>' . "\n";
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->setOutput($output);
+            Response::setOutput($output);
         }
     }
 }

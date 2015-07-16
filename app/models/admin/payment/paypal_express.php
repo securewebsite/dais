@@ -21,8 +21,8 @@ use App\Models\Model;
 class PaypalExpress extends Model {
     
     public function install() {
-        $this->db->query("
-			CREATE TABLE IF NOT EXISTS `{$this->db->prefix}paypal_order` (
+        DB::query("
+			CREATE TABLE IF NOT EXISTS `" . DB::prefix() . "paypal_order` (
 			  `paypal_order_id` int(11) NOT NULL AUTO_INCREMENT,
 			  `order_id` int(11) NOT NULL,
 			  `date_added` DATETIME NOT NULL,
@@ -34,8 +34,8 @@ class PaypalExpress extends Model {
 			  PRIMARY KEY (`paypal_order_id`)
 			) ENGINE=InnoDB DEFAULT COLLATE=utf8_unicode_ci;");
         
-        $this->db->query("
-			CREATE TABLE IF NOT EXISTS `{$this->db->prefix}paypal_order_transaction` (
+        DB::query("
+			CREATE TABLE IF NOT EXISTS `" . DB::prefix() . "paypal_order_transaction` (
 			  `paypal_order_transaction_id` int(11) NOT NULL AUTO_INCREMENT,
 			  `paypal_order_id` int(11) NOT NULL,
 			  `transaction_id` CHAR(20) NOT NULL,
@@ -56,14 +56,14 @@ class PaypalExpress extends Model {
     }
     
     public function uninstall() {
-        $this->db->query("DROP TABLE IF EXISTS `{$this->db->prefix}paypal_order_transaction`;");
-        $this->db->query("DROP TABLE IF EXISTS `{$this->db->prefix}paypal_order`;");
+        DB::query("DROP TABLE IF EXISTS `" . DB::prefix() . "paypal_order_transaction`;");
+        DB::query("DROP TABLE IF EXISTS `" . DB::prefix() . "paypal_order`;");
     }
     
     public function totalCaptured($paypal_order_id) {
-        $qry = $this->db->query("
+        $qry = DB::query("
 			SELECT SUM(`amount`) AS `amount` 
-			FROM `{$this->db->prefix}paypal_order_transaction` 
+			FROM `" . DB::prefix() . "paypal_order_transaction` 
 			WHERE `paypal_order_id` = '" . (int)$paypal_order_id . "' 
 			AND `pending_reason` != 'authorization' 
 			AND (`payment_status` = 'Partially-Refunded' 
@@ -75,9 +75,9 @@ class PaypalExpress extends Model {
     }
     
     public function totalRefundedOrder($paypal_order_id) {
-        $qry = $this->db->query("
+        $qry = DB::query("
 			SELECT SUM(`amount`) AS `amount` 
-			FROM `{$this->db->prefix}paypal_order_transaction` 
+			FROM `" . DB::prefix() . "paypal_order_transaction` 
 			WHERE `paypal_order_id` = '" . (int)$paypal_order_id . "' 
 			AND `payment_status` = 'Refunded'");
         
@@ -85,10 +85,10 @@ class PaypalExpress extends Model {
     }
     
     public function totalRefundedTransaction($transaction_id) {
-        $qry = $this->db->query("
+        $qry = DB::query("
 			SELECT SUM(`amount`) AS `amount` 
-			FROM `{$this->db->prefix}paypal_order_transaction` 
-			WHERE `parent_transaction_id` = '" . $this->db->escape($transaction_id) . "' 
+			FROM `" . DB::prefix() . "paypal_order_transaction` 
+			WHERE `parent_transaction_id` = '" . DB::escape($transaction_id) . "' 
 			AND `payment_type` = 'refund'");
         
         return $qry->row['amount'];
@@ -101,8 +101,8 @@ class PaypalExpress extends Model {
     }
     
     public function getOrder($order_id) {
-        $qry = $this->db->query("
-			SELECT * FROM `{$this->db->prefix}paypal_order` 
+        $qry = DB::query("
+			SELECT * FROM `" . DB::prefix() . "paypal_order` 
 			WHERE `order_id` = '" . (int)$order_id . "' LIMIT 1");
         
         if ($qry->num_rows) {
@@ -116,40 +116,40 @@ class PaypalExpress extends Model {
     }
     
     public function updateOrder($capture_status, $order_id) {
-        $this->db->query("
-			UPDATE `{$this->db->prefix}paypal_order` 
+        DB::query("
+			UPDATE `" . DB::prefix() . "paypal_order` 
 			SET 
 				`date_modified` = now(), 
-				`capture_status` = '" . $this->db->escape($capture_status) . "' 
+				`capture_status` = '" . DB::escape($capture_status) . "' 
 			WHERE `order_id` = '" . (int)$order_id . "'");
     }
     
     public function addTransaction($transaction_data, $request_data = array()) {
-        $this->db->query("
-			INSERT INTO `{$this->db->prefix}paypal_order_transaction` 
+        DB::query("
+			INSERT INTO `" . DB::prefix() . "paypal_order_transaction` 
 			SET 
                 `paypal_order_id`       = '" . (int)$transaction_data['paypal_order_id'] . "', 
-                `transaction_id`        = '" . $this->db->escape($transaction_data['transaction_id']) . "', 
-                `parent_transaction_id` = '" . $this->db->escape($transaction_data['parent_transaction_id']) . "', 
+                `transaction_id`        = '" . DB::escape($transaction_data['transaction_id']) . "', 
+                `parent_transaction_id` = '" . DB::escape($transaction_data['parent_transaction_id']) . "', 
                 `date_added`            = NOW(), 
-                `note`                  = '" . $this->db->escape($transaction_data['note']) . "', 
-                `msgsubid`              = '" . $this->db->escape($transaction_data['msgsubid']) . "', 
-                `receipt_id`            = '" . $this->db->escape($transaction_data['receipt_id']) . "', 
-                `payment_type`          = '" . $this->db->escape($transaction_data['payment_type']) . "', 
-                `payment_status`        = '" . $this->db->escape($transaction_data['payment_status']) . "', 
-                `pending_reason`        = '" . $this->db->escape($transaction_data['pending_reason']) . "', 
-                `transaction_entity`    = '" . $this->db->escape($transaction_data['transaction_entity']) . "', 
+                `note`                  = '" . DB::escape($transaction_data['note']) . "', 
+                `msgsubid`              = '" . DB::escape($transaction_data['msgsubid']) . "', 
+                `receipt_id`            = '" . DB::escape($transaction_data['receipt_id']) . "', 
+                `payment_type`          = '" . DB::escape($transaction_data['payment_type']) . "', 
+                `payment_status`        = '" . DB::escape($transaction_data['payment_status']) . "', 
+                `pending_reason`        = '" . DB::escape($transaction_data['pending_reason']) . "', 
+                `transaction_entity`    = '" . DB::escape($transaction_data['transaction_entity']) . "', 
                 `amount`                = '" . (float)$transaction_data['amount'] . "', 
-                `debug_data`            = '" . $this->db->escape($transaction_data['debug_data']) . "'");
+                `debug_data`            = '" . DB::escape($transaction_data['debug_data']) . "'");
         
-        $paypal_order_transaction_id = $this->db->getLastId();
+        $paypal_order_transaction_id = DB::getLastId();
         
         if ($request_data) {
             $serialized_data = serialize($request_data);
             
-            $this->db->query("
-				UPDATE {$this->db->prefix}paypal_order_transaction
-				SET call_data = '" . $this->db->escape($serialized_data) . "'
+            DB::query("
+				UPDATE " . DB::prefix() . "paypal_order_transaction
+				SET call_data = '" . DB::escape($serialized_data) . "'
 				WHERE paypal_order_transaction_id = " . (int)$paypal_order_transaction_id . "
 				LIMIT 1
 			");
@@ -159,9 +159,9 @@ class PaypalExpress extends Model {
     }
     
     public function getFailedTransaction($paypal_order_transaction_id) {
-        $result = $this->db->query("
+        $result = DB::query("
 			SELECT *
-			FROM {$this->db->prefix}paypal_order_transaction
+			FROM " . DB::prefix() . "paypal_order_transaction
 			WHERE paypal_order_transaction_id = " . (int)$paypal_order_transaction_id . "
 		")->row;
         
@@ -173,34 +173,34 @@ class PaypalExpress extends Model {
     }
     
     public function updateTransaction($transaction) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}paypal_order_transaction
+        DB::query("
+			UPDATE " . DB::prefix() . "paypal_order_transaction
 			SET 
                 paypal_order_id       = " . (int)$transaction['paypal_order_id'] . ",
-                transaction_id        = '" . $this->db->escape($transaction['transaction_id']) . "',
-                parent_transaction_id = '" . $this->db->escape($transaction['parent_transaction_id']) . "',
-                date_added            = '" . $this->db->escape($transaction['date_added']) . "',
-                note                  = '" . $this->db->escape($transaction['note']) . "',
-                msgsubid              = '" . $this->db->escape($transaction['msgsubid']) . "',
-                receipt_id            = '" . $this->db->escape($transaction['receipt_id']) . "',
-                payment_type          = '" . $this->db->escape($transaction['payment_type']) . "',
-                payment_status        = '" . $this->db->escape($transaction['payment_status']) . "',
-                pending_reason        = '" . $this->db->escape($transaction['pending_reason']) . "',
-                transaction_entity    = '" . $this->db->escape($transaction['transaction_entity']) . "',
-                amount                = '" . $this->db->escape($transaction['amount']) . "',
-                debug_data            = '" . $this->db->escape($transaction['debug_data']) . "',
-                call_data             = '" . $this->db->escape($transaction['call_data']) . "'
+                transaction_id        = '" . DB::escape($transaction['transaction_id']) . "',
+                parent_transaction_id = '" . DB::escape($transaction['parent_transaction_id']) . "',
+                date_added            = '" . DB::escape($transaction['date_added']) . "',
+                note                  = '" . DB::escape($transaction['note']) . "',
+                msgsubid              = '" . DB::escape($transaction['msgsubid']) . "',
+                receipt_id            = '" . DB::escape($transaction['receipt_id']) . "',
+                payment_type          = '" . DB::escape($transaction['payment_type']) . "',
+                payment_status        = '" . DB::escape($transaction['payment_status']) . "',
+                pending_reason        = '" . DB::escape($transaction['pending_reason']) . "',
+                transaction_entity    = '" . DB::escape($transaction['transaction_entity']) . "',
+                amount                = '" . DB::escape($transaction['amount']) . "',
+                debug_data            = '" . DB::escape($transaction['debug_data']) . "',
+                call_data             = '" . DB::escape($transaction['call_data']) . "'
 			WHERE paypal_order_transaction_id = " . (int)$transaction['paypal_order_transaction_id'] . "
 		");
     }
     
     private function getTransactions($paypal_order_id) {
-        $qry = $this->db->query("
+        $qry = DB::query("
 			SELECT `ot`.*, 
 			(SELECT count(`ot2`.`paypal_order_id`) 
-				FROM `{$this->db->prefix}paypal_order_transaction` `ot2` 
+				FROM `" . DB::prefix() . "paypal_order_transaction` `ot2` 
 				WHERE `ot2`.`parent_transaction_id` = `ot`.`transaction_id`) AS `children` 
-			FROM `{$this->db->prefix}paypal_order_transaction` `ot` 
+			FROM `" . DB::prefix() . "paypal_order_transaction` `ot` 
 			WHERE `paypal_order_id` = '" . (int)$paypal_order_id . "'");
         
         if ($qry->num_rows) {
@@ -211,10 +211,10 @@ class PaypalExpress extends Model {
     }
     
     public function getLocalTransaction($transaction_id) {
-        $result = $this->db->query("
+        $result = DB::query("
 			SELECT *
-			FROM {$this->db->prefix}paypal_order_transaction
-			WHERE transaction_id = '" . $this->db->escape($transaction_id) . "'
+			FROM " . DB::prefix() . "paypal_order_transaction
+			WHERE transaction_id = '" . DB::escape($transaction_id) . "'
 		")->row;
         
         if ($result) {
@@ -295,12 +295,12 @@ class PaypalExpress extends Model {
     }
     
     public function getOrderId($transaction_id) {
-        $qry = $this->db->query("
+        $qry = DB::query("
 			SELECT `o`.`order_id` 
-			FROM `{$this->db->prefix}paypal_order_transaction` `ot` 
-			LEFT JOIN `{$this->db->prefix}paypal_order` `o` 
+			FROM `" . DB::prefix() . "paypal_order_transaction` `ot` 
+			LEFT JOIN `" . DB::prefix() . "paypal_order` `o` 
 			ON `o`.`paypal_order_id` = `ot`.`paypal_order_id` 
-			WHERE `ot`.`transaction_id` = '" . $this->db->escape($transaction_id) . "' 
+			WHERE `ot`.`transaction_id` = '" . DB::escape($transaction_id) . "' 
 			LIMIT 1");
         
         if ($qry->num_rows) {

@@ -28,14 +28,14 @@ class Masonry extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('masonry_widget', $this->request->post);
-            $this->cache->delete('products.masonry');
+            SettingSetting::editSetting('masonry_widget', $this->request->post);
+            Cache::delete('products.masonry');
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             if (!empty($this->request->get['continue'])) {
-                Response::redirect(Url::link('widget/masonry', 'token=' . $this->session->data['token'], 'SSL'));
+                Response::redirect(Url::link('widget/masonry', '', 'SSL'));
             } else {
-                Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+                Response::redirect(Url::link('module/widget', '', 'SSL'));
             }
         }
         
@@ -64,8 +64,8 @@ class Masonry extends Controller {
         Breadcrumb::add('lang_text_widget', 'module/widget');
         Breadcrumb::add('lang_heading_title', 'widget/masonry');
         
-        $data['action'] = Url::link('widget/masonry', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('widget/masonry', '', 'SSL');
+        $data['cancel'] = Url::link('module/widget', '', 'SSL');
         
         if (isset($this->request->post['masonry_cart'])) {
             $data['masonry_cart'] = $this->request->post['masonry_cart'];
@@ -85,7 +85,7 @@ class Masonry extends Controller {
         
         Theme::model('design/layout');
         
-        $data['layouts'] = $this->model_design_layout->getLayouts();
+        $data['layouts'] = DesignLayout::getLayouts();
         
         Theme::loadjs('javascript/widget/masonry', $data);
         
@@ -93,7 +93,7 @@ class Masonry extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('widget/masonry', $data));
+        Response::setOutput(View::render('widget/masonry', $data));
     }
     
     private function validate() {

@@ -28,10 +28,10 @@ class Reward extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('reward', $this->request->post);
+            SettingSetting::editSetting('reward', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/total', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -43,8 +43,8 @@ class Reward extends Controller {
         Breadcrumb::add('lang_text_total', 'module/total');
         Breadcrumb::add('lang_heading_title', 'total/reward');
         
-        $data['action'] = Url::link('total/reward', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('total/reward', '', 'SSL');
+        $data['cancel'] = Url::link('module/total', '', 'SSL');
         
         if (isset($this->request->post['reward_status'])) {
             $data['reward_status'] = $this->request->post['reward_status'];
@@ -62,7 +62,7 @@ class Reward extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('total/reward', $data));
+        Response::setOutput(View::render('total/reward', $data));
     }
     
     protected function validate() {

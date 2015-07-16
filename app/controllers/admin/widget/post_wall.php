@@ -28,14 +28,14 @@ class PostWall extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('post_wall_widget', $this->request->post);
-            $this->cache->delete('posts.masonry');
+            SettingSetting::editSetting('post_wall_widget', $this->request->post);
+            Cache::delete('posts.masonry');
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             if (!empty($this->request->get['continue'])) {
-                Response::redirect(Url::link('widget/post_wall', 'token=' . $this->session->data['token'], 'SSL'));
+                Response::redirect(Url::link('widget/post_wall', '', 'SSL'));
             } else {
-                Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+                Response::redirect(Url::link('module/widget', '', 'SSL'));
             }
         }
         
@@ -59,13 +59,11 @@ class PostWall extends Controller {
             $data['error_asterisk'] = array();
         }
         
-        $data['breadcrumbs'] = array();
-        
         Breadcrumb::add('lang_text_widget', 'module/widget');
         Breadcrumb::add('lang_heading_title', 'widget/post_wall');
         
-        $data['action'] = Url::link('widget/post_wall', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('widget/post_wall', '', 'SSL');
+        $data['cancel'] = Url::link('module/widget', '', 'SSL');
         
         $data['widgets'] = array();
         
@@ -79,7 +77,7 @@ class PostWall extends Controller {
         
         Theme::model('design/layout');
         
-        $data['layouts'] = $this->model_design_layout->getLayouts();
+        $data['layouts'] = DesignLayout::getLayouts();
         
         Theme::loadjs('javascript/widget/post_wall', $data);
         
@@ -87,7 +85,7 @@ class PostWall extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('widget/post_wall', $data));
+        Response::setOutput(View::render('widget/post_wall', $data));
     }
     
     private function validate() {

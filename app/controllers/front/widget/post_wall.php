@@ -15,22 +15,24 @@
 */
 
 namespace App\Controllers\Front\Widget;
+
 use App\Controllers\Controller;
 
 class PostWall extends Controller {
+    
     public function index($setting) {
         static $widget = 0;
         
-        $data = $this->theme->language('widget/post_wall');
+        $data = Theme::language('widget/post_wall');
         
-        $this->javascript->register('masonry.min', 'bootstrap.min')->register('imagesloaded.min', 'masonry.min');
+        JS::register('masonry.min', 'bootstrap.min')->register('imagesloaded.min', 'masonry.min');
         
-        $data['heading_title'] = $this->language->get('lang_heading_' . $setting['post_type']);
+        $data['heading_title'] = Lang::get('lang_heading_' . $setting['post_type']);
         
-        $data['text_empty'] = sprintf($this->language->get('lang_text_empty'), $setting['post_type']);
+        $data['text_empty'] = sprintf(Lang::get('lang_text_empty'), $setting['post_type']);
         
-        $this->theme->model('content/post');
-        $this->theme->model('tool/image');
+        Theme::model('content/post');
+        Theme::model('tool/image');
         
         $data['button'] = $setting['button'];
         $data['span'] = $setting['span'];
@@ -62,7 +64,7 @@ class PostWall extends Controller {
             if ($setting['post_type'] == 'featured') {
                 $results = array();
                 
-                $posts = explode(',', $this->config->get('featured_post'));
+                $posts = explode(',', Config::get('featured_post'));
                 
                 if (empty($setting['limit'])) {
                     $setting['limit'] = 5;
@@ -71,14 +73,14 @@ class PostWall extends Controller {
                 $posts = array_slice($posts, 0, (int)$setting['limit']);
                 
                 foreach ($posts as $post_id) {
-                    $post_info = $this->model_content_post->getPost($post_id);
+                    $post_info = ContentPost::getPost($post_id);
                     
                     if ($post_info) {
                         $results[] = $post_info;
                     }
                 }
             } else {
-                $results = $this->model_content_post->getPosts(array('sort' => 'p.date_added', 'order' => 'DESC', 'start' => 0, 'limit' => $setting['limit']));
+                $results = ContentPost::getPosts(array('sort' => 'p.date_added', 'order' => 'DESC', 'start' => 0, 'limit' => $setting['limit']));
             }
             
             $chars = $setting['span'] * 40;
@@ -93,7 +95,7 @@ class PostWall extends Controller {
                         $height = ceil(((int)$image_width / $size[0]) * $size[1]);
                     }
                     
-                    $image = $this->model_tool_image->resize($result['image'], (int)$image_width, $height, 'h');
+                    $image = ToolImage::resize($result['image'], (int)$image_width, $height, 'h');
                 } else {
                     $image = '';
                 }
@@ -104,13 +106,13 @@ class PostWall extends Controller {
                     $description = false;
                 }
                 
-                if ($this->config->get('blog_comment_status') && $setting['span'] > 1) {
+                if (Config::get('blog_comment_status') && $setting['span'] > 1) {
                     $rating = $result['rating'];
                 } else {
                     $rating = false;
                 }
                 
-                $masonry_posts[] = array('post_id' => $result['post_id'], 'thumb' => $image, 'name' => $result['name'], 'description' => $description, 'rating' => $rating, 'comments' => sprintf($this->language->get('lang_text_comments'), (int)$result['comments']), 'href' => $this->url->link('content/post', 'post_id=' . $result['post_id']),);
+                $masonry_posts[] = array('post_id' => $result['post_id'], 'thumb' => $image, 'name' => $result['name'], 'description' => $description, 'rating' => $rating, 'comments' => sprintf(Lang::get('lang_text_comments'), (int)$result['comments']), 'href' => Url::link('content/post', 'post_id=' . $result['post_id']),);
             }
             
             $cachefile = $masonry_posts;
@@ -121,18 +123,18 @@ class PostWall extends Controller {
         
         $data['widget'] = $widget++;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('widget/post_wall', $data);
+        return View::render('widget/post_wall', $data);
     }
     
     protected function formatDescription($description, $chars = 100) {
         $description = preg_replace('/<[^>]+>/i', ' ', html_entity_decode($description, ENT_QUOTES, 'UTF-8'));
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
-        if ($this->encode->strlen($description) > $chars) {
-            return trim($this->encode->substr($description, 0, $chars)) . '...';
+        if (Encode::strlen($description) > $chars) {
+            return trim(Encode::substr($description, 0, $chars)) . '...';
         } else {
             return $description;
         }

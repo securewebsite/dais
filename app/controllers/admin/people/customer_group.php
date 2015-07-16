@@ -38,7 +38,7 @@ class CustomerGroup extends Controller {
         Theme::model('people/customer_group');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_people_customer_group->addCustomerGroup($this->request->post);
+            PeopleCustomerGroup::addCustomerGroup($this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -55,7 +55,7 @@ class CustomerGroup extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('people/customer_group', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('people/customer_group', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -69,7 +69,7 @@ class CustomerGroup extends Controller {
         Theme::model('people/customer_group');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_people_customer_group->editCustomerGroup($this->request->get['customer_group_id'], $this->request->post);
+            PeopleCustomerGroup::editCustomerGroup($this->request->get['customer_group_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -86,7 +86,7 @@ class CustomerGroup extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('people/customer_group', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('people/customer_group', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -101,7 +101,7 @@ class CustomerGroup extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $customer_group_id) {
-                $this->model_people_customer_group->deleteCustomerGroup($customer_group_id);
+                PeopleCustomerGroup::deleteCustomerGroup($customer_group_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -120,7 +120,7 @@ class CustomerGroup extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('people/customer_group', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('people/customer_group', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,21 +165,21 @@ class CustomerGroup extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'people/customer_group', $url);
         
-        $data['insert'] = Url::link('people/customer_group/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('people/customer_group/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('people/customer_group/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('people/customer_group/delete', '' . $url, 'SSL');
         
         $data['customer_groups'] = array();
         
         $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $customer_group_total = $this->model_people_customer_group->getTotalCustomerGroups();
+        $customer_group_total = PeopleCustomerGroup::getTotalCustomerGroups();
         
-        $results = $this->model_people_customer_group->getCustomerGroups($filter);
+        $results = PeopleCustomerGroup::getCustomerGroups($filter);
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/customer_group/update', 'token=' . $this->session->data['token'] . '&customer_group_id=' . $result['customer_group_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/customer_group/update', '' . '&customer_group_id=' . $result['customer_group_id'] . $url, 'SSL'));
             
             $data['customer_groups'][] = array('customer_group_id' => $result['customer_group_id'], 'name' => $result['name'] . (($result['customer_group_id'] == Config::get('config_customer_group_id')) ? Lang::get('lang_text_default') : null), 'sort_order' => $result['sort_order'], 'selected' => isset($this->request->post['selected']) && in_array($result['customer_group_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -210,8 +210,8 @@ class CustomerGroup extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_name'] = Url::link('people/customer_group', 'token=' . $this->session->data['token'] . '&sort=cgd.name' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('people/customer_group', 'token=' . $this->session->data['token'] . '&sort=cg.sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('people/customer_group', '' . '&sort=cgd.name' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('people/customer_group', '' . '&sort=cg.sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -223,7 +223,7 @@ class CustomerGroup extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($customer_group_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('people/customer_group', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($customer_group_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('people/customer_group', '' . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -232,7 +232,7 @@ class CustomerGroup extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('people/customer_group_list', $data));
+        Response::setOutput(View::render('people/customer_group_list', $data));
     }
     
     protected function getForm() {
@@ -267,25 +267,25 @@ class CustomerGroup extends Controller {
         Breadcrumb::add('lang_heading_title', 'people/customer_group', $url);
         
         if (!isset($this->request->get['customer_group_id'])) {
-            $data['action'] = Url::link('people/customer_group/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('people/customer_group/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('people/customer_group/update', 'token=' . $this->session->data['token'] . '&customer_group_id=' . $this->request->get['customer_group_id'] . $url, 'SSL');
+            $data['action'] = Url::link('people/customer_group/update', '' . '&customer_group_id=' . $this->request->get['customer_group_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('people/customer_group', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('people/customer_group', '' . $url, 'SSL');
         
         if (isset($this->request->get['customer_group_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $customer_group_info = $this->model_people_customer_group->getCustomerGroup($this->request->get['customer_group_id']);
+            $customer_group_info = PeopleCustomerGroup::getCustomerGroup($this->request->get['customer_group_id']);
         }
         
         Theme::model('locale/language');
         
-        $data['languages'] = $this->model_locale_language->getLanguages();
+        $data['languages'] = LocaleLanguage::getLanguages();
         
         if (isset($this->request->post['customer_group_description'])) {
             $data['customer_group_description'] = $this->request->post['customer_group_description'];
         } elseif (isset($this->request->get['customer_group_id'])) {
-            $data['customer_group_description'] = $this->model_people_customer_group->getCustomerGroupDescriptions($this->request->get['customer_group_id']);
+            $data['customer_group_description'] = PeopleCustomerGroup::getCustomerGroupDescriptions($this->request->get['customer_group_id']);
         } else {
             $data['customer_group_description'] = array();
         }
@@ -342,7 +342,7 @@ class CustomerGroup extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('people/customer_group_form', $data));
+        Response::setOutput(View::render('people/customer_group_form', $data));
     }
     
     protected function validateForm() {
@@ -374,13 +374,13 @@ class CustomerGroup extends Controller {
                 $this->error['warning'] = Lang::get('lang_error_default');
             }
             
-            $store_total = $this->model_setting_store->getTotalStoresByCustomerGroupId($customer_group_id);
+            $store_total = SettingStore::getTotalStoresByCustomerGroupId($customer_group_id);
             
             if ($store_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_store'), $store_total);
             }
             
-            $customer_total = $this->model_people_customer->getTotalCustomersByCustomerGroupId($customer_group_id);
+            $customer_total = PeopleCustomer::getTotalCustomersByCustomerGroupId($customer_group_id);
             
             if ($customer_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_customer'), $customer_total);

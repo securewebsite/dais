@@ -40,14 +40,14 @@ class Customer extends Model {
                     cgd.name AS customer_group, 
                     c.status, 
                     (SELECT SUM(op.quantity) 
-                        FROM `{$this->db->prefix}order_product` op 
+                        FROM `" . DB::prefix() . "order_product` op 
                         WHERE op.order_id = o.order_id 
                         GROUP BY op.order_id) AS products, 
                     o.total 
-                FROM `{$this->db->prefix}order` o 
-                LEFT JOIN `{$this->db->prefix}customer` c 
+                FROM `" . DB::prefix() . "order` o 
+                LEFT JOIN `" . DB::prefix() . "customer` c 
                 ON (o.customer_id = c.customer_id) 
-                LEFT JOIN {$this->db->prefix}customer_group_description cgd 
+                LEFT JOIN " . DB::prefix() . "customer_group_description cgd 
                 ON (c.customer_group_id = cgd.customer_group_id) 
                 WHERE o.customer_id > 0 
                 AND cgd.language_id = '" . (int)Config::get('config_language_id') . "'";
@@ -59,11 +59,11 @@ class Customer extends Model {
         }
         
         if (!empty($data['filter_date_start'])) {
-            $sql.= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $sql.= " AND DATE(o.date_added) >= '" . DB::escape($data['filter_date_start']) . "'";
         }
         
         if (!empty($data['filter_date_end'])) {
-            $sql.= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql.= " AND DATE(o.date_added) <= '" . DB::escape($data['filter_date_end']) . "'";
         }
         
         $sql.= ") tmp GROUP BY tmp.customer_id ORDER BY total DESC";
@@ -80,7 +80,7 @@ class Customer extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
@@ -88,7 +88,7 @@ class Customer extends Model {
     public function getTotalOrders($data = array()) {
         $sql = "
             SELECT COUNT(DISTINCT o.customer_id) AS total 
-            FROM `{$this->db->prefix}order` o 
+            FROM `" . DB::prefix() . "order` o 
             WHERE o.customer_id > '0'";
         
         if (!empty($data['filter_order_status_id'])) {
@@ -98,14 +98,14 @@ class Customer extends Model {
         }
         
         if (!empty($data['filter_date_start'])) {
-            $sql.= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $sql.= " AND DATE(o.date_added) >= '" . DB::escape($data['filter_date_start']) . "'";
         }
         
         if (!empty($data['filter_date_end'])) {
-            $sql.= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql.= " AND DATE(o.date_added) <= '" . DB::escape($data['filter_date_end']) . "'";
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->row['total'];
     }
@@ -121,21 +121,21 @@ class Customer extends Model {
                 SUM(cr.points) AS points, 
                 COUNT(o.order_id) AS orders, 
                 SUM(o.total) AS total 
-            FROM {$this->db->prefix}customer_reward cr 
-            LEFT JOIN `{$this->db->prefix}customer` c 
+            FROM " . DB::prefix() . "customer_reward cr 
+            LEFT JOIN `" . DB::prefix() . "customer` c 
                 ON (cr.customer_id = c.customer_id) 
-            LEFT JOIN {$this->db->prefix}customer_group_description cgd 
+            LEFT JOIN " . DB::prefix() . "customer_group_description cgd 
                 ON (c.customer_group_id = cgd.customer_group_id) 
-            LEFT JOIN `{$this->db->prefix}order` o 
+            LEFT JOIN `" . DB::prefix() . "order` o 
                 ON (cr.order_id = o.order_id) 
             WHERE cgd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_date_start'])) {
-            $sql.= " AND DATE(cr.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $sql.= " AND DATE(cr.date_added) >= '" . DB::escape($data['filter_date_start']) . "'";
         }
         
         if (!empty($data['filter_date_end'])) {
-            $sql.= " AND DATE(cr.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql.= " AND DATE(cr.date_added) <= '" . DB::escape($data['filter_date_end']) . "'";
         }
         
         $sql.= " GROUP BY cr.customer_id ORDER BY points DESC";
@@ -152,7 +152,7 @@ class Customer extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
@@ -160,16 +160,16 @@ class Customer extends Model {
     public function getTotalRewardPoints() {
         $sql = "
             SELECT COUNT(DISTINCT customer_id) AS total 
-            FROM `{$this->db->prefix}customer_reward`";
+            FROM `" . DB::prefix() . "customer_reward`";
         
         $implode = array();
         
         if (!empty($data['filter_date_start'])) {
-            $implode[] = "DATE(cr.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $implode[] = "DATE(cr.date_added) >= '" . DB::escape($data['filter_date_start']) . "'";
         }
         
         if (!empty($data['filter_date_end'])) {
-            $implode[] = "DATE(cr.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $implode[] = "DATE(cr.date_added) <= '" . DB::escape($data['filter_date_end']) . "'";
         }
         
         if ($implode) {
@@ -189,7 +189,7 @@ class Customer extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->row['total'];
     }
@@ -203,19 +203,19 @@ class Customer extends Model {
                 cgd.name AS customer_group, 
                 c.status, 
                 SUM(cc.amount) AS total 
-            FROM {$this->db->prefix}customer_credit cc 
-            LEFT JOIN `{$this->db->prefix}customer` c 
+            FROM " . DB::prefix() . "customer_credit cc 
+            LEFT JOIN `" . DB::prefix() . "customer` c 
             ON (cc.customer_id = c.customer_id) 
-            LEFT JOIN {$this->db->prefix}customer_group_description cgd 
+            LEFT JOIN " . DB::prefix() . "customer_group_description cgd 
             ON (c.customer_group_id = cgd.customer_group_id) 
             WHERE cgd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_date_start'])) {
-            $sql.= "DATE(cc.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $sql.= "DATE(cc.date_added) >= '" . DB::escape($data['filter_date_start']) . "'";
         }
         
         if (!empty($data['filter_date_end'])) {
-            $sql.= "DATE(cc.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql.= "DATE(cc.date_added) <= '" . DB::escape($data['filter_date_end']) . "'";
         }
         
         $sql.= " GROUP BY cc.customer_id ORDER BY total DESC";
@@ -232,7 +232,7 @@ class Customer extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
@@ -240,16 +240,16 @@ class Customer extends Model {
     public function getTotalCredit() {
         $sql = "
             SELECT COUNT(DISTINCT customer_id) AS total 
-            FROM `{$this->db->prefix}customer_credit`";
+            FROM `" . DB::prefix() . "customer_credit`";
         
         $implode = array();
         
         if (!empty($data['filter_date_start'])) {
-            $implode[] = "DATE(cr.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $implode[] = "DATE(cr.date_added) >= '" . DB::escape($data['filter_date_start']) . "'";
         }
         
         if (!empty($data['filter_date_end'])) {
-            $implode[] = "DATE(cr.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $implode[] = "DATE(cr.date_added) <= '" . DB::escape($data['filter_date_end']) . "'";
         }
         
         if ($implode) {
@@ -269,7 +269,7 @@ class Customer extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->row['total'];
     }

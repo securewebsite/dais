@@ -21,30 +21,30 @@ use App\Models\Model;
 class Recurring extends Model {
     
     public function addRecurring($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}recurring 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "recurring 
 			SET 
                 sort_order      = '" . (int)$data['sort_order'] . "', 
                 status          = '" . (int)$data['status'] . "', 
                 price           = '" . (float)$data['price'] . "', 
-                frequency       = '" . $this->db->escape($data['frequency']) . "', 
+                frequency       = '" . DB::escape($data['frequency']) . "', 
                 duration        = '" . (int)$data['duration'] . "', 
                 cycle           = '" . (int)$data['cycle'] . "', 
                 trial_status    = '" . (int)$data['trial_status'] . "', 
                 trial_price     = '" . (float)$data['trial_price'] . "', 
-                trial_frequency = '" . $this->db->escape($data['trial_frequency']) . "', 
+                trial_frequency = '" . DB::escape($data['trial_frequency']) . "', 
                 trial_duration  = '" . (int)$data['trial_duration'] . "', 
                 trial_cycle     = '" . (int)$data['trial_cycle'] . "'");
         
-        $recurring_id = $this->db->getLastId();
+        $recurring_id = DB::getLastId();
         
         foreach ($data['recurring_description'] as $language_id => $recurring_description) {
-             $this->db->query("
-                INSERT INTO {$this->db->prefix}recurring_description 
+             DB::query("
+                INSERT INTO " . DB::prefix() . "recurring_description 
                 SET 
                     recurring_id = '" . (int)$recurring_id . "', 
                     language_id  = '" . (int)$language_id . "', 
-                    name         = '" . $this->db->escape($recurring_description['name']) . "'
+                    name         = '" . DB::escape($recurring_description['name']) . "'
                 ");
         }
         
@@ -54,33 +54,33 @@ class Recurring extends Model {
     }
     
     public function editRecurring($recurring_id, $data) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}recurring 
+        DB::query("
+			UPDATE " . DB::prefix() . "recurring 
 			SET 
                 price           = '" . (float)$data['price'] . "', 
-                frequency       = '" . $this->db->escape($data['frequency']) . "', 
+                frequency       = '" . DB::escape($data['frequency']) . "', 
                 duration        = '" . (int)$data['duration'] . "', 
                 cycle           = '" . (int)$data['cycle'] . "', 
                 sort_order      = '" . (int)$data['sort_order'] . "', 
                 status          = '" . (int)$data['status'] . "', 
                 trial_price     = '" . (float)$data['trial_price'] . "', 
-                trial_frequency = '" . $this->db->escape($data['trial_frequency']) . "', 
+                trial_frequency = '" . DB::escape($data['trial_frequency']) . "', 
                 trial_duration  = '" . (int)$data['trial_duration'] . "', 
                 trial_cycle     = '" . (int)$data['trial_cycle'] . "', 
                 trial_status    = '" . (int)$data['trial_status'] . "' 
 			WHERE recurring_id = '" . (int)$recurring_id . "'");
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}recurring_description 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "recurring_description 
             WHERE recurring_id = '" . (int)$recurring_id . "'");
 
         foreach ($data['recurring_description'] as $language_id => $recurring_description) {
-             $this->db->query("
-                INSERT INTO {$this->db->prefix}recurring_description 
+             DB::query("
+                INSERT INTO " . DB::prefix() . "recurring_description 
                 SET 
                     recurring_id = '" . (int)$recurring_id . "', 
                     language_id  = '" . (int)$language_id . "', 
-                    name         = '" . $this->db->escape($recurring_description['name']) . "'
+                    name         = '" . DB::escape($recurring_description['name']) . "'
                 ");
         }
         
@@ -100,20 +100,20 @@ class Recurring extends Model {
     }
     
     public function deleteRecurring($recurring_id) {
-        $this->db->query("
-			DELETE FROM {$this->db->prefix}recurring 
+        DB::query("
+			DELETE FROM " . DB::prefix() . "recurring 
 			WHERE recurring_id = '" . (int)$recurring_id . "'");
         
-        $this->db->query("
-			DELETE FROM {$this->db->prefix}recurring_description 
+        DB::query("
+			DELETE FROM " . DB::prefix() . "recurring_description 
 			WHERE recurring_id = '" . (int)$recurring_id . "'");
         
-        $this->db->query("
-			DELETE FROM {$this->db->prefix}product_recurring 
+        DB::query("
+			DELETE FROM " . DB::prefix() . "product_recurring 
 			WHERE recurring_id = '" . (int)$recurring_id . "'");
         
-        $this->db->query("
-			UPDATE {$this->db->prefix}order_recurring 
+        DB::query("
+			UPDATE " . DB::prefix() . "order_recurring 
 			SET 
 				recurring_id = '0' 
 			WHERE recurring_id = '" . (int)$recurring_id . "'");
@@ -122,9 +122,9 @@ class Recurring extends Model {
     }
     
     public function getRecurring($recurring_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}recurring 
+			FROM " . DB::prefix() . "recurring 
 			WHERE recurring_id = '" . (int)$recurring_id . "'");
         
         return $query->row;
@@ -133,9 +133,9 @@ class Recurring extends Model {
     public function getRecurringDescription($recurring_id) {
         $recurring_description_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}recurring_description 
+			FROM " . DB::prefix() . "recurring_description 
 			WHERE recurring_id = '" . (int)$recurring_id . "'");
         
         foreach ($query->rows as $result) {
@@ -148,13 +148,13 @@ class Recurring extends Model {
     public function getRecurrings($data = array()) {
         $sql = "
 			SELECT * 
-			FROM {$this->db->prefix}recurring r 
-			LEFT JOIN {$this->db->prefix}recurring_description rd 
+			FROM " . DB::prefix() . "recurring r 
+			LEFT JOIN " . DB::prefix() . "recurring_description rd 
 			ON (r.recurring_id = rd.recurring_id) 
 			WHERE rd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_name'])) {
-            $sql.= " AND rd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+            $sql.= " AND rd.name LIKE '" . DB::escape($data['filter_name']) . "%'";
         }
         
         $sort_data = array('rd.name', 'r.sort_order');
@@ -183,15 +183,15 @@ class Recurring extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
     
     public function getTotalRecurrings() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}recurring");
+			FROM " . DB::prefix() . "recurring");
         
         return $query->row['total'];
     }

@@ -28,10 +28,10 @@ class BlogFeatured extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('blog_featured', $this->request->post);
+            SettingSetting::editSetting('blog_featured', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/widget', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -49,10 +49,8 @@ class BlogFeatured extends Controller {
         Breadcrumb::add('lang_text_widget', 'module/widget');
         Breadcrumb::add('lang_heading_title', 'widget/blog_featured');
         
-        $data['action'] = Url::link('widget/blog_featured', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL');
-        
-        $data['token'] = $this->session->data['token'];
+        $data['action'] = Url::link('widget/blog_featured', '', 'SSL');
+        $data['cancel'] = Url::link('module/widget', '', 'SSL');
         
         if (isset($this->request->post['blog_featured_post'])) {
             $data['blog_featured_post'] = $this->request->post['blog_featured_post'];
@@ -71,7 +69,7 @@ class BlogFeatured extends Controller {
         $data['posts'] = array();
         
         foreach ($posts as $post_id) {
-            $post_info = $this->model_content_post->getPost($post_id);
+            $post_info = ContentPost::getPost($post_id);
             
             if ($post_info) {
                 $data['posts'][] = array('post_id' => $post_info['post_id'], 'name' => $post_info['name']);
@@ -88,7 +86,7 @@ class BlogFeatured extends Controller {
         
         Theme::model('design/layout');
         
-        $data['layouts'] = $this->model_design_layout->getLayouts();
+        $data['layouts'] = DesignLayout::getLayouts();
         
         Theme::loadjs('javascript/widget/blog_featured', $data);
         
@@ -96,7 +94,7 @@ class BlogFeatured extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('widget/blog_featured', $data));
+        Response::setOutput(View::render('widget/blog_featured', $data));
     }
     
     private function validate() {

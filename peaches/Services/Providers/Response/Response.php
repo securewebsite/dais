@@ -21,7 +21,14 @@ class Response {
     private $headers = array();
     private $level   = 0;
     private $output;
+    private $token;
     
+    public function __construct() {
+        if (isset(Session::p()->data['token'])):
+            $this->token = Session::p()->data['token'];
+        endif;
+    }
+
     public function addHeader($header) {
         $this->headers[] = $header;
     }
@@ -97,5 +104,29 @@ class Response {
             
             echo ($output);
         endif;
+    }
+
+    public function makeToken() {
+        $token = md5(mt_rand());
+
+        $this->token = $token;
+
+        Session::p()->data['token'] = $token;
+        User::setToken($token);
+    }
+
+    public function match() {
+        $user    = !is_null(User::getToken()) ? User::getToken() : false;
+        $session = isset(Session::p()->data['token']) ? Session::p()->data['token'] : false;
+
+        if (($user !== $this->token) || ($session !== $this->token) || ($session !== $user) || (!$this->token) || (!$user) || (!$session)):
+            return false;
+        endif;
+
+        return true;
+    }
+
+    public function getToken() {
+        return $this->token;
     }
 }

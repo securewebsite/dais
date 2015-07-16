@@ -19,9 +19,9 @@ use App\Models\Model;
 
 class Notification extends Model {
 	public function getConfigurableNotifications() {
-		$query = $this->db->query("
+		$query = DB::query("
 			SELECT email_id, email_slug, config_description 
-			FROM {$this->db->prefix}email 
+			FROM " . DB::prefix() . "email 
 			WHERE recipient = '1' 
 			AND configurable = '1'");
 
@@ -29,10 +29,10 @@ class Notification extends Model {
 	}
 
 	public function getCustomerNotifications() {
-		$query = $this->db->query("
+		$query = DB::query("
 			SELECT settings 
-			FROM {$this->db->prefix}customer_notification 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "'");
+			FROM " . DB::prefix() . "customer_notification 
+			WHERE customer_id = '" . (int)\Customer::getId() . "'");
 
 		$data = unserialize($query->row['settings']);
 
@@ -76,20 +76,20 @@ class Notification extends Model {
 
 		$notify = serialize($notify);
 
-		$this->db->query("
-			UPDATE {$this->db->prefix}customer_notification 
+		DB::query("
+			UPDATE " . DB::prefix() . "customer_notification 
 			SET 
-				settings = '" . $this->db->escape($notify) . "' 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "'");
+				settings = '" . DB::escape($notify) . "' 
+			WHERE customer_id = '" . (int)\Customer::getId() . "'");
 
 		return true;
 	}
 
 	public function getTotalNotifications() {
-		$query = $this->db->query("
+		$query = DB::query("
 			SELECT COUNT(notification_id) AS total 
-			FROM {$this->db->prefix}customer_inbox 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "'
+			FROM " . DB::prefix() . "customer_inbox 
+			WHERE customer_id = '" . (int)\Customer::getId() . "'
 		");
 
 		return $query->row['total'];
@@ -99,10 +99,10 @@ class Notification extends Model {
 		if ($start < 0) $start = 0;
         if ($limit < 1) $limit = 10;
 
-		$query = $this->db->query("
+		$query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}customer_inbox 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "' 
+			FROM " . DB::prefix() . "customer_inbox 
+			WHERE customer_id = '" . (int)\Customer::getId() . "' 
 			ORDER BY notification_id DESC 
 			LIMIT " . (int)$start . "," . (int)$limit);
 
@@ -110,11 +110,11 @@ class Notification extends Model {
 	}
 
 	public function getInboxNotification($notification_id) {
-		$query = $this->db->query("
+		$query = DB::query("
 			SELECT message 
-			FROM {$this->db->prefix}customer_inbox 
+			FROM " . DB::prefix() . "customer_inbox 
 			WHERE notification_id = '" . (int)$notification_id . "' 
-			AND customer_id = '" . (int)$this->customer->getId() . "'");
+			AND customer_id = '" . (int)\Customer::getId() . "'");
 
 		// this is the process for reading so let's mark it as read
 		$this->markRead($notification_id);
@@ -123,27 +123,27 @@ class Notification extends Model {
 	}
 
 	public function markRead($notification_id) {
-		$this->db->query("
-			UPDATE {$this->db->prefix}customer_inbox 
+		DB::query("
+			UPDATE " . DB::prefix() . "customer_inbox 
 			SET is_read = '1' 
 			WHERE notification_id = '" . (int)$notification_id . "' 
-			AND customer_id = '" . (int)$this->customer->getId() . "'");
+			AND customer_id = '" . (int)\Customer::getId() . "'");
 	}
 
 	public function deleteInboxNotification($notification_id) {
-		$query = $this->db->query("
+		$query = DB::query("
 			DELETE 
-			FROM {$this->db->prefix}customer_inbox 
+			FROM " . DB::prefix() . "customer_inbox 
 			WHERE notification_id = '" . (int)$notification_id . "' 
-			AND customer_id = '" . (int)$this->customer->getId() . "'");
+			AND customer_id = '" . (int)\Customer::getId() . "'");
 
 		if ($query) return true;
 	}
 
 	public function getWebversion($id) {
-		$query = $this->db->query("
+		$query = DB::query("
 			SELECT html 
-			FROM {$this->db->prefix}notification_queue 
+			FROM " . DB::prefix() . "notification_queue 
 			WHERE queue_id = '" . (int)$id . "'
 		");
 

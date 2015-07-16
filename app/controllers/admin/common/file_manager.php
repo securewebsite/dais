@@ -41,13 +41,11 @@ class FileManager extends Controller {
             $data['base'] = Config::get('http.server');
         }
         
-        $data['token'] = $this->session->data['token'];
-        
         $data['directory'] = Config::get('http.public') . 'image/data/';
         
         Theme::model('tool/image');
         
-        $data['no_image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+        $data['no_image'] = ToolImage::resize('placeholder.png', 100, 100);
         
         if (isset($this->request->get['field'])) {
             $data['field'] = $this->request->get['field'];
@@ -67,14 +65,14 @@ class FileManager extends Controller {
         $data['css_link'] = Config::get('https.public') . 'asset/' . Config::get('theme.name') . '/compiled/' . Filecache::get_key($css_key, 'css');
         $data['js_link']  = Config::get('https.public') . 'asset/' . Config::get('theme.name') . '/compiled/' . Filecache::get_key($js_key, 'js');
         
-        Response::setOutput(Theme::view('common/file_manager', $data));
+        Response::setOutput(View::render('common/file_manager', $data));
     }
     
     public function image() {
         Theme::model('tool/image');
         
         if (isset($this->request->get['image'])) {
-            Response::setOutput($this->model_tool_image->resize(html_entity_decode($this->request->get['image'], ENT_QUOTES, 'UTF-8'), 100, 100));
+            Response::setOutput(ToolImage::resize(html_entity_decode($this->request->get['image'], ENT_QUOTES, 'UTF-8'), 100, 100));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);

@@ -45,14 +45,14 @@ class Widget extends Controller {
         
         Theme::model('setting/module');
         
-        $modules = $this->model_setting_module->getInstalled('widget');
+        $modules = SettingModule::getInstalled('widget');
         
         foreach ($modules as $key => $value) {
             $theme_file = Theme::getPath() . 'controller/widget/' . $value . '.php';
             $core_file  = Config::get('path.application') . 'widget/' . $value . '.php';
             
             if (!is_readable($theme_file) && !is_readable($core_file)) {
-                $this->model_setting_module->uninstall('widget', $value);
+                SettingModule::uninstall('widget', $value);
                 
                 unset($modules[$key]);
             }
@@ -73,17 +73,17 @@ class Widget extends Controller {
                 if (!in_array($module, $modules)) {
                     $action[] = array(
                         'text' => Lang::get('lang_text_install'), 
-                        'href' => Url::link('module/widget/install', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL')
+                        'href' => Url::link('module/widget/install', '' . '&module=' . $module, 'SSL')
                     );
                 } else {
                     $action[] = array(
                         'text' => Lang::get('lang_text_edit'), 
-                        'href' => Url::link('widget/' . $module . '', 'token=' . $this->session->data['token'], 'SSL')
+                        'href' => Url::link('widget/' . $module . '', '', 'SSL')
                     );
                     
                     $action[] = array(
                         'text' => Lang::get('lang_text_uninstall'), 
-                        'href' => Url::link('module/widget/uninstall', 'token=' . $this->session->data['token'] . '&module=' . $module, 'SSL')
+                        'href' => Url::link('module/widget/uninstall', '' . '&module=' . $module, 'SSL')
                     );
                 }
                 
@@ -95,7 +95,7 @@ class Widget extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('module/widget', $data));
+        Response::setOutput(View::render('module/widget', $data));
     }
     
     public function install() {
@@ -106,16 +106,16 @@ class Widget extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/widget', '', 'SSL'));
         } else {
             Theme::model('setting/module');
             
-            $this->model_setting_module->install('widget', $this->request->get['module']);
+            SettingModule::install('widget', $this->request->get['module']);
             
             Theme::model('people/user_group');
             
-            $this->model_people_user_group->addPermission(User::getId(), 'access', 'widget/' . $this->request->get['module']);
-            $this->model_people_user_group->addPermission(User::getId(), 'modify', 'widget/' . $this->request->get['module']);
+            PeopleUserGroup::addPermission(User::getId(), 'access', 'widget/' . $this->request->get['module']);
+            PeopleUserGroup::addPermission(User::getId(), 'modify', 'widget/' . $this->request->get['module']);
             
             $base_path  = Config::get('path.application') . 'widget' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'widget' . SEP;
@@ -134,7 +134,7 @@ class Widget extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/widget', '', 'SSL'));
         }
     }
     
@@ -146,13 +146,13 @@ class Widget extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/widget', '', 'SSL'));
         } else {
             Theme::model('setting/module');
             Theme::model('setting/setting');
             
-            $this->model_setting_module->uninstall('widget', $this->request->get['module']);
-            $this->model_setting_setting->deleteSetting($this->request->get['module']);
+            SettingModule::uninstall('widget', $this->request->get['module']);
+            SettingSetting::deleteSetting($this->request->get['module']);
             
             $base_path  = Config::get('path.application') . 'widget' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'widget' . SEP;
@@ -171,7 +171,7 @@ class Widget extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/widget', '', 'SSL'));
         }
     }
 }

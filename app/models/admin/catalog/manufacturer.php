@@ -21,28 +21,28 @@ use App\Models\Model;
 class Manufacturer extends Model {
     
     public function addManufacturer($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}manufacturer 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "manufacturer 
 			SET 
-				name = '" . $this->db->escape($data['name']) . "', 
+				name = '" . DB::escape($data['name']) . "', 
 				sort_order = '" . (int)$data['sort_order'] . "'
 		");
         
-        $manufacturer_id = $this->db->getLastId();
+        $manufacturer_id = DB::getLastId();
         
         if (isset($data['image'])) {
-            $this->db->query("
-				UPDATE {$this->db->prefix}manufacturer 
+            DB::query("
+				UPDATE " . DB::prefix() . "manufacturer 
 				SET 
-					image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' 
+					image = '" . DB::escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' 
 				WHERE manufacturer_id = '" . (int)$manufacturer_id . "'
 			");
         }
         
         if (isset($data['manufacturer_store'])) {
             foreach ($data['manufacturer_store'] as $store_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}manufacturer_to_store 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "manufacturer_to_store 
 					SET 
 						manufacturer_id = '" . (int)$manufacturer_id . "', 
 						store_id = '" . (int)$store_id . "'
@@ -51,48 +51,48 @@ class Manufacturer extends Model {
         }
         
         if ($data['slug']) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}route 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "route 
 				SET 
 					route = 'catalog/manufacturer/info', 
 					query = 'manufacturer_id:" . (int)$manufacturer_id . "', 
-					slug = '" . $this->db->escape($data['slug']) . "'
+					slug = '" . DB::escape($data['slug']) . "'
 			");
         }
 
         $this->search->add(Config::get('config_language_id'), 'manufacturer', $manufacturer_id, $data['name']);
         
-        $this->cache->delete('manufacturer');
+        Cache::delete('manufacturer');
         
         Theme::trigger('admin_add_manufacturer', array('manufacturer_id' => $manufacturer_id));
     }
     
     public function editManufacturer($manufacturer_id, $data) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}manufacturer 
+        DB::query("
+			UPDATE " . DB::prefix() . "manufacturer 
 			SET 
-				name = '" . $this->db->escape($data['name']) . "', 
+				name = '" . DB::escape($data['name']) . "', 
 				sort_order = '" . (int)$data['sort_order'] . "' 
 			WHERE manufacturer_id = '" . (int)$manufacturer_id . "'
 		");
         
         if (isset($data['image'])) {
-            $this->db->query("
-				UPDATE {$this->db->prefix}manufacturer 
+            DB::query("
+				UPDATE " . DB::prefix() . "manufacturer 
 				SET 
-					image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' 
+					image = '" . DB::escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' 
 				WHERE manufacturer_id = '" . (int)$manufacturer_id . "'
 			");
         }
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}manufacturer_to_store 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "manufacturer_to_store 
             WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
         
         if (isset($data['manufacturer_store'])) {
             foreach ($data['manufacturer_store'] as $store_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}manufacturer_to_store 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "manufacturer_to_store 
 					SET 
 						manufacturer_id = '" . (int)$manufacturer_id . "', 
 						store_id = '" . (int)$store_id . "'
@@ -100,17 +100,17 @@ class Manufacturer extends Model {
             }
         }
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}route 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "route 
             WHERE query = 'manufacturer_id:" . (int)$manufacturer_id . "'");
         
         if ($data['slug']) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}route 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "route 
 				SET 
 					route = 'catalog/manufacturer/info', 
 					query = 'manufacturer_id:" . (int)$manufacturer_id . "', 
-					slug = '" . $this->db->escape($data['slug']) . "'
+					slug = '" . DB::escape($data['slug']) . "'
 			");
         }
 
@@ -120,38 +120,38 @@ class Manufacturer extends Model {
         // insert
         $this->search->add(Config::get('config_language_id'), 'manufacturer', $manufacturer_id, $data['name']);
         
-        $this->cache->delete('manufacturer');
+        Cache::delete('manufacturer');
         
         Theme::trigger('admin_edit_manufacturer', array('manufacturer_id' => $manufacturer_id));
     }
     
     public function deleteManufacturer($manufacturer_id) {
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}manufacturer 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "manufacturer 
             WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}manufacturer_to_store 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "manufacturer_to_store 
             WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}route 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "route 
             WHERE query = 'manufacturer_id:" . (int)$manufacturer_id . "'");
         
         $this->search->delete('manufacturer', $manufacturer_id);
 
-        $this->cache->delete('manufacturer');
+        Cache::delete('manufacturer');
         
         Theme::trigger('admin_delete_manufacturer', array('manufacturer_id' => $manufacturer_id));
     }
     
     public function getManufacturer($manufacturer_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT DISTINCT *, 
 			(SELECT slug 
-				FROM {$this->db->prefix}route 
+				FROM " . DB::prefix() . "route 
 				WHERE query = 'manufacturer_id:" . (int)$manufacturer_id . "') AS slug 
-			FROM {$this->db->prefix}manufacturer 
+			FROM " . DB::prefix() . "manufacturer 
 			WHERE manufacturer_id = '" . (int)$manufacturer_id . "'
 		");
         
@@ -161,10 +161,10 @@ class Manufacturer extends Model {
     public function getManufacturers($data = array()) {
         $sql = "
             SELECT * 
-            FROM {$this->db->prefix}manufacturer";
+            FROM " . DB::prefix() . "manufacturer";
         
         if (!empty($data['filter_name'])) {
-            $sql.= " WHERE name LIKE {$this->db->escape($data['filter_name']) }%";
+            $sql.= " WHERE name LIKE {DB::escape($data['filter_name']) }%";
         }
         
         $sort_data = array('name', 'sort_order');
@@ -193,7 +193,7 @@ class Manufacturer extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
@@ -201,9 +201,9 @@ class Manufacturer extends Model {
     public function getManufacturerStores($manufacturer_id) {
         $manufacturer_store_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}manufacturer_to_store 
+			FROM " . DB::prefix() . "manufacturer_to_store 
 			WHERE manufacturer_id = '" . (int)$manufacturer_id . "'
 		");
         
@@ -215,9 +215,9 @@ class Manufacturer extends Model {
     }
     
     public function getTotalManufacturersByImageId($image_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}manufacturer 
+			FROM " . DB::prefix() . "manufacturer 
 			WHERE image_id = '" . (int)$image_id . "'
 		");
         
@@ -225,9 +225,9 @@ class Manufacturer extends Model {
     }
     
     public function getTotalManufacturers() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}manufacturer
+			FROM " . DB::prefix() . "manufacturer
 		");
         
         return $query->row['total'];

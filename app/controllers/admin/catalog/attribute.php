@@ -38,7 +38,7 @@ class Attribute extends Controller {
         Theme::model('catalog/attribute');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_catalog_attribute->addAttribute($this->request->post);
+            CatalogAttribute::addAttribute($this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -56,7 +56,7 @@ class Attribute extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/attribute', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/attribute', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -70,7 +70,7 @@ class Attribute extends Controller {
         Theme::model('catalog/attribute');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_catalog_attribute->editAttribute($this->request->get['attribute_id'], $this->request->post);
+            CatalogAttribute::editAttribute($this->request->get['attribute_id'], $this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -88,7 +88,7 @@ class Attribute extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/attribute', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/attribute', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -103,7 +103,7 @@ class Attribute extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $attribute_id) {
-                $this->model_catalog_attribute->deleteAttribute($attribute_id);
+                CatalogAttribute::deleteAttribute($attribute_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -122,7 +122,7 @@ class Attribute extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/attribute', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/attribute', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -167,21 +167,21 @@ class Attribute extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'catalog/attribute', $url);
         
-        $data['insert'] = Url::link('catalog/attribute/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('catalog/attribute/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('catalog/attribute/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('catalog/attribute/delete', '' . $url, 'SSL');
         
         $data['attributes'] = array();
         
         $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $attribute_total = $this->model_catalog_attribute->getTotalAttributes();
+        $attribute_total = CatalogAttribute::getTotalAttributes();
         
-        $results = $this->model_catalog_attribute->getAttributes($filter);
+        $results = CatalogAttribute::getAttributes($filter);
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/attribute/update', 'token=' . $this->session->data['token'] . '&attribute_id=' . $result['attribute_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/attribute/update', '' . '&attribute_id=' . $result['attribute_id'] . $url, 'SSL'));
             
             $data['attributes'][] = array('attribute_id' => $result['attribute_id'], 'name' => $result['name'], 'attribute_group' => $result['attribute_group'], 'sort_order' => $result['sort_order'], 'selected' => isset($this->request->post['selected']) && in_array($result['attribute_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -212,9 +212,9 @@ class Attribute extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_name'] = Url::link('catalog/attribute', 'token=' . $this->session->data['token'] . '&sort=ad.name' . $url, 'SSL');
-        $data['sort_attribute_group'] = Url::link('catalog/attribute', 'token=' . $this->session->data['token'] . '&sort=attribute_group' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('catalog/attribute', 'token=' . $this->session->data['token'] . '&sort=a.sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('catalog/attribute', '' . '&sort=ad.name' . $url, 'SSL');
+        $data['sort_attribute_group'] = Url::link('catalog/attribute', '' . '&sort=attribute_group' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('catalog/attribute', '' . '&sort=a.sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -226,7 +226,7 @@ class Attribute extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($attribute_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/attribute', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($attribute_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/attribute', '' . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -235,7 +235,7 @@ class Attribute extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('catalog/attribute_list', $data));
+        Response::setOutput(View::render('catalog/attribute_list', $data));
     }
     
     protected function getForm() {
@@ -270,25 +270,25 @@ class Attribute extends Controller {
         Breadcrumb::add('lang_heading_title', 'catalog/attribute', $url);
         
         if (!isset($this->request->get['attribute_id'])) {
-            $data['action'] = Url::link('catalog/attribute/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/attribute/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/attribute/update', 'token=' . $this->session->data['token'] . '&attribute_id=' . $this->request->get['attribute_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/attribute/update', '' . '&attribute_id=' . $this->request->get['attribute_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('catalog/attribute', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('catalog/attribute', '' . $url, 'SSL');
         
         if (isset($this->request->get['attribute_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $attribute_info = $this->model_catalog_attribute->getAttribute($this->request->get['attribute_id']);
+            $attribute_info = CatalogAttribute::getAttribute($this->request->get['attribute_id']);
         }
         
         Theme::model('locale/language');
         
-        $data['languages'] = $this->model_locale_language->getLanguages();
+        $data['languages'] = LocaleLanguage::getLanguages();
         
         if (isset($this->request->post['attribute_description'])) {
             $data['attribute_description'] = $this->request->post['attribute_description'];
         } elseif (isset($this->request->get['attribute_id'])) {
-            $data['attribute_description'] = $this->model_catalog_attribute->getAttributeDescriptions($this->request->get['attribute_id']);
+            $data['attribute_description'] = CatalogAttribute::getAttributeDescriptions($this->request->get['attribute_id']);
         } else {
             $data['attribute_description'] = array();
         }
@@ -303,7 +303,7 @@ class Attribute extends Controller {
         
         Theme::model('catalog/attribute_group');
         
-        $data['attribute_groups'] = $this->model_catalog_attribute_group->getAttributeGroups();
+        $data['attribute_groups'] = CatalogAttributeGroup::getAttributeGroups();
         
         if (isset($this->request->post['sort_order'])) {
             $data['sort_order'] = $this->request->post['sort_order'];
@@ -317,7 +317,7 @@ class Attribute extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('catalog/attribute_form', $data));
+        Response::setOutput(View::render('catalog/attribute_form', $data));
     }
     
     protected function validateForm() {
@@ -344,7 +344,7 @@ class Attribute extends Controller {
         Theme::model('catalog/product');
         
         foreach ($this->request->post['selected'] as $attribute_id) {
-            $product_total = $this->model_catalog_product->getTotalProductsByAttributeId($attribute_id);
+            $product_total = CatalogProduct::getTotalProductsByAttributeId($attribute_id);
             
             if ($product_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_product'), $product_total);
@@ -366,7 +366,7 @@ class Attribute extends Controller {
             
             $json = array();
             
-            $results = $this->model_catalog_attribute->getAttributes($filter);
+            $results = CatalogAttribute::getAttributes($filter);
             
             foreach ($results as $result) {
                 $json[] = array('attribute_id' => $result['attribute_id'], 'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')), 'attribute_group' => $result['attribute_group']);

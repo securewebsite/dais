@@ -21,37 +21,37 @@ use App\Models\Model;
 class Post extends Model {
     
     public function addPost($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}blog_post 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "blog_post 
 			SET 
-				date_available = '" . $this->db->escape($data['date_available']) . "', 
+				date_available = '" . DB::escape($data['date_available']) . "', 
 				author_id = '" . (int)$data['author_id'] . "', 
 				status = '" . (int)$data['status'] . "', 
 				sort_order = '" . (int)$data['sort_order'] . "', 
 				date_added = NOW()
 		");
         
-        $post_id = $this->db->getLastId();
+        $post_id = DB::getLastId();
         
         if (isset($data['image'])) {
-            $this->db->query("
-				UPDATE {$this->db->prefix}blog_post 
+            DB::query("
+				UPDATE " . DB::prefix() . "blog_post 
 				SET 
-					image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' 
+					image = '" . DB::escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' 
 				WHERE post_id = '" . (int)$post_id . "'
 			");
         }
         
         foreach ($data['post_description'] as $language_id => $value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}blog_post_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "blog_post_description 
 				SET 
                     post_id          = '" . (int)$post_id . "', 
                     language_id      = '" . (int)$language_id . "', 
-                    name             = '" . $this->db->escape($value['name']) . "', 
-                    meta_keyword     = '" . $this->db->escape($value['meta_keyword']) . "', 
-                    meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-                    description      = '" . $this->db->escape($value['description']) . "'
+                    name             = '" . DB::escape($value['name']) . "', 
+                    meta_keyword     = '" . DB::escape($value['meta_keyword']) . "', 
+                    meta_description = '" . DB::escape($value['meta_description']) . "', 
+                    description      = '" . DB::escape($value['description']) . "'
 			");
 
             // process tags
@@ -59,13 +59,13 @@ class Post extends Model {
                 $tags = explode(',', $value['tag']);
                 foreach ($tags as $tag):
                     $tag = trim($tag);
-                    $this->db->query("
-                        INSERT INTO {$this->db->prefix}tag 
+                    DB::query("
+                        INSERT INTO " . DB::prefix() . "tag 
                         SET 
                             section     = 'post', 
                             element_id  = '" . (int)$post_id . "', 
                             language_id = '" . (int)$language_id . "', 
-                            tag         = '" . $this->db->escape($tag) . "'
+                            tag         = '" . DB::escape($tag) . "'
                     ");
                 endforeach;
             endif;
@@ -76,8 +76,8 @@ class Post extends Model {
         
         if (isset($data['post_store'])) {
             foreach ($data['post_store'] as $store_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}blog_post_to_store 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "blog_post_to_store 
 					SET 
 						post_id = '" . (int)$post_id . "', 
 						store_id = '" . (int)$store_id . "'
@@ -87,11 +87,11 @@ class Post extends Model {
         
         if (isset($data['post_image'])) {
             foreach ($data['post_image'] as $post_image) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}blog_post_image 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "blog_post_image 
 					SET 
 						post_id = '" . (int)$post_id . "', 
-						image = '" . $this->db->escape(html_entity_decode($post_image['image'], ENT_QUOTES, 'UTF-8')) . "', 
+						image = '" . DB::escape(html_entity_decode($post_image['image'], ENT_QUOTES, 'UTF-8')) . "', 
 						sort_order = '" . (int)$post_image['sort_order'] . "'
 				");
             }
@@ -99,8 +99,8 @@ class Post extends Model {
         
         if (isset($data['post_category'])) {
             foreach ($data['post_category'] as $category_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}blog_post_to_category 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "blog_post_to_category 
 					SET 
 						post_id = '" . (int)$post_id . "', 
 						category_id = '" . (int)$category_id . "'
@@ -110,25 +110,25 @@ class Post extends Model {
         
         if (isset($data['post_related'])) {
             foreach ($data['post_related'] as $related_id) {
-                $this->db->query("
-                    DELETE FROM {$this->db->prefix}blog_post_related 
+                DB::query("
+                    DELETE FROM " . DB::prefix() . "blog_post_related 
                     WHERE post_id = '" . (int)$post_id . "' 
                     AND related_id = '" . (int)$related_id . "'");
                 
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}blog_post_related 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "blog_post_related 
 					SET 
 						post_id = '" . (int)$post_id . "', 
 						related_id = '" . (int)$related_id . "'
 				");
                 
-                $this->db->query("
-                    DELETE FROM {$this->db->prefix}blog_post_related 
+                DB::query("
+                    DELETE FROM " . DB::prefix() . "blog_post_related 
                     WHERE post_id = '" . (int)$related_id . "' 
                     AND related_id = '" . (int)$post_id . "'");
                 
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}blog_post_related 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "blog_post_related 
 					SET 
 						post_id = '" . (int)$related_id . "', 
 						related_id = '" . (int)$post_id . "'
@@ -139,8 +139,8 @@ class Post extends Model {
         if (isset($data['post_layout'])) {
             foreach ($data['post_layout'] as $store_id => $layout) {
                 if ($layout['layout_id']) {
-                    $this->db->query("
-						INSERT INTO {$this->db->prefix}blog_post_to_layout 
+                    DB::query("
+						INSERT INTO " . DB::prefix() . "blog_post_to_layout 
 						SET 
 							post_id = '" . (int)$post_id . "', 
 							store_id = '" . (int)$store_id . "', 
@@ -151,27 +151,27 @@ class Post extends Model {
         }
         
         if ($data['slug']) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}route 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "route 
 				SET 
 					route = 'content/post', 
 					query = 'post_id:" . (int)$post_id . "', 
-					slug = '" . $this->db->escape($data['slug']) . "'
+					slug = '" . DB::escape($data['slug']) . "'
 			");
         }
         
-        $this->cache->delete('post');
-        $this->cache->delete('posts');
-        $this->cache->delete('author');
+        Cache::delete('post');
+        Cache::delete('posts');
+        Cache::delete('author');
         
         Theme::trigger('admin_blog_add_post', array('blog_post_id' => $post_id));
     }
     
     public function editPost($post_id, $data) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}blog_post 
+        DB::query("
+			UPDATE " . DB::prefix() . "blog_post 
 			SET 
-				date_available = '" . $this->db->escape($data['date_available']) . "', 
+				date_available = '" . DB::escape($data['date_available']) . "', 
 				author_id = '" . (int)$data['author_id'] . "', 
 				status = '" . (int)$data['status'] . "', 
 				sort_order = '" . (int)$data['sort_order'] . "', 
@@ -180,32 +180,32 @@ class Post extends Model {
 		");
         
         if (isset($data['image'])) {
-            $this->db->query("
-				UPDATE {$this->db->prefix}blog_post 
+            DB::query("
+				UPDATE " . DB::prefix() . "blog_post 
 				SET 
-					image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' 
+					image = '" . DB::escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' 
 					WHERE post_id = '" . (int)$post_id . "'
 			");
         }
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}blog_post_description 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "blog_post_description 
             WHERE post_id = '" . (int)$post_id . "'");
         
         foreach ($data['post_description'] as $language_id => $value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}blog_post_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "blog_post_description 
 				SET 
 					post_id = '" . (int)$post_id . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($value['name']) . "', 
-					meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', 
-					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-					description = '" . $this->db->escape($value['description']) . "'
+					name = '" . DB::escape($value['name']) . "', 
+					meta_keyword = '" . DB::escape($value['meta_keyword']) . "', 
+					meta_description = '" . DB::escape($value['meta_description']) . "', 
+					description = '" . DB::escape($value['description']) . "'
 			");
 
-            $this->db->query("
-                DELETE FROM {$this->db->prefix}tag 
+            DB::query("
+                DELETE FROM " . DB::prefix() . "tag 
                 WHERE section   = 'post' 
                 AND element_id  = '" . (int)$post_id . "' 
                 AND language_id = '" . (int)$language_id . "'
@@ -216,13 +216,13 @@ class Post extends Model {
                 $tags = explode(',', $value['tag']);
                 foreach ($tags as $tag):
                     $tag = trim($tag);
-                    $this->db->query("
-                        INSERT INTO {$this->db->prefix}tag 
+                    DB::query("
+                        INSERT INTO " . DB::prefix() . "tag 
                         SET 
                             section     = 'post', 
                             element_id  = '" . (int)$post_id . "', 
                             language_id = '" . (int)$language_id . "', 
-                            tag         = '" . $this->db->escape($tag) . "'
+                            tag         = '" . DB::escape($tag) . "'
                     ");
                 endforeach;
             endif;
@@ -233,14 +233,14 @@ class Post extends Model {
             $this->search->add($language_id, 'post', $post_id, $value['description']);
         }
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}blog_post_to_store 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "blog_post_to_store 
             WHERE post_id = '" . (int)$post_id . "'");
         
         if (isset($data['post_store'])) {
             foreach ($data['post_store'] as $store_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}blog_post_to_store 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "blog_post_to_store 
 					SET 
 						post_id = '" . (int)$post_id . "', 
 						store_id = '" . (int)$store_id . "'
@@ -248,30 +248,30 @@ class Post extends Model {
             }
         }
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}blog_post_image 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "blog_post_image 
             WHERE post_id = '" . (int)$post_id . "'");
         
         if (isset($data['post_image'])) {
             foreach ($data['post_image'] as $post_image) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}blog_post_image 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "blog_post_image 
 					SET 
 						post_id = '" . (int)$post_id . "', 
-						image = '" . $this->db->escape(html_entity_decode($post_image['image'], ENT_QUOTES, 'UTF-8')) . "', 
+						image = '" . DB::escape(html_entity_decode($post_image['image'], ENT_QUOTES, 'UTF-8')) . "', 
 						sort_order = '" . (int)$post_image['sort_order'] . "'
 				");
             }
         }
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}blog_post_to_category 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "blog_post_to_category 
             WHERE post_id = '" . (int)$post_id . "'");
         
         if (isset($data['post_category'])) {
             foreach ($data['post_category'] as $category_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}blog_post_to_category 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "blog_post_to_category 
 					SET 
 						post_id = '" . (int)$post_id . "', 
 						category_id = '" . (int)$category_id . "'
@@ -279,35 +279,35 @@ class Post extends Model {
             }
         }
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}blog_post_related 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "blog_post_related 
             WHERE post_id = '" . (int)$post_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}blog_post_related 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "blog_post_related 
             WHERE related_id = '" . (int)$post_id . "'");
         
         if (isset($data['post_related'])) {
             foreach ($data['post_related'] as $related_id) {
-                $this->db->query("
-                    DELETE FROM {$this->db->prefix}blog_post_related 
+                DB::query("
+                    DELETE FROM " . DB::prefix() . "blog_post_related 
                     WHERE post_id = '" . (int)$post_id . "' 
                     AND related_id = '" . (int)$related_id . "'");
                 
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}blog_post_related 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "blog_post_related 
 					SET 
 						post_id = '" . (int)$post_id . "', 
 						related_id = '" . (int)$related_id . "'
 				");
                 
-                $this->db->query("
-                    DELETE FROM {$this->db->prefix}blog_post_related 
+                DB::query("
+                    DELETE FROM " . DB::prefix() . "blog_post_related 
                     WHERE post_id = '" . (int)$related_id . "' 
                     AND related_id = '" . (int)$post_id . "'");
                 
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}blog_post_related 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "blog_post_related 
 					SET 
 						post_id = '" . (int)$related_id . "', 
 						related_id = '" . (int)$post_id . "'
@@ -315,15 +315,15 @@ class Post extends Model {
             }
         }
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}blog_post_to_layout 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "blog_post_to_layout 
             WHERE post_id = '" . (int)$post_id . "'");
         
         if (isset($data['post_layout'])) {
             foreach ($data['post_layout'] as $store_id => $layout) {
                 if ($layout['layout_id']) {
-                    $this->db->query("
-						INSERT INTO {$this->db->prefix}blog_post_to_layout 
+                    DB::query("
+						INSERT INTO " . DB::prefix() . "blog_post_to_layout 
 						SET 
 							post_id = '" . (int)$post_id . "', 
 							store_id = '" . (int)$store_id . "', 
@@ -333,88 +333,88 @@ class Post extends Model {
             }
         }
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}route 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "route 
             WHERE query = 'post_id:" . (int)$post_id . "'");
         
         if ($data['slug']) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}route 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "route 
 				SET 
 					route = 'content/post', 
 					query = 'post_id:" . (int)$post_id . "', 
-					slug = '" . $this->db->escape($data['slug']) . "'
+					slug = '" . DB::escape($data['slug']) . "'
 			");
         }
         
-        $this->cache->delete('post');
-        $this->cache->delete('posts');
-        $this->cache->delete('author');
+        Cache::delete('post');
+        Cache::delete('posts');
+        Cache::delete('author');
         
         Theme::trigger('admin_blog_edit_post', array('blog_post_id' => $post_id));
     }
     
     public function deletePost($post_id) {
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}blog_post 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "blog_post 
             WHERE post_id = '" . (int)$post_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}blog_post_description 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "blog_post_description 
             WHERE post_id = '" . (int)$post_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}blog_post_image 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "blog_post_image 
             WHERE post_id = '" . (int)$post_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}blog_post_related 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "blog_post_related 
             WHERE post_id = '" . (int)$post_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}blog_post_related 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "blog_post_related 
             WHERE related_id = '" . (int)$post_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}blog_post_to_category 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "blog_post_to_category 
             WHERE post_id = '" . (int)$post_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}blog_post_to_layout 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "blog_post_to_layout 
             WHERE post_id = '" . (int)$post_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}blog_post_to_store 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "blog_post_to_store 
             WHERE post_id = '" . (int)$post_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}blog_comment 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "blog_comment 
             WHERE post_id = '" . (int)$post_id . "'");
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}route 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "route 
             WHERE query = 'post_id:" . (int)$post_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}tag 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "tag 
             WHERE section  = 'post' 
             AND element_id = '" . (int)$post_id . "'");
         
         $this->search->delete('post', $post_id);
         
-        $this->cache->delete('post');
-        $this->cache->delete('posts');
-        $this->cache->delete('author');
+        Cache::delete('post');
+        Cache::delete('posts');
+        Cache::delete('author');
         
         Theme::trigger('admin_blog_delete_post', array('blog_post_id' => $post_id));
     }
     
     public function getPost($post_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT DISTINCT *, 
-			(SELECT slug FROM {$this->db->prefix}route WHERE query = 'post_id:" . (int)$post_id . "') AS slug 
-			FROM {$this->db->prefix}blog_post p 
-			LEFT JOIN {$this->db->prefix}blog_post_description pd 
+			(SELECT slug FROM " . DB::prefix() . "route WHERE query = 'post_id:" . (int)$post_id . "') AS slug 
+			FROM " . DB::prefix() . "blog_post p 
+			LEFT JOIN " . DB::prefix() . "blog_post_description pd 
 				ON (p.post_id = pd.post_id) 
 			WHERE p.post_id = '" . (int)$post_id . "' 
 			AND pd.language_id = '" . (int)Config::get('config_language_id') . "'
@@ -428,9 +428,9 @@ class Post extends Model {
     }
 
     public function getPostTags($post_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT tag 
-            FROM {$this->db->prefix}tag 
+            FROM " . DB::prefix() . "tag 
             WHERE section   = 'post' 
             AND element_id  = '" . (int)$post_id . "' 
             AND language_id = '" . (int)Config::get('config_language_id') . "'
@@ -451,18 +451,18 @@ class Post extends Model {
         if ($data) {
             $sql = "
 				SELECT * 
-				FROM {$this->db->prefix}blog_post p 
-				LEFT JOIN {$this->db->prefix}blog_post_description pd 
+				FROM " . DB::prefix() . "blog_post p 
+				LEFT JOIN " . DB::prefix() . "blog_post_description pd 
 				ON (p.post_id = pd.post_id) ";
             
             if (!empty($data['filter_category_id'])) {
-                $sql.= " LEFT JOIN {$this->db->prefix}blog_post_to_category p2c ON (p.post_id = p2c.post_id)";
+                $sql.= " LEFT JOIN " . DB::prefix() . "blog_post_to_category p2c ON (p.post_id = p2c.post_id)";
             }
             
             $sql.= " WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "'";
             
             if (!empty($data['filter_name'])) {
-                $sql.= " AND LCASE(pd.name) LIKE '" . $this->db->escape(Encode::strtolower($data['filter_name'])) . "%'";
+                $sql.= " AND LCASE(pd.name) LIKE '" . DB::escape(Encode::strtolower($data['filter_name'])) . "%'";
             }
             
             if (!empty($data['filter_author_id'])) {
@@ -482,11 +482,11 @@ class Post extends Model {
             }
             
             if (!empty($data['filter_date_added'])) {
-                $sql.= " AND DATE(p.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+                $sql.= " AND DATE(p.date_added) = DATE('" . DB::escape($data['filter_date_added']) . "')";
             }
             
             if (!empty($data['filter_date_modified'])) {
-                $sql.= " AND DATE(p.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified']) . "')";
+                $sql.= " AND DATE(p.date_modified) = DATE('" . DB::escape($data['filter_date_modified']) . "')";
             }
             
             if (!empty($data['filter_category_id'])) {
@@ -497,7 +497,7 @@ class Post extends Model {
                     
                     Theme::model('content/category');
                     
-                    $categories = $this->model_content_category->getCategories($data['filter_category_id']);
+                    $categories = ContentCategory::getCategories($data['filter_category_id']);
                     
                     foreach ($categories as $category) {
                         $implode_data[] = "p2c.category_id = '" . (int)$category['category_id'] . "'";
@@ -541,16 +541,16 @@ class Post extends Model {
                 $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
             }
             
-            $query = $this->db->query($sql);
+            $query = DB::query($sql);
             
             return $query->rows;
         } else {
-            $post_data = $this->cache->get('post.' . (int)Config::get('config_language_id') . '.' . (int)Config::get('config_store_id'));
+            $post_data = Cache::get('post.' . (int)Config::get('config_language_id') . '.' . (int)Config::get('config_store_id'));
             
             if (!$post_data) {
                 $sql = "
-						SELECT * FROM {$this->db->prefix}blog_post p 
-						 LEFT JOIN {$this->db->prefix}blog_post_description pd 
+						SELECT * FROM " . DB::prefix() . "blog_post p 
+						 LEFT JOIN " . DB::prefix() . "blog_post_description pd 
 						 	ON (p.post_id = pd.post_id) 
 						 WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "'";
                 
@@ -560,11 +560,11 @@ class Post extends Model {
                 
                 $sql.= " ORDER BY pd.name ASC";
                 
-                $query = $this->db->query($sql);
+                $query = DB::query($sql);
                 
                 $post_data = $query->rows;
                 
-                $this->cache->set('post.' . (int)Config::get('config_language_id') . '.' . (int)Config::get('config_store_id'), $post_data);
+                Cache::set('post.' . (int)Config::get('config_language_id') . '.' . (int)Config::get('config_store_id'), $post_data);
             }
             
             return $post_data;
@@ -572,12 +572,12 @@ class Post extends Model {
     }
     
     public function getPostsByCategoryId($category_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}blog_post p 
-			LEFT JOIN {$this->db->prefix}blog_post_description pd 
+			FROM " . DB::prefix() . "blog_post p 
+			LEFT JOIN " . DB::prefix() . "blog_post_description pd 
 				ON (p.post_id = pd.post_id) 
-			LEFT JOIN {$this->db->prefix}blog_post_to_category p2c 
+			LEFT JOIN " . DB::prefix() . "blog_post_to_category p2c 
 				ON (p.post_id = p2c.post_id) 
 			WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "' 
 			AND p2c.category_id = '" . (int)$category_id . "' 
@@ -590,9 +590,9 @@ class Post extends Model {
     public function getPostDescriptions($post_id) {
         $post_description_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}blog_post_description 
+			FROM " . DB::prefix() . "blog_post_description 
 			WHERE post_id = '" . (int)$post_id . "'
 		");
         
@@ -612,7 +612,7 @@ class Post extends Model {
     public function getPostAuthor($author_id) {
         Theme::model('people/user');
         
-        $user_info = $this->model_people_user->getUser($author_id);
+        $user_info = PeopleUser::getUser($author_id);
         
         return $this->getAuthorNameRelatedToPostedBy($user_info);
     }
@@ -622,7 +622,7 @@ class Post extends Model {
         
         Theme::model('people/user');
         
-        $authors = $this->model_people_user->getUsers();
+        $authors = PeopleUser::getUsers();
         
         if ($authors) {
             foreach ($authors as $author) {
@@ -655,9 +655,9 @@ class Post extends Model {
     }
     
     public function getPostImages($post_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}blog_post_image 
+			FROM " . DB::prefix() . "blog_post_image 
 			WHERE post_id = '" . (int)$post_id . "'
 		");
         
@@ -667,9 +667,9 @@ class Post extends Model {
     public function getPostStores($post_id) {
         $post_store_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}blog_post_to_store 
+			FROM " . DB::prefix() . "blog_post_to_store 
 			WHERE post_id = '" . (int)$post_id . "'
 		");
         
@@ -683,9 +683,9 @@ class Post extends Model {
     public function getPostLayouts($post_id) {
         $post_layout_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}blog_post_to_layout 
+			FROM " . DB::prefix() . "blog_post_to_layout 
 			WHERE post_id = '" . (int)$post_id . "'
 		");
         
@@ -699,9 +699,9 @@ class Post extends Model {
     public function getPostCategories($post_id) {
         $post_category_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}blog_post_to_category 
+			FROM " . DB::prefix() . "blog_post_to_category 
 			WHERE post_id = '" . (int)$post_id . "'
 		");
         
@@ -715,10 +715,10 @@ class Post extends Model {
     public function getPostCategoriesNames($post_id) {
         $post_category_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT cd.* 
-			FROM {$this->db->prefix}blog_post_to_category p2c 
-			LEFT JOIN {$this->db->prefix}blog_category_description cd 
+			FROM " . DB::prefix() . "blog_post_to_category p2c 
+			LEFT JOIN " . DB::prefix() . "blog_category_description cd 
 				ON (p2c.category_id = cd.category_id) 
 			WHERE p2c.post_id = '" . (int)$post_id . "' 
 			AND cd.language_id='" . (int)Config::get('config_language_id') . "'
@@ -734,9 +734,9 @@ class Post extends Model {
     public function getPostRelated($post_id) {
         $post_related_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}blog_post_related 
+			FROM " . DB::prefix() . "blog_post_related 
 			WHERE post_id = '" . (int)$post_id . "'
 		");
         
@@ -751,18 +751,18 @@ class Post extends Model {
         
         $sql = "
             SELECT COUNT(DISTINCT p.post_id) AS total 
-			FROM {$this->db->prefix}blog_post p 
-			LEFT JOIN {$this->db->prefix}blog_post_description pd 
+			FROM " . DB::prefix() . "blog_post p 
+			LEFT JOIN " . DB::prefix() . "blog_post_description pd 
 			ON (p.post_id = pd.post_id)";
         
         if (!empty($data['filter_category_id'])) {
-            $sql.= " LEFT JOIN {$this->db->prefix}blog_post_to_category p2c ON (p.post_id = p2c.post_id)";
+            $sql.= " LEFT JOIN " . DB::prefix() . "blog_post_to_category p2c ON (p.post_id = p2c.post_id)";
         }
         
         $sql.= " WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_name'])) {
-            $sql.= " AND LCASE(pd.name) LIKE '" . $this->db->escape(Encode::strtolower($data['filter_name'])) . "%'";
+            $sql.= " AND LCASE(pd.name) LIKE '" . DB::escape(Encode::strtolower($data['filter_name'])) . "%'";
         }
         
         if (!empty($data['filter_author_id'])) {
@@ -782,11 +782,11 @@ class Post extends Model {
         }
         
         if (!empty($data['filter_date_added'])) {
-            $sql.= " AND DATE(p.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $sql.= " AND DATE(p.date_added) = DATE('" . DB::escape($data['filter_date_added']) . "')";
         }
         
         if (!empty($data['filter_date_modified'])) {
-            $sql.= " AND DATE(p.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified']) . "')";
+            $sql.= " AND DATE(p.date_modified) = DATE('" . DB::escape($data['filter_date_modified']) . "')";
         }
         
         if (!empty($data['filter_category_id'])) {
@@ -797,7 +797,7 @@ class Post extends Model {
                 
                 Theme::model('content/category');
                 
-                $categories = $this->model_content_category->getCategories($data['filter_category_id']);
+                $categories = ContentCategory::getCategories($data['filter_category_id']);
                 
                 foreach ($categories as $category) {
                     $implode_data[] = "p2c.category_id = '" . (int)$category['category_id'] . "'";
@@ -813,15 +813,15 @@ class Post extends Model {
             $sql.= " AND p.author_id ='" . (int)User::getId() . "'";
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->row['total'];
     }
     
     public function getTotalPostsByAuthorId($author_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}blog_post 
+			FROM " . DB::prefix() . "blog_post 
 			WHERE author_id = '" . (int)$author_id . "'
 		");
         
@@ -829,9 +829,9 @@ class Post extends Model {
     }
     
     public function getTotalPostsByLayoutId($layout_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}blog_post_to_layout 
+			FROM " . DB::prefix() . "blog_post_to_layout 
 			WHERE layout_id = '" . (int)$layout_id . "'
 		");
         

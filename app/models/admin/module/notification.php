@@ -21,28 +21,28 @@ use App\Models\Model;
 class Notification extends Model {
 	
 	public function addNotification($data) {
-		$this->db->query("
-			INSERT INTO {$this->db->prefix}email 
+		DB::query("
+			INSERT INTO " . DB::prefix() . "email 
 			SET 
-				email_slug         = '" . $this->db->escape($data['email_slug']) . "', 
+				email_slug         = '" . DB::escape($data['email_slug']) . "', 
 				configurable       = '" . (int)$data['configurable'] . "', 
 				priority           = '" . (int)$data['priority'] . "', 
-				config_description = '" . $this->db->escape($data['config_description']) . "', 
+				config_description = '" . DB::escape($data['config_description']) . "', 
 				recipient          = '" . (int)$data['recipient'] . "', 
 				is_system          = '" . (int)$data['is_system'] . "'
 		");
 
-		$id = $this->db->getLastId();
+		$id = DB::getLastId();
 
 		foreach ($data['email_content'] as $language_id => $value):
-			$this->db->query("
-				INSERT INTO {$this->db->prefix}email_content 
+			DB::query("
+				INSERT INTO " . DB::prefix() . "email_content 
 				SET 
 					email_id    = '" . (int)$id . "', 
 					language_id = '" . (int)$language_id . "', 
-					subject     = '" . $this->db->escape($value['subject']) . "', 
-					text        = '" . $this->db->escape($value['text']) . "',
-					html        = '" . $this->db->escape($value['html']) . "'
+					subject     = '" . DB::escape($value['subject']) . "', 
+					text        = '" . DB::escape($value['text']) . "',
+					html        = '" . DB::escape($value['html']) . "'
 			");
 		endforeach;
 
@@ -50,31 +50,31 @@ class Notification extends Model {
 	}
 
 	public function editNotification($id, $data) {
-		$this->db->query("
-			UPDATE {$this->db->prefix}email 
+		DB::query("
+			UPDATE " . DB::prefix() . "email 
 			SET 
-				email_slug         = '" . $this->db->escape($data['email_slug']) . "', 
+				email_slug         = '" . DB::escape($data['email_slug']) . "', 
 				configurable       = '" . (int)$data['configurable'] . "', 
 				priority           = '" . (int)$data['priority'] . "', 
-				config_description = '" . $this->db->escape($data['config_description']) . "', 
+				config_description = '" . DB::escape($data['config_description']) . "', 
 				recipient          = '" . (int)$data['recipient'] . "', 
 				is_system          = '" . (int)$data['is_system'] . "' 
 			WHERE email_id = '" . (int)$id . "'
 		");
         
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}email_content 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "email_content 
         	WHERE email_id = '" . (int)$id . "'");
         
         foreach ($data['email_content'] as $language_id => $value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}email_content 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "email_content 
 				SET 
 					email_id    = '" . (int)$id . "', 
 					language_id = '" . (int)$language_id . "', 
-					subject     = '" . $this->db->escape($value['subject']) . "', 
-					text        = '" . $this->db->escape($value['text']) . "', 
-					html        = '" . $this->db->escape($value['html']) . "'
+					subject     = '" . DB::escape($value['subject']) . "', 
+					text        = '" . DB::escape($value['text']) . "', 
+					html        = '" . DB::escape($value['html']) . "'
 			");
         }
 
@@ -82,21 +82,21 @@ class Notification extends Model {
 	}
 
 	public function deleteNotification($id) {
-		$this->db->query("
-			DELETE FROM {$this->db->prefix}email 
+		DB::query("
+			DELETE FROM " . DB::prefix() . "email 
 			WHERE email_id = '" . (int)$id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}email_content 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "email_content 
         	WHERE email_id = '" . (int)$id . "'");
 
         Theme::trigger('admin_delete_notification', array('notification_id' => $id));
 	}
 
 	public function getTotalNotifications() {
-		$query = $this->db->query("
+		$query = DB::query("
 			SELECT COUNT(email_id) AS total 
-			FROM {$this->db->prefix}email");
+			FROM " . DB::prefix() . "email");
 
 		return $query->row['total'];
 	}
@@ -104,8 +104,8 @@ class Notification extends Model {
 	public function getNotifications($data = array()) {
 		$sql = "
 			SELECT * 
-			FROM {$this->db->prefix}email e 
-			LEFT JOIN {$this->db->prefix}email_content ec 
+			FROM " . DB::prefix() . "email e 
+			LEFT JOIN " . DB::prefix() . "email_content ec 
 			ON (e.email_id = ec.email_id) 
 			WHERE ec.language_id = '" . (int)Config::get('config_language_id') . "'";
 
@@ -121,15 +121,15 @@ class Notification extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         endif;
 
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
 
         return $query->rows;
 	}
 
 	public function getNotification($id) {
-		$query = $this->db->query("
+		$query = DB::query("
 			SELECT DISTINCT * 
-			FROM {$this->db->prefix}email 
+			FROM " . DB::prefix() . "email 
 			WHERE email_id = '" . (int)$id . "'
 		");
         
@@ -139,9 +139,9 @@ class Notification extends Model {
 	public function getNotificationContent($id) {
         $data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}email_content 
+			FROM " . DB::prefix() . "email_content 
 			WHERE email_id = '" . (int)$id . "'
 		");
         
@@ -157,9 +157,9 @@ class Notification extends Model {
     }
 
     public function checkSystem($id) {
-    	$query = $this->db->query("
+    	$query = DB::query("
     		SELECT is_system 
-    		FROM {$this->db->prefix}email 
+    		FROM " . DB::prefix() . "email 
     		WHERE email_id = '" . (int)$id ."'");
 
     	return $query->row['is_system'];

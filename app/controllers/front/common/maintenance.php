@@ -21,8 +21,9 @@ use Dais\Base\Action;
 use Dais\Services\Providers\User;
 
 class Maintenance extends Controller {
+    
     public function index() {
-        if ($this->config->get('config_maintenance')) {
+        if (Config::get('config_maintenance')) {
             $route = '';
             
             if (isset($this->request->get['route'])) {
@@ -36,7 +37,7 @@ class Maintenance extends Controller {
             // Show site if logged in as admin
             $this->user = new User;
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
             if (($route != 'payment') && !$this->user->isLogged()) {
                 return new Action('common/maintenance/info');
@@ -45,18 +46,18 @@ class Maintenance extends Controller {
     }
     
     public function info() {
-        $data = $this->theme->language('common/maintenance');
+        $data = Theme::language('common/maintenance');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
-        $this->breadcrumb->add('lang_text_maintenance', 'common/maintenance');
+        Breadcrumb::add('lang_text_maintenance', 'common/maintenance');
         
-        $data['message'] = $this->language->get('lang_text_message');
+        $data['message'] = Lang::get('lang_text_message');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('common/maintenance', $data));
+        Response::setOutput(View::render('common/maintenance', $data));
     }
 }

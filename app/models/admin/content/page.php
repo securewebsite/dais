@@ -21,8 +21,8 @@ use App\Models\Model;
 class Page extends Model {
     
     public function addPage($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}page 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "page 
 			SET 
                 sort_order = '" . (int)$data['sort_order'] . "', 
                 bottom     = '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', 
@@ -30,18 +30,18 @@ class Page extends Model {
                 status     = '" . (int)$data['status'] . "'
 		");
         
-        $page_id = $this->db->getLastId();
+        $page_id = DB::getLastId();
         
         foreach ($data['page_description'] as $language_id => $value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}page_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "page_description 
 				SET 
                     page_id          = '" . (int)$page_id . "', 
                     language_id      = '" . (int)$language_id . "', 
-                    title            = '" . $this->db->escape($value['title']) . "', 
-                    description      = '" . $this->db->escape($value['description']) . "', 
-                    meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-                    meta_keywords    = '" . $this->db->escape($value['meta_keywords']) . "'
+                    title            = '" . DB::escape($value['title']) . "', 
+                    description      = '" . DB::escape($value['description']) . "', 
+                    meta_description = '" . DB::escape($value['meta_description']) . "', 
+                    meta_keywords    = '" . DB::escape($value['meta_keywords']) . "'
 			");
 
             // process tags
@@ -49,13 +49,13 @@ class Page extends Model {
                 $tags = explode(',', $value['tag']);
                 foreach ($tags as $tag):
                     $tag = trim($tag);
-                    $this->db->query("
-                        INSERT INTO {$this->db->prefix}tag 
+                    DB::query("
+                        INSERT INTO " . DB::prefix() . "tag 
                         SET 
                             section     = 'page', 
                             element_id  = '" . (int)$page_id . "', 
                             language_id = '" . (int)$language_id . "', 
-                            tag         = '" . $this->db->escape($tag) . "'
+                            tag         = '" . DB::escape($tag) . "'
                     ");
                 endforeach;
             endif;
@@ -66,8 +66,8 @@ class Page extends Model {
         
         if (isset($data['page_store'])) {
             foreach ($data['page_store'] as $store_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}page_to_store 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "page_to_store 
 					SET 
 						page_id  = '" . (int)$page_id . "', 
 						store_id = '" . (int)$store_id . "'
@@ -78,8 +78,8 @@ class Page extends Model {
         if (isset($data['page_layout'])) {
             foreach ($data['page_layout'] as $store_id => $layout) {
                 if ($layout) {
-                    $this->db->query("
-						INSERT INTO {$this->db->prefix}page_to_layout 
+                    DB::query("
+						INSERT INTO " . DB::prefix() . "page_to_layout 
 						SET 
                             page_id   = '" . (int)$page_id . "', 
                             store_id  = '" . (int)$store_id . "', 
@@ -90,23 +90,23 @@ class Page extends Model {
         }
         
         if ($data['slug']) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}route 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "route 
 				SET 
                     route ='content/page', 
                     query = 'page_id:" . (int)$page_id . "', 
-                    slug  = '" . $this->db->escape($data['slug']) . "'
+                    slug  = '" . DB::escape($data['slug']) . "'
 			");
         }
         
-        $this->cache->delete('page');
+        Cache::delete('page');
         
         Theme::trigger('admin_add_page', array('page_id' => $page_id));
     }
     
     public function editPage($page_id, $data) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}page 
+        DB::query("
+			UPDATE " . DB::prefix() . "page 
 			SET 
                 sort_order = '" . (int)$data['sort_order'] . "', 
                 bottom     = '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', 
@@ -115,24 +115,24 @@ class Page extends Model {
 			WHERE page_id  = '" . (int)$page_id . "'
 		");
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}page_description 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "page_description 
             WHERE page_id = '" . (int)$page_id . "'");
         
         foreach ($data['page_description'] as $language_id => $value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}page_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "page_description 
 				SET 
                     page_id          = '" . (int)$page_id . "', 
                     language_id      = '" . (int)$language_id . "', 
-                    title            = '" . $this->db->escape($value['title']) . "', 
-                    description      = '" . $this->db->escape($value['description']) . "', 
-                    meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-                    meta_keywords    = '" . $this->db->escape($value['meta_keywords']) . "'
+                    title            = '" . DB::escape($value['title']) . "', 
+                    description      = '" . DB::escape($value['description']) . "', 
+                    meta_description = '" . DB::escape($value['meta_description']) . "', 
+                    meta_keywords    = '" . DB::escape($value['meta_keywords']) . "'
 			");
 
-            $this->db->query("
-                DELETE FROM {$this->db->prefix}tag 
+            DB::query("
+                DELETE FROM " . DB::prefix() . "tag 
                 WHERE section   = 'page' 
                 AND element_id  = '" . (int)$page_id . "' 
                 AND language_id = '" . (int)$language_id . "'
@@ -143,13 +143,13 @@ class Page extends Model {
                 $tags = explode(',', $value['tag']);
                 foreach ($tags as $tag):
                     $tag = trim($tag);
-                    $this->db->query("
-                        INSERT INTO {$this->db->prefix}tag 
+                    DB::query("
+                        INSERT INTO " . DB::prefix() . "tag 
                         SET 
                             section     = 'page', 
                             element_id  = '" . (int)$page_id . "', 
                             language_id = '" . (int)$language_id . "', 
-                            tag         = '" . $this->db->escape($tag) . "'
+                            tag         = '" . DB::escape($tag) . "'
                     ");
                 endforeach;
             endif;
@@ -160,14 +160,14 @@ class Page extends Model {
             $this->search->add($language_id, 'page', $page_id, $value['description']);
         }
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}page_to_store 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "page_to_store 
             WHERE page_id = '" . (int)$page_id . "'");
         
         if (isset($data['page_store'])) {
             foreach ($data['page_store'] as $store_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}page_to_store 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "page_to_store 
 					SET 
 						page_id  = '" . (int)$page_id . "', 
 						store_id = '" . (int)$store_id . "'
@@ -175,15 +175,15 @@ class Page extends Model {
             }
         }
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}page_to_layout 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "page_to_layout 
             WHERE page_id = '" . (int)$page_id . "'");
         
         if (isset($data['page_layout'])) {
             foreach ($data['page_layout'] as $store_id => $layout) {
                 if ($layout['layout_id']) {
-                    $this->db->query("
-						INSERT INTO {$this->db->prefix}page_to_layout 
+                    DB::query("
+						INSERT INTO " . DB::prefix() . "page_to_layout 
 						SET 
                             page_id   = '" . (int)$page_id . "', 
                             store_id  = '" . (int)$store_id . "', 
@@ -201,85 +201,85 @@ class Page extends Model {
          */
         
         if (isset($data['event_id'])):
-            $this->db->query("
-                DELETE FROM {$this->db->prefix}route 
+            DB::query("
+                DELETE FROM " . DB::prefix() . "route 
                 WHERE query = 'event_page_id:" . (int)$page_id . "'");
             
             if ($data['slug']):
-                $this->db->query("
-                    INSERT INTO {$this->db->prefix}route 
+                DB::query("
+                    INSERT INTO " . DB::prefix() . "route 
                     SET 
                         route = 'event/page', 
                         query = 'event_page_id:" . (int)$page_id . "', 
-                        slug  = '" . $this->db->escape($data['slug']) . "'
+                        slug  = '" . DB::escape($data['slug']) . "'
                 ");
             endif;
         else:
-            $this->db->query("
-                DELETE FROM {$this->db->prefix}route 
+            DB::query("
+                DELETE FROM " . DB::prefix() . "route 
                 WHERE query = 'page_id:" . (int)$page_id . "'");
             
             if ($data['slug']):
-                $this->db->query("
-    				INSERT INTO {$this->db->prefix}route 
+                DB::query("
+    				INSERT INTO " . DB::prefix() . "route 
     				SET 
                         route = 'content/page', 
                         query = 'page_id:" . (int)$page_id . "', 
-                        slug  = '" . $this->db->escape($data['slug']) . "'
+                        slug  = '" . DB::escape($data['slug']) . "'
     			");
             endif;
         endif;
         
-        $this->cache->delete('page');
+        Cache::delete('page');
         
         Theme::trigger('admin_edit_page', array('page_id' => $page_id));
     }
     
     public function deletePage($page_id) {
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}page 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "page 
             WHERE page_id = '" . (int)$page_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}page_description 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "page_description 
             WHERE page_id = '" . (int)$page_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}page_to_store 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "page_to_store 
             WHERE page_id = '" . (int)$page_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}page_to_layout 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "page_to_layout 
             WHERE page_id = '" . (int)$page_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}route 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "route 
             WHERE query = 'page_id:" . (int)$page_id . "'");
 
         // event page slugs
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}route 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "route 
             WHERE query = 'event_page_id:" . (int)$page_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}tag 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "tag 
             WHERE section  = 'page' 
             AND element_id = '" . (int)$page_id . "'");
         
         $this->search->delete('page', $page_id);
         
-        $this->cache->delete('page');
+        Cache::delete('page');
         
         Theme::trigger('admin_delete_page', array('page_id' => $page_id));
     }
     
     public function getPage($page_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT DISTINCT *, 
 			(SELECT slug 
-				FROM {$this->db->prefix}route 
+				FROM " . DB::prefix() . "route 
 				WHERE query = 'page_id:" . (int)$page_id . "') AS slug 
-			FROM {$this->db->prefix}page 
+			FROM " . DB::prefix() . "page 
 			WHERE page_id = '" . (int)$page_id . "'
 		");
 
@@ -291,12 +291,12 @@ class Page extends Model {
     }
 
     public function getEventPage($page_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT DISTINCT *, 
             (SELECT slug 
-                FROM {$this->db->prefix}route 
+                FROM " . DB::prefix() . "route 
                 WHERE query = 'event_page_id:" . (int)$page_id . "') AS slug 
-            FROM {$this->db->prefix}page 
+            FROM " . DB::prefix() . "page 
             WHERE page_id = '" . (int)$page_id . "'
         ");
 
@@ -308,9 +308,9 @@ class Page extends Model {
     }
 
     public function getPageTags($page_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT tag 
-            FROM {$this->db->prefix}tag 
+            FROM " . DB::prefix() . "tag 
             WHERE section   = 'page' 
             AND element_id  = '" . (int)$page_id . "' 
             AND language_id = '" . (int)Config::get('config_language_id') . "'
@@ -331,8 +331,8 @@ class Page extends Model {
         if ($data) {
             $sql = "
 				SELECT * 
-				FROM {$this->db->prefix}page i 
-				LEFT JOIN {$this->db->prefix}page_description id 
+				FROM " . DB::prefix() . "page i 
+				LEFT JOIN " . DB::prefix() . "page_description id 
 				ON (i.page_id = id.page_id) 
 				WHERE id.language_id = '" . (int)Config::get('config_language_id') . "'";
             
@@ -362,17 +362,17 @@ class Page extends Model {
                 $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
             }
             
-            $query = $this->db->query($sql);
+            $query = DB::query($sql);
             
             return $query->rows;
         } else {
-            $page_data = $this->cache->get('page.' . (int)Config::get('config_language_id'));
+            $page_data = Cache::get('page.' . (int)Config::get('config_language_id'));
             
             if (!$page_data) {
-                $query = $this->db->query("
+                $query = DB::query("
 					SELECT * 
-					FROM {$this->db->prefix}page i 
-					LEFT JOIN {$this->db->prefix}page_description id 
+					FROM " . DB::prefix() . "page i 
+					LEFT JOIN " . DB::prefix() . "page_description id 
 						ON (i.page_id = id.page_id) 
 					WHERE id.language_id = '" . (int)Config::get('config_language_id') . "' 
 					ORDER BY id.title
@@ -380,7 +380,7 @@ class Page extends Model {
                 
                 $page_data = $query->rows;
                 
-                $this->cache->set('page.' . (int)Config::get('config_language_id'), $page_data);
+                Cache::set('page.' . (int)Config::get('config_language_id'), $page_data);
             }
             
             return $page_data;
@@ -390,9 +390,9 @@ class Page extends Model {
     public function getPageDescriptions($page_id) {
         $page_description_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}page_description 
+			FROM " . DB::prefix() . "page_description 
 			WHERE page_id = '" . (int)$page_id . "'
 		");
         
@@ -412,9 +412,9 @@ class Page extends Model {
     public function getPageStores($page_id) {
         $page_store_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}page_to_store 
+			FROM " . DB::prefix() . "page_to_store 
 			WHERE page_id = '" . (int)$page_id . "'
 		");
         
@@ -428,9 +428,9 @@ class Page extends Model {
     public function getPageLayouts($page_id) {
         $page_layout_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}page_to_layout 
+			FROM " . DB::prefix() . "page_to_layout 
 			WHERE page_id = '" . (int)$page_id . "'
 		");
         
@@ -442,9 +442,9 @@ class Page extends Model {
     }
 
     public function getEventSlug($page_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT slug 
-            FROM {$this->db->prefix}route 
+            FROM " . DB::prefix() . "route 
             WHERE route = 'event/page' 
             AND query = 'event_page_id:" . (int)$page_id . "'
         ");
@@ -453,9 +453,9 @@ class Page extends Model {
     }
 
     public function getEventName($event_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT event_name 
-            FROM {$this->db->prefix}event_manager 
+            FROM " . DB::prefix() . "event_manager 
             WHERE event_id = '" . (int)$event_id . "'
         ");
 
@@ -463,17 +463,17 @@ class Page extends Model {
     }
     
     public function getTotalPages() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}page");
+			FROM " . DB::prefix() . "page");
         
         return $query->row['total'];
     }
     
     public function getTotalPagesByLayoutId($layout_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}page_to_layout 
+			FROM " . DB::prefix() . "page_to_layout 
 			WHERE layout_id = '" . (int)$layout_id . "'
 		");
         

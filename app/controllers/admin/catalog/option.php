@@ -42,7 +42,7 @@ class Option extends Controller {
         Theme::model('catalog/option');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_catalog_option->addOption($this->request->post);
+            CatalogOption::addOption($this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -60,7 +60,7 @@ class Option extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/option', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/option', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -76,7 +76,7 @@ class Option extends Controller {
         Theme::model('catalog/option');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_catalog_option->editOption($this->request->get['option_id'], $this->request->post);
+            CatalogOption::editOption($this->request->get['option_id'], $this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -94,7 +94,7 @@ class Option extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/option', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/option', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -111,7 +111,7 @@ class Option extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $option_id) {
-                $this->model_catalog_option->deleteOption($option_id);
+                CatalogOption::deleteOption($option_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -130,7 +130,7 @@ class Option extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/option', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/option', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -175,21 +175,21 @@ class Option extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'catalog/option', $url);
         
-        $data['insert'] = Url::link('catalog/option/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('catalog/option/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('catalog/option/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('catalog/option/delete', '' . $url, 'SSL');
         
         $data['options'] = array();
         
         $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $option_total = $this->model_catalog_option->getTotalOptions();
+        $option_total = CatalogOption::getTotalOptions();
         
-        $results = $this->model_catalog_option->getOptions($filter);
+        $results = CatalogOption::getOptions($filter);
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/option/update', 'token=' . $this->session->data['token'] . '&option_id=' . $result['option_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/option/update', '' . '&option_id=' . $result['option_id'] . $url, 'SSL'));
             
             $data['options'][] = array('option_id' => $result['option_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'selected' => isset($this->request->post['selected']) && in_array($result['option_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -220,8 +220,8 @@ class Option extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_name'] = Url::link('catalog/option', 'token=' . $this->session->data['token'] . '&sort=od.name' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('catalog/option', 'token=' . $this->session->data['token'] . '&sort=o.sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('catalog/option', '' . '&sort=od.name' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('catalog/option', '' . '&sort=o.sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -233,7 +233,7 @@ class Option extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($option_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/option', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($option_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/option', '' . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -242,7 +242,7 @@ class Option extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('catalog/option_list', $data));
+        Response::setOutput(View::render('catalog/option_list', $data));
     }
     
     protected function getForm() {
@@ -283,27 +283,25 @@ class Option extends Controller {
         Breadcrumb::add('lang_heading_title', 'catalog/option', $url);
         
         if (!isset($this->request->get['option_id'])) {
-            $data['action'] = Url::link('catalog/option/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/option/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/option/update', 'token=' . $this->session->data['token'] . '&option_id=' . $this->request->get['option_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/option/update', '' . '&option_id=' . $this->request->get['option_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('catalog/option', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('catalog/option', '' . $url, 'SSL');
         
         if (isset($this->request->get['option_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $option_info = $this->model_catalog_option->getOption($this->request->get['option_id']);
+            $option_info = CatalogOption::getOption($this->request->get['option_id']);
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         Theme::model('locale/language');
         
-        $data['languages'] = $this->model_locale_language->getLanguages();
+        $data['languages'] = LocaleLanguage::getLanguages();
         
         if (isset($this->request->post['option_description'])) {
             $data['option_description'] = $this->request->post['option_description'];
         } elseif (isset($this->request->get['option_id'])) {
-            $data['option_description'] = $this->model_catalog_option->getOptionDescriptions($this->request->get['option_id']);
+            $data['option_description'] = CatalogOption::getOptionDescriptions($this->request->get['option_id']);
         } else {
             $data['option_description'] = array();
         }
@@ -327,7 +325,7 @@ class Option extends Controller {
         if (isset($this->request->post['option_value'])) {
             $option_values = $this->request->post['option_value'];
         } elseif (isset($this->request->get['option_id'])) {
-            $option_values = $this->model_catalog_option->getOptionValueDescriptions($this->request->get['option_id']);
+            $option_values = CatalogOption::getOptionValueDescriptions($this->request->get['option_id']);
         } else {
             $option_values = array();
         }
@@ -343,10 +341,10 @@ class Option extends Controller {
                 $image = 'placeholder.png';
             }
             
-            $data['option_values'][] = array('option_value_id' => $option_value['option_value_id'], 'option_value_description' => $option_value['option_value_description'], 'image' => $image, 'thumb' => $this->model_tool_image->resize($image, 100, 100), 'sort_order' => $option_value['sort_order']);
+            $data['option_values'][] = array('option_value_id' => $option_value['option_value_id'], 'option_value_description' => $option_value['option_value_description'], 'image' => $image, 'thumb' => ToolImage::resize($image, 100, 100), 'sort_order' => $option_value['sort_order']);
         }
         
-        $data['no_image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+        $data['no_image'] = ToolImage::resize('placeholder.png', 100, 100);
         
         Theme::loadjs('javascript/catalog/option_form', $data);
         
@@ -354,7 +352,7 @@ class Option extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('catalog/option_form', $data));
+        Response::setOutput(View::render('catalog/option_form', $data));
     }
     
     protected function validateForm() {
@@ -395,7 +393,7 @@ class Option extends Controller {
         Theme::model('catalog/product');
         
         foreach ($this->request->post['selected'] as $option_id) {
-            $product_total = $this->model_catalog_product->getTotalProductsByOptionId($option_id);
+            $product_total = CatalogProduct::getTotalProductsByOptionId($option_id);
             
             if ($product_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_product'), $product_total);
@@ -419,17 +417,17 @@ class Option extends Controller {
             
             $filter = array('filter_name' => $this->request->get['filter_name'], 'start' => 0, 'limit' => 20);
             
-            $options = $this->model_catalog_option->getOptions($filter);
+            $options = CatalogOption::getOptions($filter);
             
             foreach ($options as $option) {
                 $option_value_data = array();
                 
                 if ($option['type'] == 'select' || $option['type'] == 'radio' || $option['type'] == 'checkbox' || $option['type'] == 'image') {
-                    $option_values = $this->model_catalog_option->getOptionValues($option['option_id']);
+                    $option_values = CatalogOption::getOptionValues($option['option_id']);
                     
                     foreach ($option_values as $option_value) {
                         if ($option_value['image'] && file_exists(Config::get('path.image') . $option_value['image'])) {
-                            $image = $this->model_tool_image->resize($option_value['image'], 50, 50);
+                            $image = ToolImage::resize($option_value['image'], 50, 50);
                         } else {
                             $image = '';
                         }

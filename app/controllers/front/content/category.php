@@ -15,19 +15,21 @@
 */
 
 namespace App\Controllers\Front\Content;
+
 use App\Controllers\Controller;
 
 class Category extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('content/category');
+        $data = Theme::language('content/category');
         
         if (Theme::getstyle() === 'shop'):
-            $this->breadcrumb->add($this->config->get('config_name'), 'content/home');
+            Breadcrumb::add(Config::get('config_name'), 'content/home');
         endif;
         
-        $this->theme->model('content/category');
-        $this->theme->model('content/post');
-        $this->theme->model('tool/image');
+        Theme::model('content/category');
+        Theme::model('content/post');
+        Theme::model('tool/image');
         
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -50,7 +52,7 @@ class Category extends Controller {
         if (isset($this->request->get['limit'])) {
             $limit = $this->request->get['limit'];
         } else {
-            $limit = $this->config->get('config_catalog_limit');
+            $limit = Config::get('config_catalog_limit');
         }
         
         if (isset($this->request->get['bpath'])) {
@@ -65,10 +67,10 @@ class Category extends Controller {
                     $path.= '_' . (int)$path_id;
                 }
                 
-                $category_info = $this->model_content_category->getCategory($path_id);
+                $category_info = ContentCategory::getCategory($path_id);
                 
                 if ($category_info) {
-                    $this->breadcrumb->add($category_info['name'], 'content/category', 'bpath=' . $path);
+                    Breadcrumb::add($category_info['name'], 'content/category', 'bpath=' . $path);
                 }
             }
             
@@ -77,27 +79,27 @@ class Category extends Controller {
             $category_id = 0;
         }
         
-        $category_info = $this->model_content_category->getCategory($category_id);
+        $category_info = ContentCategory::getCategory($category_id);
         
         if ($category_info) {
-            $this->theme->setTitle($category_info['name']);
-            $this->theme->setDescription($category_info['meta_description']);
-            $this->theme->setKeywords($category_info['meta_keyword']);
+            Theme::setTitle($category_info['name']);
+            Theme::setDescription($category_info['meta_description']);
+            Theme::setKeywords($category_info['meta_keyword']);
             
-            $this->theme->setOgType('article');
+            Theme::setOgType('article');
             
             $data['heading_title'] = $category_info['name'];
             
             if ($category_info['image']) {
                 $data['thumb'] = IMAGE_URL . $category_info['image'];
                  // remove resizing and allow img-responsive to handle sizing
-                $this->theme->setOgImage($this->model_tool_image->resize($category_info['image'], 200, 200, 'h'));
+                Theme::setOgImage(ToolImage::resize($category_info['image'], 200, 200, 'h'));
             } else {
                 $data['thumb'] = '';
             }
             
             $data['description'] = html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8');
-            $this->theme->setOgDescription(html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8'));
+            Theme::setOgDescription(html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8'));
             
             $url = '';
             
@@ -121,14 +123,14 @@ class Category extends Controller {
                 foreach ($tags as $tag):
                     $data['tags'][] = array(
                         'name' => trim($tag), 
-                        'href' => $this->url->link('search/search', 'search=' . trim($tag))
+                        'href' => Url::link('search/search', 'search=' . trim($tag))
                     );
                 endforeach;
             endif;
             
             $data['categories'] = array();
             
-            $results = $this->model_content_category->getCategories($category_id);
+            $results = ContentCategory::getCategories($category_id);
             
             foreach ($results as $result) {
                 $filter = array(
@@ -138,19 +140,19 @@ class Category extends Controller {
                 
                 $post_total = false;
 
-                if ($this->config->get('config_post_count')):
-                    $post_total = $this->model_content_post->getTotalPosts($filter);
+                if (Config::get('config_post_count')):
+                    $post_total = ContentPost::getTotalPosts($filter);
                 endif;
 
                 if ($result['image']):
-                    $img = $this->model_tool_image->resize($result['image'], 189, 142, 'h');
+                    $img = ToolImage::resize($result['image'], 189, 142, 'h');
                 else:
                     $img = IMAGE_URL . 'placeholder.png';
                 endif;
                 
                 $data['categories'][] = array(
                     'name' => $result['name'] . ($post_total ? ' (' . $post_total . ')' : ''), 
-                    'href' => $this->url->link('content/category', 'bpath=' . $this->request->get['bpath'] . '_' . $result['category_id'] . $url), 
+                    'href' => Url::link('content/category', 'bpath=' . $this->request->get['bpath'] . '_' . $result['category_id'] . $url), 
                     'pic'  => $img
                 );
                 
@@ -161,8 +163,8 @@ class Category extends Controller {
             
             $filter = array('filter_category_id' => $category_id, 'filter_sub_category' => true, 'sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $limit, 'limit' => $limit);
             
-            $post_total = $this->model_content_post->getTotalPosts($filter);
-            $results = $this->model_content_post->getPosts($filter);
+            $post_total = ContentPost::getTotalPosts($filter);
+            $results = ContentPost::getPosts($filter);
             
             unset($filter);
             
@@ -175,20 +177,20 @@ class Category extends Controller {
                     $image = '';
                 }
                 
-                if ($this->config->get('blog_comment_status')) {
+                if (Config::get('blog_comment_status')) {
                     $rating = (int)$result['rating'];
                 } else {
                     $rating = false;
                 }
                 
-                $categories = $this->model_content_category->getCategoriesByPostId($result['post_id']);
+                $categories = ContentCategory::getCategoriesByPostId($result['post_id']);
                 
                 $posted_in = array();
                 $posted_in_categories = '';
                 
                 if ($categories) {
                     foreach ($categories as $category) {
-                        $posted_in[] = sprintf($this->language->get('lang_text_posted_categories'), $category['href'], $category['name']);
+                        $posted_in[] = sprintf(Lang::get('lang_text_posted_categories'), $category['href'], $category['name']);
                     }
                 }
                 
@@ -196,9 +198,9 @@ class Category extends Controller {
                     $posted_in_categories = implode(", ", $posted_in);
                 endif;
                 
-                $comment_text = ($result['comments'] == 1) ? rtrim($this->language->get('lang_text_comments'), 's') : $this->language->get('lang_text_comments');
+                $comment_text = ($result['comments'] == 1) ? rtrim(Lang::get('lang_text_comments'), 's') : Lang::get('lang_text_comments');
                 
-                $data['posts'][] = array('post_id' => $result['post_id'], 'author_name' => $result['author_name'], 'thumb' => $image, 'name' => $result['name'], 'short' => $this->encode->substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 450) . '..', 'blurb' => $this->encode->substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 200) . '..', 'rating' => $rating, 'views' => sprintf($this->language->get('lang_text_views'), (int)$result['viewed']), 'comments' => sprintf($comment_text, (int)$result['comments']), 'href' => $this->url->link('content/post', 'bpath=' . $this->request->get['bpath'] . '&post_id=' . $result['post_id']), 'comments_href' => $this->url->link('content/post', 'post_id=' . $result['post_id'] . '&to_comments=1'), 'author_href' => $this->url->link('content/search', '&filter_author_id=' . $result['author_id']), 'date_added' => date($this->language->get('lang_post_date'), strtotime($result['date_added'])), 'categories' => $posted_in_categories);
+                $data['posts'][] = array('post_id' => $result['post_id'], 'author_name' => $result['author_name'], 'thumb' => $image, 'name' => $result['name'], 'short' => Encode::substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 450) . '..', 'blurb' => Encode::substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 200) . '..', 'rating' => $rating, 'views' => sprintf(Lang::get('lang_text_views'), (int)$result['viewed']), 'comments' => sprintf($comment_text, (int)$result['comments']), 'href' => Url::link('content/post', 'bpath=' . $this->request->get['bpath'] . '&post_id=' . $result['post_id']), 'comments_href' => Url::link('content/post', 'post_id=' . $result['post_id'] . '&to_comments=1'), 'author_href' => Url::link('content/search', '&filter_author_id=' . $result['author_id']), 'date_added' => date(Lang::get('lang_post_date'), strtotime($result['date_added'])), 'categories' => $posted_in_categories);
             }
             
             $url = '';
@@ -215,13 +217,13 @@ class Category extends Controller {
                 $url.= '&limit=' . $this->request->get['limit'];
             }
             
-            $data['pagination'] = $this->theme->paginate($post_total, $page, $limit, $this->language->get('lang_text_pagination'), $this->url->link('content/category', 'bpath=' . $this->request->get['bpath'] . $url . '&page={page}'));
+            $data['pagination'] = Theme::paginate($post_total, $page, $limit, Lang::get('lang_text_pagination'), Url::link('content/category', 'bpath=' . $this->request->get['bpath'] . $url . '&page={page}'));
             
             $data['sort'] = $sort;
             $data['order'] = $order;
             $data['limit'] = $limit;
             
-            $data['continue'] = $this->url->link('content/home');
+            $data['continue'] = Url::link('content/home');
             
             // Search
             
@@ -231,11 +233,11 @@ class Category extends Controller {
                 $data['filter_name'] = '';
             }
             
-            $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+            $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $data = $this->theme->renderControllers($data);
+            $data = Theme::renderControllers($data);
             
-            $this->response->setOutput($this->theme->view('content/category', $data));
+            Response::setOutput(View::render('content/category', $data));
         } else {
             $url = '';
             
@@ -259,13 +261,13 @@ class Category extends Controller {
                 $url.= '&limit=' . $this->request->get['limit'];
             }
             
-            $this->breadcrumb->add('lang_text_error', 'content/category', $url);
+            Breadcrumb::add('lang_text_error', 'content/category', $url);
             
-            $this->theme->setTitle($this->language->get('lang_text_error'));
+            Theme::setTitle(Lang::get('lang_text_error'));
             
-            $data['heading_title'] = $this->language->get('lang_text_error');
+            $data['heading_title'] = Lang::get('lang_text_error');
             
-            $data['continue'] = $this->url->link('content/home');
+            $data['continue'] = Url::link('content/home');
             
             // Search
             
@@ -275,11 +277,11 @@ class Category extends Controller {
                 $data['filter_name'] = '';
             }
             
-            $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+            $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $data = $this->theme->renderControllers($data);
+            $data = Theme::renderControllers($data);
             
-            $this->response->setOutput($this->theme->view('error/not_found', $data));
+            Response::setOutput(View::render('error/not_found', $data));
         }
     }
 }

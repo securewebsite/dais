@@ -21,67 +21,67 @@ use App\Models\Model;
 class GiftCardTheme extends Model {
     
     public function addGiftcardTheme($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}gift_card_theme 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "gift_card_theme 
 			SET 
-				image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "'
+				image = '" . DB::escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "'
 		");
         
-        $gift_card_theme_id = $this->db->getLastId();
+        $gift_card_theme_id = DB::getLastId();
         
         foreach ($data['gift_card_theme_description'] as $language_id => $value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}gift_card_theme_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "gift_card_theme_description 
 				SET 
                     gift_card_theme_id = '" . (int)$gift_card_theme_id . "', 
                     language_id       = '" . (int)$language_id . "', 
-                    name              = '" . $this->db->escape($value['name']) . "'
+                    name              = '" . DB::escape($value['name']) . "'
 			");
         }
         
-        $this->cache->delete('gift_card');
+        Cache::delete('gift_card');
     }
     
     public function editGiftcardTheme($gift_card_theme_id, $data) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}gift_card_theme 
+        DB::query("
+			UPDATE " . DB::prefix() . "gift_card_theme 
 			SET 
-				image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' 
+				image = '" . DB::escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' 
 			WHERE gift_card_theme_id = '" . (int)$gift_card_theme_id . "'
 		");
         
-        $this->db->query("DELETE FROM {$this->db->prefix}gift_card_theme_description WHERE gift_card_theme_id = '" . (int)$gift_card_theme_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "gift_card_theme_description WHERE gift_card_theme_id = '" . (int)$gift_card_theme_id . "'");
         
         foreach ($data['gift_card_theme_description'] as $language_id => $value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}gift_card_theme_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "gift_card_theme_description 
 				SET 
                     gift_card_theme_id = '" . (int)$gift_card_theme_id . "', 
                     language_id       = '" . (int)$language_id . "', 
-                    name              = '" . $this->db->escape($value['name']) . "'
+                    name              = '" . DB::escape($value['name']) . "'
 			");
         }
         
-        $this->cache->delete('gift_card');
+        Cache::delete('gift_card');
     }
     
     public function deleteGiftcardTheme($gift_card_theme_id) {
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}gift_card_theme 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "gift_card_theme 
             WHERE gift_card_theme_id = '" . (int)$gift_card_theme_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}gift_card_theme_description 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "gift_card_theme_description 
             WHERE gift_card_theme_id = '" . (int)$gift_card_theme_id . "'");
         
-        $this->cache->delete('gift_card');
+        Cache::delete('gift_card');
     }
     
     public function getGiftcardTheme($gift_card_theme_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}gift_card_theme vt 
-			LEFT JOIN {$this->db->prefix}gift_card_theme_description vtd 
+			FROM " . DB::prefix() . "gift_card_theme vt 
+			LEFT JOIN " . DB::prefix() . "gift_card_theme_description vtd 
 				ON (vt.gift_card_theme_id = vtd.gift_card_theme_id) 
 			WHERE vt.gift_card_theme_id = '" . (int)$gift_card_theme_id . "' 
 			AND vtd.language_id = '" . (int)Config::get('config_language_id') . "'
@@ -94,8 +94,8 @@ class GiftCardTheme extends Model {
         if ($data) {
             $sql = "
 				SELECT * 
-				FROM {$this->db->prefix}gift_card_theme vt 
-				LEFT JOIN {$this->db->prefix}gift_card_theme_description vtd 
+				FROM " . DB::prefix() . "gift_card_theme vt 
+				LEFT JOIN " . DB::prefix() . "gift_card_theme_description vtd 
 					ON (vt.gift_card_theme_id = vtd.gift_card_theme_id) 
 				WHERE vtd.language_id = '" . (int)Config::get('config_language_id') . "' 
 				ORDER BY vtd.name
@@ -119,14 +119,14 @@ class GiftCardTheme extends Model {
                 $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
             }
             
-            $query = $this->db->query($sql);
+            $query = DB::query($sql);
             
             return $query->rows;
         } else {
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}gift_card_theme vt 
-				LEFT JOIN {$this->db->prefix}gift_card_theme_description vtd 
+				FROM " . DB::prefix() . "gift_card_theme vt 
+				LEFT JOIN " . DB::prefix() . "gift_card_theme_description vtd 
 					ON (vt.gift_card_theme_id = vtd.gift_card_theme_id) 
 				WHERE vtd.language_id = '" . (int)Config::get('config_language_id') . "' 
 				ORDER BY vtd.name
@@ -139,9 +139,9 @@ class GiftCardTheme extends Model {
     public function getGiftcardThemeDescriptions($gift_card_theme_id) {
         $gift_card_theme_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}gift_card_theme_description 
+			FROM " . DB::prefix() . "gift_card_theme_description 
 			WHERE gift_card_theme_id = '" . (int)$gift_card_theme_id . "'
 		");
         
@@ -153,9 +153,9 @@ class GiftCardTheme extends Model {
     }
     
     public function getTotalGiftcardThemes() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}gift_card_theme");
+			FROM " . DB::prefix() . "gift_card_theme");
         
         return $query->row['total'];
     }

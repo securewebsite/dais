@@ -23,9 +23,9 @@ class Language extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}language 
+				FROM " . DB::prefix() . "language 
 				WHERE language_id = '" . (int)$language_id . "'
 			");
             
@@ -42,13 +42,13 @@ class Language extends Model {
     }
     
     public function getLanguages() {
-        $key = 'languages.all.' . (int)$this->config->get('config_store_id');
+        $key = 'languages.all.' . (int)Config::get('config_store_id');
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
             $language_data = array();
             
-            $query = $this->db->query("SELECT * FROM {$this->db->prefix}language ORDER BY sort_order, name");
+            $query = DB::query("SELECT * FROM " . DB::prefix() . "language ORDER BY sort_order, name");
             
             foreach ($query->rows as $result):
                 $language_data[$result['code']] = array('language_id' => $result['language_id'], 'name' => $result['name'], 'code' => $result['code'], 'locale' => $result['locale'], 'image' => $result['image'], 'directory' => $result['directory'], 'filename' => $result['filename'], 'sort_order' => $result['sort_order'], 'status' => $result['status']);

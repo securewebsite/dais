@@ -28,10 +28,10 @@ class Flat extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('flat', $this->request->post);
+            SettingSetting::editSetting('flat', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -43,9 +43,9 @@ class Flat extends Controller {
         Breadcrumb::add('lang_text_shipping', 'module/shipping');
         Breadcrumb::add('lang_heading_title', 'shipping/flat');
         
-        $data['action'] = Url::link('shipping/flat', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('shipping/flat', '', 'SSL');
         
-        $data['cancel'] = Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/shipping', '', 'SSL');
         
         if (isset($this->request->post['flat_cost'])) {
             $data['flat_cost'] = $this->request->post['flat_cost'];
@@ -61,7 +61,7 @@ class Flat extends Controller {
         
         Theme::model('locale/tax_class');
         
-        $data['tax_classes'] = $this->model_locale_tax_class->getTaxClasses();
+        $data['tax_classes'] = LocaleTaxClass::getTaxClasses();
         
         if (isset($this->request->post['flat_geo_zone_id'])) {
             $data['flat_geo_zone_id'] = $this->request->post['flat_geo_zone_id'];
@@ -71,7 +71,7 @@ class Flat extends Controller {
         
         Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
+        $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
         if (isset($this->request->post['flat_status'])) {
             $data['flat_status'] = $this->request->post['flat_status'];
@@ -89,7 +89,7 @@ class Flat extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('shipping/flat', $data));
+        Response::setOutput(View::render('shipping/flat', $data));
     }
     
     protected function validate() {

@@ -23,48 +23,48 @@ class StockStatus extends Model {
     public function addStockStatus($data) {
         foreach ($data['stock_status'] as $language_id => $value) {
             if (isset($stock_status_id)) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}stock_status 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "stock_status 
 					SET 
 						stock_status_id = '" . (int)$stock_status_id . "', 
 						language_id = '" . (int)$language_id . "', 
-						name = '" . $this->db->escape($value['name']) . "'
+						name = '" . DB::escape($value['name']) . "'
 				");
             } else {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}stock_status 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "stock_status 
 					SET 
 						language_id = '" . (int)$language_id . "', 
-						name = '" . $this->db->escape($value['name']) . "'
+						name = '" . DB::escape($value['name']) . "'
 				");
                 
-                $stock_status_id = $this->db->getLastId();
+                $stock_status_id = DB::getLastId();
             }
         }
     }
     
     public function editStockStatus($stock_status_id, $data) {
-        $this->db->query("DELETE FROM {$this->db->prefix}stock_status WHERE stock_status_id = '" . (int)$stock_status_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "stock_status WHERE stock_status_id = '" . (int)$stock_status_id . "'");
         
         foreach ($data['stock_status'] as $language_id => $value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}stock_status 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "stock_status 
 				SET 
 					stock_status_id = '" . (int)$stock_status_id . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($value['name']) . "'
+					name = '" . DB::escape($value['name']) . "'
 			");
         }
     }
     
     public function deleteStockStatus($stock_status_id) {
-        $this->db->query("DELETE FROM {$this->db->prefix}stock_status WHERE stock_status_id = '" . (int)$stock_status_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "stock_status WHERE stock_status_id = '" . (int)$stock_status_id . "'");
     }
     
     public function getStockStatus($stock_status_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}stock_status 
+			FROM " . DB::prefix() . "stock_status 
 			WHERE stock_status_id = '" . (int)$stock_status_id . "' 
 			AND language_id = '" . (int)Config::get('config_language_id') . "'
 		");
@@ -76,7 +76,7 @@ class StockStatus extends Model {
         if ($data) {
             $sql = "
 				SELECT * 
-				FROM {$this->db->prefix}stock_status 
+				FROM " . DB::prefix() . "stock_status 
 				WHERE language_id = '" . (int)Config::get('config_language_id') . "'";
             
             $sql.= " ORDER BY name";
@@ -99,15 +99,15 @@ class StockStatus extends Model {
                 $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
             }
             
-            $query = $this->db->query($sql);
+            $query = DB::query($sql);
             
             return $query->rows;
         } else {
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT 
 					stock_status_id, 
 					name 
-				FROM {$this->db->prefix}stock_status 
+				FROM " . DB::prefix() . "stock_status 
 				WHERE language_id = '" . (int)Config::get('config_language_id') . "' 
 				ORDER BY name
 			");
@@ -119,9 +119,9 @@ class StockStatus extends Model {
     public function getStockStatusDescriptions($stock_status_id) {
         $stock_status_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}stock_status 
+			FROM " . DB::prefix() . "stock_status 
 			WHERE stock_status_id = '" . (int)$stock_status_id . "'");
         
         foreach ($query->rows as $result) {
@@ -132,9 +132,9 @@ class StockStatus extends Model {
     }
     
     public function getTotalStockStatuses() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}stock_status 
+			FROM " . DB::prefix() . "stock_status 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'");
         
         return $query->row['total'];

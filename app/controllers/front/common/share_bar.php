@@ -15,17 +15,18 @@
 */
 
 namespace App\Controllers\Front\Common;
+
 use App\Controllers\Controller;
 
 class ShareBar extends Controller {
 
 	public function index($data) {
 		$type = array_shift($data);
-		$data = $this->theme->language('common/share_bar', $data[0]);
+		$data = Theme::language('common/share_bar', $data[0]);
 
-		$this->theme->model('setting/setting');
+		Theme::model('setting/setting');
 
-		$settings = $this->model_setting_setting->getSetting('share_bar');
+		$settings = SettingSetting::getSetting('share_bar');
 
 		foreach($settings as $key => $setting):
 			$data[$key] = $setting;
@@ -39,21 +40,21 @@ class ShareBar extends Controller {
 
 		switch ($type):
 			case 'product':
-				$href        = $this->url->link('catalog/product', 'product_id=' . $data['product_id']);
+				$href        = Url::link('catalog/product', 'product_id=' . $data['product_id']);
 				$description = $data['description'];
 				break;
 			case 'page':
-				$href        = $this->url->link('content/page', 'page_id=' . $data['page_id']);
+				$href        = Url::link('content/page', 'page_id=' . $data['page_id']);
 				$description = $data['description'];
 				$data['pinterest_enabled'] = false;
 				break;
 			case 'post':
-				$href        = $this->url->link('content/post', 'post_id=' . $data['post_id']);
+				$href        = Url::link('content/post', 'post_id=' . $data['post_id']);
 				$description = $data['description'];
 				$data['pinterest_enabled'] = false;
 				break;
 			case 'event':
-				$href        = $this->url->link('event/page', 'event_page_id=' . $data['event_page_id']);
+				$href        = Url::link('event/page', 'event_page_id=' . $data['event_page_id']);
 				$description = $data['description'];
 				$data['pinterest_enabled'] = false;
 				break;
@@ -62,10 +63,10 @@ class ShareBar extends Controller {
 		$data['social_href'] = $href;
 		$data['social_desc'] = urlencode($data['heading_title'] . "\n" . substr(strip_tags($description), 0, 500) . "...");
 		
-		$data['social_site'] = $this->config->get('config_name');
+		$data['social_site'] = Config::get('config_name');
 
-		$data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+		$data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('common/share_bar', $data);
+        return View::render('common/share_bar', $data);
 	}
 }

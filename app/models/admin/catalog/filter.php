@@ -21,39 +21,39 @@ use App\Models\Model;
 class Filter extends Model {
     
     public function addFilter($data) {
-        $this->db->query("
-            INSERT INTO `{$this->db->prefix}filter_group` 
+        DB::query("
+            INSERT INTO `" . DB::prefix() . "filter_group` 
             SET sort_order = '" . (int)$data['sort_order'] . "'");
         
-        $filter_group_id = $this->db->getLastId();
+        $filter_group_id = DB::getLastId();
         
         foreach ($data['filter_group_description'] as $language_id => $value) {
-            $this->db->query("
-                INSERT INTO {$this->db->prefix}filter_group_description 
+            DB::query("
+                INSERT INTO " . DB::prefix() . "filter_group_description 
                 SET 
                     filter_group_id = '" . (int)$filter_group_id . "', 
                     language_id = '" . (int)$language_id . "', 
-                    name = '" . $this->db->escape($value['name']) . "'");
+                    name = '" . DB::escape($value['name']) . "'");
         }
         
         if (isset($data['filter'])) {
             foreach ($data['filter'] as $filter) {
-                $this->db->query("
-                    INSERT INTO {$this->db->prefix}filter 
+                DB::query("
+                    INSERT INTO " . DB::prefix() . "filter 
                     SET 
                         filter_group_id = '" . (int)$filter_group_id . "', 
                         sort_order = '" . (int)$filter['sort_order'] . "'");
                 
-                $filter_id = $this->db->getLastId();
+                $filter_id = DB::getLastId();
                 
                 foreach ($filter['filter_description'] as $language_id => $filter_description) {
-                    $this->db->query("
-                        INSERT INTO {$this->db->prefix}filter_description 
+                    DB::query("
+                        INSERT INTO " . DB::prefix() . "filter_description 
                         SET 
                             filter_id = '" . (int)$filter_id . "', 
                             language_id = '" . (int)$language_id . "', 
                             filter_group_id = '" . (int)$filter_group_id . "', 
-                            name = '" . $this->db->escape($filter_description['name']) . "'");
+                            name = '" . DB::escape($filter_description['name']) . "'");
                 }
             }
         }
@@ -62,59 +62,59 @@ class Filter extends Model {
     }
     
     public function editFilter($filter_group_id, $data) {
-        $this->db->query("
-            UPDATE `{$this->db->prefix}filter_group` 
+        DB::query("
+            UPDATE `" . DB::prefix() . "filter_group` 
             SET sort_order = '" . (int)$data['sort_order'] . "' 
             WHERE filter_group_id = '" . (int)$filter_group_id . "'");
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}filter_group_description 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "filter_group_description 
             WHERE filter_group_id = '" . (int)$filter_group_id . "'");
         
         foreach ($data['filter_group_description'] as $language_id => $value) {
-            $this->db->query("
-                INSERT INTO {$this->db->prefix}filter_group_description 
+            DB::query("
+                INSERT INTO " . DB::prefix() . "filter_group_description 
                 SET 
                     filter_group_id = '" . (int)$filter_group_id . "', 
                     language_id = '" . (int)$language_id . "', 
-                    name = '" . $this->db->escape($value['name']) . "'");
+                    name = '" . DB::escape($value['name']) . "'");
         }
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}filter 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "filter 
             WHERE filter_group_id = '" . (int)$filter_group_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}filter_description 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "filter_description 
             WHERE filter_group_id = '" . (int)$filter_group_id . "'");
         
         if (isset($data['filter'])) {
             foreach ($data['filter'] as $filter) {
                 if ($filter['filter_id']) {
-                    $this->db->query("
-                        INSERT INTO {$this->db->prefix}filter 
+                    DB::query("
+                        INSERT INTO " . DB::prefix() . "filter 
                         SET 
                             filter_id = '" . (int)$filter['filter_id'] . "', 
                             filter_group_id = '" . (int)$filter_group_id . "', 
                             sort_order = '" . (int)$filter['sort_order'] . "'");
                 } else {
-                    $this->db->query("
-                        INSERT INTO {$this->db->prefix}filter 
+                    DB::query("
+                        INSERT INTO " . DB::prefix() . "filter 
                         SET 
                             filter_group_id = '" . (int)$filter_group_id . "', 
                             sort_order = '" . (int)$filter['sort_order'] . "'");
                 }
                 
-                $filter_id = $this->db->getLastId();
+                $filter_id = DB::getLastId();
                 
                 foreach ($filter['filter_description'] as $language_id => $filter_description) {
-                    $this->db->query("
-                        INSERT INTO {$this->db->prefix}filter_description 
+                    DB::query("
+                        INSERT INTO " . DB::prefix() . "filter_description 
                         SET 
                             filter_id = '" . (int)$filter_id . "', 
                             language_id = '" . (int)$language_id . "', 
                             filter_group_id = '" . (int)$filter_group_id . "', 
-                            name = '" . $this->db->escape($filter_description['name']) . "'");
+                            name = '" . DB::escape($filter_description['name']) . "'");
                 }
             }
         }
@@ -123,30 +123,30 @@ class Filter extends Model {
     }
     
     public function deleteFilter($filter_group_id) {
-        $this->db->query("
-            DELETE FROM `{$this->db->prefix}filter_group` 
+        DB::query("
+            DELETE FROM `" . DB::prefix() . "filter_group` 
             WHERE filter_group_id = '" . (int)$filter_group_id . "'");
 
-        $this->db->query("
-            DELETE FROM `{$this->db->prefix}filter_group_description` 
+        DB::query("
+            DELETE FROM `" . DB::prefix() . "filter_group_description` 
             WHERE filter_group_id = '" . (int)$filter_group_id . "'");
 
-        $this->db->query("
-            DELETE FROM `{$this->db->prefix}filter` 
+        DB::query("
+            DELETE FROM `" . DB::prefix() . "filter` 
             WHERE filter_group_id = '" . (int)$filter_group_id . "'");
 
-        $this->db->query("
-            DELETE FROM `{$this->db->prefix}filter_description` 
+        DB::query("
+            DELETE FROM `" . DB::prefix() . "filter_description` 
             WHERE filter_group_id = '" . (int)$filter_group_id . "'");
         
         Theme::trigger('admin_delete_filter');
     }
     
     public function getFilterGroup($filter_group_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM `{$this->db->prefix}filter_group` fg 
-            LEFT JOIN {$this->db->prefix}filter_group_description fgd 
+            FROM `" . DB::prefix() . "filter_group` fg 
+            LEFT JOIN " . DB::prefix() . "filter_group_description fgd 
             ON (fg.filter_group_id = fgd.filter_group_id) 
             WHERE fg.filter_group_id = '" . (int)$filter_group_id . "' 
             AND fgd.language_id = '" . (int)Config::get('config_language_id') . "'");
@@ -157,8 +157,8 @@ class Filter extends Model {
     public function getFilterGroups($data = array()) {
         $sql = "
             SELECT * 
-            FROM `{$this->db->prefix}filter_group` fg 
-            LEFT JOIN {$this->db->prefix}filter_group_description fgd 
+            FROM `" . DB::prefix() . "filter_group` fg 
+            LEFT JOIN " . DB::prefix() . "filter_group_description fgd 
             ON (fg.filter_group_id = fgd.filter_group_id) 
             WHERE fgd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
@@ -188,7 +188,7 @@ class Filter extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
@@ -196,9 +196,9 @@ class Filter extends Model {
     public function getFilterGroupDescriptions($filter_group_id) {
         $filter_group_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}filter_group_description 
+            FROM " . DB::prefix() . "filter_group_description 
             WHERE filter_group_id = '" . (int)$filter_group_id . "'");
         
         foreach ($query->rows as $result) {
@@ -209,14 +209,14 @@ class Filter extends Model {
     }
     
     public function getFilter($filter_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT *, 
             (SELECT name 
-                FROM {$this->db->prefix}filter_group_description fgd 
+                FROM " . DB::prefix() . "filter_group_description fgd 
                 WHERE f.filter_group_id = fgd.filter_group_id 
                 AND fgd.language_id = '" . (int)Config::get('config_language_id') . "') AS `group` 
-            FROM {$this->db->prefix}filter f 
-            LEFT JOIN {$this->db->prefix}filter_description fd 
+            FROM " . DB::prefix() . "filter f 
+            LEFT JOIN " . DB::prefix() . "filter_description fd 
             ON (f.filter_id = fd.filter_id) 
             WHERE f.filter_id = '" . (int)$filter_id . "' 
             AND fd.language_id = '" . (int)Config::get('config_language_id') . "'");
@@ -228,16 +228,16 @@ class Filter extends Model {
         $sql = "
             SELECT *, 
             (SELECT name 
-                FROM {$this->db->prefix}filter_group_description fgd 
+                FROM " . DB::prefix() . "filter_group_description fgd 
                 WHERE f.filter_group_id = fgd.filter_group_id 
                 AND fgd.language_id = '" . (int)Config::get('config_language_id') . "') AS `group` 
-            FROM {$this->db->prefix}filter f 
-            LEFT JOIN {$this->db->prefix}filter_description fd 
+            FROM " . DB::prefix() . "filter f 
+            LEFT JOIN " . DB::prefix() . "filter_description fd 
             ON (f.filter_id = fd.filter_id) 
             WHERE fd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_name'])) {
-            $sql.= " AND fd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+            $sql.= " AND fd.name LIKE '" . DB::escape($data['filter_name']) . "%'";
         }
         
         $sql.= " ORDER BY f.sort_order ASC";
@@ -254,7 +254,7 @@ class Filter extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
@@ -262,15 +262,15 @@ class Filter extends Model {
     public function getFilterDescriptions($filter_group_id) {
         $filter_data = array();
         
-        $filter_query = $this->db->query("
-            SELECT * FROM {$this->db->prefix}filter 
+        $filter_query = DB::query("
+            SELECT * FROM " . DB::prefix() . "filter 
             WHERE filter_group_id = '" . (int)$filter_group_id . "'");
         
         foreach ($filter_query->rows as $filter) {
             $filter_description_data = array();
             
-            $filter_description_query = $this->db->query("
-                SELECT * FROM {$this->db->prefix}filter_description 
+            $filter_description_query = DB::query("
+                SELECT * FROM " . DB::prefix() . "filter_description 
                 WHERE filter_id = '" . (int)$filter['filter_id'] . "'");
             
             foreach ($filter_description_query->rows as $filter_description) {
@@ -284,9 +284,9 @@ class Filter extends Model {
     }
     
     public function getTotalFilterGroups() {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT COUNT(*) AS total 
-            FROM `{$this->db->prefix}filter_group`");
+            FROM `" . DB::prefix() . "filter_group`");
         
         return $query->row['total'];
     }

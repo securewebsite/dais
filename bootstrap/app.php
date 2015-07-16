@@ -102,22 +102,8 @@ if (preg_match('/^\/(' . API_FACADE . ')/', $_SERVER['REQUEST_URI'])):
     endif;
 endif;
 
-/*
-|--------------------------------------------------------------------------
-|   Register the Dais Autoloader
-|--------------------------------------------------------------------------
-|
-|   Let's make sure we can load up some classes or our users aren't gonna
-|   have much of an experience with our super cool application.
-|
-*/
-
-//Dais\Support\Autoload::register();
-
-
 /**
- *  We also need to redirect calls to the app when no db config
- *  file exists.
+ *  We need to throw an error if there's no db set up.
  */
 if (!isset($_ENV) || empty($_ENV['DB_DATABASE'])):
     throw new \Exception('No database config is set in your environment.');
@@ -157,6 +143,26 @@ $app = new Dais\Application(
 /**
  * $app->registerServiceProviders([
  *    Dais\Services\MyCoolNewService::class,
+ * ]);
+*/
+
+/*
+|--------------------------------------------------------------------------
+|   Register Your Aliases
+|--------------------------------------------------------------------------
+|
+|   Feel free to add your own aliases/facades to the list below.
+|	Dais ships with only models as facades. If you're creating new
+|	facades for items in the app directory, make sure that you dump the
+| 	composer autoloader to ensure they are loaded.
+|
+|	composer dumpautoload
+|
+*/
+
+/**
+ * $app->registerClassAliases([
+ *    'MyFacade' => 'App\Models\Front\Facades\MyFacade',
  * ]);
 */
 

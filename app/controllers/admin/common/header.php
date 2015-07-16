@@ -35,7 +35,7 @@ class Header extends Controller {
         
         $data = Theme::language('common/header', $data);
         
-        if (!User::isLogged() || !isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])):
+        if (!User::isLogged() || !Response::match()):
             $data['logged']    = '';
             $data['dashboard'] = Url::link('common/login', '', 'SSL');
         else:
@@ -48,6 +48,6 @@ class Header extends Controller {
         $key              = CSS::compile();
         $data['css_link'] = Config::get('https.public') . 'asset/css/' . Filecache::get_key($key, 'css');
         
-        return Theme::view('common/header', $data);
+        return View::render('common/header', $data);
     }
 }

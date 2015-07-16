@@ -19,18 +19,18 @@ use App\Models\Model;
 
 class Order extends Model {
     public function getOrder($order_id) {
-        $order_query = $this->db->query("
+        $order_query = DB::query("
 			SELECT * 
-			FROM `{$this->db->prefix}order` 
+			FROM `" . DB::prefix() . "order` 
 			WHERE order_id = '" . (int)$order_id . "' 
-			AND customer_id = '" . (int)$this->customer->getId() . "' 
+			AND customer_id = '" . (int)\Customer::getId() . "' 
 			AND order_status_id > '0'
 		");
         
         if ($order_query->num_rows) {
-            $country_query = $this->db->query("
+            $country_query = DB::query("
 				SELECT * 
-				FROM `{$this->db->prefix}country` 
+				FROM `" . DB::prefix() . "country` 
 				WHERE country_id = '" . (int)$order_query->row['payment_country_id'] . "'
 			");
             
@@ -42,9 +42,9 @@ class Order extends Model {
                 $payment_iso_code_3 = '';
             }
             
-            $zone_query = $this->db->query("
+            $zone_query = DB::query("
 				SELECT * 
-				FROM `{$this->db->prefix}zone` 
+				FROM `" . DB::prefix() . "zone` 
 				WHERE zone_id = '" . (int)$order_query->row['payment_zone_id'] . "'
 			");
             
@@ -54,9 +54,9 @@ class Order extends Model {
                 $payment_zone_code = '';
             }
             
-            $country_query = $this->db->query("
+            $country_query = DB::query("
 				SELECT * 
-				FROM `{$this->db->prefix}country` 
+				FROM `" . DB::prefix() . "country` 
 				WHERE country_id = '" . (int)$order_query->row['shipping_country_id'] . "'
 			");
             
@@ -68,9 +68,9 @@ class Order extends Model {
                 $shipping_iso_code_3 = '';
             }
             
-            $zone_query = $this->db->query("
+            $zone_query = DB::query("
 				SELECT * 
-				FROM `{$this->db->prefix}zone` 
+				FROM `" . DB::prefix() . "zone` 
 				WHERE zone_id = '" . (int)$order_query->row['shipping_zone_id'] . "'
 			");
             
@@ -95,7 +95,7 @@ class Order extends Model {
             $limit = 1;
         }
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT 
 				o.order_id, 
 				o.firstname, 
@@ -105,12 +105,12 @@ class Order extends Model {
 				o.total, 
 				o.currency_code, 
 				o.currency_value 
-			FROM `{$this->db->prefix}order` o 
-			LEFT JOIN {$this->db->prefix}order_status os 
+			FROM `" . DB::prefix() . "order` o 
+			LEFT JOIN " . DB::prefix() . "order_status os 
 				ON (o.order_status_id = os.order_status_id) 
-			WHERE o.customer_id = '" . (int)$this->customer->getId() . "' 
+			WHERE o.customer_id = '" . (int)\Customer::getId() . "' 
 			AND o.order_status_id > '0' 
-			AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+			AND os.language_id = '" . (int)Config::get('config_language_id') . "' 
 			ORDER BY o.order_id 
 			DESC LIMIT " . (int)$start . "," . (int)$limit);
         
@@ -118,9 +118,9 @@ class Order extends Model {
     }
     
     public function getOrderProducts($order_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}order_product 
+			FROM " . DB::prefix() . "order_product 
 			WHERE order_id = '" . (int)$order_id . "'
 		");
         
@@ -128,9 +128,9 @@ class Order extends Model {
     }
     
     public function getOrderOptions($order_id, $order_product_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}order_option 
+			FROM " . DB::prefix() . "order_option 
 			WHERE order_id = '" . (int)$order_id . "' 
 			AND order_product_id = '" . (int)$order_product_id . "'
 		");
@@ -139,9 +139,9 @@ class Order extends Model {
     }
     
     public function getOrderGiftcards($order_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM `{$this->db->prefix}order_gift_card` 
+			FROM `" . DB::prefix() . "order_gift_card` 
 			WHERE order_id = '" . (int)$order_id . "'
 		");
         
@@ -149,9 +149,9 @@ class Order extends Model {
     }
     
     public function getOrderTotals($order_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}order_total 
+			FROM " . DB::prefix() . "order_total 
 			WHERE order_id = '" . (int)$order_id . "' 
 			ORDER BY sort_order
 		");
@@ -160,18 +160,18 @@ class Order extends Model {
     }
     
     public function getOrderHistories($order_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT 
 				date_added, 
 				os.name AS status, 
 				oh.comment, 
 				oh.notify 
-			FROM {$this->db->prefix}order_history oh 
-			LEFT JOIN {$this->db->prefix}order_status os 
+			FROM " . DB::prefix() . "order_history oh 
+			LEFT JOIN " . DB::prefix() . "order_status os 
 				ON oh.order_status_id = os.order_status_id 
 			WHERE oh.order_id = '" . (int)$order_id . "' 
 			AND oh.notify = '1' 
-			AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+			AND os.language_id = '" . (int)Config::get('config_language_id') . "' 
 			ORDER BY oh.date_added
 		");
         
@@ -179,9 +179,9 @@ class Order extends Model {
     }
     
     public function getOrderDownloads($order_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}order_download 
+			FROM " . DB::prefix() . "order_download 
 			WHERE order_id = '" . (int)$order_id . "' 
 			ORDER BY name
 		");
@@ -190,10 +190,10 @@ class Order extends Model {
     }
     
     public function getTotalOrders() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM `{$this->db->prefix}order` 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "' 
+			FROM `" . DB::prefix() . "order` 
+			WHERE customer_id = '" . (int)\Customer::getId() . "' 
 			AND order_status_id > '0'
 		");
         
@@ -201,9 +201,9 @@ class Order extends Model {
     }
     
     public function getTotalOrderProductsByOrderId($order_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}order_product 
+			FROM " . DB::prefix() . "order_product 
 			WHERE order_id = '" . (int)$order_id . "'
 		");
         
@@ -211,9 +211,9 @@ class Order extends Model {
     }
     
     public function getTotalOrderGiftcardsByOrderId($order_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM `{$this->db->prefix}order_gift_card` 
+			FROM `" . DB::prefix() . "order_gift_card` 
 			WHERE order_id = '" . (int)$order_id . "'
 		");
         

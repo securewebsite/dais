@@ -15,16 +15,18 @@
 */
 
 namespace App\Controllers\Front\Checkout;
+
 use App\Controllers\Controller;
 
 class PaymentMethod extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('checkout/checkout');
+        $data = Theme::language('checkout/checkout');
         
-        $this->theme->model('account/address');
+        Theme::model('account/address');
         
-        if ($this->customer->isLogged() && isset($this->session->data['payment_address_id'])) {
-            $payment_address = $this->model_account_address->getAddress($this->session->data['payment_address_id']);
+        if (Customer::isLogged() && isset($this->session->data['payment_address_id'])) {
+            $payment_address = AccountAddress::getAddress($this->session->data['payment_address_id']);
         } elseif (isset($this->session->data['guest'])) {
             $payment_address = $this->session->data['guest']['payment'];
         }
@@ -34,23 +36,23 @@ class PaymentMethod extends Controller {
             // Totals
             $total_data = array();
             $total = 0;
-            $taxes = $this->cart->getTaxes();
+            $taxes = Cart::getTaxes();
             
-            $this->theme->model('setting/module');
+            Theme::model('setting/module');
             
             $sort_order = array();
             
-            $results = $this->model_setting_module->getModules('total');
+            $results = SettingModule::getModules('total');
             
             foreach ($results as $key => $value) {
-                $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
+                $sort_order[$key] = Config::get($value['code'] . '_sort_order');
             }
             
             array_multisort($sort_order, SORT_ASC, $results);
             
             foreach ($results as $result) {
-                if ($this->config->get($result['code'] . '_status')) {
-                    $this->theme->model('total/' . $result['code']);
+                if (Config::get($result['code'] . '_status')) {
+                    Theme::model('total/' . $result['code']);
                     
                     $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
                 }
@@ -59,15 +61,15 @@ class PaymentMethod extends Controller {
             // Payment Methods
             $method_data = array();
             
-            $this->theme->model('setting/module');
+            Theme::model('setting/module');
             
-            $results = $this->model_setting_module->getModules('payment');
+            $results = SettingModule::getModules('payment');
             
-            $cart_has_recurring = $this->cart->hasRecurringProducts();
+            $cart_has_recurring = Cart::hasRecurringProducts();
             
             foreach ($results as $result) {
-                if ($this->config->get($result['code'] . '_status')) {
-                    $this->theme->model('payment/' . $result['code']);
+                if (Config::get($result['code'] . '_status')) {
+                    Theme::model('payment/' . $result['code']);
                     
                     $method = $this->{'model_payment_' . $result['code']}->getMethod($payment_address, $total);
                     
@@ -97,7 +99,7 @@ class PaymentMethod extends Controller {
         }
         
         if (empty($this->session->data['payment_methods'])) {
-            $data['error_warning'] = sprintf($this->language->get('lang_error_no_payment'), $this->url->link('content/contact'));
+            $data['error_warning'] = sprintf(Lang::get('lang_error_no_payment'), Url::link('content/contact'));
         } else {
             $data['error_warning'] = '';
         }
@@ -120,13 +122,13 @@ class PaymentMethod extends Controller {
             $data['comment'] = '';
         }
         
-        if ($this->config->get('config_checkout_id')) {
-            $this->theme->model('content/page');
+        if (Config::get('config_checkout_id')) {
+            Theme::model('content/page');
             
-            $page_info = $this->model_content_page->getPage($this->config->get('config_checkout_id'));
+            $page_info = ContentPage::getPage(Config::get('config_checkout_id'));
             
             if ($page_info) {
-                $data['text_agree'] = sprintf($this->language->get('lang_text_agree'), $this->url->link('content/page/info', 'page_id=' . $this->config->get('config_checkout_id'), 'SSL'), $page_info['title'], $page_info['title']);
+                $data['text_agree'] = sprintf(Lang::get('lang_text_agree'), Url::link('content/page/info', 'page_id=' . Config::get('config_checkout_id'), 'SSL'), $page_info['title'], $page_info['title']);
             } else {
                 $data['text_agree'] = '';
             }
@@ -140,36 +142,36 @@ class PaymentMethod extends Controller {
             $data['agree'] = '';
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->response->setOutput($this->theme->view('checkout/payment_method', $data));
+        Response::setOutput(View::render('checkout/payment_method', $data));
     }
     
     public function validate() {
-        $this->theme->language('checkout/checkout');
+        Theme::language('checkout/checkout');
         
         $json = array();
         
         // Validate if payment address has been set.
-        $this->theme->model('account/address');
+        Theme::model('account/address');
         
-        if ($this->customer->isLogged() && isset($this->session->data['payment_address_id'])) {
-            $payment_address = $this->model_account_address->getAddress($this->session->data['payment_address_id']);
+        if (Customer::isLogged() && isset($this->session->data['payment_address_id'])) {
+            $payment_address = AccountAddress::getAddress($this->session->data['payment_address_id']);
         } elseif (isset($this->session->data['guest'])) {
             $payment_address = $this->session->data['guest']['payment'];
         }
         
         if (empty($payment_address)) {
-            $json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
+            $json['redirect'] = Url::link('checkout/checkout', '', 'SSL');
         }
         
         // Validate cart has products and has stock.
-        if ((!$this->cart->hasProducts() && empty($this->session->data['gift_cards'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
-            $json['redirect'] = $this->url->link('checkout/cart');
+        if ((!Cart::hasProducts() && empty($this->session->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
+            $json['redirect'] = Url::link('checkout/cart');
         }
         
         // Validate minimum quantity requirments.
-        $products = $this->cart->getProducts();
+        $products = Cart::getProducts();
         
         foreach ($products as $product) {
             $product_total = 0;
@@ -181,7 +183,7 @@ class PaymentMethod extends Controller {
             }
             
             if ($product['minimum'] > $product_total) {
-                $json['redirect'] = $this->url->link('checkout/cart');
+                $json['redirect'] = Url::link('checkout/cart');
                 
                 break;
             }
@@ -189,18 +191,18 @@ class PaymentMethod extends Controller {
         
         if (!$json) {
             if (!isset($this->request->post['payment_method'])) {
-                $json['error']['warning'] = $this->language->get('lang_error_payment');
+                $json['error']['warning'] = Lang::get('lang_error_payment');
             } elseif (!isset($this->session->data['payment_methods'][$this->request->post['payment_method']])) {
-                $json['error']['warning'] = $this->language->get('lang_error_payment');
+                $json['error']['warning'] = Lang::get('lang_error_payment');
             }
             
-            if ($this->config->get('config_checkout_id')) {
-                $this->theme->model('content/page');
+            if (Config::get('config_checkout_id')) {
+                Theme::model('content/page');
                 
-                $page_info = $this->model_content_page->getPage($this->config->get('config_checkout_id'));
+                $page_info = ContentPage::getPage(Config::get('config_checkout_id'));
                 
                 if ($page_info && !isset($this->request->post['agree'])) {
-                    $json['error']['warning'] = sprintf($this->language->get('lang_error_agree'), $page_info['title']);
+                    $json['error']['warning'] = sprintf(Lang::get('lang_error_agree'), $page_info['title']);
                 }
             }
             
@@ -211,8 +213,8 @@ class PaymentMethod extends Controller {
             }
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

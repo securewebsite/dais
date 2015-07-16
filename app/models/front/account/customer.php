@@ -19,68 +19,68 @@ use App\Models\Model;
 
 class Customer extends Model {
     public function addCustomer($data) {
-        if (isset($data['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($data['customer_group_id'], $this->config->get('config_customer_group_display'))) {
+        if (isset($data['customer_group_id']) && is_array(Config::get('config_customer_group_display')) && in_array($data['customer_group_id'], Config::get('config_customer_group_display'))) {
             $customer_group_id = $data['customer_group_id'];
         } else {
-            $customer_group_id = $this->config->get('config_customer_group_id');
+            $customer_group_id = Config::get('config_customer_group_id');
         }
         
-        $this->theme->model('account/customer_group');
+        Theme::model('account/customer_group');
         
-        $customer_group_info = $this->model_account_customer_group->getCustomerGroup($customer_group_id);
+        $customer_group_info = AccountCustomerGroup::getCustomerGroup($customer_group_id);
         
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}customer 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "customer 
 			SET 
-                store_id          = '" . (int)$this->config->get('config_store_id') . "', 
-                username          = '" . $this->db->escape($data['username']) . "', 
-                firstname         = '" . $this->db->escape($data['firstname']) . "', 
-                lastname          = '" . $this->db->escape($data['lastname']) . "', 
-                email             = '" . $this->db->escape($data['email']) . "', 
-                telephone         = '" . $this->db->escape($data['telephone']) . "', 
-                salt              = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', 
-                password          = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', 
+                store_id          = '" . (int)Config::get('config_store_id') . "', 
+                username          = '" . DB::escape($data['username']) . "', 
+                firstname         = '" . DB::escape($data['firstname']) . "', 
+                lastname          = '" . DB::escape($data['lastname']) . "', 
+                email             = '" . DB::escape($data['email']) . "', 
+                telephone         = '" . DB::escape($data['telephone']) . "', 
+                salt              = '" . DB::escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', 
+                password          = '" . DB::escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', 
                 newsletter        = '" . (isset($data['newsletter']) ? (int)$data['newsletter'] : 0) . "', 
                 customer_group_id = '" . (int)$customer_group_id . "', 
                 referral_id       = '" . (isset($this->request->cookie['referrer']) ? $this->request->cookie['referrer'] : 0) . "', 
-                ip                = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', 
+                ip                = '" . DB::escape($this->request->server['REMOTE_ADDR']) . "', 
                 status            = '1', 
                 approved          = '" . (int)!$customer_group_info['approval'] . "', 
                 date_added        = NOW()
 		");
         
-        $customer_id = $this->db->getLastId();
+        $customer_id = DB::getLastId();
 
         // add customer to customer_ips table for each new account
-        $this->db->query("
-            INSERT INTO {$this->db->prefix}customer_ip 
+        DB::query("
+            INSERT INTO " . DB::prefix() . "customer_ip 
             SET 
                 customer_id = '" . (int)$customer_id . "', 
-                ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', 
+                ip = '" . DB::escape($this->request->server['REMOTE_ADDR']) . "', 
                 date_added = NOW()
         ");
         
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}address 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "address 
 			SET 
                 customer_id = '" . (int)$customer_id . "', 
-                firstname   = '" . $this->db->escape($data['firstname']) . "', 
-                lastname    = '" . $this->db->escape($data['lastname']) . "', 
-                company     = '" . $this->db->escape($data['company']) . "', 
-                company_id  = '" . $this->db->escape($data['company_id']) . "', 
-                tax_id      = '" . $this->db->escape($data['tax_id']) . "', 
-                address_1   = '" . $this->db->escape($data['address_1']) . "', 
-                address_2   = '" . $this->db->escape($data['address_2']) . "', 
-                city        = '" . $this->db->escape($data['city']) . "', 
-                postcode    = '" . $this->db->escape($data['postcode']) . "', 
+                firstname   = '" . DB::escape($data['firstname']) . "', 
+                lastname    = '" . DB::escape($data['lastname']) . "', 
+                company     = '" . DB::escape($data['company']) . "', 
+                company_id  = '" . DB::escape($data['company_id']) . "', 
+                tax_id      = '" . DB::escape($data['tax_id']) . "', 
+                address_1   = '" . DB::escape($data['address_1']) . "', 
+                address_2   = '" . DB::escape($data['address_2']) . "', 
+                city        = '" . DB::escape($data['city']) . "', 
+                postcode    = '" . DB::escape($data['postcode']) . "', 
                 country_id  = '" . (int)$data['country_id'] . "', 
                 zone_id     = '" . (int)$data['zone_id'] . "'
 		");
         
-        $address_id = $this->db->getLastId();
+        $address_id = DB::getLastId();
         
-        $this->db->query("
-			UPDATE {$this->db->prefix}customer 
+        DB::query("
+			UPDATE " . DB::prefix() . "customer 
 			SET address_id = '" . (int)$address_id . "' 
 			WHERE customer_id = '" . (int)$customer_id . "'
 		");
@@ -92,24 +92,24 @@ class Customer extends Model {
         if (isset($data['affiliate']) && $data['affiliate']['status'] == 1):
             $aff = $data['affiliate'];
 
-            $this->db->query("
-                UPDATE {$this->db->prefix}customer 
+            DB::query("
+                UPDATE " . DB::prefix() . "customer 
                 SET 
                   is_affiliate        = '" . (int)1 . "', 
                   affiliate_status    = '" . (int)1 . "', 
-                  company             = '" . $this->db->escape($data['company']) . "', 
-                  website             = '" . $this->db->escape($aff['website']) . "', 
+                  company             = '" . DB::escape($data['company']) . "', 
+                  website             = '" . DB::escape($aff['website']) . "', 
                   code                = '" . uniqid() . "', 
-                  commission          = '" . (float)$this->config->get('config_commission') . "', 
-                  tax_id              = '" . $this->db->escape($aff['tax']) . "', 
-                  payment_method      = '" . $this->db->escape($aff['payment_method']) . "', 
-                  cheque              = '" . $this->db->escape($aff['cheque']) . "', 
-                  paypal              = '" . $this->db->escape($aff['paypal']) . "', 
-                  bank_name           = '" . $this->db->escape($aff['bank_name']) . "', 
-                  bank_branch_number  = '" . $this->db->escape($aff['bank_branch_number']) . "', 
-                  bank_swift_code     = '" . $this->db->escape($aff['bank_swift_code']) . "', 
-                  bank_account_name   = '" . $this->db->escape($aff['bank_account_name']) . "',
-                  bank_account_number = '" . $this->db->escape($aff['bank_account_number']) . "' 
+                  commission          = '" . (float)Config::get('config_commission') . "', 
+                  tax_id              = '" . DB::escape($aff['tax']) . "', 
+                  payment_method      = '" . DB::escape($aff['payment_method']) . "', 
+                  cheque              = '" . DB::escape($aff['cheque']) . "', 
+                  paypal              = '" . DB::escape($aff['paypal']) . "', 
+                  bank_name           = '" . DB::escape($aff['bank_name']) . "', 
+                  bank_branch_number  = '" . DB::escape($aff['bank_branch_number']) . "', 
+                  bank_swift_code     = '" . DB::escape($aff['bank_swift_code']) . "', 
+                  bank_account_name   = '" . DB::escape($aff['bank_account_name']) . "',
+                  bank_account_number = '" . DB::escape($aff['bank_account_number']) . "' 
                 WHERE customer_id = '" . (int)$customer_id . "'
             ");
             
@@ -117,12 +117,12 @@ class Customer extends Model {
              * Add affiliate vanity url slug
              */
             if ($aff['slug']):
-                $this->db->query("
-                    INSERT INTO {$this->db->prefix}affiliate_route 
+                DB::query("
+                    INSERT INTO " . DB::prefix() . "affiliate_route 
                     SET 
                         route = '" . Theme::getstyle() . "/home', 
                         query = 'affiliate_id:" . (int)$customer_id . "', 
-                        slug  = '" . $this->db->escape($aff['slug']) . "'
+                        slug  = '" . DB::escape($aff['slug']) . "'
                 ");
             endif;
         endif;
@@ -130,8 +130,8 @@ class Customer extends Model {
         /**
          * Add default notification settings
          */
-        $this->theme->model('account/notification');
-        $emails = $this->model_account_notification->getConfigurableNotifications();
+        Theme::model('account/notification');
+        $emails = AccountNotification::getConfigurableNotifications();
 
         $notify = array();
 
@@ -144,34 +144,34 @@ class Customer extends Model {
 
         $notify = serialize($notify);
 
-        $this->db->query("
-            INSERT INTO {$this->db->prefix}customer_notification 
+        DB::query("
+            INSERT INTO " . DB::prefix() . "customer_notification 
             SET 
                 customer_id = '" . (int)$customer_id . "', 
-                settings    = '" . $this->db->escape($notify) . "'
+                settings    = '" . DB::escape($notify) . "'
         ");
 
         $callback = array(
             'customer_id' => $customer_id,
-            'percent'     => number_format($this->config->get('config_commission')),
+            'percent'     => number_format(Config::get('config_commission')),
             'callback'    => array(
                 'class'  => __CLASS__,
                 'method' => 'public_register_customer'
             )
         );
         
-        $this->theme->notify('public_register_customer', $callback);
+        Theme::notify('public_register_customer', $callback);
 
         unset($callback);
         
         // Send to main admin email if new account email is enabled
-        if ($this->config->get('config_account_mail')):
+        if (Config::get('config_account_mail')):
 
             // Build additional emails array to Cc: these emails.
             $cc = array();
 
-            if ($this->config->get('config_alert_emails')):
-                $emails = explode(',', $this->config->get('config_alert_emails'));
+            if (Config::get('config_alert_emails')):
+                $emails = explode(',', Config::get('config_alert_emails'));
                 foreach ($emails as $email):
                     if (strlen($email) > 0 && preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $email)):
                        $cc[] = trim($email);
@@ -180,7 +180,7 @@ class Customer extends Model {
             endif;
             
             $callback = array(
-                'user_id'    => $this->config->get('config_admin_email_user'),
+                'user_id'    => Config::get('config_admin_email_user'),
                 'customer'   => $customer_id,
                 'address_id' => $address_id,
                 'callback'   => array(
@@ -189,53 +189,53 @@ class Customer extends Model {
                 )
             );
             
-            $this->theme->notify('public_register_admin', $callback, $cc);   
+            Theme::notify('public_register_admin', $callback, $cc);   
         endif;
         
-        $this->theme->trigger('front_add_customer', array('customer_id' => $customer_id));
+        Theme::trigger('front_add_customer', array('customer_id' => $customer_id));
     }
     
     public function editCustomer($data) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}customer 
+        DB::query("
+			UPDATE " . DB::prefix() . "customer 
 			SET 
-                firstname = '" . $this->db->escape($data['firstname']) . "', 
-                lastname  = '" . $this->db->escape($data['lastname']) . "', 
-                email     = '" . $this->db->escape($data['email']) . "', 
-                telephone = '" . $this->db->escape($data['telephone']) . "' 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "'
+                firstname = '" . DB::escape($data['firstname']) . "', 
+                lastname  = '" . DB::escape($data['lastname']) . "', 
+                email     = '" . DB::escape($data['email']) . "', 
+                telephone = '" . DB::escape($data['telephone']) . "' 
+			WHERE customer_id = '" . (int)\Customer::getId() . "'
 		");
         
-        $this->theme->trigger('front_edit_customer', array('customer_id' => $customer_id));
+        Theme::trigger('front_edit_customer', array('customer_id' => $customer_id));
     }
     
     public function editPassword($customer_id, $password) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}customer 
+        DB::query("
+			UPDATE " . DB::prefix() . "customer 
 			SET 
-                salt     = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', 
-                password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', 
+                salt     = '" . DB::escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', 
+                password = '" . DB::escape(sha1($salt . sha1($salt . sha1($password)))) . "', 
                 reset    = '' 
 			WHERE customer_id = '" . (int)$customer_id . "'
 		");
         
-        $this->theme->trigger('front_customer_edit_password', array('customer_id' => $customer_id));
+        Theme::trigger('front_customer_edit_password', array('customer_id' => $customer_id));
     }
     
     public function editNewsletter($newsletter) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}customer 
+        DB::query("
+			UPDATE " . DB::prefix() . "customer 
 			SET newsletter = '" . (int)$newsletter . "' 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "'
+			WHERE customer_id = '" . (int)\Customer::getId() . "'
 		");
         
-        $this->theme->trigger('front_customer_edit_newsletter', array('customer_id' => $this->customer->getId()));
+        Theme::trigger('front_customer_edit_newsletter', array('customer_id' => \Customer::getId()));
     }
     
     public function getCustomer($customer_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}customer 
+			FROM " . DB::prefix() . "customer 
 			WHERE customer_id = '" . (int)$customer_id . "'
 		");
         
@@ -247,10 +247,10 @@ class Customer extends Model {
 
         $customer_id = $customer['customer_id'];
 
-        $this->db->query("
-            UPDATE {$this->db->prefix}customer 
+        DB::query("
+            UPDATE " . DB::prefix() . "customer 
             SET 
-                reset = '" . $this->db->escape($code) . "' 
+                reset = '" . DB::escape($code) . "' 
             WHERE customer_id = '" . (int)$customer_id . "'
         ");
 
@@ -258,34 +258,34 @@ class Customer extends Model {
     }
 
     public function getCustomerByCode($code) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}customer 
-            WHERE reset = '" . $this->db->escape($code) . "' AND reset != ''");
+            FROM " . DB::prefix() . "customer 
+            WHERE reset = '" . DB::escape($code) . "' AND reset != ''");
         
         return $query->row;
     }
     
     public function getCustomerByEmail($email) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}customer 
-			WHERE LOWER(email) = '" . $this->db->escape($this->encode->strtolower($email)) . "'
+			FROM " . DB::prefix() . "customer 
+			WHERE LOWER(email) = '" . DB::escape($this->encode->strtolower($email)) . "'
 		");
         
         return $query->row;
     }
     
     public function getCustomerByToken($token) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}customer 
-			WHERE token = '" . $this->db->escape($token) . "' 
+			FROM " . DB::prefix() . "customer 
+			WHERE token = '" . DB::escape($token) . "' 
 			AND token != ''
 		");
         
-        $this->db->query("
-			UPDATE {$this->db->prefix}customer 
+        DB::query("
+			UPDATE " . DB::prefix() . "customer 
 			SET token = ''");
         
         return $query->row;
@@ -296,23 +296,23 @@ class Customer extends Model {
 			SELECT *, 
 			CONCAT(c.firstname, ' ', c.lastname) AS name, 
 			cg.name AS customer_group 
-			FROM {$this->db->prefix}customer c 
-			LEFT JOIN {$this->db->prefix}customer_group cg 
+			FROM " . DB::prefix() . "customer c 
+			LEFT JOIN " . DB::prefix() . "customer_group cg 
 				ON (c.customer_group_id = cg.customer_group_id) 
 		";
         
         $implode = array();
         
         if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
-            $implode[] = "LCASE(CONCAT(c.firstname, ' ', c.lastname)) LIKE '" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "%'";
+            $implode[] = "LCASE(CONCAT(c.firstname, ' ', c.lastname)) LIKE '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "%'";
         }
         
         if (isset($data['filter_email']) && !is_null($data['filter_email'])) {
-            $implode[] = "LCASE(c.email) = '" . $this->db->escape($this->encode->strtolower($data['filter_email'])) . "'";
+            $implode[] = "LCASE(c.email) = '" . DB::escape($this->encode->strtolower($data['filter_email'])) . "'";
         }
         
         if (isset($data['filter_customer_group_id']) && !is_null($data['filter_customer_group_id'])) {
-            $implode[] = "cg.customer_group_id = '" . $this->db->escape($data['filter_customer_group_id']) . "'";
+            $implode[] = "cg.customer_group_id = '" . DB::escape($data['filter_customer_group_id']) . "'";
         }
         
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
@@ -324,11 +324,11 @@ class Customer extends Model {
         }
         
         if (isset($data['filter_ip']) && !is_null($data['filter_ip'])) {
-            $implode[] = "c.customer_id IN (SELECT customer_id FROM {$this->db->prefix}customer_ip WHERE ip = '" . $this->db->escape($data['filter_ip']) . "')";
+            $implode[] = "c.customer_id IN (SELECT customer_id FROM " . DB::prefix() . "customer_ip WHERE ip = '" . DB::escape($data['filter_ip']) . "')";
         }
         
         if (isset($data['filter_date_added']) && !is_null($data['filter_date_added'])) {
-            $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $implode[] = "DATE(c.date_added) = DATE('" . DB::escape($data['filter_date_added']) . "')";
         }
         
         if ($implode) {
@@ -362,35 +362,35 @@ class Customer extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
     
     public function getTotalCustomersByEmail($email) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}customer 
-			WHERE LOWER(email) = '" . $this->db->escape($this->encode->strtolower($email)) . "'
+			FROM " . DB::prefix() . "customer 
+			WHERE LOWER(email) = '" . DB::escape($this->encode->strtolower($email)) . "'
 		");
         
         return $query->row['total'];
     }
     
     public function getTotalCustomersByUsername($username) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}customer 
-			WHERE LOWER(username) = '" . $this->db->escape($this->encode->strtolower($username)) . "'
+			FROM " . DB::prefix() . "customer 
+			WHERE LOWER(username) = '" . DB::escape($this->encode->strtolower($username)) . "'
 		");
         
         return $query->row['total'];
     }
     
     public function getIps($customer_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM `{$this->db->prefix}customer_ip` 
+			FROM `" . DB::prefix() . "customer_ip` 
 			WHERE customer_id = '" . (int)$customer_id . "'
 		");
         
@@ -398,10 +398,10 @@ class Customer extends Model {
     }
     
     public function isBanIp($ip) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM `{$this->db->prefix}customer_ban_ip` 
-			WHERE ip = '" . $this->db->escape($ip) . "'
+			FROM `" . DB::prefix() . "customer_ban_ip` 
+			WHERE ip = '" . DB::escape($ip) . "'
 		");
         
         return $query->num_rows;
@@ -423,8 +423,8 @@ class Customer extends Model {
     }
 
     public function public_register_admin($data, $message) {
-        $this->theme->model('tool/utility');
-        $customer = $this->model_tool_utility->getNewCustomerDetail ($data['customer'], $data['address_id']);
+        Theme::model('tool/utility');
+        $customer = ToolUtility::getNewCustomerDetail ($data['customer'], $data['address_id']);
 
         $format = 
             '{username}' . "\n" . 

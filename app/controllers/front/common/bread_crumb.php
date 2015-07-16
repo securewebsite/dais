@@ -15,15 +15,17 @@
 */
 
 namespace App\Controllers\Front\Common;
+
 use App\Controllers\Controller;
 
 class BreadCrumb extends Controller {
+    
     public function index() {
         
-        $data['breadcrumbs'] = $this->breadcrumb->fetch();
+        $data['breadcrumbs'] = \Breadcrumb::fetch();
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('common/bread_crumb', $data);
+        return View::render('common/bread_crumb', $data);
     }
 }

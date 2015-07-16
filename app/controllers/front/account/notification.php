@@ -15,6 +15,7 @@
 */
 
 namespace App\Controllers\Front\Account;
+
 use App\Controllers\Controller;
 
 class Notification extends Controller {
@@ -22,23 +23,23 @@ class Notification extends Controller {
 	private $error = array();
 
 	public function index() {
-		if (!$this->customer->isLogged()):
-            $this->session->data['redirect'] = $this->url->link('account/notification', '', 'SSL');
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+		if (!Customer::isLogged()):
+            $this->session->data['redirect'] = Url::link('account/notification', '', 'SSL');
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
 
-		$data = $this->theme->language('account/notification');
+		$data = Theme::language('account/notification');
 
-		$this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('account/notification');
+		Theme::setTitle(Lang::get('lang_heading_title'));
+        Theme::model('account/notification');
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
-            $this->model_account_notification->editNotification($this->request->post);
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            AccountNotification::editNotification($this->request->post);
+            $this->session->data['success'] = Lang::get('lang_text_success');
         endif;
 
-        $this->breadcrumb->add('lang_text_account', 'account/dashboard', null, true, 'SSL');
-        $this->breadcrumb->add('lang_heading_title', 'account/notification', null, true, 'SSL');
+        Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
+        Breadcrumb::add('lang_heading_title', 'account/notification', null, true, 'SSL');
 
         if (isset($this->error['warning'])):
             $data['error_warning'] = $this->error['warning'];
@@ -53,8 +54,8 @@ class Notification extends Controller {
             $data['success'] = '';
         endif;
 
-        $customer_notifications = $this->model_account_notification->getCustomerNotifications();
-        $emails = $this->model_account_notification->getConfigurableNotifications();
+        $customer_notifications = AccountNotification::getCustomerNotifications();
+        $emails = AccountNotification::getConfigurableNotifications();
 
         $data['notifications'] = array();
 
@@ -62,8 +63,8 @@ class Notification extends Controller {
             $mail     = array();
             $internal = array();
 
-            $mail['title']     = $this->language->get('lang_text_email');
-            $internal['title'] = $this->language->get('lang_text_internal');
+            $mail['title']     = Lang::get('lang_text_email');
+            $internal['title'] = Lang::get('lang_text_internal');
 
             if (array_key_exists($email['email_id'], $customer_notifications)):
                 $mail['value']     = $customer_notifications[$email['email_id']]['email'];
@@ -86,24 +87,24 @@ class Notification extends Controller {
             );
         endforeach;
 
-		$data['action'] = $this->url->link('account/notification', '', 'SSL');
-		$data['back']   = $this->url->link('account/dashboard', '', 'SSL');
+		$data['action'] = Url::link('account/notification', '', 'SSL');
+		$data['back']   = Url::link('account/dashboard', '', 'SSL');
 
-        $this->theme->loadjs('javascript/account/notification', $data);
+        Theme::loadjs('javascript/account/notification', $data);
 
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->setController('header', 'shop/header');
-        $this->theme->setController('footer', 'shop/footer');
+        Theme::setController('header', 'shop/header');
+        Theme::setController('footer', 'shop/footer');
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('account/notification', $data));
+        Response::setOutput(View::render('account/notification', $data));
 	}
 
     public function inbox() {
-        $data = $this->theme->language('account/notification');
-        $this->theme->model('account/notification');
+        $data = Theme::language('account/notification');
+        Theme::model('account/notification');
         
         if (isset($this->request->get['page'])):
             $page = $this->request->get['page'];
@@ -113,84 +114,84 @@ class Notification extends Controller {
         
         $data['inbox'] = array();
         
-        $total   = $this->model_account_notification->getTotalNotifications();
-        $results = $this->model_account_notification->getAllNotifications(($page - 1) * 10, 10);
+        $total   = AccountNotification::getTotalNotifications();
+        $results = AccountNotification::getAllNotifications(($page - 1) * 10, 10);
 
-        $data['back'] = $this->url->link('account/dashboard', '', 'SSL');
+        $data['back'] = Url::link('account/dashboard', '', 'SSL');
         
         foreach ($results as $result):
            $data['inbox'][] = array(
                 'notification_id' => $result['notification_id'],
-                'href'            => $this->url->link('account/notification/read', 'notification_id=' . $result['notification_id'], 'SSL'),
+                'href'            => Url::link('account/notification/read', 'notification_id=' . $result['notification_id'], 'SSL'),
                 'subject'         => $result['subject'],
                 'read'            => $result['is_read'],
-                'delete'          => $this->url->link('account/notification/delete', 'notification_id=' . $result['notification_id'], 'SSL'),
+                'delete'          => Url::link('account/notification/delete', 'notification_id=' . $result['notification_id'], 'SSL'),
             ); 
         endforeach;
         
-        $data['pagination'] = $this->theme->paginate(
+        $data['pagination'] = Theme::paginate(
             $total, 
             $page, 
             10, 
-            $this->language->get('lang_text_pagination'), 
-            $this->url->link('account/notification/inbox', 'page={page}', 'SSL')
+            Lang::get('lang_text_pagination'), 
+            Url::link('account/notification/inbox', 'page={page}', 'SSL')
         );
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->response->setOutput($this->theme->view('account/inbox', $data));
+        Response::setOutput(View::render('account/inbox', $data));
     }
 
     public function read() {
-        $this->theme->model('account/notification');
+        Theme::model('account/notification');
 
         $json = array();
 
         $id = $this->request->get['notification_id'];
 
-        $json['message'] = html_entity_decode($this->model_account_notification->getInboxNotification($id), ENT_QUOTES, 'UTF-8');
+        $json['message'] = html_entity_decode(AccountNotification::getInboxNotification($id), ENT_QUOTES, 'UTF-8');
 
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 
     public function delete() {
-        $this->theme->language('account/notification');
-        $this->theme->model('account/notification');
+        Theme::language('account/notification');
+        Theme::model('account/notification');
 
         $json = array();
 
         $notification_id = $this->request->get['notification_id'];
 
-        if ($this->model_account_notification->deleteInboxNotification($notification_id)):
-            $json['success'] = $this->language->get('lang_text_success');
+        if (AccountNotification::deleteInboxNotification($notification_id)):
+            $json['success'] = Lang::get('lang_text_success');
         endif;
 
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 
     public function unsubscribe() {
-        if ($this->customer->isLogged()):
-            $this->response->redirect($this->url->link('account/notification/#tab-settings', '', 'SSL'));
+        if (Customer::isLogged()):
+            Response::redirect(Url::link('account/notification/#tab-settings', '', 'SSL'));
         endif;
 
-        $this->theme->language('account/notification');
+        Theme::language('account/notification');
     }
 
     public function webversion() {
-        $data = $this->theme->language('account/notification');
+        $data = Theme::language('account/notification');
 
         $data['webversion'] = false;
 
         if (isset($this->request->get['id'])):
-            $this->theme->model('account/notification');
-            $data['webversion'] = $this->model_account_notification->getWebversion($this->request->get['id']);
+            Theme::model('account/notification');
+            $data['webversion'] = AccountNotification::getWebversion($this->request->get['id']);
         endif;
 
-        $this->response->setOutput($this->theme->view('account/webversion', $data));
+        Response::setOutput(View::render('account/webversion', $data));
     }
 
     public function preferences() {

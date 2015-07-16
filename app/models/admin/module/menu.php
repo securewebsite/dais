@@ -21,42 +21,42 @@ use App\Models\Model;
 class Menu extends Model {
     
     public function addMenu($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}menu 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "menu 
 			SET 
-				name = '" . $this->db->escape($data['name']) . "', 
-				type = '" . $this->db->escape($data['type']) . "', 
-				items = '" . $this->db->escape(serialize($data['menu_item'])) . "', 
+				name = '" . DB::escape($data['name']) . "', 
+				type = '" . DB::escape($data['type']) . "', 
+				items = '" . DB::escape(serialize($data['menu_item'])) . "', 
 				status = '" . (int)$data['status'] . "'
 		");
         
-        $this->cache->delete('menu');
+        Cache::delete('menu');
     }
     
     public function editMenu($menu_id, $data) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}menu 
+        DB::query("
+			UPDATE " . DB::prefix() . "menu 
 			SET 
-				name = '" . $this->db->escape($data['name']) . "', 
-				type = '" . $this->db->escape($data['type']) . "', 
-				items = '" . $this->db->escape(serialize($data['menu_item'])) . "', 
+				name = '" . DB::escape($data['name']) . "', 
+				type = '" . DB::escape($data['type']) . "', 
+				items = '" . DB::escape(serialize($data['menu_item'])) . "', 
 				status = '" . (int)$data['status'] . "' 
 			WHERE menu_id = '" . (int)$menu_id . "'
 		");
         
-        $this->cache->delete('menu');
+        Cache::delete('menu');
     }
     
     public function deleteMenu($menu_id) {
-        $this->db->query("DELETE FROM {$this->db->prefix}menu WHERE menu_id = '" . (int)$menu_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "menu WHERE menu_id = '" . (int)$menu_id . "'");
         
-        $this->cache->delete('menu');
+        Cache::delete('menu');
     }
     
     public function getTotalMenus() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(menu_id) AS total 
-			FROM {$this->db->prefix}menu");
+			FROM " . DB::prefix() . "menu");
         
         return $query->row['total'];
     }
@@ -66,7 +66,7 @@ class Menu extends Model {
         
         $sql = "
 			SELECT DISTINCT * 
-			FROM {$this->db->prefix}menu 
+			FROM " . DB::prefix() . "menu 
 			GROUP BY type, menu_id";
         
         if (isset($data['start']) || isset($data['limit'])):
@@ -81,7 +81,7 @@ class Menu extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         endif;
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         foreach ($query->rows as $row):
             foreach ($row as $key => $value):
@@ -98,9 +98,9 @@ class Menu extends Model {
     }
     
     public function getMenu($menu_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT DISTINCT * 
-			FROM {$this->db->prefix}menu 
+			FROM " . DB::prefix() . "menu 
 			WHERE menu_id = '" . (int)$menu_id . "'
 		");
         

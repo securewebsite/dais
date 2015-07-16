@@ -25,11 +25,11 @@ class Setting extends Model {
         $data = array();
         
         if (is_bool($rows)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}setting 
+				FROM " . DB::prefix() . "setting 
 				WHERE store_id = '" . (int)$store_id . "' 
-				AND section = '" . $this->db->escape($group) . "'
+				AND section = '" . DB::escape($group) . "'
 			");
             
             $rows = $query->rows;

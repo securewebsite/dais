@@ -28,10 +28,10 @@ class GiftCard extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('gift_card', $this->request->post);
+            SettingSetting::editSetting('gift_card', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/total', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -43,8 +43,8 @@ class GiftCard extends Controller {
         Breadcrumb::add('lang_text_total', 'module/total');
         Breadcrumb::add('lang_heading_title', 'total/gift_card');
         
-        $data['action'] = Url::link('total/gift_card', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = Url::link('module/total', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('total/gift_card', '', 'SSL');
+        $data['cancel'] = Url::link('module/total', '', 'SSL');
         
         if (isset($this->request->post['gift_card_status'])) {
             $data['gift_card_status'] = $this->request->post['gift_card_status'];
@@ -62,7 +62,7 @@ class GiftCard extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('total/gift_card', $data));
+        Response::setOutput(View::render('total/gift_card', $data));
     }
     
     protected function validate() {

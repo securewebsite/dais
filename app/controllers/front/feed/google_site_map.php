@@ -15,58 +15,60 @@
 */
 
 namespace App\Controllers\Front\Feed;
+
 use App\Controllers\Controller;
 
 class GoogleSiteMap extends Controller {
+    
     public function index() {
-        if ($this->config->get('google_sitemap_status')) {
+        if (Config::get('google_sitemap_status')) {
             $output = '<?xml version="1.0" encoding="UTF-8"?>';
             $output.= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-            $this->theme->model('catalog/product');
+            Theme::model('catalog/product');
             
-            $products = $this->model_catalog_product->getProducts();
+            $products = CatalogProduct::getProducts();
             
             foreach ($products as $product) {
                 $output.= '<url>';
-                $output.= '<loc>' . $this->url->link('catalog/product', 'product_id=' . $product['product_id']) . '</loc>';
+                $output.= '<loc>' . Url::link('catalog/product', 'product_id=' . $product['product_id']) . '</loc>';
                 $output.= '<changefreq>weekly</changefreq>';
                 $output.= '<priority>1.0</priority>';
                 $output.= '</url>';
             }
             
-            $this->theme->model('catalog/category');
+            Theme::model('catalog/category');
             
             $output.= $this->getCategories(0);
             
-            $this->theme->model('catalog/manufacturer');
+            Theme::model('catalog/manufacturer');
             
-            $manufacturers = $this->model_catalog_manufacturer->getManufacturers();
+            $manufacturers = CatalogManufacturer::getManufacturers();
             
             foreach ($manufacturers as $manufacturer) {
                 $output.= '<url>';
-                $output.= '<loc>' . $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $manufacturer['manufacturer_id']) . '</loc>';
+                $output.= '<loc>' . Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $manufacturer['manufacturer_id']) . '</loc>';
                 $output.= '<changefreq>weekly</changefreq>';
                 $output.= '<priority>0.7</priority>';
                 $output.= '</url>';
                 
-                $products = $this->model_catalog_product->getProducts(array('filter_manufacturer_id' => $manufacturer['manufacturer_id']));
+                $products = CatalogProduct::getProducts(array('filter_manufacturer_id' => $manufacturer['manufacturer_id']));
                 
                 foreach ($products as $product) {
                     $output.= '<url>';
-                    $output.= '<loc>' . $this->url->link('catalog/product', 'product_id=' . $product['product_id']) . '</loc>';
+                    $output.= '<loc>' . Url::link('catalog/product', 'product_id=' . $product['product_id']) . '</loc>';
                     $output.= '<changefreq>weekly</changefreq>';
                     $output.= '<priority>1.0</priority>';
                     $output.= '</url>';
                 }
             }
             
-            $this->theme->model('content/page');
+            Theme::model('content/page');
             
-            $pages = $this->model_content_page->getPages();
+            $pages = ContentPage::getPages();
             
             foreach ($pages as $page) {
                 $output.= '<url>';
-                $output.= '<loc>' . $this->url->link('content/page', 'page_id=' . $page['page_id']) . '</loc>';
+                $output.= '<loc>' . Url::link('content/page', 'page_id=' . $page['page_id']) . '</loc>';
                 $output.= '<changefreq>weekly</changefreq>';
                 $output.= '<priority>0.5</priority>';
                 $output.= '</url>';
@@ -74,17 +76,17 @@ class GoogleSiteMap extends Controller {
             
             $output.= '</urlset>';
             
-            $this->theme->listen(__CLASS__, __FUNCTION__);
+            Theme::listen(__CLASS__, __FUNCTION__);
             
-            $this->response->addHeader('Content-Type: application/xml');
-            $this->response->setOutput($output);
+            Response::addHeader('Content-Type: application/xml');
+            Response::setOutput($output);
         }
     }
     
     protected function getCategories($parent_id, $current_path = '') {
         $output = '';
         
-        $results = $this->model_catalog_category->getCategories($parent_id);
+        $results = CatalogCategory::getCategories($parent_id);
         
         foreach ($results as $result) {
             if (!$current_path) {
@@ -94,16 +96,16 @@ class GoogleSiteMap extends Controller {
             }
             
             $output.= '<url>';
-            $output.= '<loc>' . $this->url->link('catalog/category', 'path=' . $new_path) . '</loc>';
+            $output.= '<loc>' . Url::link('catalog/category', 'path=' . $new_path) . '</loc>';
             $output.= '<changefreq>weekly</changefreq>';
             $output.= '<priority>0.7</priority>';
             $output.= '</url>';
             
-            $products = $this->model_catalog_product->getProducts(array('filter_category_id' => $result['category_id']));
+            $products = CatalogProduct::getProducts(array('filter_category_id' => $result['category_id']));
             
             foreach ($products as $product) {
                 $output.= '<url>';
-                $output.= '<loc>' . $this->url->link('catalog/product', 'path=' . $new_path . '&product_id=' . $product['product_id']) . '</loc>';
+                $output.= '<loc>' . Url::link('catalog/product', 'path=' . $new_path . '&product_id=' . $product['product_id']) . '</loc>';
                 $output.= '<changefreq>weekly</changefreq>';
                 $output.= '<priority>1.0</priority>';
                 $output.= '</url>';

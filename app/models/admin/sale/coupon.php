@@ -21,30 +21,30 @@ use App\Models\Model;
 class Coupon extends Model {
     
     public function addCoupon($data) {
-        $this->db->query("
-            INSERT INTO {$this->db->prefix}coupon 
+        DB::query("
+            INSERT INTO " . DB::prefix() . "coupon 
             SET 
-                name = '" . $this->db->escape($data['name']) . "', 
-                code = '" . $this->db->escape($data['code']) . "', 
+                name = '" . DB::escape($data['name']) . "', 
+                code = '" . DB::escape($data['code']) . "', 
                 discount = '" . (float)$data['discount'] . "', 
-                type = '" . $this->db->escape($data['type']) . "', 
+                type = '" . DB::escape($data['type']) . "', 
                 total = '" . (float)$data['total'] . "', 
                 logged = '" . (int)$data['logged'] . "', 
                 shipping = '" . (int)$data['shipping'] . "', 
-                date_start = '" . $this->db->escape($data['date_start']) . "', 
-                date_end = '" . $this->db->escape($data['date_end']) . "', 
+                date_start = '" . DB::escape($data['date_start']) . "', 
+                date_end = '" . DB::escape($data['date_end']) . "', 
                 uses_total = '" . (int)$data['uses_total'] . "', 
                 uses_customer = '" . (int)$data['uses_customer'] . "', 
                 status = '" . (int)$data['status'] . "', 
                 date_added = NOW()
         ");
         
-        $coupon_id = $this->db->getLastId();
+        $coupon_id = DB::getLastId();
         
         if (isset($data['coupon_product'])) {
             foreach ($data['coupon_product'] as $product_id) {
-                $this->db->query("
-                    INSERT INTO {$this->db->prefix}coupon_product 
+                DB::query("
+                    INSERT INTO " . DB::prefix() . "coupon_product 
                     SET 
                         coupon_id = '" . (int)$coupon_id . "', 
                         product_id = '" . (int)$product_id . "'
@@ -54,8 +54,8 @@ class Coupon extends Model {
         
         if (isset($data['coupon_category'])) {
             foreach ($data['coupon_category'] as $category_id) {
-                $this->db->query("
-                    INSERT INTO {$this->db->prefix}coupon_category 
+                DB::query("
+                    INSERT INTO " . DB::prefix() . "coupon_category 
                     SET 
                         coupon_id = '" . (int)$coupon_id . "', 
                         category_id = '" . (int)$category_id . "'
@@ -67,32 +67,32 @@ class Coupon extends Model {
     }
     
     public function editCoupon($coupon_id, $data) {
-        $this->db->query("
-            UPDATE {$this->db->prefix}coupon 
+        DB::query("
+            UPDATE " . DB::prefix() . "coupon 
             SET 
-                name = '" . $this->db->escape($data['name']) . "', 
-                code = '" . $this->db->escape($data['code']) . "', 
+                name = '" . DB::escape($data['name']) . "', 
+                code = '" . DB::escape($data['code']) . "', 
                 discount = '" . (float)$data['discount'] . "', 
-                type = '" . $this->db->escape($data['type']) . "', 
+                type = '" . DB::escape($data['type']) . "', 
                 total = '" . (float)$data['total'] . "', 
                 logged = '" . (int)$data['logged'] . "', 
                 shipping = '" . (int)$data['shipping'] . "', 
-                date_start = '" . $this->db->escape($data['date_start']) . "', 
-                date_end = '" . $this->db->escape($data['date_end']) . "', 
+                date_start = '" . DB::escape($data['date_start']) . "', 
+                date_end = '" . DB::escape($data['date_end']) . "', 
                 uses_total = '" . (int)$data['uses_total'] . "', 
                 uses_customer = '" . (int)$data['uses_customer'] . "', 
                 status = '" . (int)$data['status'] . "' 
             WHERE coupon_id = '" . (int)$coupon_id . "'
         ");
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}coupon_product 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "coupon_product 
             WHERE coupon_id = '" . (int)$coupon_id . "'");
         
         if (isset($data['coupon_product'])) {
             foreach ($data['coupon_product'] as $product_id) {
-                $this->db->query("
-                    INSERT INTO {$this->db->prefix}coupon_product 
+                DB::query("
+                    INSERT INTO " . DB::prefix() . "coupon_product 
                     SET 
                         coupon_id = '" . (int)$coupon_id . "', 
                         product_id = '" . (int)$product_id . "'
@@ -100,14 +100,14 @@ class Coupon extends Model {
             }
         }
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}coupon_category 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "coupon_category 
             WHERE coupon_id = '" . (int)$coupon_id . "'");
         
         if (isset($data['coupon_category'])) {
             foreach ($data['coupon_category'] as $category_id) {
-                $this->db->query("
-                    INSERT INTO {$this->db->prefix}coupon_category 
+                DB::query("
+                    INSERT INTO " . DB::prefix() . "coupon_category 
                     SET 
                         coupon_id = '" . (int)$coupon_id . "', 
                         category_id = '" . (int)$category_id . "'
@@ -119,39 +119,39 @@ class Coupon extends Model {
     }
     
     public function deleteCoupon($coupon_id) {
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}coupon 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "coupon 
             WHERE coupon_id = '" . (int)$coupon_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}coupon_product 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "coupon_product 
             WHERE coupon_id = '" . (int)$coupon_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}coupon_category 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "coupon_category 
             WHERE coupon_id = '" . (int)$coupon_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}coupon_history 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "coupon_history 
             WHERE coupon_id = '" . (int)$coupon_id . "'");
         
         Theme::trigger('admin_delete_coupon', array('coupon_id' => $coupon_id));
     }
     
     public function getCoupon($coupon_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT DISTINCT * 
-            FROM {$this->db->prefix}coupon 
+            FROM " . DB::prefix() . "coupon 
             WHERE coupon_id = '" . (int)$coupon_id . "'");
         
         return $query->row;
     }
     
     public function getCouponByCode($code) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT DISTINCT * 
-            FROM {$this->db->prefix}coupon 
-            WHERE code = '" . $this->db->escape($code) . "'");
+            FROM " . DB::prefix() . "coupon 
+            WHERE code = '" . DB::escape($code) . "'");
         
         return $query->row;
     }
@@ -166,7 +166,7 @@ class Coupon extends Model {
                 date_start, 
                 date_end, 
                 status 
-            FROM {$this->db->prefix}coupon";
+            FROM " . DB::prefix() . "coupon";
         
         $sort_data = array(
             'name', 
@@ -201,7 +201,7 @@ class Coupon extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
@@ -209,9 +209,9 @@ class Coupon extends Model {
     public function getCouponProducts($coupon_id) {
         $coupon_product_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}coupon_product 
+            FROM " . DB::prefix() . "coupon_product 
             WHERE coupon_id = '" . (int)$coupon_id . "'");
         
         foreach ($query->rows as $result) {
@@ -224,9 +224,9 @@ class Coupon extends Model {
     public function getCouponCategories($coupon_id) {
         $coupon_category_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}coupon_category 
+            FROM " . DB::prefix() . "coupon_category 
             WHERE coupon_id = '" . (int)$coupon_id . "'");
         
         foreach ($query->rows as $result) {
@@ -237,9 +237,9 @@ class Coupon extends Model {
     }
     
     public function getTotalCoupons() {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT COUNT(*) AS total 
-            FROM {$this->db->prefix}coupon");
+            FROM " . DB::prefix() . "coupon");
         
         return $query->row['total'];
     }
@@ -253,14 +253,14 @@ class Coupon extends Model {
             $limit = 10;
         }
         
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT 
                 ch.order_id, 
                 CONCAT(c.firstname, ' ', c.lastname) AS customer, 
                 ch.amount, 
                 ch.date_added 
-            FROM {$this->db->prefix}coupon_history ch 
-            LEFT JOIN {$this->db->prefix}customer c 
+            FROM " . DB::prefix() . "coupon_history ch 
+            LEFT JOIN " . DB::prefix() . "customer c 
             ON (ch.customer_id = c.customer_id) 
             WHERE ch.coupon_id = '" . (int)$coupon_id . "' 
             ORDER BY ch.date_added ASC 
@@ -270,9 +270,9 @@ class Coupon extends Model {
     }
     
     public function getTotalCouponHistories($coupon_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT COUNT(*) AS total 
-            FROM {$this->db->prefix}coupon_history 
+            FROM " . DB::prefix() . "coupon_history 
             WHERE coupon_id = '" . (int)$coupon_id . "'");
         
         return $query->row['total'];

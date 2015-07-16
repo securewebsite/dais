@@ -16,55 +16,57 @@
 
 
 namespace App\Controllers\Front\Account;
+
 use App\Controllers\Controller;
 
 class Register extends Controller {
+    
     private $error = array();
     
     public function index() {
-        if ($this->customer->isLogged()) {
-            $this->response->redirect($this->url->link('account/dashboard', '', 'SSL'));
+        if (Customer::isLogged()) {
+            Response::redirect(Url::link('account/dashboard', '', 'SSL'));
         }
         
-        $data = $this->theme->language('account/register');
+        $data = Theme::language('account/register');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
 
-        $this->javascript->register('validation/validate.min', 'migrate.min')
+        JS::register('validation/validate.min', 'migrate.min')
             ->register('validation/validate.bootstrap.min', 'validate.min')
             ->register('steps.min', 'validate.bootstrap.min');
 
-        $this->css->register('steps', 'calendar')
+        CSS::register('steps', 'calendar')
             ->register('validate', 'steps');
         
-        $this->theme->model('account/customer');
+        Theme::model('account/customer');
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_account_customer->addCustomer($this->request->post);
+            AccountCustomer::addCustomer($this->request->post);
             
-            $this->customer->login($this->request->post['email'], $this->request->post['password']);
+            Customer::login($this->request->post['email'], $this->request->post['password']);
             
             unset($this->session->data['guest']);
 
             // Default Shipping Address
-            if ($this->config->get('config_tax_customer') == 'shipping') {
+            if (Config::get('config_tax_customer') == 'shipping') {
                 $this->session->data['shipping_country_id'] = $this->request->post['country_id'];
                 $this->session->data['shipping_zone_id']    = $this->request->post['zone_id'];
                 $this->session->data['shipping_postcode']   = $this->request->post['postcode'];               
             }
 
             // Default Payment Address
-            if ($this->config->get('config_tax_customer') == 'payment') {
+            if (Config::get('config_tax_customer') == 'payment') {
                 $this->session->data['payment_country_id'] = $this->request->post['country_id'];
                 $this->session->data['payment_zone_id']    = $this->request->post['zone_id'];          
             }
             
-            $this->response->redirect($this->url->link('account/success'));
+            Response::redirect(Url::link('account/success'));
         }
         
-        $this->breadcrumb->add('lang_text_register', 'account/register', null, true, 'SSL');
+        Breadcrumb::add('lang_text_register', 'account/register', null, true, 'SSL');
         
-        $data['text_account_already'] = sprintf($this->language->get('lang_text_account_already'), $this->url->link('account/login', '', 'SSL'));
+        $data['text_account_already'] = sprintf(Lang::get('lang_text_account_already'), Url::link('account/login', '', 'SSL'));
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -156,7 +158,7 @@ class Register extends Controller {
             $data['error_zone'] = '';
         }
         
-        $data['action'] = $this->url->link('account/register', '', 'SSL');
+        $data['action'] = Url::link('account/register', '', 'SSL');
         
         if (isset($this->request->post['username'])) {
             $data['username'] = $this->request->post['username'];
@@ -194,15 +196,15 @@ class Register extends Controller {
             $data['company'] = '';
         }
         
-        $this->theme->model('account/customer_group');
+        Theme::model('account/customer_group');
         
         $data['customer_groups'] = array();
         
-        if (is_array($this->config->get('config_customer_group_display'))) {
-            $customer_groups = $this->model_account_customer_group->getCustomerGroups();
+        if (is_array(Config::get('config_customer_group_display'))) {
+            $customer_groups = AccountCustomerGroup::getCustomerGroups();
             
             foreach ($customer_groups as $customer_group) {
-                if (in_array($customer_group['customer_group_id'], $this->config->get('config_customer_group_display'))) {
+                if (in_array($customer_group['customer_group_id'], Config::get('config_customer_group_display'))) {
                     $data['customer_groups'][] = $customer_group;
                 }
             }
@@ -211,7 +213,7 @@ class Register extends Controller {
         if (isset($this->request->post['customer_group_id'])) {
             $data['customer_group_id'] = $this->request->post['customer_group_id'];
         } else {
-            $data['customer_group_id'] = $this->config->get('config_customer_group_id');
+            $data['customer_group_id'] = Config::get('config_customer_group_id');
         }
 
         // Company ID
@@ -259,7 +261,7 @@ class Register extends Controller {
         } elseif (isset($this->session->data['shipping_country_id'])) {
             $data['country_id'] = $this->session->data['shipping_country_id'];      
         } else {    
-            $data['country_id'] = $this->config->get('config_country_id');
+            $data['country_id'] = Config::get('config_country_id');
         }
 
         if (isset($this->request->post['zone_id'])) {
@@ -270,11 +272,11 @@ class Register extends Controller {
             $data['zone_id'] = '';
         }
 
-        $data['params'] = htmlentities('{"zone_id":"' . $data['zone_id'] . '","select":"' . $this->language->get('lang_text_select') . '","none":"' . $this->language->get('lang_text_none') . '"}');
+        $data['params'] = htmlentities('{"zone_id":"' . $data['zone_id'] . '","select":"' . Lang::get('lang_text_select') . '","none":"' . Lang::get('lang_text_none') . '"}');
 
-        $this->theme->model('locale/country');
+        Theme::model('locale/country');
 
-        $data['countries'] = $this->model_locale_country->getCountries();
+        $data['countries'] = LocaleCountry::getCountries();
         
         if (isset($this->request->post['password'])) {
             $data['password'] = $this->request->post['password'];
@@ -294,14 +296,14 @@ class Register extends Controller {
             $data['newsletter'] = '';
         }
         
-        if ($this->config->get('config_account_id')) {
-            $this->theme->model('content/page');
+        if (Config::get('config_account_id')) {
+            Theme::model('content/page');
             
-            $page_info = $this->model_content_page->getPage($this->config->get('config_account_id'));
+            $page_info = ContentPage::getPage(Config::get('config_account_id'));
             if ($page_info) {
-                $data['text_agree']             = sprintf($this->language->get('lang_text_agree'), $this->url->link('content/page/info', 'page_id=' . $this->config->get('config_account_id'), 'SSL'), $page_info['title'], $page_info['title']);
-                $data['legal_account']          = sprintf($this->language->get('lang_text_legal_account'), $page_info['title']);
-                $data['lang_error_req_account'] = sprintf($this->language->get('lang_error_req_account'), $page_info['title']);
+                $data['text_agree']             = sprintf(Lang::get('lang_text_agree'), Url::link('content/page/info', 'page_id=' . Config::get('config_account_id'), 'SSL'), $page_info['title'], $page_info['title']);
+                $data['legal_account']          = sprintf(Lang::get('lang_text_legal_account'), $page_info['title']);
+                $data['lang_error_req_account'] = sprintf(Lang::get('lang_error_req_account'), $page_info['title']);
             } else {
                 $data['text_agree']             = '';
                 $data['legal_account']          = '';
@@ -325,7 +327,7 @@ class Register extends Controller {
         
         $data['affiliate_allowed'] = false;
 
-        if ($this->config->get('config_affiliate_allowed')):
+        if (Config::get('config_affiliate_allowed')):
             $data['affiliate_allowed'] = true;
 
             // errors first
@@ -395,14 +397,14 @@ class Register extends Controller {
                 $data['affiliate']['bank_account_name']   = '';
                 $data['affiliate']['bank_account_number'] = '';
 
-                if ($this->config->get('config_affiliate_terms')):
-                    $this->theme->model('content/page');
+                if (Config::get('config_affiliate_terms')):
+                    Theme::model('content/page');
                     
-                    $page_info = $this->model_content_page->getPage($this->config->get('config_affiliate_terms'));
+                    $page_info = ContentPage::getPage(Config::get('config_affiliate_terms'));
                     if ($page_info):
-                        $data['text_affiliate_agree']     = sprintf($this->language->get('lang_text_agree'), $this->url->link('content/page/info', 'page_id=' . $this->config->get('config_affiliate_terms'), 'SSL'), $page_info['title'], $page_info['title']);
-                        $data['legal_affiliate']          = sprintf($this->language->get('lang_text_legal_affiliate'), $page_info['title']);
-                        $data['lang_error_req_affiliate'] = sprintf($this->language->get('lang_error_req_affiliate'), $page_info['title']);
+                        $data['text_affiliate_agree']     = sprintf(Lang::get('lang_text_agree'), Url::link('content/page/info', 'page_id=' . Config::get('config_affiliate_terms'), 'SSL'), $page_info['title'], $page_info['title']);
+                        $data['legal_affiliate']          = sprintf(Lang::get('lang_text_legal_affiliate'), $page_info['title']);
+                        $data['lang_error_req_affiliate'] = sprintf(Lang::get('lang_error_req_affiliate'), $page_info['title']);
                     else:
                         $data['text_agree']               = '';
                         $data['legal_affiliate']          = '';
@@ -422,106 +424,106 @@ class Register extends Controller {
             endif;
         endif;
         
-        $this->theme->loadjs('javascript/account/register', $data);
+        Theme::loadjs('javascript/account/register', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('account/register', $data));
+        Response::setOutput(View::render('account/register', $data));
     }
     
     protected function validate() {
         // Customer Group
-        $this->theme->model('account/customer_group');
+        Theme::model('account/customer_group');
 
-        if (isset($this->request->post['customer_group_id']) && is_array($this->config->get('config_customer_group_display')) && in_array($this->request->post['customer_group_id'], $this->config->get('config_customer_group_display'))) {
+        if (isset($this->request->post['customer_group_id']) && is_array(Config::get('config_customer_group_display')) && in_array($this->request->post['customer_group_id'], Config::get('config_customer_group_display'))) {
             $customer_group_id = $this->request->post['customer_group_id'];
         } else {
-            $customer_group_id = $this->config->get('config_customer_group_id');
+            $customer_group_id = Config::get('config_customer_group_id');
         }
 
-        $customer_group = $this->model_account_customer_group->getCustomerGroup($customer_group_id);
+        $customer_group = AccountCustomerGroup::getCustomerGroup($customer_group_id);
 
         if ($customer_group) {  
             // Company ID
             if ($customer_group['company_id_display'] && $customer_group['company_id_required'] && empty($this->request->post['company_id'])) {
-                $this->error['company_id'] = $this->language->get('lang_error_company_id');
+                $this->error['company_id'] = Lang::get('lang_error_company_id');
             }
 
             // Tax ID 
             if ($customer_group['tax_id_display'] && $customer_group['tax_id_required'] && empty($this->request->post['tax_id'])) {
-                $this->error['tax_id'] = $this->language->get('lang_error_tax_id');
+                $this->error['tax_id'] = Lang::get('lang_error_tax_id');
             }                       
         }
 
-        if (($this->encode->strlen($this->request->post['address_1']) < 3) || ($this->encode->strlen($this->request->post['address_1']) > 128)) {
-            $this->error['address_1'] = $this->language->get('lang_error_address_1');
+        if ((Encode::strlen($this->request->post['address_1']) < 3) || (Encode::strlen($this->request->post['address_1']) > 128)) {
+            $this->error['address_1'] = Lang::get('lang_error_address_1');
         }
 
-        if (($this->encode->strlen($this->request->post['city']) < 2) || ($this->encode->strlen($this->request->post['city']) > 128)) {
-            $this->error['city'] = $this->language->get('lang_error_city');
+        if ((Encode::strlen($this->request->post['city']) < 2) || (Encode::strlen($this->request->post['city']) > 128)) {
+            $this->error['city'] = Lang::get('lang_error_city');
         }
 
-        $this->theme->model('locale/country');
+        Theme::model('locale/country');
 
-        $country_info = $this->model_locale_country->getCountry($this->request->post['country_id']);
+        $country_info = LocaleCountry::getCountry($this->request->post['country_id']);
 
         if ($country_info) {
-            if ($country_info['postcode_required'] && ($this->encode->strlen($this->request->post['postcode']) < 2) || ($this->encode->strlen($this->request->post['postcode']) > 10)) {
-                $this->error['postcode'] = $this->language->get('lang_error_postcode');
+            if ($country_info['postcode_required'] && (Encode::strlen($this->request->post['postcode']) < 2) || (Encode::strlen($this->request->post['postcode']) > 10)) {
+                $this->error['postcode'] = Lang::get('lang_error_postcode');
             }
 
-            if ($this->config->get('config_vat') && $this->request->post['tax_id'] && ($this->vat->validate($country_info['iso_code_2'], $this->request->post['tax_id']) == 'invalid')) {
-                $this->error['tax_id'] = $this->language->get('lang_error_vat');
+            if (Config::get('config_vat') && $this->request->post['tax_id'] && ($this->vat->validate($country_info['iso_code_2'], $this->request->post['tax_id']) == 'invalid')) {
+                $this->error['tax_id'] = Lang::get('lang_error_vat');
             }
         }
         
-        if ($this->config->get('config_account_id')) {
-            $this->theme->model('content/page');
+        if (Config::get('config_account_id')) {
+            Theme::model('content/page');
             
-            $page_info = $this->model_content_page->getPage($this->config->get('config_account_id'));
+            $page_info = ContentPage::getPage(Config::get('config_account_id'));
             
             if ($page_info && !isset($this->request->post['agree'])) {
-                $this->error['warning'] = sprintf($this->language->get('lang_error_agree'), $page_info['title']);
+                $this->error['warning'] = sprintf(Lang::get('lang_error_agree'), $page_info['title']);
             }
         }
 
         if (!empty($this->request->post['affiliate']) && $this->request->post['affiliate']['status'] == 1):
-            if ($this->encode->strlen($this->request->post['affiliate']['tax']) < 1):
-                $this->error['tax'] = $this->language->get('lang_error_tax_id');
+            if (Encode::strlen($this->request->post['affiliate']['tax']) < 1):
+                $this->error['tax'] = Lang::get('lang_error_tax_id');
             endif;
 
-            if ($this->encode->strlen($this->request->post['affiliate']['slug']) < 1):
-                $this->error['slug'] = $this->language->get('lang_error_vanity');
+            if (Encode::strlen($this->request->post['affiliate']['slug']) < 1):
+                $this->error['slug'] = Lang::get('lang_error_vanity');
             endif;
 
             if (!$this->request->post['affiliate']['payment_method']):
-                $this->error['payment_method'] = $this->language->get('lang_error_payment_method');
+                $this->error['payment_method'] = Lang::get('lang_error_payment_method');
             else:
-                if ($this->request->post['affiliate']['payment_method'] == 'cheque' && $this->encode->strlen($this->request->post['affiliate']['cheque']) < 1):
-                    $this->error['cheque'] = $this->language->get('lang_error_cheque');
+                if ($this->request->post['affiliate']['payment_method'] == 'cheque' && Encode::strlen($this->request->post['affiliate']['cheque']) < 1):
+                    $this->error['cheque'] = Lang::get('lang_error_cheque');
                 endif;
 
-                if ($this->request->post['affiliate']['payment_method'] == 'paypal' && $this->encode->strlen($this->request->post['affiliate']['paypal']) < 1):
-                    $this->error['paypal'] = $this->language->get('lang_error_paypal');
+                if ($this->request->post['affiliate']['payment_method'] == 'paypal' && Encode::strlen($this->request->post['affiliate']['paypal']) < 1):
+                    $this->error['paypal'] = Lang::get('lang_error_paypal');
                 endif;
 
-                if ($this->request->post['affiliate']['payment_method'] == 'bank' && $this->encode->strlen($this->request->post['affiliate']['bank_name']) < 1):
-                    $this->error['bank_name'] = $this->language->get('lang_error_bank_name');
+                if ($this->request->post['affiliate']['payment_method'] == 'bank' && Encode::strlen($this->request->post['affiliate']['bank_name']) < 1):
+                    $this->error['bank_name'] = Lang::get('lang_error_bank_name');
                 endif;
 
-                if ($this->request->post['affiliate']['payment_method'] == 'bank' && $this->encode->strlen($this->request->post['affiliate']['bank_account_name']) < 1):
-                    $this->error['bank_account_name'] = $this->language->get('lang_error_bank_account_name');
+                if ($this->request->post['affiliate']['payment_method'] == 'bank' && Encode::strlen($this->request->post['affiliate']['bank_account_name']) < 1):
+                    $this->error['bank_account_name'] = Lang::get('lang_error_bank_account_name');
                 endif;
 
-                if ($this->request->post['affiliate']['payment_method'] == 'bank' && $this->encode->strlen($this->request->post['affiliate']['bank_account_number']) < 1):
-                    $this->error['bank_account_number'] = $this->language->get('lang_error_bank_account_number');
+                if ($this->request->post['affiliate']['payment_method'] == 'bank' && Encode::strlen($this->request->post['affiliate']['bank_account_number']) < 1):
+                    $this->error['bank_account_number'] = Lang::get('lang_error_bank_account_number');
                 endif;
             endif;
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }
@@ -529,82 +531,82 @@ class Register extends Controller {
     public function username() {
         $json = array();
         
-        $this->theme->language('account/register');
-        $this->theme->model('account/customer');
+        Theme::language('account/register');
+        Theme::model('account/customer');
         
         $json['valid'] = true;
         
-        if ($this->model_account_customer->getTotalCustomersByUsername($this->request->get['username'])):
+        if (AccountCustomer::getTotalCustomersByUsername($this->request->get['username'])):
             $json['valid']   = false;
-            $json['message'] = $this->language->get('lang_error_uexists');
+            $json['message'] = Lang::get('lang_error_uexists');
         endif;
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
     
     public function email() {
         $json = array();
         
-        $this->theme->language('account/register');
-        $this->theme->model('account/customer');
+        Theme::language('account/register');
+        Theme::model('account/customer');
         
         $json['valid'] = true;
         
-        if ($this->model_account_customer->getTotalCustomersByEmail($this->request->get['email'])):
+        if (AccountCustomer::getTotalCustomersByEmail($this->request->get['email'])):
             $json['valid']   = false;
-            $json['message'] = $this->language->get('lang_error_exists');
+            $json['message'] = Lang::get('lang_error_exists');
         endif;
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 
     public function country() {
         $json = array();
         
-        $this->theme->model('locale/country');
+        Theme::model('locale/country');
         
-        $country_info = $this->model_locale_country->getCountry($this->request->get['country_id']);
+        $country_info = LocaleCountry::getCountry($this->request->get['country_id']);
         
         if ($country_info) {
-            $this->theme->model('locale/zone');
+            Theme::model('locale/zone');
             
-            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => $this->model_locale_zone->getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
+            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => LocaleZone::getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 
     public function slug() {
-        $this->language->load('account/affiliate');
-        $this->theme->model('tool/utility');
+        Lang::load('account/affiliate');
+        Theme::model('tool/utility');
         
         $json = array();
         
         $json['valid'] = true;
         
-        if (!isset($this->request->get['affiliate']['slug']) || $this->encode->strlen($this->request->get['affiliate']['slug']) < 1):
+        if (!isset($this->request->get['affiliate']['slug']) || Encode::strlen($this->request->get['affiliate']['slug']) < 1):
             $json['valid']   = false;
-            $json['message'] = $this->language->get('lang_error_slug');
+            $json['message'] = Lang::get('lang_error_slug');
         else:
             
             // build slug
-            $slug = $this->url->build_slug($this->request->get['affiliate']['slug']);
+            $slug = Url::build_slug($this->request->get['affiliate']['slug']);
             
             // check that the slug is globally unique
-            $query = $this->model_tool_utility->findSlugByName($slug);
+            $query = ToolUtility::findSlugByName($slug);
             
             if ($query):
                 $json['valid']   = false;
-                $json['message'] = sprintf($this->language->get('lang_error_slug_found'), $slug);
+                $json['message'] = sprintf(Lang::get('lang_error_slug_found'), $slug);
             else:
                 $json['slug'] = $slug;
             endif;
         endif;
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

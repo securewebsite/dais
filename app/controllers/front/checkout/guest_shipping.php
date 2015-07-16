@@ -15,11 +15,13 @@
 */
 
 namespace App\Controllers\Front\Checkout;
+
 use App\Controllers\Controller;
 
 class GuestShipping extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('checkout/checkout');
+        $data = Theme::language('checkout/checkout');
         
         if (isset($this->session->data['guest']['shipping']['firstname'])) {
             $data['firstname'] = $this->session->data['guest']['shipping']['firstname'];
@@ -70,7 +72,7 @@ class GuestShipping extends Controller {
         } elseif (isset($this->session->data['shipping_country_id'])) {
             $data['country_id'] = $this->session->data['shipping_country_id'];
         } else {
-            $data['country_id'] = $this->config->get('config_country_id');
+            $data['country_id'] = Config::get('config_country_id');
         }
         
         if (isset($this->session->data['guest']['shipping']['zone_id'])) {
@@ -81,72 +83,72 @@ class GuestShipping extends Controller {
             $data['zone_id'] = '';
         }
         
-        $data['params'] = htmlentities('{"zone_id":"' . $data['zone_id'] . '","select":"' . $this->language->get('lang_text_select') . '","none":"' . $this->language->get('lang_text_none') . '"}');
+        $data['params'] = htmlentities('{"zone_id":"' . $data['zone_id'] . '","select":"' . Lang::get('lang_text_select') . '","none":"' . Lang::get('lang_text_none') . '"}');
         
-        $this->theme->model('locale/country');
+        Theme::model('locale/country');
         
-        $data['countries'] = $this->model_locale_country->getCountries();
+        $data['countries'] = LocaleCountry::getCountries();
         
-        $this->theme->loadjs('javascript/checkout/guest_shipping', $data);
+        Theme::loadjs('javascript/checkout/guest_shipping', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data['javascript'] = $this->theme->controller('common/javascript');
+        $data['javascript'] = Theme::controller('common/javascript');
         
-        $this->response->setOutput($this->theme->view('checkout/guest_shipping', $data));
+        Response::setOutput(View::render('checkout/guest_shipping', $data));
     }
     
     public function validate() {
-        $this->theme->language('checkout/checkout');
+        Theme::language('checkout/checkout');
         
         $json = array();
         
         // Validate if customer is logged in.
-        if ($this->customer->isLogged()) {
-            $json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
+        if (Customer::isLogged()) {
+            $json['redirect'] = Url::link('checkout/checkout', '', 'SSL');
         }
         
         // Validate cart has products and has stock.
-        if ((!$this->cart->hasProducts() && empty($this->session->data['gift_cards'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
-            $json['redirect'] = $this->url->link('checkout/cart');
+        if ((!Cart::hasProducts() && empty($this->session->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
+            $json['redirect'] = Url::link('checkout/cart');
         }
         
         // Check if guest checkout is avaliable.
-        if (!$this->config->get('config_guest_checkout') || $this->config->get('config_customer_price') || $this->cart->hasDownload()) {
-            $json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
+        if (!Config::get('config_guest_checkout') || Config::get('config_customer_price') || Cart::hasDownload()) {
+            $json['redirect'] = Url::link('checkout/checkout', '', 'SSL');
         }
         
         if (!$json) {
-            if (($this->encode->strlen($this->request->post['firstname']) < 1) || ($this->encode->strlen($this->request->post['firstname']) > 32)) {
-                $json['error']['firstname'] = $this->language->get('lang_error_firstname');
+            if ((Encode::strlen($this->request->post['firstname']) < 1) || (Encode::strlen($this->request->post['firstname']) > 32)) {
+                $json['error']['firstname'] = Lang::get('lang_error_firstname');
             }
             
-            if (($this->encode->strlen($this->request->post['lastname']) < 1) || ($this->encode->strlen($this->request->post['lastname']) > 32)) {
-                $json['error']['lastname'] = $this->language->get('lang_error_lastname');
+            if ((Encode::strlen($this->request->post['lastname']) < 1) || (Encode::strlen($this->request->post['lastname']) > 32)) {
+                $json['error']['lastname'] = Lang::get('lang_error_lastname');
             }
             
-            if (($this->encode->strlen($this->request->post['address_1']) < 3) || ($this->encode->strlen($this->request->post['address_1']) > 128)) {
-                $json['error']['address_1'] = $this->language->get('lang_error_address_1');
+            if ((Encode::strlen($this->request->post['address_1']) < 3) || (Encode::strlen($this->request->post['address_1']) > 128)) {
+                $json['error']['address_1'] = Lang::get('lang_error_address_1');
             }
             
-            if (($this->encode->strlen($this->request->post['city']) < 2) || ($this->encode->strlen($this->request->post['city']) > 128)) {
-                $json['error']['city'] = $this->language->get('lang_error_city');
+            if ((Encode::strlen($this->request->post['city']) < 2) || (Encode::strlen($this->request->post['city']) > 128)) {
+                $json['error']['city'] = Lang::get('lang_error_city');
             }
             
-            $this->theme->model('locale/country');
+            Theme::model('locale/country');
             
-            $country_info = $this->model_locale_country->getCountry($this->request->post['country_id']);
+            $country_info = LocaleCountry::getCountry($this->request->post['country_id']);
             
-            if ($country_info && $country_info['postcode_required'] && ($this->encode->strlen($this->request->post['postcode']) < 2) || ($this->encode->strlen($this->request->post['postcode']) > 10)) {
-                $json['error']['postcode'] = $this->language->get('lang_error_postcode');
+            if ($country_info && $country_info['postcode_required'] && (Encode::strlen($this->request->post['postcode']) < 2) || (Encode::strlen($this->request->post['postcode']) > 10)) {
+                $json['error']['postcode'] = Lang::get('lang_error_postcode');
             }
             
             if ($this->request->post['country_id'] == '') {
-                $json['error']['country'] = $this->language->get('lang_error_country');
+                $json['error']['country'] = Lang::get('lang_error_country');
             }
             
             if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] == '') {
-                $json['error']['zone'] = $this->language->get('lang_error_zone');
+                $json['error']['zone'] = Lang::get('lang_error_zone');
             }
         }
         
@@ -161,9 +163,9 @@ class GuestShipping extends Controller {
             $this->session->data['guest']['shipping']['country_id'] = $this->request->post['country_id'];
             $this->session->data['guest']['shipping']['zone_id'] = $this->request->post['zone_id'];
             
-            $this->theme->model('locale/country');
+            Theme::model('locale/country');
             
-            $country_info = $this->model_locale_country->getCountry($this->request->post['country_id']);
+            $country_info = LocaleCountry::getCountry($this->request->post['country_id']);
             
             if ($country_info) {
                 $this->session->data['guest']['shipping']['country'] = $country_info['name'];
@@ -177,9 +179,9 @@ class GuestShipping extends Controller {
                 $this->session->data['guest']['shipping']['address_format'] = '';
             }
             
-            $this->theme->model('locale/zone');
+            Theme::model('locale/zone');
             
-            $zone_info = $this->model_locale_zone->getZone($this->request->post['zone_id']);
+            $zone_info = LocaleZone::getZone($this->request->post['zone_id']);
             
             if ($zone_info) {
                 $this->session->data['guest']['shipping']['zone'] = $zone_info['name'];
@@ -197,8 +199,8 @@ class GuestShipping extends Controller {
             unset($this->session->data['shipping_methods']);
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

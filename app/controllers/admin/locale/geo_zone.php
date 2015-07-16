@@ -38,7 +38,7 @@ class GeoZone extends Controller {
         Theme::model('locale/geo_zone');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_locale_geo_zone->addGeoZone($this->request->post);
+            LocaleGeoZone::addGeoZone($this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -56,7 +56,7 @@ class GeoZone extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('locale/geo_zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('locale/geo_zone', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -70,7 +70,7 @@ class GeoZone extends Controller {
         Theme::model('locale/geo_zone');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_locale_geo_zone->editGeoZone($this->request->get['geo_zone_id'], $this->request->post);
+            LocaleGeoZone::editGeoZone($this->request->get['geo_zone_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -87,7 +87,7 @@ class GeoZone extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('locale/geo_zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('locale/geo_zone', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -102,7 +102,7 @@ class GeoZone extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $geo_zone_id) {
-                $this->model_locale_geo_zone->deleteGeoZone($geo_zone_id);
+                LocaleGeoZone::deleteGeoZone($geo_zone_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -121,7 +121,7 @@ class GeoZone extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('locale/geo_zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('locale/geo_zone', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -166,21 +166,21 @@ class GeoZone extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'locale/geo_zone', $url);
         
-        $data['insert'] = Url::link('locale/geo_zone/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('locale/geo_zone/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('locale/geo_zone/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('locale/geo_zone/delete', '' . $url, 'SSL');
         
         $data['geo_zones'] = array();
         
         $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $geo_zone_total = $this->model_locale_geo_zone->getTotalGeoZones();
+        $geo_zone_total = LocaleGeoZone::getTotalGeoZones();
         
-        $results = $this->model_locale_geo_zone->getGeoZones($filter);
+        $results = LocaleGeoZone::getGeoZones($filter);
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/geo_zone/update', 'token=' . $this->session->data['token'] . '&geo_zone_id=' . $result['geo_zone_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/geo_zone/update', '' . '&geo_zone_id=' . $result['geo_zone_id'] . $url, 'SSL'));
             
             $data['geo_zones'][] = array('geo_zone_id' => $result['geo_zone_id'], 'name' => $result['name'], 'description' => $result['description'], 'selected' => isset($this->request->post['selected']) && in_array($result['geo_zone_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -211,8 +211,8 @@ class GeoZone extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_name'] = Url::link('locale/geo_zone', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $data['sort_description'] = Url::link('locale/geo_zone', 'token=' . $this->session->data['token'] . '&sort=description' . $url, 'SSL');
+        $data['sort_name'] = Url::link('locale/geo_zone', '' . '&sort=name' . $url, 'SSL');
+        $data['sort_description'] = Url::link('locale/geo_zone', '' . '&sort=description' . $url, 'SSL');
         
         $url = '';
         
@@ -224,7 +224,7 @@ class GeoZone extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($geo_zone_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/geo_zone', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($geo_zone_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/geo_zone', '' . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -233,7 +233,7 @@ class GeoZone extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('locale/geo_zone_list', $data));
+        Response::setOutput(View::render('locale/geo_zone_list', $data));
     }
     
     protected function getForm() {
@@ -274,18 +274,16 @@ class GeoZone extends Controller {
         Breadcrumb::add('lang_heading_title', 'locale/geo_zone', $url);
         
         if (!isset($this->request->get['geo_zone_id'])) {
-            $data['action'] = Url::link('locale/geo_zone/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/geo_zone/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/geo_zone/update', 'token=' . $this->session->data['token'] . '&geo_zone_id=' . $this->request->get['geo_zone_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/geo_zone/update', '' . '&geo_zone_id=' . $this->request->get['geo_zone_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('locale/geo_zone', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('locale/geo_zone', '' . $url, 'SSL');
         
         if (isset($this->request->get['geo_zone_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $geo_zone_info = $this->model_locale_geo_zone->getGeoZone($this->request->get['geo_zone_id']);
+            $geo_zone_info = LocaleGeoZone::getGeoZone($this->request->get['geo_zone_id']);
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         if (isset($this->request->post['name'])) {
             $data['name'] = $this->request->post['name'];
@@ -305,12 +303,12 @@ class GeoZone extends Controller {
         
         Theme::model('locale/country');
         
-        $data['countries'] = $this->model_locale_country->getCountries(array('filter_status' => 1));
+        $data['countries'] = LocaleCountry::getCountries(array('filter_status' => 1));
         
         if (isset($this->request->post['zone_to_geo_zone'])) {
             $data['zone_to_geo_zones'] = $this->request->post['zone_to_geo_zone'];
         } elseif (isset($this->request->get['geo_zone_id'])) {
-            $data['zone_to_geo_zones'] = $this->model_locale_geo_zone->getZoneToGeoZones($this->request->get['geo_zone_id']);
+            $data['zone_to_geo_zones'] = LocaleGeoZone::getZoneToGeoZones($this->request->get['geo_zone_id']);
         } else {
             $data['zone_to_geo_zones'] = array();
         }
@@ -321,7 +319,7 @@ class GeoZone extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('locale/geo_zone_form', $data));
+        Response::setOutput(View::render('locale/geo_zone_form', $data));
     }
     
     protected function validateForm() {
@@ -350,7 +348,7 @@ class GeoZone extends Controller {
         Theme::model('locale/tax_rate');
         
         foreach ($this->request->post['selected'] as $geo_zone_id) {
-            $tax_rate_total = $this->model_locale_tax_rate->getTotalTaxRatesByGeoZoneId($geo_zone_id);
+            $tax_rate_total = LocaleTaxRate::getTotalTaxRatesByGeoZoneId($geo_zone_id);
             
             if ($tax_rate_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_tax_rate'), $tax_rate_total);
@@ -367,7 +365,7 @@ class GeoZone extends Controller {
         
         Theme::model('locale/zone');
         
-        $results = $this->model_locale_zone->getZonesByCountryId($this->request->get['country_id']);
+        $results = LocaleZone::getZonesByCountryId($this->request->get['country_id']);
         
         foreach ($results as $result) {
             $output.= '<option value="' . $result['zone_id'] . '"';

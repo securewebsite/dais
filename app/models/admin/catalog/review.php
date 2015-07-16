@@ -21,58 +21,58 @@ use App\Models\Model;
 class Review extends Model {
     
     public function addReview($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}review 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "review 
 			SET 
-				author = '" . $this->db->escape($data['author']) . "', 
-				product_id = '" . $this->db->escape($data['product_id']) . "', 
-				text = '" . $this->db->escape(strip_tags($data['text'])) . "', 
+				author = '" . DB::escape($data['author']) . "', 
+				product_id = '" . DB::escape($data['product_id']) . "', 
+				text = '" . DB::escape(strip_tags($data['text'])) . "', 
 				rating = '" . (int)$data['rating'] . "', 
 				status = '" . (int)$data['status'] . "', 
 				date_added = NOW()
 		");
         
-        $review_id = $this->db->getLastId();
+        $review_id = DB::getLastId();
         
-        $this->cache->delete('reviews.product');
+        Cache::delete('reviews.product');
         
         Theme::trigger('admin_add_review', array('review_id' => $review_id));
     }
     
     public function editReview($review_id, $data) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}review 
+        DB::query("
+			UPDATE " . DB::prefix() . "review 
 			SET 
-				author = '" . $this->db->escape($data['author']) . "', 
-				product_id = '" . $this->db->escape($data['product_id']) . "', 
-				text = '" . $this->db->escape(strip_tags($data['text'])) . "', 
+				author = '" . DB::escape($data['author']) . "', 
+				product_id = '" . DB::escape($data['product_id']) . "', 
+				text = '" . DB::escape(strip_tags($data['text'])) . "', 
 				rating = '" . (int)$data['rating'] . "', 
 				status = '" . (int)$data['status'] . "', 
 				date_added = NOW() 
 			WHERE review_id = '" . (int)$review_id . "'
 		");
         
-        $this->cache->delete('reviews.product');
+        Cache::delete('reviews.product');
         
         Theme::trigger('admin_edit_review', array('review_id' => $review_id));
     }
     
     public function deleteReview($review_id) {
-        $this->db->query("DELETE FROM {$this->db->prefix}review WHERE review_id = '" . (int)$review_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "review WHERE review_id = '" . (int)$review_id . "'");
         
-        $this->cache->delete('reviews.product');
+        Cache::delete('reviews.product');
         
         Theme::trigger('admin_delete_review', array('review_id' => $review_id));
     }
     
     public function getReview($review_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT DISTINCT *, 
 			(SELECT pd.name 
-				FROM {$this->db->prefix}product_description pd 
+				FROM " . DB::prefix() . "product_description pd 
 				WHERE pd.product_id = r.product_id 
 				AND pd.language_id = '" . (int)Config::get('config_language_id') . "') AS product 
-			FROM {$this->db->prefix}review r 
+			FROM " . DB::prefix() . "review r 
 			WHERE r.review_id = '" . (int)$review_id . "'
 		");
         
@@ -88,8 +88,8 @@ class Review extends Model {
 				r.rating, 
 				r.status, 
 				r.date_added 
-			FROM {$this->db->prefix}review r 
-			LEFT JOIN {$this->db->prefix}product_description pd 
+			FROM " . DB::prefix() . "review r 
+			LEFT JOIN " . DB::prefix() . "product_description pd 
 			ON (r.product_id = pd.product_id) 
 			WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "'
 		";
@@ -124,28 +124,28 @@ class Review extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
     
     public function getTotalReviews($data = array()) {
         $sql = "
-			SELECT COUNT(*) AS total FROM {$this->db->prefix}review";
+			SELECT COUNT(*) AS total FROM " . DB::prefix() . "review";
         
         if (isset($data['filter_status'])):
             $sql.= " WHERE status = '" . (int)$data['filter_status'] . "'";
         endif;
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->row['total'];
     }
     
     public function getTotalReviewsAwaitingApproval() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}review 
+			FROM " . DB::prefix() . "review 
 			WHERE status = '0'
 		");
         

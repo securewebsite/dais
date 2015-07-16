@@ -37,7 +37,7 @@ class Notification extends Controller {
         Theme::model('module/notification');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
-            $this->model_module_notification->addNotification($this->request->post);
+            ModuleNotification::addNotification($this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -46,7 +46,7 @@ class Notification extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             endif;
             
-            Response::redirect(Url::link('module/notification', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('module/notification', '' . $url, 'SSL'));
         endif;
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -60,7 +60,7 @@ class Notification extends Controller {
         Theme::model('module/notification');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
-            $this->model_module_notification->editNotification($this->request->get['notification_id'], $this->request->post);
+            ModuleNotification::editNotification($this->request->get['notification_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -69,7 +69,7 @@ class Notification extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             endif;
             
-            Response::redirect(Url::link('module/notification', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('module/notification', '' . $url, 'SSL'));
         endif;
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -84,7 +84,7 @@ class Notification extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()):
             foreach ($this->request->post['selected'] as $notification_id):
-                $this->model_module_notification->deleteNotification($notification_id);
+                ModuleNotification::deleteNotification($notification_id);
             endforeach;
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -95,7 +95,7 @@ class Notification extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             endif;
             
-            Response::redirect(Url::link('module/notification', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('module/notification', '' . $url, 'SSL'));
         endif;
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -118,8 +118,8 @@ class Notification extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'module/notification', $url);
         
-        $data['insert'] = Url::link('module/notification/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('module/notification/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('module/notification/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('module/notification/delete', '' . $url, 'SSL');
 
         $data['notifications'] = array();
         
@@ -128,15 +128,15 @@ class Notification extends Controller {
             'limit' => Config::get('config_admin_limit')
         );
         
-		$total   = $this->model_module_notification->getTotalNotifications();
-		$results = $this->model_module_notification->getNotifications($filter);
+		$total   = ModuleNotification::getTotalNotifications();
+		$results = ModuleNotification::getNotifications($filter);
 
 		foreach ($results as $result):
             $action = array();
             
             $action[] = array(
             	'text' => Lang::get('lang_text_edit'), 
-            	'href' => Url::link('module/notification/update', 'token=' . $this->session->data['token'] . '&notification_id=' . $result['email_id'] . $url, 'SSL')
+            	'href' => Url::link('module/notification/update', '' . '&notification_id=' . $result['email_id'] . $url, 'SSL')
             );
 
             // Let's display a nice name
@@ -187,14 +187,14 @@ class Notification extends Controller {
         	$page, 
         	Config::get('config_admin_limit'), 
         	Lang::get('lang_text_pagination'), 
-        	Url::link('module/notification', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
+        	Url::link('module/notification', '' . $url . '&page={page}', 'SSL')
         );
 
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('module/notification_list', $data));
+        Response::setOutput(View::render('module/notification_list', $data));
 	}
 
 	public function getForm() {
@@ -246,27 +246,25 @@ class Notification extends Controller {
         Breadcrumb::add('lang_heading_title', 'module/notification', $url);
 
         if (!isset($this->request->get['notification_id'])):
-            $data['action'] = Url::link('module/notification/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('module/notification/insert', '' . $url, 'SSL');
         else:
-            $data['action'] = Url::link('module/notification/update', 'token=' . $this->session->data['token'] . '&notification_id=' . $this->request->get['notification_id'] . $url, 'SSL');
+            $data['action'] = Url::link('module/notification/update', '' . '&notification_id=' . $this->request->get['notification_id'] . $url, 'SSL');
         endif;
         
-        $data['cancel'] = Url::link('module/notification', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('module/notification', '' . $url, 'SSL');
         
         if (isset($this->request->get['notification_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')):
-            $notification_info = $this->model_module_notification->getNotification($this->request->get['notification_id']);
+            $notification_info = ModuleNotification::getNotification($this->request->get['notification_id']);
         endif;
-        
-        $data['token'] = $this->session->data['token'];
         
         Theme::model('locale/language');
         
-        $data['languages'] = $this->model_locale_language->getLanguages();
+        $data['languages'] = LocaleLanguage::getLanguages();
         
         if (isset($this->request->post['email_content'])):
             $data['email_content'] = $this->request->post['email_content'];
         elseif (isset($this->request->get['notification_id'])):
-            $data['email_content'] = $this->model_module_notification->getNotificationContent($this->request->get['notification_id']);
+            $data['email_content'] = ModuleNotification::getNotificationContent($this->request->get['notification_id']);
         else:
             $data['email_content'] = array();
         endif;
@@ -326,7 +324,7 @@ class Notification extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('module/notification_form', $data));
+        Response::setOutput(View::render('module/notification_form', $data));
 
 	}
 
@@ -374,7 +372,7 @@ class Notification extends Controller {
         $count = 0;
 
         foreach ($this->request->post['selected'] as $email_id):
-        	$check = $this->model_module_notification->checkSystem($email_id);
+        	$check = ModuleNotification::checkSystem($email_id);
         	if ($check):
         		$count++;
         	endif;

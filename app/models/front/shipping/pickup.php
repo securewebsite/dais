@@ -19,17 +19,17 @@ use App\Models\Model;
 
 class Pickup extends Model {
     function getQuote($address) {
-        $this->language->load('shipping/pickup');
+        Lang::load('shipping/pickup');
         
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}zone_to_geo_zone 
-            WHERE geo_zone_id = '" . (int)$this->config->get('pickup_geo_zone_id') . "' 
+            FROM " . DB::prefix() . "zone_to_geo_zone 
+            WHERE geo_zone_id = '" . (int)Config::get('pickup_geo_zone_id') . "' 
             AND country_id    = '" . (int)$address['country_id'] . "' 
             AND (zone_id      = '" . (int)$address['zone_id'] . "' OR zone_id = '0')"
         );
         
-        if (!$this->config->get('pickup_geo_zone_id')):
+        if (!Config::get('pickup_geo_zone_id')):
             $status = true;
         elseif ($query->num_rows):
             $status = true;
@@ -44,17 +44,17 @@ class Pickup extends Model {
             
             $quote_data['pickup'] = array(
                 'code'         => 'pickup.pickup', 
-                'title'        => $this->language->get('lang_text_description'), 
+                'title'        => Lang::get('lang_text_description'), 
                 'cost'         => 0.00, 
                 'tax_class_id' => 0, 
-                'text'         => $this->currency->format(0.00)
+                'text'         => Currency::format(0.00)
             );
             
             $method_data = array(
                 'code'       => 'pickup', 
-                'title'      => $this->language->get('lang_text_title'), 
+                'title'      => Lang::get('lang_text_title'), 
                 'quote'      => $quote_data, 
-                'sort_order' => $this->config->get('pickup_sort_order'), 
+                'sort_order' => Config::get('pickup_sort_order'), 
                 'error'      => false
             );
         endif;

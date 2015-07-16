@@ -23,16 +23,16 @@ class Category extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT DISTINCT * 
-				FROM {$this->db->prefix}blog_category c 
-				LEFT JOIN {$this->db->prefix}blog_category_description cd 
+				FROM " . DB::prefix() . "blog_category c 
+				LEFT JOIN " . DB::prefix() . "blog_category_description cd 
 					ON (c.category_id = cd.category_id) 
-				LEFT JOIN {$this->db->prefix}blog_category_to_store c2s 
+				LEFT JOIN " . DB::prefix() . "blog_category_to_store c2s 
 					ON (c.category_id = c2s.category_id) 
 				WHERE c.category_id = '" . (int)$category_id . "' 
-				AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
-				AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+				AND cd.language_id = '" . (int)Config::get('config_language_id') . "' 
+				AND c2s.store_id = '" . (int)Config::get('config_store_id') . "' 
 				AND c.status = '1'
 			");
             
@@ -50,12 +50,12 @@ class Category extends Model {
     }
 
     public function getBlogCategoryTags($category_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT tag 
-            FROM {$this->db->prefix}tag 
+            FROM " . DB::prefix() . "tag 
             WHERE section   = 'blog_category' 
             AND element_id  = '" . (int)$category_id . "' 
-            AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+            AND language_id = '" . (int)Config::get('config_language_id') . "'
         ");
         
         if ($query->num_rows):
@@ -74,16 +74,16 @@ class Category extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}blog_category c 
-				LEFT JOIN {$this->db->prefix}blog_category_description cd 
+				FROM " . DB::prefix() . "blog_category c 
+				LEFT JOIN " . DB::prefix() . "blog_category_description cd 
 					ON (c.category_id = cd.category_id) 
-				LEFT JOIN {$this->db->prefix}blog_category_to_store c2s 
+				LEFT JOIN " . DB::prefix() . "blog_category_to_store c2s 
 					ON (c.category_id = c2s.category_id) 
 				WHERE c.parent_id = '" . (int)$parent_id . "' 
-				AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
-				AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+				AND cd.language_id = '" . (int)Config::get('config_language_id') . "' 
+				AND c2s.store_id = '" . (int)Config::get('config_store_id') . "' 
 				AND c.status = '1' 
 				ORDER BY c.sort_order, LCASE(cd.name)
 			");
@@ -103,9 +103,9 @@ class Category extends Model {
     public function getCategoriesByParentId($category_id) {
         $category_data = array();
         
-        $category_query = $this->db->query("
+        $category_query = DB::query("
 			SELECT category_id 
-			FROM {$this->db->prefix}blog_category 
+			FROM " . DB::prefix() . "blog_category 
 			WHERE parent_id = '" . (int)$category_id . "'
 		");
         
@@ -127,18 +127,18 @@ class Category extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}blog_category_to_layout 
+				FROM " . DB::prefix() . "blog_category_to_layout 
 				WHERE category_id = '" . (int)$category_id . "' 
-				AND store_id = '" . (int)$this->config->get('config_store_id') . "'
+				AND store_id = '" . (int)Config::get('config_store_id') . "'
 			");
             
             if ($query->num_rows):
                 $cachefile = $query->row['layout_id'];
                 $this->cache->set($key, $cachefile);
             else:
-                $cachefile = $this->config->get('config_layout_category');
+                $cachefile = Config::get('config_layout_category');
                 $this->cache->set($key, $cachefile);
             endif;
         endif;
@@ -153,9 +153,9 @@ class Category extends Model {
         if (is_bool($cachefile)):
             $category_data = array();
             
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT category_id 
-				FROM {$this->db->prefix}blog_post_to_category 
+				FROM " . DB::prefix() . "blog_post_to_category 
 				WHERE post_id = '" . (int)$post_id . "'
 			");
             
@@ -164,7 +164,7 @@ class Category extends Model {
                     $category_info = $this->getCategory($category['category_id']);
                     
                     if ($category_info):
-                        if ($this->config->get('config_top_level')):
+                        if (Config::get('config_top_level')):
                             $path = $category_info['category_id'];
                         else:
                             $path = $this->buildCategoryPath($category_info['category_id']);
@@ -191,13 +191,13 @@ class Category extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT COUNT(*) AS total 
-				FROM {$this->db->prefix}blog_category c 
-				LEFT JOIN {$this->db->prefix}blog_category_to_store c2s 
+				FROM " . DB::prefix() . "blog_category c 
+				LEFT JOIN " . DB::prefix() . "blog_category_to_store c2s 
 					ON (c.category_id = c2s.category_id) 
 				WHERE c.parent_id = '" . (int)$parent_id . "' 
-				AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+				AND c2s.store_id = '" . (int)Config::get('config_store_id') . "' 
 				AND c.status = '1'
 			");
             
@@ -209,9 +209,9 @@ class Category extends Model {
     }
     
     public function buildCategoryPath($category_id, $path = '', $run = true) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT parent_id 
-			FROM {$this->db->prefix}blog_category 
+			FROM " . DB::prefix() . "blog_category 
 			WHERE category_id = '" . (int)$category_id . "'
 		");
         

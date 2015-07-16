@@ -15,70 +15,72 @@
 */
 
 namespace App\Controllers\Front\Content;
+
 use App\Controllers\Controller;
 
 class SiteMap extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('content/site_map');
+        $data = Theme::language('content/site_map');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
-        $this->breadcrumb->add('lang_heading_title', 'content/site_map');
+        Breadcrumb::add('lang_heading_title', 'content/site_map');
         
-        $this->theme->model('catalog/category');
-        $this->theme->model('catalog/product');
+        Theme::model('catalog/category');
+        Theme::model('catalog/product');
         
         $data['categories'] = array();
         
-        $categories_1 = $this->model_catalog_category->getCategories(0);
+        $categories_1 = CatalogCategory::getCategories(0);
         
         foreach ($categories_1 as $category_1) {
             $level_2_data = array();
             
-            $categories_2 = $this->model_catalog_category->getCategories($category_1['category_id']);
+            $categories_2 = CatalogCategory::getCategories($category_1['category_id']);
             
             foreach ($categories_2 as $category_2) {
                 $level_3_data = array();
                 
-                $categories_3 = $this->model_catalog_category->getCategories($category_2['category_id']);
+                $categories_3 = CatalogCategory::getCategories($category_2['category_id']);
                 
                 foreach ($categories_3 as $category_3) {
-                    $level_3_data[] = array('name' => $category_3['name'], 'href' => $this->url->link('catalog/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id'] . '_' . $category_3['category_id']));
+                    $level_3_data[] = array('name' => $category_3['name'], 'href' => Url::link('catalog/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id'] . '_' . $category_3['category_id']));
                 }
                 
-                $level_2_data[] = array('name' => $category_2['name'], 'children' => $level_3_data, 'href' => $this->url->link('catalog/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id']));
+                $level_2_data[] = array('name' => $category_2['name'], 'children' => $level_3_data, 'href' => Url::link('catalog/category', 'path=' . $category_1['category_id'] . '_' . $category_2['category_id']));
             }
             
-            $data['categories'][] = array('name' => $category_1['name'], 'children' => $level_2_data, 'href' => $this->url->link('catalog/category', 'path=' . $category_1['category_id']));
+            $data['categories'][] = array('name' => $category_1['name'], 'children' => $level_2_data, 'href' => Url::link('catalog/category', 'path=' . $category_1['category_id']));
         }
         
-        $data['special'] = $this->url->link('catalog/special');
-        $data['account'] = $this->url->link('account/dashboard', '', 'SSL');
-        $data['edit'] = $this->url->link('account/edit', '', 'SSL');
-        $data['password'] = $this->url->link('account/password', '', 'SSL');
-        $data['address'] = $this->url->link('account/address', '', 'SSL');
-        $data['history'] = $this->url->link('account/order', '', 'SSL');
-        $data['download'] = $this->url->link('account/download', '', 'SSL');
-        $data['cart'] = $this->url->link('checkout/cart');
-        $data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
-        $data['search'] = $this->url->link('catalog/search');
-        $data['contact'] = $this->url->link('content/contact');
+        $data['special'] = Url::link('catalog/special');
+        $data['account'] = Url::link('account/dashboard', '', 'SSL');
+        $data['edit'] = Url::link('account/edit', '', 'SSL');
+        $data['password'] = Url::link('account/password', '', 'SSL');
+        $data['address'] = Url::link('account/address', '', 'SSL');
+        $data['history'] = Url::link('account/order', '', 'SSL');
+        $data['download'] = Url::link('account/download', '', 'SSL');
+        $data['cart'] = Url::link('checkout/cart');
+        $data['checkout'] = Url::link('checkout/checkout', '', 'SSL');
+        $data['search'] = Url::link('catalog/search');
+        $data['contact'] = Url::link('content/contact');
         
-        $this->theme->model('content/page');
+        Theme::model('content/page');
         
         $data['pages'] = array();
         
-        foreach ($this->model_content_page->getPages() as $result) {
-            $data['pages'][] = array('title' => $result['title'], 'href' => $this->url->link('content/page', 'page_id=' . $result['page_id']));
+        foreach (ContentPage::getPages() as $result) {
+            $data['pages'][] = array('title' => $result['title'], 'href' => Url::link('content/page', 'page_id=' . $result['page_id']));
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->setController('header', 'shop/header');
-        $this->theme->setController('footer', 'shop/footer');
+        Theme::setController('header', 'shop/header');
+        Theme::setController('footer', 'shop/footer');
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('content/site_map', $data));
+        Response::setOutput(View::render('content/site_map', $data));
     }
 }

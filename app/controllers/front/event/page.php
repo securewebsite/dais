@@ -15,13 +15,15 @@
 */
 
 namespace App\Controllers\Front\Event;
+
 use App\Controllers\Controller;
 
 class Page extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('event/page');
+        $data = Theme::language('event/page');
         
-        $this->theme->model('content/page');
+        Theme::model('content/page');
         
         if (isset($this->request->get['event_page_id'])):
             $page_id = (int)$this->request->get['event_page_id'];
@@ -29,25 +31,25 @@ class Page extends Controller {
             $page_id = 0;
         endif;
         
-        $page_info = $this->model_content_page->getEventPage($page_id);
+        $page_info = ContentPage::getEventPage($page_id);
         
         if ($page_info):
             
-            if ($this->customer->isLogged()):
-            	if ($page_info['visibility'] > $this->customer->customer_group_id):
-            		$this->response->redirect($this->url->link('error/permission', '', 'SSL'));
+            if (Customer::isLogged()):
+            	if ($page_info['visibility'] > Customer::customer_group_id):
+            		Response::redirect(Url::link('error/permission', '', 'SSL'));
             	endif;
-            elseif ($page_info['visibility'] > $this->config->get('config_default_visibility')):
-            	$this->response->redirect($this->url->link('error/permission', '', 'SSL'));
+            elseif ($page_info['visibility'] > Config::get('config_default_visibility')):
+            	Response::redirect(Url::link('error/permission', '', 'SSL'));
             endif;
 
-            $this->theme->setTitle($page_info['title']);
-            $this->theme->setDescription($page_info['meta_description']);
-            $this->theme->setKeywords($page_info['meta_keywords']);
-            $this->theme->setOgType('article');
-            $this->theme->setOgDescription(html_entity_decode($page_info['description'], ENT_QUOTES, 'UTF-8'));
+            Theme::setTitle($page_info['title']);
+            Theme::setDescription($page_info['meta_description']);
+            Theme::setKeywords($page_info['meta_keywords']);
+            Theme::setOgType('article');
+            Theme::setOgDescription(html_entity_decode($page_info['description'], ENT_QUOTES, 'UTF-8'));
             
-            $this->breadcrumb->add($page_info['title'], 'event/page', 'event_page_id=' . $page_id);
+            Breadcrumb::add($page_info['title'], 'event/page', 'event_page_id=' . $page_id);
             
             $data['event_page_id'] = $page_id;
 			$data['heading_title'] = $page_info['title'];
@@ -59,7 +61,7 @@ class Page extends Controller {
                 foreach ($tags as $tag):
                     $data['tags'][] = array(
                         'name' => trim($tag), 
-                        'href' => $this->url->link('search/search', 'search=' . trim($tag))
+                        'href' => Url::link('search/search', 'search=' . trim($tag))
                     );
                 endforeach;
             endif;
@@ -68,10 +70,10 @@ class Page extends Controller {
             $data['unavailable'] = 0;
             $data['registered']  = 0;
 
-            $this->theme->model('catalog/product');
+            Theme::model('catalog/product');
             
-            if ($this->customer->isLogged()):
-                $registered = $this->model_catalog_product->getRoster($page_info['event_id'], $this->customer->getId());
+            if (Customer::isLogged()):
+                $registered = CatalogProduct::getRoster($page_info['event_id'], Customer::getId());
                 if ($registered):
                     $data['registered'] = 1;
                 endif;
@@ -80,21 +82,21 @@ class Page extends Controller {
             endif;
             
             $data['event_name']   = html_entity_decode($page_info['event_name'], ENT_QUOTES, 'UTF-8');
-            $data['event_date']   = date($this->language->get('lang_date_format_short'), strtotime($page_info['date_time']));
-            $data['event_time']   = date($this->language->get('lang_time_format'), strtotime($page_info['date_time']));
+            $data['event_date']   = date(Lang::get('lang_date_format_short'), strtotime($page_info['date_time']));
+            $data['event_time']   = date(Lang::get('lang_time_format'), strtotime($page_info['date_time']));
             $data['event_days']   = unserialize($page_info['event_days']);
             $data['event_length'] = $page_info['event_length'];
             $data['seats']        = $page_info['seats'];
             $data['available']    = $page_info['seats'] - $page_info['filled'];
 
             if ($page_info['event_length'] == 1):
-                $plural = $this->language->get('lang_text_event_hour');
+                $plural = Lang::get('lang_text_event_hour');
             else:
-                $plural = $this->language->get('lang_text_event_hours');
+                $plural = Lang::get('lang_text_event_hours');
             endif;
 
             if (count($data['event_days']) > 1):
-                $data['event_length_text'] = sprintf($this->language->get('lang_text_event_each'), $plural);
+                $data['event_length_text'] = sprintf(Lang::get('lang_text_event_each'), $plural);
             else:
                 $data['event_length_text'] = $plural;
             endif;
@@ -104,13 +106,13 @@ class Page extends Controller {
             $data['text_already_on']       = '';
             
             if ($data['available'] < 1):
-                $customer_waitlist = $this->model_catalog_product->checkWaitList($page_info['event_id'], $this->customer->getId());
+                $customer_waitlist = CatalogProduct::checkWaitList($page_info['event_id'], Customer::getId());
                 
                 if (!$customer_waitlist):
-                    $data['text_unavailable_info'] = sprintf($this->language->get('lang_text_unavailable_info'), $data['event_name']);
-                    $data['button_waitlist'] = $this->language->get('lang_button_waitlist');
+                    $data['text_unavailable_info'] = sprintf(Lang::get('lang_text_unavailable_info'), $data['event_name']);
+                    $data['button_waitlist'] = Lang::get('lang_button_waitlist');
                 else:
-                    $data['text_already_on'] = $this->language->get('lang_text_already_on');
+                    $data['text_already_on'] = Lang::get('lang_text_already_on');
                 endif;
             endif;
             
@@ -143,8 +145,8 @@ class Page extends Controller {
             $data['presenter_twitter']  = false;
             
             if ($host['image']):
-                $this->theme->model('tool/image');
-                $data['presenter_image'] = $this->model_tool_image->resize($host['image'], 200, 200, 'f');
+                Theme::model('tool/image');
+                $data['presenter_image'] = ToolImage::resize($host['image'], 200, 200, 'f');
             endif;
 
             if ($host['facebook']):
@@ -156,33 +158,33 @@ class Page extends Controller {
             endif;
             
             if ($page_info['presenter_tab']):
-                $data['text_presenter_info'] = sprintf($this->language->get('lang_text_presenter_info'), $page_info['presenter_tab']);
-                $data['text_presenter_bio']  = sprintf($this->language->get('lang_text_presenter_bio'), $page_info['presenter_tab']);
+                $data['text_presenter_info'] = sprintf(Lang::get('lang_text_presenter_info'), $page_info['presenter_tab']);
+                $data['text_presenter_bio']  = sprintf(Lang::get('lang_text_presenter_bio'), $page_info['presenter_tab']);
             else:
-                $data['text_presenter_info'] = sprintf($this->language->get('lang_text_presenter_info'), $this->language->get('lang_tab_presenter'));
-                $data['text_presenter_bio']  = sprintf($this->language->get('lang_text_presenter_bio'), $this->language->get('lang_tab_presenter'));
+                $data['text_presenter_info'] = sprintf(Lang::get('lang_text_presenter_info'), Lang::get('lang_tab_presenter'));
+                $data['text_presenter_bio']  = sprintf(Lang::get('lang_text_presenter_bio'), Lang::get('lang_tab_presenter'));
             endif;
             
-            $data['continue'] = $this->url->link('content/home');
+            $data['continue'] = Url::link('content/home');
             
-            $data             = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-            $data['share_bar'] = $this->theme->controller('common/share_bar', array('event', $data));
-            $data             = $this->theme->renderControllers($data);
+            $data             = Theme::listen(__CLASS__, __FUNCTION__, $data);
+            $data['share_bar'] = Theme::controller('common/share_bar', array('event', $data));
+            $data             = Theme::renderControllers($data);
             
-            $this->response->setOutput($this->theme->view('event/page', $data));
+            Response::setOutput(View::render('event/page', $data));
         else:
-            $this->breadcrumb->add('lang_text_error', 'event/page', 'event_page_id=' . $page_id);
-            $this->theme->setTitle($this->language->get('lang_text_error'));
+            Breadcrumb::add('lang_text_error', 'event/page', 'event_page_id=' . $page_id);
+            Theme::setTitle(Lang::get('lang_text_error'));
             
-			$data['heading_title'] = $this->language->get('lang_text_error');
-			$data['continue']      = $this->url->link('content/home');
+			$data['heading_title'] = Lang::get('lang_text_error');
+			$data['continue']      = Url::link('content/home');
             
-            $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
+            Response::addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
             
-            $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-            $data = $this->theme->renderControllers($data);
+            $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
+            $data = Theme::renderControllers($data);
             
-            $this->response->setOutput($this->theme->view('error/not_found', $data));
+            Response::setOutput(View::render('error/not_found', $data));
         endif;
     }
 }

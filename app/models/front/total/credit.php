@@ -19,13 +19,13 @@ use App\Models\Model;
 
 class Credit extends Model {
     public function getTotal(&$total_data, &$total, &$taxes) {
-        if ($this->config->get('credit_status')):
-            $this->language->load('total/credit');
+        if (Config::get('credit_status')):
+            Lang::load('total/credit');
             
             $balance = 0;
             
-            if ($this->customer->isLogged()):
-                $balance = $this->customer->getBalance();
+            if (Customer::isLogged()):
+                $balance = Customer::getBalance();
             endif;
             
             if ((float)$balance):
@@ -38,10 +38,10 @@ class Credit extends Model {
                 if ($credit > 0):
                     $total_data[] = array(
                         'code'       => 'credit', 
-                        'title'      => $this->language->get('lang_text_credit'), 
-                        'text'       => $this->currency->format(-$credit), 
+                        'title'      => Lang::get('lang_text_credit'), 
+                        'text'       => Currency::format(-$credit), 
                         'value'      => - $credit, 
-                        'sort_order' => $this->config->get('credit_sort_order'));
+                        'sort_order' => Config::get('credit_sort_order'));
                     
                     $total-= $credit;
                 endif;
@@ -50,15 +50,15 @@ class Credit extends Model {
     }
     
     public function confirm($order_info, $order_total) {
-        $this->language->load('total/credit');
+        Lang::load('total/credit');
         
         if ($order_info['customer_id']):
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}customer_credit 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "customer_credit 
 				SET 
                     customer_id = '" . (int)$order_info['customer_id'] . "', 
                     order_id    = '" . (int)$order_info['order_id'] . "', 
-                    description = '" . $this->db->escape(sprintf($this->language->get('lang_text_order_id'), (int)$order_info['order_id'])) . "', 
+                    description = '" . DB::escape(sprintf(Lang::get('lang_text_order_id'), (int)$order_info['order_id'])) . "', 
                     amount      = '" . (float)$order_total['value'] . "', 
                     date_added  = NOW()
 			");

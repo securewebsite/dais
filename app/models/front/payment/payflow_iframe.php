@@ -20,13 +20,13 @@ use Dais\Library\Log as Log;
 
 class PayflowIframe extends Model {
     public function getMethod($address, $total) {
-        $this->language->load('payment/payflow_iframe');
+        Lang::load('payment/payflow_iframe');
         
-        $query = $this->db->query("SELECT * FROM {$this->db->prefix}zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('payflow_iframe_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+        $query = DB::query("SELECT * FROM " . DB::prefix() . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)Config::get('payflow_iframe_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
         
-        if ($this->config->get('payflow_iframe_total') > $total) {
+        if (Config::get('payflow_iframe_total') > $total) {
             $status = false;
-        } elseif (!$this->config->get('payflow_iframe_geo_zone_id')) {
+        } elseif (!Config::get('payflow_iframe_geo_zone_id')) {
             $status = true;
         } elseif ($query->num_rows) {
             $status = true;
@@ -37,14 +37,14 @@ class PayflowIframe extends Model {
         $method_data = array();
         
         if ($status) {
-            $method_data = array('code' => 'payflow_iframe', 'title' => $this->language->get('lang_text_title'), 'sort_order' => $this->config->get('payflow_iframe_sort_order'));
+            $method_data = array('code' => 'payflow_iframe', 'title' => Lang::get('lang_text_title'), 'sort_order' => Config::get('payflow_iframe_sort_order'));
         }
         
         return $method_data;
     }
     
     public function getOrderId($secure_token_id) {
-        $result = $this->db->query("SELECT `order_id` FROM `{$this->db->prefix}paypal_payflow_iframe_order` WHERE `secure_token_id` = '" . $this->db->escape($secure_token_id) . "'")->row;
+        $result = DB::query("SELECT `order_id` FROM `" . DB::prefix() . "paypal_payflow_iframe_order` WHERE `secure_token_id` = '" . DB::escape($secure_token_id) . "'")->row;
         
         if ($result) {
             $order_id = $result['order_id'];
@@ -56,25 +56,25 @@ class PayflowIframe extends Model {
     }
     
     public function addOrder($order_id, $secure_token_id) {
-        $this->db->query("INSERT INTO `{$this->db->prefix}paypal_payflow_iframe_order` SET `order_id` = '" . (int)$order_id . "', `secure_token_id` = '" . $this->db->escape($secure_token_id) . "'");
+        DB::query("INSERT INTO `" . DB::prefix() . "paypal_payflow_iframe_order` SET `order_id` = '" . (int)$order_id . "', `secure_token_id` = '" . DB::escape($secure_token_id) . "'");
     }
     
     public function updateOrder($data) {
-        $this->db->query("
-			UPDATE `{$this->db->prefix}paypal_payflow_iframe_order`
-			SET `transaction_reference` = '" . $this->db->escape($data['transaction_reference']) . "',
-				`transaction_type` = '" . $this->db->escape($data['transaction_type']) . "',
+        DB::query("
+			UPDATE `" . DB::prefix() . "paypal_payflow_iframe_order`
+			SET `transaction_reference` = '" . DB::escape($data['transaction_reference']) . "',
+				`transaction_type` = '" . DB::escape($data['transaction_type']) . "',
 				`complete` = " . (int)$data['complete'] . "
-			WHERE `secure_token_id` = '" . $this->db->escape($data['secure_token_id']) . "'
+			WHERE `secure_token_id` = '" . DB::escape($data['secure_token_id']) . "'
 		");
     }
     
     public function call($data) {
-        $default_parameters = array('USER' => $this->config->get('payflow_iframe_user'), 'VENDOR' => $this->config->get('payflow_iframe_vendor'), 'PWD' => $this->config->get('payflow_iframe_password'), 'PARTNER' => $this->config->get('payflow_iframe_partner'), 'BUTTONSOURCE' => 'Dais_Cart_PFP',);
+        $default_parameters = array('USER' => Config::get('payflow_iframe_user'), 'VENDOR' => Config::get('payflow_iframe_vendor'), 'PWD' => Config::get('payflow_iframe_password'), 'PARTNER' => Config::get('payflow_iframe_partner'), 'BUTTONSOURCE' => 'Dais_Cart_PFP',);
         
         $call_parameters = array_merge($data, $default_parameters);
         
-        if ($this->config->get('payflow_iframe_test')) {
+        if (Config::get('payflow_iframe_test')) {
             $url = 'https://pilot-payflowpro.paypal.com';
         } else {
             $url = 'https://payflowpro.paypal.com';
@@ -108,18 +108,18 @@ class PayflowIframe extends Model {
     }
     
     public function addTransaction($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}paypal_payflow_iframe_order_transaction
+        DB::query("
+			INSERT INTO " . DB::prefix() . "paypal_payflow_iframe_order_transaction
 			SET order_id = " . (int)$data['order_id'] . ",
-				transaction_reference = '" . $this->db->escape($data['transaction_reference']) . "',
-				transaction_type = '" . $this->db->escape($data['type']) . "',
+				transaction_reference = '" . DB::escape($data['transaction_reference']) . "',
+				transaction_type = '" . DB::escape($data['type']) . "',
 				`time` = NOW(),
-				`amount` = '" . $this->db->escape($data['amount']) . "'
+				`amount` = '" . DB::escape($data['amount']) . "'
 		");
     }
     
     public function log($message) {
-        if ($this->config->get('payflow_iframe_debug')) {
+        if (Config::get('payflow_iframe_debug')) {
             $log = new Log('payflow-iframe.log');
             $log->write($message);
         }

@@ -15,40 +15,42 @@
 */
 
 namespace App\Controllers\Front\Account;
+
 use App\Controllers\Controller;
 
 class Forgotten extends Controller {
+    
     private $error = array();
     
     public function index() {
-        if ($this->customer->isLogged()):
-            $this->response->redirect($this->url->link('account/dashboard', '', 'SSL'));
+        if (Customer::isLogged()):
+            Response::redirect(Url::link('account/dashboard', '', 'SSL'));
         endif;
         
-        $data = $this->theme->language('account/forgotten');
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->theme->model('account/customer');
+        $data = Theme::language('account/forgotten');
+        Theme::setTitle(Lang::get('lang_heading_title'));
+        Theme::model('account/customer');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
             $code        = sha1(uniqid(mt_rand(), true));
-            $customer_id = $this->model_account_customer->editCode($this->request->post['email'], $code);
+            $customer_id = AccountCustomer::editCode($this->request->post['email'], $code);
 
             $callback = array(
                 'customer_id' => $customer_id,
-                'link'        => $this->url->link('account/reset', 'code=' . $code, 'SSL'),
+                'link'        => Url::link('account/reset', 'code=' . $code, 'SSL'),
                 'callback'    => array(
                     'class'  => __CLASS__,
                     'method' => 'customer_forgotten_message'
                 )
             );
             
-            $this->theme->notify('public_customer_forgotten', $callback);
+            Theme::notify('public_customer_forgotten', $callback);
 
-            $this->session->data['success'] = $this->language->get('lang_text_success');
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+            $this->session->data['success'] = Lang::get('lang_text_success');
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
         
-        $this->breadcrumb->add('lang_text_forgotten', 'account/forgotten', null, true, 'SSL');
+        Breadcrumb::add('lang_text_forgotten', 'account/forgotten', null, true, 'SSL');
         
         if (isset($this->error['warning'])):
             $data['error_warning'] = $this->error['warning'];
@@ -56,27 +58,27 @@ class Forgotten extends Controller {
             $data['error_warning'] = '';
         endif;
         
-        $data['action'] = $this->url->link('account/forgotten', '', 'SSL');
-        $data['back']   = $this->url->link('account/login', '', 'SSL');
+        $data['action'] = Url::link('account/forgotten', '', 'SSL');
+        $data['back']   = Url::link('account/login', '', 'SSL');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->setController('header', 'shop/header');
-        $this->theme->setController('footer', 'shop/footer');
+        Theme::setController('header', 'shop/header');
+        Theme::setController('footer', 'shop/footer');
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('account/forgotten', $data));
+        Response::setOutput(View::render('account/forgotten', $data));
     }
     
     protected function validate() {
         if (!isset($this->request->post['email'])):
-            $this->error['warning'] = $this->language->get('lang_error_email');
-        elseif (!$this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])):
-            $this->error['warning'] = $this->language->get('lang_error_email');
+            $this->error['warning'] = Lang::get('lang_error_email');
+        elseif (!AccountCustomer::getTotalCustomersByEmail($this->request->post['email'])):
+            $this->error['warning'] = Lang::get('lang_error_email');
         endif;
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

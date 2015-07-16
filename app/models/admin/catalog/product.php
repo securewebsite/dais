@@ -21,23 +21,23 @@ use App\Models\Model;
 class Product extends Model {
     
     public function addProduct($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}product 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "product 
 			SET 
-				model           = '" . $this->db->escape($data['model']) . "', 
-				sku             = '" . $this->db->escape($data['sku']) . "', 
-				upc             = '" . $this->db->escape($data['upc']) . "', 
-				ean             = '" . $this->db->escape($data['ean']) . "', 
-				jan             = '" . $this->db->escape($data['jan']) . "', 
-				isbn            = '" . $this->db->escape($data['isbn']) . "', 
-				mpn             = '" . $this->db->escape($data['mpn']) . "', 
-				location        = '" . $this->db->escape($data['location']) . "', 
+				model           = '" . DB::escape($data['model']) . "', 
+				sku             = '" . DB::escape($data['sku']) . "', 
+				upc             = '" . DB::escape($data['upc']) . "', 
+				ean             = '" . DB::escape($data['ean']) . "', 
+				jan             = '" . DB::escape($data['jan']) . "', 
+				isbn            = '" . DB::escape($data['isbn']) . "', 
+				mpn             = '" . DB::escape($data['mpn']) . "', 
+				location        = '" . DB::escape($data['location']) . "', 
 				visibility      = '" . (int)$data['visibility'] . "', 
 				quantity        = '" . (int)$data['quantity'] . "', 
 				minimum         = '" . (int)$data['minimum'] . "', 
 				subtract        = '" . (int)$data['subtract'] . "', 
 				stock_status_id = '" . (int)$data['stock_status_id'] . "', 
-				date_available  = '" . $this->db->escape($data['date_available']) . "', 
+				date_available  = '" . DB::escape($data['date_available']) . "', 
 				manufacturer_id = '" . (int)$data['manufacturer_id'] . "', 
 				shipping        = '" . (int)$data['shipping'] . "', 
 				price           = '" . (float)$data['price'] . "', 
@@ -49,33 +49,33 @@ class Product extends Model {
 				height          = '" . (float)$data['height'] . "', 
 				length_class_id = '" . (int)$data['length_class_id'] . "', 
 				status          = '" . (int)$data['status'] . "', 
-				tax_class_id    = '" . $this->db->escape($data['tax_class_id']) . "', 
+				tax_class_id    = '" . DB::escape($data['tax_class_id']) . "', 
 				sort_order      = '" . (int)$data['sort_order'] . "', 
 				date_added      = NOW(), 
 				customer_id     = '" . (int)$data['customer_id'] . "'
 		");
         
-        $product_id = $this->db->getLastId();
+        $product_id = DB::getLastId();
         
         if (isset($data['image'])) {
-            $this->db->query("
-				UPDATE {$this->db->prefix}product 
+            DB::query("
+				UPDATE " . DB::prefix() . "product 
 				SET 
-					image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' 
+					image = '" . DB::escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' 
 				WHERE product_id = '" . (int)$product_id . "'
 			");
         }
         
         foreach ($data['product_description'] as $language_id => $value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}product_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "product_description 
 				SET 
 					product_id       = '" . (int)$product_id . "', 
 					language_id      = '" . (int)$language_id . "', 
-					name             = '" . $this->db->escape($value['name']) . "', 
-					meta_keyword     = '" . $this->db->escape($value['meta_keyword']) . "', 
-					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-					description      = '" . $this->db->escape($value['description']) . "'
+					name             = '" . DB::escape($value['name']) . "', 
+					meta_keyword     = '" . DB::escape($value['meta_keyword']) . "', 
+					meta_description = '" . DB::escape($value['meta_description']) . "', 
+					description      = '" . DB::escape($value['description']) . "'
 			");
 
 			// process tags
@@ -83,13 +83,13 @@ class Product extends Model {
 				$tags = explode(',', $value['tag']);
 				foreach ($tags as $tag):
 					$tag = trim($tag);
-					$this->db->query("
-						INSERT INTO {$this->db->prefix}tag 
+					DB::query("
+						INSERT INTO " . DB::prefix() . "tag 
 						SET 
 							section     = 'product', 
 							element_id  = '" . (int)$product_id . "', 
 							language_id = '" . (int)$language_id . "', 
-							tag         = '" . $this->db->escape($tag) . "'
+							tag         = '" . DB::escape($tag) . "'
 					");
 				endforeach;
 			endif;
@@ -100,8 +100,8 @@ class Product extends Model {
         
         if (isset($data['product_store'])) {
             foreach ($data['product_store'] as $store_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_to_store 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "product_to_store 
 					SET 
 						product_id = '" . (int)$product_id . "', 
 						store_id   = '" . (int)$store_id . "'
@@ -112,21 +112,21 @@ class Product extends Model {
         if (isset($data['product_attribute'])) {
             foreach ($data['product_attribute'] as $product_attribute) {
                 if ($product_attribute['attribute_id']) {
-                    $this->db->query("
+                    DB::query("
 						DELETE 
-						FROM {$this->db->prefix}product_attribute 
+						FROM " . DB::prefix() . "product_attribute 
 						WHERE product_id = '" . (int)$product_id . "' 
 						AND attribute_id = '" . (int)$product_attribute['attribute_id'] . "'
 					");
                     
                     foreach ($product_attribute['product_attribute_description'] as $language_id => $product_attribute_description) {
-                        $this->db->query("
-							INSERT INTO {$this->db->prefix}product_attribute 
+                        DB::query("
+							INSERT INTO " . DB::prefix() . "product_attribute 
 							SET 
 								product_id   = '" . (int)$product_id . "', 
 								attribute_id = '" . (int)$product_attribute['attribute_id'] . "', 
 								language_id  = '" . (int)$language_id . "', 
-								text         = '" . $this->db->escape($product_attribute_description['text']) . "'
+								text         = '" . DB::escape($product_attribute_description['text']) . "'
 						");
                     }
                 }
@@ -136,20 +136,20 @@ class Product extends Model {
         if (isset($data['product_option'])) {
             foreach ($data['product_option'] as $product_option) {
                 if ($product_option['type'] == 'select' || $product_option['type'] == 'radio' || $product_option['type'] == 'checkbox' || $product_option['type'] == 'image') {
-                    $this->db->query("
-						INSERT INTO {$this->db->prefix}product_option 
+                    DB::query("
+						INSERT INTO " . DB::prefix() . "product_option 
 						SET 
 							product_id = '" . (int)$product_id . "', 
 							option_id  = '" . (int)$product_option['option_id'] . "', 
 							required   = '" . (int)$product_option['required'] . "'
 					");
                     
-                    $product_option_id = $this->db->getLastId();
+                    $product_option_id = DB::getLastId();
                     
                     if (isset($product_option['product_option_value']) && count($product_option['product_option_value']) > 0) {
                         foreach ($product_option['product_option_value'] as $product_option_value) {
-                            $this->db->query("
-								INSERT INTO {$this->db->prefix}product_option_value 
+                            DB::query("
+								INSERT INTO " . DB::prefix() . "product_option_value 
 								SET 
 									product_option_id = '" . (int)$product_option_id . "', 
 									product_id        = '" . (int)$product_id . "', 
@@ -158,27 +158,27 @@ class Product extends Model {
 									quantity          = '" . (int)$product_option_value['quantity'] . "', 
 									subtract          = '" . (int)$product_option_value['subtract'] . "', 
 									price             = '" . (float)$product_option_value['price'] . "', 
-									price_prefix      = '" . $this->db->escape($product_option_value['price_prefix']) . "', 
+									price_prefix      = '" . DB::escape($product_option_value['price_prefix']) . "', 
 									points            = '" . (int)$product_option_value['points'] . "', 
-									points_prefix     = '" . $this->db->escape($product_option_value['points_prefix']) . "', 
+									points_prefix     = '" . DB::escape($product_option_value['points_prefix']) . "', 
 									weight            = '" . (float)$product_option_value['weight'] . "', 
-									weight_prefix     = '" . $this->db->escape($product_option_value['weight_prefix']) . "'
+									weight_prefix     = '" . DB::escape($product_option_value['weight_prefix']) . "'
 							");
                         }
                     } else {
-                        $this->db->query("
+                        DB::query("
 							DELETE 
-							FROM {$this->db->prefix}product_option 
+							FROM " . DB::prefix() . "product_option 
 							WHERE product_option_id = '" . $product_option_id . "'
 						");
                     }
                 } else {
-                    $this->db->query("
-						INSERT INTO {$this->db->prefix}product_option 
+                    DB::query("
+						INSERT INTO " . DB::prefix() . "product_option 
 						SET 
 							product_id   = '" . (int)$product_id . "', 
 							option_id    = '" . (int)$product_option['option_id'] . "', 
-							option_value = '" . $this->db->escape($product_option['option_value']) . "', 
+							option_value = '" . DB::escape($product_option['option_value']) . "', 
 							required     = '" . (int)$product_option['required'] . "'
 					");
                 }
@@ -187,42 +187,42 @@ class Product extends Model {
         
         if (isset($data['product_discount'])) {
             foreach ($data['product_discount'] as $product_discount) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_discount 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "product_discount 
 					SET 
 						product_id        = '" . (int)$product_id . "', 
 						customer_group_id = '" . (int)$product_discount['customer_group_id'] . "', 
 						quantity          = '" . (int)$product_discount['quantity'] . "', 
 						priority          = '" . (int)$product_discount['priority'] . "', 
 						price             = '" . (float)$product_discount['price'] . "', 
-						date_start        = '" . $this->db->escape($product_discount['date_start']) . "', 
-						date_end          = '" . $this->db->escape($product_discount['date_end']) . "'
+						date_start        = '" . DB::escape($product_discount['date_start']) . "', 
+						date_end          = '" . DB::escape($product_discount['date_end']) . "'
 				");
             }
         }
         
         if (isset($data['product_special'])) {
             foreach ($data['product_special'] as $product_special) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_special 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "product_special 
 					SET 
 						product_id        = '" . (int)$product_id . "', 
 						customer_group_id = '" . (int)$product_special['customer_group_id'] . "', 
 						priority          = '" . (int)$product_special['priority'] . "', 
 						price             = '" . (float)$product_special['price'] . "', 
-						date_start        = '" . $this->db->escape($product_special['date_start']) . "', 
-						date_end          = '" . $this->db->escape($product_special['date_end']) . "'
+						date_start        = '" . DB::escape($product_special['date_start']) . "', 
+						date_end          = '" . DB::escape($product_special['date_end']) . "'
 				");
             }
         }
         
         if (isset($data['product_image'])) {
             foreach ($data['product_image'] as $product_image) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_image 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "product_image 
 					SET 
 						product_id = '" . (int)$product_id . "', 
-						image      = '" . $this->db->escape(html_entity_decode($product_image['image'], ENT_QUOTES, 'UTF-8')) . "', 
+						image      = '" . DB::escape(html_entity_decode($product_image['image'], ENT_QUOTES, 'UTF-8')) . "', 
 						sort_order = '" . (int)$product_image['sort_order'] . "'
 				");
             }
@@ -230,8 +230,8 @@ class Product extends Model {
         
         if (isset($data['product_download'])) {
             foreach ($data['product_download'] as $download_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_to_download 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "product_to_download 
 					SET 
 						product_id  = '" . (int)$product_id . "', 
 						download_id = '" . (int)$download_id . "'
@@ -241,8 +241,8 @@ class Product extends Model {
         
         if (isset($data['product_category'])) {
             foreach ($data['product_category'] as $category_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_to_category 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "product_to_category 
 					SET 
 						product_id  = '" . (int)$product_id . "', 
 						category_id = '" . (int)$category_id . "'
@@ -252,8 +252,8 @@ class Product extends Model {
         
         if (isset($data['product_filter'])) {
             foreach ($data['product_filter'] as $filter_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_filter 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "product_filter 
 					SET 
 						product_id = '" . (int)$product_id . "', 
 						filter_id  = '" . (int)$filter_id . "'
@@ -263,24 +263,24 @@ class Product extends Model {
         
         if (isset($data['product_related'])) {
             foreach ($data['product_related'] as $related_id) {
-                $this->db->query("
-                	DELETE FROM {$this->db->prefix}product_related 
+                DB::query("
+                	DELETE FROM " . DB::prefix() . "product_related 
                 	WHERE product_id = '" . (int)$product_id . "' 
                 	AND related_id = '" . (int)$related_id . "'");
 
-                $this->db->query("
-                	INSERT INTO {$this->db->prefix}product_related 
+                DB::query("
+                	INSERT INTO " . DB::prefix() . "product_related 
                 	SET 
                 		product_id = '" . (int)$product_id . "', 
                 		related_id = '" . (int)$related_id . "'");
 
-                $this->db->query("
-                	DELETE FROM {$this->db->prefix}product_related 
+                DB::query("
+                	DELETE FROM " . DB::prefix() . "product_related 
                 	WHERE product_id = '" . (int)$related_id . "' 
                 	AND related_id = '" . (int)$product_id . "'");
 
-                $this->db->query("
-                	INSERT INTO {$this->db->prefix}product_related 
+                DB::query("
+                	INSERT INTO " . DB::prefix() . "product_related 
                 	SET 
                 		product_id = '" . (int)$related_id . "', 
                 		related_id = '" . (int)$product_id . "'");
@@ -289,8 +289,8 @@ class Product extends Model {
         
         if (isset($data['product_reward'])) {
             foreach ($data['product_reward'] as $customer_group_id => $product_reward) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_reward 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "product_reward 
 					SET 
 						product_id        = '" . (int)$product_id . "', 
 						customer_group_id = '" . (int)$customer_group_id . "', 
@@ -302,8 +302,8 @@ class Product extends Model {
         if (isset($data['product_layout'])) {
             foreach ($data['product_layout'] as $store_id => $layout) {
                 if ($layout['layout_id']) {
-                    $this->db->query("
-						INSERT INTO {$this->db->prefix}product_to_layout 
+                    DB::query("
+						INSERT INTO " . DB::prefix() . "product_to_layout 
 						SET 
 							product_id = '" . (int)$product_id . "', 
 							store_id   = '" . (int)$store_id . "', 
@@ -314,19 +314,19 @@ class Product extends Model {
         }
         
         if ($data['slug']) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}route 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "route 
 				SET 
 					route = 'catalog/product', 
 					query = 'product_id:" . (int)$product_id . "', 
-					slug  = '" . $this->db->escape($data['slug']) . "'
+					slug  = '" . DB::escape($data['slug']) . "'
 			");
         }
         
         if (isset($data['product_recurrings'])) {
             foreach ($data['product_recurrings'] as $recurring) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_recurring 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "product_recurring 
 					SET 
 						product_id        = '" . (int)$product_id . "', 
 						customer_group_id = '" . (int)$recurring['customer_group_id'] . "', 
@@ -335,31 +335,31 @@ class Product extends Model {
             }
         }
         
-        $this->cache->delete('product');
-        $this->cache->delete('products.total');
-        $this->cache->delete('products.all');
+        Cache::delete('product');
+        Cache::delete('products.total');
+        Cache::delete('products.all');
         
         Theme::trigger('admin_add_product', array('product_id' => $product_id));
     }
     
     public function editProduct($product_id, $data) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}product 
+        DB::query("
+			UPDATE " . DB::prefix() . "product 
 			SET 
-				model           = '" . $this->db->escape($data['model']) . "', 
-				sku             = '" . $this->db->escape($data['sku']) . "', 
-				upc             = '" . $this->db->escape($data['upc']) . "', 
-				ean             = '" . $this->db->escape($data['ean']) . "', 
-				jan             = '" . $this->db->escape($data['jan']) . "', 
-				isbn            = '" . $this->db->escape($data['isbn']) . "', 
-				mpn             = '" . $this->db->escape($data['mpn']) . "', 
-				location        = '" . $this->db->escape($data['location']) . "', 
+				model           = '" . DB::escape($data['model']) . "', 
+				sku             = '" . DB::escape($data['sku']) . "', 
+				upc             = '" . DB::escape($data['upc']) . "', 
+				ean             = '" . DB::escape($data['ean']) . "', 
+				jan             = '" . DB::escape($data['jan']) . "', 
+				isbn            = '" . DB::escape($data['isbn']) . "', 
+				mpn             = '" . DB::escape($data['mpn']) . "', 
+				location        = '" . DB::escape($data['location']) . "', 
 				visibility      = '" . (int)$data['visibility'] . "', 
 				quantity        = '" . (int)$data['quantity'] . "', 
 				minimum         = '" . (int)$data['minimum'] . "', 
 				subtract        = '" . (int)$data['subtract'] . "', 
 				stock_status_id = '" . (int)$data['stock_status_id'] . "', 
-				date_available  = '" . $this->db->escape($data['date_available']) . "', 
+				date_available  = '" . DB::escape($data['date_available']) . "', 
 				manufacturer_id = '" . (int)$data['manufacturer_id'] . "', 
 				shipping        = '" . (int)$data['shipping'] . "', 
 				price           = '" . (float)$data['price'] . "', 
@@ -371,66 +371,66 @@ class Product extends Model {
 				height          = '" . (float)$data['height'] . "', 
 				length_class_id = '" . (int)$data['length_class_id'] . "', 
 				status          = '" . (int)$data['status'] . "', 
-				tax_class_id    = '" . $this->db->escape($data['tax_class_id']) . "', 
+				tax_class_id    = '" . DB::escape($data['tax_class_id']) . "', 
 				sort_order      = '" . (int)$data['sort_order'] . "', 
 				date_modified   = NOW(), 
 				customer_id     = '" . (int)$data['customer_id'] . "' 
 			WHERE product_id = '" . (int)$product_id . "'
 		");
         
-        $event_id = $this->db->query("
+        $event_id = DB::query("
 			SELECT event_id 
-			FROM {$this->db->prefix}product 
+			FROM " . DB::prefix() . "product 
 			WHERE product_id = '" . (int)$product_id . "'");
         
         if ($event_id->row['event_id'] > 0) {
-            $this->db->query("
-				UPDATE {$this->db->prefix}event 
+            DB::query("
+				UPDATE " . DB::prefix() . "event 
 				SET 
-					model    = '" . $this->db->escape($data['model']) . "', 
-					sku      = '" . $this->db->escape($data['sku']) . "', 
-					location = '" . $this->db->escape($data['location']) . "', 
+					model    = '" . DB::escape($data['model']) . "', 
+					sku      = '" . DB::escape($data['sku']) . "', 
+					location = '" . DB::escape($data['location']) . "', 
 					seats    = '" . (int)$data['quantity'] . "', 
 					cost     = '" . (float)$data['price'] . "' 
 				WHERE event_id = '" . (int)$event_id->row['event_id'] . "'");
         }
         
         if (isset($data['image'])) {
-            $this->db->query("
-				UPDATE {$this->db->prefix}product 
+            DB::query("
+				UPDATE " . DB::prefix() . "product 
 				SET 
-					image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' 
+					image = '" . DB::escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' 
 				WHERE product_id = '" . (int)$product_id . "'
 			");
         }
         
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_description 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_description 
         	WHERE product_id = '" . (int)$product_id . "'");
         
         foreach ($data['product_description'] as $language_id => $value) {
             if ($event_id->row['event_id'] > 0) {
-                $this->db->query("
-					UPDATE {$this->db->prefix}event 
+                DB::query("
+					UPDATE " . DB::prefix() . "event 
 					SET 
-						class_name  = '" . $this->db->escape($value['name']) . "', 
-						description = '" . $this->db->escape($value['description']) . "' 
+						class_name  = '" . DB::escape($value['name']) . "', 
+						description = '" . DB::escape($value['description']) . "' 
 					WHERE event_id = '" . (int)$event_id->row['event_id'] . "'");
             }
             
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}product_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "product_description 
 				SET 
 					product_id       = '" . (int)$product_id . "', 
 					language_id      = '" . (int)$language_id . "', 
-					name             = '" . $this->db->escape($value['name']) . "', 
-					meta_keyword     = '" . $this->db->escape($value['meta_keyword']) . "', 
-					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-					description      = '" . $this->db->escape($value['description']) . "'
+					name             = '" . DB::escape($value['name']) . "', 
+					meta_keyword     = '" . DB::escape($value['meta_keyword']) . "', 
+					meta_description = '" . DB::escape($value['meta_description']) . "', 
+					description      = '" . DB::escape($value['description']) . "'
 			");
 
-			$this->db->query("
-				DELETE FROM {$this->db->prefix}tag 
+			DB::query("
+				DELETE FROM " . DB::prefix() . "tag 
 				WHERE section   = 'product' 
 				AND element_id  = '" . (int)$product_id . "' 
 				AND language_id = '" . (int)$language_id . "'
@@ -441,13 +441,13 @@ class Product extends Model {
 				$tags = explode(',', $value['tag']);
 				foreach ($tags as $tag):
 					$tag = trim($tag);
-					$this->db->query("
-						INSERT INTO {$this->db->prefix}tag 
+					DB::query("
+						INSERT INTO " . DB::prefix() . "tag 
 						SET 
 							section     = 'product', 
 							element_id  = '" . (int)$product_id . "', 
 							language_id = '" . (int)$language_id . "', 
-							tag         = '" . $this->db->escape($tag) . "'
+							tag         = '" . DB::escape($tag) . "'
 					");
 				endforeach;
 			endif;
@@ -458,14 +458,14 @@ class Product extends Model {
 			$this->search->add($language_id, 'product', $product_id, $value['description']);
         }
         
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_to_store 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_to_store 
         	WHERE product_id = '" . (int)$product_id . "'");
         
         if (isset($data['product_store'])) {
             foreach ($data['product_store'] as $store_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_to_store 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "product_to_store 
 					SET 
 						product_id = '" . (int)$product_id . "', 
 						store_id   = '" . (int)$store_id . "'
@@ -473,40 +473,40 @@ class Product extends Model {
             }
         }
         
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_attribute 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_attribute 
         	WHERE product_id = '" . (int)$product_id . "'");
         
         if (!empty($data['product_attribute'])) {
             foreach ($data['product_attribute'] as $product_attribute) {
                 if ($product_attribute['attribute_id']) {
                     foreach ($product_attribute['product_attribute_description'] as $language_id => $product_attribute_description) {
-                        $this->db->query("
-							INSERT INTO {$this->db->prefix}product_attribute 
+                        DB::query("
+							INSERT INTO " . DB::prefix() . "product_attribute 
 							SET 
 								product_id   = '" . (int)$product_id . "', 
 								attribute_id = '" . (int)$product_attribute['attribute_id'] . "', 
 								language_id  = '" . (int)$language_id . "', 
-								text         = '" . $this->db->escape($product_attribute_description['text']) . "'
+								text         = '" . DB::escape($product_attribute_description['text']) . "'
 						");
                     }
                 }
             }
         }
         
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_option 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_option 
         	WHERE product_id = '" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_option_value 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_option_value 
         	WHERE product_id = '" . (int)$product_id . "'");
         
         if (isset($data['product_option'])) {
             foreach ($data['product_option'] as $product_option) {
                 if ($product_option['type'] == 'select' || $product_option['type'] == 'radio' || $product_option['type'] == 'checkbox' || $product_option['type'] == 'image') {
-                    $this->db->query("
-						INSERT INTO {$this->db->prefix}product_option 
+                    DB::query("
+						INSERT INTO " . DB::prefix() . "product_option 
 						SET 
 							product_option_id = '" . (int)$product_option['product_option_id'] . "', 
 							product_id        = '" . (int)$product_id . "', 
@@ -514,12 +514,12 @@ class Product extends Model {
 							required          = '" . (int)$product_option['required'] . "'
 					");
                     
-                    $product_option_id = $this->db->getLastId();
+                    $product_option_id = DB::getLastId();
                     
                     if (isset($product_option['product_option_value']) && count($product_option['product_option_value']) > 0) {
                         foreach ($product_option['product_option_value'] as $product_option_value) {
-                            $this->db->query("
-								INSERT INTO {$this->db->prefix}product_option_value 
+                            DB::query("
+								INSERT INTO " . DB::prefix() . "product_option_value 
 								SET 
 									product_option_value_id = '" . (int)$product_option_value['product_option_value_id'] . "', 
 									product_option_id       = '" . (int)$product_option_id . "', 
@@ -529,95 +529,95 @@ class Product extends Model {
 									quantity                = '" . (int)$product_option_value['quantity'] . "', 
 									subtract                = '" . (int)$product_option_value['subtract'] . "', 
 									price                   = '" . (float)$product_option_value['price'] . "', 
-									price_prefix            = '" . $this->db->escape($product_option_value['price_prefix']) . "', 
+									price_prefix            = '" . DB::escape($product_option_value['price_prefix']) . "', 
 									points                  = '" . (int)$product_option_value['points'] . "', 
-									points_prefix           = '" . $this->db->escape($product_option_value['points_prefix']) . "', 
+									points_prefix           = '" . DB::escape($product_option_value['points_prefix']) . "', 
 									weight                  = '" . (float)$product_option_value['weight'] . "', 
-									weight_prefix           = '" . $this->db->escape($product_option_value['weight_prefix']) . "'
+									weight_prefix           = '" . DB::escape($product_option_value['weight_prefix']) . "'
 							");
                         }
                     } else {
-                        $this->db->query("
-                        	DELETE FROM {$this->db->prefix}product_option 
+                        DB::query("
+                        	DELETE FROM " . DB::prefix() . "product_option 
                         	WHERE product_option_id = '" . $product_option_id . "'");
                     }
                 } else {
-                    $this->db->query("
-						INSERT INTO {$this->db->prefix}product_option 
+                    DB::query("
+						INSERT INTO " . DB::prefix() . "product_option 
 						SET 
 							product_option_id = '" . (int)$product_option['product_option_id'] . "', 
 							product_id        = '" . (int)$product_id . "', 
 							option_id         = '" . (int)$product_option['option_id'] . "', 
-							option_value      = '" . $this->db->escape($product_option['option_value']) . "', 
+							option_value      = '" . DB::escape($product_option['option_value']) . "', 
 							required          = '" . (int)$product_option['required'] . "'
 					");
                 }
             }
         }
         
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_discount 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_discount 
         	WHERE product_id = '" . (int)$product_id . "'");
         
         if (isset($data['product_discount'])) {
             foreach ($data['product_discount'] as $product_discount) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_discount 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "product_discount 
 					SET 
 						product_id        = '" . (int)$product_id . "', 
 						customer_group_id = '" . (int)$product_discount['customer_group_id'] . "', 
 						quantity          = '" . (int)$product_discount['quantity'] . "', 
 						priority          = '" . (int)$product_discount['priority'] . "', 
 						price             = '" . (float)$product_discount['price'] . "', 
-						date_start        = '" . $this->db->escape($product_discount['date_start']) . "', 
-						date_end          = '" . $this->db->escape($product_discount['date_end']) . "'
+						date_start        = '" . DB::escape($product_discount['date_start']) . "', 
+						date_end          = '" . DB::escape($product_discount['date_end']) . "'
 				");
             }
         }
         
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_special 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_special 
         	WHERE product_id = '" . (int)$product_id . "'");
         
         if (isset($data['product_special'])) {
             foreach ($data['product_special'] as $product_special) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_special 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "product_special 
 					SET 
 						product_id        = '" . (int)$product_id . "', 
 						customer_group_id = '" . (int)$product_special['customer_group_id'] . "', 
 						priority          = '" . (int)$product_special['priority'] . "', 
 						price             = '" . (float)$product_special['price'] . "', 
-						date_start        = '" . $this->db->escape($product_special['date_start']) . "', 
-						date_end          = '" . $this->db->escape($product_special['date_end']) . "'
+						date_start        = '" . DB::escape($product_special['date_start']) . "', 
+						date_end          = '" . DB::escape($product_special['date_end']) . "'
 				");
             }
         }
         
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_image 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_image 
         	WHERE product_id = '" . (int)$product_id . "'");
         
         if (isset($data['product_image'])) {
             foreach ($data['product_image'] as $product_image) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_image 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "product_image 
 					SET 
 						product_id = '" . (int)$product_id . "', 
-						image      = '" . $this->db->escape(html_entity_decode($product_image['image'], ENT_QUOTES, 'UTF-8')) . "', 
+						image      = '" . DB::escape(html_entity_decode($product_image['image'], ENT_QUOTES, 'UTF-8')) . "', 
 						sort_order = '" . (int)$product_image['sort_order'] . "'
 				");
             }
         }
         
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_to_download 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_to_download 
         	WHERE product_id = '" . (int)$product_id . "'");
         
         if (isset($data['product_download'])) {
             foreach ($data['product_download'] as $download_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_to_download 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "product_to_download 
 					SET 
 						product_id  = '" . (int)$product_id . "', 
 						download_id = '" . (int)$download_id . "'
@@ -625,14 +625,14 @@ class Product extends Model {
             }
         }
         
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_to_category 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_to_category 
         	WHERE product_id = '" . (int)$product_id . "'");
         
         if (isset($data['product_category'])) {
             foreach ($data['product_category'] as $category_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_to_category 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "product_to_category 
 					SET 
 						product_id  = '" . (int)$product_id . "', 
 						category_id = '" . (int)$category_id . "'
@@ -640,14 +640,14 @@ class Product extends Model {
             }
         }
         
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_filter 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_filter 
         	WHERE product_id = '" . (int)$product_id . "'");
         
         if (isset($data['product_filter'])) {
             foreach ($data['product_filter'] as $filter_id) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_filter 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "product_filter 
 					SET 
 						product_id = '" . (int)$product_id . "', 
 						filter_id  = '" . (int)$filter_id . "'
@@ -655,48 +655,48 @@ class Product extends Model {
             }
         }
         
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_related 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_related 
         	WHERE product_id = '" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_related 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_related 
         	WHERE related_id = '" . (int)$product_id . "'");
         
         if (isset($data['product_related'])) {
             foreach ($data['product_related'] as $related_id) {
-                $this->db->query("
-                	DELETE FROM {$this->db->prefix}product_related 
+                DB::query("
+                	DELETE FROM " . DB::prefix() . "product_related 
                 	WHERE product_id = '" . (int)$product_id . "' 
                 	AND related_id   = '" . (int)$related_id . "'");
 
-                $this->db->query("
-                	INSERT INTO {$this->db->prefix}product_related 
+                DB::query("
+                	INSERT INTO " . DB::prefix() . "product_related 
                 	SET 
                 		product_id = '" . (int)$product_id . "', 
                 		related_id = '" . (int)$related_id . "'");
 
-                $this->db->query("
-                	DELETE FROM {$this->db->prefix}product_related 
+                DB::query("
+                	DELETE FROM " . DB::prefix() . "product_related 
                 	WHERE product_id = '" . (int)$related_id . "' 
                 	AND related_id   = '" . (int)$product_id . "'");
 
-                $this->db->query("
-                	INSERT INTO {$this->db->prefix}product_related 
+                DB::query("
+                	INSERT INTO " . DB::prefix() . "product_related 
                 	SET 
                 		product_id = '" . (int)$related_id . "', 
                 		related_id = '" . (int)$product_id . "'");
             }
         }
         
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_reward 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_reward 
         	WHERE product_id = '" . (int)$product_id . "'");
         
         if (isset($data['product_reward'])) {
             foreach ($data['product_reward'] as $customer_group_id => $value) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_reward 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "product_reward 
 					SET 
 						product_id        = '" . (int)$product_id . "', 
 						customer_group_id = '" . (int)$customer_group_id . "', 
@@ -705,15 +705,15 @@ class Product extends Model {
             }
         }
         
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_to_layout 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_to_layout 
         	WHERE product_id = '" . (int)$product_id . "'");
         
         if (isset($data['product_layout'])) {
             foreach ($data['product_layout'] as $store_id => $layout) {
                 if ($layout['layout_id']) {
-                    $this->db->query("
-						INSERT INTO {$this->db->prefix}product_to_layout 
+                    DB::query("
+						INSERT INTO " . DB::prefix() . "product_to_layout 
 						SET 
 							product_id = '" . (int)$product_id . "', 
 							store_id   = '" . (int)$store_id . "', 
@@ -723,28 +723,28 @@ class Product extends Model {
             }
         }
         
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}route 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "route 
         	WHERE query = 'product_id:" . (int)$product_id . "'");
         
         if ($data['slug']) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}route 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "route 
 				SET 
 					route = 'catalog/product', 
 					query = 'product_id:" . (int)$product_id . "', 
-					slug  = '" . $this->db->escape($data['slug']) . "'
+					slug  = '" . DB::escape($data['slug']) . "'
 			");
         }
         
-        $this->db->query("
-			DELETE FROM {$this->db->prefix}product_recurring 
+        DB::query("
+			DELETE FROM " . DB::prefix() . "product_recurring 
 			WHERE product_id = '" . (int)$product_id . "'");
         
         if (isset($data['product_recurrings'])) {
             foreach ($data['product_recurrings'] as $recurring) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}product_recurring 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "product_recurring 
 					SET 
 						product_id        = '" . (int)$product_id . "', 
 						customer_group_id = '" . (int)$recurring['customer_group_id'] . "', 
@@ -753,17 +753,17 @@ class Product extends Model {
             }
         }
         
-        $this->cache->delete('product');
-        $this->cache->delete('products.all');
+        Cache::delete('product');
+        Cache::delete('products.all');
         
         Theme::trigger('admin_edit_product', array('product_id' => $product_id));
     }
     
     public function copyProduct($product_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT DISTINCT * 
-			FROM {$this->db->prefix}product p 
-			LEFT JOIN {$this->db->prefix}product_description pd 
+			FROM " . DB::prefix() . "product p 
+			LEFT JOIN " . DB::prefix() . "product_description pd 
 				ON (p.product_id = pd.product_id) 
 			WHERE p.product_id = '" . (int)$product_id . "' 
 			AND pd.language_id = '" . (int)Config::get('config_language_id') . "'
@@ -797,121 +797,121 @@ class Product extends Model {
             $this->addProduct($data);
         }
         
-        $this->cache->delete('products.total');
-        $this->cache->delete('products.all');
+        Cache::delete('products.total');
+        Cache::delete('products.all');
     }
     
     public function deleteProduct($product_id) {
-        $event_product = $this->db->query("
+        $event_product = DB::query("
 			SELECT event_id 
-			FROM {$this->db->prefix}product 
+			FROM " . DB::prefix() . "product 
 			WHERE product_id = '" . (int)$product_id . "'");
         
         if ($event_product->row['event_id'] > 0):
-            $this->db->query("
-				DELETE FROM {$this->db->prefix}event_manager 
+            DB::query("
+				DELETE FROM " . DB::prefix() . "event_manager 
 				WHERE event_id = '" . (int)$event_product->row['event_id'] . "'");
         endif;
         
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product 
         	WHERE product_id = '" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_attribute 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_attribute 
         	WHERE product_id = '" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_description 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_description 
         	WHERE product_id = '" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_discount 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_discount 
         	WHERE product_id = '" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_filter 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_filter 
         	WHERE product_id = '" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_image 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_image 
         	WHERE product_id = '" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_option 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_option 
         	WHERE product_id = '" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_option_value 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_option_value 
         	WHERE product_id = '" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_related 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_related 
         	WHERE product_id = '" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_related 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_related 
         	WHERE related_id = '" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_reward 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_reward 
         	WHERE product_id = '" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_special 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_special 
         	WHERE product_id = '" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_to_category 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_to_category 
         	WHERE product_id = '" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_to_download 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_to_download 
         	WHERE product_id = '" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_to_layout 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_to_layout 
         	WHERE product_id = '" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_to_store 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_to_store 
         	WHERE product_id = '" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}product_recurring 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "product_recurring 
         	WHERE product_id = " . (int)$product_id);
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}review 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "review 
         	WHERE product_id = '" . (int)$product_id . "'");
         
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}route 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "route 
         	WHERE query = 'product_id:" . (int)$product_id . "'");
 
-        $this->db->query("
-        	DELETE FROM {$this->db->prefix}tag 
+        DB::query("
+        	DELETE FROM " . DB::prefix() . "tag 
 			WHERE section  = 'product' 
 			AND element_id = '" . (int)$product_id . "'");
 
         $this->search->delete('product', $product_id);
         
-        $this->cache->delete('product');
-        $this->cache->delete('products.total');
-        $this->cache->delete('products.all');
+        Cache::delete('product');
+        Cache::delete('products.total');
+        Cache::delete('products.all');
         
         Theme::trigger('admin_delete_product', array('product_id' => $product_id));
     }
     
     public function getProduct($product_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT DISTINCT *, 
 			(SELECT slug 
-				FROM {$this->db->prefix}route 
+				FROM " . DB::prefix() . "route 
 				WHERE query = 'product_id:" . (int)$product_id . "') AS slug 
         	
-			FROM {$this->db->prefix}product p 
-			LEFT JOIN {$this->db->prefix}product_description pd 
+			FROM " . DB::prefix() . "product p 
+			LEFT JOIN " . DB::prefix() . "product_description pd 
 				ON (p.product_id = pd.product_id) 
 			WHERE p.product_id = '" . (int)$product_id . "' 
 			AND pd.language_id = '" . (int)Config::get('config_language_id') . "'
@@ -925,9 +925,9 @@ class Product extends Model {
     }
 
     public function getProductTags($product_id) {
-    	$query = $this->db->query("
+    	$query = DB::query("
     		SELECT tag 
-    		FROM {$this->db->prefix}tag 
+    		FROM " . DB::prefix() . "tag 
 			WHERE section   = 'product' 
 			AND element_id  = '" . (int)$product_id . "' 
 			AND language_id = '" . (int)Config::get('config_language_id') . "'
@@ -947,30 +947,30 @@ class Product extends Model {
     public function getProducts($data = array()) {
         $sql = "
 			SELECT * 
-			FROM {$this->db->prefix}product p 
-			LEFT JOIN {$this->db->prefix}product_description pd 
+			FROM " . DB::prefix() . "product p 
+			LEFT JOIN " . DB::prefix() . "product_description pd 
 			ON (p.product_id = pd.product_id)";
         
         if (!empty($data['filter_category_id'])) {
-            $sql.= " LEFT JOIN {$this->db->prefix}product_to_category p2c ON (p.product_id = p2c.product_id)";
+            $sql.= " LEFT JOIN " . DB::prefix() . "product_to_category p2c ON (p.product_id = p2c.product_id)";
         }
         
         $sql.= " WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_name'])) {
-            $sql.= " AND pd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+            $sql.= " AND pd.name LIKE '" . DB::escape($data['filter_name']) . "%'";
         }
         
         if (!empty($data['filter_model'])) {
-            $sql.= " AND p.model LIKE '" . $this->db->escape($data['filter_model']) . "%'";
+            $sql.= " AND p.model LIKE '" . DB::escape($data['filter_model']) . "%'";
         }
         
         if (!empty($data['filter_price'])) {
-            $sql.= " AND p.price LIKE '" . $this->db->escape($data['filter_price']) . "%'";
+            $sql.= " AND p.price LIKE '" . DB::escape($data['filter_price']) . "%'";
         }
         
         if (isset($data['filter_quantity']) && !is_null($data['filter_quantity'])) {
-            $sql.= " AND p.quantity = '" . $this->db->escape($data['filter_quantity']) . "'";
+            $sql.= " AND p.quantity = '" . DB::escape($data['filter_quantity']) . "'";
         }
         
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
@@ -1005,18 +1005,18 @@ class Product extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
     
     public function getProductsByCategoryId($category_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}product p 
-			LEFT JOIN {$this->db->prefix}product_description pd 
+			FROM " . DB::prefix() . "product p 
+			LEFT JOIN " . DB::prefix() . "product_description pd 
 				ON (p.product_id = pd.product_id) 
-			LEFT JOIN {$this->db->prefix}product_to_category p2c 
+			LEFT JOIN " . DB::prefix() . "product_to_category p2c 
 				ON (p.product_id = p2c.product_id) 
 			WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "' 
 			AND p2c.category_id = '" . (int)$category_id . "' 
@@ -1029,9 +1029,9 @@ class Product extends Model {
     public function getProductDescriptions($product_id) {
         $product_description_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}product_description 
+			FROM " . DB::prefix() . "product_description 
 			WHERE product_id = '" . (int)$product_id . "'
 		");
         
@@ -1051,9 +1051,9 @@ class Product extends Model {
     public function getProductCategories($product_id) {
         $product_category_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}product_to_category 
+			FROM " . DB::prefix() . "product_to_category 
 			WHERE product_id = '" . (int)$product_id . "'
 		");
         
@@ -1067,9 +1067,9 @@ class Product extends Model {
     public function getProductFilters($product_id) {
         $product_filter_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}product_filter 
+			FROM " . DB::prefix() . "product_filter 
 			WHERE product_id = '" . (int)$product_id . "'
 		");
         
@@ -1083,9 +1083,9 @@ class Product extends Model {
     public function getProductAttributes($product_id) {
         $product_attribute_data = array();
         
-        $product_attribute_query = $this->db->query("
+        $product_attribute_query = DB::query("
 			SELECT attribute_id 
-			FROM {$this->db->prefix}product_attribute 
+			FROM " . DB::prefix() . "product_attribute 
 			WHERE product_id = '" . (int)$product_id . "' 
 			GROUP BY attribute_id
 		");
@@ -1093,9 +1093,9 @@ class Product extends Model {
         foreach ($product_attribute_query->rows as $product_attribute) {
             $product_attribute_description_data = array();
             
-            $product_attribute_description_query = $this->db->query("
+            $product_attribute_description_query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}product_attribute 
+				FROM " . DB::prefix() . "product_attribute 
 				WHERE product_id = '" . (int)$product_id . "' 
 				AND attribute_id = '" . (int)$product_attribute['attribute_id'] . "'
 			");
@@ -1116,12 +1116,12 @@ class Product extends Model {
     public function getProductOptions($product_id) {
         $product_option_data = array();
         
-        $product_option_query = $this->db->query("
+        $product_option_query = DB::query("
 			SELECT * 
-			FROM `{$this->db->prefix}product_option` po 
-			LEFT JOIN `{$this->db->prefix}option` o 
+			FROM `" . DB::prefix() . "product_option` po 
+			LEFT JOIN `" . DB::prefix() . "option` o 
 			ON (po.option_id = o.option_id) 
-			LEFT JOIN `{$this->db->prefix}option_description` od 
+			LEFT JOIN `" . DB::prefix() . "option_description` od 
 			ON (o.option_id = od.option_id) 
 			WHERE po.product_id = '" . (int)$product_id . "' 
 			AND od.language_id = '" . (int)Config::get('config_language_id') . "'
@@ -1130,9 +1130,9 @@ class Product extends Model {
         foreach ($product_option_query->rows as $product_option) {
             $product_option_value_data = array();
             
-            $product_option_value_query = $this->db->query("
+            $product_option_value_query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}product_option_value 
+				FROM " . DB::prefix() . "product_option_value 
 				WHERE product_option_id = '" . (int)$product_option['product_option_id'] . "'
 			");
             
@@ -1166,9 +1166,9 @@ class Product extends Model {
     }
     
     public function getProductImages($product_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}product_image 
+			FROM " . DB::prefix() . "product_image 
 			WHERE product_id = '" . (int)$product_id . "'
 		");
         
@@ -1176,9 +1176,9 @@ class Product extends Model {
     }
     
     public function getProductDiscounts($product_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}product_discount 
+			FROM " . DB::prefix() . "product_discount 
 			WHERE product_id = '" . (int)$product_id . "' 
 			ORDER BY quantity, priority, price
 		");
@@ -1187,9 +1187,9 @@ class Product extends Model {
     }
     
     public function getProductSpecials($product_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}product_special 
+			FROM " . DB::prefix() . "product_special 
 			WHERE product_id = '" . (int)$product_id . "' 
 			ORDER BY priority, price
 		");
@@ -1200,9 +1200,9 @@ class Product extends Model {
     public function getProductRewards($product_id) {
         $product_reward_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}product_reward 
+			FROM " . DB::prefix() . "product_reward 
 			WHERE product_id = '" . (int)$product_id . "'
 		");
         
@@ -1216,9 +1216,9 @@ class Product extends Model {
     public function getProductDownloads($product_id) {
         $product_download_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}product_to_download 
+			FROM " . DB::prefix() . "product_to_download 
 			WHERE product_id = '" . (int)$product_id . "'
 		");
         
@@ -1232,9 +1232,9 @@ class Product extends Model {
     public function getProductStores($product_id) {
         $product_store_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}product_to_store 
+			FROM " . DB::prefix() . "product_to_store 
 			WHERE product_id = '" . (int)$product_id . "'
 		");
         
@@ -1248,9 +1248,9 @@ class Product extends Model {
     public function getProductLayouts($product_id) {
         $product_layout_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}product_to_layout 
+			FROM " . DB::prefix() . "product_to_layout 
 			WHERE product_id = '" . (int)$product_id . "'
 		");
         
@@ -1264,9 +1264,9 @@ class Product extends Model {
     public function getProductRelated($product_id) {
         $product_related_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}product_related 
+			FROM " . DB::prefix() . "product_related 
 			WHERE product_id = '" . (int)$product_id . "'
 		");
         
@@ -1278,9 +1278,9 @@ class Product extends Model {
     }
     
     public function getRecurrings($product_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}product_recurring 
+			FROM " . DB::prefix() . "product_recurring 
 			WHERE product_id = '" . (int)$product_id . "'");
         
         return $query->rows;
@@ -1289,45 +1289,45 @@ class Product extends Model {
     public function getTotalProducts($data = array()) {
         $sql = "
 			SELECT COUNT(DISTINCT p.product_id) AS total 
-			FROM {$this->db->prefix}product p 
-			LEFT JOIN {$this->db->prefix}product_description pd 
+			FROM " . DB::prefix() . "product p 
+			LEFT JOIN " . DB::prefix() . "product_description pd 
 			ON (p.product_id = pd.product_id)";
         
         if (!empty($data['filter_category_id'])) {
-            $sql.= " LEFT JOIN {$this->db->prefix}product_to_category p2c ON (p.product_id = p2c.product_id)";
+            $sql.= " LEFT JOIN " . DB::prefix() . "product_to_category p2c ON (p.product_id = p2c.product_id)";
         }
         
         $sql.= " WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_name'])) {
-            $sql.= " AND pd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+            $sql.= " AND pd.name LIKE '" . DB::escape($data['filter_name']) . "%'";
         }
         
         if (!empty($data['filter_model'])) {
-            $sql.= " AND p.model LIKE '" . $this->db->escape($data['filter_model']) . "%'";
+            $sql.= " AND p.model LIKE '" . DB::escape($data['filter_model']) . "%'";
         }
         
         if (!empty($data['filter_price'])) {
-            $sql.= " AND p.price LIKE '" . $this->db->escape($data['filter_price']) . "%'";
+            $sql.= " AND p.price LIKE '" . DB::escape($data['filter_price']) . "%'";
         }
         
         if (isset($data['filter_quantity']) && !is_null($data['filter_quantity'])) {
-            $sql.= " AND p.quantity = '" . $this->db->escape($data['filter_quantity']) . "'";
+            $sql.= " AND p.quantity = '" . DB::escape($data['filter_quantity']) . "'";
         }
         
         if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
             $sql.= " AND p.status = '" . (int)$data['filter_status'] . "'";
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->row['total'];
     }
     
     public function getTotalProductsByTaxClassId($tax_class_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}product 
+			FROM " . DB::prefix() . "product 
 			WHERE tax_class_id = '" . (int)$tax_class_id . "'
 		");
         
@@ -1335,9 +1335,9 @@ class Product extends Model {
     }
     
     public function getTotalProductsByStockStatusId($stock_status_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}product 
+			FROM " . DB::prefix() . "product 
 			WHERE stock_status_id = '" . (int)$stock_status_id . "'
 		");
         
@@ -1345,9 +1345,9 @@ class Product extends Model {
     }
     
     public function getTotalProductsByWeightClassId($weight_class_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}product 
+			FROM " . DB::prefix() . "product 
 			WHERE weight_class_id = '" . (int)$weight_class_id . "'
 		");
         
@@ -1355,9 +1355,9 @@ class Product extends Model {
     }
     
     public function getTotalProductsByLengthClassId($length_class_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}product 
+			FROM " . DB::prefix() . "product 
 			WHERE length_class_id = '" . (int)$length_class_id . "'
 		");
         
@@ -1365,9 +1365,9 @@ class Product extends Model {
     }
     
     public function getTotalProductsByDownloadId($download_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}product_to_download 
+			FROM " . DB::prefix() . "product_to_download 
 			WHERE download_id = '" . (int)$download_id . "'
 		");
         
@@ -1375,9 +1375,9 @@ class Product extends Model {
     }
     
     public function getTotalProductsByManufacturerId($manufacturer_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}product 
+			FROM " . DB::prefix() . "product 
 			WHERE manufacturer_id = '" . (int)$manufacturer_id . "'
 		");
         
@@ -1385,9 +1385,9 @@ class Product extends Model {
     }
     
     public function getTotalProductsByAttributeId($attribute_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}product_attribute 
+			FROM " . DB::prefix() . "product_attribute 
 			WHERE attribute_id = '" . (int)$attribute_id . "'
 		");
         
@@ -1395,9 +1395,9 @@ class Product extends Model {
     }
     
     public function getTotalProductsByOptionId($option_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}product_option 
+			FROM " . DB::prefix() . "product_option 
 			WHERE option_id = '" . (int)$option_id . "'
 		");
         
@@ -1405,9 +1405,9 @@ class Product extends Model {
     }
     
     public function getTotalProductsByLayoutId($layout_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}product_to_layout 
+			FROM " . DB::prefix() . "product_to_layout 
 			WHERE layout_id = '" . (int)$layout_id . "'
 		");
         
@@ -1415,9 +1415,9 @@ class Product extends Model {
     }
     
     public function getTotalProductsOutOfStock() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}product 
+			FROM " . DB::prefix() . "product 
 			WHERE status <= 0
 		");
         

@@ -92,9 +92,9 @@ class SaleReturn extends Controller {
             'limit'                   => Config::get('config_admin_limit')
         );
         
-        $return_total = $this->model_report_returns->getTotalReturns($filter);
+        $return_total = ReportReturns::getTotalReturns($filter);
         
-        $results = $this->model_report_returns->getReturns($filter);
+        $results = ReportReturns::getReturns($filter);
         
         foreach ($results as $result) {
             $data['returns'][] = array(
@@ -104,11 +104,9 @@ class SaleReturn extends Controller {
             );
         }
         
-        $data['token'] = $this->session->data['token'];
-        
         Theme::model('locale/return_status');
         
-        $data['return_statuses'] = $this->model_locale_return_status->getReturnStatuses();
+        $data['return_statuses'] = LocaleReturnStatus::getReturnStatuses();
         
         $data['groups'] = array();
         
@@ -155,7 +153,7 @@ class SaleReturn extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('report/sale_return', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
+            Url::link('report/sale_return', '' . $url . '&page={page}', 'SSL')
         );
         
         $data['filter_date_start']       = $filter_date_start;
@@ -167,6 +165,6 @@ class SaleReturn extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('report/sale_return', $data));
+        Response::setOutput(View::render('report/sale_return', $data));
     }
 }

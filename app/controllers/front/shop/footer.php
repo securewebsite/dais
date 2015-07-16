@@ -15,14 +15,16 @@
 */
 
 namespace App\Controllers\Front\Shop;
+
 use App\Controllers\Controller;
 
 class Footer extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('shop/footer');
+        $data = Theme::language('shop/footer');
         
-        $data['powered'] = sprintf($this->language->get('lang_text_powered'), date('Y', time()), $this->config->get('config_name'));
-        $data['google_analytics'] = html_entity_decode($this->config->get('config_google_analytics'), ENT_QUOTES, 'UTF-8');
+        $data['powered'] = sprintf(Lang::get('lang_text_powered'), date('Y', time()), Config::get('config_name'));
+        $data['google_analytics'] = html_entity_decode(Config::get('config_google_analytics'), ENT_QUOTES, 'UTF-8');
         
         $route = 'shop/home';
         
@@ -32,8 +34,8 @@ class Footer extends Controller {
         
         $data['route'] = $route;
         
-        if ($this->config->get('config_customer_online')):
-            $this->theme->model('tool/online');
+        if (Config::get('config_customer_online')):
+            Theme::model('tool/online');
             
             if (isset($this->request->server['REMOTE_ADDR'])):
                 $ip = $this->request->server['REMOTE_ADDR'];
@@ -53,23 +55,23 @@ class Footer extends Controller {
                 $referer = '';
             endif;
             
-            $this->model_tool_online->whosonline($ip, $this->customer->getId(), $url, $referer);
+            ToolOnline::whosonline($ip, Customer::getId(), $url, $referer);
         endif;
 
         if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))):
-            $server = $this->config->get('config_ssl');
+            $server = Config::get('config_ssl');
         else:
-            $server = $this->config->get('config_url');
+            $server = Config::get('config_url');
         endif;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
 
         $key             = JS::compile();
         $data['js_link'] = $server . 'asset/js/' . Filecache::get_key($key, 'js');
 
-        $data['javascript']    = $this->theme->controller('common/javascript');
-        $data['footer_blocks'] = $this->theme->controller('widget/footer_blocks');
+        $data['javascript']    = Theme::controller('common/javascript');
+        $data['footer_blocks'] = Theme::controller('widget/footer_blocks');
         
-        return $this->theme->view('shop/footer', $data);
+        return View::render('shop/footer', $data);
     }
 }

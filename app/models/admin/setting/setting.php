@@ -23,11 +23,11 @@ class Setting extends Model {
     public function getSetting($group, $store_id = 0) {
         $data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}setting 
+			FROM " . DB::prefix() . "setting 
 			WHERE store_id = '" . (int)$store_id . "' 
-			AND section = '" . $this->db->escape($group) . "'
+			AND section = '" . DB::escape($group) . "'
 		");
         
         foreach ($query->rows as $result) {
@@ -46,46 +46,46 @@ class Setting extends Model {
         
         foreach ($data as $key => $value):
             if (!is_array($value)):
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}setting 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "setting 
 					SET 
 						store_id = '" . (int)$store_id . "', 
-						section = '" . $this->db->escape($group) . "', 
-						item = '" . $this->db->escape($key) . "', 
-						data = '" . $this->db->escape($value) . "'
+						section = '" . DB::escape($group) . "', 
+						item = '" . DB::escape($key) . "', 
+						data = '" . DB::escape($value) . "'
 				");
             else:
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}setting 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "setting 
 					SET 
 						store_id = '" . (int)$store_id . "', 
-						section = '" . $this->db->escape($group) . "', 
-						item = '" . $this->db->escape($key) . "', 
-						data = '" . $this->db->escape(serialize($value)) . "', 
+						section = '" . DB::escape($group) . "', 
+						item = '" . DB::escape($key) . "', 
+						data = '" . DB::escape(serialize($value)) . "', 
 						serialized = '1'
 				");
             endif;
         endforeach;
         
-        $this->cache->delete('default');
+        Cache::delete('default');
     }
     
     public function deleteSetting($group, $store_id = 0) {
-        $this->db->query("
-			DELETE FROM {$this->db->prefix}setting 
+        DB::query("
+			DELETE FROM " . DB::prefix() . "setting 
 			WHERE store_id = '" . (int)$store_id . "' 
-			AND section = '" . $this->db->escape($group) . "'
+			AND section = '" . DB::escape($group) . "'
 		");
         
-        $this->cache->delete('default');
+        Cache::delete('default');
     }
     
     public function getSettingValue($group = '', $key = '', $value = '', $store_id = 0) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT data 
-			FROM {$this->db->prefix}setting 
-			WHERE section = '" . $this->db->escape($group) . "' 
-			AND item = '" . $this->db->escape($key) . "' 
+			FROM " . DB::prefix() . "setting 
+			WHERE section = '" . DB::escape($group) . "' 
+			AND item = '" . DB::escape($key) . "' 
 			AND store_id = '" . (int)$store_id . "'");
         
         if ($query->num_rows):
@@ -97,26 +97,26 @@ class Setting extends Model {
     
     public function editSettingValue($group = '', $key = '', $value = '', $store_id = 0) {
         if (!is_array($value)) {
-            $this->db->query("
-				UPDATE {$this->db->prefix}setting 
+            DB::query("
+				UPDATE " . DB::prefix() . "setting 
 				SET 
-					data = '" . $this->db->escape($value) . "' 
-				WHERE section = '" . $this->db->escape($group) . "' 
-				AND item = '" . $this->db->escape($key) . "' 
+					data = '" . DB::escape($value) . "' 
+				WHERE section = '" . DB::escape($group) . "' 
+				AND item = '" . DB::escape($key) . "' 
 				AND store_id = '" . (int)$store_id . "'
 			");
         } else {
-            $this->db->query("
-				UPDATE {$this->db->prefix}setting 
+            DB::query("
+				UPDATE " . DB::prefix() . "setting 
 				SET 
-					data = '" . $this->db->escape(serialize($value)) . "' 
-				WHERE section = '" . $this->db->escape($group) . "' 
-				AND item = '" . $this->db->escape($key) . "' 
+					data = '" . DB::escape(serialize($value)) . "' 
+				WHERE section = '" . DB::escape($group) . "' 
+				AND item = '" . DB::escape($key) . "' 
 				AND store_id = '" . (int)$store_id . "', 
 				serialized = '1'
 			");
         }
         
-        $this->cache->delete('default');
+        Cache::delete('default');
     }
 }

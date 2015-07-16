@@ -19,20 +19,20 @@ use App\Models\Model;
 
 class Weight extends Model {
     public function getQuote($address) {
-        $this->language->load('shipping/weight');
+        Lang::load('shipping/weight');
         
         $quote_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}geo_zone ORDER BY name"
+            FROM " . DB::prefix() . "geo_zone ORDER BY name"
         );
         
         foreach ($query->rows as $result):
-            if ($this->config->get('weight_' . $result['geo_zone_id'] . '_status')):
-                $query = $this->db->query("
+            if (Config::get('weight_' . $result['geo_zone_id'] . '_status')):
+                $query = DB::query("
                     SELECT * 
-                    FROM {$this->db->prefix}zone_to_geo_zone 
+                    FROM " . DB::prefix() . "zone_to_geo_zone 
                     WHERE geo_zone_id = '" . (int)$result['geo_zone_id'] . "' 
                     AND country_id    = '" . (int)$address['country_id'] . "' 
                     AND (zone_id      = '" . (int)$address['zone_id'] . "' OR zone_id = '0')"
@@ -49,8 +49,8 @@ class Weight extends Model {
             
             if ($status):
                 $cost   = '';
-                $weight = $this->cart->getWeight();
-                $rates  = explode(',', $this->config->get('weight_' . $result['geo_zone_id'] . '_rate'));
+                $weight = Cart::getWeight();
+                $rates  = explode(',', Config::get('weight_' . $result['geo_zone_id'] . '_rate'));
                 
                 foreach ($rates as $rate):
                     $data = explode(':', $rate);
@@ -66,10 +66,10 @@ class Weight extends Model {
                 if ((string)$cost != ''):
                     $quote_data['weight_' . $result['geo_zone_id']] = array(
                         'code'         => 'weight.weight_' . $result['geo_zone_id'], 
-                        'title'        => $result['name'] . '  (' . $this->language->get('lang_text_weight') . ' ' . $this->weight->format($weight, $this->config->get('config_weight_class_id')) . ')', 
+                        'title'        => $result['name'] . '  (' . Lang::get('lang_text_weight') . ' ' . $this->weight->format($weight, Config::get('config_weight_class_id')) . ')', 
                         'cost'         => $cost, 
-                        'tax_class_id' => $this->config->get('weight_tax_class_id'), 
-                        'text'         => $this->currency->format($this->tax->calculate($cost, $this->config->get('weight_tax_class_id'), $this->config->get('config_tax')))
+                        'tax_class_id' => Config::get('weight_tax_class_id'), 
+                        'text'         => Currency::format(Tax::calculate($cost, Config::get('weight_tax_class_id'), Config::get('config_tax')))
                     );
                 endif;
             endif;
@@ -80,9 +80,9 @@ class Weight extends Model {
         if ($quote_data):
             $method_data = array(
                 'code'       => 'weight', 
-                'title'      => $this->language->get('lang_text_title'), 
+                'title'      => Lang::get('lang_text_title'), 
                 'quote'      => $quote_data, 
-                'sort_order' => $this->config->get('weight_sort_order'), 
+                'sort_order' => Config::get('weight_sort_order'), 
                 'error'      => false
             );
         endif;

@@ -190,7 +190,7 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_theme; ?></label>
 						<div class="control-field col-sm-4">
-							<select name="config_theme" onchange="$('#theme').load('index.php?route=setting/setting/theme&token=<?= $token; ?>&theme='+encodeURIComponent(this.value));" class="form-control">
+							<select name="config_theme" onchange="$('#theme').load('index.php?route=setting/setting/theme&theme='+encodeURIComponent(this.value));" class="form-control">
 								<?php foreach ($themes as $theme) { ?>
 									<?php if ($theme == $config_theme) { ?>
 									<option value="<?= $theme; ?>" selected><?= $theme; ?></option>
@@ -205,7 +205,7 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_admin_theme; ?></label>
 						<div class="control-field col-sm-4">
-							<select name="config_admin_theme" onchange="$('#admin_theme').load('index.php?route=setting/setting/admin_theme&amp;token=<?= $token; ?>&amp;theme='+encodeURIComponent(this.value));" class="form-control">
+							<select name="config_admin_theme" onchange="$('#admin_theme').load('index.php?route=setting/setting/admin_theme&amp;theme='+encodeURIComponent(this.value));" class="form-control">
 								<?php foreach ($admin_themes as $theme) { ?>
 									<?php if ($theme == $config_admin_theme) { ?>
 									<option value="<?= $theme; ?>" selected><?= $theme; ?></option>

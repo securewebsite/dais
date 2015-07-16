@@ -23,13 +23,13 @@ class GiftCardTheme extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}gift_card_theme vt 
-				LEFT JOIN {$this->db->prefix}gift_card_theme_description vtd 
+				FROM " . DB::prefix() . "gift_card_theme vt 
+				LEFT JOIN " . DB::prefix() . "gift_card_theme_description vtd 
 				ON (vt.gift_card_theme_id = vtd.gift_card_theme_id) 
 				WHERE vt.gift_card_theme_id = '" . (int)$gift_card_theme_id . "' 
-				AND vtd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+				AND vtd.language_id = '" . (int)Config::get('config_language_id') . "'
 			");
             
             if ($query->num_rows):
@@ -52,10 +52,10 @@ class GiftCardTheme extends Model {
             if (is_bool($cachefile)):
                 $sql = "
 					SELECT * 
-					FROM {$this->db->prefix}gift_card_theme vt 
-					LEFT JOIN {$this->db->prefix}gift_card_theme_description vtd 
+					FROM " . DB::prefix() . "gift_card_theme vt 
+					LEFT JOIN " . DB::prefix() . "gift_card_theme_description vtd 
 						ON (vt.gift_card_theme_id = vtd.gift_card_theme_id) 
-					WHERE vtd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+					WHERE vtd.language_id = '" . (int)Config::get('config_language_id') . "' 
 					ORDER BY vtd.name";
                 
                 if (isset($data['order']) && ($data['order'] == 'DESC')):
@@ -76,7 +76,7 @@ class GiftCardTheme extends Model {
                     $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
                 endif;
                 
-                $query = $this->db->query($sql);
+                $query = DB::query($sql);
                 
                 if ($query->num_rows):
                     $cachefile = $query->rows;
@@ -88,16 +88,16 @@ class GiftCardTheme extends Model {
             endif;
             unset($key);
         else:
-            $key = 'gift_card.themes.all.' . (int)$this->config->get('config_store_id');
+            $key = 'gift_card.themes.all.' . (int)Config::get('config_store_id');
             $cachefile = $this->cache->get($key);
             
             if (is_bool($cachefile)):
-                $query = $this->db->query("
+                $query = DB::query("
 					SELECT * 
-					FROM {$this->db->prefix}gift_card_theme vt 
-					LEFT JOIN {$this->db->prefix}gift_card_theme_description vtd 
+					FROM " . DB::prefix() . "gift_card_theme vt 
+					LEFT JOIN " . DB::prefix() . "gift_card_theme_description vtd 
 						ON (vt.gift_card_theme_id = vtd.gift_card_theme_id) 
-					WHERE vtd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+					WHERE vtd.language_id = '" . (int)Config::get('config_language_id') . "' 
 					ORDER BY vtd.name
 				");
                 

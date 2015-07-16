@@ -38,7 +38,7 @@ class Zone extends Controller {
         Theme::model('locale/zone');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_locale_zone->addZone($this->request->post);
+            LocaleZone::addZone($this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -55,7 +55,7 @@ class Zone extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('locale/zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('locale/zone', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -69,7 +69,7 @@ class Zone extends Controller {
         Theme::model('locale/zone');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_locale_zone->editZone($this->request->get['zone_id'], $this->request->post);
+            LocaleZone::editZone($this->request->get['zone_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -86,7 +86,7 @@ class Zone extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('locale/zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('locale/zone', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -101,7 +101,7 @@ class Zone extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $zone_id) {
-                $this->model_locale_zone->deleteZone($zone_id);
+                LocaleZone::deleteZone($zone_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -120,7 +120,7 @@ class Zone extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('locale/zone', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('locale/zone', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,21 +165,21 @@ class Zone extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'locale/zone', $url);
         
-        $data['insert'] = Url::link('locale/zone/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('locale/zone/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('locale/zone/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('locale/zone/delete', '' . $url, 'SSL');
         
         $data['zones'] = array();
         
         $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $zone_total = $this->model_locale_zone->getTotalZones();
+        $zone_total = LocaleZone::getTotalZones();
         
-        $results = $this->model_locale_zone->getZones($filter);
+        $results = LocaleZone::getZones($filter);
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/zone/update', 'token=' . $this->session->data['token'] . '&zone_id=' . $result['zone_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/zone/update', '' . '&zone_id=' . $result['zone_id'] . $url, 'SSL'));
             
             $data['zones'][] = array('zone_id' => $result['zone_id'], 'country' => $result['country'], 'name' => $result['name'] . (($result['zone_id'] == Config::get('config_zone_id')) ? Lang::get('lang_text_default') : null), 'code' => $result['code'], 'selected' => isset($this->request->post['selected']) && in_array($result['zone_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -210,9 +210,9 @@ class Zone extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_country'] = Url::link('locale/zone', 'token=' . $this->session->data['token'] . '&sort=c.name' . $url, 'SSL');
-        $data['sort_name'] = Url::link('locale/zone', 'token=' . $this->session->data['token'] . '&sort=z.name' . $url, 'SSL');
-        $data['sort_code'] = Url::link('locale/zone', 'token=' . $this->session->data['token'] . '&sort=z.code' . $url, 'SSL');
+        $data['sort_country'] = Url::link('locale/zone', '' . '&sort=c.name' . $url, 'SSL');
+        $data['sort_name'] = Url::link('locale/zone', '' . '&sort=z.name' . $url, 'SSL');
+        $data['sort_code'] = Url::link('locale/zone', '' . '&sort=z.code' . $url, 'SSL');
         
         $url = '';
         
@@ -224,7 +224,7 @@ class Zone extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($zone_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/zone', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($zone_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/zone', '' . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -233,7 +233,7 @@ class Zone extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('locale/zone_list', $data));
+        Response::setOutput(View::render('locale/zone_list', $data));
     }
     
     protected function getForm() {
@@ -268,15 +268,15 @@ class Zone extends Controller {
         Breadcrumb::add('lang_heading_title', 'locale/zone', $url);
         
         if (!isset($this->request->get['zone_id'])) {
-            $data['action'] = Url::link('locale/zone/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/zone/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/zone/update', 'token=' . $this->session->data['token'] . '&zone_id=' . $this->request->get['zone_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/zone/update', '' . '&zone_id=' . $this->request->get['zone_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('locale/zone', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('locale/zone', '' . $url, 'SSL');
         
         if (isset($this->request->get['zone_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $zone_info = $this->model_locale_zone->getZone($this->request->get['zone_id']);
+            $zone_info = LocaleZone::getZone($this->request->get['zone_id']);
         }
         
         if (isset($this->request->post['status'])) {
@@ -313,13 +313,13 @@ class Zone extends Controller {
         
         Theme::model('locale/country');
         
-        $data['countries'] = $this->model_locale_country->getCountries();
+        $data['countries'] = LocaleCountry::getCountries();
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('locale/zone_form', $data));
+        Response::setOutput(View::render('locale/zone_form', $data));
     }
     
     protected function validateForm() {
@@ -350,25 +350,25 @@ class Zone extends Controller {
                 $this->error['warning'] = Lang::get('lang_error_default');
             }
             
-            $store_total = $this->model_setting_store->getTotalStoresByZoneId($zone_id);
+            $store_total = SettingStore::getTotalStoresByZoneId($zone_id);
             
             if ($store_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_store'), $store_total);
             }
             
-            $address_total = $this->model_people_customer->getTotalAddressesByZoneId($zone_id);
+            $address_total = PeopleCustomer::getTotalAddressesByZoneId($zone_id);
             
             if ($address_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_address'), $address_total);
             }
             
-            $affiliate_total = $this->model_people_customer->getTotalAffiliatesByZoneId($zone_id);
+            $affiliate_total = PeopleCustomer::getTotalAffiliatesByZoneId($zone_id);
             
             if ($affiliate_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_affiliate'), $affiliate_total);
             }
             
-            $zone_to_geo_zone_total = $this->model_locale_geo_zone->getTotalZoneToGeoZoneByZoneId($zone_id);
+            $zone_to_geo_zone_total = LocaleGeoZone::getTotalZoneToGeoZoneByZoneId($zone_id);
             
             if ($zone_to_geo_zone_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_zone_to_geo_zone'), $zone_to_geo_zone_total);

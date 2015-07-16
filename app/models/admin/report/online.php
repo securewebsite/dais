@@ -21,16 +21,16 @@ use App\Models\Model;
 class Online extends Model {
     
     public function getCustomersOnline($data = array()) {
-        $sql = "SELECT co.ip, co.customer_id, co.url, co.referer, co.date_added FROM {$this->db->prefix}customer_online co LEFT JOIN {$this->db->prefix}customer c ON (co.customer_id = c.customer_id)";
+        $sql = "SELECT co.ip, co.customer_id, co.url, co.referer, co.date_added FROM " . DB::prefix() . "customer_online co LEFT JOIN " . DB::prefix() . "customer c ON (co.customer_id = c.customer_id)";
         
         $implode = array();
         
         if (isset($data['filter_ip']) && !is_null($data['filter_ip'])) {
-            $implode[] = "co.ip LIKE '" . $this->db->escape($data['filter_ip']) . "'";
+            $implode[] = "co.ip LIKE '" . DB::escape($data['filter_ip']) . "'";
         }
         
         if (isset($data['filter_customer']) && !is_null($data['filter_customer'])) {
-            $implode[] = "co.customer_id > 0 AND CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "'";
+            $implode[] = "co.customer_id > 0 AND CONCAT(c.firstname, ' ', c.lastname) LIKE '" . DB::escape($data['filter_customer']) . "'";
         }
         
         if ($implode) {
@@ -52,22 +52,22 @@ class Online extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
     
     public function getTotalCustomersOnline($data = array()) {
-        $sql = "SELECT COUNT(*) AS total FROM `{$this->db->prefix}customer_online` co LEFT JOIN {$this->db->prefix}customer c ON (co.customer_id = c.customer_id)";
+        $sql = "SELECT COUNT(*) AS total FROM `" . DB::prefix() . "customer_online` co LEFT JOIN " . DB::prefix() . "customer c ON (co.customer_id = c.customer_id)";
         
         $implode = array();
         
         if (isset($data['filter_ip']) && !is_null($data['filter_ip'])) {
-            $implode[] = "co.ip LIKE '" . $this->db->escape($data['filter_ip']) . "'";
+            $implode[] = "co.ip LIKE '" . DB::escape($data['filter_ip']) . "'";
         }
         
         if (isset($data['filter_customer']) && !is_null($data['filter_customer'])) {
-            $implode[] = "co.customer_id > 0 AND CONCAT(c.firstname, ' ', c.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "'";
+            $implode[] = "co.customer_id > 0 AND CONCAT(c.firstname, ' ', c.lastname) LIKE '" . DB::escape($data['filter_customer']) . "'";
         }
         
         if ($implode) {
@@ -75,7 +75,7 @@ class Online extends Model {
             $sql.= " WHERE {$imp}";
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->row['total'];
     }

@@ -15,46 +15,48 @@
 */
 
 namespace App\Controllers\Front\Account;
+
 use App\Controllers\Controller;
 
 class Newsletter extends Controller {
+    
     public function index() {
-        if (!$this->customer->isLogged()) {
-            $this->session->data['redirect'] = $this->url->link('account/newsletter', '', 'SSL');
+        if (!Customer::isLogged()) {
+            $this->session->data['redirect'] = Url::link('account/newsletter', '', 'SSL');
             
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         }
         
-        $data = $this->theme->language('account/newsletter');
+        $data = Theme::language('account/newsletter');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-            $this->theme->model('account/customer');
+            Theme::model('account/customer');
             
-            $this->model_account_customer->editNewsletter($this->request->post['newsletter']);
+            AccountCustomer::editNewsletter($this->request->post['newsletter']);
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            $this->response->redirect($this->url->link('account/dashboard', '', 'SSL'));
+            Response::redirect(Url::link('account/dashboard', '', 'SSL'));
         }
         
-        $this->breadcrumb->add('lang_text_account', 'account/dashboard', null, true, 'SSL');
-        $this->breadcrumb->add('lang_text_newsletter', 'account/newsletter', null, true, 'SSL');
+        Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
+        Breadcrumb::add('lang_text_newsletter', 'account/newsletter', null, true, 'SSL');
         
-        $data['action'] = $this->url->link('account/newsletter', '', 'SSL');
+        $data['action'] = Url::link('account/newsletter', '', 'SSL');
         
-        $data['newsletter'] = $this->customer->getNewsletter();
+        $data['newsletter'] = Customer::getNewsletter();
         
-        $data['back'] = $this->url->link('account/dashboard', '', 'SSL');
+        $data['back'] = Url::link('account/dashboard', '', 'SSL');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->setController('header', 'shop/header');
-        $this->theme->setController('footer', 'shop/footer');
+        Theme::setController('header', 'shop/header');
+        Theme::setController('footer', 'shop/footer');
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('account/newsletter', $data));
+        Response::setOutput(View::render('account/newsletter', $data));
     }
 }

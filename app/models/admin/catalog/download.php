@@ -21,23 +21,23 @@ use App\Models\Model;
 class Download extends Model {
     
     public function addDownload($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}download 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "download 
 			SET 
-				filename = '" . $this->db->escape($data['filename']) . "', 
-				mask = '" . $this->db->escape($data['mask']) . "', 
+				filename = '" . DB::escape($data['filename']) . "', 
+				mask = '" . DB::escape($data['mask']) . "', 
 				remaining = '" . (int)$data['remaining'] . "', 
 				date_added = NOW()");
         
-        $download_id = $this->db->getLastId();
+        $download_id = DB::getLastId();
         
         foreach ($data['download_description'] as $language_id => $value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}download_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "download_description 
 				SET 
 					download_id = '" . (int)$download_id . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($value['name']) . "'");
+					name = '" . DB::escape($value['name']) . "'");
         }
         
         Theme::trigger('admin_add_download', array('download_id' => $download_id));
@@ -54,36 +54,36 @@ class Download extends Model {
                     unlink(Config::get('path.download') . $download_info['filename']);
                 endif;
                 
-                $this->db->query("
-					UPDATE {$this->db->prefix}order_download 
+                DB::query("
+					UPDATE " . DB::prefix() . "order_download 
 					SET 
-						`filename` = '" . $this->db->escape($data['filename']) . "', 
-						mask = '" . $this->db->escape($data['mask']) . "', 
+						`filename` = '" . DB::escape($data['filename']) . "', 
+						mask = '" . DB::escape($data['mask']) . "', 
 						remaining = '" . (int)$data['remaining'] . "' 
-					WHERE `filename` = '" . $this->db->escape($download_info['filename']) . "'");
+					WHERE `filename` = '" . DB::escape($download_info['filename']) . "'");
             }
         }
         
-        $this->db->query("
-			UPDATE {$this->db->prefix}download 
+        DB::query("
+			UPDATE " . DB::prefix() . "download 
 			SET 
-				filename = '" . $this->db->escape($data['filename']) . "', 
-				mask = '" . $this->db->escape($data['mask']) . "', 
+				filename = '" . DB::escape($data['filename']) . "', 
+				mask = '" . DB::escape($data['mask']) . "', 
 				remaining = '" . (int)$data['remaining'] . "' 
 			WHERE download_id = '" . (int)$download_id . "'");
         
-        $this->db->query("
+        DB::query("
 			DELETE 
-			FROM {$this->db->prefix}download_description 
+			FROM " . DB::prefix() . "download_description 
 			WHERE download_id = '" . (int)$download_id . "'");
         
         foreach ($data['download_description'] as $language_id => $value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}download_description 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "download_description 
 				SET 
 					download_id = '" . (int)$download_id . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($value['name']) . "'");
+					name = '" . DB::escape($value['name']) . "'");
         }
         
         Theme::trigger('admin_edit_download', array('download_id' => $download_id));
@@ -96,22 +96,22 @@ class Download extends Model {
         
         unlink(Config::get('path.download') . $download['filename']);
         
-        $this->db->query("
-			DELETE FROM {$this->db->prefix}download 
+        DB::query("
+			DELETE FROM " . DB::prefix() . "download 
 			WHERE download_id = '" . (int)$download_id . "'");
         
-        $this->db->query("
-			DELETE FROM {$this->db->prefix}download_description 
+        DB::query("
+			DELETE FROM " . DB::prefix() . "download_description 
 			WHERE download_id = '" . (int)$download_id . "'");
         
         Theme::trigger('admin_delete_download', array('download_id' => $download_id));
     }
     
     public function getDownload($download_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT DISTINCT * 
-			FROM {$this->db->prefix}download d 
-			LEFT JOIN {$this->db->prefix}download_description dd 
+			FROM " . DB::prefix() . "download d 
+			LEFT JOIN " . DB::prefix() . "download_description dd 
 				ON (d.download_id = dd.download_id) 
 			WHERE d.download_id = '" . (int)$download_id . "' 
 			AND dd.language_id = '" . (int)Config::get('config_language_id') . "'");
@@ -122,13 +122,13 @@ class Download extends Model {
     public function getDownloads($data = array()) {
         $sql = "
 			SELECT * 
-			FROM {$this->db->prefix}download d 
-			LEFT JOIN {$this->db->prefix}download_description dd 
+			FROM " . DB::prefix() . "download d 
+			LEFT JOIN " . DB::prefix() . "download_description dd 
 				ON (d.download_id = dd.download_id) 
 			WHERE dd.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (!empty($data['filter_name'])) {
-            $sql.= " AND dd.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+            $sql.= " AND dd.name LIKE '" . DB::escape($data['filter_name']) . "%'";
         }
         
         $sort_data = array('dd.name', 'd.remaining');
@@ -157,7 +157,7 @@ class Download extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
@@ -165,9 +165,9 @@ class Download extends Model {
     public function getDownloadDescriptions($download_id) {
         $download_description_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}download_description 
+			FROM " . DB::prefix() . "download_description 
 			WHERE download_id = '" . (int)$download_id . "'");
         
         foreach ($query->rows as $result) {
@@ -178,9 +178,9 @@ class Download extends Model {
     }
     
     public function getTotalDownloads() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}download");
+			FROM " . DB::prefix() . "download");
         
         return $query->row['total'];
     }

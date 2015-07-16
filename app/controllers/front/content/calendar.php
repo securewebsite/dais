@@ -15,33 +15,35 @@
 */
 
 namespace App\Controllers\Front\Content;
+
 use App\Controllers\Controller;
 
 class Calendar extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('content/calendar');
+        $data = Theme::language('content/calendar');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
-        $this->breadcrumb->add('lang_heading_title', 'content/calendar', null, true, 'SSL');
+        Theme::setTitle(Lang::get('lang_heading_title'));
+        Breadcrumb::add('lang_heading_title', 'content/calendar', null, true, 'SSL');
         
         //$data['template_path'] = 'asset/' . Config::get('theme.name') . '/template/';
         $data['template_path'] = 'asset/calendar/';
         $data['today']         = date('Y-m-d', time());
-        $data['continue']      = $this->url->link('content/home');
+        $data['continue']      = Url::link('content/home');
         
-        $this->theme->loadjs('javascript/content/calendar', $data);
+        Theme::loadjs('javascript/content/calendar', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('content/calendar', $data));
+        Response::setOutput(View::render('content/calendar', $data));
     }
     
     public function fetch() {
-        $this->theme->language('content/calendar');
-        $this->theme->model('catalog/product');
-        $this->theme->model('tool/image');
-        $events = $this->model_catalog_product->getEvents();
+        Theme::language('content/calendar');
+        Theme::model('catalog/product');
+        Theme::model('tool/image');
+        $events = CatalogProduct::getEvents();
         
         $json = array();
         
@@ -54,17 +56,17 @@ class Calendar extends Controller {
                 $image = false;
 
                 if ($event['product_id']):
-                    $url   = $this->url->link('catalog/product', 'product_id=' . $event['product_id']);
-                    $image = $this->model_catalog_product->getEventImage($event['product_id']);
-                    $image = $this->model_tool_image->resize($image, 100, 100, 'h');
+                    $url   = Url::link('catalog/product', 'product_id=' . $event['product_id']);
+                    $image = CatalogProduct::getEventImage($event['product_id']);
+                    $image = ToolImage::resize($image, 100, 100, 'h');
                 endif;
 
                 if ($event['page_id']):
-                    $url = $this->url->link('event/page', 'event_page_id=' . $event['page_id']);
+                    $url = Url::link('event/page', 'event_page_id=' . $event['page_id']);
                 endif;
 
                 $event_class = $event['event_class'];
-                $finished    = (strtotime($event['date_end']) < time()) ? $this->language->get('lang_text_finished') : false;
+                $finished    = (strtotime($event['date_end']) < time()) ? Lang::get('lang_text_finished') : false;
                 $days        = unserialize($event['event_days']);
                 $event_times = array();
                 
@@ -123,6 +125,6 @@ class Calendar extends Controller {
             endforeach;
         endif;
         
-        $this->response->setOutput(json_encode(array('success' => 1, 'result' => $json)));
+        Response::setOutput(json_encode(array('success' => 1, 'result' => $json)));
     }
 }

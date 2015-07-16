@@ -37,7 +37,7 @@
 				</thead>
 				<tbody data-link="row" class="rowlink">
 					<tr id="filter" class="info">
-						<td class="text-center"><a class="btn btn-default btn-block" href="index.php?route=sale/return&token=<?= $token; ?>" rel="tooltip" title="Reset"><i class="fa fa-power-off fa-fw"></i></a></td>
+						<td class="text-center"><a class="btn btn-default btn-block" href="index.php?route=sale/return" rel="tooltip" title="Reset"><i class="fa fa-power-off fa-fw"></i></a></td>
 						<td class="text-right hidden-xs"><input type="text" name="filter_return_id" value="<?= $filter_return_id; ?>" class="form-control text-right"></td>
 						<td class="text-right hidden-xs"><input type="text" name="filter_order_id" value="<?= $filter_order_id; ?>" class="form-control text-right"></td>
 						<td><input type="text" name="filter_customer" value="<?= $filter_customer; ?>" class="form-control" data-target="name" data-url="people/customer" class="form-control"></td>

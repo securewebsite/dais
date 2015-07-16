@@ -21,17 +21,17 @@ use App\Models\Model;
 class Store extends Model {
     
     public function addStore($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}store 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "store 
 			SET 
-				name = '" . $this->db->escape($data['config_name']) . "', 
-				`url` = '" . $this->db->escape($data['config_url']) . "', 
-				`ssl` = '" . $this->db->escape($data['config_ssl']) . "'
+				name = '" . DB::escape($data['config_name']) . "', 
+				`url` = '" . DB::escape($data['config_url']) . "', 
+				`ssl` = '" . DB::escape($data['config_ssl']) . "'
 		");
         
-        $store_id = $this->db->getLastId();
+        $store_id = DB::getLastId();
         
-        $this->cache->delete('stores');
+        Cache::delete('stores');
         
         Theme::trigger('admin_add_store', array('store_id' => $store_id));
         
@@ -39,32 +39,32 @@ class Store extends Model {
     }
     
     public function editStore($store_id, $data) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}store 
+        DB::query("
+			UPDATE " . DB::prefix() . "store 
 			SET 
-				name = '" . $this->db->escape($data['config_name']) . "', 
-				`url` = '" . $this->db->escape($data['config_url']) . "', 
-				`ssl` = '" . $this->db->escape($data['config_ssl']) . "' 
+				name = '" . DB::escape($data['config_name']) . "', 
+				`url` = '" . DB::escape($data['config_url']) . "', 
+				`ssl` = '" . DB::escape($data['config_ssl']) . "' 
 			WHERE store_id = '" . (int)$store_id . "'
 		");
         
-        $this->cache->delete('stores');
+        Cache::delete('stores');
         
         Theme::trigger('admin_edit_store', array('store_id' => $store_id));
     }
     
     public function deleteStore($store_id) {
-        $this->db->query("DELETE FROM {$this->db->prefix}store WHERE store_id = '" . (int)$store_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "store WHERE store_id = '" . (int)$store_id . "'");
         
-        $this->cache->delete('stores');
+        Cache::delete('stores');
         
         Theme::trigger('admin_delete_store', array('store_id' => $store_id));
     }
     
     public function getStore($store_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT DISTINCT * 
-			FROM {$this->db->prefix}store 
+			FROM " . DB::prefix() . "store 
 			WHERE store_id = '" . (int)$store_id . "'
 		");
         
@@ -72,34 +72,34 @@ class Store extends Model {
     }
     
     public function getStores($data = array()) {
-        $store_data = $this->cache->get('store');
+        $store_data = Cache::get('store');
         
         if (!$store_data) {
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}store 
+				FROM " . DB::prefix() . "store 
 				ORDER BY url");
             
             $store_data = $query->rows;
             
-            $this->cache->set('store', $store_data);
+            Cache::set('store', $store_data);
         }
         
         return $store_data;
     }
     
     public function getTotalStores() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}store");
+			FROM " . DB::prefix() . "store");
         
         return $query->row['total'];
     }
     
     public function getTotalStoresByLayoutId($layout_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}setting 
+			FROM " . DB::prefix() . "setting 
 			WHERE item = 'config_layout_id' 
 			AND data = '" . (int)$layout_id . "' 
 			AND store_id != '0'
@@ -109,11 +109,11 @@ class Store extends Model {
     }
     
     public function getTotalStoresByLanguage($language) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}setting 
+			FROM " . DB::prefix() . "setting 
 			WHERE item = 'config_language' 
-			AND data = '" . $this->db->escape($language) . "' 
+			AND data = '" . DB::escape($language) . "' 
 			AND store_id != '0'
 		");
         
@@ -121,11 +121,11 @@ class Store extends Model {
     }
     
     public function getTotalStoresByCurrency($currency) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}setting 
+			FROM " . DB::prefix() . "setting 
 			WHERE item = 'config_currency' 
-			AND data = '" . $this->db->escape($currency) . "' 
+			AND data = '" . DB::escape($currency) . "' 
 			AND store_id != '0'
 		");
         
@@ -133,9 +133,9 @@ class Store extends Model {
     }
     
     public function getTotalStoresByCountryId($country_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}setting 
+			FROM " . DB::prefix() . "setting 
 			WHERE item = 'config_country_id' 
 			AND data = '" . (int)$country_id . "' 
 			AND store_id != '0'
@@ -145,9 +145,9 @@ class Store extends Model {
     }
     
     public function getTotalStoresByZoneId($zone_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}setting 
+			FROM " . DB::prefix() . "setting 
 			WHERE item = 'config_zone_id' 
 			AND data = '" . (int)$zone_id . "' 
 			AND store_id != '0'
@@ -157,9 +157,9 @@ class Store extends Model {
     }
     
     public function getTotalStoresByCustomerGroupId($customer_group_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}setting 
+			FROM " . DB::prefix() . "setting 
 			WHERE item = 'config_customer_group_id' 
 			AND data = '" . (int)$customer_group_id . "' 
 			AND store_id != '0'
@@ -169,17 +169,17 @@ class Store extends Model {
     }
     
     public function getTotalStoresByPageId($page_id) {
-        $account_query = $this->db->query("
+        $account_query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}setting 
+			FROM " . DB::prefix() . "setting 
 			WHERE item = 'config_account_id' 
 			AND data = '" . (int)$page_id . "' 
 			AND store_id != '0'
 		");
         
-        $checkout_query = $this->db->query("
+        $checkout_query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}setting 
+			FROM " . DB::prefix() . "setting 
 			WHERE item = 'config_checkout_id' 
 			AND data = '" . (int)$page_id . "' 
 			AND store_id != '0'
@@ -189,9 +189,9 @@ class Store extends Model {
     }
     
     public function getTotalStoresByOrderStatusId($order_status_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}setting 
+			FROM " . DB::prefix() . "setting 
 			WHERE item = 'config_order_status_id' 
 			AND data = '" . (int)$order_status_id . "' 
 			AND store_id != '0'

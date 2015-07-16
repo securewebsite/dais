@@ -69,16 +69,16 @@ class CustomerCredit extends Controller {
             'limit'             => Config::get('config_admin_limit')
         );
         
-        $customer_total = $this->model_report_customer->getTotalCredit($filter);
+        $customer_total = ReportCustomer::getTotalCredit($filter);
         
-        $results = $this->model_report_customer->getCredit($filter);
+        $results = ReportCustomer::getCredit($filter);
         
         foreach ($results as $result) {
             $action = array();
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('people/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'));
+                'href' => Url::link('people/customer/update', '' . '&customer_id=' . $result['customer_id'] . $url, 'SSL'));
             
             $data['customers'][] = array(
                 'customer'       => $result['customer'], 
@@ -89,8 +89,6 @@ class CustomerCredit extends Controller {
                 'action'         => $action
             );
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         $url = '';
         
@@ -107,7 +105,7 @@ class CustomerCredit extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('report/customer_credit', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
+            Url::link('report/customer_credit', '' . $url . '&page={page}', 'SSL')
         );
         
         $data['filter_date_start'] = $filter_date_start;
@@ -117,6 +115,6 @@ class CustomerCredit extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('report/customer_credit', $data));
+        Response::setOutput(View::render('report/customer_credit', $data));
     }
 }

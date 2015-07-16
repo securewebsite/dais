@@ -16,16 +16,18 @@
 
 
 namespace App\Controllers\Front\Account;
+
 use App\Controllers\Controller;
 
 class Logout extends Controller {
+    
     public function index() {
-        if ($this->customer->isLogged()) {
+        if (Customer::isLogged()) {
             
-            $customer_id = $this->customer->getId();
+            $customer_id = Customer::getId();
             
-            $this->customer->logout();
-            $this->cart->clear();
+            Customer::logout();
+            Cart::clear();
             
             unset($this->session->data['wishlist']);
             unset($this->session->data['shipping_address_id']);
@@ -46,18 +48,18 @@ class Logout extends Controller {
             unset($this->session->data['gift_card']);
             unset($this->session->data['gift_cards']);
             
-            $this->theme->trigger('front_customer_logout', array('customer_id' => $customer_id));
+            Theme::trigger('front_customer_logout', array('customer_id' => $customer_id));
         }
         
-        $data = $this->theme->language('account/logout');
+        $data = Theme::language('account/logout');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
-        if ($this->customer->isLogged()):
-            $this->breadcrumb->add('lang_text_account', 'account/dashboard', null, true, 'SSL');
+        if (Customer::isLogged()):
+            Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
         endif;
         
-        $this->breadcrumb->add('lang_text_logout', 'account/logout', null, true, 'SSL');
+        Breadcrumb::add('lang_text_logout', 'account/logout', null, true, 'SSL');
 
         if (Theme::getstyle() == 'content'):
             $route = 'content/home';
@@ -65,13 +67,13 @@ class Logout extends Controller {
             $route = 'shop/home';
         endif;
         
-        $data['continue']     = $this->url->link($route);
-        $data['text_message'] = $this->language->get('lang_text_message');
+        $data['continue']     = Url::link($route);
+        $data['text_message'] = Lang::get('lang_text_message');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('common/success', $data));
+        Response::setOutput(View::render('common/success', $data));
     }
 }

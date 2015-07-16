@@ -19,14 +19,14 @@ use App\Models\Model;
 
 class Download extends Model {
     public function getDownload($order_download_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}order_download od 
-			LEFT JOIN `{$this->db->prefix}order` o 
+			FROM " . DB::prefix() . "order_download od 
+			LEFT JOIN `" . DB::prefix() . "order` o 
 				ON (od.order_id = o.order_id) 
-			WHERE o.customer_id = '" . (int)$this->customer->getId() . "' 
+			WHERE o.customer_id = '" . (int)\Customer::getId() . "' 
 			AND o.order_status_id > '0' 
-			AND o.order_status_id = '" . (int)$this->config->get('config_complete_status_id') . "' 
+			AND o.order_status_id = '" . (int)Config::get('config_complete_status_id') . "' 
 			AND od.order_download_id = '" . (int)$order_download_id . "' 
 			AND od.remaining > 0
 		");
@@ -43,7 +43,7 @@ class Download extends Model {
             $limit = 20;
         }
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT 
 				o.order_id, 
 				o.date_added, 
@@ -51,12 +51,12 @@ class Download extends Model {
 				od.name, 
 				od.filename, 
 				od.remaining 
-			FROM {$this->db->prefix}order_download od 
-			LEFT JOIN `{$this->db->prefix}order` o 
+			FROM " . DB::prefix() . "order_download od 
+			LEFT JOIN `" . DB::prefix() . "order` o 
 				ON (od.order_id = o.order_id) 
-			WHERE o.customer_id = '" . (int)$this->customer->getId() . "' 
+			WHERE o.customer_id = '" . (int)\Customer::getId() . "' 
 			AND o.order_status_id > '0' 
-			AND o.order_status_id = '" . (int)$this->config->get('config_complete_status_id') . "' 
+			AND o.order_status_id = '" . (int)Config::get('config_complete_status_id') . "' 
 			AND od.remaining > 0 
 			ORDER BY o.date_added 
 			DESC LIMIT " . (int)$start . "," . (int)$limit);
@@ -65,8 +65,8 @@ class Download extends Model {
     }
     
     public function updateRemaining($order_download_id) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}order_download 
+        DB::query("
+			UPDATE " . DB::prefix() . "order_download 
 			SET 
 				remaining = (remaining - 1) 
 			WHERE order_download_id = '" . (int)$order_download_id . "'
@@ -74,14 +74,14 @@ class Download extends Model {
     }
     
     public function getTotalDownloads() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}order_download od 
-			LEFT JOIN `{$this->db->prefix}order` o 
+			FROM " . DB::prefix() . "order_download od 
+			LEFT JOIN `" . DB::prefix() . "order` o 
 			ON (od.order_id = o.order_id) 
-			WHERE o.customer_id = '" . (int)$this->customer->getId() . "' 
+			WHERE o.customer_id = '" . (int)\Customer::getId() . "' 
 			AND o.order_status_id > '0' 
-			AND o.order_status_id = '" . (int)$this->config->get('config_complete_status_id') . "' 
+			AND o.order_status_id = '" . (int)Config::get('config_complete_status_id') . "' 
 			AND od.remaining > 0
 		");
         

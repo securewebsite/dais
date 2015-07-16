@@ -21,29 +21,29 @@ class Comment extends Model {
     public function addComment($post_id, $data) {
         $website = (isset($data['website'])) ? $data['website'] : '';
         
-        $sql = "INSERT INTO {$this->db->prefix}blog_comment 
+        $sql = "INSERT INTO " . DB::prefix() . "blog_comment 
 				SET 
-					author = '" . $this->db->escape($data['name']) . "', 
-					customer_id = '" . (int)$this->customer->getId() . "', 
-					email = '" . $this->db->escape($data['email']) . "', 
-					website = '" . $this->db->escape($website) . "', 
+					author = '" . DB::escape($data['name']) . "', 
+					customer_id = '" . (int)Customer::getId() . "', 
+					email = '" . DB::escape($data['email']) . "', 
+					website = '" . DB::escape($website) . "', 
 					post_id = '" . (int)$post_id . "', 
-					text = '" . $this->db->escape($data['text']) . "', 
+					text = '" . DB::escape($data['text']) . "', 
 					rating = '" . (int)$data['rating'] . "', 
 					date_added = NOW()";
         
-        if (!$this->config->get('blog_comment_require_approve')) {
+        if (!Config::get('blog_comment_require_approve')) {
             $sql.= ", status = 1";
         }
         
-        $this->db->query($sql);
+        DB::query($sql);
         
-        $comment_id = $this->db->getLastId();
+        $comment_id = DB::getLastId();
         
-        if (!$this->config->get('blog_comment_require_approve')):
-            $this->theme->trigger('front_comment_add_approved', array('comment_id' => $comment_id));
+        if (!Config::get('blog_comment_require_approve')):
+            Theme::trigger('front_comment_add_approved', array('comment_id' => $comment_id));
         else:
-            $this->theme->trigger('front_comment_add_unapproved', array('comment_id' => $comment_id));
+            Theme::trigger('front_comment_add_unapproved', array('comment_id' => $comment_id));
         endif;
     }
     
@@ -60,7 +60,7 @@ class Comment extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 			SELECT 
 				c.comment_id, 
 				c.author, 
@@ -72,16 +72,16 @@ class Comment extends Model {
 				pd.name, 
 				p.image, 
 				c.date_added 
-			FROM {$this->db->prefix}blog_comment c 
-			LEFT JOIN {$this->db->prefix}blog_post p 
+			FROM " . DB::prefix() . "blog_comment c 
+			LEFT JOIN " . DB::prefix() . "blog_post p 
 				ON (c.post_id = p.post_id) 
-			LEFT JOIN {$this->db->prefix}blog_post_description pd 
+			LEFT JOIN " . DB::prefix() . "blog_post_description pd 
 				ON (p.post_id = pd.post_id) 
 			WHERE p.post_id = '" . (int)$post_id . "' 
 			AND p.date_available <= NOW() 
 			AND p.status = '1' 
 			AND c.status = '1' 
-			AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+			AND pd.language_id = '" . (int)Config::get('config_language_id') . "' 
 			ORDER BY c.date_added DESC LIMIT " . (int)$start . "," . (int)$limit);
             
             if ($query->num_rows):
@@ -101,9 +101,9 @@ class Comment extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT AVG(rating) AS total 
-				FROM {$this->db->prefix}blog_comment 
+				FROM " . DB::prefix() . "blog_comment 
 				WHERE status = '1' 
 				AND post_id = '" . (int)$post_id . "' 
 				GROUP BY post_id
@@ -126,10 +126,10 @@ class Comment extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT COUNT(*) AS total 
-				FROM {$this->db->prefix}blog_comment c 
-				LEFT JOIN {$this->db->prefix}blog_post p 
+				FROM " . DB::prefix() . "blog_comment c 
+				LEFT JOIN " . DB::prefix() . "blog_post p 
 				ON (c.post_id = p.post_id) 
 				WHERE p.date_available <= NOW() 
 				AND p.status = '1' 
@@ -148,18 +148,18 @@ class Comment extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT COUNT(*) AS total 
-				FROM {$this->db->prefix}blog_comment c 
-				LEFT JOIN {$this->db->prefix}blog_post p 
+				FROM " . DB::prefix() . "blog_comment c 
+				LEFT JOIN " . DB::prefix() . "blog_post p 
 					ON (c.post_id = p.post_id) 
-				LEFT JOIN {$this->db->prefix}blog_post_description pd 
+				LEFT JOIN " . DB::prefix() . "blog_post_description pd 
 					ON (p.post_id = pd.post_id) 
 				WHERE p.post_id = '" . (int)$post_id . "' 
 				AND p.date_available <= NOW() 
 				AND p.status = '1' 
 				AND c.status = '1' 
-				AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+				AND pd.language_id = '" . (int)Config::get('config_language_id') . "'
 			");
             
             $cachefile = $query->row['total'];

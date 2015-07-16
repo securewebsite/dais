@@ -35,7 +35,7 @@ class ErrorLog extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'tool/error_log');
         
-        $data['clear'] = Url::link('tool/error_log/clear', 'token=' . $this->session->data['token'], 'SSL');
+        $data['clear'] = Url::link('tool/error_log/clear', '', 'SSL');
         
         $file = Config::get('path.logs') . Config::get('config_error_filename');
         
@@ -49,7 +49,7 @@ class ErrorLog extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('tool/error_log', $data));
+        Response::setOutput(View::render('tool/error_log', $data));
     }
     
     public function clear() {
@@ -65,6 +65,6 @@ class ErrorLog extends Controller {
         
         Theme::listen(__CLASS__, __FUNCTION__);
         
-        Response::redirect(Url::link('tool/error_log', 'token=' . $this->session->data['token'], 'SSL'));
+        Response::redirect(Url::link('tool/error_log', '', 'SSL'));
     }
 }

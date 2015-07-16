@@ -16,7 +16,7 @@
 				type:'POST',
 				dataType:'json',
 				data: {'amount':amt, 'order_id':<?= $order_id; ?>, 'complete': captureComplete},
-				url:'index.php?route=payment/paypal_express/capture&token=<?= $token; ?>',
+				url:'index.php?route=payment/paypal_express/capture',
 				beforeSend:function(){
 					$('#btn_capture').hide();
 					$('#img_loading_capture').show();
@@ -84,7 +84,7 @@
 				type:'POST',
 				dataType:'json',
 				data: {'order_id':<?= $order_id; ?> },
-				url:'index.php?route=payment/paypal_express/void&token=<?= $token; ?>',
+				url:'index.php?route=payment/paypal_express/void',
 				beforeSend:function(){
 					$('#btn_void').hide();
 					$('#img_loading_void').show();

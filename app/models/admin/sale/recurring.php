@@ -23,8 +23,8 @@ class Recurring extends Model {
     public function getTotalRecurrings($data) {
         $sql = "
 			SELECT COUNT(*) AS `total` 
-			FROM `{$this->db->prefix}order_recurring` `or` 
-			JOIN `{$this->db->prefix}order` o 
+			FROM `" . DB::prefix() . "order_recurring` `or` 
+			JOIN `" . DB::prefix() . "order` o 
 			USING(order_id) 
 			WHERE 1 = 1";
         
@@ -37,11 +37,11 @@ class Recurring extends Model {
         }
         
         if (!empty($data['filter_payment_reference'])) {
-            $sql.= " AND or.reference LIKE '" . $this->db->escape($data['filter_reference']) . "%'";
+            $sql.= " AND or.reference LIKE '" . DB::escape($data['filter_reference']) . "%'";
         }
         
         if (!empty($data['filter_customer'])) {
-            $sql.= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "%'";
+            $sql.= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '" . DB::escape($data['filter_customer']) . "%'";
         }
         
         if (!empty($data['filter_status'])) {
@@ -49,10 +49,10 @@ class Recurring extends Model {
         }
         
         if (!empty($data['filter_date_added'])) {
-            $sql.= " AND DATE(or.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $sql.= " AND DATE(or.date_added) = DATE('" . DB::escape($data['filter_date_added']) . "')";
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->row['total'];
     }
@@ -66,8 +66,8 @@ class Recurring extends Model {
 				`or`.`status`, 
 				`or`.`date_added`, 
 				CONCAT(`o`.`firstname`, ' ', `o`.`lastname`) AS `customer` 
-			FROM `{$this->db->prefix}order_recurring` `or` 
-			JOIN `{$this->db->prefix}order` `o` 
+			FROM `" . DB::prefix() . "order_recurring` `or` 
+			JOIN `" . DB::prefix() . "order` `o` 
 			USING(`order_id`) 
 			WHERE 1 = 1 ";
         
@@ -80,11 +80,11 @@ class Recurring extends Model {
         }
         
         if (!empty($data['filter_reference'])) {
-            $sql.= " AND or.reference LIKE '" . $this->db->escape($data['filter_reference']) . "%'";
+            $sql.= " AND or.reference LIKE '" . DB::escape($data['filter_reference']) . "%'";
         }
         
         if (!empty($data['filter_customer'])) {
-            $sql.= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '" . $this->db->escape($data['filter_customer']) . "%'";
+            $sql.= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '" . DB::escape($data['filter_customer']) . "%'";
         }
         
         if (!empty($data['filter_status'])) {
@@ -92,7 +92,7 @@ class Recurring extends Model {
         }
         
         if (!empty($data['filter_date_added'])) {
-            $sql.= " AND DATE(or.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+            $sql.= " AND DATE(or.date_added) = DATE('" . DB::escape($data['filter_date_added']) . "')";
         }
         
         $sort_data = array('or.order_recurring_id', 'or.order_id', 'or.reference', 'customer', 'or.status', 'or.date_added');
@@ -123,7 +123,7 @@ class Recurring extends Model {
         
         $recurrings = array();
         
-        $results = $this->db->query($sql)->rows;
+        $results = DB::query($sql)->rows;
         
         foreach ($results as $result) {
             $recurrings[] = array('order_recurring_id' => $result['order_recurring_id'], 'order_id' => $result['order_id'], 'reference' => $result['reference'], 'customer' => $result['customer'], 'status' => $this->getStatus($result['status']), 'date_added' => $result['date_added']);
@@ -135,9 +135,9 @@ class Recurring extends Model {
     public function getRecurring($order_recurring_id) {
         $recurring = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}order_recurring 
+			FROM " . DB::prefix() . "order_recurring 
 			WHERE order_recurring_id = " . (int)$order_recurring_id);
         
         if ($query->num_rows) {
@@ -150,9 +150,9 @@ class Recurring extends Model {
     public function getRecurringTransactions($order_recurring_id) {
         $transactions = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT amount, type, date_added 
-			FROM {$this->db->prefix}order_recurring_transaction 
+			FROM " . DB::prefix() . "order_recurring_transaction 
 			WHERE order_recurring_id = " . (int)$order_recurring_id . " 
 			ORDER BY date_added DESC");
         

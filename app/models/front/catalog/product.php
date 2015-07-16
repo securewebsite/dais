@@ -21,31 +21,31 @@ use Dais\Library\Text;
 
 class Product extends Model {
     public function updateViewed($product_id) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}product 
+        DB::query("
+			UPDATE " . DB::prefix() . "product 
 			SET viewed = (viewed + 1) 
 			WHERE product_id = '" . (int)$product_id . "'
 		");
     }
     
     public function getProduct($product_id) {
-        if ($this->customer->isLogged()):
-            $customer_group_id = $this->customer->getGroupId();
+        if (Customer::isLogged()):
+            $customer_group_id = Customer::getGroupId();
         else:
-            $customer_group_id = $this->config->get('config_default_visibility');
+            $customer_group_id = Config::get('config_default_visibility');
         endif;
         
         $key = 'product.' . $product_id;
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT DISTINCT *, 
 					pd.name AS name, 
 					p.image, 
 					m.name AS manufacturer, 
 					(SELECT price 
-						FROM {$this->db->prefix}product_discount pd2 
+						FROM " . DB::prefix() . "product_discount pd2 
 						WHERE pd2.product_id = p.product_id 
 						AND pd2.customer_group_id = '" . (int)$customer_group_id . "' 
 						AND pd2.quantity = '1' 
@@ -53,53 +53,53 @@ class Product extends Model {
 						AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) 
 						ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, 
 					(SELECT price 
-						FROM {$this->db->prefix}product_special ps 
+						FROM " . DB::prefix() . "product_special ps 
 						WHERE ps.product_id = p.product_id 
 						AND ps.customer_group_id = '" . (int)$customer_group_id . "' 
 						AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) 
 						AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) 
 						ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special, 
 					(SELECT points 
-						FROM {$this->db->prefix}product_reward pr 
+						FROM " . DB::prefix() . "product_reward pr 
 						WHERE pr.product_id = p.product_id 
 						AND customer_group_id = '" . (int)$customer_group_id . "') AS reward, 
 					(SELECT ss.name 
-						FROM {$this->db->prefix}stock_status ss 
+						FROM " . DB::prefix() . "stock_status ss 
 						WHERE ss.stock_status_id = p.stock_status_id 
-						AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, 
+						AND ss.language_id = '" . (int)Config::get('config_language_id') . "') AS stock_status, 
 					(SELECT wcd.unit 
-						FROM {$this->db->prefix}weight_class_description wcd 
+						FROM " . DB::prefix() . "weight_class_description wcd 
 						WHERE p.weight_class_id = wcd.weight_class_id 
-						AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS weight_class, 
+						AND wcd.language_id = '" . (int)Config::get('config_language_id') . "') AS weight_class, 
 					(SELECT lcd.unit 
-						FROM {$this->db->prefix}length_class_description lcd 
+						FROM " . DB::prefix() . "length_class_description lcd 
 						WHERE p.length_class_id = lcd.length_class_id 
-						AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS length_class, 
+						AND lcd.language_id = '" . (int)Config::get('config_language_id') . "') AS length_class, 
 					(SELECT AVG(rating) AS total 
-						FROM {$this->db->prefix}review r1 
+						FROM " . DB::prefix() . "review r1 
 						WHERE r1.product_id = p.product_id 
 						AND r1.status = '1' 
 						GROUP BY r1.product_id) AS rating, 
 					(SELECT COUNT(*) AS total 
-						FROM {$this->db->prefix}review r2 
+						FROM " . DB::prefix() . "review r2 
 						WHERE r2.product_id = p.product_id 
 						AND r2.status = '1' 
 						GROUP BY r2.product_id) AS reviews, 
 					p.sort_order 
-				FROM {$this->db->prefix}product p 
-				LEFT JOIN {$this->db->prefix}product_description pd 
+				FROM " . DB::prefix() . "product p 
+				LEFT JOIN " . DB::prefix() . "product_description pd 
 					ON (p.product_id = pd.product_id) 
-				LEFT JOIN {$this->db->prefix}product_to_store p2s 
+				LEFT JOIN " . DB::prefix() . "product_to_store p2s 
 					ON (p.product_id = p2s.product_id) 
-				LEFT JOIN {$this->db->prefix}manufacturer m 
+				LEFT JOIN " . DB::prefix() . "manufacturer m 
 					ON (p.manufacturer_id = m.manufacturer_id) 
 				WHERE p.product_id = '" . (int)$product_id . "' 
-				AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+				AND pd.language_id = '" . (int)Config::get('config_language_id') . "' 
 				AND p.status = '1' 
 				AND p.date_available <= NOW() 
 				AND p.visibility <= '" . (int)$customer_group_id . "' 
 				AND p.customer_id = '0' 
-				AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'
+				AND p2s.store_id = '" . (int)Config::get('config_store_id') . "'
 			");
             
             if ($query->num_rows):
@@ -161,10 +161,10 @@ class Product extends Model {
     }
     
     public function getProducts($data = array()) {
-        if ($this->customer->isLogged()):
-            $customer_group_id = $this->customer->getGroupId();
+        if (Customer::isLogged()):
+            $customer_group_id = Customer::getGroupId();
         else:
-            $customer_group_id = $this->config->get('config_default_visibility');
+            $customer_group_id = Config::get('config_default_visibility');
         endif;
         
         if (!empty($data)):
@@ -178,12 +178,12 @@ class Product extends Model {
                 $sql = "
 					SELECT p.product_id, 
 						(SELECT AVG(rating) AS total 
-							FROM {$this->db->prefix}review r1 
+							FROM " . DB::prefix() . "review r1 
 							WHERE r1.product_id = p.product_id 
 							AND r1.status = '1' 
 							GROUP BY r1.product_id) AS rating, 
 						(SELECT price 
-							FROM {$this->db->prefix}product_discount pd2 
+							FROM " . DB::prefix() . "product_discount pd2 
 							WHERE pd2.product_id = p.product_id 
 							AND pd2.customer_group_id = '" . (int)$customer_group_id . "' 
 							AND pd2.quantity = '1' 
@@ -191,7 +191,7 @@ class Product extends Model {
 							AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) 
 							ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, 
 						(SELECT price 
-							FROM {$this->db->prefix}product_special ps 
+							FROM " . DB::prefix() . "product_special ps 
 							WHERE ps.product_id = p.product_id 
 							AND ps.customer_group_id = '" . (int)$customer_group_id . "' 
 							AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) 
@@ -201,37 +201,37 @@ class Product extends Model {
                 if (!empty($data['filter_category_id'])):
                     
                     if (!empty($data['filter_sub_category'])):
-                        $sql.= " FROM {$this->db->prefix}category_path cp 
-								  LEFT JOIN {$this->db->prefix}product_to_category p2c 
+                        $sql.= " FROM " . DB::prefix() . "category_path cp 
+								  LEFT JOIN " . DB::prefix() . "product_to_category p2c 
 									ON (cp.category_id = p2c.category_id)";
                     else:
-                        $sql.= " FROM {$this->db->prefix}product_to_category p2c";
+                        $sql.= " FROM " . DB::prefix() . "product_to_category p2c";
                     endif;
                     
                     if (!empty($data['filter_filter'])):
-                        $sql.= " LEFT JOIN {$this->db->prefix}product_filter pf 
+                        $sql.= " LEFT JOIN " . DB::prefix() . "product_filter pf 
 									ON (p2c.product_id = pf.product_id) 
-								  LEFT JOIN {$this->db->prefix}product p 
+								  LEFT JOIN " . DB::prefix() . "product p 
 									ON (pf.product_id = p.product_id)";
                     else:
-                        $sql.= " LEFT JOIN {$this->db->prefix}product p 
+                        $sql.= " LEFT JOIN " . DB::prefix() . "product p 
 									ON (p2c.product_id = p.product_id)";
                     endif;
                 else:
-                    $sql.= " FROM {$this->db->prefix}product p";
+                    $sql.= " FROM " . DB::prefix() . "product p";
                 endif;
                 
-                $sql.= " LEFT JOIN {$this->db->prefix}product_description pd 
+                $sql.= " LEFT JOIN " . DB::prefix() . "product_description pd 
 							ON (p.product_id = pd.product_id) 
-						  LEFT JOIN {$this->db->prefix}product_to_store p2s 
+						  LEFT JOIN " . DB::prefix() . "product_to_store p2s 
 							ON (p.product_id = p2s.product_id) 
-						  WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+						  WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "' 
 						  AND (p.end_date = '0000-00-00 00:00:00' OR p.end_date > NOW()) 
 						  AND p.status = '1' 
 						  AND p.visibility <= '" . (int)$customer_group_id . "' 
 						  AND p.customer_id = '0' 
 						  AND p.date_available <= NOW() 
-						  AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+						  AND p2s.store_id = '" . (int)Config::get('config_store_id') . "'";
                 
                 if (!empty($data['filter_category_id'])):
                     if (!empty($data['filter_sub_category'])):
@@ -260,7 +260,7 @@ class Product extends Model {
                         $words = explode(' ', trim(preg_replace('/\s\s+/', ' ', $data['filter_name'])));
                         
                         foreach ($words as $word):
-                            $implode[] = "pd.name LIKE '%" . $this->db->escape($word) . "%'";
+                            $implode[] = "pd.name LIKE '%" . DB::escape($word) . "%'";
                         endforeach;
                         
                         if ($implode):
@@ -269,36 +269,36 @@ class Product extends Model {
                         endif;
                         
                         if (!empty($data['filter_description'])):
-                            $sql.= " OR pd.description LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+                            $sql.= " OR pd.description LIKE '%" . DB::escape($data['filter_name']) . "%'";
                         endif;
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.model) = '" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.model) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.sku) = '" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.sku) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.upc) = '" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.upc) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.ean) = '" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.ean) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.jan) = '" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.jan) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.isbn) = '" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.isbn) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.mpn) = '" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.mpn) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     $sql.= ")";
@@ -344,7 +344,7 @@ class Product extends Model {
                 
                 $product_data = array();
                 
-                $query = $this->db->query($sql);
+                $query = DB::query($sql);
                 
                 foreach ($query->rows as $result):
                     $product_data[$result['product_id']] = $this->getProduct($result['product_id']);
@@ -355,19 +355,19 @@ class Product extends Model {
             endif;
             unset($key);
         else:
-            $key = 'products.all.' . (int)$this->config->get('config_store_id');
+            $key = 'products.all.' . (int)Config::get('config_store_id');
             $cachefile = $this->cache->get($key);
             
             if (is_bool($cachefile)):
-                $query = $this->db->query("
+                $query = DB::query("
 					SELECT p.product_id, 
 						(SELECT AVG(rating) AS total 
-							FROM {$this->db->prefix}review r1 
+							FROM " . DB::prefix() . "review r1 
 							WHERE r1.product_id = p.product_id 
 							AND r1.status = '1' 
 							GROUP BY r1.product_id) AS rating, 
 						(SELECT price 
-							FROM {$this->db->prefix}product_discount pd2 
+							FROM " . DB::prefix() . "product_discount pd2 
 							WHERE pd2.product_id = p.product_id 
 							AND pd2.customer_group_id = '" . (int)$customer_group_id . "' 
 							AND pd2.quantity = '1' 
@@ -375,24 +375,24 @@ class Product extends Model {
 							AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) 
 							ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, 
 						(SELECT price 
-							FROM {$this->db->prefix}product_special ps 
+							FROM " . DB::prefix() . "product_special ps 
 							WHERE ps.product_id = p.product_id 
 							AND ps.customer_group_id = '" . (int)$customer_group_id . "' 
 							AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) 
 							AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) 
 							ORDER BY ps.priority ASC, ps.price ASC LIMIT 1) AS special 
-					FROM {$this->db->prefix}product p 
-					LEFT JOIN {$this->db->prefix}product_description pd 
+					FROM " . DB::prefix() . "product p 
+					LEFT JOIN " . DB::prefix() . "product_description pd 
 						ON (p.product_id = pd.product_id) 
-					LEFT JOIN {$this->db->prefix}product_to_store p2s 
+					LEFT JOIN " . DB::prefix() . "product_to_store p2s 
 						ON (p.product_id = p2s.product_id) 
-					WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+					WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "' 
 					AND (p.end_date = '0000-00-00 00:00:00' OR p.end_date > NOW()) 
 					AND p.status = '1' 
 					AND p.visibility <= '" . (int)$customer_group_id . "' 
 					AND p.customer_id = '0' 
 					AND p.date_available <= NOW() 
-					AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+					AND p2s.store_id = '" . (int)Config::get('config_store_id') . "' 
 					GROUP BY p.product_id 
 					ORDER BY p.sort_order ASC, LCASE(pd.name) ASC
 				");
@@ -412,12 +412,12 @@ class Product extends Model {
     }
 
     public function getProductTags($product_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT tag 
-            FROM {$this->db->prefix}tag 
+            FROM " . DB::prefix() . "tag 
             WHERE section   = 'product' 
             AND element_id  = '" . (int)$product_id . "' 
-            AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+            AND language_id = '" . (int)Config::get('config_language_id') . "'
         ");
         
         if ($query->num_rows):
@@ -432,10 +432,10 @@ class Product extends Model {
     }
     
     public function getProductSpecials($data = array()) {
-        if ($this->customer->isLogged()):
-            $customer_group_id = $this->customer->getGroupId();
+        if (Customer::isLogged()):
+            $customer_group_id = Customer::getGroupId();
         else:
-            $customer_group_id = $this->config->get('config_default_visibility');
+            $customer_group_id = Config::get('config_default_visibility');
         endif;
         
         if (!empty($data)):
@@ -447,22 +447,22 @@ class Product extends Model {
 					SELECT DISTINCT 
 						ps.product_id, 
 						(SELECT AVG(rating) 
-							FROM {$this->db->prefix}review r1 
+							FROM " . DB::prefix() . "review r1 
 							WHERE r1.product_id = ps.product_id 
 							AND r1.status = '1' 
 							GROUP BY r1.product_id) AS rating 
-					FROM {$this->db->prefix}product_special ps 
-					LEFT JOIN {$this->db->prefix}product p 
+					FROM " . DB::prefix() . "product_special ps 
+					LEFT JOIN " . DB::prefix() . "product p 
 						ON (ps.product_id = p.product_id) 
-					LEFT JOIN {$this->db->prefix}product_description pd 
+					LEFT JOIN " . DB::prefix() . "product_description pd 
 						ON (p.product_id = pd.product_id) 
-					LEFT JOIN {$this->db->prefix}product_to_store p2s 
+					LEFT JOIN " . DB::prefix() . "product_to_store p2s 
 						ON (p.product_id = p2s.product_id) 
 					WHERE p.status = '1' 
 					AND p.visibility <= '" . (int)$customer_group_id . "' 
 					AND p.customer_id = '0' 
 					AND p.date_available <= NOW() 
-					AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+					AND p2s.store_id = '" . (int)Config::get('config_store_id') . "' 
 					AND ps.customer_group_id = '" . (int)$customer_group_id . "' 
 					AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) 
 					AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) 
@@ -500,7 +500,7 @@ class Product extends Model {
                 
                 $product_data = array();
                 
-                $query = $this->db->query($sql);
+                $query = DB::query($sql);
                 
                 foreach ($query->rows as $result):
                     $product_data[$result['product_id']] = $this->getProduct($result['product_id']);
@@ -511,30 +511,30 @@ class Product extends Model {
             endif;
             unset($key);
         else:
-            $key = 'products.special.' . (int)$this->config->get('config_store_id');
+            $key = 'products.special.' . (int)Config::get('config_store_id');
             $cachefile = $this->cache->get($key);
             
             if (is_bool($cachefile)):
-                $query = $this->db->query("
+                $query = DB::query("
 					SELECT DISTINCT 
 						ps.product_id, 
 						(SELECT AVG(rating) 
-							FROM {$this->db->prefix}review r1 
+							FROM " . DB::prefix() . "review r1 
 							WHERE r1.product_id = ps.product_id 
 							AND r1.status = '1' 
 							GROUP BY r1.product_id) AS rating 
-					FROM {$this->db->prefix}product_special ps 
-					LEFT JOIN {$this->db->prefix}product p 
+					FROM " . DB::prefix() . "product_special ps 
+					LEFT JOIN " . DB::prefix() . "product p 
 						ON (ps.product_id = p.product_id) 
-					LEFT JOIN {$this->db->prefix}product_description pd 
+					LEFT JOIN " . DB::prefix() . "product_description pd 
 						ON (p.product_id = pd.product_id) 
-					LEFT JOIN {$this->db->prefix}product_to_store p2s 
+					LEFT JOIN " . DB::prefix() . "product_to_store p2s 
 						ON (p.product_id = p2s.product_id) 
 					WHERE p.status = '1' 
 					AND p.visibility <= '" . (int)$customer_group_id . "' 
 					AND p.customer_id = '0' 
 					AND p.date_available <= NOW() 
-					AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+					AND p2s.store_id = '" . (int)Config::get('config_store_id') . "' 
 					AND ps.customer_group_id = '" . (int)$customer_group_id . "' 
 					AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) 
 					AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) 
@@ -557,28 +557,28 @@ class Product extends Model {
     }
     
     public function getLatestProducts($limit) {
-        if ($this->customer->isLogged()):
-            $customer_group_id = $this->customer->getGroupId();
+        if (Customer::isLogged()):
+            $customer_group_id = Customer::getGroupId();
         else:
-            $customer_group_id = $this->config->get('config_default_visibility');
+            $customer_group_id = Config::get('config_default_visibility');
         endif;
         
-        $key = 'products.latest.' . (int)$this->config->get('config_store_id');
+        $key = 'products.latest.' . (int)Config::get('config_store_id');
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
             $product_data = array();
             
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT p.product_id 
-				FROM {$this->db->prefix}product p 
-				LEFT JOIN {$this->db->prefix}product_to_store p2s 
+				FROM " . DB::prefix() . "product p 
+				LEFT JOIN " . DB::prefix() . "product_to_store p2s 
 				ON (p.product_id = p2s.product_id) 
 				WHERE p.status = '1' 
 				AND p.visibility <= '" . (int)$customer_group_id . "' 
 				AND p.customer_id = '0' 
 				AND p.date_available <= NOW() 
-				AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+				AND p2s.store_id = '" . (int)Config::get('config_store_id') . "' 
 				ORDER BY p.date_added DESC LIMIT " . (int)$limit);
             
             foreach ($query->rows as $result):
@@ -593,28 +593,28 @@ class Product extends Model {
     }
     
     public function getPopularProducts($limit) {
-        if ($this->customer->isLogged()):
-            $customer_group_id = $this->customer->getGroupId();
+        if (Customer::isLogged()):
+            $customer_group_id = Customer::getGroupId();
         else:
-            $customer_group_id = $this->config->get('config_default_visibility');
+            $customer_group_id = Config::get('config_default_visibility');
         endif;
         
-        $key = 'products.popular.' . (int)$this->config->get('config_store_id');
+        $key = 'products.popular.' . (int)Config::get('config_store_id');
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
             $product_data = array();
             
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT p.product_id 
-				FROM {$this->db->prefix}product p 
-				LEFT JOIN {$this->db->prefix}product_to_store p2s 
+				FROM " . DB::prefix() . "product p 
+				LEFT JOIN " . DB::prefix() . "product_to_store p2s 
 					ON (p.product_id = p2s.product_id) 
 				WHERE p.status = '1' 
 				AND p.visibility <= '" . (int)$customer_group_id . "' 
 				AND p.customer_id = '0' 
 				AND p.date_available <= NOW() 
-				AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+				AND p2s.store_id = '" . (int)Config::get('config_store_id') . "' 
 				ORDER BY p.viewed, p.date_added DESC LIMIT " . (int)$limit);
             
             foreach ($query->rows as $result):
@@ -629,34 +629,34 @@ class Product extends Model {
     }
     
     public function getBestSellerProducts($limit) {
-        if ($this->customer->isLogged()):
-            $customer_group_id = $this->customer->getGroupId();
+        if (Customer::isLogged()):
+            $customer_group_id = Customer::getGroupId();
         else:
-            $customer_group_id = $this->config->get('config_default_visibility');
+            $customer_group_id = Config::get('config_default_visibility');
         endif;
         
-        $key = 'products.best_seller.' . (int)$this->config->get('config_store_id');
+        $key = 'products.best_seller.' . (int)Config::get('config_store_id');
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
             $product_data = array();
             
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT op.product_id, 
 					COUNT(*) AS total 
-				FROM {$this->db->prefix}order_product op 
-				LEFT JOIN `{$this->db->prefix}order` o 
+				FROM " . DB::prefix() . "order_product op 
+				LEFT JOIN `" . DB::prefix() . "order` o 
 					ON (op.order_id = o.order_id) 
-				LEFT JOIN `{$this->db->prefix}product` p 
+				LEFT JOIN `" . DB::prefix() . "product` p 
 					ON (op.product_id = p.product_id) 
-				LEFT JOIN {$this->db->prefix}product_to_store p2s 
+				LEFT JOIN " . DB::prefix() . "product_to_store p2s 
 					ON (p.product_id = p2s.product_id) 
 				WHERE o.order_status_id > '0' 
 				AND p.status = '1' 
 				AND p.visibility <= '" . (int)$customer_group_id . "' 
 				AND p.customer_id = '0' 
 				AND p.date_available <= NOW() 
-				AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+				AND p2s.store_id = '" . (int)Config::get('config_store_id') . "' 
 				AND (p.end_date = '0000-00-00' OR p.end_date > NOW()) 
 				GROUP BY op.product_id 
 				ORDER BY total DESC LIMIT " . (int)$limit);
@@ -679,19 +679,19 @@ class Product extends Model {
         if (is_bool($cachefile)):
             $product_attribute_group_data = array();
             
-            $product_attribute_group_query = $this->db->query("
+            $product_attribute_group_query = DB::query("
 				SELECT 
 					ag.attribute_group_id, 
 					agd.name 
-				FROM {$this->db->prefix}product_attribute pa 
-				LEFT JOIN {$this->db->prefix}attribute a 
+				FROM " . DB::prefix() . "product_attribute pa 
+				LEFT JOIN " . DB::prefix() . "attribute a 
 					ON (pa.attribute_id = a.attribute_id) 
-				LEFT JOIN {$this->db->prefix}attribute_group ag 
+				LEFT JOIN " . DB::prefix() . "attribute_group ag 
 					ON (a.attribute_group_id = ag.attribute_group_id) 
-				LEFT JOIN {$this->db->prefix}attribute_group_description agd 
+				LEFT JOIN " . DB::prefix() . "attribute_group_description agd 
 					ON (ag.attribute_group_id = agd.attribute_group_id) 
 				WHERE pa.product_id = '" . (int)$product_id . "' 
-				AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+				AND agd.language_id = '" . (int)Config::get('config_language_id') . "' 
 				GROUP BY ag.attribute_group_id 
 				ORDER BY ag.sort_order, agd.name
 			");
@@ -699,20 +699,20 @@ class Product extends Model {
             foreach ($product_attribute_group_query->rows as $product_attribute_group):
                 $product_attribute_data = array();
                 
-                $product_attribute_query = $this->db->query("
+                $product_attribute_query = DB::query("
 					SELECT 
 						a.attribute_id, 
 						ad.name, 
 						pa.text 
-					FROM {$this->db->prefix}product_attribute pa 
-					LEFT JOIN {$this->db->prefix}attribute a 
+					FROM " . DB::prefix() . "product_attribute pa 
+					LEFT JOIN " . DB::prefix() . "attribute a 
 						ON (pa.attribute_id = a.attribute_id) 
-					LEFT JOIN {$this->db->prefix}attribute_description ad 
+					LEFT JOIN " . DB::prefix() . "attribute_description ad 
 						ON (a.attribute_id = ad.attribute_id) 
 					WHERE pa.product_id = '" . (int)$product_id . "' 
 					AND a.attribute_group_id = '" . (int)$product_attribute_group['attribute_group_id'] . "' 
-					AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "' 
-					AND pa.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+					AND ad.language_id = '" . (int)Config::get('config_language_id') . "' 
+					AND pa.language_id = '" . (int)Config::get('config_language_id') . "' 
 					ORDER BY a.sort_order, ad.name
 				");
                 
@@ -737,15 +737,15 @@ class Product extends Model {
         if (is_bool($cachefile)):
             $product_option_data = array();
             
-            $product_option_query = $this->db->query("
+            $product_option_query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}product_option po 
-				LEFT JOIN `{$this->db->prefix}option` o 
+				FROM " . DB::prefix() . "product_option po 
+				LEFT JOIN `" . DB::prefix() . "option` o 
 				ON (po.option_id = o.option_id) 
-				LEFT JOIN {$this->db->prefix}option_description od 
+				LEFT JOIN " . DB::prefix() . "option_description od 
 				ON (o.option_id = od.option_id) 
 				WHERE po.product_id = '" . (int)$product_id . "' 
-				AND od.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+				AND od.language_id = '" . (int)Config::get('config_language_id') . "' 
 				ORDER BY o.sort_order
 			");
             
@@ -753,16 +753,16 @@ class Product extends Model {
                 if ($product_option['type'] == 'select' || $product_option['type'] == 'radio' || $product_option['type'] == 'checkbox' || $product_option['type'] == 'image'):
                     $product_option_value_data = array();
                     
-                    $product_option_value_query = $this->db->query("
+                    $product_option_value_query = DB::query("
 						SELECT * 
-						FROM {$this->db->prefix}product_option_value pov 
-						LEFT JOIN {$this->db->prefix}option_value ov 
+						FROM " . DB::prefix() . "product_option_value pov 
+						LEFT JOIN " . DB::prefix() . "option_value ov 
 						ON (pov.option_value_id = ov.option_value_id) 
-						LEFT JOIN {$this->db->prefix}option_value_description ovd 
+						LEFT JOIN " . DB::prefix() . "option_value_description ovd 
 						ON (ov.option_value_id = ovd.option_value_id) 
 						WHERE pov.product_id = '" . (int)$product_id . "' 
 						AND pov.product_option_id = '" . (int)$product_option['product_option_id'] . "' 
-						AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+						AND ovd.language_id = '" . (int)Config::get('config_language_id') . "' 
 						ORDER BY ov.sort_order
 					");
                     
@@ -784,19 +784,19 @@ class Product extends Model {
     }
     
     public function getProductDiscounts($product_id) {
-        if ($this->customer->isLogged()):
-            $customer_group_id = $this->customer->getGroupId();
+        if (Customer::isLogged()):
+            $customer_group_id = Customer::getGroupId();
         else:
-            $customer_group_id = $this->config->get('config_default_visibility');
+            $customer_group_id = Config::get('config_default_visibility');
         endif;
         
         $key = 'product.discounts.' . $product_id;
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}product_discount 
+				FROM " . DB::prefix() . "product_discount 
 				WHERE product_id = '" . (int)$product_id . "' 
 				AND customer_group_id = '" . (int)$customer_group_id . "' 
 				AND quantity > 1 
@@ -822,9 +822,9 @@ class Product extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}product_image 
+				FROM " . DB::prefix() . "product_image 
 				WHERE product_id = '" . (int)$product_id . "' 
 				ORDER BY sort_order ASC
 			");
@@ -842,10 +842,10 @@ class Product extends Model {
     }
     
     public function getProductRelated($product_id) {
-        if ($this->customer->isLogged()):
-            $customer_group_id = $this->customer->getGroupId();
+        if (Customer::isLogged()):
+            $customer_group_id = Customer::getGroupId();
         else:
-            $customer_group_id = $this->config->get('config_default_visibility');
+            $customer_group_id = Config::get('config_default_visibility');
         endif;
         
         $key = 'product.related.' . $product_id;
@@ -854,19 +854,19 @@ class Product extends Model {
         if (is_bool($cachefile)):
             $product_data = array();
             
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}product_related pr 
-				LEFT JOIN {$this->db->prefix}product p 
+				FROM " . DB::prefix() . "product_related pr 
+				LEFT JOIN " . DB::prefix() . "product p 
 					ON (pr.related_id = p.product_id) 
-				LEFT JOIN {$this->db->prefix}product_to_store p2s 
+				LEFT JOIN " . DB::prefix() . "product_to_store p2s 
 					ON (p.product_id = p2s.product_id) 
 				WHERE pr.product_id = '" . (int)$product_id . "' 
 				AND p.status = '1' 
 				AND p.visibility <= '" . (int)$customer_group_id . "' 
 				AND p.customer_id = '0' 
 				AND p.date_available <= NOW() 
-				AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'
+				AND p2s.store_id = '" . (int)Config::get('config_store_id') . "'
 			");
             
             foreach ($query->rows as $result):
@@ -885,11 +885,11 @@ class Product extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}product_to_layout 
+				FROM " . DB::prefix() . "product_to_layout 
 				WHERE product_id = '" . (int)$product_id . "' 
-				AND store_id = '" . (int)$this->config->get('config_store_id') . "'
+				AND store_id = '" . (int)Config::get('config_store_id') . "'
 			");
             
             if ($query->num_rows):
@@ -909,9 +909,9 @@ class Product extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}product_to_category 
+				FROM " . DB::prefix() . "product_to_category 
 				WHERE product_id = '" . (int)$product_id . "'
 			");
             
@@ -929,17 +929,17 @@ class Product extends Model {
     
     public function getProductParentCategory($product_id, $category_id = 0, $run = true) {
         if ($run):
-            $result = $this->db->query("
+            $result = DB::query("
 				SELECT category_id 
-				FROM {$this->db->prefix}product_to_category 
+				FROM " . DB::prefix() . "product_to_category 
 				WHERE product_id = '" . (int)$product_id . "' 
 				ORDER BY product_id ASC LIMIT 1");
             $category_id = $result->row['category_id'];
         endif;
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT parent_id 
-			FROM {$this->db->prefix}category 
+			FROM " . DB::prefix() . "category 
 			WHERE category_id = '" . (int)$category_id . "'");
         
         if ($query->row['parent_id'] == 0):
@@ -950,10 +950,10 @@ class Product extends Model {
     }
     
     public function getTotalProducts($data = array()) {
-        if ($this->customer->isLogged()):
-            $customer_group_id = $this->customer->getGroupId();
+        if (Customer::isLogged()):
+            $customer_group_id = Customer::getGroupId();
         else:
-            $customer_group_id = $this->config->get('config_default_visibility');
+            $customer_group_id = Config::get('config_default_visibility');
         endif;
         
         if (!empty($data)):
@@ -970,36 +970,36 @@ class Product extends Model {
                 
                 if (!empty($data['filter_category_id'])):
                     if (!empty($data['filter_sub_category'])):
-                        $sql.= " FROM {$this->db->prefix}category_path cp 
-								  LEFT JOIN {$this->db->prefix}product_to_category p2c 
+                        $sql.= " FROM " . DB::prefix() . "category_path cp 
+								  LEFT JOIN " . DB::prefix() . "product_to_category p2c 
 									ON (cp.category_id = p2c.category_id)";
                     else:
-                        $sql.= " FROM {$this->db->prefix}product_to_category p2c";
+                        $sql.= " FROM " . DB::prefix() . "product_to_category p2c";
                     endif;
                     
                     if (!empty($data['filter_filter'])):
-                        $sql.= " LEFT JOIN {$this->db->prefix}product_filter pf 
+                        $sql.= " LEFT JOIN " . DB::prefix() . "product_filter pf 
 									ON (p2c.product_id = pf.product_id) 
-								  LEFT JOIN {$this->db->prefix}product p 
+								  LEFT JOIN " . DB::prefix() . "product p 
 									ON (pf.product_id = p.product_id)";
                     else:
-                        $sql.= " LEFT JOIN {$this->db->prefix}product p 
+                        $sql.= " LEFT JOIN " . DB::prefix() . "product p 
 									ON (p2c.product_id = p.product_id)";
                     endif;
                 else:
-                    $sql.= " FROM {$this->db->prefix}product p";
+                    $sql.= " FROM " . DB::prefix() . "product p";
                 endif;
                 
-                $sql.= " LEFT JOIN {$this->db->prefix}product_description pd 
+                $sql.= " LEFT JOIN " . DB::prefix() . "product_description pd 
 							ON (p.product_id = pd.product_id) 
-						  LEFT JOIN {$this->db->prefix}product_to_store p2s 
+						  LEFT JOIN " . DB::prefix() . "product_to_store p2s 
 							ON (p.product_id = p2s.product_id) 
-						  WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+						  WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "' 
 						  AND p.status = '1' 
 						  AND p.visibility <= '" . (int)$customer_group_id . "' 
 						  AND p.customer_id = '0' 
 						  AND p.date_available <= NOW() 
-						  AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+						  AND p2s.store_id = '" . (int)Config::get('config_store_id') . "'";
                 
                 if (!empty($data['filter_category_id'])):
                     if (!empty($data['filter_sub_category'])):
@@ -1030,7 +1030,7 @@ class Product extends Model {
                         $words = explode(' ', trim(preg_replace('/\s\s+/', ' ', $data['filter_name'])));
                         
                         foreach ($words as $word) {
-                            $implode[] = "pd.name LIKE '%" . $this->db->escape($word) . "%'";
+                            $implode[] = "pd.name LIKE '%" . DB::escape($word) . "%'";
                         }
                         
                         if ($implode):
@@ -1039,36 +1039,36 @@ class Product extends Model {
                         endif;
                         
                         if (!empty($data['filter_description'])):
-                            $sql.= " OR pd.description LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+                            $sql.= " OR pd.description LIKE '%" . DB::escape($data['filter_name']) . "%'";
                         endif;
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.model) = '" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.model) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.sku) = '" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.sku) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.upc) = '" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.upc) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.ean) = '" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.ean) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.jan) = '" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.jan) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.isbn) = '" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.isbn) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.mpn) = '" . $this->db->escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.mpn) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     $sql.= ")";
@@ -1078,30 +1078,30 @@ class Product extends Model {
                     $sql.= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer_id'] . "'";
                 endif;
                 
-                $query = $this->db->query($sql);
+                $query = DB::query($sql);
                 
                 $cachefile = $query->row['total'];
                 $this->cache->set($key, (int)$cachefile);
             endif;
             unset($key);
         else:
-            $key = 'products.total.' . (int)$this->config->get('config_store_id');
+            $key = 'products.total.' . (int)Config::get('config_store_id');
             $cachefile = $this->cache->get($key);
             
             if (is_bool($cachefile)):
-                $query = $this->db->query("
+                $query = DB::query("
 					SELECT COUNT(DISTINCT p.product_id) AS total 
-					FROM {$this->db->prefix}product p 
-					LEFT JOIN {$this->db->prefix}product_description pd 
+					FROM " . DB::prefix() . "product p 
+					LEFT JOIN " . DB::prefix() . "product_description pd 
 						ON (p.product_id = pd.product_id) 
-					LEFT JOIN {$this->db->prefix}product_to_store p2s 
+					LEFT JOIN " . DB::prefix() . "product_to_store p2s 
 						ON (p.product_id = p2s.product_id) 
-					WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+					WHERE pd.language_id = '" . (int)Config::get('config_language_id') . "' 
 					AND p.status = '1' 
 					AND p.visibility <= '" . (int)$customer_group_id . "' 
 					AND p.customer_id = '0' 
 					AND p.date_available <= NOW() 
-					AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'
+					AND p2s.store_id = '" . (int)Config::get('config_store_id') . "'
 				");
                 
                 $cachefile = $query->row['total'];
@@ -1113,23 +1113,23 @@ class Product extends Model {
     }
 
     public function getTotalProductsByTag($tag) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT COUNT(tag_id) AS total, element_id 
-            FROM {$this->db->prefix}tag 
+            FROM " . DB::prefix() . "tag 
             WHERE section = 'product' 
-            AND language_id = '" . (int)$this->config->get('config_language_id') . "' 
-            AND tag LIKE '%" . $this->db->escape($tag) . "%' GROUP BY element_id ASC");
+            AND language_id = '" . (int)Config::get('config_language_id') . "' 
+            AND tag LIKE '%" . DB::escape($tag) . "%' GROUP BY element_id ASC");
         
         return $query->num_rows;
     }
 
     public function getProductsByTag($tag) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT element_id 
-            FROM {$this->db->prefix}tag 
+            FROM " . DB::prefix() . "tag 
             WHERE section = 'product' 
-            AND language_id = '" . (int)$this->config->get('config_language_id') . "' 
-            AND tag LIKE '%" . $this->db->escape($tag) . "%' GROUP BY element_id ASC");
+            AND language_id = '" . (int)Config::get('config_language_id') . "' 
+            AND tag LIKE '%" . DB::escape($tag) . "%' GROUP BY element_id ASC");
         
         if ($query->num_rows):
             $product_data = array();
@@ -1143,23 +1143,23 @@ class Product extends Model {
     }
     
     public function getAllRecurring($product_id) {
-        if ($this->customer->isLogged()):
-            $customer_group_id = $this->customer->getGroupId();
+        if (Customer::isLogged()):
+            $customer_group_id = Customer::getGroupId();
         else:
-            $customer_group_id = $this->config->get('config_default_visibility');
+            $customer_group_id = Config::get('config_default_visibility');
         endif;
         
         $key = 'product.recurring.all.' . $product_id;
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT `pd`.* 
-				FROM `{$this->db->prefix}product_recurring` `pp` 
-				JOIN `{$this->db->prefix}recurring_description` `pd` 
-					ON `pd`.`language_id` = " . (int)$this->config->get('config_language_id') . " 
+				FROM `" . DB::prefix() . "product_recurring` `pp` 
+				JOIN `" . DB::prefix() . "recurring_description` `pd` 
+					ON `pd`.`language_id` = " . (int)Config::get('config_language_id') . " 
 				AND `pd`.`recurring_id` = `pp`.`recurring_id` 
-				JOIN `{$this->db->prefix}recurring` `p` 
+				JOIN `" . DB::prefix() . "recurring` `p` 
 					ON `p`.`recurring_id` = `pd`.`recurring_id` 
 				WHERE `product_id` = " . (int)$product_id . " 
 				AND `status` = 1 
@@ -1179,20 +1179,20 @@ class Product extends Model {
     }
     
     public function getRecurring($product_id, $recurring_id) {
-        if ($this->customer->isLogged()):
-            $customer_group_id = $this->customer->getGroupId();
+        if (Customer::isLogged()):
+            $customer_group_id = Customer::getGroupId();
         else:
-            $customer_group_id = $this->config->get('config_default_visibility');
+            $customer_group_id = Config::get('config_default_visibility');
         endif;
         
         $key = 'product.recurring.' . $product_id . ':' . $recurring_id;
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM `{$this->db->prefix}recurring` `p` 
-				JOIN `{$this->db->prefix}product_recurring` `pp` 
+				FROM `" . DB::prefix() . "recurring` `p` 
+				JOIN `" . DB::prefix() . "product_recurring` `pp` 
 				ON `pp`.`recurring_id` = `p`.`recurring_id` 
 				AND `pp`.`product_id` = " . (int)$product_id . " 
 				WHERE `pp`.`recurring_id` = " . (int)$recurring_id . " 
@@ -1212,28 +1212,28 @@ class Product extends Model {
     }
     
     public function getTotalProductSpecials() {
-        if ($this->customer->isLogged()):
-            $customer_group_id = $this->customer->getGroupId();
+        if (Customer::isLogged()):
+            $customer_group_id = Customer::getGroupId();
         else:
-            $customer_group_id = $this->config->get('config_default_visibility');
+            $customer_group_id = Config::get('config_default_visibility');
         endif;
         
-        $key = 'product.specials.total.' . (int)$this->config->get('config_store_id');
+        $key = 'product.specials.total.' . (int)Config::get('config_store_id');
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT COUNT(DISTINCT ps.product_id) AS total 
-				FROM {$this->db->prefix}product_special ps 
-				LEFT JOIN {$this->db->prefix}product p 
+				FROM " . DB::prefix() . "product_special ps 
+				LEFT JOIN " . DB::prefix() . "product p 
 					ON (ps.product_id = p.product_id) 
-				LEFT JOIN {$this->db->prefix}product_to_store p2s 
+				LEFT JOIN " . DB::prefix() . "product_to_store p2s 
 					ON (p.product_id = p2s.product_id) 
 				WHERE p.status = '1' 
 				AND p.visibility <= '" . (int)$customer_group_id . "' 
 				AND p.customer_id = '0' 
 				AND p.date_available <= NOW() 
-				AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+				AND p2s.store_id = '" . (int)Config::get('config_store_id') . "' 
 				AND ps.customer_group_id = '" . (int)$customer_group_id . "' 
 				AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) 
 				AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW()))
@@ -1251,10 +1251,10 @@ class Product extends Model {
     }
     
     public function getProductByModel($model) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT DISTINCT product_id 
-			FROM {$this->db->prefix}product 
-			WHERE model = '" . $this->db->escape($model) . "'");
+			FROM " . DB::prefix() . "product 
+			WHERE model = '" . DB::escape($model) . "'");
         
         if ($query->num_rows) return $this->getProduct($query->row['product_id']);
         
@@ -1262,15 +1262,15 @@ class Product extends Model {
     }
     
     public function joinWaitList($event_id, $customer_id) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}event_wait_list 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "event_wait_list 
 			SET 
 				event_id = '" . (int)$event_id . "', 
 				customer_id = '" . (int)$customer_id . "'");
         
-        $event = $this->db->query("
+        $event = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}event_manager 
+			FROM " . DB::prefix() . "event_manager 
 			WHERE event_id = '" . (int)$event_id . "'");
 
         $event_info = $event->row;
@@ -1284,32 +1284,32 @@ class Product extends Model {
             )
         );
 
-        $this->theme->notify('public_waitlist_join', $callback);
+        Theme::notify('public_waitlist_join', $callback);
 
         return 1;
     }
     
     public function getEvents() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}event_manager");
+			FROM " . DB::prefix() . "event_manager");
         
         return $query->rows;
     }
 
     public function getEventsByGroupId() {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}event_manager 
-            WHERE visibility <= '" . (int)$this->customer->getGroupId() . "'");
+            FROM " . DB::prefix() . "event_manager 
+            WHERE visibility <= '" . (int)Customer::getGroupId() . "'");
         
         return $query->rows;
     }
     
     public function getEvent($event_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}event_manager 
+			FROM " . DB::prefix() . "event_manager 
 			WHERE event_id = '" . (int)$event_id . "'");
         
         return $query->row;
@@ -1330,9 +1330,9 @@ class Product extends Model {
     }
     
     public function getPresenterName($presenter_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT presenter_name 
-			FROM {$this->db->prefix}presenter 
+			FROM " . DB::prefix() . "presenter 
 			WHERE presenter_id = '" . (int)$presenter_id . "'");
         
         if ($query->num_rows) {
@@ -1343,9 +1343,9 @@ class Product extends Model {
     }
     
     public function getPresenterBio($presenter_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT bio 
-			FROM {$this->db->prefix}presenter 
+			FROM " . DB::prefix() . "presenter 
 			WHERE presenter_id = '" . (int)$presenter_id . "'");
         
         return $query->row['bio'];
@@ -1354,9 +1354,9 @@ class Product extends Model {
     public function getRoster($event_id, $customer_id) {
         $registered = false;
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT roster 
-			FROM {$this->db->prefix}event_manager 
+			FROM " . DB::prefix() . "event_manager 
 			WHERE event_id = '" . (int)$event_id . "'");
         
         if ($query->num_rows && !empty($query->row['roster'])) {
@@ -1374,9 +1374,9 @@ class Product extends Model {
     public function checkWaitList($event_id, $customer_id) {
         $registered = false;
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}event_wait_list 
+			FROM " . DB::prefix() . "event_wait_list 
 			WHERE event_id = '" . (int)$event_id . "' 
 			AND customer_id = '" . (int)$customer_id . "'");
         
@@ -1390,9 +1390,9 @@ class Product extends Model {
     }
     
     public function getEventImage($product_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT image 
-			FROM {$this->db->prefix}product 
+			FROM " . DB::prefix() . "product 
 			WHERE product_id = '" . (int)$product_id . "'");
         
         if ($query->num_rows):
@@ -1406,11 +1406,11 @@ class Product extends Model {
         $call = $data['event'];
         unset($data);
 
-        $data = $this->theme->language('notification/event');
+        $data = Theme::language('notification/event');
 
         $data['event_name'] = $call['event_name'];
-        $data['event_date'] = date($this->language->get('lang_date_format_short'), strtotime($call['date_time']));
-        $data['event_time'] = date($this->language->get('lang_time_format'), strtotime($call['date_time']));
+        $data['event_date'] = date(Lang::get('lang_date_format_short'), strtotime($call['date_time']));
+        $data['event_time'] = date(Lang::get('lang_time_format'), strtotime($call['date_time']));
 
         $data['event_location']  = false;
         $data['event_telephone'] = false;

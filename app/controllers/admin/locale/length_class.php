@@ -38,7 +38,7 @@ class LengthClass extends Controller {
         Theme::model('locale/length_class');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_locale_length_class->addLengthClass($this->request->post);
+            LocaleLengthClass::addLengthClass($this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -55,7 +55,7 @@ class LengthClass extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('locale/length_class', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('locale/length_class', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -69,7 +69,7 @@ class LengthClass extends Controller {
         Theme::model('locale/length_class');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_locale_length_class->editLengthClass($this->request->get['length_class_id'], $this->request->post);
+            LocaleLengthClass::editLengthClass($this->request->get['length_class_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -86,7 +86,7 @@ class LengthClass extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('locale/length_class', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('locale/length_class', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -101,7 +101,7 @@ class LengthClass extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $length_class_id) {
-                $this->model_locale_length_class->deleteLengthClass($length_class_id);
+                LocaleLengthClass::deleteLengthClass($length_class_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -120,7 +120,7 @@ class LengthClass extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('locale/length_class', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('locale/length_class', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,21 +165,21 @@ class LengthClass extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'locale/length_class', $url);
         
-        $data['insert'] = Url::link('locale/length_class/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('locale/length_class/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('locale/length_class/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('locale/length_class/delete', '' . $url, 'SSL');
         
         $data['length_classes'] = array();
         
         $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $length_class_total = $this->model_locale_length_class->getTotalLengthClasses();
+        $length_class_total = LocaleLengthClass::getTotalLengthClasses();
         
-        $results = $this->model_locale_length_class->getLengthClasses($filter);
+        $results = LocaleLengthClass::getLengthClasses($filter);
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/length_class/update', 'token=' . $this->session->data['token'] . '&length_class_id=' . $result['length_class_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/length_class/update', '' . '&length_class_id=' . $result['length_class_id'] . $url, 'SSL'));
             
             $data['length_classes'][] = array('length_class_id' => $result['length_class_id'], 'title' => $result['title'] . (($result['unit'] == Config::get('config_length_class')) ? Lang::get('lang_text_default') : null), 'unit' => $result['unit'], 'value' => $result['value'], 'selected' => isset($this->request->post['selected']) && in_array($result['length_class_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -210,9 +210,9 @@ class LengthClass extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_title'] = Url::link('locale/length_class', 'token=' . $this->session->data['token'] . '&sort=title' . $url, 'SSL');
-        $data['sort_unit'] = Url::link('locale/length_class', 'token=' . $this->session->data['token'] . '&sort=unit' . $url, 'SSL');
-        $data['sort_value'] = Url::link('locale/length_class', 'token=' . $this->session->data['token'] . '&sort=value' . $url, 'SSL');
+        $data['sort_title'] = Url::link('locale/length_class', '' . '&sort=title' . $url, 'SSL');
+        $data['sort_unit'] = Url::link('locale/length_class', '' . '&sort=unit' . $url, 'SSL');
+        $data['sort_value'] = Url::link('locale/length_class', '' . '&sort=value' . $url, 'SSL');
         
         $url = '';
         
@@ -224,7 +224,7 @@ class LengthClass extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($length_class_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/length_class', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($length_class_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/length_class', '' . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -233,7 +233,7 @@ class LengthClass extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('locale/length_class_list', $data));
+        Response::setOutput(View::render('locale/length_class_list', $data));
     }
     
     protected function getForm() {
@@ -274,25 +274,25 @@ class LengthClass extends Controller {
         Breadcrumb::add('lang_heading_title', 'locale/length_class', $url);
         
         if (!isset($this->request->get['length_class_id'])) {
-            $data['action'] = Url::link('locale/length_class/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/length_class/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/length_class/update', 'token=' . $this->session->data['token'] . '&length_class_id=' . $this->request->get['length_class_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/length_class/update', '' . '&length_class_id=' . $this->request->get['length_class_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('locale/length_class', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('locale/length_class', '' . $url, 'SSL');
         
         if (isset($this->request->get['length_class_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $length_class_info = $this->model_locale_length_class->getLengthClass($this->request->get['length_class_id']);
+            $length_class_info = LocaleLengthClass::getLengthClass($this->request->get['length_class_id']);
         }
         
         Theme::model('locale/language');
         
-        $data['languages'] = $this->model_locale_language->getLanguages();
+        $data['languages'] = LocaleLanguage::getLanguages();
         
         if (isset($this->request->post['length_class_description'])) {
             $data['length_class_description'] = $this->request->post['length_class_description'];
         } elseif (isset($this->request->get['length_class_id'])) {
-            $data['length_class_description'] = $this->model_locale_length_class->getLengthClassDescriptions($this->request->get['length_class_id']);
+            $data['length_class_description'] = LocaleLengthClass::getLengthClassDescriptions($this->request->get['length_class_id']);
         } else {
             $data['length_class_description'] = array();
         }
@@ -309,7 +309,7 @@ class LengthClass extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('locale/length_class_form', $data));
+        Response::setOutput(View::render('locale/length_class_form', $data));
     }
     
     protected function validateForm() {
@@ -344,7 +344,7 @@ class LengthClass extends Controller {
                 $this->error['warning'] = Lang::get('lang_error_default');
             }
             
-            $product_total = $this->model_catalog_product->getTotalProductsByLengthClassId($length_class_id);
+            $product_total = CatalogProduct::getTotalProductsByLengthClassId($length_class_id);
             
             if ($product_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_product'), $product_total);

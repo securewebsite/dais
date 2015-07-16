@@ -21,8 +21,8 @@ class Credit extends Model {
     public function getCredits($data = array()) {
         $sql = "
 			SELECT * 
-			FROM `{$this->db->prefix}customer_credit` 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "'";
+			FROM `" . DB::prefix() . "customer_credit` 
+			WHERE customer_id = '" . (int)\Customer::getId() . "'";
         
         $sort_data = array('amount', 'description', 'date_added');
         
@@ -50,26 +50,26 @@ class Credit extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         endif;
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
     
     public function getTotalCredits() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM `{$this->db->prefix}customer_credit` 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "'
+			FROM `" . DB::prefix() . "customer_credit` 
+			WHERE customer_id = '" . (int)\Customer::getId() . "'
 		");
         
         return $query->row['total'];
     }
     
     public function getTotalAmount() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT SUM(amount) AS total 
-			FROM `{$this->db->prefix}customer_credit` 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "' 
+			FROM `" . DB::prefix() . "customer_credit` 
+			WHERE customer_id = '" . (int)\Customer::getId() . "' 
 			GROUP BY customer_id
 		");
         

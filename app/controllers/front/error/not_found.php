@@ -16,13 +16,15 @@
 
 
 namespace App\Controllers\Front\Error;
+
 use App\Controllers\Controller;
 
 class NotFound extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('error/not_found');
+        $data = Theme::language('error/not_found');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         if (isset($this->request->get['route'])):
             $routes = $this->request->get;
@@ -45,22 +47,22 @@ class NotFound extends Controller {
                 $connection = 'nonssl';
             endif;
             
-            $this->breadcrumb->add('lang_breadcrumb_error', $route, $url, true, $connection);
+            Breadcrumb::add('lang_breadcrumb_error', $route, $url, true, $connection);
         endif;
         
-        $this->response->addheader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 not found');
+        Response::addheader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 not found');
 
-        $data['heading_title'] = $this->language->get('lang_page_title');
-        $data['continue']      = $this->url->link('shop/home');
-        $data['text_error']    = $this->language->get('lang_text_error');
+        $data['heading_title'] = Lang::get('lang_page_title');
+        $data['continue']      = Url::link('shop/home');
+        $data['text_error']    = Lang::get('lang_text_error');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->setController('header', 'shop/header');
-        $this->theme->setController('footer', 'shop/footer');
+        Theme::setController('header', 'shop/header');
+        Theme::setController('footer', 'shop/footer');
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('error/not_found', $data));
+        Response::setOutput(View::render('error/not_found', $data));
     }
 }

@@ -21,75 +21,75 @@ use Dais\Library\Text;
 
 class Order extends Model {
     public function addOrder($data) {
-        $this->db->query("
-			INSERT INTO `{$this->db->prefix}order` 
+        DB::query("
+			INSERT INTO `" . DB::prefix() . "order` 
 			SET 
-				invoice_prefix          = '" . $this->db->escape($data['invoice_prefix']) . "', 
+				invoice_prefix          = '" . DB::escape($data['invoice_prefix']) . "', 
 				store_id                = '" . (int)$data['store_id'] . "', 
-				store_name              = '" . $this->db->escape($data['store_name']) . "', 
-				store_url               = '" . $this->db->escape($data['store_url']) . "', 
+				store_name              = '" . DB::escape($data['store_name']) . "', 
+				store_url               = '" . DB::escape($data['store_url']) . "', 
 				customer_id             = '" . (int)$data['customer_id'] . "', 
 				customer_group_id       = '" . (int)$data['customer_group_id'] . "', 
-				firstname               = '" . $this->db->escape($data['firstname']) . "', 
-				lastname                = '" . $this->db->escape($data['lastname']) . "', 
-				email                   = '" . $this->db->escape($data['email']) . "', 
-				telephone               = '" . $this->db->escape($data['telephone']) . "', 
-				payment_firstname       = '" . $this->db->escape($data['payment_firstname']) . "', 
-				payment_lastname        = '" . $this->db->escape($data['payment_lastname']) . "', 
-				payment_company         = '" . $this->db->escape($data['payment_company']) . "', 
-				payment_company_id      = '" . $this->db->escape($data['payment_company_id']) . "', 
-				payment_tax_id          = '" . $this->db->escape($data['payment_tax_id']) . "', 
-				payment_address_1       = '" . $this->db->escape($data['payment_address_1']) . "', 
-				payment_address_2       = '" . $this->db->escape($data['payment_address_2']) . "', 
-				payment_city            = '" . $this->db->escape($data['payment_city']) . "', 
-				payment_postcode        = '" . $this->db->escape($data['payment_postcode']) . "', 
-				payment_country         = '" . $this->db->escape($data['payment_country']) . "', 
+				firstname               = '" . DB::escape($data['firstname']) . "', 
+				lastname                = '" . DB::escape($data['lastname']) . "', 
+				email                   = '" . DB::escape($data['email']) . "', 
+				telephone               = '" . DB::escape($data['telephone']) . "', 
+				payment_firstname       = '" . DB::escape($data['payment_firstname']) . "', 
+				payment_lastname        = '" . DB::escape($data['payment_lastname']) . "', 
+				payment_company         = '" . DB::escape($data['payment_company']) . "', 
+				payment_company_id      = '" . DB::escape($data['payment_company_id']) . "', 
+				payment_tax_id          = '" . DB::escape($data['payment_tax_id']) . "', 
+				payment_address_1       = '" . DB::escape($data['payment_address_1']) . "', 
+				payment_address_2       = '" . DB::escape($data['payment_address_2']) . "', 
+				payment_city            = '" . DB::escape($data['payment_city']) . "', 
+				payment_postcode        = '" . DB::escape($data['payment_postcode']) . "', 
+				payment_country         = '" . DB::escape($data['payment_country']) . "', 
 				payment_country_id      = '" . (int)$data['payment_country_id'] . "', 
-				payment_zone            = '" . $this->db->escape($data['payment_zone']) . "', 
+				payment_zone            = '" . DB::escape($data['payment_zone']) . "', 
 				payment_zone_id         = '" . (int)$data['payment_zone_id'] . "', 
-				payment_address_format  = '" . $this->db->escape($data['payment_address_format']) . "', 
-				payment_method          = '" . $this->db->escape($data['payment_method']) . "', 
-				payment_code            = '" . $this->db->escape($data['payment_code']) . "', 
-				shipping_firstname      = '" . $this->db->escape($data['shipping_firstname']) . "', 
-				shipping_lastname       = '" . $this->db->escape($data['shipping_lastname']) . "', 
-				shipping_company        = '" . $this->db->escape($data['shipping_company']) . "', 
-				shipping_address_1      = '" . $this->db->escape($data['shipping_address_1']) . "', 
-				shipping_address_2      = '" . $this->db->escape($data['shipping_address_2']) . "', 
-				shipping_city           = '" . $this->db->escape($data['shipping_city']) . "', 
-				shipping_postcode       = '" . $this->db->escape($data['shipping_postcode']) . "', 
-				shipping_country        = '" . $this->db->escape($data['shipping_country']) . "', 
+				payment_address_format  = '" . DB::escape($data['payment_address_format']) . "', 
+				payment_method          = '" . DB::escape($data['payment_method']) . "', 
+				payment_code            = '" . DB::escape($data['payment_code']) . "', 
+				shipping_firstname      = '" . DB::escape($data['shipping_firstname']) . "', 
+				shipping_lastname       = '" . DB::escape($data['shipping_lastname']) . "', 
+				shipping_company        = '" . DB::escape($data['shipping_company']) . "', 
+				shipping_address_1      = '" . DB::escape($data['shipping_address_1']) . "', 
+				shipping_address_2      = '" . DB::escape($data['shipping_address_2']) . "', 
+				shipping_city           = '" . DB::escape($data['shipping_city']) . "', 
+				shipping_postcode       = '" . DB::escape($data['shipping_postcode']) . "', 
+				shipping_country        = '" . DB::escape($data['shipping_country']) . "', 
 				shipping_country_id     = '" . (int)$data['shipping_country_id'] . "', 
-				shipping_zone           = '" . $this->db->escape($data['shipping_zone']) . "', 
+				shipping_zone           = '" . DB::escape($data['shipping_zone']) . "', 
 				shipping_zone_id        = '" . (int)$data['shipping_zone_id'] . "', 
-				shipping_address_format = '" . $this->db->escape($data['shipping_address_format']) . "', 
-				shipping_method         = '" . $this->db->escape($data['shipping_method']) . "', 
-				shipping_code           = '" . $this->db->escape($data['shipping_code']) . "', 
-				comment                 = '" . $this->db->escape($data['comment']) . "', 
+				shipping_address_format = '" . DB::escape($data['shipping_address_format']) . "', 
+				shipping_method         = '" . DB::escape($data['shipping_method']) . "', 
+				shipping_code           = '" . DB::escape($data['shipping_code']) . "', 
+				comment                 = '" . DB::escape($data['comment']) . "', 
 				total                   = '" . (float)$data['total'] . "', 
 				affiliate_id            = '" . (int)$data['affiliate_id'] . "', 
 				commission              = '" . (float)$data['commission'] . "', 
 				language_id             = '" . (int)$data['language_id'] . "', 
 				currency_id             = '" . (int)$data['currency_id'] . "', 
-				currency_code           = '" . $this->db->escape($data['currency_code']) . "', 
+				currency_code           = '" . DB::escape($data['currency_code']) . "', 
 				currency_value          = '" . (float)$data['currency_value'] . "', 
-				ip                      = '" . $this->db->escape($data['ip']) . "', 
-				forwarded_ip            = '" . $this->db->escape($data['forwarded_ip']) . "', 
-				user_agent              = '" . $this->db->escape($data['user_agent']) . "', 
-				accept_language         = '" . $this->db->escape($data['accept_language']) . "', 
+				ip                      = '" . DB::escape($data['ip']) . "', 
+				forwarded_ip            = '" . DB::escape($data['forwarded_ip']) . "', 
+				user_agent              = '" . DB::escape($data['user_agent']) . "', 
+				accept_language         = '" . DB::escape($data['accept_language']) . "', 
 				date_added              = NOW(), 
 				date_modified           = NOW()
 		");
         
-        $order_id = $this->db->getLastId();
+        $order_id = DB::getLastId();
         
         foreach ($data['products'] as $product):
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}order_product 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "order_product 
 				SET 
 					order_id   = '" . (int)$order_id . "', 
 					product_id = '" . (int)$product['product_id'] . "', 
-					name       = '" . $this->db->escape($product['name']) . "', 
-					model      = '" . $this->db->escape($product['model']) . "', 
+					name       = '" . DB::escape($product['name']) . "', 
+					model      = '" . DB::escape($product['model']) . "', 
 					quantity   = '" . (int)$product['quantity'] . "', 
 					price      = '" . (float)$product['price'] . "', 
 					total      = '" . (float)$product['total'] . "', 
@@ -97,86 +97,86 @@ class Order extends Model {
 					reward     = '" . (int)$product['reward'] . "'
 			");
             
-            $order_product_id = $this->db->getLastId();
+            $order_product_id = DB::getLastId();
             
             foreach ($product['option'] as $option):
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}order_option 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "order_option 
 					SET 
 						order_id                = '" . (int)$order_id . "', 
 						order_product_id        = '" . (int)$order_product_id . "', 
 						product_option_id       = '" . (int)$option['product_option_id'] . "', 
 						product_option_value_id = '" . (int)$option['product_option_value_id'] . "', 
-						name                    = '" . $this->db->escape($option['name']) . "', 
-						`value`                 = '" . $this->db->escape($option['value']) . "', 
-						`type`                  = '" . $this->db->escape($option['type']) . "'
+						name                    = '" . DB::escape($option['name']) . "', 
+						`value`                 = '" . DB::escape($option['value']) . "', 
+						`type`                  = '" . DB::escape($option['type']) . "'
 				");
             endforeach;
             
             foreach ($product['download'] as $download):
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}order_download 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "order_download 
 					SET 
 						order_id         = '" . (int)$order_id . "', 
 						order_product_id = '" . (int)$order_product_id . "', 
-						name             = '" . $this->db->escape($download['name']) . "', 
-						filename         = '" . $this->db->escape($download['filename']) . "', 
-						mask             = '" . $this->db->escape($download['mask']) . "', 
+						name             = '" . DB::escape($download['name']) . "', 
+						filename         = '" . DB::escape($download['filename']) . "', 
+						mask             = '" . DB::escape($download['mask']) . "', 
 						remaining        = '" . (int)($download['remaining'] * $product['quantity']) . "'
 				");
             endforeach;
         endforeach;
         
         foreach ($data['gift_cards'] as $gift_card):
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}order_gift_card 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "order_gift_card 
 				SET 
 					order_id          = '" . (int)$order_id . "', 
-					description       = '" . $this->db->escape($gift_card['description']) . "', 
-					code              = '" . $this->db->escape($gift_card['code']) . "', 
-					from_name         = '" . $this->db->escape($gift_card['from_name']) . "', 
-					from_email        = '" . $this->db->escape($gift_card['from_email']) . "', 
-					to_name           = '" . $this->db->escape($gift_card['to_name']) . "', 
-					to_email          = '" . $this->db->escape($gift_card['to_email']) . "', 
+					description       = '" . DB::escape($gift_card['description']) . "', 
+					code              = '" . DB::escape($gift_card['code']) . "', 
+					from_name         = '" . DB::escape($gift_card['from_name']) . "', 
+					from_email        = '" . DB::escape($gift_card['from_email']) . "', 
+					to_name           = '" . DB::escape($gift_card['to_name']) . "', 
+					to_email          = '" . DB::escape($gift_card['to_email']) . "', 
 					gift_card_theme_id = '" . (int)$gift_card['gift_card_theme_id'] . "', 
-					message           = '" . $this->db->escape($gift_card['message']) . "', 
+					message           = '" . DB::escape($gift_card['message']) . "', 
 					amount            = '" . (float)$gift_card['amount'] . "'
 			");
         endforeach;
         
         foreach ($data['totals'] as $total):
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}order_total 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "order_total 
 				SET 
 					order_id   = '" . (int)$order_id . "', 
-					code       = '" . $this->db->escape($total['code']) . "', 
-					title      = '" . $this->db->escape($total['title']) . "', 
-					text       = '" . $this->db->escape($total['text']) . "', 
+					code       = '" . DB::escape($total['code']) . "', 
+					title      = '" . DB::escape($total['title']) . "', 
+					text       = '" . DB::escape($total['text']) . "', 
 					`value`    = '" . (float)$total['value'] . "', 
 					sort_order = '" . (int)$total['sort_order'] . "'
 			");
         endforeach;
         
-        $this->theme->trigger('front_order_add', array('order_id' => $order_id));
+        Theme::trigger('front_order_add', array('order_id' => $order_id));
         
         return $order_id;
     }
     
     public function getOrder($order_id) {
-        $order_query = $this->db->query("
+        $order_query = DB::query("
 			SELECT *, 
 				(SELECT os.name 
-				FROM `{$this->db->prefix}order_status` os 
+				FROM `" . DB::prefix() . "order_status` os 
 				WHERE os.order_status_id = o.order_status_id 
 				AND os.language_id = o.language_id) AS order_status 
-			FROM `{$this->db->prefix}order` o 
+			FROM `" . DB::prefix() . "order` o 
 			WHERE o.order_id = '" . (int)$order_id . "'
 		");
         
         if ($order_query->num_rows):
-            $country_query = $this->db->query("
+            $country_query = DB::query("
 				SELECT * 
-				FROM `{$this->db->prefix}country` 
+				FROM `" . DB::prefix() . "country` 
 				WHERE country_id = '" . (int)$order_query->row['payment_country_id'] . "'
 			");
             
@@ -188,9 +188,9 @@ class Order extends Model {
                 $payment_iso_code_3 = '';
             endif;
             
-            $zone_query = $this->db->query("
+            $zone_query = DB::query("
 				SELECT * 
-				FROM `{$this->db->prefix}zone` 
+				FROM `" . DB::prefix() . "zone` 
 				WHERE zone_id = '" . (int)$order_query->row['payment_zone_id'] . "'
 			");
             
@@ -200,9 +200,9 @@ class Order extends Model {
                 $payment_zone_code = '';
             endif;
             
-            $country_query = $this->db->query("
+            $country_query = DB::query("
 				SELECT * 
-				FROM `{$this->db->prefix}country` 
+				FROM `" . DB::prefix() . "country` 
 				WHERE country_id = '" . (int)$order_query->row['shipping_country_id'] . "'
 			");
             
@@ -214,9 +214,9 @@ class Order extends Model {
                 $shipping_iso_code_3 = '';
             endif;
             
-            $zone_query = $this->db->query("
+            $zone_query = DB::query("
 				SELECT * 
-				FROM `{$this->db->prefix}zone` 
+				FROM `" . DB::prefix() . "zone` 
 				WHERE zone_id = '" . (int)$order_query->row['shipping_zone_id'] . "'
 			");
             
@@ -226,9 +226,9 @@ class Order extends Model {
                 $shipping_zone_code = '';
             endif;
             
-            $this->theme->model('locale/language');
+            Theme::model('locale/language');
             
-            $language_info = $this->model_locale_language->getLanguage($order_query->row['language_id']);
+            $language_info = LocaleLanguage::getLanguage($order_query->row['language_id']);
             
             if ($language_info):
 				$language_code      = $language_info['code'];
@@ -324,56 +324,56 @@ class Order extends Model {
         	$temp = array();
 
             // Fraud Detection
-            if ($this->config->get('config_fraud_detection')):
-                $this->theme->model('checkout/fraud');
-                $risk_score = $this->model_checkout_fraud->getFraudScore($order_info);
-                if ($risk_score > $this->config->get('config_fraud_score')):
-                    $order_status_id = $this->config->get('config_fraud_status_id');
+            if (Config::get('config_fraud_detection')):
+                Theme::model('checkout/fraud');
+                $risk_score = CheckoutFraud::getFraudScore($order_info);
+                if ($risk_score > Config::get('config_fraud_score')):
+                    $order_status_id = Config::get('config_fraud_status_id');
                 endif;
             endif;
             
             // Ban IP
             $status = false;
             
-            $this->theme->model('account/customer');
+            Theme::model('account/customer');
             
             if ($order_info['customer_id']):
-                $results = $this->model_account_customer->getIps($order_info['customer_id']);
+                $results = AccountCustomer::getIps($order_info['customer_id']);
                 foreach ($results as $result):
-                    if ($this->model_account_customer->isBanIp($result['ip'])):
+                    if (AccountCustomer::isBanIp($result['ip'])):
                         $status = true;
                         break;
                     endif;
                 endforeach;
             else:
-                $status = $this->model_account_customer->isBanIp($order_info['ip']);
+                $status = AccountCustomer::isBanIp($order_info['ip']);
             endif;
             
             if ($status):
-                $order_status_id = $this->config->get('config_order_status_id');
+                $order_status_id = Config::get('config_order_status_id');
             endif;
             
-            $this->db->query("
-				UPDATE `{$this->db->prefix}order` 
+            DB::query("
+				UPDATE `" . DB::prefix() . "order` 
 				SET 
 					order_status_id = '" . (int)$order_status_id . "', 
 					date_modified   = NOW() 
 				WHERE order_id = '" . (int)$order_id . "'
 			");
             
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}order_history 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "order_history 
 				SET 
 					order_id        = '" . (int)$order_id . "', 
 					order_status_id = '" . (int)$order_status_id . "', 
 					notify          = '1', 
-					comment         = '" . $this->db->escape(($comment) ? $comment : '') . "', 
+					comment         = '" . DB::escape(($comment) ? $comment : '') . "', 
 					date_added      = NOW()
 			");
             
-            $order_product_query = $this->db->query("
+            $order_product_query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}order_product 
+				FROM " . DB::prefix() . "order_product 
 				WHERE order_id = '" . (int)$order_id . "'
 			");
 
@@ -388,24 +388,24 @@ class Order extends Model {
                 $product_ids[] = $row['product_id'];
             endforeach;
             
-            $this->customer->processMembership($product_ids);
+            Customer::processMembership($product_ids);
             
             unset($product_ids);
             
             $product_reward = 0;
             
             foreach ($order_product_query->rows as $order_product):
-                $event_query = $this->db->query("
+                $event_query = DB::query("
 					SELECT event_id 
-					FROM {$this->db->prefix}product 
+					FROM " . DB::prefix() . "product 
 					WHERE product_id = '" . (int)$order_product['product_id'] . "'");
                 
                 if ($event_query->row['event_id'] > 0):
                     $roster = array();
                     
-                    $rosters = $this->db->query("
+                    $rosters = DB::query("
 						SELECT roster 
-						FROM {$this->db->prefix}event_manager 
+						FROM " . DB::prefix() . "event_manager 
 						WHERE event_id = '" . (int)$event_query->row['event_id'] . "'");
                     
                     if (!empty($rosters->row['roster'])):
@@ -427,32 +427,32 @@ class Order extends Model {
                         );
                     endif;
                     
-                    $this->db->query("
-						UPDATE {$this->db->prefix}event_manager 
+                    DB::query("
+						UPDATE " . DB::prefix() . "event_manager 
 						SET 
 							filled = (filled + " . (int)$order_product['quantity'] . "), 
-							roster = '" . $this->db->escape(serialize($roster)) . "' 
+							roster = '" . DB::escape(serialize($roster)) . "' 
 						WHERE event_id = '" . (int)$event_query->row['event_id'] . "'");
                     
-                    $this->db->query("
-						DELETE FROM {$this->db->prefix}event_wait_list 
+                    DB::query("
+						DELETE FROM " . DB::prefix() . "event_wait_list 
 						WHERE event_id  = '" . (int)$event_query->row['event_id'] . "' 
-						AND customer_id = '" . (int)$this->customer->getId() . "'");
+						AND customer_id = '" . (int)Customer::getId() . "'");
                 endif;
                 
                 $product_reward += $order_product['reward'];
                 
-                $this->db->query("
-					UPDATE {$this->db->prefix}product 
+                DB::query("
+					UPDATE " . DB::prefix() . "product 
 					SET 
 						quantity = (quantity - " . (int)$order_product['quantity'] . ") 
 					WHERE product_id = '" . (int)$order_product['product_id'] . "' 
 					AND subtract = '1'
 				");
                 
-                $order_option_query = $this->db->query("
+                $order_option_query = DB::query("
 					SELECT * 
-					FROM {$this->db->prefix}order_option 
+					FROM " . DB::prefix() . "order_option 
 					WHERE order_id = '" . (int)$order_id . "' 
 					AND order_product_id = '" . (int)$order_product['order_product_id'] . "'
 				");
@@ -462,8 +462,8 @@ class Order extends Model {
 				$temp['products'][] = $item;
                 
                 foreach ($order_option_query->rows as $option):
-                    $this->db->query("
-						UPDATE {$this->db->prefix}product_option_value 
+                    DB::query("
+						UPDATE " . DB::prefix() . "product_option_value 
 						SET 
 							quantity = (quantity - " . (int)$order_product['quantity'] . ") 
 						WHERE product_option_value_id = '" . (int)$option['product_option_value_id'] . "' 
@@ -475,29 +475,29 @@ class Order extends Model {
             $this->cache->delete('products.popular');
             
             // Downloads
-            $order_download_query = $this->db->query("
+            $order_download_query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}order_download 
+				FROM " . DB::prefix() . "order_download 
 				WHERE order_id = '" . (int)$order_id . "'
 			");
 
 			$temp['downloads'] = $order_download_query->rows;
             
             // Gift Giftcard
-            $this->theme->model('checkout/gift_card');
+            Theme::model('checkout/gift_card');
             
-            $order_gift_card_query = $this->db->query("
+            $order_gift_card_query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}order_gift_card 
+				FROM " . DB::prefix() . "order_gift_card 
 				WHERE order_id = '" . (int)$order_id . "'
 			");
             
             $temp['gift_cards'] = $order_gift_card_query->rows;
 
             foreach ($order_gift_card_query->rows as $order_gift_card):
-                $gift_card_id = $this->model_checkout_gift_card->addGiftcard($order_id, $order_gift_card);
-                $this->db->query("
-					UPDATE {$this->db->prefix}order_gift_card 
+                $gift_card_id = CheckoutGiftCard::addGiftcard($order_id, $order_gift_card);
+                DB::query("
+					UPDATE " . DB::prefix() . "order_gift_card 
 					SET 
 						gift_card_id = '" . (int)$gift_card_id . "' 
 					WHERE order_gift_card_id = '" . (int)$order_gift_card['order_gift_card_id'] . "'
@@ -505,14 +505,14 @@ class Order extends Model {
             endforeach;
             
             // Send out any gift gift_card mails
-            if ($this->config->get('config_complete_status_id') == $order_status_id):
-                $this->model_checkout_gift_card->confirm($order_id);
+            if (Config::get('config_complete_status_id') == $order_status_id):
+                CheckoutGiftCard::confirm($order_id);
             endif;
             
             // Order Totals
-            $order_total_query = $this->db->query("
+            $order_total_query = DB::query("
 				SELECT * 
-				FROM `{$this->db->prefix}order_total` 
+				FROM `" . DB::prefix() . "order_total` 
 				WHERE order_id = '" . (int)$order_id . "' 
 				ORDER BY sort_order ASC
 			");
@@ -520,17 +520,17 @@ class Order extends Model {
 			$temp['totals'] = $order_total_query->rows;
             
             foreach ($order_total_query->rows as $order_total):
-                $this->theme->model('total/' . $order_total['code']);
+                Theme::model('total/' . $order_total['code']);
                 if (method_exists($this->{'model_total_' . $order_total['code']}, 'confirm')):
                     $this->{'model_total_' . $order_total['code']}->confirm($order_info, $order_total);
                 endif;
             endforeach;
             
-            $this->theme->language('checkout/order');
+            Theme::language('checkout/order');
             
-            $order_status_query = $this->db->query("
+            $order_status_query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}order_status 
+				FROM " . DB::prefix() . "order_status 
 				WHERE order_status_id = '" . (int)$order_status_id . "' 
 				AND language_id = '" . (int)$order_info['language_id'] . "'
 			");
@@ -538,16 +538,16 @@ class Order extends Model {
 			$temp['status'] = $order_status_query->row['name'];
             
             // Add Reward
-            if ($product_reward && ($order_status_id == $this->config->get('config_order_status_id'))):
-                $description = sprintf($this->language->get('lang_text_reward'), $product_reward, $order_id);
-                $this->customer->addReward($order_info['customer_id'], $description, $product_reward, $order_id);
+            if ($product_reward && ($order_status_id == Config::get('config_order_status_id'))):
+                $description = sprintf(Lang::get('lang_text_reward'), $product_reward, $order_id);
+                Customer::addReward($order_info['customer_id'], $description, $product_reward, $order_id);
             endif;
 
             // Add commission
             if (isset($order_info['affiliate_id']) && isset($order_info['commission'])):
-				$commission  = $this->currency->format($order_info['commission']);
-				$description = sprintf($this->language->get('lang_text_commission'), $commission, $order_id);
-            	$this->customer->addCommission($order_info['affiliate_id'], $order_id, $description, $order_info['commission']);
+				$commission  = Currency::format($order_info['commission']);
+				$description = sprintf(Lang::get('lang_text_commission'), $commission, $order_id);
+            	Customer::addCommission($order_info['affiliate_id'], $order_id, $description, $order_info['commission']);
             endif;
             
             $callback = array(
@@ -561,15 +561,15 @@ class Order extends Model {
             	)
             );
 
-            $this->theme->notify('public_customer_order_confirm', $callback);
+            Theme::notify('public_customer_order_confirm', $callback);
 
             // Admin Alert Mail
-            if ($this->config->get('config_alert_mail')):
+            if (Config::get('config_alert_mail')):
             	// Build additional emails array to Cc: these emails.
 	            $cc = array();
 
-	            if ($this->config->get('config_alert_emails')):
-	                $emails = explode(',', $this->config->get('config_alert_emails'));
+	            if (Config::get('config_alert_emails')):
+	                $emails = explode(',', Config::get('config_alert_emails'));
 	                foreach ($emails as $email):
 	                    if (strlen($email) > 0 && preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $email)):
 	                       $cc[] = trim($email);
@@ -577,10 +577,10 @@ class Order extends Model {
 	                endforeach;
 	            endif;
 	            
-	            $this->theme->notify('public_admin_order_confirm', array('user_id' => $this->config->get('config_admin_email_user')), $cc);
+	            Theme::notify('public_admin_order_confirm', array('user_id' => Config::get('config_admin_email_user')), $cc);
             endif;
             
-            $this->theme->trigger('front_order_confirm', array('order_id' => $order_id));
+            Theme::trigger('front_order_confirm', array('order_id' => $order_id));
         endif;
     }
     
@@ -590,60 +590,60 @@ class Order extends Model {
         if ($order_info && $order_info['order_status_id']):
             
             // Fraud Detection
-            if ($this->config->get('config_fraud_detection')):
-                $this->theme->model('checkout/fraud');
-                $risk_score = $this->model_checkout_fraud->getFraudScore($order_info);
-                if ($risk_score > $this->config->get('config_fraud_score')):
-                    $order_status_id = $this->config->get('config_fraud_status_id');
+            if (Config::get('config_fraud_detection')):
+                Theme::model('checkout/fraud');
+                $risk_score = CheckoutFraud::getFraudScore($order_info);
+                if ($risk_score > Config::get('config_fraud_score')):
+                    $order_status_id = Config::get('config_fraud_status_id');
                 endif;
             endif;
             
             // Ban IP
             $status = false;
             
-            $this->theme->model('account/customer');
+            Theme::model('account/customer');
             
             if ($order_info['customer_id']):
-                $results = $this->model_account_customer->getIps($order_info['customer_id']);
+                $results = AccountCustomer::getIps($order_info['customer_id']);
                 foreach ($results as $result):
-                    if ($this->model_account_customer->isBanIp($result['ip'])):
+                    if (AccountCustomer::isBanIp($result['ip'])):
                         $status = true;
                         break;
                     endif;
                 endforeach;
             else:
-                $status = $this->model_account_customer->isBanIp($order_info['ip']);
+                $status = AccountCustomer::isBanIp($order_info['ip']);
             endif;
             
             if ($status):
-                $order_status_id = $this->config->get('config_order_status_id');
+                $order_status_id = Config::get('config_order_status_id');
             endif;
             
-            $this->db->query("
-				UPDATE `{$this->db->prefix}order` 
+            DB::query("
+				UPDATE `" . DB::prefix() . "order` 
 				SET 
 					order_status_id = '" . (int)$order_status_id . "', 
 					date_modified   = NOW() 
 				WHERE order_id = '" . (int)$order_id . "'
 			");
             
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}order_history 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "order_history 
 				SET 
 					order_id        = '" . (int)$order_id . "', 
 					order_status_id = '" . (int)$order_status_id . "', 
 					notify          = '" . (int)$notify . "', 
-					comment         = '" . $this->db->escape($comment) . "', 
+					comment         = '" . DB::escape($comment) . "', 
 					date_added      = NOW()
 			");
             
             // Send out any gift gift_card mails
-            if ($this->config->get('config_complete_status_id') == $order_status_id):
-                $this->theme->model('checkout/gift_card');
-                $this->model_checkout_gift_card->confirm($order_id);
+            if (Config::get('config_complete_status_id') == $order_status_id):
+                Theme::model('checkout/gift_card');
+                CheckoutGiftCard::confirm($order_id);
             endif;
             
-            $this->theme->trigger('front_order_update', array('order_id' => $order_id));
+            Theme::trigger('front_order_update', array('order_id' => $order_id));
         endif;
     }
 
@@ -662,10 +662,10 @@ class Order extends Model {
     	
     	$order_info = $call['order'];
 
-    	$data = $this->theme->language('notification/order');
+    	$data = Theme::language('notification/order');
 
-    	$this->theme->model('catalog/product');
-    	$this->theme->model('tool/image');
+    	Theme::model('catalog/product');
+    	Theme::model('tool/image');
 
 		$data['store_name']  = $order_info['store_name'];
 		$data['store_url']   = $order_info['store_url'];
@@ -679,7 +679,7 @@ class Order extends Model {
         endif;
         
 		$data['order_id']        = $call['order_id'];
-		$data['date_added']      = date($this->language->get('lang_date_format_short'), strtotime($order_info['date_added']));
+		$data['date_added']      = date(Lang::get('lang_date_format_short'), strtotime($order_info['date_added']));
 		$data['payment_method']  = $order_info['payment_method'];
 		$data['shipping_method'] = $order_info['shipping_method'];
 		$data['email']           = $order_info['email'];
@@ -793,15 +793,15 @@ class Order extends Model {
         $has_link = false;
         
         foreach ($products as $product):
-            $product_data = $this->model_catalog_product->getProduct($product['product_id']);
+            $product_data = CatalogProduct::getProduct($product['product_id']);
             if (isset($product_data['image'])):
-                $image = $this->model_tool_image->resize($product_data['image'], 50, 50);
+                $image = ToolImage::resize($product_data['image'], 50, 50);
             else:
                 $image = '';
             endif;
             
             if ($product_data['event_id']):
-                $event = $this->model_catalog_product->getEvent($product_data['event_id']);
+                $event = CatalogProduct::getEvent($product_data['event_id']);
                 if ($event['link']):
                     $has_link = true;
                     $link = sprintf($language->get('text_online_link'), $event['link']);
@@ -818,7 +818,7 @@ class Order extends Model {
                 if ($option['type'] == 'file'):
                 	$value = $this->encode->substr($option['value'], 0, $this->encode->strrpos($option['value'], '.'));
                 elseif ($option['type'] == 'date' || $option['type'] == 'time' || $option['type'] == 'datetime'):
-                	$value = date($this->language->get('lang_date_format_short'), strtotime($option['value']));
+                	$value = date(Lang::get('lang_date_format_short'), strtotime($option['value']));
                 else:
                     $value = $option['value'];
                 endif;
@@ -844,8 +844,8 @@ class Order extends Model {
 				'model'            => $product['model'], 
 				'option'           => $option_data, 
 				'quantity'         => $product['quantity'], 
-				'price'            => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']), 
-				'total'            => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'])
+				'price'            => Currency::format($product['price'] + (Config::get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']), 
+				'total'            => Currency::format($product['total'] + (Config::get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'])
             );
         endforeach;
         
@@ -858,7 +858,7 @@ class Order extends Model {
         foreach ($gift_cards as $gift_card):
             $data['gift_cards'][] = array(
 				'description' => $gift_card['description'], 
-				'amount'      => $this->currency->format($gift_card['amount'], $order_info['currency_code'], $order_info['currency_value'])
+				'amount'      => Currency::format($gift_card['amount'], $order_info['currency_code'], $order_info['currency_value'])
             );
         endforeach;
         

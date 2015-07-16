@@ -7,7 +7,7 @@ var mapped={};
 <?php endif; ?>
 $('input[name="filter_author_id"]').typeahead({
 	source:function(q,process){
-		return $.getJSON('index.php?route=content/post/autoauthor&token='+token+'&'+filter_name+'='+encodeURIComponent(q),function(json){
+		return $.getJSON('index.php?route=content/post/autoauthor&'+filter_name+'='+encodeURIComponent(q),function(json){
 			var data=[];
 			$.each(json,function(i,item){
 				<?php if ($posted_by == 'user_name'): ?>

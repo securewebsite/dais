@@ -15,27 +15,29 @@
 */
 
 namespace App\Controllers\Front\Payment;
+
 use App\Controllers\Controller;
 
 class Moneybookers extends Controller {
+    
     public function index() {
-        $this->theme->model('checkout/order');
+        Theme::model('checkout/order');
         
-        $data = $this->theme->language('payment/moneybookers');
+        $data = Theme::language('payment/moneybookers');
         
         $data['action'] = 'https://www.moneybookers.com/app/payment.pl?p=Dais';
         
-        $data['pay_to_email'] = $this->config->get('moneybookers_email');
+        $data['pay_to_email'] = Config::get('moneybookers_email');
         $data['platform'] = '31974336';
-        $data['description'] = $this->config->get('config_name');
+        $data['description'] = Config::get('config_name');
         $data['transaction_id'] = $this->session->data['order_id'];
-        $data['return_url'] = $this->url->link('checkout/success');
-        $data['cancel_url'] = $this->url->link('checkout/checkout', '', 'SSL');
-        $data['status_url'] = $this->url->link('payment/moneybookers/callback');
+        $data['return_url'] = Url::link('checkout/success');
+        $data['cancel_url'] = Url::link('checkout/checkout', '', 'SSL');
+        $data['status_url'] = Url::link('payment/moneybookers/callback');
         $data['language'] = $this->session->data['language'];
-        $data['logo'] = $this->config->get('config_url') . 'image/' . $this->config->get('config_logo');
+        $data['logo'] = Config::get('config_url') . 'image/' . Config::get('config_logo');
         
-        $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        $order_info = CheckoutOrder::getOrder($this->session->data['order_id']);
         
         $data['pay_from_email'] = $order_info['email'];
         $data['firstname'] = $order_info['payment_firstname'];
@@ -47,12 +49,12 @@ class Moneybookers extends Controller {
         $data['city'] = $order_info['payment_city'];
         $data['state'] = $order_info['payment_zone'];
         $data['country'] = $order_info['payment_iso_code_3'];
-        $data['amount'] = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
+        $data['amount'] = Currency::format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
         $data['currency'] = $order_info['currency_code'];
         
         $products = '';
         
-        foreach ($this->cart->getProducts() as $product) {
+        foreach (Cart::getProducts() as $product) {
             $products.= $product['quantity'] . ' x ' . $product['name'] . ', ';
         }
         
@@ -60,13 +62,13 @@ class Moneybookers extends Controller {
         
         $data['order_id'] = $this->session->data['order_id'];
         
-        $this->theme->loadjs('javascript/payment/moneybookers', $data);
+        Theme::loadjs('javascript/payment/moneybookers', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data['javascript'] = $this->theme->controller('common/javascript');
+        $data['javascript'] = Theme::controller('common/javascript');
         
-        return $this->theme->view('payment/moneybookers', $data);
+        return View::render('payment/moneybookers', $data);
     }
     
     public function callback() {
@@ -76,22 +78,22 @@ class Moneybookers extends Controller {
             $order_id = 0;
         }
         
-        $this->theme->model('checkout/order');
+        Theme::model('checkout/order');
         
-        $order_info = $this->model_checkout_order->getOrder($order_id);
+        $order_info = CheckoutOrder::getOrder($order_id);
         
-        $order_info = $this->theme->listen(__CLASS__, __FUNCTION__, $order_info);
+        $order_info = Theme::listen(__CLASS__, __FUNCTION__, $order_info);
         
         if ($order_info) {
-            $this->model_checkout_order->confirm($order_id, $this->config->get('config_order_status_id'));
+            CheckoutOrder::confirm($order_id, Config::get('config_order_status_id'));
             
             $verified = true;
             
             // md5sig validation
-            if ($this->config->get('moneybookers_secret')) {
+            if (Config::get('moneybookers_secret')) {
                 $hash = $this->request->post['merchant_id'];
                 $hash.= $this->request->post['transaction_id'];
-                $hash.= strtoupper(md5($this->config->get('moneybookers_secret')));
+                $hash.= strtoupper(md5(Config::get('moneybookers_secret')));
                 $hash.= $this->request->post['mb_amount'];
                 $hash.= $this->request->post['mb_currency'];
                 $hash.= $this->request->post['status'];
@@ -107,27 +109,27 @@ class Moneybookers extends Controller {
             if ($verified) {
                 switch ($this->request->post['status']) {
                     case '2':
-                        $this->model_checkout_order->update($order_id, $this->config->get('moneybookers_order_status_id'));
+                        CheckoutOrder::update($order_id, Config::get('moneybookers_order_status_id'));
                         break;
 
                     case '0':
-                        $this->model_checkout_order->update($order_id, $this->config->get('moneybookers_pending_status_id'));
+                        CheckoutOrder::update($order_id, Config::get('moneybookers_pending_status_id'));
                         break;
 
                     case '-1':
-                        $this->model_checkout_order->update($order_id, $this->config->get('moneybookers_canceled_status_id'));
+                        CheckoutOrder::update($order_id, Config::get('moneybookers_canceled_status_id'));
                         break;
 
                     case '-2':
-                        $this->model_checkout_order->update($order_id, $this->config->get('moneybookers_failed_status_id'));
+                        CheckoutOrder::update($order_id, Config::get('moneybookers_failed_status_id'));
                         break;
 
                     case '-3':
-                        $this->model_checkout_order->update($order_id, $this->config->get('moneybookers_chargeback_status_id'));
+                        CheckoutOrder::update($order_id, Config::get('moneybookers_chargeback_status_id'));
                         break;
                 }
             } else {
-                $this->log->write('md5sig returned (' + $md5sig + ') does not match generated (' + $md5hash + '). Verify Manually. Current order state: ' . $this->config->get('config_order_status_id'));
+                $this->log->write('md5sig returned (' + $md5sig + ') does not match generated (' + $md5hash + '). Verify Manually. Current order state: ' . Config::get('config_order_status_id'));
             }
         }
     }

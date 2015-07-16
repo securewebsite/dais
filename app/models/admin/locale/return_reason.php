@@ -23,57 +23,57 @@ class ReturnReason extends Model {
     public function addReturnReason($data) {
         foreach ($data['return_reason'] as $language_id => $value) {
             if (isset($return_reason_id)) {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}return_reason 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "return_reason 
 					SET 
 						return_reason_id = '" . (int)$return_reason_id . "', 
 						language_id = '" . (int)$language_id . "', 
-						name = '" . $this->db->escape($value['name']) . "'
+						name = '" . DB::escape($value['name']) . "'
 				");
             } else {
-                $this->db->query("
-					INSERT INTO {$this->db->prefix}return_reason 
+                DB::query("
+					INSERT INTO " . DB::prefix() . "return_reason 
 					SET 
 						language_id = '" . (int)$language_id . "', 
-						name = '" . $this->db->escape($value['name']) . "'
+						name = '" . DB::escape($value['name']) . "'
 				");
                 
-                $return_reason_id = $this->db->getLastId();
+                $return_reason_id = DB::getLastId();
             }
         }
         
-        $this->cache->delete('return.reason');
-        $this->cache->delete('return.reasons');
+        Cache::delete('return.reason');
+        Cache::delete('return.reasons');
     }
     
     public function editReturnReason($return_reason_id, $data) {
-        $this->db->query("DELETE FROM {$this->db->prefix}return_reason WHERE return_reason_id = '" . (int)$return_reason_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "return_reason WHERE return_reason_id = '" . (int)$return_reason_id . "'");
         
         foreach ($data['return_reason'] as $language_id => $value) {
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}return_reason 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "return_reason 
 				SET 
 					return_reason_id = '" . (int)$return_reason_id . "', 
 					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($value['name']) . "'
+					name = '" . DB::escape($value['name']) . "'
 			");
         }
         
-        $this->cache->delete('return.reason');
-        $this->cache->delete('return.reasons');
+        Cache::delete('return.reason');
+        Cache::delete('return.reasons');
     }
     
     public function deleteReturnReason($return_reason_id) {
-        $this->db->query("DELETE FROM {$this->db->prefix}return_reason WHERE return_reason_id = '" . (int)$return_reason_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "return_reason WHERE return_reason_id = '" . (int)$return_reason_id . "'");
         
-        $this->cache->delete('return.reason');
-        $this->cache->delete('return.reasons');
+        Cache::delete('return.reason');
+        Cache::delete('return.reasons');
     }
     
     public function getReturnReason($return_reason_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}return_reason 
+			FROM " . DB::prefix() . "return_reason 
 			WHERE return_reason_id = '" . (int)$return_reason_id . "' 
 			AND language_id = '" . (int)Config::get('config_language_id') . "'
 		");
@@ -85,7 +85,7 @@ class ReturnReason extends Model {
         if ($data) {
             $sql = "
 				SELECT * 
-				FROM {$this->db->prefix}return_reason 
+				FROM " . DB::prefix() . "return_reason 
 				WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 			";
             
@@ -109,15 +109,15 @@ class ReturnReason extends Model {
                 $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
             }
             
-            $query = $this->db->query($sql);
+            $query = DB::query($sql);
             
             return $query->rows;
         } else {
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT 
 					return_reason_id, 
 					name 
-				FROM {$this->db->prefix}return_reason 
+				FROM " . DB::prefix() . "return_reason 
 				WHERE language_id = '" . (int)Config::get('config_language_id') . "' 
 				ORDER BY name
 			");
@@ -129,9 +129,9 @@ class ReturnReason extends Model {
     public function getReturnReasonDescriptions($return_reason_id) {
         $return_reason_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}return_reason 
+			FROM " . DB::prefix() . "return_reason 
 			WHERE return_reason_id = '" . (int)$return_reason_id . "'
 		");
         
@@ -143,9 +143,9 @@ class ReturnReason extends Model {
     }
     
     public function getTotalReturnReasons() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}return_reason 
+			FROM " . DB::prefix() . "return_reason 
 			WHERE language_id = '" . (int)Config::get('config_language_id') . "'");
         
         return $query->row['total'];

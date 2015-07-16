@@ -42,7 +42,7 @@ class AttributeGroup extends Controller {
         Theme::model('catalog/attribute_group');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_catalog_attribute_group->addAttributeGroup($this->request->post);
+            CatalogAttributeGroup::addAttributeGroup($this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -60,7 +60,7 @@ class AttributeGroup extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/attribute_group', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/attribute_group', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -76,7 +76,7 @@ class AttributeGroup extends Controller {
         Theme::model('catalog/attribute_group');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_catalog_attribute_group->editAttributeGroup($this->request->get['attribute_group_id'], $this->request->post);
+            CatalogAttributeGroup::editAttributeGroup($this->request->get['attribute_group_id'], $this->request->post);
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
@@ -94,7 +94,7 @@ class AttributeGroup extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/attribute_group', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/attribute_group', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -111,7 +111,7 @@ class AttributeGroup extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $attribute_group_id) {
-                $this->model_catalog_attribute_group->deleteAttributeGroup($attribute_group_id);
+                CatalogAttributeGroup::deleteAttributeGroup($attribute_group_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -130,7 +130,7 @@ class AttributeGroup extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/attribute_group', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/attribute_group', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -175,21 +175,21 @@ class AttributeGroup extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'catalog/attribute_group', $url);
         
-        $data['insert'] = Url::link('catalog/attribute_group/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('catalog/attribute_group/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('catalog/attribute_group/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('catalog/attribute_group/delete', '' . $url, 'SSL');
         
         $data['attribute_groups'] = array();
         
         $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $attribute_group_total = $this->model_catalog_attribute_group->getTotalAttributeGroups();
+        $attribute_group_total = CatalogAttributeGroup::getTotalAttributeGroups();
         
-        $results = $this->model_catalog_attribute_group->getAttributeGroups($filter);
+        $results = CatalogAttributeGroup::getAttributeGroups($filter);
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/attribute_group/update', 'token=' . $this->session->data['token'] . '&attribute_group_id=' . $result['attribute_group_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/attribute_group/update', '' . '&attribute_group_id=' . $result['attribute_group_id'] . $url, 'SSL'));
             
             $data['attribute_groups'][] = array('attribute_group_id' => $result['attribute_group_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'selected' => isset($this->request->post['selected']) && in_array($result['attribute_group_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -220,8 +220,8 @@ class AttributeGroup extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_name'] = Url::link('catalog/attribute_group', 'token=' . $this->session->data['token'] . '&sort=agd.name' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('catalog/attribute_group', 'token=' . $this->session->data['token'] . '&sort=ag.sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('catalog/attribute_group', '' . '&sort=agd.name' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('catalog/attribute_group', '' . '&sort=ag.sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -233,7 +233,7 @@ class AttributeGroup extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($attribute_group_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/attribute_group', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($attribute_group_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/attribute_group', '' . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -242,7 +242,7 @@ class AttributeGroup extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('catalog/attribute_group_list', $data));
+        Response::setOutput(View::render('catalog/attribute_group_list', $data));
     }
     
     protected function getForm() {
@@ -277,25 +277,25 @@ class AttributeGroup extends Controller {
         Breadcrumb::add('lang_heading_title', 'catalog/attribute_group', $url);
         
         if (!isset($this->request->get['attribute_group_id'])) {
-            $data['action'] = Url::link('catalog/attribute_group/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/attribute_group/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/attribute_group/update', 'token=' . $this->session->data['token'] . '&attribute_group_id=' . $this->request->get['attribute_group_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/attribute_group/update', '' . '&attribute_group_id=' . $this->request->get['attribute_group_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('catalog/attribute_group', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('catalog/attribute_group', '' . $url, 'SSL');
         
         if (isset($this->request->get['attribute_group_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $attribute_group_info = $this->model_catalog_attribute_group->getAttributeGroup($this->request->get['attribute_group_id']);
+            $attribute_group_info = CatalogAttributeGroup::getAttributeGroup($this->request->get['attribute_group_id']);
         }
         
         Theme::model('locale/language');
         
-        $data['languages'] = $this->model_locale_language->getLanguages();
+        $data['languages'] = LocaleLanguage::getLanguages();
         
         if (isset($this->request->post['attribute_group_description'])) {
             $data['attribute_group_description'] = $this->request->post['attribute_group_description'];
         } elseif (isset($this->request->get['attribute_group_id'])) {
-            $data['attribute_group_description'] = $this->model_catalog_attribute_group->getAttributeGroupDescriptions($this->request->get['attribute_group_id']);
+            $data['attribute_group_description'] = CatalogAttributeGroup::getAttributeGroupDescriptions($this->request->get['attribute_group_id']);
         } else {
             $data['attribute_group_description'] = array();
         }
@@ -312,7 +312,7 @@ class AttributeGroup extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('catalog/attribute_group_form', $data));
+        Response::setOutput(View::render('catalog/attribute_group_form', $data));
     }
     
     protected function validateForm() {
@@ -339,7 +339,7 @@ class AttributeGroup extends Controller {
         Theme::model('catalog/attribute');
         
         foreach ($this->request->post['selected'] as $attribute_group_id) {
-            $attribute_total = $this->model_catalog_attribute->getTotalAttributesByAttributeGroupId($attribute_group_id);
+            $attribute_total = CatalogAttribute::getTotalAttributesByAttributeGroupId($attribute_group_id);
             
             if ($attribute_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_attribute'), $attribute_total);

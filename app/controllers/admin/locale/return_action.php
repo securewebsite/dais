@@ -38,7 +38,7 @@ class ReturnAction extends Controller {
         Theme::model('locale/return_action');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_locale_return_action->addReturnAction($this->request->post);
+            LocaleReturnAction::addReturnAction($this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -55,7 +55,7 @@ class ReturnAction extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('locale/return_action', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('locale/return_action', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -69,7 +69,7 @@ class ReturnAction extends Controller {
         Theme::model('locale/return_action');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_locale_return_action->editReturnAction($this->request->get['return_action_id'], $this->request->post);
+            LocaleReturnAction::editReturnAction($this->request->get['return_action_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -86,7 +86,7 @@ class ReturnAction extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('locale/return_action', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('locale/return_action', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -101,7 +101,7 @@ class ReturnAction extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $return_action_id) {
-                $this->model_locale_return_action->deleteReturnAction($return_action_id);
+                LocaleReturnAction::deleteReturnAction($return_action_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -120,7 +120,7 @@ class ReturnAction extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('locale/return_action', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('locale/return_action', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,21 +165,21 @@ class ReturnAction extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'locale/return_action', $url);
         
-        $data['insert'] = Url::link('locale/return_action/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('locale/return_action/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('locale/return_action/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('locale/return_action/delete', '' . $url, 'SSL');
         
         $data['return_actions'] = array();
         
         $filter = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $return_action_total = $this->model_locale_return_action->getTotalReturnActions();
+        $return_action_total = LocaleReturnAction::getTotalReturnActions();
         
-        $results = $this->model_locale_return_action->getReturnActions($filter);
+        $results = LocaleReturnAction::getReturnActions($filter);
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/return_action/update', 'token=' . $this->session->data['token'] . '&return_action_id=' . $result['return_action_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/return_action/update', '' . '&return_action_id=' . $result['return_action_id'] . $url, 'SSL'));
             
             $data['return_actions'][] = array('return_action_id' => $result['return_action_id'], 'name' => $result['name'], 'selected' => isset($this->request->post['selected']) && in_array($result['return_action_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -210,7 +210,7 @@ class ReturnAction extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_name'] = Url::link('locale/return_action', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+        $data['sort_name'] = Url::link('locale/return_action', '' . '&sort=name' . $url, 'SSL');
         
         $url = '';
         
@@ -222,7 +222,7 @@ class ReturnAction extends Controller {
             $url.= '&order=' . $this->request->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($return_action_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/return_action', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($return_action_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/return_action', '' . $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -231,7 +231,7 @@ class ReturnAction extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('locale/return_action_list', $data));
+        Response::setOutput(View::render('locale/return_action_list', $data));
     }
     
     protected function getForm() {
@@ -266,21 +266,21 @@ class ReturnAction extends Controller {
         Breadcrumb::add('lang_heading_title', 'locale/return_action', $url);
         
         if (!isset($this->request->get['return_action_id'])) {
-            $data['action'] = Url::link('locale/return_action/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/return_action/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/return_action/update', 'token=' . $this->session->data['token'] . '&return_action_id=' . $this->request->get['return_action_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/return_action/update', '' . '&return_action_id=' . $this->request->get['return_action_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('locale/return_action', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('locale/return_action', '' . $url, 'SSL');
         
         Theme::model('locale/language');
         
-        $data['languages'] = $this->model_locale_language->getLanguages();
+        $data['languages'] = LocaleLanguage::getLanguages();
         
         if (isset($this->request->post['return_action'])) {
             $data['return_action'] = $this->request->post['return_action'];
         } elseif (isset($this->request->get['return_action_id'])) {
-            $data['return_action'] = $this->model_locale_return_action->getReturnActionDescriptions($this->request->get['return_action_id']);
+            $data['return_action'] = LocaleReturnAction::getReturnActionDescriptions($this->request->get['return_action_id']);
         } else {
             $data['return_action'] = array();
         }
@@ -289,7 +289,7 @@ class ReturnAction extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('locale/return_action_form', $data));
+        Response::setOutput(View::render('locale/return_action_form', $data));
     }
     
     protected function validateForm() {
@@ -316,7 +316,7 @@ class ReturnAction extends Controller {
         Theme::model('sale/returns');
         
         foreach ($this->request->post['selected'] as $return_action_id) {
-            $return_total = $this->model_sale_returns->getTotalReturnsByReturnActionId($return_action_id);
+            $return_total = SaleReturns::getTotalReturnsByReturnActionId($return_action_id);
             
             if ($return_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_return'), $return_total);

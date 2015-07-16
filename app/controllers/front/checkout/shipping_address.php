@@ -15,21 +15,23 @@
 */
 
 namespace App\Controllers\Front\Checkout;
+
 use App\Controllers\Controller;
 
 class ShippingAddress extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('checkout/checkout');
+        $data = Theme::language('checkout/checkout');
         
         if (isset($this->session->data['shipping_address_id'])) {
             $data['address_id'] = $this->session->data['shipping_address_id'];
         } else {
-            $data['address_id'] = $this->customer->getAddressId();
+            $data['address_id'] = Customer::getAddressId();
         }
         
-        $this->theme->model('account/address');
+        Theme::model('account/address');
         
-        $data['addresses'] = $this->model_account_address->getAddresses();
+        $data['addresses'] = AccountAddress::getAddresses();
         
         if (isset($this->session->data['shipping_postcode'])) {
             $data['postcode'] = $this->session->data['shipping_postcode'];
@@ -40,7 +42,7 @@ class ShippingAddress extends Controller {
         if (isset($this->session->data['shipping_country_id'])) {
             $data['country_id'] = $this->session->data['shipping_country_id'];
         } else {
-            $data['country_id'] = $this->config->get('config_country_id');
+            $data['country_id'] = Config::get('config_country_id');
         }
         
         if (isset($this->session->data['shipping_zone_id'])) {
@@ -49,43 +51,43 @@ class ShippingAddress extends Controller {
             $data['zone_id'] = '';
         }
         
-        $data['params'] = htmlentities('{"zone_id":"' . $data['zone_id'] . '","select":"' . $this->language->get('lang_text_select') . '","none":"' . $this->language->get('lang_text_none') . '"}');
+        $data['params'] = htmlentities('{"zone_id":"' . $data['zone_id'] . '","select":"' . Lang::get('lang_text_select') . '","none":"' . Lang::get('lang_text_none') . '"}');
         
-        $this->theme->model('locale/country');
+        Theme::model('locale/country');
         
-        $data['countries'] = $this->model_locale_country->getCountries();
+        $data['countries'] = LocaleCountry::getCountries();
         
-        $this->theme->loadjs('javascript/checkout/shipping_address', $data);
+        Theme::loadjs('javascript/checkout/shipping_address', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data['javascript'] = $this->theme->controller('common/javascript');
+        $data['javascript'] = Theme::controller('common/javascript');
         
-        $this->response->setOutput($this->theme->view('checkout/shipping_address', $data));
+        Response::setOutput(View::render('checkout/shipping_address', $data));
     }
     
     public function validate() {
-        $this->theme->language('checkout/checkout');
+        Theme::language('checkout/checkout');
         
         $json = array();
         
         // Validate if customer is logged in.
-        if (!$this->customer->isLogged()) {
-            $json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
+        if (!Customer::isLogged()) {
+            $json['redirect'] = Url::link('checkout/checkout', '', 'SSL');
         }
         
         // Validate if shipping is required. If not the customer should not have reached this page.
-        if (!$this->cart->hasShipping()) {
-            $json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
+        if (!Cart::hasShipping()) {
+            $json['redirect'] = Url::link('checkout/checkout', '', 'SSL');
         }
         
         // Validate cart has products and has stock.
-        if ((!$this->cart->hasProducts() && empty($this->session->data['gift_cards'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
-            $json['redirect'] = $this->url->link('checkout/cart');
+        if ((!Cart::hasProducts() && empty($this->session->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
+            $json['redirect'] = Url::link('checkout/cart');
         }
         
         // Validate minimum quantity requirments.
-        $products = $this->cart->getProducts();
+        $products = Cart::getProducts();
         
         foreach ($products as $product) {
             $product_total = 0;
@@ -97,7 +99,7 @@ class ShippingAddress extends Controller {
             }
             
             if ($product['minimum'] > $product_total) {
-                $json['redirect'] = $this->url->link('checkout/cart');
+                $json['redirect'] = Url::link('checkout/cart');
                 
                 break;
             }
@@ -105,21 +107,21 @@ class ShippingAddress extends Controller {
         
         if (!$json) {
             if (isset($this->request->post['shipping_address']) && $this->request->post['shipping_address'] == 'existing') {
-                $this->theme->model('account/address');
+                Theme::model('account/address');
                 
                 if (empty($this->request->post['address_id'])) {
-                    $json['error']['warning'] = $this->language->get('lang_error_address');
-                } elseif (!in_array($this->request->post['address_id'], array_keys($this->model_account_address->getAddresses()))) {
-                    $json['error']['warning'] = $this->language->get('lang_error_address');
+                    $json['error']['warning'] = Lang::get('lang_error_address');
+                } elseif (!in_array($this->request->post['address_id'], array_keys(AccountAddress::getAddresses()))) {
+                    $json['error']['warning'] = Lang::get('lang_error_address');
                 }
                 
                 if (!$json) {
                     $this->session->data['shipping_address_id'] = $this->request->post['address_id'];
                     
                     // Default Shipping Address
-                    $this->theme->model('account/address');
+                    Theme::model('account/address');
                     
-                    $address_info = $this->model_account_address->getAddress($this->request->post['address_id']);
+                    $address_info = AccountAddress::getAddress($this->request->post['address_id']);
                     
                     if ($address_info) {
                         $this->session->data['shipping_country_id'] = $address_info['country_id'];
@@ -134,44 +136,44 @@ class ShippingAddress extends Controller {
             }
             
             if ($this->request->post['shipping_address'] == 'new') {
-                if (($this->encode->strlen($this->request->post['firstname']) < 1) || ($this->encode->strlen($this->request->post['firstname']) > 32)) {
-                    $json['error']['firstname'] = $this->language->get('lang_error_firstname');
+                if ((Encode::strlen($this->request->post['firstname']) < 1) || (Encode::strlen($this->request->post['firstname']) > 32)) {
+                    $json['error']['firstname'] = Lang::get('lang_error_firstname');
                 }
                 
-                if (($this->encode->strlen($this->request->post['lastname']) < 1) || ($this->encode->strlen($this->request->post['lastname']) > 32)) {
-                    $json['error']['lastname'] = $this->language->get('lang_error_lastname');
+                if ((Encode::strlen($this->request->post['lastname']) < 1) || (Encode::strlen($this->request->post['lastname']) > 32)) {
+                    $json['error']['lastname'] = Lang::get('lang_error_lastname');
                 }
                 
-                if (($this->encode->strlen($this->request->post['address_1']) < 3) || ($this->encode->strlen($this->request->post['address_1']) > 128)) {
-                    $json['error']['address_1'] = $this->language->get('lang_error_address_1');
+                if ((Encode::strlen($this->request->post['address_1']) < 3) || (Encode::strlen($this->request->post['address_1']) > 128)) {
+                    $json['error']['address_1'] = Lang::get('lang_error_address_1');
                 }
                 
-                if (($this->encode->strlen($this->request->post['city']) < 2) || ($this->encode->strlen($this->request->post['city']) > 128)) {
-                    $json['error']['city'] = $this->language->get('lang_error_city');
+                if ((Encode::strlen($this->request->post['city']) < 2) || (Encode::strlen($this->request->post['city']) > 128)) {
+                    $json['error']['city'] = Lang::get('lang_error_city');
                 }
                 
-                $this->theme->model('locale/country');
+                Theme::model('locale/country');
                 
-                $country_info = $this->model_locale_country->getCountry($this->request->post['country_id']);
+                $country_info = LocaleCountry::getCountry($this->request->post['country_id']);
                 
-                if ($country_info && $country_info['postcode_required'] && ($this->encode->strlen($this->request->post['postcode']) < 2) || ($this->encode->strlen($this->request->post['postcode']) > 10)) {
-                    $json['error']['postcode'] = $this->language->get('lang_error_postcode');
+                if ($country_info && $country_info['postcode_required'] && (Encode::strlen($this->request->post['postcode']) < 2) || (Encode::strlen($this->request->post['postcode']) > 10)) {
+                    $json['error']['postcode'] = Lang::get('lang_error_postcode');
                 }
                 
                 if ($this->request->post['country_id'] == '') {
-                    $json['error']['country'] = $this->language->get('lang_error_country');
+                    $json['error']['country'] = Lang::get('lang_error_country');
                 }
                 
                 if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] == '') {
-                    $json['error']['zone'] = $this->language->get('lang_error_zone');
+                    $json['error']['zone'] = Lang::get('lang_error_zone');
                 }
                 
                 if (!$json) {
                     
                     // Default Shipping Address
-                    $this->theme->model('account/address');
+                    Theme::model('account/address');
                     
-                    $this->session->data['shipping_address_id'] = $this->model_account_address->addAddress($this->request->post);
+                    $this->session->data['shipping_address_id'] = AccountAddress::addAddress($this->request->post);
                     $this->session->data['shipping_country_id'] = $this->request->post['country_id'];
                     $this->session->data['shipping_zone_id'] = $this->request->post['zone_id'];
                     $this->session->data['shipping_postcode'] = $this->request->post['postcode'];
@@ -179,8 +181,8 @@ class ShippingAddress extends Controller {
             }
         }
         
-        $json = $this->theme->listen(__CLASS__, __FUNCTION__, $json);
+        $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
         
-        $this->response->setOutput(json_encode($json));
+        Response::setOutput(json_encode($json));
     }
 }

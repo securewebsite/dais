@@ -15,38 +15,39 @@
 */
 
 namespace App\Models\Front\Account;
+
 use App\Models\Model;
 
 class Returns extends Model {
     public function addReturn($data) {
-        $this->db->query("
-			INSERT INTO `{$this->db->prefix}return` 
+        DB::query("
+			INSERT INTO `" . DB::prefix() . "return` 
 			SET 
 				order_id         = '" . (int)$data['order_id'] . "', 
-				customer_id      = '" . (int)$this->customer->getId() . "', 
-				firstname        = '" . $this->db->escape($data['firstname']) . "', 
-				lastname         = '" . $this->db->escape($data['lastname']) . "', 
-				email            = '" . $this->db->escape($data['email']) . "', 
-				telephone        = '" . $this->db->escape($data['telephone']) . "', 
-				product          = '" . $this->db->escape($data['product']) . "', 
-				model            = '" . $this->db->escape($data['model']) . "', 
+				customer_id      = '" . (int)\Customer::getId() . "', 
+				firstname        = '" . DB::escape($data['firstname']) . "', 
+				lastname         = '" . DB::escape($data['lastname']) . "', 
+				email            = '" . DB::escape($data['email']) . "', 
+				telephone        = '" . DB::escape($data['telephone']) . "', 
+				product          = '" . DB::escape($data['product']) . "', 
+				model            = '" . DB::escape($data['model']) . "', 
 				quantity         = '" . (int)$data['quantity'] . "', 
 				opened           = '" . (int)$data['opened'] . "', 
 				return_reason_id = '" . (int)$data['return_reason_id'] . "', 
-				return_status_id = '" . (int)$this->config->get('config_return_status_id') . "', 
-				comment          = '" . $this->db->escape($data['comment']) . "', 
-				date_ordered     = '" . $this->db->escape($data['date_ordered']) . "', 
+				return_status_id = '" . (int)Config::get('config_return_status_id') . "', 
+				comment          = '" . DB::escape($data['comment']) . "', 
+				date_ordered     = '" . DB::escape($data['date_ordered']) . "', 
 				date_added       = NOW(), 
 				date_modified = NOW()
 		");
         
-        $return_id = $this->db->getLastId();
+        $return_id = DB::getLastId();
         
-        $this->theme->trigger('front_return_add', array('return_id' => $return_id));
+        Theme::trigger('front_return_add', array('return_id' => $return_id));
     }
     
     public function getReturn($return_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT 
 				r.return_id, 
 				r.order_id, 
@@ -60,29 +61,29 @@ class Returns extends Model {
 				r.opened, 
 				(SELECT 
 					rr.name 
-					FROM {$this->db->prefix}return_reason rr 
+					FROM " . DB::prefix() . "return_reason rr 
 					WHERE rr.return_reason_id = r.return_reason_id 
-					AND rr.language_id = '" . (int)$this->config->get('config_language_id') . "'
+					AND rr.language_id = '" . (int)Config::get('config_language_id') . "'
 					) AS reason, 
 				(SELECT 
 					ra.name 
-					FROM {$this->db->prefix}return_action ra 
+					FROM " . DB::prefix() . "return_action ra 
 					WHERE ra.return_action_id = r.return_action_id 
-					AND ra.language_id = '" . (int)$this->config->get('config_language_id') . "'
+					AND ra.language_id = '" . (int)Config::get('config_language_id') . "'
 					) AS action, 
 				(SELECT 
 					rs.name 
-					FROM {$this->db->prefix}return_status rs 
+					FROM " . DB::prefix() . "return_status rs 
 					WHERE rs.return_status_id = r.return_status_id 
-					AND rs.language_id = '" . (int)$this->config->get('config_language_id') . "'
+					AND rs.language_id = '" . (int)Config::get('config_language_id') . "'
 					) AS status, 
 				r.comment, 
 				r.date_ordered, 
 				r.date_added, 
 				r.date_modified 
-			FROM `{$this->db->prefix}return` r 
+			FROM `" . DB::prefix() . "return` r 
 			WHERE return_id = '" . (int)$return_id . "' 
-			AND customer_id = '" . $this->customer->getId() . "'
+			AND customer_id = '" . \Customer::getId() . "'
 		");
         
         return $query->row;
@@ -97,7 +98,7 @@ class Returns extends Model {
             $limit = 20;
         }
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT 
 				r.return_id, 
 				r.order_id, 
@@ -105,11 +106,11 @@ class Returns extends Model {
 				r.lastname, 
 				rs.name as status, 
 				r.date_added 
-			FROM `{$this->db->prefix}return` r 
-			LEFT JOIN {$this->db->prefix}return_status rs 
+			FROM `" . DB::prefix() . "return` r 
+			LEFT JOIN " . DB::prefix() . "return_status rs 
 				ON (r.return_status_id = rs.return_status_id) 
-			WHERE r.customer_id = '" . $this->customer->getId() . "' 
-			AND rs.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+			WHERE r.customer_id = '" . \Customer::getId() . "' 
+			AND rs.language_id = '" . (int)Config::get('config_language_id') . "' 
 			ORDER BY r.return_id 
 			DESC LIMIT " . (int)$start . "," . (int)$limit);
         
@@ -117,27 +118,27 @@ class Returns extends Model {
     }
     
     public function getTotalReturns() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM `{$this->db->prefix}return` 
-			WHERE customer_id = '" . $this->customer->getId() . "'
+			FROM `" . DB::prefix() . "return` 
+			WHERE customer_id = '" . \Customer::getId() . "'
 		");
         
         return $query->row['total'];
     }
     
     public function getReturnHistories($return_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT 
 				rh.date_added, 
 				rs.name AS status, 
 				rh.comment, 
 				rh.notify 
-			FROM {$this->db->prefix}return_history rh 
-			LEFT JOIN {$this->db->prefix}return_status rs 
+			FROM " . DB::prefix() . "return_history rh 
+			LEFT JOIN " . DB::prefix() . "return_status rs 
 				ON rh.return_status_id = rs.return_status_id 
 			WHERE rh.return_id = '" . (int)$return_id . "' 
-			AND rs.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+			AND rs.language_id = '" . (int)Config::get('config_language_id') . "' 
 			ORDER BY rh.date_added ASC
 		");
         

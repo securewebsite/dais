@@ -20,17 +20,17 @@ use App\Models\Model;
 class Recurring extends Model {
     
     public function getRecurring($id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT 
 				`or`.*,
 				`o`.`payment_method`,
 				`o`.`payment_code`,
 				`o`.`currency_code` 
-			FROM `{$this->db->prefix}order_recurring` `or` 
-			LEFT JOIN `{$this->db->prefix}order` `o` 
+			FROM `" . DB::prefix() . "order_recurring` `or` 
+			LEFT JOIN `" . DB::prefix() . "order` `o` 
 			ON `or`.`order_id` = `o`.`order_id` 
 			WHERE `or`.`order_recurring_id` = '" . (int)$id . "' 
-			AND `o`.`customer_id` = '" . (int)$this->customer->getId() . "' LIMIT 1
+			AND `o`.`customer_id` = '" . (int)\Customer::getId() . "' LIMIT 1
 		");
         
         if ($query->num_rows):
@@ -41,10 +41,10 @@ class Recurring extends Model {
     }
     
     public function getRecurringByRef($ref) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM `{$this->db->prefix}order_recurring` 
-			WHERE `reference` = '" . $this->db->escape($ref) . "' 
+			FROM `" . DB::prefix() . "order_recurring` 
+			WHERE `reference` = '" . DB::escape($ref) . "' 
 			LIMIT 1
 		");
         
@@ -59,9 +59,9 @@ class Recurring extends Model {
         
         $recurring = $this->getRecurring($id);
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM `{$this->db->prefix}order_recurring_transaction` 
+			FROM `" . DB::prefix() . "order_recurring_transaction` 
 			WHERE `order_recurring_id` = '" . (int)$id . "'
 		");
         
@@ -69,7 +69,7 @@ class Recurring extends Model {
             $transactions = array();
             
             foreach ($query->rows as $transaction):
-                $transaction['amount'] = $this->currency->format($transaction['amount'], $recurring['currency_code'], 1);
+                $transaction['amount'] = Currency::format($transaction['amount'], $recurring['currency_code'], 1);
                 $transactions[]        = $transaction;
             endforeach;
             
@@ -88,16 +88,16 @@ class Recurring extends Model {
             $limit = 1;
         endif;
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT 
 				`or`.*,
 				`o`.`payment_method`,
 				`o`.`currency_id`,
 				`o`.`currency_value` 
-			FROM `{$this->db->prefix}order_recurring` `or` 
-			LEFT JOIN `{$this->db->prefix}order` `o` 
+			FROM `" . DB::prefix() . "order_recurring` `or` 
+			LEFT JOIN `" . DB::prefix() . "order` `o` 
 				ON `or`.`order_id` = `o`.`order_id` 
-			WHERE `o`.`customer_id` = '" . (int)$this->customer->getId() . "' 
+			WHERE `o`.`customer_id` = '" . (int)\Customer::getId() . "' 
 			ORDER BY `o`.`order_id` 
 			DESC LIMIT " . (int)$start . "," . (int)$limit);
         
@@ -115,12 +115,12 @@ class Recurring extends Model {
     }
     
     public function getTotalRecurring() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM `{$this->db->prefix}order_recurring` `or` 
-			LEFT JOIN `{$this->db->prefix}order` `o` 
+			FROM `" . DB::prefix() . "order_recurring` `or` 
+			LEFT JOIN `" . DB::prefix() . "order` `o` 
 				ON `or`.`order_id` = `o`.`order_id` 
-			WHERE `o`.`customer_id` = '" . (int)$this->customer->getId() . "'
+			WHERE `o`.`customer_id` = '" . (int)\Customer::getId() . "'
 		");
         
         return $query->row['total'];

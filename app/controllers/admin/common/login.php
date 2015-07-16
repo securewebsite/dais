@@ -27,23 +27,24 @@ class Login extends Controller {
         
         Theme::setTitle(Lang::get('lang_heading_title'));
         
-        if (User::isLogged() && isset($this->request->get['token']) && ($this->request->get['token'] == $this->session->data['token'])) {
-            Response::redirect(Url::link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
+        if (User::isLogged() && !is_null(User::getToken()) && (User::getToken() == Session::p()->data['token'])) {
+            Response::redirect(Url::link('common/dashboard', '', 'SSL'));
         }
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->session->data['token'] = md5(mt_rand());
+            
+            Response::makeToken();
             
             if (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], Config::get('http.server')) === 0 || strpos($this->request->post['redirect'], Config::get('https.server')) === 0)) {
-                Response::redirect($this->request->post['redirect'] . '&token=' . $this->session->data['token']);
+                Response::redirect($this->request->post['redirect']);
             } else {
-                Response::redirect(Url::link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'));
+                Response::redirect(Url::link('common/dashboard', '', 'SSL'));
             }
         }
         
-        if ((isset($this->session->data['token']) && !isset($this->request->get['token'])) || ((isset($this->request->get['token']) && (isset($this->session->data['token']) && ($this->request->get['token'] != $this->session->data['token']))))) {
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !Response::match()):
             $this->error['warning'] = Lang::get('lang_error_token');
-        }
+        endif;
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -78,8 +79,8 @@ class Login extends Controller {
             
             unset($this->request->get['route']);
             
-            if (isset($this->request->get['token'])) {
-                unset($this->request->get['token']);
+            if (!is_null(User::getToken())) {
+                User::unsetToken();
             }
             
             $url = '';
@@ -105,7 +106,7 @@ class Login extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('common/login', $data));
+        Response::setOutput(View::render('common/login', $data));
     }
     
     protected function validate() {

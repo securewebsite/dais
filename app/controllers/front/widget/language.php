@@ -15,21 +15,23 @@
 */
 
 namespace App\Controllers\Front\Widget;
+
 use App\Controllers\Controller;
 
 class Language extends Controller {
+    
     public function index() {
         if (isset($this->request->post['language_code'])) {
             $this->session->data['language'] = $this->request->post['language_code'];
             
             if (isset($this->request->post['redirect'])) {
-                $this->response->redirect($this->request->post['redirect']);
+                Response::redirect($this->request->post['redirect']);
             } else {
-                $this->response->redirect($this->url->link('shop/home'));
+                Response::redirect(Url::link('shop/home'));
             }
         }
         
-        $data = $this->theme->language('widget/language');
+        $data = Theme::language('widget/language');
         
         if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
             $connection = 'SSL';
@@ -37,15 +39,15 @@ class Language extends Controller {
             $connection = 'NONSSL';
         }
         
-        $data['action'] = $this->url->link('widget/language', '', $connection);
+        $data['action'] = Url::link('widget/language', '', $connection);
         
         $data['language_code'] = $this->session->data['language'];
         
-        $this->theme->model('locale/language');
+        Theme::model('locale/language');
         
         $data['languages'] = array();
         
-        $results = $this->model_locale_language->getLanguages();
+        $results = LocaleLanguage::getLanguages();
         
         foreach ($results as $result) {
             if ($result['status']) {
@@ -54,7 +56,7 @@ class Language extends Controller {
         }
         
         if (!isset($this->request->get['route'])) {
-            $data['redirect'] = $this->url->link('shop/home');
+            $data['redirect'] = Url::link('shop/home');
         } else {
             $routes = $this->request->get;
             
@@ -70,11 +72,11 @@ class Language extends Controller {
                 $url = '&' . urldecode(http_build_query($routes, '', '&'));
             }
             
-            $data['redirect'] = $this->url->link($route, $url, $connection);
+            $data['redirect'] = Url::link($route, $url, $connection);
         }
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return $this->theme->view('widget/language', $data);
+        return View::render('widget/language', $data);
     }
 }

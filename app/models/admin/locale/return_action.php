@@ -23,58 +23,58 @@ class ReturnAction extends Model {
     public function addReturnAction($data) {
         foreach ($data['return_action'] as $language_id => $value):
             if (isset($return_action_id)):
-                $this->db->query("
-                    INSERT INTO {$this->db->prefix}return_action 
+                DB::query("
+                    INSERT INTO " . DB::prefix() . "return_action 
                     SET 
                         return_action_id = '" . (int)$return_action_id . "', 
                         language_id      = '" . (int)$language_id . "', 
-                        name             = '" . $this->db->escape($value['name']) . "'
+                        name             = '" . DB::escape($value['name']) . "'
                 ");
             else:
-                $this->db->query("
-                    INSERT INTO {$this->db->prefix}return_action 
+                DB::query("
+                    INSERT INTO " . DB::prefix() . "return_action 
                     SET 
                         language_id = '" . (int)$language_id . "', 
-                        name        = '" . $this->db->escape($value['name']) . "'
+                        name        = '" . DB::escape($value['name']) . "'
                 ");
                 
-                $return_action_id = $this->db->getLastId();
+                $return_action_id = DB::getLastId();
             endif;
         endforeach;
         
-        $this->cache->delete('return_action');
+        Cache::delete('return_action');
     }
     
     public function editReturnAction($return_action_id, $data) {
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}return_action 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "return_action 
             WHERE return_action_id = '" . (int)$return_action_id . "'");
         
         foreach ($data['return_action'] as $language_id => $value):
-            $this->db->query("
-                INSERT INTO {$this->db->prefix}return_action 
+            DB::query("
+                INSERT INTO " . DB::prefix() . "return_action 
                 SET 
                     return_action_id = '" . (int)$return_action_id . "', 
                     language_id      = '" . (int)$language_id . "', 
-                    name             = '" . $this->db->escape($value['name']) . "'
+                    name             = '" . DB::escape($value['name']) . "'
             ");
         endforeach;
         
-        $this->cache->delete('return_action');
+        Cache::delete('return_action');
     }
     
     public function deleteReturnAction($return_action_id) {
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}return_action 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "return_action 
             WHERE return_action_id = '" . (int)$return_action_id . "'");
         
-        $this->cache->delete('return_action');
+        Cache::delete('return_action');
     }
     
     public function getReturnAction($return_action_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}return_action 
+            FROM " . DB::prefix() . "return_action 
             WHERE return_action_id = '" . (int)$return_action_id . "' 
             AND language_id = '" . (int)Config::get('config_language_id') . "'
         ");
@@ -86,7 +86,7 @@ class ReturnAction extends Model {
         if ($data):
             $sql = "
                 SELECT * 
-                FROM {$this->db->prefix}return_action 
+                FROM " . DB::prefix() . "return_action 
                 WHERE language_id = '" . (int)Config::get('config_language_id') . "'";
             
             $sql.= " ORDER BY name";
@@ -109,25 +109,25 @@ class ReturnAction extends Model {
                 $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
             endif;
             
-            $query = $this->db->query($sql);
+            $query = DB::query($sql);
             
             return $query->rows;
         else:
-            $return_action_data = $this->cache->get('return_action.' . (int)Config::get('config_language_id'));
+            $return_action_data = Cache::get('return_action.' . (int)Config::get('config_language_id'));
             
             if (!$return_action_data):
-                $query = $this->db->query("
+                $query = DB::query("
                     SELECT 
                         return_action_id, 
                         name 
-                    FROM {$this->db->prefix}return_action 
+                    FROM " . DB::prefix() . "return_action 
                     WHERE language_id = '" . (int)Config::get('config_language_id') . "' 
                     ORDER BY name
                 ");
                 
                 $return_action_data = $query->rows;
                 
-                $this->cache->set('return_action.' . (int)Config::get('config_language_id'), $return_action_data);
+                Cache::set('return_action.' . (int)Config::get('config_language_id'), $return_action_data);
             endif;
             
             return $return_action_data;
@@ -137,9 +137,9 @@ class ReturnAction extends Model {
     public function getReturnActionDescriptions($return_action_id) {
         $return_action_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}return_action 
+            FROM " . DB::prefix() . "return_action 
             WHERE return_action_id = '" . (int)$return_action_id . "'
         ");
         
@@ -151,9 +151,9 @@ class ReturnAction extends Model {
     }
     
     public function getTotalReturnActions() {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT COUNT(*) AS total 
-            FROM {$this->db->prefix}return_action 
+            FROM " . DB::prefix() . "return_action 
             WHERE language_id = '" . (int)Config::get('config_language_id') . "'
         ");
         

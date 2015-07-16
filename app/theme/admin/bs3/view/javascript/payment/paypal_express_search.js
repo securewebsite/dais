@@ -5,7 +5,7 @@
 			type:'POST',
 			dataType:'json',
 			data: $('#form').serialize(),
-			url:'index.php?route=payment/paypal_express/doSearch&token=<?= $token; ?>',
+			url:'index.php?route=payment/paypal_express/doSearch',
 			beforeSend:function(){
 				$('#search_input').hide();
 				$('#search_box').show();

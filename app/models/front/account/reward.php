@@ -21,8 +21,8 @@ class Reward extends Model {
     public function getRewards($data = array()) {
         $sql = "
 			SELECT * 
-			FROM `{$this->db->prefix}customer_reward` 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "'
+			FROM `" . DB::prefix() . "customer_reward` 
+			WHERE customer_id = '" . (int)\Customer::getId() . "'
 		";
         
         $sort_data = array('points', 'description', 'date_added');
@@ -51,26 +51,26 @@ class Reward extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
     
     public function getTotalRewards() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM `{$this->db->prefix}customer_reward` 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "'
+			FROM `" . DB::prefix() . "customer_reward` 
+			WHERE customer_id = '" . (int)\Customer::getId() . "'
 		");
         
         return $query->row['total'];
     }
     
     public function getTotalPoints() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT SUM(points) AS total 
-			FROM `{$this->db->prefix}customer_reward` 
-			WHERE customer_id = '" . (int)$this->customer->getId() . "' GROUP BY customer_id
+			FROM `" . DB::prefix() . "customer_reward` 
+			WHERE customer_id = '" . (int)\Customer::getId() . "' GROUP BY customer_id
 		");
         
         if ($query->num_rows) {

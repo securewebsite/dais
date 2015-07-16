@@ -38,7 +38,7 @@ class Post extends Controller {
         Theme::model('content/post');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_content_post->addPost($this->request->post);
+            ContentPost::addPost($this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -63,7 +63,7 @@ class Post extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('content/post', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('content/post', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -77,7 +77,7 @@ class Post extends Controller {
         Theme::model('content/post');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_content_post->editPost($this->request->get['post_id'], $this->request->post);
+            ContentPost::editPost($this->request->get['post_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
@@ -102,7 +102,7 @@ class Post extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('content/post', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('content/post', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -117,7 +117,7 @@ class Post extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $post_id) {
-                $this->model_content_post->deletePost($post_id);
+                ContentPost::deletePost($post_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
@@ -144,7 +144,7 @@ class Post extends Controller {
                 $url.= '&page=' . $this->request->get['page'];
             }
             
-            Response::redirect(Url::link('content/post', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+            Response::redirect(Url::link('content/post', '' . $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -249,8 +249,8 @@ class Post extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'content/post');
         
-        $data['insert'] = Url::link('content/post/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $data['delete'] = Url::link('content/post/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['insert'] = Url::link('content/post/insert', '' . $url, 'SSL');
+        $data['delete'] = Url::link('content/post/delete', '' . $url, 'SSL');
         
         $data['posts'] = array();
         
@@ -270,21 +270,21 @@ class Post extends Controller {
         
         Theme::model('tool/image');
         
-        $post_total = $this->model_content_post->getTotalPosts($filter);
-        $results    = $this->model_content_post->getPosts($filter);
+        $post_total = ContentPost::getTotalPosts($filter);
+        $results    = ContentPost::getPosts($filter);
         
         foreach ($results as $result) {
             $action = array();
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('content/post/update', 'token=' . $this->session->data['token'] . '&post_id=' . $result['post_id'] . $url, 'SSL')
+                'href' => Url::link('content/post/update', '' . '&post_id=' . $result['post_id'] . $url, 'SSL')
             );
             
             if ($result['image'] && file_exists(Config::get('path.image') . $result['image'])) {
-                $image = $this->model_tool_image->resize($result['image'], 40, 40);
+                $image = ToolImage::resize($result['image'], 40, 40);
             } else {
-                $image = $this->model_tool_image->resize('placeholder.png', 40, 40);
+                $image = ToolImage::resize('placeholder.png', 40, 40);
             }
             
             $status = (!$result['status']) ? Lang::get('lang_text_disabled') : (($result['status'] === 2) ? Lang::get('lang_text_draft') : Lang::get('lang_text_posted'));
@@ -294,8 +294,8 @@ class Post extends Controller {
                 'image'         => $image, 
                 'name'          => $result['name'], 
                 'author_id'     => $result['author_id'], 
-                'author_name'   => $this->model_content_post->getPostAuthor($result['author_id']), 
-                'category'      => implode(', ', $this->model_content_post->getPostCategoriesNames($result['post_id'])), 
+                'author_name'   => ContentPost::getPostAuthor($result['author_id']), 
+                'category'      => implode(', ', ContentPost::getPostCategoriesNames($result['post_id'])), 
                 'date_added'    => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 
                 'date_modified' => ($result['date_modified'] != '0000-00-00 00:00:00') ? date(Lang::get('lang_date_format_short'), strtotime($result['date_modified'])) : '-', 
                 'viewed'        => $result['viewed'], 'status' => $status, 
@@ -303,8 +303,6 @@ class Post extends Controller {
                 'action'        => $action
             );
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
@@ -360,12 +358,12 @@ class Post extends Controller {
             $url.= '&page=' . $this->request->get['page'];
         }
         
-        $data['sort_name']          = Url::link('content/post', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
-        $data['sort_status']        = Url::link('content/post', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url, 'SSL');
-        $data['sort_viewed']        = Url::link('content/post', 'token=' . $this->session->data['token'] . '&sort=p.viewed' . $url, 'SSL');
-        $data['sort_date_added']    = Url::link('content/post', 'token=' . $this->session->data['token'] . '&sort=p.date_added' . $url, 'SSL');
-        $data['sort_date_modified'] = Url::link('content/post', 'token=' . $this->session->data['token'] . '&sort=p.date_modified' . $url, 'SSL');
-        $data['sort_order']         = Url::link('content/post', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url, 'SSL');
+        $data['sort_name']          = Url::link('content/post', '' . '&sort=pd.name' . $url, 'SSL');
+        $data['sort_status']        = Url::link('content/post', '' . '&sort=p.status' . $url, 'SSL');
+        $data['sort_viewed']        = Url::link('content/post', '' . '&sort=p.viewed' . $url, 'SSL');
+        $data['sort_date_added']    = Url::link('content/post', '' . '&sort=p.date_added' . $url, 'SSL');
+        $data['sort_date_modified'] = Url::link('content/post', '' . '&sort=p.date_modified' . $url, 'SSL');
+        $data['sort_order']         = Url::link('content/post', '' . '&sort=p.sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -412,7 +410,7 @@ class Post extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('content/post', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
+            Url::link('content/post', '' . $url . '&page={page}', 'SSL')
         );
         
         $data['filter_name']          = $filter_name;
@@ -422,11 +420,11 @@ class Post extends Controller {
         $data['filter_date_added']    = $filter_date_added;
         $data['filter_date_modified'] = $filter_date_modified;
         
-        $data['authors'] = $this->model_content_post->getAuthors();
+        $data['authors'] = ContentPost::getAuthors();
         
         Theme::model('content/category');
         
-        $data['categories'] = $this->model_content_category->getCategories();
+        $data['categories'] = ContentCategory::getCategories();
         
         $data['sort']  = $sort;
         $data['order'] = $order;
@@ -437,7 +435,7 @@ class Post extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('content/post_list', $data));
+        Response::setOutput(View::render('content/post_list', $data));
     }
     
     private function getForm() {
@@ -504,39 +502,37 @@ class Post extends Controller {
         Breadcrumb::add('lang_heading_title', 'content/post');
         
         if (!isset($this->request->get['post_id'])) {
-            $data['action'] = Url::link('content/post/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+            $data['action'] = Url::link('content/post/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('content/post/update', 'token=' . $this->session->data['token'] . '&post_id=' . $this->request->get['post_id'] . $url, 'SSL');
+            $data['action'] = Url::link('content/post/update', '' . '&post_id=' . $this->request->get['post_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('content/post', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $data['cancel'] = Url::link('content/post', '' . $url, 'SSL');
         
         if (isset($this->request->get['post_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $post_info = $this->model_content_post->getPost($this->request->get['post_id']);
+            $post_info = ContentPost::getPost($this->request->get['post_id']);
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         Theme::model('locale/language');
         
-        $data['languages'] = $this->model_locale_language->getLanguages();
+        $data['languages'] = LocaleLanguage::getLanguages();
         
         if (isset($this->request->post['post_description'])) {
             $data['post_description'] = $this->request->post['post_description'];
         } elseif (isset($this->request->get['post_id'])) {
-            $data['post_description'] = $this->model_content_post->getPostDescriptions($this->request->get['post_id']);
+            $data['post_description'] = ContentPost::getPostDescriptions($this->request->get['post_id']);
         } else {
             $data['post_description'] = array();
         }
         
         Theme::model('setting/store');
         
-        $data['stores'] = $this->model_setting_store->getStores();
+        $data['stores'] = SettingStore::getStores();
         
         if (isset($this->request->post['post_store'])) {
             $data['post_store'] = $this->request->post['post_store'];
         } elseif (isset($this->request->get['post_id'])) {
-            $data['post_store'] = $this->model_content_post->getPostStores($this->request->get['post_id']);
+            $data['post_store'] = ContentPost::getPostStores($this->request->get['post_id']);
         } else {
             $data['post_store'] = array(0);
         }
@@ -557,7 +553,7 @@ class Post extends Controller {
             $data['author_id'] = Config::get('blog_default_author');
         }
         
-        $authors = $this->model_content_post->getAuthors();
+        $authors = ContentPost::getAuthors();
 
         $data['posted_by'] = Config::get('blog_posted_by');
         
@@ -580,11 +576,11 @@ class Post extends Controller {
         Theme::model('tool/image');
         
         if (isset($this->request->post['image']) && file_exists(Config::get('path.image') . $this->request->post['image'])) {
-            $data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
+            $data['thumb'] = ToolImage::resize($this->request->post['image'], 100, 100);
         } elseif (!empty($post_info) && $post_info['image'] && file_exists(Config::get('path.image') . $post_info['image'])) {
-            $data['thumb'] = $this->model_tool_image->resize($post_info['image'], 100, 100);
+            $data['thumb'] = ToolImage::resize($post_info['image'], 100, 100);
         } else {
-            $data['thumb'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+            $data['thumb'] = ToolImage::resize('placeholder.png', 100, 100);
         }
         
         if (isset($this->request->post['date_available'])) {
@@ -613,7 +609,7 @@ class Post extends Controller {
         
         Theme::model('people/customer_group');
         
-        $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups();
+        $data['customer_groups'] = PeopleCustomerGroup::getCustomerGroups();
         
         if (isset($this->request->post['status'])) {
             $data['status'] = $this->request->post['status'];
@@ -626,7 +622,7 @@ class Post extends Controller {
         if (isset($this->request->post['post_image'])) {
             $post_images = $this->request->post['product_image'];
         } elseif (isset($this->request->get['post_id'])) {
-            $post_images = $this->model_content_post->getPostImages($this->request->get['post_id']);
+            $post_images = ContentPost::getPostImages($this->request->get['post_id']);
         } else {
             $post_images = array();
         }
@@ -640,19 +636,19 @@ class Post extends Controller {
                 $image = 'placeholder.png';
             }
             
-            $data['post_images'][] = array('image' => $image, 'thumb' => $this->model_tool_image->resize($image, 100, 100), 'sort_order' => $post_image['sort_order']);
+            $data['post_images'][] = array('image' => $image, 'thumb' => ToolImage::resize($image, 100, 100), 'sort_order' => $post_image['sort_order']);
         }
         
-        $data['no_image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+        $data['no_image'] = ToolImage::resize('placeholder.png', 100, 100);
         
         Theme::model('content/category');
         
-        $data['categories'] = $this->model_content_category->getCategories(0);
+        $data['categories'] = ContentCategory::getCategories(0);
         
         if (isset($this->request->post['post_category'])) {
             $data['post_category'] = $this->request->post['post_category'];
         } elseif (isset($this->request->get['post_id'])) {
-            $data['post_category'] = $this->model_content_post->getPostCategories($this->request->get['post_id']);
+            $data['post_category'] = ContentPost::getPostCategories($this->request->get['post_id']);
         } else {
             $data['post_category'] = array();
         }
@@ -660,7 +656,7 @@ class Post extends Controller {
         if (isset($this->request->post['post_related'])) {
             $posts = $this->request->post['post_related'];
         } elseif (isset($this->request->get['post_id'])) {
-            $posts = $this->model_content_post->getPostRelated($this->request->get['post_id']);
+            $posts = ContentPost::getPostRelated($this->request->get['post_id']);
         } else {
             $posts = array();
         }
@@ -668,7 +664,7 @@ class Post extends Controller {
         $data['posts_related'] = array();
         
         foreach ($posts as $post_id) {
-            $related_info = $this->model_content_post->getPost($post_id);
+            $related_info = ContentPost::getPost($post_id);
             
             if ($related_info) {
                 $data['posts_related'][] = array('post_id' => $related_info['post_id'], 'name' => $related_info['name']);
@@ -684,7 +680,7 @@ class Post extends Controller {
         if (isset($this->request->post['post_layout'])) {
             $data['post_layout'] = $this->request->post['post_layout'];
         } elseif (isset($this->request->get['post_id'])) {
-            $data['post_layout'] = $this->model_content_post->getPostLayouts($this->request->get['post_id']);
+            $data['post_layout'] = ContentPost::getPostLayouts($this->request->get['post_id']);
         } else {
             $data['post_layout'] = array();
         }
@@ -693,13 +689,13 @@ class Post extends Controller {
         
         Theme::model('design/layout');
         
-        $data['layouts'] = $this->model_design_layout->getLayouts();
+        $data['layouts'] = DesignLayout::getLayouts();
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('content/post_form', $data));
+        Response::setOutput(View::render('content/post_form', $data));
     }
     
     private function validateForm() {
@@ -719,7 +715,7 @@ class Post extends Controller {
         
         if (isset($this->request->post['slug']) && Encode::strlen($this->request->post['slug']) > 0):
             Theme::model('tool/utility');
-            $query = $this->model_tool_utility->findSlugByName($this->request->post['slug']);
+            $query = ToolUtility::findSlugByName($this->request->post['slug']);
             
             if (isset($this->request->get['post_id'])):
                 if ($query):
@@ -787,7 +783,7 @@ class Post extends Controller {
             
             $filter = array('filter_name' => $filter_name, 'filter_category_id' => $filter_category_id, 'filter_sub_category' => $filter_sub_category, 'start' => 0, 'limit' => $limit);
             
-            $results = $this->model_content_post->getPosts($filter);
+            $results = ContentPost::getPosts($filter);
             
             foreach ($results as $result) {
                 
@@ -814,7 +810,7 @@ class Post extends Controller {
             if (isset($this->request->get['filter_name'])) $filter['filter_name'] = $this->request->get['filter_name']; 
             if (isset($this->request->get['filter_user_name'])) $filter['filter_user_name'] = $this->request->get['filter_user_name'];
             
-            $results = $this->model_people_user->getUsers($filter);
+            $results = PeopleUser::getUsers($filter);
             
             foreach ($results as $result):
                 if (Config::get('blog_posted_by') == 'lastname firstname'):
@@ -858,7 +854,7 @@ class Post extends Controller {
             $slug = Url::build_slug($this->request->get['name']);
             
             // check that the slug is globally unique
-            $query = $this->model_tool_utility->findSlugByName($slug);
+            $query = ToolUtility::findSlugByName($slug);
             
             if ($query):
                 if (isset($this->request->get['post_id'])):

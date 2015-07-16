@@ -21,20 +21,20 @@ use App\Models\Model;
 class Layout extends Model {
     
     public function addLayout($data) {
-        $this->db->query("
-            INSERT INTO {$this->db->prefix}layout 
-            SET name = '" . $this->db->escape($data['name']) . "'");
+        DB::query("
+            INSERT INTO " . DB::prefix() . "layout 
+            SET name = '" . DB::escape($data['name']) . "'");
         
-        $layout_id = $this->db->getLastId();
+        $layout_id = DB::getLastId();
         
         if (isset($data['layout_route'])) {
             foreach ($data['layout_route'] as $layout_route) {
-                $this->db->query("
-                    INSERT INTO {$this->db->prefix}layout_route 
+                DB::query("
+                    INSERT INTO " . DB::prefix() . "layout_route 
                     SET 
                         layout_id = '" . (int)$layout_id . "', 
                         store_id = '" . (int)$layout_route['store_id'] . "', 
-                        route = '" . $this->db->escape($layout_route['route']) . "'");
+                        route = '" . DB::escape($layout_route['route']) . "'");
             }
         }
         
@@ -42,24 +42,24 @@ class Layout extends Model {
     }
     
     public function editLayout($layout_id, $data) {
-        $this->db->query("
-            UPDATE {$this->db->prefix}layout 
+        DB::query("
+            UPDATE " . DB::prefix() . "layout 
             SET 
-                name = '" . $this->db->escape($data['name']) . "' 
+                name = '" . DB::escape($data['name']) . "' 
             WHERE layout_id = '" . (int)$layout_id . "'");
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}layout_route 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "layout_route 
             WHERE layout_id = '" . (int)$layout_id . "'");
         
         if (isset($data['layout_route'])) {
             foreach ($data['layout_route'] as $layout_route) {
-                $this->db->query("
-                    INSERT INTO {$this->db->prefix}layout_route 
+                DB::query("
+                    INSERT INTO " . DB::prefix() . "layout_route 
                     SET 
                         layout_id = '" . (int)$layout_id . "', 
                         store_id = '" . (int)$layout_route['store_id'] . "', 
-                        route = '" . $this->db->escape($layout_route['route']) . "'");
+                        route = '" . DB::escape($layout_route['route']) . "'");
             }
         }
         
@@ -67,32 +67,32 @@ class Layout extends Model {
     }
     
     public function deleteLayout($layout_id) {
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}layout 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "layout 
             WHERE layout_id = '" . (int)$layout_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}layout_route 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "layout_route 
             WHERE layout_id = '" . (int)$layout_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}category_to_layout 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "category_to_layout 
             WHERE layout_id = '" . (int)$layout_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}product_to_layout 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "product_to_layout 
             WHERE layout_id = '" . (int)$layout_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}page_to_layout 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "page_to_layout 
             WHERE layout_id = '" . (int)$layout_id . "'");
         
         Theme::trigger('admin_delete_layout', array('layout_id' => $layout_id));
     }
     
     public function getLayout($layout_id) {
-        $query = $this->db->query("
-            SELECT DISTINCT * FROM {$this->db->prefix}layout 
+        $query = DB::query("
+            SELECT DISTINCT * FROM " . DB::prefix() . "layout 
             WHERE layout_id = '" . (int)$layout_id . "'");
         
         return $query->row;
@@ -101,7 +101,7 @@ class Layout extends Model {
     public function getLayouts($data = array()) {
         $sql = "
             SELECT * 
-            FROM {$this->db->prefix}layout";
+            FROM " . DB::prefix() . "layout";
         
         $sort_data = array('name');
         
@@ -129,24 +129,24 @@ class Layout extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
     
     public function getLayoutRoutes($layout_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}layout_route 
+            FROM " . DB::prefix() . "layout_route 
             WHERE layout_id = '" . (int)$layout_id . "'");
         
         return $query->rows;
     }
     
     public function getTotalLayouts() {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT COUNT(*) AS total 
-            FROM {$this->db->prefix}layout");
+            FROM " . DB::prefix() . "layout");
         
         return $query->row['total'];
     }

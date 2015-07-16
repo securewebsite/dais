@@ -9,19 +9,19 @@ $(document).on('change', 'select[name="type"]', function(){
 	
 	switch(method) {
 		case 'product_category':
-			$('#result-panel').load('index.php?route=module/menu/product_category&token=<?= $token; ?>' + menu);
+			$('#result-panel').load('index.php?route=module/menu/product_category' + menu);
 			break;
 		case 'content_category':
-			$('#result-panel').load('index.php?route=module/menu/content_category&token=<?= $token; ?>' + menu);
+			$('#result-panel').load('index.php?route=module/menu/content_category' + menu);
 			break;
 		case 'page':
-			$('#result-panel').load('index.php?route=module/menu/page&token=<?= $token; ?>' + menu);
+			$('#result-panel').load('index.php?route=module/menu/page' + menu);
 			break;
 		case 'post':
-			$('#result-panel').load('index.php?route=module/menu/post&token=<?= $token; ?>' + menu);
+			$('#result-panel').load('index.php?route=module/menu/post' + menu);
 			break;
 		case 'custom':
-			$('#result-panel').load('index.php?route=module/menu/custom&token=<?= $token; ?>' + menu);
+			$('#result-panel').load('index.php?route=module/menu/custom' + menu);
 			break;
 	}
 });

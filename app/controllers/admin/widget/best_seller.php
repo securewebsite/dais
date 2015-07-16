@@ -28,11 +28,11 @@ class BestSeller extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('best_seller', $this->request->post);
-            $this->cache->delete('products.best_seller');
+            SettingSetting::editSetting('best_seller', $this->request->post);
+            Cache::delete('products.best_seller');
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/widget', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -50,8 +50,8 @@ class BestSeller extends Controller {
         Breadcrumb::add('lang_text_widget', 'module/widget');
         Breadcrumb::add('lang_heading_title', 'widget/best_seller');
         
-        $data['action'] = Url::link('widget/best_seller', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = Url::link('module/widget', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('widget/best_seller', '', 'SSL');
+        $data['cancel'] = Url::link('module/widget', '', 'SSL');
         
         $data['widgets'] = array();
         
@@ -63,7 +63,7 @@ class BestSeller extends Controller {
         
         Theme::model('design/layout');
         
-        $data['layouts'] = $this->model_design_layout->getLayouts();
+        $data['layouts'] = DesignLayout::getLayouts();
         
         Theme::loadjs('javascript/widget/best_seller', $data);
         
@@ -71,7 +71,7 @@ class BestSeller extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('widget/best_seller', $data));
+        Response::setOutput(View::render('widget/best_seller', $data));
     }
     
     protected function validate() {

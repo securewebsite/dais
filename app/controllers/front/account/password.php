@@ -15,33 +15,35 @@
 */
 
 namespace App\Controllers\Front\Account;
+
 use App\Controllers\Controller;
 
 class Password extends Controller {
+    
     private $error = array();
     
     public function index() {
-        if (!$this->customer->isLogged()) {
-            $this->session->data['redirect'] = $this->url->link('account/password', '', 'SSL');
-            $this->response->redirect($this->url->link('account/login', '', 'SSL'));
+        if (!Customer::isLogged()) {
+            $this->session->data['redirect'] = Url::link('account/password', '', 'SSL');
+            Response::redirect(Url::link('account/login', '', 'SSL'));
         }
         
-        $data = $this->theme->language('account/password');
+        $data = Theme::language('account/password');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->theme->model('account/customer');
+            Theme::model('account/customer');
             
-            $this->model_account_customer->editPassword($this->customer->getId(), $this->request->post['password']);
+            AccountCustomer::editPassword(Customer::getId(), $this->request->post['password']);
             
-            $this->session->data['success'] = $this->language->get('lang_text_success');
+            $this->session->data['success'] = Lang::get('lang_text_success');
             
-            $this->response->redirect($this->url->link('account/dashboard', '', 'SSL'));
+            Response::redirect(Url::link('account/dashboard', '', 'SSL'));
         }
         
-        $this->breadcrumb->add('lang_text_account', 'account/dashboard', null, true, 'SSL');
-        $this->breadcrumb->add('lang_heading_title', 'account/password', null, true, 'SSL');
+        Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
+        Breadcrumb::add('lang_heading_title', 'account/password', null, true, 'SSL');
         
         if (isset($this->error['password'])) {
             $data['error_password'] = $this->error['password'];
@@ -55,7 +57,7 @@ class Password extends Controller {
             $data['error_confirm'] = '';
         }
         
-        $data['action'] = $this->url->link('account/password', '', 'SSL');
+        $data['action'] = Url::link('account/password', '', 'SSL');
         
         if (isset($this->request->post['password'])) {
             $data['password'] = $this->request->post['password'];
@@ -69,28 +71,28 @@ class Password extends Controller {
             $data['confirm'] = '';
         }
         
-        $data['back'] = $this->url->link('account/dashboard', '', 'SSL');
+        $data['back'] = Url::link('account/dashboard', '', 'SSL');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->setController('header', 'shop/header');
-        $this->theme->setController('footer', 'shop/footer');
+        Theme::setController('header', 'shop/header');
+        Theme::setController('footer', 'shop/footer');
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('account/password', $data));
+        Response::setOutput(View::render('account/password', $data));
     }
     
     protected function validate() {
-        if (($this->encode->strlen($this->request->post['password']) < 4) || ($this->encode->strlen($this->request->post['password']) > 20)) {
-            $this->error['password'] = $this->language->get('lang_error_password');
+        if ((Encode::strlen($this->request->post['password']) < 4) || (Encode::strlen($this->request->post['password']) > 20)) {
+            $this->error['password'] = Lang::get('lang_error_password');
         }
         
         if ($this->request->post['confirm'] != $this->request->post['password']) {
-            $this->error['confirm'] = $this->language->get('lang_error_confirm');
+            $this->error['confirm'] = Lang::get('lang_error_confirm');
         }
         
-        $this->theme->listen(__CLASS__, __FUNCTION__);
+        Theme::listen(__CLASS__, __FUNCTION__);
         
         return !$this->error;
     }

@@ -38,13 +38,13 @@ class Store extends Controller {
         Theme::model('setting/store');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $store_id = $this->model_setting_store->addStore($this->request->post);
+            $store_id = SettingStore::addStore($this->request->post);
             
             Theme::model('setting/setting');
-            $this->model_setting_setting->editSetting('config', $this->request->post, $store_id);
+            SettingSetting::editSetting('config', $this->request->post, $store_id);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('setting/store', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('setting/store', '', 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -58,13 +58,13 @@ class Store extends Controller {
         Theme::model('setting/store');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            $this->model_setting_store->editStore($this->request->get['store_id'], $this->request->post);
+            SettingStore::editStore($this->request->get['store_id'], $this->request->post);
             
             Theme::model('setting/setting');
-            $this->model_setting_setting->editSetting('config', $this->request->post, $this->request->get['store_id']);
+            SettingSetting::editSetting('config', $this->request->post, $this->request->get['store_id']);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('setting/store', 'token=' . $this->session->data['token'] . '&store_id=' . $this->request->get['store_id'], 'SSL'));
+            Response::redirect(Url::link('setting/store', '' . '&store_id=' . $this->request->get['store_id'], 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -80,13 +80,13 @@ class Store extends Controller {
         
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $store_id) {
-                $this->model_setting_store->deleteStore($store_id);
-                $this->model_setting_setting->deleteSetting('config', $store_id);
+                SettingStore::deleteStore($store_id);
+                SettingSetting::deleteSetting('config', $store_id);
             }
             
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('setting/store', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('setting/store', '', 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -105,23 +105,23 @@ class Store extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'setting/store');
         
-        $data['insert'] = Url::link('setting/store/insert', 'token=' . $this->session->data['token'], 'SSL');
-        $data['delete'] = Url::link('setting/store/delete', 'token=' . $this->session->data['token'], 'SSL');
+        $data['insert'] = Url::link('setting/store/insert', '', 'SSL');
+        $data['delete'] = Url::link('setting/store/delete', '', 'SSL');
         
         $data['stores'] = array();
         
         $action = array();
         
-        $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('setting/setting', 'token=' . $this->session->data['token'], 'SSL'));
+        $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('setting/setting', '', 'SSL'));
         
         $data['stores'][] = array('store_id' => 0, 'name' => Config::get('config_name') . Lang::get('lang_text_default'), 'url' => Config::get('http.public'), 'selected' => isset($this->request->post['selected']) && in_array(0, $this->request->post['selected']), 'action' => $action);
         
-        $results = $this->model_setting_store->getStores();
+        $results = SettingStore::getStores();
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('setting/store/update', 'token=' . $this->session->data['token'] . '&store_id=' . $result['store_id'], 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('setting/store/update', '' . '&store_id=' . $result['store_id'], 'SSL'));
             
             $data['stores'][] = array('store_id' => $result['store_id'], 'name' => $result['name'], 'url' => $result['url'], 'selected' => isset($this->request->post['selected']) && in_array($result['store_id'], $this->request->post['selected']), 'action' => $action);
         }
@@ -144,7 +144,7 @@ class Store extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('setting/store_list', $data));
+        Response::setOutput(View::render('setting/store_list', $data));
     }
     
     public function getForm() {
@@ -275,20 +275,18 @@ class Store extends Controller {
         }
         
         if (!isset($this->request->get['store_id'])) {
-            $data['action'] = Url::link('setting/store/insert', 'token=' . $this->session->data['token'], 'SSL');
+            $data['action'] = Url::link('setting/store/insert', '', 'SSL');
         } else {
-            $data['action'] = Url::link('setting/store/update', 'token=' . $this->session->data['token'] . '&store_id=' . $this->request->get['store_id'], 'SSL');
+            $data['action'] = Url::link('setting/store/update', '' . '&store_id=' . $this->request->get['store_id'], 'SSL');
         }
         
-        $data['cancel'] = Url::link('setting/store', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('setting/store', '', 'SSL');
         
         if (isset($this->request->get['store_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
             Theme::model('setting/setting');
             
-            $store_info = $this->model_setting_setting->getSetting('config', $this->request->get['store_id']);
+            $store_info = SettingSetting::getSetting('config', $this->request->get['store_id']);
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         if (isset($this->request->post['config_url'])) {
             $data['config_url'] = $this->request->post['config_url'];
@@ -372,7 +370,7 @@ class Store extends Controller {
         
         Theme::model('design/layout');
         
-        $data['layouts'] = $this->model_design_layout->getLayouts();
+        $data['layouts'] = DesignLayout::getLayouts();
         
         if (isset($this->request->post['config_theme'])) {
             $data['config_theme'] = $this->request->post['config_theme'];
@@ -400,7 +398,7 @@ class Store extends Controller {
         
         Theme::model('locale/country');
         
-        $data['countries'] = $this->model_locale_country->getCountries();
+        $data['countries'] = LocaleCountry::getCountries();
         
         if (isset($this->request->post['config_zone_id'])) {
             $data['config_zone_id'] = $this->request->post['config_zone_id'];
@@ -420,7 +418,7 @@ class Store extends Controller {
         
         Theme::model('locale/language');
         
-        $data['languages'] = $this->model_locale_language->getLanguages();
+        $data['languages'] = LocaleLanguage::getLanguages();
         
         if (isset($this->request->post['config_currency'])) {
             $data['config_currency'] = $this->request->post['config_currency'];
@@ -432,7 +430,7 @@ class Store extends Controller {
         
         Theme::model('locale/currency');
         
-        $data['currencies'] = $this->model_locale_currency->getCurrencies();
+        $data['currencies'] = LocaleCurrency::getCurrencies();
         
         if (isset($this->request->post['config_catalog_limit'])) {
             $data['config_catalog_limit'] = $this->request->post['config_catalog_limit'];
@@ -476,7 +474,7 @@ class Store extends Controller {
         
         Theme::model('people/customer_group');
         
-        $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups();
+        $data['customer_groups'] = PeopleCustomerGroup::getCustomerGroups();
         
         if (isset($this->request->post['config_customer_group_display'])) {
             $data['config_customer_group_display'] = $this->request->post['config_customer_group_display'];
@@ -504,7 +502,7 @@ class Store extends Controller {
         
         Theme::model('content/page');
         
-        $data['pages'] = $this->model_content_page->getPages();
+        $data['pages'] = ContentPage::getPages();
         
         if (isset($this->request->post['config_cart_weight'])) {
             $data['config_cart_weight'] = $this->request->post['config_cart_weight'];
@@ -540,7 +538,7 @@ class Store extends Controller {
         
         Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
+        $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
         if (isset($this->request->post['config_stock_display'])) {
             $data['config_stock_display'] = $this->request->post['config_stock_display'];
@@ -569,9 +567,9 @@ class Store extends Controller {
         }
         
         if (isset($store_info['config_logo']) && file_exists(Config::get('path.image') . $store_info['config_logo']) && is_file(Config::get('path.image') . $store_info['config_logo'])) {
-            $data['logo'] = $this->model_tool_image->resize($store_info['config_logo'], 100, 100);
+            $data['logo'] = ToolImage::resize($store_info['config_logo'], 100, 100);
         } else {
-            $data['logo'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+            $data['logo'] = ToolImage::resize('placeholder.png', 100, 100);
         }
         
         if (isset($this->request->post['config_icon'])) {
@@ -583,12 +581,12 @@ class Store extends Controller {
         }
         
         if (isset($store_info['config_icon']) && file_exists(Config::get('path.image') . $store_info['config_icon']) && is_file(Config::get('path.image') . $store_info['config_icon'])) {
-            $data['icon'] = $this->model_tool_image->resize($store_info['config_icon'], 100, 100);
+            $data['icon'] = ToolImage::resize($store_info['config_icon'], 100, 100);
         } else {
-            $data['icon'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+            $data['icon'] = ToolImage::resize('placeholder.png', 100, 100);
         }
         
-        $data['no_image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+        $data['no_image'] = ToolImage::resize('placeholder.png', 100, 100);
         
         if (isset($this->request->post['config_image_category_height'])) {
             $data['config_image_category_height'] = $this->request->post['config_image_category_height'];
@@ -746,7 +744,7 @@ class Store extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('setting/store_form', $data));
+        Response::setOutput(View::render('setting/store_form', $data));
     }
     
     protected function validateForm() {
@@ -847,7 +845,7 @@ class Store extends Controller {
                 $this->error['warning'] = Lang::get('lang_error_default');
             }
             
-            $store_total = $this->model_sale_order->getTotalOrdersByStoreId($store_id);
+            $store_total = SaleOrder::getTotalOrdersByStoreId($store_id);
             
             if ($store_total) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_store'), $store_total);
@@ -880,12 +878,12 @@ class Store extends Controller {
         
         Theme::model('locale/country');
         
-        $country_info = $this->model_locale_country->getCountry($this->request->get['country_id']);
+        $country_info = LocaleCountry::getCountry($this->request->get['country_id']);
         
         if ($country_info) {
             Theme::model('locale/zone');
             
-            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => $this->model_locale_zone->getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
+            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => LocaleZone::getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
         }
         
         $json = Theme::listen(__CLASS__, __FUNCTION__, $json);

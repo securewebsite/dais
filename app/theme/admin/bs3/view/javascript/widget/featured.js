@@ -2,7 +2,7 @@
 var mapped={};
 $('input[name="product"]').typeahead({
 	source:function(q,process){
-		return $.getJSON('index.php?route=catalog/product/autocomplete&token='+token+'&filter_name='+encodeURIComponent(q),function(json){
+		return $.getJSON('index.php?route=catalog/product/autocomplete&filter_name='+encodeURIComponent(q),function(json){
 			var data=[];
 			$.each(json,function(i,item){
 				mapped[item.name]=item.product_id;

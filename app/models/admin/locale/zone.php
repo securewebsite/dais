@@ -21,57 +21,57 @@ use App\Models\Model;
 class Zone extends Model {
     
     public function addZone($data) {
-        $this->db->query("
-			INSERT INTO {$this->db->prefix}zone 
+        DB::query("
+			INSERT INTO " . DB::prefix() . "zone 
 			SET 
 				status = '" . (int)$data['status'] . "', 
-				name = '" . $this->db->escape($data['name']) . "', 
-				code = '" . $this->db->escape($data['code']) . "', 
+				name = '" . DB::escape($data['name']) . "', 
+				code = '" . DB::escape($data['code']) . "', 
 				country_id = '" . (int)$data['country_id'] . "'
 		");
         
-        $this->cache->delete('zone');
-        $this->cache->delete('zones');
+        Cache::delete('zone');
+        Cache::delete('zones');
     }
     
     public function editZone($zone_id, $data) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}zone 
+        DB::query("
+			UPDATE " . DB::prefix() . "zone 
 			SET 
 				status = '" . (int)$data['status'] . "', 
-				name = '" . $this->db->escape($data['name']) . "', 
-				code = '" . $this->db->escape($data['code']) . "', 
+				name = '" . DB::escape($data['name']) . "', 
+				code = '" . DB::escape($data['code']) . "', 
 				country_id = '" . (int)$data['country_id'] . "' 
 			WHERE zone_id = '" . (int)$zone_id . "'
 		");
         
-        $this->cache->delete('zone');
-        $this->cache->delete('zones');
+        Cache::delete('zone');
+        Cache::delete('zones');
     }
     
     public function changeStatus($zone_id, $status) {
-        $this->db->query("
-			UPDATE {$this->db->prefix}zone 
+        DB::query("
+			UPDATE " . DB::prefix() . "zone 
 			SET 
 				status = '" . (int)$status . "' 
 			WHERE zone_id = '" . (int)$zone_id . "'
 		");
         
-        $this->cache->delete('zone');
-        $this->cache->delete('zones');
+        Cache::delete('zone');
+        Cache::delete('zones');
     }
     
     public function deleteZone($zone_id) {
-        $this->db->query("DELETE FROM {$this->db->prefix}zone WHERE zone_id = '" . (int)$zone_id . "'");
+        DB::query("DELETE FROM " . DB::prefix() . "zone WHERE zone_id = '" . (int)$zone_id . "'");
         
-        $this->cache->delete('zone');
-        $this->cache->delete('zones');
+        Cache::delete('zone');
+        Cache::delete('zones');
     }
     
     public function getZone($zone_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT DISTINCT * 
-			FROM {$this->db->prefix}zone 
+			FROM " . DB::prefix() . "zone 
 			WHERE zone_id = '" . (int)$zone_id . "'
 		");
         
@@ -83,8 +83,8 @@ class Zone extends Model {
 			SELECT *, 
 				z.name, 
 				c.name AS country 
-			FROM {$this->db->prefix}zone z 
-			LEFT JOIN {$this->db->prefix}country c 
+			FROM " . DB::prefix() . "zone z 
+			LEFT JOIN " . DB::prefix() . "country c 
 				ON (z.country_id = c.country_id)";
         
         $sort_data = array('c.name', 'z.name', 'z.code');
@@ -113,18 +113,18 @@ class Zone extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
     
     public function getZonesByCountryId($country_id) {
-        $zone_data = $this->cache->get('zone.' . (int)$country_id);
+        $zone_data = Cache::get('zone.' . (int)$country_id);
         
         if (!$zone_data) {
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}zone 
+				FROM " . DB::prefix() . "zone 
 				WHERE country_id = '" . (int)$country_id . "' 
 				AND status = '1' 
 				ORDER BY name
@@ -132,16 +132,16 @@ class Zone extends Model {
             
             $zone_data = $query->rows;
             
-            $this->cache->set('zone.' . (int)$country_id, $zone_data);
+            Cache::set('zone.' . (int)$country_id, $zone_data);
         }
         
         return $zone_data;
     }
     
     public function findZonesByCountryId($country_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}zone 
+			FROM " . DB::prefix() . "zone 
 			WHERE country_id = '" . (int)$country_id . "' 
 			ORDER BY name
 		");
@@ -150,17 +150,17 @@ class Zone extends Model {
     }
     
     public function getTotalZones() {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}zone");
+			FROM " . DB::prefix() . "zone");
         
         return $query->row['total'];
     }
     
     public function getTotalZonesByCountryId($country_id) {
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT COUNT(*) AS total 
-			FROM {$this->db->prefix}zone 
+			FROM " . DB::prefix() . "zone 
 			WHERE country_id = '" . (int)$country_id . "'
 		");
         

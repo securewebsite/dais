@@ -23,13 +23,13 @@ class Banner extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}banner_image bi 
-				LEFT JOIN {$this->db->prefix}banner_image_description bid 
+				FROM " . DB::prefix() . "banner_image bi 
+				LEFT JOIN " . DB::prefix() . "banner_image_description bid 
 				ON (bi.banner_image_id  = bid.banner_image_id) 
 				WHERE bi.banner_id = '" . (int)$banner_id . "' 
-				AND bid.language_id = '" . (int)$this->config->get('config_language_id') . "'
+				AND bid.language_id = '" . (int)Config::get('config_language_id') . "'
 			");
             
             if ($query->num_rows):

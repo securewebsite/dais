@@ -65,18 +65,18 @@ class CustomerOnline extends Controller {
         
         $filter = array('filter_ip' => $filter_ip, 'filter_customer' => $filter_customer, 'start' => ($page - 1) * 20, 'limit' => 20);
         
-        $customer_total = $this->model_report_online->getTotalCustomersOnline($filter);
+        $customer_total = ReportOnline::getTotalCustomersOnline($filter);
         
-        $results = $this->model_report_online->getCustomersOnline($filter);
+        $results = ReportOnline::getCustomersOnline($filter);
         
         foreach ($results as $result) {
             $action = array();
             
             if ($result['customer_id']) {
-                $action[] = array('text' => 'Edit', 'href' => Url::link('people/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'], 'SSL'));
+                $action[] = array('text' => 'Edit', 'href' => Url::link('people/customer/update', '' . '&customer_id=' . $result['customer_id'], 'SSL'));
             }
             
-            $customer_info = $this->model_people_customer->getCustomer($result['customer_id']);
+            $customer_info = PeopleCustomer::getCustomer($result['customer_id']);
             
             if ($customer_info) {
                 $customer = $customer_info['firstname'] . ' ' . $customer_info['lastname'];
@@ -86,8 +86,6 @@ class CustomerOnline extends Controller {
             
             $data['customers'][] = array('ip' => $result['ip'], 'customer' => $customer, 'url' => $result['url'], 'referer' => $result['referer'], 'date_added' => date('d/m/Y H:i:s', strtotime($result['date_added'])), 'action' => $action);
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         $url = '';
         
@@ -99,7 +97,7 @@ class CustomerOnline extends Controller {
             $url.= '&filter_ip=' . $this->request->get['filter_ip'];
         }
         
-        $data['pagination'] = Theme::paginate($customer_total, $page, 20, Lang::get('lang_text_pagination'), Url::link('report/customer_online', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($customer_total, $page, 20, Lang::get('lang_text_pagination'), Url::link('report/customer_online', '' . $url . '&page={page}', 'SSL'));
         
         $data['filter_customer'] = $filter_customer;
         $data['filter_ip'] = $filter_ip;
@@ -108,6 +106,6 @@ class CustomerOnline extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('report/customer_online', $data));
+        Response::setOutput(View::render('report/customer_online', $data));
     }
 }

@@ -28,10 +28,10 @@ class BankTransfer extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('bank_transfer', $this->request->post);
+            SettingSetting::editSetting('bank_transfer', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/payment', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -42,7 +42,7 @@ class BankTransfer extends Controller {
         
         Theme::model('locale/language');
         
-        $languages = $this->model_locale_language->getLanguages();
+        $languages = LocaleLanguage::getLanguages();
         
         foreach ($languages as $language) {
             if (isset($this->error['bank_' . $language['language_id']])) {
@@ -55,9 +55,9 @@ class BankTransfer extends Controller {
         Breadcrumb::add('lang_text_payment', 'module/payment');
         Breadcrumb::add('lang_heading_title', 'payment/bank_transfer');
         
-        $data['action'] = Url::link('payment/bank_transfer', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('payment/bank_transfer', '', 'SSL');
         
-        $data['cancel'] = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/payment', '', 'SSL');
         
         Theme::model('locale/language');
         
@@ -85,7 +85,7 @@ class BankTransfer extends Controller {
         
         Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
+        $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
         if (isset($this->request->post['bank_transfer_geo_zone_id'])) {
             $data['bank_transfer_geo_zone_id'] = $this->request->post['bank_transfer_geo_zone_id'];
@@ -95,7 +95,7 @@ class BankTransfer extends Controller {
         
         Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
+        $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
         if (isset($this->request->post['bank_transfer_status'])) {
             $data['bank_transfer_status'] = $this->request->post['bank_transfer_status'];
@@ -113,7 +113,7 @@ class BankTransfer extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('payment/bank_transfer', $data));
+        Response::setOutput(View::render('payment/bank_transfer', $data));
     }
     
     protected function validate() {
@@ -123,7 +123,7 @@ class BankTransfer extends Controller {
         
         Theme::model('locale/language');
         
-        $languages = $this->model_locale_language->getLanguages();
+        $languages = LocaleLanguage::getLanguages();
         
         foreach ($languages as $language) {
             if (!$this->request->post['bank_transfer_bank_' . $language['language_id']]) {

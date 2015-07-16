@@ -115,7 +115,7 @@
 				</table>
 			</div>
 			<div class="tab-pane" id="tab-history">
-				<div id="history" data-href="index.php?route=sale/returns/history&token=<?= $token; ?>&return_id=<?= $return_id; ?>"></div>
+				<div id="history" data-href="index.php?route=sale/returns/history&return_id=<?= $return_id; ?>"></div>
 				<div class="form-group">
 					<label class="control-label col-sm-2"><?= $lang_entry_return_status; ?></label>
 					<div class="control-field col-sm-4">

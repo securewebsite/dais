@@ -21,42 +21,42 @@ use App\Models\Model;
 class Option extends Model {
     
     public function addOption($data) {
-        $this->db->query("
-            INSERT INTO `{$this->db->prefix}option` 
+        DB::query("
+            INSERT INTO `" . DB::prefix() . "option` 
             SET 
-                type = '" . $this->db->escape($data['type']) . "', 
+                type = '" . DB::escape($data['type']) . "', 
                 sort_order = '" . (int)$data['sort_order'] . "'");
         
-        $option_id = $this->db->getLastId();
+        $option_id = DB::getLastId();
         
         foreach ($data['option_description'] as $language_id => $value) {
-            $this->db->query("
-                INSERT INTO {$this->db->prefix}option_description 
+            DB::query("
+                INSERT INTO " . DB::prefix() . "option_description 
                 SET 
                     option_id = '" . (int)$option_id . "', 
                     language_id = '" . (int)$language_id . "', 
-                    name = '" . $this->db->escape($value['name']) . "'");
+                    name = '" . DB::escape($value['name']) . "'");
         }
         
         if (isset($data['option_value'])) {
             foreach ($data['option_value'] as $option_value) {
-                $this->db->query("
-                    INSERT INTO {$this->db->prefix}option_value 
+                DB::query("
+                    INSERT INTO " . DB::prefix() . "option_value 
                     SET 
                         option_id = '" . (int)$option_id . "', 
-                        image = '" . $this->db->escape(html_entity_decode($option_value['image'], ENT_QUOTES, 'UTF-8')) . "', 
+                        image = '" . DB::escape(html_entity_decode($option_value['image'], ENT_QUOTES, 'UTF-8')) . "', 
                         sort_order = '" . (int)$option_value['sort_order'] . "'");
                 
-                $option_value_id = $this->db->getLastId();
+                $option_value_id = DB::getLastId();
                 
                 foreach ($option_value['option_value_description'] as $language_id => $option_value_description) {
-                    $this->db->query("
-                        INSERT INTO {$this->db->prefix}option_value_description 
+                    DB::query("
+                        INSERT INTO " . DB::prefix() . "option_value_description 
                         SET 
                             option_value_id = '" . (int)$option_value_id . "', 
                             language_id = '" . (int)$language_id . "', 
                             option_id = '" . (int)$option_id . "', 
-                            name = '" . $this->db->escape($option_value_description['name']) . "'");
+                            name = '" . DB::escape($option_value_description['name']) . "'");
                 }
             }
         }
@@ -65,63 +65,63 @@ class Option extends Model {
     }
     
     public function editOption($option_id, $data) {
-        $this->db->query("
-            UPDATE `{$this->db->prefix}option` 
+        DB::query("
+            UPDATE `" . DB::prefix() . "option` 
             SET 
-                type = '" . $this->db->escape($data['type']) . "', 
+                type = '" . DB::escape($data['type']) . "', 
                 sort_order = '" . (int)$data['sort_order'] . "' 
             WHERE option_id = '" . (int)$option_id . "'");
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}option_description 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "option_description 
             WHERE option_id = '" . (int)$option_id . "'");
         
         foreach ($data['option_description'] as $language_id => $value) {
-            $this->db->query("
-                INSERT INTO {$this->db->prefix}option_description 
+            DB::query("
+                INSERT INTO " . DB::prefix() . "option_description 
                 SET 
                     option_id = '" . (int)$option_id . "', 
                     language_id = '" . (int)$language_id . "', 
-                    name = '" . $this->db->escape($value['name']) . "'");
+                    name = '" . DB::escape($value['name']) . "'");
         }
         
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}option_value 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "option_value 
             WHERE option_id = '" . (int)$option_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}option_value_description 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "option_value_description 
             WHERE option_id = '" . (int)$option_id . "'");
         
         if (isset($data['option_value'])) {
             foreach ($data['option_value'] as $option_value) {
                 if ($option_value['option_value_id']) {
-                    $this->db->query("
-                        INSERT INTO {$this->db->prefix}option_value 
+                    DB::query("
+                        INSERT INTO " . DB::prefix() . "option_value 
                         SET 
                             option_value_id = '" . (int)$option_value['option_value_id'] . "', 
                             option_id = '" . (int)$option_id . "', 
-                            image = '" . $this->db->escape(html_entity_decode($option_value['image'], ENT_QUOTES, 'UTF-8')) . "', 
+                            image = '" . DB::escape(html_entity_decode($option_value['image'], ENT_QUOTES, 'UTF-8')) . "', 
                             sort_order = '" . (int)$option_value['sort_order'] . "'");
                 } else {
-                    $this->db->query("
-                        INSERT INTO {$this->db->prefix}option_value 
+                    DB::query("
+                        INSERT INTO " . DB::prefix() . "option_value 
                         SET 
                             option_id = '" . (int)$option_id . "', 
-                            image = '" . $this->db->escape(html_entity_decode($option_value['image'], ENT_QUOTES, 'UTF-8')) . "', 
+                            image = '" . DB::escape(html_entity_decode($option_value['image'], ENT_QUOTES, 'UTF-8')) . "', 
                             sort_order = '" . (int)$option_value['sort_order'] . "'");
                 }
                 
-                $option_value_id = $this->db->getLastId();
+                $option_value_id = DB::getLastId();
                 
                 foreach ($option_value['option_value_description'] as $language_id => $option_value_description) {
-                    $this->db->query("
-                        INSERT INTO {$this->db->prefix}option_value_description 
+                    DB::query("
+                        INSERT INTO " . DB::prefix() . "option_value_description 
                         SET 
                             option_value_id = '" . (int)$option_value_id . "', 
                             language_id = '" . (int)$language_id . "', 
                             option_id = '" . (int)$option_id . "', 
-                            name = '" . $this->db->escape($option_value_description['name']) . "'");
+                            name = '" . DB::escape($option_value_description['name']) . "'");
                 }
             }
         }
@@ -130,30 +130,30 @@ class Option extends Model {
     }
     
     public function deleteOption($option_id) {
-        $this->db->query("
-            DELETE FROM `{$this->db->prefix}option` 
+        DB::query("
+            DELETE FROM `" . DB::prefix() . "option` 
             WHERE option_id = '" . (int)$option_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}option_description 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "option_description 
             WHERE option_id = '" . (int)$option_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}option_value 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "option_value 
             WHERE option_id = '" . (int)$option_id . "'");
 
-        $this->db->query("
-            DELETE FROM {$this->db->prefix}option_value_description 
+        DB::query("
+            DELETE FROM " . DB::prefix() . "option_value_description 
             WHERE option_id = '" . (int)$option_id . "'");
         
         Theme::trigger('admin_delete_option', array('option_id' => $option_id));
     }
     
     public function getOption($option_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM `{$this->db->prefix}option` o 
-            LEFT JOIN {$this->db->prefix}option_description od 
+            FROM `" . DB::prefix() . "option` o 
+            LEFT JOIN " . DB::prefix() . "option_description od 
             ON (o.option_id = od.option_id) 
             WHERE o.option_id = '" . (int)$option_id . "' 
             AND od.language_id = '" . (int)Config::get('config_language_id') . "'");
@@ -164,13 +164,13 @@ class Option extends Model {
     public function getOptions($data = array()) {
         $sql = "
             SELECT * 
-            FROM `{$this->db->prefix}option` o 
-            LEFT JOIN {$this->db->prefix}option_description od 
+            FROM `" . DB::prefix() . "option` o 
+            LEFT JOIN " . DB::prefix() . "option_description od 
             ON (o.option_id = od.option_id) 
             WHERE od.language_id = '" . (int)Config::get('config_language_id') . "'";
         
         if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
-            $sql.= " AND od.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+            $sql.= " AND od.name LIKE '" . DB::escape($data['filter_name']) . "%'";
         }
         
         $sort_data = array('od.name', 'o.type', 'o.sort_order');
@@ -199,7 +199,7 @@ class Option extends Model {
             $sql.= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
         
-        $query = $this->db->query($sql);
+        $query = DB::query($sql);
         
         return $query->rows;
     }
@@ -207,9 +207,9 @@ class Option extends Model {
     public function getOptionDescriptions($option_id) {
         $option_data = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}option_description 
+            FROM " . DB::prefix() . "option_description 
             WHERE option_id = '" . (int)$option_id . "'");
         
         foreach ($query->rows as $result) {
@@ -220,10 +220,10 @@ class Option extends Model {
     }
     
     public function getOptionValue($option_value_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}option_value ov 
-            LEFT JOIN {$this->db->prefix}option_value_description ovd 
+            FROM " . DB::prefix() . "option_value ov 
+            LEFT JOIN " . DB::prefix() . "option_value_description ovd 
             ON (ov.option_value_id = ovd.option_value_id) 
             WHERE ov.option_value_id = '" . (int)$option_value_id . "' 
             AND ovd.language_id = '" . (int)Config::get('config_language_id') . "'");
@@ -234,10 +234,10 @@ class Option extends Model {
     public function getOptionValues($option_id) {
         $option_value_data = array();
         
-        $option_value_query = $this->db->query("
+        $option_value_query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}option_value ov 
-            LEFT JOIN {$this->db->prefix}option_value_description ovd 
+            FROM " . DB::prefix() . "option_value ov 
+            LEFT JOIN " . DB::prefix() . "option_value_description ovd 
             ON (ov.option_value_id = ovd.option_value_id) 
             WHERE ov.option_id = '" . (int)$option_id . "' 
             AND ovd.language_id = '" . (int)Config::get('config_language_id') . "' 
@@ -258,17 +258,17 @@ class Option extends Model {
     public function getOptionValueDescriptions($option_id) {
         $option_value_data = array();
         
-        $option_value_query = $this->db->query("
+        $option_value_query = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}option_value 
+            FROM " . DB::prefix() . "option_value 
             WHERE option_id = '" . (int)$option_id . "'");
         
         foreach ($option_value_query->rows as $option_value) {
             $option_value_description_data = array();
             
-            $option_value_description_query = $this->db->query("
+            $option_value_description_query = DB::query("
                 SELECT * 
-                FROM {$this->db->prefix}option_value_description 
+                FROM " . DB::prefix() . "option_value_description 
                 WHERE option_value_id = '" . (int)$option_value['option_value_id'] . "'");
             
             foreach ($option_value_description_query->rows as $option_value_description) {
@@ -287,9 +287,9 @@ class Option extends Model {
     }
     
     public function getTotalOptions() {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT COUNT(*) AS total 
-            FROM `{$this->db->prefix}option`");
+            FROM `" . DB::prefix() . "option`");
         
         return $query->row['total'];
     }

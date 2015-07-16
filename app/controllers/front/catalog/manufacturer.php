@@ -15,59 +15,61 @@
 */
 
 namespace App\Controllers\Front\Catalog;
+
 use App\Controllers\Controller;
 
 class Manufacturer extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('catalog/manufacturer');
+        $data = Theme::language('catalog/manufacturer');
         
-        $this->theme->model('catalog/manufacturer');
-        $this->theme->model('tool/image');
+        Theme::model('catalog/manufacturer');
+        Theme::model('tool/image');
         
-        $this->javascript->register('storage.min', 'jquery.min');
+        JS::register('storage.min', 'jquery.min');
         
-        $this->theme->setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
-        $this->breadcrumb->add('lang_text_brand', 'catalog/manufacturer');
+        Breadcrumb::add('lang_text_brand', 'catalog/manufacturer');
         
         $data['categories'] = array();
         
-        $results = $this->model_catalog_manufacturer->getManufacturers();
+        $results = CatalogManufacturer::getManufacturers();
         
         foreach ($results as $result) {
-            if (is_numeric($this->encode->substr($result['name'], 0, 1))) {
+            if (is_numeric(Encode::substr($result['name'], 0, 1))) {
                 $key = '0 - 9';
             } else {
-                $key = $this->encode->substr($this->encode->strtoupper($result['name']), 0, 1);
+                $key = Encode::substr(Encode::strtoupper($result['name']), 0, 1);
             }
             
             if (!isset($data['manufacturers'][$key])) {
                 $data['categories'][$key]['name'] = $key;
             }
             
-            $data['categories'][$key]['manufacturer'][] = array('name' => $result['name'], 'href' => $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $result['manufacturer_id']));
+            $data['categories'][$key]['manufacturer'][] = array('name' => $result['name'], 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $result['manufacturer_id']));
         }
         
-        $data['continue'] = $this->url->link('shop/home');
+        $data['continue'] = Url::link('shop/home');
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->theme->setController('header', 'shop/header');
-        $this->theme->setController('footer', 'shop/footer');
+        Theme::setController('header', 'shop/header');
+        Theme::setController('footer', 'shop/footer');
         
-        $data = $this->theme->renderControllers($data);
+        $data = Theme::renderControllers($data);
         
-        $this->response->setOutput($this->theme->view('catalog/manufacturer_list', $data));
+        Response::setOutput(View::render('catalog/manufacturer_list', $data));
     }
     
     public function info() {
-        $data = $this->theme->language('catalog/manufacturer');
+        $data = Theme::language('catalog/manufacturer');
         
-        $this->theme->model('catalog/manufacturer');
-        $this->theme->model('catalog/product');
-        $this->theme->model('tool/image');
+        Theme::model('catalog/manufacturer');
+        Theme::model('catalog/product');
+        Theme::model('tool/image');
         
-        $this->javascript->register('storage.min', 'jquery.min');
+        JS::register('storage.min', 'jquery.min');
         
         if (isset($this->request->get['manufacturer_id'])) {
             $manufacturer_id = (int)$this->request->get['manufacturer_id'];
@@ -96,17 +98,17 @@ class Manufacturer extends Controller {
         if (isset($this->request->get['limit'])) {
             $limit = $this->request->get['limit'];
         } else {
-            $limit = $this->config->get('config_catalog_limit');
+            $limit = Config::get('config_catalog_limit');
         }
         
-        $this->breadcrumb->add('lang_text_brand', 'catalog/manufacturer');
+        Breadcrumb::add('lang_text_brand', 'catalog/manufacturer');
         
-        $data['image_width'] = $this->config->get('config_image_product_width');
+        $data['image_width'] = Config::get('config_image_product_width');
         
-        $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
+        $manufacturer_info = CatalogManufacturer::getManufacturer($manufacturer_id);
         
         if ($manufacturer_info) {
-            $this->theme->setTitle($manufacturer_info['name']);
+            Theme::setTitle($manufacturer_info['name']);
             
             $url = '';
             
@@ -126,54 +128,54 @@ class Manufacturer extends Controller {
                 $url.= '&limit=' . $this->request->get['limit'];
             }
             
-            $this->breadcrumb->add($manufacturer_info['name'], 'catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url);
+            Breadcrumb::add($manufacturer_info['name'], 'catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url);
             
             $data['heading_title'] = $manufacturer_info['name'];
             
-            $data['text_compare'] = sprintf($this->language->get('lang_text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
+            $data['text_compare'] = sprintf(Lang::get('lang_text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
             
-            $data['compare'] = $this->url->link('catalog/compare');
+            $data['compare'] = Url::link('catalog/compare');
             
             $data['products'] = array();
             
             $filter = array('filter_manufacturer_id' => $manufacturer_id, 'sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $limit, 'limit' => $limit);
             
-            $product_total = $this->model_catalog_product->getTotalProducts($filter);
+            $product_total = CatalogProduct::getTotalProducts($filter);
             
-            $results = $this->model_catalog_product->getProducts($filter);
+            $results = CatalogProduct::getProducts($filter);
             
             foreach ($results as $result) {
                 if ($result['image']) {
-                    $image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+                    $image = ToolImage::resize($result['image'], Config::get('config_image_product_width'), Config::get('config_image_product_height'));
                 } else {
                     $image = false;
                 }
                 
-                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                    $price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+                if ((Config::get('config_customer_price') && Customer::isLogged()) || !Config::get('config_customer_price')) {
+                    $price = Currency::format(Tax::calculate($result['price'], $result['tax_class_id'], Config::get('config_tax')));
                 } else {
                     $price = false;
                 }
                 
                 if ((float)$result['special']) {
-                    $special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')));
+                    $special = Currency::format(Tax::calculate($result['special'], $result['tax_class_id'], Config::get('config_tax')));
                 } else {
                     $special = false;
                 }
                 
-                if ($this->config->get('config_tax')) {
-                    $tax = $this->currency->format((float)$result['special'] ? $result['special'] : $result['price']);
+                if (Config::get('config_tax')) {
+                    $tax = Currency::format((float)$result['special'] ? $result['special'] : $result['price']);
                 } else {
                     $tax = false;
                 }
                 
-                if ($this->config->get('config_review_status')) {
+                if (Config::get('config_review_status')) {
                     $rating = (int)$result['rating'];
                 } else {
                     $rating = false;
                 }
                 
-                $data['products'][] = array('product_id' => $result['product_id'], 'event_id' => $result['event_id'], 'thumb' => $image, 'name' => $result['name'], 'description' => $this->encode->substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..', 'price' => $price, 'special' => $special, 'tax' => $tax, 'rating' => $rating, 'reviews' => sprintf($this->language->get('lang_text_reviews'), (int)$result['reviews']), 'href' => $this->url->link('catalog/product', 'product_id=' . $result['product_id'] . $url));
+                $data['products'][] = array('product_id' => $result['product_id'], 'event_id' => $result['event_id'], 'thumb' => $image, 'name' => $result['name'], 'description' => Encode::substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..', 'price' => $price, 'special' => $special, 'tax' => $tax, 'rating' => $rating, 'reviews' => sprintf(Lang::get('lang_text_reviews'), (int)$result['reviews']), 'href' => Url::link('catalog/product', 'product_id=' . $result['product_id'] . $url));
             }
             
             $url = '';
@@ -184,25 +186,25 @@ class Manufacturer extends Controller {
             
             $data['sorts'] = array();
             
-            $data['sorts'][] = array('text' => $this->language->get('lang_text_default'), 'value' => 'p.sort_order-ASC', 'href' => $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.sort_order&order=ASC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_default'), 'value' => 'p.sort_order-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.sort_order&order=ASC' . $url));
             
-            $data['sorts'][] = array('text' => $this->language->get('lang_text_name_asc'), 'value' => 'pd.name-ASC', 'href' => $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=pd.name&order=ASC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_name_asc'), 'value' => 'pd.name-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=pd.name&order=ASC' . $url));
             
-            $data['sorts'][] = array('text' => $this->language->get('lang_text_name_desc'), 'value' => 'pd.name-DESC', 'href' => $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=pd.name&order=DESC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_name_desc'), 'value' => 'pd.name-DESC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=pd.name&order=DESC' . $url));
             
-            $data['sorts'][] = array('text' => $this->language->get('lang_text_price_asc'), 'value' => 'p.price-ASC', 'href' => $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.price&order=ASC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_price_asc'), 'value' => 'p.price-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.price&order=ASC' . $url));
             
-            $data['sorts'][] = array('text' => $this->language->get('lang_text_price_desc'), 'value' => 'p.price-DESC', 'href' => $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.price&order=DESC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_price_desc'), 'value' => 'p.price-DESC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.price&order=DESC' . $url));
             
-            if ($this->config->get('config_review_status')) {
-                $data['sorts'][] = array('text' => $this->language->get('lang_text_rating_desc'), 'value' => 'rating-DESC', 'href' => $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=rating&order=DESC' . $url));
+            if (Config::get('config_review_status')) {
+                $data['sorts'][] = array('text' => Lang::get('lang_text_rating_desc'), 'value' => 'rating-DESC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=rating&order=DESC' . $url));
                 
-                $data['sorts'][] = array('text' => $this->language->get('lang_text_rating_asc'), 'value' => 'rating-ASC', 'href' => $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=rating&order=ASC' . $url));
+                $data['sorts'][] = array('text' => Lang::get('lang_text_rating_asc'), 'value' => 'rating-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=rating&order=ASC' . $url));
             }
             
-            $data['sorts'][] = array('text' => $this->language->get('lang_text_model_asc'), 'value' => 'p.model-ASC', 'href' => $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.model&order=ASC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_model_asc'), 'value' => 'p.model-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.model&order=ASC' . $url));
             
-            $data['sorts'][] = array('text' => $this->language->get('lang_text_model_desc'), 'value' => 'p.model-DESC', 'href' => $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.model&order=DESC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_model_desc'), 'value' => 'p.model-DESC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.model&order=DESC' . $url));
             
             $url = '';
             
@@ -216,12 +218,12 @@ class Manufacturer extends Controller {
             
             $data['limits'] = array();
             
-            $limits = array_unique(array($this->config->get('config_catalog_limit'), 32, 64, 88, 112));
+            $limits = array_unique(array(Config::get('config_catalog_limit'), 32, 64, 88, 112));
             
             sort($limits);
             
             foreach ($limits as $value) {
-                $data['limits'][] = array('text' => $value, 'value' => $value, 'href' => $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&limit=' . $value));
+                $data['limits'][] = array('text' => $value, 'value' => $value, 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&limit=' . $value));
             }
             
             $url = '';
@@ -238,7 +240,7 @@ class Manufacturer extends Controller {
                 $url.= '&limit=' . $this->request->get['limit'];
             }
             
-            $data['pagination'] = $this->theme->paginate($product_total, $page, $limit, $this->language->get('lang_text_pagination'), $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&page={page}'));
+            $data['pagination'] = Theme::paginate($product_total, $page, $limit, Lang::get('lang_text_pagination'), Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&page={page}'));
             
             $data['sort'] = $sort;
             $data['order'] = $order;
@@ -252,16 +254,16 @@ class Manufacturer extends Controller {
             
             $data['display'] = $cookie;
             
-            $data['continue'] = $this->url->link('shop/home');
+            $data['continue'] = Url::link('shop/home');
             
-            $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+            $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $this->theme->setController('header', 'shop/header');
-            $this->theme->setController('footer', 'shop/footer');
+            Theme::setController('header', 'shop/header');
+            Theme::setController('footer', 'shop/footer');
             
-            $data = $this->theme->renderControllers($data);
+            $data = Theme::renderControllers($data);
             
-            $this->response->setOutput($this->theme->view('catalog/manufacturer_info', $data));
+            Response::setOutput(View::render('catalog/manufacturer_info', $data));
         } else {
             $url = '';
             
@@ -285,24 +287,24 @@ class Manufacturer extends Controller {
                 $url.= '&limit=' . $this->request->get['limit'];
             }
             
-            $this->breadcrumb->add('lang_text_error', 'catalog/manufacturer', $url);
+            Breadcrumb::add('lang_text_error', 'catalog/manufacturer', $url);
             
-            $this->theme->setTitle($this->language->get('lang_text_error'));
+            Theme::setTitle(Lang::get('lang_text_error'));
             
-            $data['heading_title'] = $this->language->get('lang_text_error');
+            $data['heading_title'] = Lang::get('lang_text_error');
             
-            $data['continue'] = $this->url->link('shop/home');
+            $data['continue'] = Url::link('shop/home');
             
-            $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
+            Response::addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
             
-            $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+            $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
-            $this->theme->setController('header', 'shop/header');
-            $this->theme->setController('footer', 'shop/footer');
+            Theme::setController('header', 'shop/header');
+            Theme::setController('footer', 'shop/footer');
             
-            $data = $this->theme->renderControllers($data);
+            $data = Theme::renderControllers($data);
             
-            $this->response->setOutput($this->theme->view('error/not_found', $data));
+            Response::setOutput(View::render('error/not_found', $data));
         }
     }
 }

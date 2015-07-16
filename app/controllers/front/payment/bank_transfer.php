@@ -15,38 +15,40 @@
 */
 
 namespace App\Controllers\Front\Payment;
+
 use App\Controllers\Controller;
 
 class BankTransfer extends Controller {
+    
     public function index() {
-        $data = $this->theme->language('payment/bank_transfer');
+        $data = Theme::language('payment/bank_transfer');
         
-        $data['bank'] = nl2br($this->config->get('bank_transfer_bank_' . $this->config->get('config_language_id')));
+        $data['bank'] = nl2br(Config::get('bank_transfer_bank_' . Config::get('config_language_id')));
         
-        $data['continue'] = $this->url->link('checkout/success');
+        $data['continue'] = Url::link('checkout/success');
         
-        $this->theme->loadjs('javascript/payment/bank_transfer', $data);
+        Theme::loadjs('javascript/payment/bank_transfer', $data);
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $data['javascript'] = $this->theme->controller('common/javascript');
+        $data['javascript'] = Theme::controller('common/javascript');
         
-        return $this->theme->view('payment/bank_transfer', $data);
+        return View::render('payment/bank_transfer', $data);
     }
     
     public function confirm() {
-        $data = $this->theme->language('payment/bank_transfer');
+        $data = Theme::language('payment/bank_transfer');
         
-        $this->theme->model('checkout/order');
+        Theme::model('checkout/order');
         
-        $comment = $this->language->get('lang_text_instruction') . "\n\n";
-        $comment.= $this->config->get('bank_transfer_bank_' . $this->config->get('config_language_id')) . "\n\n";
-        $comment.= $this->language->get('lang_text_payment');
+        $comment = Lang::get('lang_text_instruction') . "\n\n";
+        $comment.= Config::get('bank_transfer_bank_' . Config::get('config_language_id')) . "\n\n";
+        $comment.= Lang::get('lang_text_payment');
         
         $data['comment'] = $comment;
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('bank_transfer_order_status_id'), $data['comment'], true);
+        CheckoutOrder::confirm($this->session->data['order_id'], Config::get('bank_transfer_order_status_id'), $data['comment'], true);
     }
 }

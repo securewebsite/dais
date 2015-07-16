@@ -28,10 +28,10 @@ class Free extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('free', $this->request->post);
+            SettingSetting::editSetting('free', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/shipping', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -43,9 +43,9 @@ class Free extends Controller {
         Breadcrumb::add('lang_text_shipping', 'module/shipping');
         Breadcrumb::add('lang_heading_title', 'shipping/free');
         
-        $data['action'] = Url::link('shipping/free', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('shipping/free', '', 'SSL');
         
-        $data['cancel'] = Url::link('module/shipping', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/shipping', '', 'SSL');
         
         if (isset($this->request->post['free_total'])) {
             $data['free_total'] = $this->request->post['free_total'];
@@ -61,7 +61,7 @@ class Free extends Controller {
         
         Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
+        $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
         if (isset($this->request->post['free_status'])) {
             $data['free_status'] = $this->request->post['free_status'];
@@ -79,7 +79,7 @@ class Free extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('shipping/free', $data));
+        Response::setOutput(View::render('shipping/free', $data));
     }
     
     protected function validate() {

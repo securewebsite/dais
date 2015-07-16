@@ -2,7 +2,7 @@
 $('#credit').on('click',function(){
 	var a=$(this),b=a.data('action');
 	$.ajax({
-		url:'index.php?route=sale/order/'+b+'credit&token=<?= $token; ?>&order_id=<?= $order_id; ?>',
+		url:'index.php?route=sale/order/'+b+'credit&order_id=<?= $order_id; ?>',
 		type:'post',
 		dataType:'json',
 		beforeSend:function(){
@@ -31,7 +31,7 @@ $('#credit').on('click',function(){
 $('#reward').on('click',function(){
 	var a=$(this),b=a.data('action');
 	$.ajax({
-		url:'index.php?route=sale/order/'+b+'reward&token=<?= $token; ?>&order_id=<?= $order_id; ?>',
+		url:'index.php?route=sale/order/'+b+'reward&order_id=<?= $order_id; ?>',
 		type:'post',
 		dataType:'json',
 		beforeSend:function(){
@@ -60,7 +60,7 @@ $('#reward').on('click',function(){
 $('#commission').on('click',function(){
 	var a=$(this),b=a.data('action');
 	$.ajax({
-		url:'index.php?route=sale/order/'+b+'commission&token=<?= $token; ?>&order_id=<?= $order_id; ?>',
+		url:'index.php?route=sale/order/'+b+'commission&order_id=<?= $order_id; ?>',
 		type:'post',
 		dataType:'json',
 		beforeSend:function(){

@@ -22,9 +22,9 @@ class Waitlist extends Model {
     public function getWaitLists($customer_id) {
         $waitlist_data = array();
         
-        $waitlists_query = $this->db->query("
+        $waitlists_query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}event_wait_list 
+			FROM " . DB::prefix() . "event_wait_list 
 			WHERE customer_id = '" . (int)$customer_id . "'");
         
         if ($waitlists_query->num_rows):
@@ -40,9 +40,9 @@ class Waitlist extends Model {
         
         $event_data = array();
         
-        $event_query = $this->db->query("
+        $event_query = DB::query("
 			SELECT * 
-			FROM {$this->db->prefix}event_manager 
+			FROM " . DB::prefix() . "event_manager 
 			WHERE event_id = '" . (int)$event_id . "'");
         
         if ($event_query->num_rows):
@@ -53,8 +53,8 @@ class Waitlist extends Model {
     }
     
     public function remove($event_id, $customer_id) {
-        $this->db->query("
-			DELETE FROM {$this->db->prefix}event_wait_list 
+        DB::query("
+			DELETE FROM " . DB::prefix() . "event_wait_list 
 			WHERE event_id = '" . (int)$event_id . "' 
 			AND customer_id = '" . (int)$customer_id . "'");
         

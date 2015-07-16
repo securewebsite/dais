@@ -20,16 +20,16 @@ use App\Models\Model;
 class Reward extends Model {
     public function getTotal(&$total_data, &$total, &$taxes) {
         if (isset($this->session->data['reward'])):
-            $this->language->load('total/reward');
+            Lang::load('total/reward');
             
-            $points = $this->customer->getRewardPoints();
+            $points = Customer::getRewardPoints();
             
             if ($this->session->data['reward'] <= $points):
                 $discount_total = 0;
                 
                 $points_total = 0;
                 
-                foreach ($this->cart->getProducts() as $product):
+                foreach (Cart::getProducts() as $product):
                     if ($product['points']):
                         $points_total+= $product['points'];
                     endif;
@@ -37,14 +37,14 @@ class Reward extends Model {
                 
                 $points = min($points, $points_total);
                 
-                foreach ($this->cart->getProducts() as $product):
+                foreach (Cart::getProducts() as $product):
                     $discount = 0;
                     
                     if ($product['points']):
                         $discount = $product['total'] * ($this->session->data['reward'] / $points_total);
                         
                         if ($product['tax_class_id']):
-                            $tax_rates = $this->tax->getRates($product['total'] - ($product['total'] - $discount), $product['tax_class_id']);
+                            $tax_rates = Tax::getRates($product['total'] - ($product['total'] - $discount), $product['tax_class_id']);
                             
                             foreach ($tax_rates as $tax_rate):
                                 if ($tax_rate['type'] == 'P'):
@@ -59,10 +59,10 @@ class Reward extends Model {
                 
                 $total_data[] = array(
                     'code'       => 'reward', 
-                    'title'      => sprintf($this->language->get('lang_text_reward'), $this->session->data['reward']), 
-                    'text'       => $this->currency->format(-$discount_total), 
+                    'title'      => sprintf(Lang::get('lang_text_reward'), $this->session->data['reward']), 
+                    'text'       => Currency::format(-$discount_total), 
                     'value'      => - $discount_total, 
-                    'sort_order' => $this->config->get('reward_sort_order')
+                    'sort_order' => Config::get('reward_sort_order')
                 );
                 
                 $total -= $discount_total;
@@ -71,7 +71,7 @@ class Reward extends Model {
     }
     
     public function confirm($order_info, $order_total) {
-        $this->language->load('total/reward');
+        Lang::load('total/reward');
         
         $points = 0;
         $start  = strpos($order_total['title'], '(') + 1;
@@ -82,11 +82,11 @@ class Reward extends Model {
         endif;
         
         if ($points):
-            $this->db->query("
-				INSERT INTO {$this->db->prefix}customer_reward 
+            DB::query("
+				INSERT INTO " . DB::prefix() . "customer_reward 
 				SET 
                     customer_id = '" . (int)$order_info['customer_id'] . "', 
-                    description = '" . $this->db->escape(sprintf($this->language->get('lang_text_order_id'), (int)$order_info['order_id'])) . "', 
+                    description = '" . DB::escape(sprintf(Lang::get('lang_text_order_id'), (int)$order_info['order_id'])) . "', 
                     points      = '" . (float) - $points . "', 
                     date_added  = NOW()
 			");

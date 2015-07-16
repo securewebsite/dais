@@ -15,30 +15,32 @@
 */
 
 namespace App\Controllers\Front\Checkout;
+
 use App\Controllers\Controller;
 
 class Confirm extends Controller {
+    
     public function index() {
         $redirect = '';
         
-        if ($this->cart->hasShipping()):
+        if (Cart::hasShipping()):
             
             // Validate if shipping address has been set.
-            $this->theme->model('account/address');
+            Theme::model('account/address');
             
-            if ($this->customer->isLogged() && isset($this->session->data['shipping_address_id'])):
-                $shipping_address = $this->model_account_address->getAddress($this->session->data['shipping_address_id']);
+            if (Customer::isLogged() && isset($this->session->data['shipping_address_id'])):
+                $shipping_address = AccountAddress::getAddress($this->session->data['shipping_address_id']);
             elseif (isset($this->session->data['guest'])):
                 $shipping_address = $this->session->data['guest']['shipping'];
             endif;
             
             if (empty($shipping_address)):
-                $redirect = $this->url->link('checkout/checkout', '', 'SSL');
+                $redirect = Url::link('checkout/checkout', '', 'SSL');
             endif;
             
             // Validate if shipping method has been set.
             if (!isset($this->session->data['shipping_method'])):
-                $redirect = $this->url->link('checkout/checkout', '', 'SSL');
+                $redirect = Url::link('checkout/checkout', '', 'SSL');
             endif;
         else:
             unset($this->session->data['shipping_method']);
@@ -46,30 +48,30 @@ class Confirm extends Controller {
         endif;
         
         // Validate if payment address has been set.
-        $this->theme->model('account/address');
+        Theme::model('account/address');
         
-        if ($this->customer->isLogged() && isset($this->session->data['payment_address_id'])):
-            $payment_address = $this->model_account_address->getAddress($this->session->data['payment_address_id']);
+        if (Customer::isLogged() && isset($this->session->data['payment_address_id'])):
+            $payment_address = AccountAddress::getAddress($this->session->data['payment_address_id']);
         elseif (isset($this->session->data['guest'])):
             $payment_address = $this->session->data['guest']['payment'];
         endif;
         
         if (empty($payment_address)):
-            $redirect = $this->url->link('checkout/checkout', '', 'SSL');
+            $redirect = Url::link('checkout/checkout', '', 'SSL');
         endif;
         
         // Validate if payment method has been set.
         if (!isset($this->session->data['payment_method'])):
-            $redirect = $this->url->link('checkout/checkout', '', 'SSL');
+            $redirect = Url::link('checkout/checkout', '', 'SSL');
         endif;
         
         // Validate cart has products and has stock.
-        if ((!$this->cart->hasProducts() && empty($this->session->data['gift_cards'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))):
-            $redirect = $this->url->link('checkout/cart');
+        if ((!Cart::hasProducts() && empty($this->session->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))):
+            $redirect = Url::link('checkout/cart');
         endif;
         
         // Validate minimum quantity requirments.
-        $products = $this->cart->getProducts();
+        $products = Cart::getProducts();
         
         foreach ($products as $product):
             $product_total = 0;
@@ -81,7 +83,7 @@ class Confirm extends Controller {
             endforeach;
             
             if ($product['minimum'] > $product_total):
-                $redirect = $this->url->link('checkout/cart');
+                $redirect = Url::link('checkout/cart');
                 break;
             endif;
         endforeach;
@@ -89,23 +91,23 @@ class Confirm extends Controller {
         if (!$redirect):
             $total_data = array();
             $total      = 0;
-            $taxes      = $this->cart->getTaxes();
+            $taxes      = Cart::getTaxes();
             
-            $this->theme->model('setting/module');
+            Theme::model('setting/module');
             
             $sort_order = array();
             
-            $results = $this->model_setting_module->getModules('total');
+            $results = SettingModule::getModules('total');
             
             foreach ($results as $key => $value):
-                $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
+                $sort_order[$key] = Config::get($value['code'] . '_sort_order');
             endforeach;
             
             array_multisort($sort_order, SORT_ASC, $results);
             
             foreach ($results as $result):
-                if ($this->config->get($result['code'] . '_status')):
-                    $this->theme->model('total/' . $result['code']);
+                if (Config::get($result['code'] . '_status')):
+                    Theme::model('total/' . $result['code']);
                     $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
                 endif;
             endforeach;
@@ -118,31 +120,31 @@ class Confirm extends Controller {
             
             array_multisort($sort_order, SORT_ASC, $total_data);
             
-            $data = $this->theme->language('checkout/checkout');
+            $data = Theme::language('checkout/checkout');
             
             $order = array();
             
-            $order['invoice_prefix'] = $this->config->get('config_invoice_prefix');
-            $order['store_id']       = $this->config->get('config_store_id');
-            $order['store_name']     = $this->config->get('config_name');
+            $order['invoice_prefix'] = Config::get('config_invoice_prefix');
+            $order['store_id']       = Config::get('config_store_id');
+            $order['store_name']     = Config::get('config_name');
             
             if ($order['store_id']):
-                $order['store_url'] = $this->config->get('config_url');
+                $order['store_url'] = Config::get('config_url');
             else:
                 $order['store_url'] = Config::get('http.server');
             endif;
             
-            if ($this->customer->isLogged()):
-                $order['customer_id']       = $this->customer->getId();
-                $order['customer_group_id'] = $this->customer->getGroupId();
-                $order['firstname']         = $this->customer->getFirstName();
-                $order['lastname']          = $this->customer->getLastName();
-                $order['email']             = $this->customer->getEmail();
-                $order['telephone']         = $this->customer->getTelephone();
+            if (Customer::isLogged()):
+                $order['customer_id']       = Customer::getId();
+                $order['customer_group_id'] = Customer::getGroupId();
+                $order['firstname']         = Customer::getFirstName();
+                $order['lastname']          = Customer::getLastName();
+                $order['email']             = Customer::getEmail();
+                $order['telephone']         = Customer::getTelephone();
                 
-                $this->theme->model('account/address');
+                Theme::model('account/address');
                 
-                $payment_address = $this->model_account_address->getAddress($this->session->data['payment_address_id']);
+                $payment_address = AccountAddress::getAddress($this->session->data['payment_address_id']);
             elseif (isset($this->session->data['guest'])):
                 $order['customer_id']       = 0;
                 $order['customer_group_id'] = $this->session->data['guest']['customer_group_id'];
@@ -181,10 +183,10 @@ class Confirm extends Controller {
                 $order['payment_code'] = '';
             endif;
             
-            if ($this->cart->hasShipping()):
-                if ($this->customer->isLogged()):
-                    $this->theme->model('account/address');
-                    $shipping_address = $this->model_account_address->getAddress($this->session->data['shipping_address_id']);
+            if (Cart::hasShipping()):
+                if (Customer::isLogged()):
+                    Theme::model('account/address');
+                    $shipping_address = AccountAddress::getAddress($this->session->data['shipping_address_id']);
                 elseif (isset($this->session->data['guest'])):
                     $shipping_address = $this->session->data['guest']['shipping'];
                 endif;
@@ -232,7 +234,7 @@ class Confirm extends Controller {
             
             $product_data = array();
             
-            foreach ($this->cart->getProducts() as $product):
+            foreach (Cart::getProducts() as $product):
                 $option_data = array();
                 
                 foreach ($product['option'] as $option):
@@ -263,7 +265,7 @@ class Confirm extends Controller {
                     'subtract'   => $product['subtract'], 
                     'price'      => $product['price'], 
                     'total'      => $product['total'], 
-                    'tax'        => $this->tax->getTax($product['price'], $product['tax_class_id']), 
+                    'tax'        => Tax::getTax($product['price'], $product['tax_class_id']), 
                     'reward'     => $product['reward']
                 );
             endforeach;
@@ -303,11 +305,11 @@ class Confirm extends Controller {
             /**
              * We'll need our sub_total to calculate the commission
              */
-            $sub_total = $this->cart->getSubTotal();
+            $sub_total = Cart::getSubTotal();
 
             // Load model
             
-            $this->theme->model('account/affiliate');
+            Theme::model('account/affiliate');
 
             /**
              * Start with setting affiliate_id to false;
@@ -318,8 +320,8 @@ class Confirm extends Controller {
             /**
              * Let's handle all logged in customers first
              */
-            if ($this->customer->isLogged() && ($this->customer->getReferralId() > 0)):
-                $affiliate_id = $this->customer->getReferralId();
+            if (Customer::isLogged() && (Customer::getReferralId() > 0)):
+                $affiliate_id = Customer::getReferralId();
             endif;
 
             /**
@@ -337,9 +339,9 @@ class Confirm extends Controller {
                 $affiliate_id = $this->request->cookie['affiliate_id'];
             endif;
 
-            if ($affiliate_id && ($affiliate_id !== $this->customer->getId())):
+            if ($affiliate_id && ($affiliate_id !== Customer::getId())):
                 $order['affiliate_id'] = $affiliate_id;
-                $percent               = $this->model_account_affiliate->getAffiliateCommission($affiliate_id);
+                $percent               = AccountAffiliate::getAffiliateCommission($affiliate_id);
                 $commission            = $sub_total * ($percent / 100);
                 $order['commission']   = number_format($commission, 2);
             else:
@@ -347,10 +349,10 @@ class Confirm extends Controller {
                 $order['commission']   = 0;
             endif;
             
-            $order['language_id']    = $this->config->get('config_language_id');
-            $order['currency_id']    = $this->currency->getId();
-            $order['currency_code']  = $this->currency->getCode();
-            $order['currency_value'] = $this->currency->getValue($this->currency->getCode());
+            $order['language_id']    = Config::get('config_language_id');
+            $order['currency_id']    = Currency::getId();
+            $order['currency_code']  = Currency::getCode();
+            $order['currency_value'] = Currency::getValue(Currency::getCode());
             $order['ip']             = $this->request->server['REMOTE_ADDR'];
             
             if (!empty($this->request->server['HTTP_X_FORWARDED_FOR'])):
@@ -373,13 +375,13 @@ class Confirm extends Controller {
                 $order['accept_language'] = '';
             endif;
             
-            $this->theme->model('checkout/order');
+            Theme::model('checkout/order');
             
-            $this->session->data['order_id'] = $this->model_checkout_order->addOrder($order);
+            $this->session->data['order_id'] = CheckoutOrder::addOrder($order);
             
             $data['products'] = array();
             
-            foreach ($this->cart->getProducts() as $product):
+            foreach (Cart::getProducts() as $product):
                 $option_data = array();
                 
                 foreach ($product['option'] as $option):
@@ -387,12 +389,12 @@ class Confirm extends Controller {
                         $value = $option['option_value'];
                     else:
                         $filename = $this->encryption->decrypt($option['option_value']);    
-                        $value    = $this->encode->substr($filename, 0, $this->encode->strrpos($filename, '.'));
+                        $value    = Encode::substr($filename, 0, Encode::strrpos($filename, '.'));
                     endif;
                     
                     $option_data[] = array(
                         'name'  => $option['name'], 
-                        'value' => ($this->encode->strlen($value) > 20 ? $this->encode->substr($value, 0, 20) . '..' : $value)
+                        'value' => (Encode::strlen($value) > 20 ? Encode::substr($value, 0, 20) . '..' : $value)
                     );
                 endforeach;
                 
@@ -400,21 +402,21 @@ class Confirm extends Controller {
                 
                 if ($product['recurring']):
                     $frequencies = array(
-                        'day'        => $this->language->get('lang_text_day'), 
-                        'week'       => $this->language->get('lang_text_week'), 
-                        'semi_month' => $this->language->get('lang_text_semi_month'), 
-                        'month'      => $this->language->get('lang_text_month'), 
-                        'year'       => $this->language->get('lang_text_year')
+                        'day'        => Lang::get('lang_text_day'), 
+                        'week'       => Lang::get('lang_text_week'), 
+                        'semi_month' => Lang::get('lang_text_semi_month'), 
+                        'month'      => Lang::get('lang_text_month'), 
+                        'year'       => Lang::get('lang_text_year')
                     );
                     
                     if ($product['recurring']['trial']):
-                        $recurring = sprintf($this->language->get('lang_text_trial_description'), $this->currency->format($this->tax->calculate($product['recurring']['trial_price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax'))), $product['recurring']['trial_cycle'], $frequencies[$product['recurring']['trial_frequency']], $product['recurring']['trial_duration']) . ' ';
+                        $recurring = sprintf(Lang::get('lang_text_trial_description'), Currency::format(Tax::calculate($product['recurring']['trial_price'] * $product['quantity'], $product['tax_class_id'], Config::get('config_tax'))), $product['recurring']['trial_cycle'], $frequencies[$product['recurring']['trial_frequency']], $product['recurring']['trial_duration']) . ' ';
                     endif;
                     
                     if ($product['recurring']['duration']):
-                        $recurring.= sprintf($this->language->get('lang_text_payment_description'), $this->currency->format($this->tax->calculate($product['recurring']['price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax'))), $product['recurring']['cycle'], $frequencies[$product['recurring']['frequency']], $product['recurring']['duration']);
+                        $recurring.= sprintf(Lang::get('lang_text_payment_description'), Currency::format(Tax::calculate($product['recurring']['price'] * $product['quantity'], $product['tax_class_id'], Config::get('config_tax'))), $product['recurring']['cycle'], $frequencies[$product['recurring']['frequency']], $product['recurring']['duration']);
                     else:
-                        $recurring.= sprintf($this->language->get('lang_text_payment_until_canceled_description'), $this->currency->format($this->tax->calculate($product['recurring']['price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax'))), $product['recurring']['cycle'], $frequencies[$product['recurring']['frequency']], $product['recurring']['duration']);
+                        $recurring.= sprintf(Lang::get('lang_text_payment_until_canceled_description'), Currency::format(Tax::calculate($product['recurring']['price'] * $product['quantity'], $product['tax_class_id'], Config::get('config_tax'))), $product['recurring']['cycle'], $frequencies[$product['recurring']['frequency']], $product['recurring']['duration']);
                     endif;
                 endif;
                 
@@ -426,9 +428,9 @@ class Confirm extends Controller {
                     'option'     => $option_data, 
                     'quantity'   => $product['quantity'], 
                     'subtract'   => $product['subtract'], 
-                    'price'      => $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax'))), 
-                    'total'      => $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity']), 
-                    'href'       => $this->url->link('catalog/product', 'product_id=' . $product['product_id']), 
+                    'price'      => Currency::format(Tax::calculate($product['price'], $product['tax_class_id'], Config::get('config_tax'))), 
+                    'total'      => Currency::format(Tax::calculate($product['price'], $product['tax_class_id'], Config::get('config_tax')) * $product['quantity']), 
+                    'href'       => Url::link('catalog/product', 'product_id=' . $product['product_id']), 
                     'recurring'  => $recurring
                 );
             endforeach;
@@ -440,20 +442,20 @@ class Confirm extends Controller {
                 foreach ($this->session->data['gift_cards'] as $gift_card):
                     $data['gift_cards'][] = array(
                         'description' => $gift_card['description'], 
-                        'amount'      => $this->currency->format($gift_card['amount'])
+                        'amount'      => Currency::format($gift_card['amount'])
                     );
                 endforeach;
             endif;
             
             $data['totals']  = $total_data;
-            $data['payment'] = $this->theme->controller('payment/' . $this->session->data['payment_method']['code']);
+            $data['payment'] = Theme::controller('payment/' . $this->session->data['payment_method']['code']);
         else:
             $data['redirect'] = $redirect;
         endif;
         
         
-        $data = $this->theme->listen(__CLASS__, __FUNCTION__, $data);
+        $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        $this->response->setOutput($this->theme->view('checkout/confirm', $data));
+        Response::setOutput(View::render('checkout/confirm', $data));
     }
 }

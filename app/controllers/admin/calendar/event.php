@@ -34,9 +34,9 @@ class Event extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('calendar/event');
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
-            $this->model_calendar_event->addEvent($this->request->post);
+            CalendarEvent::addEvent($this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_add_success');
-            Response::redirect(Url::link('calendar/event', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('calendar/event', '', 'SSL'));
         endif;
         $this->getForm();
     }
@@ -46,9 +46,9 @@ class Event extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('calendar/event');
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
-            $this->model_calendar_event->editEvent($this->request->get['event_id'], $this->request->post);
+            CalendarEvent::editEvent($this->request->get['event_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_edit_success');
-            Response::redirect(Url::link('calendar/event', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('calendar/event', '', 'SSL'));
         endif;
         $this->getForm();
     }
@@ -59,10 +59,10 @@ class Event extends Controller {
         Theme::model('calendar/event');
         if (isset($this->request->post['selected']) && $this->validateDelete()):
             foreach ($this->request->post['selected'] as $event_id):
-                $this->model_calendar_event->deleteEvent($event_id);
+                CalendarEvent::deleteEvent($event_id);
             endforeach;
             $this->session->data['success'] = Lang::get('lang_text_delete_success');
-            Response::redirect(Url::link('calendar/event', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('calendar/event', '', 'SSL'));
         endif;
         $this->getList();
     }
@@ -72,9 +72,9 @@ class Event extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('calendar/event');
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateFormPresenter()):
-            $this->model_calendar_event->addPresenter($this->request->post);
+            CalendarEvent::addPresenter($this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_add_i_success');
-            Response::redirect(Url::link('calendar/event/presenter_list', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('calendar/event/presenter_list', '', 'SSL'));
         endif;
         $this->presenter_form();
     }
@@ -84,9 +84,9 @@ class Event extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('calendar/event');
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateFormPresenter()):
-            $this->model_calendar_event->editPresenter($this->request->get['presenter_id'], $this->request->post);
+            CalendarEvent::editPresenter($this->request->get['presenter_id'], $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_edit_i_success');
-            Response::redirect(Url::link('calendar/event/presenter_list', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('calendar/event/presenter_list', '', 'SSL'));
         endif;
         $this->presenter_form();
     }
@@ -97,10 +97,10 @@ class Event extends Controller {
         Theme::model('calendar/event');
         if (isset($this->request->post['selected']) && $this->validateDeletePresenter()):
             foreach ($this->request->post['selected'] as $presenter_id):
-                $this->model_calendar_event->deletePresenter($presenter_id);
+                CalendarEvent::deletePresenter($presenter_id);
             endforeach;
             $this->session->data['success'] = Lang::get('lang_text_delete_i_success');
-            Response::redirect(Url::link('calendar/event/presenter_list', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('calendar/event/presenter_list', '', 'SSL'));
         endif;
         $this->presenter_list();
     }
@@ -109,7 +109,7 @@ class Event extends Controller {
         Theme::language('calendar/event');
         Theme::model('calendar/event');
         $json = array();
-        $results = $this->model_calendar_event->addToWaitList($this->request->post);
+        $results = CalendarEvent::addToWaitList($this->request->post);
         if ($results == 1):
             $success = 1;
             $message = Lang::get('lang_text_add_waitlist_success');
@@ -130,10 +130,10 @@ class Event extends Controller {
         Theme::model('calendar/event');
         $json = array();
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateRoster()):
-            $exists = $this->model_calendar_event->checkAttendee($this->request->post);
+            $exists = CalendarEvent::checkAttendee($this->request->post);
             if (!$exists):
-                $this->model_calendar_event->addAttendee($this->request->post);
-                $results     = $this->model_calendar_event->getRoster($this->request->post['event_id']);
+                CalendarEvent::addAttendee($this->request->post);
+                $results     = CalendarEvent::getRoster($this->request->post['event_id']);
                 $roster_html = '';
                 if ($results):
                     foreach ($results as $result):
@@ -150,7 +150,7 @@ class Event extends Controller {
                     $roster_html .= '<td class="text-center" colspan="3">' . Lang::get('lang_text_no_attendees') . '</td>';
                     $roster_html .= '</tr>';
                 endif;
-                $available = $this->model_calendar_event->getAvailable($this->request->post['event_id']);
+                $available = CalendarEvent::getAvailable($this->request->post['event_id']);
                 $json = array(
                     'success'   => 1, 
                     'message'   => Lang::get('lang_text_add_s_success'), 
@@ -175,12 +175,12 @@ class Event extends Controller {
         if (isset($this->request->post['selected']) && $this->validateRoster()):
             $a = 0;
             foreach ($this->request->post['selected'] as $attendee_id):
-                $this->model_calendar_event->deleteAttendee($this->request->get['event_id'], $attendee_id);
+                CalendarEvent::deleteAttendee($this->request->get['event_id'], $attendee_id);
                 $a++;
             endforeach;
-            $this->model_calendar_event->updateSeats($this->request->get['event_id'], $a);
+            CalendarEvent::updateSeats($this->request->get['event_id'], $a);
             $this->session->data['success'] = Lang::get('lang_text_delete_s_success');
-            Response::redirect(Url::link('calendar/event/roster', 'token=' . $this->session->data['token'] . '&event_id=' . $this->request->get['event_id'], 'SSL'));
+            Response::redirect(Url::link('calendar/event/roster', '' . '&event_id=' . $this->request->get['event_id'], 'SSL'));
         endif;
         $this->roster();
     }
@@ -209,7 +209,7 @@ class Event extends Controller {
         Breadcrumb::add('lang_heading_title', 'calendar/event');
         Breadcrumb::add('lang_column_waitlist', 'calendar/event/get_wait_list', '&event_id=' . $this->request->get['event_id']);
         
-        $results = $this->model_calendar_event->getWaitListAttendees($this->request->get['event_id']);
+        $results = CalendarEvent::getWaitListAttendees($this->request->get['event_id']);
         
         $data['attendees'] = array();
         
@@ -218,16 +218,16 @@ class Event extends Controller {
                 $actions = array();
                 $actions[] = array(
                     'text' => Lang::get('lang_text_add'), 
-                    'href' => Url::link('calendar/event/add_to_event', 'token=' . $this->session->data['token'] . '&event_id=' . $result['event_id'] . '&customer_id=' . $result['customer_id'], 'SSL')
+                    'href' => Url::link('calendar/event/add_to_event', '' . '&event_id=' . $result['event_id'] . '&customer_id=' . $result['customer_id'], 'SSL')
                 );
                 $actions[] = array(
                     'text' => Lang::get('lang_text_remove'), 
-                    'href' => Url::link('calendar/event/remove_from_list', 'token=' . $this->session->data['token'] . '&event_id=' . $result['event_id'] . '&event_wait_list_id=' . $result['event_wait_list_id'], 'SSL')
+                    'href' => Url::link('calendar/event/remove_from_list', '' . '&event_id=' . $result['event_id'] . '&event_wait_list_id=' . $result['event_wait_list_id'], 'SSL')
                 );
                 
                 Theme::model('people/customer');
                 
-                $customer_info = $this->model_people_customer->getCustomer($result['customer_id']);
+                $customer_info = PeopleCustomer::getCustomer($result['customer_id']);
                 
                 $data['attendees'][] = array(
                     'event_wait_list_id' => $result['event_wait_list_id'], 
@@ -238,37 +238,36 @@ class Event extends Controller {
             endforeach;
         endif;
         
-        $data['token']      = $this->session->data['token'];
-        $data['clear_list'] = Url::link('calendar/event/empty_wait_list', 'token=' . $this->session->data['token'] . '&event_id=' . $this->request->get['event_id'], 'SSL');
-        $data['cancel']     = Url::link('calendar/event', 'token=' . $this->session->data['token'], 'SSL');
+        $data['clear_list'] = Url::link('calendar/event/empty_wait_list', 'event_id=' . $this->request->get['event_id'], 'SSL');
+        $data['cancel']     = Url::link('calendar/event', '', 'SSL');
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('calendar/waitlist', $data));
+        Response::setOutput(View::render('calendar/waitlist', $data));
     }
     
     public function add_to_event() {
         Theme::language('calendar/event');
         Theme::model('calendar/event');
-        $this->model_calendar_event->addToEvent($this->request->get);
+        CalendarEvent::addToEvent($this->request->get);
         $this->session->data['success'] = Lang::get('lang_text_add_to_event');
-        Response::redirect(Url::link('calendar/event/get_wait_list', 'token=' . $this->session->data['token'] . '&event_id=' . $this->request->get['event_id'], 'SSL'));
+        Response::redirect(Url::link('calendar/event/get_wait_list', '' . '&event_id=' . $this->request->get['event_id'], 'SSL'));
     }
     
     public function remove_from_list() {
         Theme::language('calendar/event');
         Theme::model('calendar/event');
-        $this->model_calendar_event->removeFromList($this->request->get['event_wait_list_id']);
+        CalendarEvent::removeFromList($this->request->get['event_wait_list_id']);
         $this->session->data['success'] = Lang::get('lang_text_remove_from_list');
-        Response::redirect(Url::link('calendar/event/get_wait_list', 'token=' . $this->session->data['token'] . '&event_id=' . $this->request->get['event_id'], 'SSL'));
+        Response::redirect(Url::link('calendar/event/get_wait_list', '' . '&event_id=' . $this->request->get['event_id'], 'SSL'));
     }
     
     public function empty_wait_list() {
         Theme::model('calendar/event');
-        $this->model_calendar_event->emptyWaitList($this->request->get['event_id']);
-        Response::redirect(Url::link('calendar/event', 'token=' . $this->session->data['token'], 'SSL'));
+        CalendarEvent::emptyWaitList($this->request->get['event_id']);
+        Response::redirect(Url::link('calendar/event', '', 'SSL'));
     }
     
     public function getList() {
@@ -293,7 +292,7 @@ class Event extends Controller {
         Breadcrumb::add('lang_heading_title', 'calendar/event');
         
         $filter  = array();
-        $results = $this->model_calendar_event->getEvents($filter);
+        $results = CalendarEvent::getEvents($filter);
         
         $data['events'] = array();
         
@@ -305,12 +304,12 @@ class Event extends Controller {
                 
                 $actions[] = array(
                     'text' => Lang::get('lang_text_edit'), 
-                    'href' => Url::link('calendar/event/update', 'token=' . $this->session->data['token'] . '&event_id=' . $result['event_id'], 'SSL')
+                    'href' => Url::link('calendar/event/update', '' . '&event_id=' . $result['event_id'], 'SSL')
                 );
                 
                 $actions[] = array(
                     'text' => Lang::get('lang_text_roster'), 
-                    'href' => Url::link('calendar/event/roster', 'token=' . $this->session->data['token'] . '&event_id=' . $result['event_id'], 'SSL')
+                    'href' => Url::link('calendar/event/roster', '' . '&event_id=' . $result['event_id'], 'SSL')
                 );
                 
                 if ($result['link']):
@@ -322,31 +321,30 @@ class Event extends Controller {
                 $data['events'][] = array(
                     'event_id'      => $result['event_id'], 
                     'event_name'    => html_entity_decode($result['event_name']), 
-                    'visibility'    => $this->model_people_customer_group->getCustomerGroupName($result['visibility']), 
+                    'visibility'    => PeopleCustomerGroup::getCustomerGroupName($result['visibility']), 
                     'date_time'     => date(Lang::get('lang_date_format_short') . ' ' . Lang::get('lang_time_format'), strtotime($result['date_time'])), 
                     'location'      => $location, 
                     'cost'          => Currency::format($result['cost']), 
                     'seats'         => $result['seats'], 
                     'filled'        => $result['seats'] - $result['filled'], 
-                    'waitlist'      => $this->model_calendar_event->getWaitListCount($result['event_id']), 
-                    'waitlist_href' => Url::link('calendar/event/get_wait_list', 'token=' . $this->session->data['token'] . '&event_id=' . $result['event_id'], 'SSL'), 
-                    'presenter'     => $this->model_calendar_event->getPresenterName($result['presenter_id']), 
+                    'waitlist'      => CalendarEvent::getWaitListCount($result['event_id']), 
+                    'waitlist_href' => Url::link('calendar/event/get_wait_list', '' . '&event_id=' . $result['event_id'], 'SSL'), 
+                    'presenter'     => CalendarEvent::getPresenterName($result['presenter_id']), 
                     'selected'      => isset($this->request->post['selected']) && in_array($result['result_id'], $this->request->post['selected']), 
                     'action'        => $actions
                 );
             endforeach;
         endif;
         
-        $data['token']      = $this->session->data['token'];
-        $data['presenters'] = Url::link('calendar/event/presenter_list', 'token=' . $this->session->data['token'], 'SSL');
-        $data['insert']     = Url::link('calendar/event/insert', 'token=' . $this->session->data['token'], 'SSL');
-        $data['delete']     = Url::link('calendar/event/delete', 'token=' . $this->session->data['token'], 'SSL');
+        $data['presenters'] = Url::link('calendar/event/presenter_list', '', 'SSL');
+        $data['insert']     = Url::link('calendar/event/insert', '', 'SSL');
+        $data['delete']     = Url::link('calendar/event/delete', '', 'SSL');
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('calendar/event_list', $data));
+        Response::setOutput(View::render('calendar/event_list', $data));
     }
     
     public function getForm() {
@@ -439,20 +437,19 @@ class Event extends Controller {
         Breadcrumb::add('lang_heading_title', 'calendar/event');
         
         if (!isset($this->request->get['event_id'])) {
-            $data['action'] = Url::link('calendar/event/insert', 'token=' . $this->session->data['token'], 'SSL');
+            $data['action'] = Url::link('calendar/event/insert', '', 'SSL');
             $data['method'] = 'insert';
         } else {
-            $data['action'] = Url::link('calendar/event/update', 'token=' . $this->session->data['token'] . '&event_id=' . $this->request->get['event_id'], 'SSL');
+            $data['action'] = Url::link('calendar/event/update', '' . '&event_id=' . $this->request->get['event_id'], 'SSL');
             $data['method'] = 'edit';
         }
         
-        $data['cancel'] = Url::link('calendar/event', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('calendar/event', '', 'SSL');
         
         if (isset($this->request->get['event_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $event_info = $this->model_calendar_event->getEvent($this->request->get['event_id']);
+            $event_info = CalendarEvent::getEvent($this->request->get['event_id']);
         }
         
-        $data['token'] = $this->session->data['token'];
         $data['days']  = array(
             Lang::get('lang_text_monday'), 
             Lang::get('lang_text_tuesday'), 
@@ -469,8 +466,8 @@ class Event extends Controller {
         $product_info = array();
         
         if (!empty($event_info)) {
-            $product_info = $this->model_catalog_product->getProduct($event_info['product_id']);
-            $page_info    = $this->model_content_page->getEventPage($event_info['page_id']);
+            $product_info = CatalogProduct::getProduct($event_info['product_id']);
+            $page_info    = ContentPage::getEventPage($event_info['page_id']);
         }
         
         if (isset($this->request->post['name'])) {
@@ -515,12 +512,12 @@ class Event extends Controller {
         
         Theme::model('setting/store');
         
-        $data['stores'] = $this->model_setting_store->getStores();
+        $data['stores'] = SettingStore::getStores();
         
         if (isset($this->request->post['product_store'])) {
             $data['product_store'] = $this->request->post['product_store'];
         } elseif (!empty($event_info) && $event_info['product_id'] > 0) {
-            $data['product_store'] = $this->model_catalog_product->getProductStores($data['product_id']);
+            $data['product_store'] = CatalogProduct::getProductStores($data['product_id']);
         } else {
             $data['product_store'] = array(0);
         }
@@ -528,14 +525,14 @@ class Event extends Controller {
         if (isset($this->request->post['page_store'])) {
             $data['page_store'] = $this->request->post['page_store'];
         } elseif (!empty($event_info) && $event_info['page_id'] > 0) {
-            $data['page_store'] = $this->model_content_page->getPageStores($data['page_id']);
+            $data['page_store'] = ContentPage::getPageStores($data['page_id']);
         } else {
             $data['page_store'] = array(0);
         }
 
         Theme::model('locale/stock_status');
         
-        $data['stock_statuses'] = $this->model_locale_stock_status->getStockStatuses();
+        $data['stock_statuses'] = LocaleStockStatus::getStockStatuses();
         
         if (isset($this->request->post['stock_status_id'])) {
             $data['stock_status_id'] = $this->request->post['stock_status_id'];
@@ -549,12 +546,12 @@ class Event extends Controller {
         
         $filter = array();
         
-        $data['categories'] = $this->model_catalog_category->getCategories($filter);
+        $data['categories'] = CatalogCategory::getCategories($filter);
         
         if (isset($this->request->post['product_category'])) {
             $data['product_category'] = $this->request->post['product_category'];
         } elseif (!empty($event_info)) {
-            $data['product_category'] = $this->model_catalog_product->getProductCategories($data['product_id']);
+            $data['product_category'] = CatalogProduct::getProductCategories($data['product_id']);
         } else {
             $data['product_category'] = array();
         }
@@ -569,7 +566,7 @@ class Event extends Controller {
         
         Theme::model('people/customer_group');
         
-        $data['customer_groups'] = $this->model_people_customer_group->getCustomerGroups();
+        $data['customer_groups'] = PeopleCustomerGroup::getCustomerGroups();
         
         if (isset($this->request->post['event_length'])) {
             $data['event_length'] = $this->request->post['event_length'];
@@ -744,7 +741,7 @@ class Event extends Controller {
             );
         endforeach;
         
-        $data['presenters'] = $this->model_calendar_event->getPresenters();
+        $data['presenters'] = CalendarEvent::getPresenters();
         
         Theme::loadjs('javascript/calendar/event_form', $data);
 
@@ -752,7 +749,7 @@ class Event extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('calendar/event_form', $data));
+        Response::setOutput(View::render('calendar/event_form', $data));
     }
     
     public function presenter_list() {
@@ -781,7 +778,7 @@ class Event extends Controller {
         
         $filter = array();
         
-        $results = $this->model_calendar_event->getPresenters($filter);
+        $results = CalendarEvent::getPresenters($filter);
 
         Theme::model('tool/image');
         
@@ -793,13 +790,13 @@ class Event extends Controller {
                 
                 $action[] = array(
                     'text' => Lang::get('lang_text_edit'), 
-                    'href' => Url::link('calendar/event/update_presenter', 'token=' . $this->session->data['token'] . '&presenter_id=' . $result['presenter_id'], 'SSL')
+                    'href' => Url::link('calendar/event/update_presenter', '' . '&presenter_id=' . $result['presenter_id'], 'SSL')
                 );
 
                 if ($result['image'] && file_exists(Config::get('path.image') . $result['image'])):
-                    $image = $this->model_tool_image->resize($result['image'], 100, 100);
+                    $image = ToolImage::resize($result['image'], 100, 100);
                 else:
-                    $image = $this->model_tool_image->resize('placeholder.png', 100, 100);
+                    $image = ToolImage::resize('placeholder.png', 100, 100);
                 endif;
                 
                 $data['presenters'][] = array(
@@ -814,16 +811,15 @@ class Event extends Controller {
             }
         }
         
-        $data['token']  = $this->session->data['token'];
-        $data['insert'] = Url::link('calendar/event/insert_presenter', 'token=' . $this->session->data['token'], 'SSL');
-        $data['delete'] = Url::link('calendar/event/delete_presenter', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = Url::link('calendar/event', 'token=' . $this->session->data['token'], 'SSL');
+        $data['insert'] = Url::link('calendar/event/insert_presenter', '', 'SSL');
+        $data['delete'] = Url::link('calendar/event/delete_presenter', '', 'SSL');
+        $data['cancel'] = Url::link('calendar/event', '', 'SSL');
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('calendar/presenter_list', $data));
+        Response::setOutput(View::render('calendar/presenter_list', $data));
     }
     
     public function presenter_form() {
@@ -852,18 +848,16 @@ class Event extends Controller {
         Breadcrumb::add('lang_text_presenter_tab', 'calendar/event/presenter_list');
         
         if (!isset($this->request->get['presenter_id'])) {
-            $data['action'] = Url::link('calendar/event/insert_presenter', 'token=' . $this->session->data['token'], 'SSL');
+            $data['action'] = Url::link('calendar/event/insert_presenter', '', 'SSL');
         } else {
-            $data['action'] = Url::link('calendar/event/update_presenter', 'token=' . $this->session->data['token'] . '&presenter_id=' . $this->request->get['presenter_id'], 'SSL');
+            $data['action'] = Url::link('calendar/event/update_presenter', '' . '&presenter_id=' . $this->request->get['presenter_id'], 'SSL');
         }
         
-        $data['cancel'] = Url::link('calendar/event/presenter_list', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('calendar/event/presenter_list', '', 'SSL');
         
         if (isset($this->request->get['presenter_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $event_info = $this->model_calendar_event->getPresenter($this->request->get['presenter_id']);
+            $event_info = CalendarEvent::getPresenter($this->request->get['presenter_id']);
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         if (isset($this->request->post['presenter_name'])) {
             $data['presenter_name'] = $this->request->post['presenter_name'];
@@ -884,12 +878,12 @@ class Event extends Controller {
         Theme::model('tool/image');
         
         if (isset($event_info['image']) && file_exists(Config::get('path.image') . $event_info['image'])):
-            $data['image'] = $this->model_tool_image->resize($event_info['image'], 100, 100);
+            $data['image'] = ToolImage::resize($event_info['image'], 100, 100);
         else:
-            $data['image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+            $data['image'] = ToolImage::resize('placeholder.png', 100, 100);
         endif;
         
-        $data['no_image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+        $data['no_image'] = ToolImage::resize('placeholder.png', 100, 100);
 
         if (isset($this->request->post['facebook'])) {
             $data['facebook'] = $this->request->post['facebook'];
@@ -919,7 +913,7 @@ class Event extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('calendar/presenter_form', $data));
+        Response::setOutput(View::render('calendar/presenter_form', $data));
     }
     
     public function roster() {
@@ -953,29 +947,28 @@ class Event extends Controller {
         
         Theme::model('people/customer');
         
-        $data['customers'] = $this->model_people_customer->getCustomers();
+        $data['customers'] = PeopleCustomer::getCustomers();
         
         $data['attendees'] = array();
         
-        $results = $this->model_calendar_event->getRoster($event_id);
+        $results = CalendarEvent::getRoster($event_id);
         
         if ($results) {
             foreach ($results as $result) {
                 $data['attendees'][] = array(
                     'attendee_id' => $result['attendee_id'], 
-                    'name'        => $this->model_calendar_event->getAttendeeName($result['attendee_id']), 
+                    'name'        => CalendarEvent::getAttendeeName($result['attendee_id']), 
                     'date_added'  => date(Lang::get('lang_date_format_short'), $result['date_added'])
                 );
             }
         }
         
-        $data['event_name'] = $this->model_calendar_event->getEventName($event_id);
-        $data['seats']      = $this->model_calendar_event->getSeats($event_id);
-        $data['available']  = $this->model_calendar_event->getAvailable($event_id);
+        $data['event_name'] = CalendarEvent::getEventName($event_id);
+        $data['seats']      = CalendarEvent::getSeats($event_id);
+        $data['available']  = CalendarEvent::getAvailable($event_id);
         $data['event_id']   = $event_id;
-        $data['delete']     = Url::link('calendar/event/delete_attendee', 'token=' . $this->session->data['token'] . '&event_id=' . $event_id, 'SSL');
-        $data['cancel']     = Url::link('calendar/event', 'token=' . $this->session->data['token'], 'SSL');
-        $data['token']      = $this->session->data['token'];
+        $data['delete']     = Url::link('calendar/event/delete_attendee', '' . '&event_id=' . $event_id, 'SSL');
+        $data['cancel']     = Url::link('calendar/event', '', 'SSL');
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
@@ -983,7 +976,7 @@ class Event extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('calendar/roster', $data));
+        Response::setOutput(View::render('calendar/roster', $data));
     }
     
     public function autocomplete() {
@@ -994,7 +987,7 @@ class Event extends Controller {
             
             $filter = array('filter_username' => $this->request->get['name'], 'start' => 0, 'limit' => 20);
             
-            $results = $this->model_people_customer->getCustomers($filter);
+            $results = PeopleCustomer::getCustomers($filter);
             
             foreach ($results as $result) {
                 $json[] = array(

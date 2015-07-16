@@ -68,15 +68,15 @@ class AffiliateCommission extends Controller {
             'limit'             => Config::get('config_admin_limit')
         );
         
-        $affiliate_total = $this->model_report_affiliate->getTotalCommission($filter);
-        $results         = $this->model_report_affiliate->getCommission($filter);
+        $affiliate_total = ReportAffiliate::getTotalCommission($filter);
+        $results         = ReportAffiliate::getCommission($filter);
         
         foreach ($results as $result) {
             $action = array();
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('people/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL')
+                'href' => Url::link('people/customer/update', '' . '&customer_id=' . $result['customer_id'] . $url, 'SSL')
             );
             
             $data['affiliates'][] = array(
@@ -89,8 +89,6 @@ class AffiliateCommission extends Controller {
                 'action'     => $action
             );
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         $url = '';
         
@@ -107,7 +105,7 @@ class AffiliateCommission extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('report/affiliate_commission', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
+            Url::link('report/affiliate_commission', '' . $url . '&page={page}', 'SSL')
         );
         
         $data['filter_date_start'] = $filter_date_start;
@@ -117,6 +115,6 @@ class AffiliateCommission extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('report/affiliate_commission', $data));
+        Response::setOutput(View::render('report/affiliate_commission', $data));
     }
 }

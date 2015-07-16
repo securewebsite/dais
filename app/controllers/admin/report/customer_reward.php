@@ -64,19 +64,17 @@ class CustomerReward extends Controller {
         
         $filter = array('filter_date_start' => $filter_date_start, 'filter_date_end' => $filter_date_end, 'start' => ($page - 1) * Config::get('config_admin_limit'), 'limit' => Config::get('config_admin_limit'));
         
-        $customer_total = $this->model_report_customer->getTotalRewardPoints($filter);
+        $customer_total = ReportCustomer::getTotalRewardPoints($filter);
         
-        $results = $this->model_report_customer->getRewardPoints($filter);
+        $results = ReportCustomer::getRewardPoints($filter);
         
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/customer/update', '' . '&customer_id=' . $result['customer_id'] . $url, 'SSL'));
             
             $data['customers'][] = array('customer' => $result['customer'], 'email' => $result['email'], 'customer_group' => $result['customer_group'], 'status' => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 'points' => $result['points'], 'orders' => $result['orders'], 'total' => Currency::format($result['total'], Config::get('config_currency')), 'action' => $action);
         }
-        
-        $data['token'] = $this->session->data['token'];
         
         $url = '';
         
@@ -88,7 +86,7 @@ class CustomerReward extends Controller {
             $url.= '&filter_date_end=' . $this->request->get['filter_date_end'];
         }
         
-        $data['pagination'] = Theme::paginate($customer_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/customer_reward', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($customer_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/customer_reward', '' . $url . '&page={page}', 'SSL'));
         
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
@@ -97,6 +95,6 @@ class CustomerReward extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('report/customer_reward', $data));
+        Response::setOutput(View::render('report/customer_reward', $data));
     }
 }

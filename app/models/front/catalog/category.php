@@ -23,16 +23,16 @@ class Category extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT DISTINCT * 
-				FROM {$this->db->prefix}category c 
-				LEFT JOIN {$this->db->prefix}category_description cd 
+				FROM " . DB::prefix() . "category c 
+				LEFT JOIN " . DB::prefix() . "category_description cd 
 					ON (c.category_id = cd.category_id) 
-				LEFT JOIN {$this->db->prefix}category_to_store c2s 
+				LEFT JOIN " . DB::prefix() . "category_to_store c2s 
 					ON (c.category_id = c2s.category_id) 
 				WHERE c.category_id = '" . (int)$category_id . "' 
-				AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
-				AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+				AND cd.language_id = '" . (int)Config::get('config_language_id') . "' 
+				AND c2s.store_id = '" . (int)Config::get('config_store_id') . "' 
 				AND c.status = '1'
 			");
             
@@ -50,12 +50,12 @@ class Category extends Model {
     }
 
     public function getProductCategoryTags($category_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT tag 
-            FROM {$this->db->prefix}tag 
+            FROM " . DB::prefix() . "tag 
             WHERE section   = 'product_category' 
             AND element_id  = '" . (int)$category_id . "' 
-            AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+            AND language_id = '" . (int)Config::get('config_language_id') . "'
         ");
         
         if ($query->num_rows):
@@ -74,16 +74,16 @@ class Category extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}category c 
-				LEFT JOIN {$this->db->prefix}category_description cd 
+				FROM " . DB::prefix() . "category c 
+				LEFT JOIN " . DB::prefix() . "category_description cd 
 					ON (c.category_id = cd.category_id) 
-				LEFT JOIN {$this->db->prefix}category_to_store c2s 
+				LEFT JOIN " . DB::prefix() . "category_to_store c2s 
 					ON (c.category_id = c2s.category_id) 
 				WHERE c.parent_id = '" . (int)$parent_id . "' 
-				AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
-				AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "'  
+				AND cd.language_id = '" . (int)Config::get('config_language_id') . "' 
+				AND c2s.store_id = '" . (int)Config::get('config_store_id') . "'  
 				AND c.status = '1' 
 				ORDER BY c.sort_order, LCASE(cd.name)
 			");
@@ -103,9 +103,9 @@ class Category extends Model {
     public function getCategoryFilters($category_id) {
         $implode = array();
         
-        $query = $this->db->query("
+        $query = DB::query("
 			SELECT filter_id 
-			FROM {$this->db->prefix}category_filter 
+			FROM " . DB::prefix() . "category_filter 
 			WHERE category_id = '" . (int)$category_id . "'
 		");
         
@@ -116,18 +116,18 @@ class Category extends Model {
         $filter_group_data = array();
         
         if ($implode):
-            $filter_group_query = $this->db->query("
+            $filter_group_query = DB::query("
 				SELECT DISTINCT 
 					f.filter_group_id, 
 					fgd.name, 
 					fg.sort_order 
-				FROM {$this->db->prefix}filter f 
-				LEFT JOIN {$this->db->prefix}filter_group fg 
+				FROM " . DB::prefix() . "filter f 
+				LEFT JOIN " . DB::prefix() . "filter_group fg 
 					ON (f.filter_group_id = fg.filter_group_id) 
-				LEFT JOIN {$this->db->prefix}filter_group_description fgd 
+				LEFT JOIN " . DB::prefix() . "filter_group_description fgd 
 					ON (fg.filter_group_id = fgd.filter_group_id) 
 				WHERE f.filter_id IN (" . implode(',', $implode) . ") 
-				AND fgd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+				AND fgd.language_id = '" . (int)Config::get('config_language_id') . "' 
 				GROUP BY f.filter_group_id 
 				ORDER BY fg.sort_order, LCASE(fgd.name)
 			");
@@ -135,16 +135,16 @@ class Category extends Model {
             foreach ($filter_group_query->rows as $filter_group):
                 $filter_data = array();
                 
-                $filter_query = $this->db->query("
+                $filter_query = DB::query("
 					SELECT DISTINCT 
 						f.filter_id, 
 						fd.name 
-					FROM {$this->db->prefix}filter f 
-					LEFT JOIN {$this->db->prefix}filter_description fd 
+					FROM " . DB::prefix() . "filter f 
+					LEFT JOIN " . DB::prefix() . "filter_description fd 
 						ON (f.filter_id = fd.filter_id) 
 					WHERE f.filter_id IN (" . implode(',', $implode) . ") 
 					AND f.filter_group_id = '" . (int)$filter_group['filter_group_id'] . "' 
-					AND fd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+					AND fd.language_id = '" . (int)Config::get('config_language_id') . "' 
 					ORDER BY f.sort_order, LCASE(fd.name)
 				");
                 
@@ -166,11 +166,11 @@ class Category extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}category_to_layout 
+				FROM " . DB::prefix() . "category_to_layout 
 				WHERE category_id = '" . (int)$category_id . "' 
-				AND store_id = '" . (int)$this->config->get('config_store_id') . "'
+				AND store_id = '" . (int)Config::get('config_store_id') . "'
 			");
             
             if ($query->num_rows):
@@ -190,13 +190,13 @@ class Category extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT COUNT(*) AS total 
-				FROM {$this->db->prefix}category c 
-				LEFT JOIN {$this->db->prefix}category_to_store c2s 
+				FROM " . DB::prefix() . "category c 
+				LEFT JOIN " . DB::prefix() . "category_to_store c2s 
 				ON (c.category_id = c2s.category_id) 
 				WHERE c.parent_id = '" . (int)$parent_id . "' 
-				AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+				AND c2s.store_id = '" . (int)Config::get('config_store_id') . "' 
 				AND c.status = '1'
 			");
             

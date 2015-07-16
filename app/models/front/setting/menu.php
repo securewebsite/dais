@@ -23,9 +23,9 @@ class Menu extends Model {
         $row = $this->cache->get($key);
         
         if (is_bool($row)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT DISTINCT * 
-				FROM {$this->db->prefix}menu 
+				FROM " . DB::prefix() . "menu 
 				WHERE menu_id = '" . (int)$menu_id . "' 
 				AND status = '1'
 			");
@@ -51,9 +51,9 @@ class Menu extends Model {
         $row = $this->cache->get($key);
         
         if (is_bool($row)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT layout_id 
-				FROM {$this->db->prefix}layout 
+				FROM " . DB::prefix() . "layout 
 				WHERE name = 'default'
 			");
             
@@ -70,11 +70,11 @@ class Menu extends Model {
         
         if (is_bool($cachefile)):
             $layouts = array();
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}layout_route 
+				FROM " . DB::prefix() . "layout_route 
 				WHERE route 
-				LIKE '" . $this->db->escape($route) . "%'
+				LIKE '" . DB::escape($route) . "%'
 			");
             
             foreach ($query->rows as $row):

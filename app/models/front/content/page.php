@@ -23,16 +23,16 @@ class Page extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT DISTINCT * 
-				FROM {$this->db->prefix}page i 
-				LEFT JOIN {$this->db->prefix}page_description id 
+				FROM " . DB::prefix() . "page i 
+				LEFT JOIN " . DB::prefix() . "page_description id 
 					ON (i.page_id = id.page_id) 
-				LEFT JOIN {$this->db->prefix}page_to_store i2s 
+				LEFT JOIN " . DB::prefix() . "page_to_store i2s 
 					ON (i.page_id = i2s.page_id) 
 				WHERE i.page_id = '" . (int)$page_id . "' 
-				AND id.language_id = '" . (int)$this->config->get('config_language_id') . "' 
-				AND i2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+				AND id.language_id = '" . (int)Config::get('config_language_id') . "' 
+				AND i2s.store_id = '" . (int)Config::get('config_store_id') . "' 
 				AND i.status = '1'
 			");
             
@@ -51,19 +51,19 @@ class Page extends Model {
     }
     
     public function getPages() {
-        $key = 'pages.all.' . (int)$this->config->get('config_store_id');
+        $key = 'pages.all.' . (int)Config::get('config_store_id');
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}page i 
-				LEFT JOIN {$this->db->prefix}page_description id 
+				FROM " . DB::prefix() . "page i 
+				LEFT JOIN " . DB::prefix() . "page_description id 
 					ON (i.page_id = id.page_id) 
-				LEFT JOIN {$this->db->prefix}page_to_store i2s 
+				LEFT JOIN " . DB::prefix() . "page_to_store i2s 
 					ON (i.page_id = i2s.page_id) 
-				WHERE id.language_id = '" . (int)$this->config->get('config_language_id') . "' 
-				AND i2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+				WHERE id.language_id = '" . (int)Config::get('config_language_id') . "' 
+				AND i2s.store_id = '" . (int)Config::get('config_store_id') . "' 
 				AND i.status = '1' 
                 AND i.event_id = '0' 
 				ORDER BY i.sort_order, LCASE(id.title) ASC
@@ -82,12 +82,12 @@ class Page extends Model {
     }
 
     public function getPageTags($page_id) {
-        $query = $this->db->query("
+        $query = DB::query("
             SELECT tag 
-            FROM {$this->db->prefix}tag 
+            FROM " . DB::prefix() . "tag 
             WHERE section   = 'page' 
             AND element_id  = '" . (int)$page_id . "' 
-            AND language_id = '" . (int)$this->config->get('config_language_id') . "'
+            AND language_id = '" . (int)Config::get('config_language_id') . "'
         ");
         
         if ($query->num_rows):
@@ -106,11 +106,11 @@ class Page extends Model {
         $cachefile = $this->cache->get($key);
         
         if (is_bool($cachefile)):
-            $query = $this->db->query("
+            $query = DB::query("
 				SELECT * 
-				FROM {$this->db->prefix}page_to_layout 
+				FROM " . DB::prefix() . "page_to_layout 
 				WHERE page_id = '" . (int)$page_id . "' 
-				AND store_id = '" . (int)$this->config->get('config_store_id') . "'
+				AND store_id = '" . (int)Config::get('config_store_id') . "'
 			");
             
             if ($query->num_rows):
@@ -134,16 +134,16 @@ class Page extends Model {
             $data[$key] = $value;
         endforeach;
 
-        $this->theme->model('catalog/product');
-        $event = $this->model_catalog_product->getEvent($event_id);
+        Theme::model('catalog/product');
+        $event = CatalogProduct::getEvent($event_id);
 
         foreach($event as $key => $value):
             $data[$key] = $value;
         endforeach;
 
-        $presenter = $this->db->query("
+        $presenter = DB::query("
             SELECT * 
-            FROM {$this->db->prefix}presenter 
+            FROM " . DB::prefix() . "presenter 
             WHERE presenter_id = '" . (int)$event['presenter_id'] . "'
         ");
         

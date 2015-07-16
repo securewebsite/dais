@@ -28,10 +28,10 @@ class PaypalStandard extends Controller {
         Theme::model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            $this->model_setting_setting->editSetting('paypal_standard', $this->request->post);
+            SettingSetting::editSetting('paypal_standard', $this->request->post);
             $this->session->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            Response::redirect(Url::link('module/payment', '', 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -49,9 +49,9 @@ class PaypalStandard extends Controller {
         Breadcrumb::add('lang_text_payment', 'module/payment');
         Breadcrumb::add('lang_heading_title', 'payment/paypal_standard');
         
-        $data['action'] = Url::link('payment/paypal_standard', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = Url::link('payment/paypal_standard', '', 'SSL');
         
-        $data['cancel'] = Url::link('module/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = Url::link('module/payment', '', 'SSL');
         
         if (isset($this->request->post['paypal_standard_email'])) {
             $data['paypal_standard_email'] = $this->request->post['paypal_standard_email'];
@@ -145,7 +145,7 @@ class PaypalStandard extends Controller {
         
         Theme::model('locale/order_status');
         
-        $data['order_statuses'] = $this->model_locale_order_status->getOrderStatuses();
+        $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
         if (isset($this->request->post['paypal_standard_geo_zone_id'])) {
             $data['paypal_standard_geo_zone_id'] = $this->request->post['paypal_standard_geo_zone_id'];
@@ -155,7 +155,7 @@ class PaypalStandard extends Controller {
         
         Theme::model('locale/geo_zone');
         
-        $data['geo_zones'] = $this->model_locale_geo_zone->getGeoZones();
+        $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
         if (isset($this->request->post['paypal_standard_status'])) {
             $data['paypal_standard_status'] = $this->request->post['paypal_standard_status'];
@@ -173,7 +173,7 @@ class PaypalStandard extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(Theme::view('payment/paypal_standard', $data));
+        Response::setOutput(View::render('payment/paypal_standard', $data));
     }
     
     private function validate() {
