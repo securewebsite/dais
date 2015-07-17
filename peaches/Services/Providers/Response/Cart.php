@@ -22,7 +22,7 @@ class Cart {
     
     public function __construct() {
         if (is_null(Session::get('cart')) || !is_array(Session::get('cart'))):
-            Session::get('cart', array());
+            Session::set('cart', array());
         endif;
     }
     
@@ -462,7 +462,7 @@ class Cart {
     }
     
     public function clear() { 
-        Session::get('cart', array());
+        Session::set('cart', array());
         $this->data = array();
     }
     

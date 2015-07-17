@@ -31,10 +31,14 @@ class Banner extends Controller {
         $results = DesignBanner::getBanner($setting['banner_id']);
         
         foreach ($results as $result) {
-            if (file_exists(Config::get('path.image') . $result['image'])) {
+            if (is_readable(Config::get('path.image') . $result['image'])) {
                 $result['link'] = (Config::get('config_ucfirst')) ? Url::cap_slug($result['link']) : $result['link'];
                 
-                $data['banners'][] = array('title' => $result['title'], 'link' => $result['link'], 'image' => ToolImage::resize($result['image'], $setting['width'], $setting['height']));
+                $data['banners'][] = [
+                    'title' => $result['title'], 
+                    'link'  => $result['link'], 
+                    'image' => ToolImage::resize($result['image'], $setting['width'], $setting['height'])
+                ];
             }
         }
         

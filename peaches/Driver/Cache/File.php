@@ -6,12 +6,12 @@
 |--------------------------------------------------------------------------
 |
 |   This file is part of the Dais Framework package.
-|	
-|	(c) Vince Kronlein <vince@dais.io>
-|	
-|	For the full copyright and license information, please view the LICENSE
-|	file that was distributed with this source code.
-|	
+|   
+|   (c) Vince Kronlein <vince@dais.io>
+|   
+|   For the full copyright and license information, please view the LICENSE
+|   file that was distributed with this source code.
+|   
 */
 
 namespace Dais\Driver\Cache;
@@ -23,9 +23,9 @@ class File implements CacheContract {
     private $expire;
     
     public function __construct() {
-        $this->expire = Config::get('cache.time');
+        $this->expire = \Config::get('cache.time');
         
-        $files = glob(Config::get('path.cache') . Config::get('cache.prefix') . '*');
+        $files = glob(\Config::get('path.cache') . \Config::get('cache.prefix') . '*');
         
         if ($files):
             foreach ($files as $file):
@@ -40,16 +40,16 @@ class File implements CacheContract {
     }
     
     public function get($key, $type = false) {
-        if (!Config::get('config_cache_status')):
+        if (!\Config::get('cache.status')):
             return false;
         endif;
         
-        $file = Config::get('path.cache') . Config::get('cache.prefix') . '.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key);
-
-        if ($file):
-            $file_handle = fopen($file, 'r');
+        $files = glob(\Config::get('path.cache') . \Config::get('cache.prefix') . '.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.*');
+        
+        if ($files):
+            $file_handle = fopen($files[0], 'r');
             flock($file_handle, LOCK_SH);
-            $data = fread($file_handle, filesize($file));
+            $data = fread($file_handle, filesize($files[0]));
             flock($file_handle, LOCK_UN);
             fclose($file_handle);
             return $this->is_serialized($data) ? unserialize($data) : $data;
@@ -59,7 +59,7 @@ class File implements CacheContract {
     }
     
     public function set($key, $value, $type = false, $expire = 0) {
-        if (!Config::get('config_cache_status')):
+        if (!\Config::get('cache.status')):
             return false;
         endif;
         
@@ -67,7 +67,7 @@ class File implements CacheContract {
         
         $expires = ($expire) ? $expire : $this->expire;
         
-        $file = Config::get('path.cache') . Config::get('cache.prefix') . '.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.' . (time() + $expires);
+        $file = \Config::get('path.cache') . \Config::get('cache.prefix') . '.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.' . (time() + $expires);
         
         $data = (is_array($value)) ? serialize($value) : $value;
         
@@ -80,7 +80,7 @@ class File implements CacheContract {
     }
     
     public function delete($key, $type = false) {
-        $files = glob(Config::get('path.cache') . Config::get('cache.prefix') . '.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.*');
+        $files = glob(\Config::get('path.cache') . \Config::get('cache.prefix') . '.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.*');
         
         if ($files):
             foreach ($files as $file):
@@ -92,7 +92,7 @@ class File implements CacheContract {
     }
     
     public function flush_cache() {
-        $files = glob(Config::get('path.cache') . Config::get('cache.prefix') . '.*');
+        $files = glob(\Config::get('path.cache') . \Config::get('cache.prefix') . '.*');
         
         if ($files):
             foreach ($files as $file):
@@ -104,7 +104,7 @@ class File implements CacheContract {
     }
 
     /**
-     *	This function has been copied from Wordpress.
+     *  This function has been copied from Wordpress.
      */
     private function is_serialized($data) {
         

@@ -66,9 +66,14 @@ class ColumnLeft extends Controller {
             $widgets = Config::get($module['code'] . '_widget');
             
             if ($widgets) {
+                
                 foreach ($widgets as $widget) {
                     if ($widget['layout_id'] == $layout_id && $widget['position'] == 'column_left' && $widget['status']) {
-                        $widget_data[] = array('code' => $module['code'], 'setting' => $widget, 'sort_order' => $widget['sort_order']);
+                        $widget_data[] = array(
+                            'code'       => $module['code'], 
+                            'setting'    => $widget, 
+                            'sort_order' => $widget['sort_order']
+                        );
                     }
                 }
             }

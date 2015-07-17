@@ -36,9 +36,9 @@ class Git extends Controller {
         Plugin::model('setting/setting');
         
         if ((Request::server('REQUEST_METHOD') == 'POST') && $this->validate()):
-            $this->model_setting_setting->editSetting('git', Request::post());
+            SettingSetting::editSetting('git', Request::post());
             Session::set('success', Lang::get('lang_text_success'));
-            Response::redirect(Url::link('module/plugin', 'token=' . Session::get('token'), 'SSL'));
+            Response::redirect(Url::link('module/plugin', '', 'SSL'));
         endif;
         
         // test to see if we can find a local git repo
@@ -71,10 +71,10 @@ class Git extends Controller {
         Breadcrumb::add('lang_text_plugin', 'module/plugin');
         Breadcrumb::add('lang_heading_title', 'plugin/git');
         
-        $data['action'] = Url::link('plugin/git', 'token=' . Session::get('token'), 'SSL');
-        $data['cancel'] = Url::link('module/plugin', 'token=' . Session::get('token'), 'SSL');
+        $data['action'] = Url::link('plugin/git', '', 'SSL');
+        $data['cancel'] = Url::link('module/plugin', '', 'SSL');
         
-        $settings = $this->model_setting_setting->getSetting('git');
+        $settings = SettingSetting::getSetting('git');
         
         if (!is_null(Request::post('git_provider'))):
             $data['git_provider'] = Request::post('git_provider');
@@ -144,7 +144,7 @@ class Git extends Controller {
         
         Plugin::model('design/layout');
         
-        $data['layouts'] = $this->model_design_layout->getLayouts();
+        $data['layouts'] = DesignLayout::getLayouts();
         
         Theme::loadjs('git', $data, $this->script_directory);
         

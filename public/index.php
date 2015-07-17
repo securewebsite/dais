@@ -33,7 +33,7 @@ require dirname(__DIR__) . '/bootstrap/app.php';
 |
 */
 
-if (Config::get('config_cache_status')):
+if (!Config::get('config_cache_status')):
     Cache::flush_cache();
 endif;
 

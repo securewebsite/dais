@@ -255,6 +255,8 @@ class Config {
 
         $this->data['path.filecache'] = $this->data['path.asset'];
 
+        $this->data['cache.status'] = $this->data['config_cache_status'];
+
         // Image Upload Url for Summernote Editor
         if ($this->data['config_secure']):
             $img_url = $this->data['https.server'] . 'image/';

@@ -34,7 +34,7 @@ class Git extends Controller {
         Plugin::language('git');
         Plugin::model('setting/setting');
         
-        $settings = $this->model_setting_setting->getSetting('git');
+        $settings = SettingSetting::getSetting('git');
         
         // If not enabled, bail testing
         if (!$settings['git_status']):

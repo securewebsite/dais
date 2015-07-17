@@ -27,6 +27,6 @@ class AdminEvent extends Controller {
     
     // Add call back methods for events below
     public function editProduct($data) {
-        return Response::redirect(Url::link('tool/error_log', 'token=' . Session::get('token'), 'SSL'));
+        return Response::redirect(Url::link('tool/error_log', '', 'SSL'));
     }
 }
