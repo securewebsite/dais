@@ -125,7 +125,7 @@ endif;
 $app = new Dais\Application(
     realpath(__DIR__ . '/../')
 );
-//var_dump($app);exit;
+
 /*
 |--------------------------------------------------------------------------
 |   Register Your Service Providers
@@ -177,5 +177,5 @@ $app = new Dais\Application(
 */
 
 $app->boot();
-//var_dump($app['cache']);exit;
+
 return $app;

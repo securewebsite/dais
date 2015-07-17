@@ -90,7 +90,7 @@ class User {
                     Session::p()->data['permission'][$key] = $value;
                 endforeach;
             endif;
-            //var_dump(Session::p()->data['token']);exit;
+            
             return true;
         else:
             return false;
