@@ -129,4 +129,14 @@ class Response {
     public function getToken() {
         return $this->token;
     }
+
+    public function test($data, $quit = true) {
+        echo "<pre>";
+        print_r($data);
+        echo "</pre>";
+
+        if ($quit):
+            exit;
+        endif;
+    }
 }
