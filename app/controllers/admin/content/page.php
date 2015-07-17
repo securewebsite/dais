@@ -35,22 +35,22 @@ class Page extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('content/page');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            ContentPage::addPage($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            ContentPage::addPage(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('content/page', '' . $url, 'SSL'));
@@ -66,22 +66,22 @@ class Page extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('content/page');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            ContentPage::editPage($this->request->get['page_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            ContentPage::editPage(Request::p()->get['page_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('content/page', '' . $url, 'SSL'));
@@ -97,25 +97,25 @@ class Page extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('content/page');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $page_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $page_id) {
                 ContentPage::deletePage($page_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('content/page', '' . $url, 'SSL'));
@@ -129,36 +129,36 @@ class Page extends Controller {
     protected function getList() {
         $data = Theme::language('content/page');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'id.title';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'content/page', $url);
@@ -184,14 +184,14 @@ class Page extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('content/page/update', '' . '&page_id=' . $result['page_id'] . $url, 'SSL')
+                'href' => Url::link('content/page/update', '' . 'page_id=' . $result['page_id'] . $url, 'SSL')
             );
             
             $data['pages'][] = array(
                 'page_id'    => $result['page_id'], 
                 'title'      => $result['title'], 
                 'sort_order' => $result['sort_order'], 
-                'selected'   => isset($this->request->post['selected']) && in_array($result['page_id'], $this->request->post['selected']), 
+                'selected'   => isset(Request::p()->post['selected']) && in_array($result['page_id'], Request::p()->post['selected']), 
                 'action'     => $action
             );
         }
@@ -202,10 +202,10 @@ class Page extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -218,21 +218,21 @@ class Page extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_title']      = Url::link('content/page', '' . '&sort=id.title' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('content/page', '' . '&sort=i.sort_order' . $url, 'SSL');
+        $data['sort_title']      = Url::link('content/page', '' . 'sort=id.title' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('content/page', '' . 'sort=i.sort_order' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate(
@@ -287,40 +287,40 @@ class Page extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'content/page', $url);
         
-        if (!isset($this->request->get['page_id'])) {
+        if (!isset(Request::p()->get['page_id'])) {
             $data['action'] = Url::link('content/page/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('content/page/update', '' . '&page_id=' . $this->request->get['page_id'] . $url, 'SSL');
+            $data['action'] = Url::link('content/page/update', '' . 'page_id=' . Request::p()->get['page_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('content/page', '' . $url, 'SSL');
         
-        if (isset($this->request->get['page_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $page_info = ContentPage::getPage($this->request->get['page_id']);
+        if (isset(Request::p()->get['page_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $page_info = ContentPage::getPage(Request::p()->get['page_id']);
         }
         
         Theme::model('locale/language');
         
         $data['languages'] = LocaleLanguage::getLanguages();
         
-        if (isset($this->request->post['page_description'])) {
-            $data['page_description'] = $this->request->post['page_description'];
-        } elseif (isset($this->request->get['page_id'])) {
-            $data['page_description'] = ContentPage::getPageDescriptions($this->request->get['page_id']);
+        if (isset(Request::p()->post['page_description'])) {
+            $data['page_description'] = Request::p()->post['page_description'];
+        } elseif (isset(Request::p()->get['page_id'])) {
+            $data['page_description'] = ContentPage::getPageDescriptions(Request::p()->get['page_id']);
         } else {
             $data['page_description'] = array();
         }
@@ -329,50 +329,50 @@ class Page extends Controller {
         
         $data['stores'] = SettingStore::getStores();
         
-        if (isset($this->request->post['page_store'])) {
-            $data['page_store'] = $this->request->post['page_store'];
-        } elseif (isset($this->request->get['page_id'])) {
-            $data['page_store'] = ContentPage::getPageStores($this->request->get['page_id']);
+        if (isset(Request::p()->post['page_store'])) {
+            $data['page_store'] = Request::p()->post['page_store'];
+        } elseif (isset(Request::p()->get['page_id'])) {
+            $data['page_store'] = ContentPage::getPageStores(Request::p()->get['page_id']);
         } else {
             $data['page_store'] = array(0);
         }
         
-        if (isset($this->request->post['slug'])) {
-            $data['slug'] = $this->request->post['slug'];
+        if (isset(Request::p()->post['slug'])) {
+            $data['slug'] = Request::p()->post['slug'];
         } elseif (!empty($page_info) && $page_info['event_id'] == 0) {
             $data['slug'] = $page_info['slug'];
         } elseif (!empty($page_info) && $page_info['event_id'] > 0) {
-            $data['slug'] = ContentPage::getEventSlug($this->request->get['page_id']);
+            $data['slug'] = ContentPage::getEventSlug(Request::p()->get['page_id']);
         } else {
             $data['slug'] = '';
         }
         
-        if (isset($this->request->post['bottom'])) {
-            $data['bottom'] = $this->request->post['bottom'];
+        if (isset(Request::p()->post['bottom'])) {
+            $data['bottom'] = Request::p()->post['bottom'];
         } elseif (!empty($page_info)) {
             $data['bottom'] = $page_info['bottom'];
         } else {
             $data['bottom'] = 0;
         }
         
-        if (isset($this->request->post['status'])) {
-            $data['status'] = (int)$this->request->post['status'];
+        if (isset(Request::p()->post['status'])) {
+            $data['status'] = (int)Request::p()->post['status'];
         } elseif (!empty($page_info)) {
             $data['status'] = (int)$page_info['status'];
         } else {
             $data['status'] = (int)1;
         }
         
-        if (isset($this->request->post['sort_order'])) {
-            $data['sort_order'] = $this->request->post['sort_order'];
+        if (isset(Request::p()->post['sort_order'])) {
+            $data['sort_order'] = Request::p()->post['sort_order'];
         } elseif (!empty($page_info)) {
             $data['sort_order'] = $page_info['sort_order'];
         } else {
             $data['sort_order'] = '';
         }
 
-        if (isset($this->request->post['event_id'])) {
-            $data['event_id'] = $this->request->post['event_id'];
+        if (isset(Request::p()->post['event_id'])) {
+            $data['event_id'] = Request::p()->post['event_id'];
         } elseif (!empty($page_info)) {
             $data['event_id'] = $page_info['event_id'];
         } else {
@@ -387,14 +387,14 @@ class Page extends Controller {
 
         if ($data['event_id'] > 0):
             $data['event_name'] = ContentPage::getEventName($data['event_id']);
-            $data['event_url']  = Url::link('calendar/event/update', '' . '&event_id=' . $data['event_id'], 'SSL');
-            $data['slug']       = ContentPage::getEventSlug($this->request->get['page_id']);
+            $data['event_url']  = Url::link('calendar/event/update', '' . 'event_id=' . $data['event_id'], 'SSL');
+            $data['slug']       = ContentPage::getEventSlug(Request::p()->get['page_id']);
         endif;
         
-        if (isset($this->request->post['page_layout'])) {
-            $data['page_layout'] = $this->request->post['page_layout'];
-        } elseif (isset($this->request->get['page_id'])) {
-            $data['page_layout'] = ContentPage::getPageLayouts($this->request->get['page_id']);
+        if (isset(Request::p()->post['page_layout'])) {
+            $data['page_layout'] = Request::p()->post['page_layout'];
+        } elseif (isset(Request::p()->get['page_id'])) {
+            $data['page_layout'] = ContentPage::getPageLayouts(Request::p()->get['page_id']);
         } else {
             $data['page_layout'] = array();
         }
@@ -403,8 +403,8 @@ class Page extends Controller {
         
         $data['layouts'] = DesignLayout::getLayouts();
         
-        if (isset($this->request->post['visibility'])) {
-            $data['visibility'] = $this->request->post['visibility'];
+        if (isset(Request::p()->post['visibility'])) {
+            $data['visibility'] = Request::p()->post['visibility'];
         } elseif (!empty($page_info)) {
             $data['visibility'] = $page_info['visibility'];
         } else {
@@ -428,7 +428,7 @@ class Page extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        foreach ($this->request->post['page_description'] as $language_id => $value) {
+        foreach (Request::p()->post['page_description'] as $language_id => $value) {
             if ((Encode::strlen($value['title']) < 3) || (Encode::strlen($value['title']) > 64)) {
                 $this->error['title'][$language_id] = Lang::get('lang_error_title');
             }
@@ -438,19 +438,19 @@ class Page extends Controller {
             }
         }
         
-        if (isset($this->request->post['slug']) && Encode::strlen($this->request->post['slug']) > 0):
+        if (isset(Request::p()->post['slug']) && Encode::strlen(Request::p()->post['slug']) > 0):
             Theme::model('tool/utility');
-            $query = ToolUtility::findSlugByName($this->request->post['slug']);
+            $query = ToolUtility::findSlugByName(Request::p()->post['slug']);
             
-            if (isset($this->request->get['page_id'])):
+            if (isset(Request::p()->get['page_id'])):
                 if ($query):
-                    if (($query != 'page_id:' . $this->request->get['page_id']) && ($query != 'event_page_id:' . $this->request->get['page_id'])):
-                        $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), $this->request->post['slug']);
+                    if (($query != 'page_id:' . Request::p()->get['page_id']) && ($query != 'event_page_id:' . Request::p()->get['page_id'])):
+                        $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), Request::p()->post['slug']);
                     endif;
                 endif;
             else:
                 if ($query):
-                    $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), $this->request->post['slug']);
+                    $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), Request::p()->post['slug']);
                 endif;
             endif;
         else:
@@ -474,7 +474,7 @@ class Page extends Controller {
         Theme::model('setting/store');
         Theme::model('calendar/event');
         
-        foreach ($this->request->post['selected'] as $page_id) {
+        foreach (Request::p()->post['selected'] as $page_id) {
             if (Config::get('config_account_id') == $page_id) {
                 $this->error['warning'] = Lang::get('lang_error_account');
             }
@@ -513,19 +513,19 @@ class Page extends Controller {
         
         $json = array();
         
-        if (!isset($this->request->get['name']) || Encode::strlen($this->request->get['name']) < 1):
+        if (!isset(Request::p()->get['name']) || Encode::strlen(Request::p()->get['name']) < 1):
             $json['error'] = Lang::get('lang_error_name_first');
         else:
             
             // build slug
-            $slug = Url::build_slug($this->request->get['name']);
+            $slug = Url::build_slug(Request::p()->get['name']);
             
             // check that the slug is globally unique
             $query = ToolUtility::findSlugByName($slug);
             
             if ($query):
-                if (isset($this->request->get['page_id'])):
-                    if (($query != 'page_id:' . $this->request->get['page_id']) && ($query != 'event_page_id:' . $this->request->get['page_id'])):
+                if (isset(Request::p()->get['page_id'])):
+                    if (($query != 'page_id:' . Request::p()->get['page_id']) && ($query != 'event_page_id:' . Request::p()->get['page_id'])):
                         $json['error'] = sprintf(Lang::get('lang_error_slug_found'), $slug);
                     else:
                         $json['slug'] = $slug;
@@ -546,8 +546,8 @@ class Page extends Controller {
     public function description() {
         $json = array();
 
-        if (isset($this->request->post['description']))
-            $json['success'] = $this->keyword->getDescription($this->request->post['description']);
+        if (isset(Request::p()->post['description']))
+            $json['success'] = $this->keyword->getDescription(Request::p()->post['description']);
 
         Response::setOutput(json_encode($json));
     }
@@ -555,9 +555,9 @@ class Page extends Controller {
     public function keyword() {
         $json = array();
 
-        if (isset($this->request->post['keywords'])):
+        if (isset(Request::p()->post['keywords'])):
             // let's clean up the data first
-            $keywords        = $this->keyword->getDescription($this->request->post['keywords']);
+            $keywords        = $this->keyword->getDescription(Request::p()->post['keywords']);
             $json['success'] = $this->keyword->getKeywords($keywords);
         endif;
 

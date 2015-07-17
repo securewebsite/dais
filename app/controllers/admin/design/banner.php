@@ -41,23 +41,23 @@ class Banner extends Controller {
         
         Theme::model('design/banner');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            DesignBanner::addBanner($this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            DesignBanner::addBanner(Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('design/banner', '' . $url, 'SSL'));
@@ -75,23 +75,23 @@ class Banner extends Controller {
         
         Theme::model('design/banner');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            DesignBanner::editBanner($this->request->get['banner_id'], $this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            DesignBanner::editBanner(Request::p()->get['banner_id'], Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('design/banner', '' . $url, 'SSL'));
@@ -109,25 +109,25 @@ class Banner extends Controller {
         
         Theme::model('design/banner');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $banner_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $banner_id) {
                 DesignBanner::deleteBanner($banner_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('design/banner', '' . $url, 'SSL'));
@@ -141,36 +141,36 @@ class Banner extends Controller {
     protected function getList() {
         $data = Theme::language('design/banner');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'name';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'design/banner', $url);
@@ -189,9 +189,9 @@ class Banner extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('design/banner/update', '' . '&banner_id=' . $result['banner_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('design/banner/update', '' . 'banner_id=' . $result['banner_id'] . $url, 'SSL'));
             
-            $data['banners'][] = array('banner_id' => $result['banner_id'], 'name' => $result['name'], 'status' => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 'selected' => isset($this->request->post['selected']) && in_array($result['banner_id'], $this->request->post['selected']), 'action' => $action);
+            $data['banners'][] = array('banner_id' => $result['banner_id'], 'name' => $result['name'], 'status' => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 'selected' => isset(Request::p()->post['selected']) && in_array($result['banner_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -200,10 +200,10 @@ class Banner extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -216,21 +216,21 @@ class Banner extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('design/banner', '' . '&sort=name' . $url, 'SSL');
-        $data['sort_status'] = Url::link('design/banner', '' . '&sort=status' . $url, 'SSL');
+        $data['sort_name'] = Url::link('design/banner', '' . 'sort=name' . $url, 'SSL');
+        $data['sort_status'] = Url::link('design/banner', '' . 'sort=status' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate($banner_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('design/banner', '' . $url . '&page={page}', 'SSL'));
@@ -268,42 +268,42 @@ class Banner extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'design/banner', $url);
         
-        if (!isset($this->request->get['banner_id'])) {
+        if (!isset(Request::p()->get['banner_id'])) {
             $data['action'] = Url::link('design/banner/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('design/banner/update', '' . '&banner_id=' . $this->request->get['banner_id'] . $url, 'SSL');
+            $data['action'] = Url::link('design/banner/update', '' . 'banner_id=' . Request::p()->get['banner_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('design/banner', '' . $url, 'SSL');
         
-        if (isset($this->request->get['banner_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $banner_info = DesignBanner::getBanner($this->request->get['banner_id']);
+        if (isset(Request::p()->get['banner_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $banner_info = DesignBanner::getBanner(Request::p()->get['banner_id']);
         }
         
-        if (isset($this->request->post['name'])) {
-            $data['name'] = $this->request->post['name'];
+        if (isset(Request::p()->post['name'])) {
+            $data['name'] = Request::p()->post['name'];
         } elseif (!empty($banner_info)) {
             $data['name'] = $banner_info['name'];
         } else {
             $data['name'] = '';
         }
         
-        if (isset($this->request->post['status'])) {
-            $data['status'] = $this->request->post['status'];
+        if (isset(Request::p()->post['status'])) {
+            $data['status'] = Request::p()->post['status'];
         } elseif (!empty($banner_info)) {
             $data['status'] = $banner_info['status'];
         } else {
@@ -316,10 +316,10 @@ class Banner extends Controller {
         
         Theme::model('tool/image');
         
-        if (isset($this->request->post['banner_image'])) {
-            $banner_images = $this->request->post['banner_image'];
-        } elseif (isset($this->request->get['banner_id'])) {
-            $banner_images = DesignBanner::getBannerImages($this->request->get['banner_id']);
+        if (isset(Request::p()->post['banner_image'])) {
+            $banner_images = Request::p()->post['banner_image'];
+        } elseif (isset(Request::p()->get['banner_id'])) {
+            $banner_images = DesignBanner::getBannerImages(Request::p()->get['banner_id']);
         } else {
             $banner_images = array();
         }
@@ -352,12 +352,12 @@ class Banner extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 64)) {
+        if ((Encode::strlen(Request::p()->post['name']) < 3) || (Encode::strlen(Request::p()->post['name']) > 64)) {
             $this->error['name'] = Lang::get('lang_error_name');
         }
         
-        if (isset($this->request->post['banner_image'])) {
-            foreach ($this->request->post['banner_image'] as $banner_image_id => $banner_image) {
+        if (isset(Request::p()->post['banner_image'])) {
+            foreach (Request::p()->post['banner_image'] as $banner_image_id => $banner_image) {
                 foreach ($banner_image['banner_image_description'] as $language_id => $banner_image_description) {
                     if ((Encode::strlen($banner_image_description['title']) < 2) || (Encode::strlen($banner_image_description['title']) > 64)) {
                         $this->error['banner_image'][$banner_image_id][$language_id] = Lang::get('lang_error_title');

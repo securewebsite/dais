@@ -40,16 +40,16 @@ class File implements CacheContract {
     }
     
     public function get($key, $type = false) {
-        if (!Config::get('cache.status')):
+        if (!Config::get('config_cache_status')):
             return false;
         endif;
         
-        $files = glob(Config::get('path.cache') . Config::get('cache.prefix') . '.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key) . '.*');
-        
-        if ($files):
-            $file_handle = fopen($files[0], 'r');
+        $file = Config::get('path.cache') . Config::get('cache.prefix') . '.' . preg_replace('/[^A-Z0-9\._-]/i', '', $key);
+
+        if ($file):
+            $file_handle = fopen($file, 'r');
             flock($file_handle, LOCK_SH);
-            $data = fread($file_handle, filesize($files[0]));
+            $data = fread($file_handle, filesize($file));
             flock($file_handle, LOCK_UN);
             fclose($file_handle);
             return $this->is_serialized($data) ? unserialize($data) : $data;
@@ -59,7 +59,7 @@ class File implements CacheContract {
     }
     
     public function set($key, $value, $type = false, $expire = 0) {
-        if (!Config::get('cache.status')):
+        if (!Config::get('config_cache_status')):
             return false;
         endif;
         

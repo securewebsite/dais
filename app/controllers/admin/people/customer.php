@@ -77,9 +77,9 @@ class Customer extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/customer');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
-            PeopleCustomer::addCustomer($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
+            PeopleCustomer::addCustomer(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = Filter::uri($this->filters);
             
@@ -96,9 +96,9 @@ class Customer extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/customer');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
-            PeopleCustomer::editCustomer($this->request->get['customer_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
+            PeopleCustomer::editCustomer(Request::p()->get['customer_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = Filter::uri($this->filters);
             
@@ -115,12 +115,12 @@ class Customer extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/customer');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()):
-            foreach ($this->request->post['selected'] as $customer_id):
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()):
+            foreach (Request::p()->post['selected'] as $customer_id):
                 PeopleCustomer::deleteCustomer($customer_id);
             endforeach;
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = Filter::uri($this->filters);
             
@@ -141,10 +141,10 @@ class Customer extends Controller {
         
         if (!\User::hasPermission('modify', 'people/customer')):
             $this->error['warning'] = Lang::get('lang_error_permission');
-        elseif (isset($this->request->post['selected'])):
+        elseif (isset(Request::p()->post['selected'])):
             $approved = 0;
             
-            foreach ($this->request->post['selected'] as $customer_id):
+            foreach (Request::p()->post['selected'] as $customer_id):
                 $customer_info = PeopleCustomer::getCustomer($customer_id);
                 
                 if ($customer_info && !$customer_info['approved']):
@@ -153,7 +153,7 @@ class Customer extends Controller {
                 endif;
             endforeach;
             
-            $this->session->data['success'] = sprintf(Lang::get('lang_text_approved'), $approved);
+            Session::p()->data['success'] = sprintf(Lang::get('lang_text_approved'), $approved);
             
             $url = Filter::uri($this->filters);
             
@@ -202,7 +202,7 @@ class Customer extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('people/customer/update', '' . '&customer_id=' . $result['customer_id'] . $url, 'SSL')
+                'href' => Url::link('people/customer/update', '' . 'customer_id=' . $result['customer_id'] . $url, 'SSL')
             );
             
             $data['customers'][] = array(
@@ -215,7 +215,7 @@ class Customer extends Controller {
                 'approved'       => ($result['approved'] ? Lang::get('lang_text_yes') : Lang::get('lang_text_no')), 
                 'ip'             => $result['ip'], 
                 'date_added'     => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 
-                'selected'       => isset($this->request->post['selected']) && in_array($result['customer_id'], $this->request->post['selected']), 
+                'selected'       => isset(Request::p()->post['selected']) && in_array($result['customer_id'], Request::p()->post['selected']), 
                 'action'         => $action
             );
         endforeach;
@@ -226,9 +226,9 @@ class Customer extends Controller {
             $data['error_warning'] = '';
         endif;
         
-        if (isset($this->session->data['success'])):
-            $data['success'] = $this->session->data['success'];
-            unset($this->session->data['success']);
+        if (isset(Session::p()->data['success'])):
+            $data['success'] = Session::p()->data['success'];
+            unset(Session::p()->data['success']);
         else:
             $data['success'] = '';
         endif;
@@ -242,11 +242,11 @@ class Customer extends Controller {
             $url .= '&order=ASC'; 
         endif;
         
-        $data['sort_username']       = Url::link('people/customer', '' . '&sort=username' . $url, 'SSL');
-        $data['sort_name']           = Url::link('people/customer', '' . '&sort=name' . $url, 'SSL');
-        $data['sort_email']          = Url::link('people/customer', '' . '&sort=c.email' . $url, 'SSL');
-        $data['sort_customer_group'] = Url::link('people/customer', '' . '&sort=customer_group' . $url, 'SSL');
-        $data['sort_status']         = Url::link('people/customer', '' . '&sort=c.status' . $url, 'SSL');
+        $data['sort_username']       = Url::link('people/customer', '' . 'sort=username' . $url, 'SSL');
+        $data['sort_name']           = Url::link('people/customer', '' . 'sort=name' . $url, 'SSL');
+        $data['sort_email']          = Url::link('people/customer', '' . 'sort=c.email' . $url, 'SSL');
+        $data['sort_customer_group'] = Url::link('people/customer', '' . 'sort=customer_group' . $url, 'SSL');
+        $data['sort_status']         = Url::link('people/customer', '' . 'sort=c.status' . $url, 'SSL');
         
         $paging = Filter::unpage($this->filters);
         $url    = Filter::uri($paging);
@@ -288,8 +288,8 @@ class Customer extends Controller {
     protected function getForm() {
         $data = Theme::language('people/customer');
         
-        if (isset($this->request->get['customer_id'])):
-            $data['customer_id'] = $this->request->get['customer_id'];
+        if (isset(Request::p()->get['customer_id'])):
+            $data['customer_id'] = Request::p()->get['customer_id'];
         else:
             $data['customer_id'] = 0;
         endif;
@@ -306,16 +306,16 @@ class Customer extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'people/customer', $url);
         
-        if (!isset($this->request->get['customer_id'])):
+        if (!isset(Request::p()->get['customer_id'])):
             $data['action'] = Url::link('people/customer/insert', 'token=' . $data['token'] . $url, 'SSL');
         else:
-            $data['action'] = Url::link('people/customer/update', 'token=' . $data['token'] . '&customer_id=' . $this->request->get['customer_id'] . $url, 'SSL');
+            $data['action'] = Url::link('people/customer/update', 'token=' . $data['token'] . '&customer_id=' . Request::p()->get['customer_id'] . $url, 'SSL');
         endif;
         
         $data['cancel'] = Url::link('people/customer', '' . $url, 'SSL');
         
-        if (isset($this->request->get['customer_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')):
-            $customer_info = PeopleCustomer::getCustomer($this->request->get['customer_id']);
+        if (isset(Request::p()->get['customer_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')):
+            $customer_info = PeopleCustomer::getCustomer(Request::p()->get['customer_id']);
         endif;
 
         $defaults = array(
@@ -332,8 +332,8 @@ class Customer extends Controller {
         );
         
         foreach ($defaults as $key => $value):
-            if (isset($this->request->post[$key])):
-                $data[$key] = $this->request->post[$key];
+            if (isset(Request::p()->post[$key])):
+                $data[$key] = Request::p()->post[$key];
             elseif (!empty($customer_info)):
                 $data[$key] = $customer_info[$key];
             else:
@@ -344,22 +344,22 @@ class Customer extends Controller {
         Theme::model('people/customer_group');
         $data['customer_groups'] = PeopleCustomerGroup::getCustomerGroups();
 
-        if (isset($this->request->post['affiliate'])):
-            $data['affiliate'] = $this->request->post['affiliate'];
+        if (isset(Request::p()->post['affiliate'])):
+            $data['affiliate'] = Request::p()->post['affiliate'];
         elseif (!empty($customer_info)):
-            $data['affiliate'] = PeopleCustomer::getAffiliateDetails($this->request->get['customer_id']);
+            $data['affiliate'] = PeopleCustomer::getAffiliateDetails(Request::p()->get['customer_id']);
         else:
             $data['affiliate'] = array();
         endif;
 
-        if (isset($this->request->post['password'])):
-            $data['password'] = $this->request->post['password'];
+        if (isset(Request::p()->post['password'])):
+            $data['password'] = Request::p()->post['password'];
         else:
             $data['password'] = '';
         endif;
         
-        if (isset($this->request->post['confirm'])):
-            $data['confirm'] = $this->request->post['confirm'];
+        if (isset(Request::p()->post['confirm'])):
+            $data['confirm'] = Request::p()->post['confirm'];
         else:
             $data['confirm'] = '';
         endif;
@@ -368,10 +368,10 @@ class Customer extends Controller {
         
         $data['countries'] = LocaleCountry::getCountries(array('filter_status' => 1));
         
-        if (isset($this->request->post['address'])):
-            $data['addresses'] = $this->request->post['address'];
+        if (isset(Request::p()->post['address'])):
+            $data['addresses'] = Request::p()->post['address'];
         elseif (!empty($customer_info)):
-            $data['addresses'] = PeopleCustomer::getAddresses($this->request->get['customer_id']);
+            $data['addresses'] = PeopleCustomer::getAddresses(Request::p()->get['customer_id']);
         else:
             $data['addresses'] = array();
         endif;
@@ -385,7 +385,7 @@ class Customer extends Controller {
                     'firstname' => $referrer['firstname'],
                     'lastname'  => $referrer['lastname'],
                     'username'  => $referrer['username'],
-                    'href'      => Url::link('people/customer', '' . '&filter_username=' . $referrer['username'], 'SSL')
+                    'href'      => Url::link('people/customer', '' . 'filter_username=' . $referrer['username'], 'SSL')
                 );
             endif;
         endif;
@@ -393,7 +393,7 @@ class Customer extends Controller {
         $data['ips'] = array();
         
         if (!empty($customer_info)):
-            $results = PeopleCustomer::getIpsByCustomerId($this->request->get['customer_id']);
+            $results = PeopleCustomer::getIpsByCustomerId(Request::p()->get['customer_id']);
             
             foreach ($results as $result):
                 $ban_ip_total = PeopleCustomer::getTotalBanIpsByIp($result['ip']);
@@ -402,7 +402,7 @@ class Customer extends Controller {
                     'ip'         => $result['ip'], 
                     'total'      => PeopleCustomer::getTotalCustomersByIp($result['ip']), 
                     'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 
-                    'filter_ip'  => Url::link('people/customer', '' . '&filter_ip=' . $result['ip'], 'SSL'), 
+                    'filter_ip'  => Url::link('people/customer', '' . 'filter_ip=' . $result['ip'], 'SSL'), 
                     'ban_ip'     => $ban_ip_total
                 );
             endforeach;
@@ -422,52 +422,52 @@ class Customer extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         endif;
         
-        if ((Encode::strlen($this->request->post['username']) < 3) || (Encode::strlen($this->request->post['username']) > 16)):
+        if ((Encode::strlen(Request::p()->post['username']) < 3) || (Encode::strlen(Request::p()->post['username']) > 16)):
             $this->error['username'] = Lang::get('lang_error_username');
         endif;
         
-        if ((Encode::strlen($this->request->post['firstname']) < 1) || (Encode::strlen($this->request->post['firstname']) > 32)):
+        if ((Encode::strlen(Request::p()->post['firstname']) < 1) || (Encode::strlen(Request::p()->post['firstname']) > 32)):
             $this->error['firstname'] = Lang::get('lang_error_firstname');
         endif;
         
-        if ((Encode::strlen($this->request->post['lastname']) < 1) || (Encode::strlen($this->request->post['lastname']) > 32)):
+        if ((Encode::strlen(Request::p()->post['lastname']) < 1) || (Encode::strlen(Request::p()->post['lastname']) > 32)):
             $this->error['lastname'] = Lang::get('lang_error_lastname');
         endif;
         
-        if ((Encode::strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['email'])):
+        if ((Encode::strlen(Request::p()->post['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', Request::p()->post['email'])):
             $this->error['email'] = Lang::get('lang_error_email');
         endif;
         
-        $customer_info = PeopleCustomer::getCustomerByEmail($this->request->post['username'], $this->request->post['email']);
+        $customer_info = PeopleCustomer::getCustomerByEmail(Request::p()->post['username'], Request::p()->post['email']);
         
-        if (!isset($this->request->get['customer_id'])):
+        if (!isset(Request::p()->get['customer_id'])):
             if ($customer_info):
                 $this->error['warning'] = Lang::get('lang_error_exists');
             endif;
         else:
-            if ($customer_info && ($this->request->get['customer_id'] != $customer_info['customer_id'])):
+            if ($customer_info && (Request::p()->get['customer_id'] != $customer_info['customer_id'])):
                 $this->error['warning'] = Lang::get('lang_error_exists');
             endif;
         endif;
         
-        if ((Encode::strlen($this->request->post['telephone']) < 3) || (Encode::strlen($this->request->post['telephone']) > 32)):
+        if ((Encode::strlen(Request::p()->post['telephone']) < 3) || (Encode::strlen(Request::p()->post['telephone']) > 32)):
             $this->error['telephone'] = Lang::get('lang_error_telephone');
         endif;
         
-        if ($this->request->post['password'] || (!isset($this->request->get['customer_id']))):
-            if ((Encode::strlen($this->request->post['password']) < 4) || (Encode::strlen($this->request->post['password']) > 20)):
+        if (Request::p()->post['password'] || (!isset(Request::p()->get['customer_id']))):
+            if ((Encode::strlen(Request::p()->post['password']) < 4) || (Encode::strlen(Request::p()->post['password']) > 20)):
                 $this->error['password'] = Lang::get('lang_error_password');
             endif;
             
-            if ($this->request->post['password'] != $this->request->post['confirm']):
+            if (Request::p()->post['password'] != Request::p()->post['confirm']):
                 $this->error['confirm'] = Lang::get('lang_error_confirm');
             endif;
         endif;
         
         $address_required = false;
         
-        if (isset($this->request->post['address']) && $address_required):
-            foreach ($this->request->post['address'] as $key => $value):
+        if (isset(Request::p()->post['address']) && $address_required):
+            foreach (Request::p()->post['address'] as $key => $value):
                 if ((Encode::strlen($value['firstname']) < 1) || (Encode::strlen($value['firstname']) > 32)):
                     $this->error['address_firstname'][$key] = Lang::get('lang_error_firstname');
                 endif;
@@ -509,40 +509,40 @@ class Customer extends Controller {
         endif;
 
         // check affiliate goodies
-        if (isset($this->request->post['affiliate'])):
+        if (isset(Request::p()->post['affiliate'])):
             // check all our parameters for validity
-            if (Encode::strlen($this->request->post['affiliate']['code']) < 1):
+            if (Encode::strlen(Request::p()->post['affiliate']['code']) < 1):
                 $this->error['code'] = Lang::get('lang_error_code');
             endif;
             
-            if (Encode::strlen($this->request->post['affiliate']['commission']) < 1):
+            if (Encode::strlen(Request::p()->post['affiliate']['commission']) < 1):
                 $this->error['commission'] = Lang::get('lang_error_commission');
             endif;
 
-            if (Encode::strlen($this->request->post['affiliate']['tax_id']) < 1):
+            if (Encode::strlen(Request::p()->post['affiliate']['tax_id']) < 1):
                 $this->error['tax_id'] = Lang::get('lang_error_tax_id');
             endif;
 
-            if (!$this->request->post['affiliate']['payment_method']):
+            if (!Request::p()->post['affiliate']['payment_method']):
                 $this->error['payment'] = Lang::get('lang_error_payment');
             else:
-                if ($this->request->post['affiliate']['payment_method'] == 'cheque' && Encode::strlen($this->request->post['affiliate']['cheque']) < 1):
+                if (Request::p()->post['affiliate']['payment_method'] == 'cheque' && Encode::strlen(Request::p()->post['affiliate']['cheque']) < 1):
                     $this->error['cheque'] = Lang::get('lang_error_cheque');
                 endif;
 
-                if ($this->request->post['affiliate']['payment_method'] == 'paypal' && Encode::strlen($this->request->post['affiliate']['paypal']) < 1):
+                if (Request::p()->post['affiliate']['payment_method'] == 'paypal' && Encode::strlen(Request::p()->post['affiliate']['paypal']) < 1):
                     $this->error['paypal'] = Lang::get('lang_error_paypal');
                 endif;
 
-                if ($this->request->post['affiliate']['payment_method'] == 'bank' && Encode::strlen($this->request->post['affiliate']['bank_name']) < 1):
+                if (Request::p()->post['affiliate']['payment_method'] == 'bank' && Encode::strlen(Request::p()->post['affiliate']['bank_name']) < 1):
                     $this->error['bank_name'] = Lang::get('lang_error_bank_name');
                 endif;
 
-                if ($this->request->post['affiliate']['payment_method'] == 'bank' && Encode::strlen($this->request->post['affiliate']['bank_account_name']) < 1):
+                if (Request::p()->post['affiliate']['payment_method'] == 'bank' && Encode::strlen(Request::p()->post['affiliate']['bank_account_name']) < 1):
                     $this->error['account_name'] = Lang::get('lang_error_account_name');
                 endif;
 
-                if ($this->request->post['affiliate']['payment_method'] == 'bank' && Encode::strlen($this->request->post['affiliate']['bank_account_number']) < 1):
+                if (Request::p()->post['affiliate']['payment_method'] == 'bank' && Encode::strlen(Request::p()->post['affiliate']['bank_account_number']) < 1):
                     $this->error['account_number'] = Lang::get('lang_error_account_number');
                 endif;
             endif;
@@ -570,8 +570,8 @@ class Customer extends Controller {
     public function login() {
         $json = array();
         
-        if (isset($this->request->get['customer_id'])):
-            $customer_id = $this->request->get['customer_id'];
+        if (isset(Request::p()->get['customer_id'])):
+            $customer_id = Request::p()->get['customer_id'];
         else:
             $customer_id = 0;
         endif;
@@ -585,8 +585,8 @@ class Customer extends Controller {
             
             PeopleCustomer::editToken($customer_id, $token);
             
-            if (isset($this->request->get['store_id'])):
-                $store_id = $this->request->get['store_id'];
+            if (isset(Request::p()->get['store_id'])):
+                $store_id = Request::p()->get['store_id'];
             else:
                 $store_id = 0;
             endif;
@@ -616,28 +616,28 @@ class Customer extends Controller {
         
         Theme::model('people/customer');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && \User::hasPermission('modify', 'people/customer')):
-            PeopleCustomer::addHistory($this->request->get['customer_id'], $this->request->post['comment']);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && \User::hasPermission('modify', 'people/customer')):
+            PeopleCustomer::addHistory(Request::p()->get['customer_id'], Request::p()->post['comment']);
             $data['success'] = Lang::get('lang_text_success');
         else:
             $data['success'] = '';
         endif;
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !\User::hasPermission('modify', 'people/customer')):
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && !\User::hasPermission('modify', 'people/customer')):
             $data['error_warning'] = Lang::get('lang_error_permission');
         else:
             $data['error_warning'] = '';
         endif;
         
-        if (isset($this->request->get['page'])):
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])):
+            $page = Request::p()->get['page'];
         else:
             $page = 1;
         endif;
         
         $data['histories'] = array();
         
-        $results = PeopleCustomer::getHistories($this->request->get['customer_id'], ($page - 1) * 10, 10);
+        $results = PeopleCustomer::getHistories(Request::p()->get['customer_id'], ($page - 1) * 10, 10);
         
         foreach ($results as $result):
             $data['histories'][] = array(
@@ -646,14 +646,14 @@ class Customer extends Controller {
             );
         endforeach;
         
-        $history_total = PeopleCustomer::getTotalHistories($this->request->get['customer_id']);
+        $history_total = PeopleCustomer::getTotalHistories(Request::p()->get['customer_id']);
         
         $data['pagination'] = Theme::paginate(
             $history_total, 
             $page, 
             10, 
             Lang::get('lang_text_pagination'), 
-            Url::link('people/customer/history', '' . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL')
+            Url::link('people/customer/history', '' . 'customer_id=' . Request::p()->get['customer_id'] . '&page={page}', 'SSL')
         );
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
@@ -666,28 +666,28 @@ class Customer extends Controller {
         
         Theme::model('people/customer');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && \User::hasPermission('modify', 'people/customer')):
-            PeopleCustomer::addCredit($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['amount']);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && \User::hasPermission('modify', 'people/customer')):
+            PeopleCustomer::addCredit(Request::p()->get['customer_id'], Request::p()->post['description'], Request::p()->post['amount']);
             $data['success'] = Lang::get('lang_text_credit_success');
         else:
             $data['success'] = '';
         endif;
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !\User::hasPermission('modify', 'people/customer')):
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && !\User::hasPermission('modify', 'people/customer')):
             $data['error_warning'] = Lang::get('lang_error_permission');
         else:
             $data['error_warning'] = '';
         endif;
         
-        if (isset($this->request->get['page'])):
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])):
+            $page = Request::p()->get['page'];
         else:
             $page = 1;
         endif;
         
         $data['credits'] = array();
         
-        $results = PeopleCustomer::getCredits($this->request->get['customer_id'], ($page - 1) * 10, 10);
+        $results = PeopleCustomer::getCredits(Request::p()->get['customer_id'], ($page - 1) * 10, 10);
         
         foreach ($results as $result):
             $data['credits'][] = array(
@@ -697,16 +697,16 @@ class Customer extends Controller {
             );
         endforeach;
         
-        $data['balance'] = Currency::format(PeopleCustomer::getCreditTotal($this->request->get['customer_id']), Config::get('config_currency'));
+        $data['balance'] = Currency::format(PeopleCustomer::getCreditTotal(Request::p()->get['customer_id']), Config::get('config_currency'));
         
-        $credit_total = PeopleCustomer::getTotalCredits($this->request->get['customer_id']);
+        $credit_total = PeopleCustomer::getTotalCredits(Request::p()->get['customer_id']);
         
         $data['pagination'] = Theme::paginate(
             $credit_total, 
             $page, 
             10, 
             Lang::get('lang_text_pagination'), 
-            Url::link('people/customer/credit', '' . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL')
+            Url::link('people/customer/credit', '' . 'customer_id=' . Request::p()->get['customer_id'] . '&page={page}', 'SSL')
         );
         
         Theme::loadjs('javascript/people/customer_alert', $data);
@@ -723,28 +723,28 @@ class Customer extends Controller {
         
         Theme::model('people/customer');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && \User::hasPermission('modify', 'people/customer')):
-            PeopleCustomer::addCommission($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['amount']);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && \User::hasPermission('modify', 'people/customer')):
+            PeopleCustomer::addCommission(Request::p()->get['customer_id'], Request::p()->post['description'], Request::p()->post['amount']);
             $data['success'] = Lang::get('lang_text_commission_success');
         else:
             $data['success'] = '';
         endif;
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !\User::hasPermission('modify', 'people/customer')):
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && !\User::hasPermission('modify', 'people/customer')):
             $data['error_warning'] = Lang::get('lang_error_permission');
         else:
             $data['error_warning'] = '';
         endif;
         
-        if (isset($this->request->get['page'])):
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])):
+            $page = Request::p()->get['page'];
         else:
             $page = 1;
         endif;
         
         $data['commissions'] = array();
         
-        $results = PeopleCustomer::getCommissions($this->request->get['customer_id'], ($page - 1) * 10, 10);
+        $results = PeopleCustomer::getCommissions(Request::p()->get['customer_id'], ($page - 1) * 10, 10);
         
         foreach ($results as $result):
             $data['commissions'][] = array(
@@ -754,16 +754,16 @@ class Customer extends Controller {
             );
         endforeach;
         
-        $data['balance'] = Currency::format(PeopleCustomer::getCommissionTotal($this->request->get['customer_id']), Config::get('config_currency'));
+        $data['balance'] = Currency::format(PeopleCustomer::getCommissionTotal(Request::p()->get['customer_id']), Config::get('config_currency'));
         
-        $commission_total = PeopleCustomer::getTotalCommissions($this->request->get['customer_id']);
+        $commission_total = PeopleCustomer::getTotalCommissions(Request::p()->get['customer_id']);
         
         $data['pagination'] = Theme::paginate(
             $commission_total, 
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('people/customer/commission', '' . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL')
+            Url::link('people/customer/commission', '' . 'customer_id=' . Request::p()->get['customer_id'] . '&page={page}', 'SSL')
         );
         
         Theme::loadjs('javascript/people/customer_alert', $data);
@@ -780,28 +780,28 @@ class Customer extends Controller {
         
         Theme::model('people/customer');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && \User::hasPermission('modify', 'people/customer')):
-            PeopleCustomer::addReward($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['points']);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && \User::hasPermission('modify', 'people/customer')):
+            PeopleCustomer::addReward(Request::p()->get['customer_id'], Request::p()->post['description'], Request::p()->post['points']);
             $data['success'] = Lang::get('lang_text_reward_success');
         else:
             $data['success'] = '';
         endif;
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !\User::hasPermission('modify', 'people/customer')):
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && !\User::hasPermission('modify', 'people/customer')):
             $data['error_warning'] = Lang::get('lang_error_permission');
         else:
             $data['error_warning'] = '';
         endif;
         
-        if (isset($this->request->get['page'])):
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])):
+            $page = Request::p()->get['page'];
         else:
             $page = 1;
         endif;
         
         $data['rewards'] = array();
         
-        $results = PeopleCustomer::getRewards($this->request->get['customer_id'], ($page - 1) * 10, 10);
+        $results = PeopleCustomer::getRewards(Request::p()->get['customer_id'], ($page - 1) * 10, 10);
         
         foreach ($results as $result):
             $data['rewards'][] = array(
@@ -811,16 +811,16 @@ class Customer extends Controller {
             );
         endforeach;
         
-        $data['balance'] = PeopleCustomer::getRewardTotal($this->request->get['customer_id']);
+        $data['balance'] = PeopleCustomer::getRewardTotal(Request::p()->get['customer_id']);
         
-        $reward_total = PeopleCustomer::getTotalRewards($this->request->get['customer_id']);
+        $reward_total = PeopleCustomer::getTotalRewards(Request::p()->get['customer_id']);
         
         $data['pagination'] = Theme::paginate(
             $reward_total, 
             $page, 
             10, 
             Lang::get('lang_text_pagination'), 
-            Url::link('people/customer/reward', '' . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL')
+            Url::link('people/customer/reward', '' . 'customer_id=' . Request::p()->get['customer_id'] . '&page={page}', 'SSL')
         );
         
         Theme::loadjs('javascript/people/customer_alert', $data);
@@ -837,13 +837,13 @@ class Customer extends Controller {
         
         $json = array();
         
-        if (isset($this->request->post['ip'])):
+        if (isset(Request::p()->post['ip'])):
             if (!\User::hasPermission('modify', 'people/customer')):
                 $json['error'] = Lang::get('lang_error_permission');
             else:
                 Theme::model('people/customer');
                 
-                PeopleCustomer::addBanIP($this->request->post['ip']);
+                PeopleCustomer::addBanIP(Request::p()->post['ip']);
                 
                 $json['success'] = Lang::get('lang_text_success');
             endif;
@@ -859,13 +859,13 @@ class Customer extends Controller {
         
         $json = array();
         
-        if (isset($this->request->post['ip'])):
+        if (isset(Request::p()->post['ip'])):
             if (!\User::hasPermission('modify', 'people/customer')):
                 $json['error'] = Lang::get('lang_error_permission');
             else:
                 Theme::model('people/customer');
                 
-                PeopleCustomer::removeBanIP($this->request->post['ip']);
+                PeopleCustomer::removeBanIP(Request::p()->post['ip']);
                 
                 $json['success'] = Lang::get('lang_text_success');
             endif;
@@ -879,12 +879,12 @@ class Customer extends Controller {
     public function autocomplete() {
         $json = array();
         
-        if (isset($this->request->get['filter_username']) || isset($this->request->get['filter_name']) || isset($this->request->get['filter_email'])):
+        if (isset(Request::p()->get['filter_username']) || isset(Request::p()->get['filter_name']) || isset(Request::p()->get['filter_email'])):
             Theme::model('people/customer');
             
-            $filter_username = (isset($this->request->get['filter_username'])) ? $this->request->get['filter_username'] : null;
-            $filter_name     = (isset($this->request->get['filter_name'])) ? $this->request->get['filter_name'] : null;
-            $filter_email    = (isset($this->request->get['filter_email'])) ? $this->request->get['filter_email'] : null;
+            $filter_username = (isset(Request::p()->get['filter_username'])) ? Request::p()->get['filter_username'] : null;
+            $filter_name     = (isset(Request::p()->get['filter_name'])) ? Request::p()->get['filter_name'] : null;
+            $filter_email    = (isset(Request::p()->get['filter_email'])) ? Request::p()->get['filter_email'] : null;
             
             $filter = array(
                 'filter_username' => $filter_username, 
@@ -930,7 +930,7 @@ class Customer extends Controller {
         
         Theme::model('locale/country');
         
-        $country_info = LocaleCountry::getCountry($this->request->get['country_id']);
+        $country_info = LocaleCountry::getCountry(Request::p()->get['country_id']);
         
         if ($country_info):
             Theme::model('locale/zone');
@@ -942,7 +942,7 @@ class Customer extends Controller {
                 'iso_code_3'        => $country_info['iso_code_3'], 
                 'address_format'    => $country_info['address_format'], 
                 'postcode_required' => $country_info['postcode_required'], 
-                'zone'              => LocaleZone::getZonesByCountryId($this->request->get['country_id']), 
+                'zone'              => LocaleZone::getZonesByCountryId(Request::p()->get['country_id']), 
                 'status'            => $country_info['status']
             );
         endif;
@@ -955,9 +955,9 @@ class Customer extends Controller {
     public function address() {
         $json = array();
         
-        if (!empty($this->request->get['address_id'])):
+        if (!empty(Request::p()->get['address_id'])):
             Theme::model('people/customer');
-            $json = PeopleCustomer::getAddress($this->request->get['address_id']);
+            $json = PeopleCustomer::getAddress(Request::p()->get['address_id']);
         endif;
         
         $json = Theme::listen(__CLASS__, __FUNCTION__, $json);

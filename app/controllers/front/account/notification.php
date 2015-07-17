@@ -24,7 +24,7 @@ class Notification extends Controller {
 
 	public function index() {
 		if (!Customer::isLogged()):
-            $this->session->data['redirect'] = Url::link('account/notification', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/notification', '', 'SSL');
             Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
 
@@ -33,9 +33,9 @@ class Notification extends Controller {
 		Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('account/notification');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
-            AccountNotification::editNotification($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
+            AccountNotification::editNotification(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
         endif;
 
         Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
@@ -47,9 +47,9 @@ class Notification extends Controller {
             $data['error_warning'] = '';
         endif;
 
-        if (isset($this->session->data['success'])):
-            $data['success'] = $this->session->data['success'];
-            unset($this->session->data['success']);
+        if (isset(Session::p()->data['success'])):
+            $data['success'] = Session::p()->data['success'];
+            unset(Session::p()->data['success']);
         else:
             $data['success'] = '';
         endif;
@@ -106,8 +106,8 @@ class Notification extends Controller {
         $data = Theme::language('account/notification');
         Theme::model('account/notification');
         
-        if (isset($this->request->get['page'])):
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])):
+            $page = Request::p()->get['page'];
         else:
             $page = 1;
         endif;
@@ -147,7 +147,7 @@ class Notification extends Controller {
 
         $json = array();
 
-        $id = $this->request->get['notification_id'];
+        $id = Request::p()->get['notification_id'];
 
         $json['message'] = html_entity_decode(AccountNotification::getInboxNotification($id), ENT_QUOTES, 'UTF-8');
 
@@ -162,7 +162,7 @@ class Notification extends Controller {
 
         $json = array();
 
-        $notification_id = $this->request->get['notification_id'];
+        $notification_id = Request::p()->get['notification_id'];
 
         if (AccountNotification::deleteInboxNotification($notification_id)):
             $json['success'] = Lang::get('lang_text_success');
@@ -186,9 +186,9 @@ class Notification extends Controller {
 
         $data['webversion'] = false;
 
-        if (isset($this->request->get['id'])):
+        if (isset(Request::p()->get['id'])):
             Theme::model('account/notification');
-            $data['webversion'] = AccountNotification::getWebversion($this->request->get['id']);
+            $data['webversion'] = AccountNotification::getWebversion(Request::p()->get['id']);
         endif;
 
         Response::setOutput(View::render('account/webversion', $data));

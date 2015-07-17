@@ -37,22 +37,22 @@ class Coupon extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('sale/coupon');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            SaleCoupon::addCoupon($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            SaleCoupon::addCoupon(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('sale/coupon', '' . $url, 'SSL'));
@@ -68,22 +68,22 @@ class Coupon extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('sale/coupon');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            SaleCoupon::editCoupon($this->request->get['coupon_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            SaleCoupon::editCoupon(Request::p()->get['coupon_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('sale/coupon', '' . $url, 'SSL'));
@@ -99,25 +99,25 @@ class Coupon extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('sale/coupon');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $coupon_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $coupon_id) {
                 SaleCoupon::deleteCoupon($coupon_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('sale/coupon', '' . $url, 'SSL'));
@@ -131,36 +131,36 @@ class Coupon extends Controller {
     protected function getList() {
         $data = Theme::language('sale/coupon');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'name';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'sale/coupon', $url);
@@ -179,9 +179,9 @@ class Coupon extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('sale/coupon/update', '' . '&coupon_id=' . $result['coupon_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('sale/coupon/update', '' . 'coupon_id=' . $result['coupon_id'] . $url, 'SSL'));
             
-            $data['coupons'][] = array('coupon_id' => $result['coupon_id'], 'name' => $result['name'], 'code' => $result['code'], 'discount' => $result['discount'], 'date_start' => date(Lang::get('lang_date_format_short'), strtotime($result['date_start'])), 'date_end' => date(Lang::get('lang_date_format_short'), strtotime($result['date_end'])), 'status' => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 'selected' => isset($this->request->post['selected']) && in_array($result['coupon_id'], $this->request->post['selected']), 'action' => $action);
+            $data['coupons'][] = array('coupon_id' => $result['coupon_id'], 'name' => $result['name'], 'code' => $result['code'], 'discount' => $result['discount'], 'date_start' => date(Lang::get('lang_date_format_short'), strtotime($result['date_start'])), 'date_end' => date(Lang::get('lang_date_format_short'), strtotime($result['date_end'])), 'status' => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 'selected' => isset(Request::p()->post['selected']) && in_array($result['coupon_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -190,10 +190,10 @@ class Coupon extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -206,25 +206,25 @@ class Coupon extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('sale/coupon', '' . '&sort=name' . $url);
-        $data['sort_code'] = Url::link('sale/coupon', '' . '&sort=code' . $url);
-        $data['sort_discount'] = Url::link('sale/coupon', '' . '&sort=discount' . $url);
-        $data['sort_date_start'] = Url::link('sale/coupon', '' . '&sort=date_start' . $url);
-        $data['sort_date_end'] = Url::link('sale/coupon', '' . '&sort=date_end' . $url);
-        $data['sort_status'] = Url::link('sale/coupon', '' . '&sort=status' . $url);
+        $data['sort_name'] = Url::link('sale/coupon', '' . 'sort=name' . $url);
+        $data['sort_code'] = Url::link('sale/coupon', '' . 'sort=code' . $url);
+        $data['sort_discount'] = Url::link('sale/coupon', '' . 'sort=discount' . $url);
+        $data['sort_date_start'] = Url::link('sale/coupon', '' . 'sort=date_start' . $url);
+        $data['sort_date_end'] = Url::link('sale/coupon', '' . 'sort=date_end' . $url);
+        $data['sort_status'] = Url::link('sale/coupon', '' . 'sort=status' . $url);
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate($coupon_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('sale/coupon', '' . $url . '&page={page}'));
@@ -242,8 +242,8 @@ class Coupon extends Controller {
     protected function getForm() {
         $data = Theme::language('sale/coupon');
         
-        if (isset($this->request->get['coupon_id'])) {
-            $data['coupon_id'] = $this->request->get['coupon_id'];
+        if (isset(Request::p()->get['coupon_id'])) {
+            $data['coupon_id'] = Request::p()->get['coupon_id'];
         } else {
             $data['coupon_id'] = 0;
         }
@@ -280,92 +280,92 @@ class Coupon extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         Breadcrumb::add('lang_heading_title', 'sale/coupon', $url);
         
-        if (!isset($this->request->get['coupon_id'])) {
+        if (!isset(Request::p()->get['coupon_id'])) {
             $data['action'] = Url::link('sale/coupon/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('sale/coupon/update', '' . '&coupon_id=' . $this->request->get['coupon_id'] . $url, 'SSL');
+            $data['action'] = Url::link('sale/coupon/update', '' . 'coupon_id=' . Request::p()->get['coupon_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('sale/coupon', '' . $url, 'SSL');
         
-        if (isset($this->request->get['coupon_id']) && (!$this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $coupon_info = SaleCoupon::getCoupon($this->request->get['coupon_id']);
+        if (isset(Request::p()->get['coupon_id']) && (!Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $coupon_info = SaleCoupon::getCoupon(Request::p()->get['coupon_id']);
         }
         
-        if (isset($this->request->post['name'])) {
-            $data['name'] = $this->request->post['name'];
+        if (isset(Request::p()->post['name'])) {
+            $data['name'] = Request::p()->post['name'];
         } elseif (!empty($coupon_info)) {
             $data['name'] = $coupon_info['name'];
         } else {
             $data['name'] = '';
         }
         
-        if (isset($this->request->post['code'])) {
-            $data['code'] = $this->request->post['code'];
+        if (isset(Request::p()->post['code'])) {
+            $data['code'] = Request::p()->post['code'];
         } elseif (!empty($coupon_info)) {
             $data['code'] = $coupon_info['code'];
         } else {
             $data['code'] = '';
         }
         
-        if (isset($this->request->post['type'])) {
-            $data['type'] = $this->request->post['type'];
+        if (isset(Request::p()->post['type'])) {
+            $data['type'] = Request::p()->post['type'];
         } elseif (!empty($coupon_info)) {
             $data['type'] = $coupon_info['type'];
         } else {
             $data['type'] = '';
         }
         
-        if (isset($this->request->post['discount'])) {
-            $data['discount'] = $this->request->post['discount'];
+        if (isset(Request::p()->post['discount'])) {
+            $data['discount'] = Request::p()->post['discount'];
         } elseif (!empty($coupon_info)) {
             $data['discount'] = $coupon_info['discount'];
         } else {
             $data['discount'] = '';
         }
         
-        if (isset($this->request->post['logged'])) {
-            $data['logged'] = $this->request->post['logged'];
+        if (isset(Request::p()->post['logged'])) {
+            $data['logged'] = Request::p()->post['logged'];
         } elseif (!empty($coupon_info)) {
             $data['logged'] = $coupon_info['logged'];
         } else {
             $data['logged'] = '';
         }
         
-        if (isset($this->request->post['shipping'])) {
-            $data['shipping'] = $this->request->post['shipping'];
+        if (isset(Request::p()->post['shipping'])) {
+            $data['shipping'] = Request::p()->post['shipping'];
         } elseif (!empty($coupon_info)) {
             $data['shipping'] = $coupon_info['shipping'];
         } else {
             $data['shipping'] = '';
         }
         
-        if (isset($this->request->post['total'])) {
-            $data['total'] = $this->request->post['total'];
+        if (isset(Request::p()->post['total'])) {
+            $data['total'] = Request::p()->post['total'];
         } elseif (!empty($coupon_info)) {
             $data['total'] = $coupon_info['total'];
         } else {
             $data['total'] = '';
         }
         
-        if (isset($this->request->post['coupon_product'])) {
-            $products = $this->request->post['coupon_product'];
-        } elseif (isset($this->request->get['coupon_id'])) {
-            $products = SaleCoupon::getCouponProducts($this->request->get['coupon_id']);
+        if (isset(Request::p()->post['coupon_product'])) {
+            $products = Request::p()->post['coupon_product'];
+        } elseif (isset(Request::p()->get['coupon_id'])) {
+            $products = SaleCoupon::getCouponProducts(Request::p()->get['coupon_id']);
         } else {
             $products = array();
         }
@@ -382,10 +382,10 @@ class Coupon extends Controller {
             }
         }
         
-        if (isset($this->request->post['coupon_category'])) {
-            $categories = $this->request->post['coupon_category'];
-        } elseif (isset($this->request->get['coupon_id'])) {
-            $categories = SaleCoupon::getCouponCategories($this->request->get['coupon_id']);
+        if (isset(Request::p()->post['coupon_category'])) {
+            $categories = Request::p()->post['coupon_category'];
+        } elseif (isset(Request::p()->get['coupon_id'])) {
+            $categories = SaleCoupon::getCouponCategories(Request::p()->get['coupon_id']);
         } else {
             $categories = array();
         }
@@ -402,40 +402,40 @@ class Coupon extends Controller {
             }
         }
         
-        if (isset($this->request->post['date_start'])) {
-            $data['date_start'] = $this->request->post['date_start'];
+        if (isset(Request::p()->post['date_start'])) {
+            $data['date_start'] = Request::p()->post['date_start'];
         } elseif (!empty($coupon_info)) {
             $data['date_start'] = date('Y-m-d', strtotime($coupon_info['date_start']));
         } else {
             $data['date_start'] = date('Y-m-d', time());
         }
         
-        if (isset($this->request->post['date_end'])) {
-            $data['date_end'] = $this->request->post['date_end'];
+        if (isset(Request::p()->post['date_end'])) {
+            $data['date_end'] = Request::p()->post['date_end'];
         } elseif (!empty($coupon_info)) {
             $data['date_end'] = date('Y-m-d', strtotime($coupon_info['date_end']));
         } else {
             $data['date_end'] = date('Y-m-d', time());
         }
         
-        if (isset($this->request->post['uses_total'])) {
-            $data['uses_total'] = $this->request->post['uses_total'];
+        if (isset(Request::p()->post['uses_total'])) {
+            $data['uses_total'] = Request::p()->post['uses_total'];
         } elseif (!empty($coupon_info)) {
             $data['uses_total'] = $coupon_info['uses_total'];
         } else {
             $data['uses_total'] = 1;
         }
         
-        if (isset($this->request->post['uses_customer'])) {
-            $data['uses_customer'] = $this->request->post['uses_customer'];
+        if (isset(Request::p()->post['uses_customer'])) {
+            $data['uses_customer'] = Request::p()->post['uses_customer'];
         } elseif (!empty($coupon_info)) {
             $data['uses_customer'] = $coupon_info['uses_customer'];
         } else {
             $data['uses_customer'] = 1;
         }
         
-        if (isset($this->request->post['status'])) {
-            $data['status'] = $this->request->post['status'];
+        if (isset(Request::p()->post['status'])) {
+            $data['status'] = Request::p()->post['status'];
         } elseif (!empty($coupon_info)) {
             $data['status'] = $coupon_info['status'];
         } else {
@@ -454,20 +454,20 @@ class Coupon extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 128)) {
+        if ((Encode::strlen(Request::p()->post['name']) < 3) || (Encode::strlen(Request::p()->post['name']) > 128)) {
             $this->error['name'] = Lang::get('lang_error_name');
         }
         
-        if ((Encode::strlen($this->request->post['code']) < 3) || (Encode::strlen($this->request->post['code']) > 10)) {
+        if ((Encode::strlen(Request::p()->post['code']) < 3) || (Encode::strlen(Request::p()->post['code']) > 10)) {
             $this->error['code'] = Lang::get('lang_error_code');
         }
         
-        $coupon_info = SaleCoupon::getCouponByCode($this->request->post['code']);
+        $coupon_info = SaleCoupon::getCouponByCode(Request::p()->post['code']);
         
         if ($coupon_info) {
-            if (!isset($this->request->get['coupon_id'])) {
+            if (!isset(Request::p()->get['coupon_id'])) {
                 $this->error['warning'] = Lang::get('lang_error_exists');
-            } elseif ($coupon_info['coupon_id'] != $this->request->get['coupon_id']) {
+            } elseif ($coupon_info['coupon_id'] != Request::p()->get['coupon_id']) {
                 $this->error['warning'] = Lang::get('lang_error_exists');
             }
         }
@@ -492,23 +492,23 @@ class Coupon extends Controller {
         
         Theme::model('sale/coupon');
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $data['histories'] = array();
         
-        $results = SaleCoupon::getCouponHistories($this->request->get['coupon_id'], ($page - 1) * 10, 10);
+        $results = SaleCoupon::getCouponHistories(Request::p()->get['coupon_id'], ($page - 1) * 10, 10);
         
         foreach ($results as $result) {
             $data['histories'][] = array('order_id' => $result['order_id'], 'customer' => $result['customer'], 'amount' => $result['amount'], 'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])));
         }
         
-        $history_total = SaleCoupon::getTotalCouponHistories($this->request->get['coupon_id']);
+        $history_total = SaleCoupon::getTotalCouponHistories(Request::p()->get['coupon_id']);
         
-        $data['pagination'] = Theme::paginate($history_total, $page, 10, Lang::get('lang_text_pagination'), Url::link('sale/coupon/history', '' . '&coupon_id=' . $this->request->get['coupon_id'] . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($history_total, $page, 10, Lang::get('lang_text_pagination'), Url::link('sale/coupon/history', '' . 'coupon_id=' . Request::p()->get['coupon_id'] . '&page={page}', 'SSL'));
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         

@@ -27,9 +27,9 @@ class HeaderMenu extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('header_menu', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('header_menu', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/widget', '', 'SSL'));
         }
@@ -48,8 +48,8 @@ class HeaderMenu extends Controller {
         
         $data['widgets'] = array();
         
-        if (isset($this->request->post['header_menu_widget'])) {
-            $data['widgets'] = $this->request->post['header_menu_widget'];
+        if (isset(Request::p()->post['header_menu_widget'])) {
+            $data['widgets'] = Request::p()->post['header_menu_widget'];
         } elseif (Config::get('header_menu_widget')) {
             $data['widgets'] = Config::get('header_menu_widget');
         }

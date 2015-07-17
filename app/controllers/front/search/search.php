@@ -27,14 +27,14 @@ class Search extends Controller {
 
 		Breadcrumb::add('lang_heading_title', 'search/search');
 
-		if (isset($this->request->post['search'])):
-			$search = $this->request->post['search'];
+		if (isset(Request::p()->post['search'])):
+			$search = Request::p()->post['search'];
 		else:
 			$search = false;
 		endif;
 
-		if (isset($this->request->get['page'])):
-            $page = $this->request->get['page'];
+		if (isset(Request::p()->get['page'])):
+            $page = Request::p()->get['page'];
         else:
             $page = 1;
         endif;

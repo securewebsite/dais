@@ -25,7 +25,7 @@ class Dashboard extends Controller {
     
     public function index() {
         if (!Customer::isLogged()) {
-            $this->session->data['redirect'] = Url::link('account/dashboard', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/dashboard', '', 'SSL');
             Response::redirect(Url::link('account/login', '', 'SSL'));
         }
         
@@ -36,16 +36,16 @@ class Dashboard extends Controller {
         
         Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
         
-        if (isset($this->session->data['success'])):
-            $data['success'] = $this->session->data['success'];
-            unset($this->session->data['success']);
+        if (isset(Session::p()->data['success'])):
+            $data['success'] = Session::p()->data['success'];
+            unset(Session::p()->data['success']);
         else:
             $data['success'] = '';
         endif;
         
-        if (isset($this->session->data['warning'])):
-            $data['warning'] = $this->session->data['warning'];
-            unset($this->session->data['warning']);
+        if (isset(Session::p()->data['warning'])):
+            $data['warning'] = Session::p()->data['warning'];
+            unset(Session::p()->data['warning']);
         elseif (isset($this->error['warning'])):
             $data['warning'] = $this->error['warning'];
         else:

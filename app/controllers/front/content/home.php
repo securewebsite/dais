@@ -71,26 +71,26 @@ class Home extends Controller {
             Theme::model('content/post');
             Theme::model('content/category');
             
-            if (isset($this->request->get['sort'])):
-                $sort = $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])):
+                $sort = Request::p()->get['sort'];
             else:
                 $sort = 'p.date_added';
             endif;
             
-            if (isset($this->request->get['order'])):
-                $order = $this->request->get['order'];
+            if (isset(Request::p()->get['order'])):
+                $order = Request::p()->get['order'];
             else:
                 $order = 'DESC';
             endif;
             
-            if (isset($this->request->get['page'])):
-                $page = $this->request->get['page'];
+            if (isset(Request::p()->get['page'])):
+                $page = Request::p()->get['page'];
             else:
                 $page = 1;
             endif;
             
-            if (isset($this->request->get['limit'])):
-                $limit = $this->request->get['limit'];
+            if (isset(Request::p()->get['limit'])):
+                $limit = Request::p()->get['limit'];
             else:
                 $limit = Config::get('config_catalog_limit');
             endif;
@@ -136,16 +136,16 @@ class Home extends Controller {
                 
             $url = '';
             
-            if (isset($this->request->get['sort'])):
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])):
+                $url.= '&sort=' . Request::p()->get['sort'];
             endif;
             
-            if (isset($this->request->get['order'])):
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])):
+                $url.= '&order=' . Request::p()->get['order'];
             endif;
             
-            if (isset($this->request->get['limit'])):
-                $url.= '&limit=' . $this->request->get['limit'];
+            if (isset(Request::p()->get['limit'])):
+                $url.= '&limit=' . Request::p()->get['limit'];
             endif;
             
             $data['pagination'] = Theme::paginate($post_total, $page, $limit, Lang::get('lang_text_pagination'), Url::link('content/home', $url . '&page={page}'));
@@ -155,8 +155,8 @@ class Home extends Controller {
             $data['limit'] = $limit;
             
             // Search
-            if (isset($this->request->get['filter_name'])):
-                $data['filter_name'] = $this->request->get['filter_name'];
+            if (isset(Request::p()->get['filter_name'])):
+                $data['filter_name'] = Request::p()->get['filter_name'];
             else:
                 $data['filter_name'] = '';
             endif;

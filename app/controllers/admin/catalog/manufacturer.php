@@ -41,23 +41,23 @@ class Manufacturer extends Controller {
         
         Theme::model('catalog/manufacturer');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            CatalogManufacturer::addManufacturer($this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            CatalogManufacturer::addManufacturer(Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/manufacturer', '' . $url, 'SSL'));
@@ -75,23 +75,23 @@ class Manufacturer extends Controller {
         
         Theme::model('catalog/manufacturer');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            CatalogManufacturer::editManufacturer($this->request->get['manufacturer_id'], $this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            CatalogManufacturer::editManufacturer(Request::p()->get['manufacturer_id'], Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/manufacturer', '' . $url, 'SSL'));
@@ -109,25 +109,25 @@ class Manufacturer extends Controller {
         
         Theme::model('catalog/manufacturer');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $manufacturer_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $manufacturer_id) {
                 CatalogManufacturer::deleteManufacturer($manufacturer_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/manufacturer', '' . $url, 'SSL'));
@@ -141,36 +141,36 @@ class Manufacturer extends Controller {
     protected function getList() {
         $data = Theme::language('catalog/manufacturer');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'name';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'catalog/manufacturer', $url);
@@ -189,9 +189,9 @@ class Manufacturer extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/manufacturer/update', '' . '&manufacturer_id=' . $result['manufacturer_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/manufacturer/update', '' . 'manufacturer_id=' . $result['manufacturer_id'] . $url, 'SSL'));
             
-            $data['manufacturers'][] = array('manufacturer_id' => $result['manufacturer_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'selected' => isset($this->request->post['selected']) && in_array($result['manufacturer_id'], $this->request->post['selected']), 'action' => $action);
+            $data['manufacturers'][] = array('manufacturer_id' => $result['manufacturer_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['manufacturer_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -200,10 +200,10 @@ class Manufacturer extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -216,21 +216,21 @@ class Manufacturer extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('catalog/manufacturer', '' . '&sort=name' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('catalog/manufacturer', '' . '&sort=sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('catalog/manufacturer', '' . 'sort=name' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('catalog/manufacturer', '' . 'sort=sort_order' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate($manufacturer_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/manufacturer', '' . $url . '&page={page}', 'SSL'));
@@ -268,34 +268,34 @@ class Manufacturer extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'catalog/manufacturer', $url);
         
-        if (!isset($this->request->get['manufacturer_id'])) {
+        if (!isset(Request::p()->get['manufacturer_id'])) {
             $data['action'] = Url::link('catalog/manufacturer/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/manufacturer/update', '' . '&manufacturer_id=' . $this->request->get['manufacturer_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/manufacturer/update', '' . 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('catalog/manufacturer', '' . $url, 'SSL');
         
-        if (isset($this->request->get['manufacturer_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $manufacturer_info = CatalogManufacturer::getManufacturer($this->request->get['manufacturer_id']);
+        if (isset(Request::p()->get['manufacturer_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $manufacturer_info = CatalogManufacturer::getManufacturer(Request::p()->get['manufacturer_id']);
         }
         
-        if (isset($this->request->post['name'])) {
-            $data['name'] = $this->request->post['name'];
+        if (isset(Request::p()->post['name'])) {
+            $data['name'] = Request::p()->post['name'];
         } elseif (!empty($manufacturer_info)) {
             $data['name'] = $manufacturer_info['name'];
         } else {
@@ -306,24 +306,24 @@ class Manufacturer extends Controller {
         
         $data['stores'] = SettingStore::getStores();
         
-        if (isset($this->request->post['manufacturer_store'])) {
-            $data['manufacturer_store'] = $this->request->post['manufacturer_store'];
-        } elseif (isset($this->request->get['manufacturer_id'])) {
-            $data['manufacturer_store'] = CatalogManufacturer::getManufacturerStores($this->request->get['manufacturer_id']);
+        if (isset(Request::p()->post['manufacturer_store'])) {
+            $data['manufacturer_store'] = Request::p()->post['manufacturer_store'];
+        } elseif (isset(Request::p()->get['manufacturer_id'])) {
+            $data['manufacturer_store'] = CatalogManufacturer::getManufacturerStores(Request::p()->get['manufacturer_id']);
         } else {
             $data['manufacturer_store'] = array(0);
         }
         
-        if (isset($this->request->post['slug'])) {
-            $data['slug'] = $this->request->post['slug'];
+        if (isset(Request::p()->post['slug'])) {
+            $data['slug'] = Request::p()->post['slug'];
         } elseif (!empty($manufacturer_info)) {
             $data['slug'] = $manufacturer_info['slug'];
         } else {
             $data['slug'] = '';
         }
         
-        if (isset($this->request->post['image'])) {
-            $data['image'] = $this->request->post['image'];
+        if (isset(Request::p()->post['image'])) {
+            $data['image'] = Request::p()->post['image'];
         } elseif (!empty($manufacturer_info)) {
             $data['image'] = $manufacturer_info['image'];
         } else {
@@ -332,8 +332,8 @@ class Manufacturer extends Controller {
         
         Theme::model('tool/image');
         
-        if (isset($this->request->post['image']) && file_exists(Config::get('path.image') . $this->request->post['image'])) {
-            $data['thumb'] = ToolImage::resize($this->request->post['image'], 100, 100);
+        if (isset(Request::p()->post['image']) && file_exists(Config::get('path.image') . Request::p()->post['image'])) {
+            $data['thumb'] = ToolImage::resize(Request::p()->post['image'], 100, 100);
         } elseif (!empty($manufacturer_info) && $manufacturer_info['image'] && file_exists(Config::get('path.image') . $manufacturer_info['image'])) {
             $data['thumb'] = ToolImage::resize($manufacturer_info['image'], 100, 100);
         } else {
@@ -342,8 +342,8 @@ class Manufacturer extends Controller {
         
         $data['no_image'] = ToolImage::resize('placeholder.png', 100, 100);
         
-        if (isset($this->request->post['sort_order'])) {
-            $data['sort_order'] = $this->request->post['sort_order'];
+        if (isset(Request::p()->post['sort_order'])) {
+            $data['sort_order'] = Request::p()->post['sort_order'];
         } elseif (!empty($manufacturer_info)) {
             $data['sort_order'] = $manufacturer_info['sort_order'];
         } else {
@@ -362,23 +362,23 @@ class Manufacturer extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 64)) {
+        if ((Encode::strlen(Request::p()->post['name']) < 3) || (Encode::strlen(Request::p()->post['name']) > 64)) {
             $this->error['name'] = Lang::get('lang_error_name');
         }
         
-        if (isset($this->request->post['slug']) && Encode::strlen($this->request->post['slug']) > 0):
+        if (isset(Request::p()->post['slug']) && Encode::strlen(Request::p()->post['slug']) > 0):
             Theme::model('tool/utility');
-            $query = ToolUtility::findSlugByName($this->request->post['slug']);
+            $query = ToolUtility::findSlugByName(Request::p()->post['slug']);
             
-            if (isset($this->request->get['manufacturer_id'])):
+            if (isset(Request::p()->get['manufacturer_id'])):
                 if ($query):
-                    if ($query != 'manufacturer_id:' . $this->request->get['manufacturer_id']):
-                        $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), $this->request->post['slug']);
+                    if ($query != 'manufacturer_id:' . Request::p()->get['manufacturer_id']):
+                        $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), Request::p()->post['slug']);
                     endif;
                 endif;
             else:
                 if ($query):
-                    $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), $this->request->post['slug']);
+                    $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), Request::p()->post['slug']);
                 endif;
             endif;
         else:
@@ -397,7 +397,7 @@ class Manufacturer extends Controller {
         
         Theme::model('catalog/product');
         
-        foreach ($this->request->post['selected'] as $manufacturer_id) {
+        foreach (Request::p()->post['selected'] as $manufacturer_id) {
             $product_total = CatalogProduct::getTotalProductsByManufacturerId($manufacturer_id);
             
             if ($product_total) {
@@ -413,10 +413,10 @@ class Manufacturer extends Controller {
     public function autocomplete() {
         $json = array();
         
-        if (isset($this->request->get['filter_name'])) {
+        if (isset(Request::p()->get['filter_name'])) {
             Theme::model('catalog/manufacturer');
             
-            $filter = array('filter_name' => $this->request->get['filter_name'], 'start' => 0, 'limit' => 20);
+            $filter = array('filter_name' => Request::p()->get['filter_name'], 'start' => 0, 'limit' => 20);
             
             $results = CatalogManufacturer::getManufacturers($filter);
             
@@ -444,19 +444,19 @@ class Manufacturer extends Controller {
         
         $json = array();
         
-        if (!isset($this->request->get['name']) || Encode::strlen($this->request->get['name']) < 1):
+        if (!isset(Request::p()->get['name']) || Encode::strlen(Request::p()->get['name']) < 1):
             $json['error'] = Lang::get('lang_error_name_first');
         else:
             
             // build slug
-            $slug = Url::build_slug($this->request->get['name']);
+            $slug = Url::build_slug(Request::p()->get['name']);
             
             // check that the slug is globally unique
             $query = ToolUtility::findSlugByName($slug);
             
             if ($query):
-                if (isset($this->request->get['manufacturer_id'])):
-                    if ($query != 'manufacturer_id:' . $this->request->get['manufacturer_id']):
+                if (isset(Request::p()->get['manufacturer_id'])):
+                    if ($query != 'manufacturer_id:' . Request::p()->get['manufacturer_id']):
                         $json['error'] = sprintf(Lang::get('lang_error_slug_found'), $slug);
                     else:
                         $json['slug'] = $slug;

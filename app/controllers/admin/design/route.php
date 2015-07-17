@@ -41,15 +41,15 @@ class Route extends Controller {
         
         Theme::model('design/route');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
-            DesignRoute::editRoutes($this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
+            DesignRoute::editRoutes(Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['page'])):
-                $url .= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])):
+                $url .= '&page=' . Request::p()->get['page'];
             endif;
             
             Response::redirect(Url::link('design/route', '' . $url, 'SSL'));
@@ -63,16 +63,16 @@ class Route extends Controller {
 	protected function getList() {
 		$data = Theme::language('design/route');
         
-        if (isset($this->request->get['page'])):
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])):
+            $page = Request::p()->get['page'];
         else:
             $page = 1;
         endif;
         
         $url = '';
         
-        if (isset($this->request->get['page'])):
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])):
+            $url.= '&page=' . Request::p()->get['page'];
         endif;
         
         Breadcrumb::add('lang_heading_title', 'design/route', $url);
@@ -104,17 +104,17 @@ class Route extends Controller {
             $data['error_warning'] = '';
         endif;
         
-        if (isset($this->session->data['success'])):
-            $data['success'] = $this->session->data['success'];
-            unset($this->session->data['success']);
+        if (isset(Session::p()->data['success'])):
+            $data['success'] = Session::p()->data['success'];
+            unset(Session::p()->data['success']);
         else:
             $data['success'] = '';
         endif;
         
         $url = '';
         
-        if (isset($this->request->get['page'])):
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])):
+            $url.= '&page=' . Request::p()->get['page'];
         endif;
         
         $data['pagination'] = Theme::paginate(
@@ -143,8 +143,8 @@ class Route extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['page'])):
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])):
+            $url.= '&page=' . Request::p()->get['page'];
         endif;
         
         Breadcrumb::add('lang_heading_title', 'design/route', $url);
@@ -152,8 +152,8 @@ class Route extends Controller {
         $data['action'] = Url::link('design/route/edit', '' . $url, 'SSL');
         $data['cancel'] = Url::link('design/route', '' . $url, 'SSL');
         
-        if (isset($this->request->post['custom_route'])):
-            $data['custom_routes'] = $this->request->post['custom_route'];
+        if (isset(Request::p()->post['custom_route'])):
+            $data['custom_routes'] = Request::p()->post['custom_route'];
         else:
             $data['custom_routes'] = DesignRoute::getCustomRoutes();
         endif;

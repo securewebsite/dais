@@ -23,15 +23,15 @@ class Header extends Controller {
     public function index() {
         $data['title'] = Theme::getTitle();
         
-        if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))):
+        if (isset(Request::p()->server['HTTPS']) && ((Request::p()->server['HTTPS'] == 'on') || (Request::p()->server['HTTPS'] == '1'))):
             $server = Config::get('config_ssl');
         else:
             $server = Config::get('config_url');
         endif;
         
-        if (isset($this->session->data['error']) && !empty($this->session->data['error'])):
-            $data['error'] = $this->session->data['error'];
-            unset($this->session->data['error']);
+        if (isset(Session::p()->data['error']) && !empty(Session::p()->data['error'])):
+            $data['error'] = Session::p()->data['error'];
+            unset(Session::p()->data['error']);
         else:
             $data['error'] = '';
         endif;
@@ -58,8 +58,8 @@ class Header extends Controller {
         
         // add our social graph here
         // set open graph props dynamically
-        if (isset($this->request->get['_route_'])):
-            $canonical_route = $this->request->get['_route_'];
+        if (isset(Request::p()->get['_route_'])):
+            $canonical_route = Request::p()->get['_route_'];
         else:
             $canonical_route = '';
         endif;
@@ -97,7 +97,7 @@ class Header extends Controller {
         
         $data = Theme::language('content/header', $data);
         
-        $data['text_wishlist'] = sprintf(Lang::get('lang_text_wishlist'), (isset($this->session->data['wishlist']) ? count($this->session->data['wishlist']) : 0));
+        $data['text_wishlist'] = sprintf(Lang::get('lang_text_wishlist'), (isset(Session::p()->data['wishlist']) ? count(Session::p()->data['wishlist']) : 0));
         $data['text_welcome']  = sprintf(Lang::get('lang_text_welcome'), Url::link('account/login', '', 'SSL'), Url::link('account/register', '', 'SSL'));
         $data['text_logged']   = sprintf(Lang::get('lang_text_logged'), Url::link('account/dashboard', '', 'SSL'), Customer::getFirstName(), Url::link('account/logout', '', 'SSL'));
         
@@ -122,7 +122,7 @@ class Header extends Controller {
         $homeroute = false;
         $data['schema_type'] = 'Article';
         
-        if (!isset($this->request->get['route']) || $this->request->get['route'] == 'content/home'):
+        if (!isset(Request::p()->get['route']) || Request::p()->get['route'] == 'content/home'):
             $homeroute = true;
         endif;
         
@@ -138,32 +138,19 @@ class Header extends Controller {
         
         $status = true;
         
-        if (isset($this->request->server['HTTP_USER_AGENT'])):
+        if (isset(Request::p()->server['HTTP_USER_AGENT'])):
             $robots = explode("\n", str_replace(array("\r\n", "\r"), "\n", trim(Config::get('config_robots'))));
             foreach ($robots as $robot):
-                if ($robot && strpos($this->request->server['HTTP_USER_AGENT'], trim($robot)) !== false):
+                if ($robot && strpos(Request::p()->server['HTTP_USER_AGENT'], trim($robot)) !== false):
                     $status = false;
                     break;
                 endif;
             endforeach;
         endif;
         
-        // A dirty hack to try to set a cookie for the multi-store feature
-        Theme::model('setting/store');
-        
-        $data['stores'] = array();
-        
-        if (Config::get('config_shared') && $status):
-            $data['stores'][] = $server . 'asset/' . strtolower(Theme::name) . '/js/crossdomain.php?session_id=' . $this->session->getId();
-            $stores = SettingStore::getStores();
-            foreach ($stores as $store):
-                $data['stores'][] = $store['url'] . 'asset/' . strtolower(Theme::name) . '/js/crossdomain.php?session_id=' . $this->session->getId();
-            endforeach;
-        endif;
-        
         // Search
-        if (isset($this->request->get['search'])):
-            $data['search'] = $this->request->get['search'];
+        if (isset(Request::p()->get['search'])):
+            $data['search'] = Request::p()->get['search'];
         else:
             $data['search'] = '';
         endif;

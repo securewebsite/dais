@@ -26,7 +26,7 @@ class PayflowIframe extends Controller {
         Theme::model('locale/country');
         Theme::model('locale/zone');
         
-        $order_info = CheckoutOrder::getOrder($this->session->data['order_id']);
+        $order_info = CheckoutOrder::getOrder(Session::p()->data['order_id']);
         
         if (Config::get('payflow_iframe_test')) {
             $mode = 'TEST';
@@ -42,7 +42,7 @@ class PayflowIframe extends Controller {
             $transaction_type = 'A';
         }
         
-        $secure_token_id = md5($this->session->data['order_id'] . mt_rand() . microtime());
+        $secure_token_id = md5(Session::p()->data['order_id'] . mt_rand() . microtime());
         
         PaymentPayflowIframe::addOrder($order_info['order_id'], $secure_token_id);
         
@@ -112,31 +112,31 @@ class PayflowIframe extends Controller {
         Theme::model('payment/payflow_iframe');
         Theme::model('checkout/order');
         
-        PaymentPayflowIframe::log('POST: ' . print_r($this->request->post, 1));
+        PaymentPayflowIframe::log('POST: ' . print_r(Request::post(), 1));
         
-        $order_id = PaymentPayflowIframe::getOrderId($this->request->post['SECURETOKENID']);
+        $order_id = PaymentPayflowIframe::getOrderId(Request::p()->post['SECURETOKENID']);
         
         if ($order_id) {
             $order_info = CheckoutOrder::getOrder($order_id);
             
-            $urlParams = array('TENDER' => 'C', 'TRXTYPE' => 'I', 'ORIGID' => $this->request->post['PNREF'],);
+            $urlParams = array('TENDER' => 'C', 'TRXTYPE' => 'I', 'ORIGID' => Request::p()->post['PNREF'],);
             
             $response_params = PaymentPayflowIframe::call($urlParams);
             
-            if ($order_info['order_status_id'] == 0 && $response_params['RESULT'] == '0' && $this->request->post['RESULT'] == 0) {
+            if ($order_info['order_status_id'] == 0 && $response_params['RESULT'] == '0' && Request::p()->post['RESULT'] == 0) {
                 CheckoutOrder::confirm($order_id, Config::get('payflow_iframe_order_status_id'));
                 
-                if ($this->request->post['TYPE'] == 'S') {
+                if (Request::p()->post['TYPE'] == 'S') {
                     $complete = 1;
                 } else {
                     $complete = 0;
                 }
                 
-                $posted = array('secure_token_id' => $this->request->post['SECURETOKENID'], 'transaction_reference' => $this->request->post['PNREF'], 'transaction_type' => $this->request->post['TYPE'], 'complete' => $complete,);
+                $posted = array('secure_token_id' => Request::p()->post['SECURETOKENID'], 'transaction_reference' => Request::p()->post['PNREF'], 'transaction_type' => Request::p()->post['TYPE'], 'complete' => $complete,);
                 
                 PaymentPayflowIframe::updateOrder($posted);
                 
-                $posted = array('order_id' => $order_id, 'type' => $this->request->post['TYPE'], 'transaction_reference' => $this->request->post['PNREF'], 'amount' => $this->request->post['AMT'],);
+                $posted = array('order_id' => $order_id, 'type' => Request::p()->post['TYPE'], 'transaction_reference' => Request::p()->post['PNREF'], 'amount' => Request::p()->post['AMT'],);
                 
                 PaymentPayflowIframe::addTransaction($posted);
             }

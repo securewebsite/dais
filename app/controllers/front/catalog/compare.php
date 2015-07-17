@@ -27,18 +27,18 @@ class Compare extends Controller {
         
         Theme::model('tool/image');
         
-        if (!isset($this->session->data['compare'])) {
-            $this->session->data['compare'] = array();
+        if (!isset(Session::p()->data['compare'])) {
+            Session::p()->data['compare'] = array();
         }
         
-        if (isset($this->request->get['remove'])) {
-            $key = array_search($this->request->get['remove'], $this->session->data['compare']);
+        if (isset(Request::p()->get['remove'])) {
+            $key = array_search(Request::p()->get['remove'], Session::p()->data['compare']);
             
             if ($key !== false) {
-                unset($this->session->data['compare'][$key]);
+                unset(Session::p()->data['compare'][$key]);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_remove');
+            Session::p()->data['success'] = Lang::get('lang_text_remove');
             
             Response::redirect(Url::link('catalog/compare'));
         }
@@ -47,10 +47,10 @@ class Compare extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'catalog/compare');
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -61,7 +61,7 @@ class Compare extends Controller {
         
         $data['attribute_groups'] = array();
         
-        foreach ($this->session->data['compare'] as $key => $product_id) {
+        foreach (Session::p()->data['compare'] as $key => $product_id) {
             $product_info = CatalogProduct::getProduct($product_id);
             
             if ($product_info) {
@@ -111,7 +111,7 @@ class Compare extends Controller {
                     }
                 }
             } else {
-                unset($this->session->data['compare'][$key]);
+                unset(Session::p()->data['compare'][$key]);
             }
         }
         
@@ -132,12 +132,12 @@ class Compare extends Controller {
         
         $json = array();
         
-        if (!isset($this->session->data['compare'])) {
-            $this->session->data['compare'] = array();
+        if (!isset(Session::p()->data['compare'])) {
+            Session::p()->data['compare'] = array();
         }
         
-        if (isset($this->request->post['product_id'])) {
-            $product_id = $this->request->post['product_id'];
+        if (isset(Request::p()->post['product_id'])) {
+            $product_id = Request::p()->post['product_id'];
         } else {
             $product_id = 0;
         }
@@ -147,17 +147,17 @@ class Compare extends Controller {
         $product_info = CatalogProduct::getProduct($product_id);
         
         if ($product_info) {
-            if (!in_array($this->request->post['product_id'], $this->session->data['compare'])) {
-                if (count($this->session->data['compare']) >= 4) {
-                    array_shift($this->session->data['compare']);
+            if (!in_array(Request::p()->post['product_id'], Session::p()->data['compare'])) {
+                if (count(Session::p()->data['compare']) >= 4) {
+                    array_shift(Session::p()->data['compare']);
                 }
                 
-                $this->session->data['compare'][] = $this->request->post['product_id'];
+                Session::p()->data['compare'][] = Request::p()->post['product_id'];
             }
             
-            $json['success'] = sprintf(Lang::get('lang_text_success'), Url::link('catalog/product', 'product_id=' . $this->request->post['product_id']), $product_info['name'], Url::link('catalog/compare'));
+            $json['success'] = sprintf(Lang::get('lang_text_success'), Url::link('catalog/product', 'product_id=' . Request::p()->post['product_id']), $product_info['name'], Url::link('catalog/compare'));
             
-            $json['total'] = sprintf(Lang::get('lang_text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
+            $json['total'] = sprintf(Lang::get('lang_text_compare'), (isset(Session::p()->data['compare']) ? count(Session::p()->data['compare']) : 0));
         }
         
         $json = Theme::listen(__CLASS__, __FUNCTION__, $json);

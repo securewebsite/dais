@@ -27,9 +27,9 @@ class Handling extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('handling', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('handling', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/total', '', 'SSL'));
         }
@@ -46,20 +46,20 @@ class Handling extends Controller {
         $data['action'] = Url::link('total/handling', '', 'SSL');
         $data['cancel'] = Url::link('module/total', '', 'SSL');
         
-        if (isset($this->request->post['handling_total'])) {
-            $data['handling_total'] = $this->request->post['handling_total'];
+        if (isset(Request::p()->post['handling_total'])) {
+            $data['handling_total'] = Request::p()->post['handling_total'];
         } else {
             $data['handling_total'] = Config::get('handling_total');
         }
         
-        if (isset($this->request->post['handling_fee'])) {
-            $data['handling_fee'] = $this->request->post['handling_fee'];
+        if (isset(Request::p()->post['handling_fee'])) {
+            $data['handling_fee'] = Request::p()->post['handling_fee'];
         } else {
             $data['handling_fee'] = Config::get('handling_fee');
         }
         
-        if (isset($this->request->post['handling_tax_class_id'])) {
-            $data['handling_tax_class_id'] = $this->request->post['handling_tax_class_id'];
+        if (isset(Request::p()->post['handling_tax_class_id'])) {
+            $data['handling_tax_class_id'] = Request::p()->post['handling_tax_class_id'];
         } else {
             $data['handling_tax_class_id'] = Config::get('handling_tax_class_id');
         }
@@ -68,14 +68,14 @@ class Handling extends Controller {
         
         $data['tax_classes'] = LocaleTaxClass::getTaxClasses();
         
-        if (isset($this->request->post['handling_status'])) {
-            $data['handling_status'] = $this->request->post['handling_status'];
+        if (isset(Request::p()->post['handling_status'])) {
+            $data['handling_status'] = Request::p()->post['handling_status'];
         } else {
             $data['handling_status'] = Config::get('handling_status');
         }
         
-        if (isset($this->request->post['handling_sort_order'])) {
-            $data['handling_sort_order'] = $this->request->post['handling_sort_order'];
+        if (isset(Request::p()->post['handling_sort_order'])) {
+            $data['handling_sort_order'] = Request::p()->post['handling_sort_order'];
         } else {
             $data['handling_sort_order'] = Config::get('handling_sort_order');
         }

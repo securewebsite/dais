@@ -75,7 +75,7 @@ class PaypalPro extends Controller {
         
         Theme::model('checkout/order');
         
-        $order_info = CheckoutOrder::getOrder($this->session->data['order_id']);
+        $order_info = CheckoutOrder::getOrder(Session::p()->data['order_id']);
         
         $request = 'METHOD=DoDirectPayment';
         $request.= '&VERSION=51.0';
@@ -85,21 +85,21 @@ class PaypalPro extends Controller {
         $request.= '&CUSTREF=' . (int)$order_info['order_id'];
         $request.= '&PAYMENTACTION=' . $payment_type;
         $request.= '&AMT=' . Currency::format($order_info['total'], $order_info['currency_code'], false, false);
-        $request.= '&CREDITCARDTYPE=' . $this->request->post['cc_type'];
-        $request.= '&ACCT=' . urlencode(str_replace(' ', '', $this->request->post['cc_number']));
-        $request.= '&CARDSTART=' . urlencode($this->request->post['cc_start_date_month'] . $this->request->post['cc_start_date_year']);
-        $request.= '&EXPDATE=' . urlencode($this->request->post['cc_expire_date_month'] . $this->request->post['cc_expire_date_year']);
-        $request.= '&CVV2=' . urlencode($this->request->post['cc_cvv2']);
+        $request.= '&CREDITCARDTYPE=' . Request::p()->post['cc_type'];
+        $request.= '&ACCT=' . urlencode(str_replace(' ', '', Request::p()->post['cc_number']));
+        $request.= '&CARDSTART=' . urlencode(Request::p()->post['cc_start_date_month'] . Request::p()->post['cc_start_date_year']);
+        $request.= '&EXPDATE=' . urlencode(Request::p()->post['cc_expire_date_month'] . Request::p()->post['cc_expire_date_year']);
+        $request.= '&CVV2=' . urlencode(Request::p()->post['cc_cvv2']);
         
-        if ($this->request->post['cc_type'] == 'SWITCH' || $this->request->post['cc_type'] == 'SOLO') {
-            $request.= '&CARDISSUE=' . urlencode($this->request->post['cc_issue']);
+        if (Request::p()->post['cc_type'] == 'SWITCH' || Request::p()->post['cc_type'] == 'SOLO') {
+            $request.= '&CARDISSUE=' . urlencode(Request::p()->post['cc_issue']);
         }
         
         $request.= '&FIRSTNAME=' . urlencode($order_info['payment_firstname']);
         $request.= '&LASTNAME=' . urlencode($order_info['payment_lastname']);
         $request.= '&EMAIL=' . urlencode($order_info['email']);
         $request.= '&PHONENUM=' . urlencode($order_info['telephone']);
-        $request.= '&IPADDRESS=' . urlencode($this->request->server['REMOTE_ADDR']);
+        $request.= '&IPADDRESS=' . urlencode(Request::p()->server['REMOTE_ADDR']);
         $request.= '&STREET=' . urlencode($order_info['payment_address_1']);
         $request.= '&CITY=' . urlencode($order_info['payment_city']);
         $request.= '&STATE=' . urlencode(($order_info['payment_iso_code_2'] != 'US') ? $order_info['payment_zone'] : $order_info['payment_zone_code']);
@@ -153,7 +153,7 @@ class PaypalPro extends Controller {
         $json = array();
         
         if (($response_info['ACK'] == 'Success') || ($response_info['ACK'] == 'SuccessWithWarning')) {
-            CheckoutOrder::confirm($this->session->data['order_id'], Config::get('config_order_status_id'));
+            CheckoutOrder::confirm(Session::p()->data['order_id'], Config::get('config_order_status_id'));
             
             $message = '';
             
@@ -169,7 +169,7 @@ class PaypalPro extends Controller {
                 $message.= 'TRANSACTIONID: ' . $response_info['TRANSACTIONID'] . "\n";
             }
             
-            CheckoutOrder::update($this->session->data['order_id'], Config::get('paypal_pro_order_status_id'), $message);
+            CheckoutOrder::update(Session::p()->data['order_id'], Config::get('paypal_pro_order_status_id'), $message);
             
             $json['success'] = Url::link('checkout/success');
         } else {

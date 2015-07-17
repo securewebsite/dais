@@ -37,22 +37,22 @@ class WeightClass extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('locale/weight_class');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            LocaleWeightClass::addWeightClass($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            LocaleWeightClass::addWeightClass(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/weight_class', '' . $url, 'SSL'));
@@ -68,22 +68,22 @@ class WeightClass extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('locale/weight_class');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            LocaleWeightClass::editWeightClass($this->request->get['weight_class_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            LocaleWeightClass::editWeightClass(Request::p()->get['weight_class_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/weight_class', '' . $url, 'SSL'));
@@ -99,25 +99,25 @@ class WeightClass extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('locale/weight_class');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $weight_class_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $weight_class_id) {
                 LocaleWeightClass::deleteWeightClass($weight_class_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/weight_class', '' . $url, 'SSL'));
@@ -131,36 +131,36 @@ class WeightClass extends Controller {
     protected function getList() {
         $data = Theme::language('locale/weight_class');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'title';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'locale/weight_class', $url);
@@ -179,9 +179,9 @@ class WeightClass extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/weight_class/update', '' . '&weight_class_id=' . $result['weight_class_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/weight_class/update', '' . 'weight_class_id=' . $result['weight_class_id'] . $url, 'SSL'));
             
-            $data['weight_classes'][] = array('weight_class_id' => $result['weight_class_id'], 'title' => $result['title'] . (($result['unit'] == Config::get('config_weight_class')) ? Lang::get('lang_text_default') : null), 'unit' => $result['unit'], 'value' => $result['value'], 'selected' => isset($this->request->post['selected']) && in_array($result['weight_class_id'], $this->request->post['selected']), 'action' => $action);
+            $data['weight_classes'][] = array('weight_class_id' => $result['weight_class_id'], 'title' => $result['title'] . (($result['unit'] == Config::get('config_weight_class')) ? Lang::get('lang_text_default') : null), 'unit' => $result['unit'], 'value' => $result['value'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['weight_class_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -190,10 +190,10 @@ class WeightClass extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -206,22 +206,22 @@ class WeightClass extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_title'] = Url::link('locale/weight_class', '' . '&sort=title' . $url, 'SSL');
-        $data['sort_unit'] = Url::link('locale/weight_class', '' . '&sort=unit' . $url, 'SSL');
-        $data['sort_value'] = Url::link('locale/weight_class', '' . '&sort=value' . $url, 'SSL');
+        $data['sort_title'] = Url::link('locale/weight_class', '' . 'sort=title' . $url, 'SSL');
+        $data['sort_unit'] = Url::link('locale/weight_class', '' . 'sort=unit' . $url, 'SSL');
+        $data['sort_value'] = Url::link('locale/weight_class', '' . 'sort=value' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate($weight_class_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/weight_class', '' . $url . '&page={page}', 'SSL'));
@@ -259,46 +259,46 @@ class WeightClass extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'locale/weight_class', $url);
         
-        if (!isset($this->request->get['weight_class_id'])) {
+        if (!isset(Request::p()->get['weight_class_id'])) {
             $data['action'] = Url::link('locale/weight_class/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/weight_class/update', '' . '&weight_class_id=' . $this->request->get['weight_class_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/weight_class/update', '' . 'weight_class_id=' . Request::p()->get['weight_class_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('locale/weight_class', '' . $url, 'SSL');
         
-        if (isset($this->request->get['weight_class_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $weight_class_info = LocaleWeightClass::getWeightClass($this->request->get['weight_class_id']);
+        if (isset(Request::p()->get['weight_class_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $weight_class_info = LocaleWeightClass::getWeightClass(Request::p()->get['weight_class_id']);
         }
         
         Theme::model('locale/language');
         
         $data['languages'] = LocaleLanguage::getLanguages();
         
-        if (isset($this->request->post['weight_class_description'])) {
-            $data['weight_class_description'] = $this->request->post['weight_class_description'];
-        } elseif (isset($this->request->get['weight_class_id'])) {
-            $data['weight_class_description'] = LocaleWeightClass::getWeightClassDescriptions($this->request->get['weight_class_id']);
+        if (isset(Request::p()->post['weight_class_description'])) {
+            $data['weight_class_description'] = Request::p()->post['weight_class_description'];
+        } elseif (isset(Request::p()->get['weight_class_id'])) {
+            $data['weight_class_description'] = LocaleWeightClass::getWeightClassDescriptions(Request::p()->get['weight_class_id']);
         } else {
             $data['weight_class_description'] = array();
         }
         
-        if (isset($this->request->post['value'])) {
-            $data['value'] = $this->request->post['value'];
+        if (isset(Request::p()->post['value'])) {
+            $data['value'] = Request::p()->post['value'];
         } elseif (!empty($weight_class_info)) {
             $data['value'] = $weight_class_info['value'];
         } else {
@@ -317,7 +317,7 @@ class WeightClass extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        foreach ($this->request->post['weight_class_description'] as $language_id => $value) {
+        foreach (Request::p()->post['weight_class_description'] as $language_id => $value) {
             if ((Encode::strlen($value['title']) < 3) || (Encode::strlen($value['title']) > 32)) {
                 $this->error['title'][$language_id] = Lang::get('lang_error_title');
             }
@@ -339,7 +339,7 @@ class WeightClass extends Controller {
         
         Theme::model('catalog/product');
         
-        foreach ($this->request->post['selected'] as $weight_class_id) {
+        foreach (Request::p()->post['selected'] as $weight_class_id) {
             if (Config::get('config_weight_class_id') == $weight_class_id) {
                 $this->error['warning'] = Lang::get('lang_error_default');
             }

@@ -25,10 +25,10 @@ class ShippingMethod extends Controller {
         
         Theme::model('account/address');
         
-        if (Customer::isLogged() && isset($this->session->data['shipping_address_id'])) {
-            $shipping_address = AccountAddress::getAddress($this->session->data['shipping_address_id']);
-        } elseif (isset($this->session->data['guest'])) {
-            $shipping_address = $this->session->data['guest']['shipping'];
+        if (Customer::isLogged() && isset(Session::p()->data['shipping_address_id'])) {
+            $shipping_address = AccountAddress::getAddress(Session::p()->data['shipping_address_id']);
+        } elseif (isset(Session::p()->data['guest'])) {
+            $shipping_address = Session::p()->data['guest']['shipping'];
         }
         
         if (!empty($shipping_address)) {
@@ -65,29 +65,29 @@ class ShippingMethod extends Controller {
             
             array_multisort($sort_order, SORT_ASC, $quote_data);
             
-            $this->session->data['shipping_methods'] = $quote_data;
+            Session::p()->data['shipping_methods'] = $quote_data;
         }
         
-        if (empty($this->session->data['shipping_methods'])) {
+        if (empty(Session::p()->data['shipping_methods'])) {
             $data['error_warning'] = sprintf(Lang::get('lang_error_no_shipping'), Url::link('content/contact'));
         } else {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['shipping_methods'])) {
-            $data['shipping_methods'] = $this->session->data['shipping_methods'];
+        if (isset(Session::p()->data['shipping_methods'])) {
+            $data['shipping_methods'] = Session::p()->data['shipping_methods'];
         } else {
             $data['shipping_methods'] = array();
         }
         
-        if (isset($this->session->data['shipping_method']['code'])) {
-            $data['code'] = $this->session->data['shipping_method']['code'];
+        if (isset(Session::p()->data['shipping_method']['code'])) {
+            $data['code'] = Session::p()->data['shipping_method']['code'];
         } else {
             $data['code'] = '';
         }
         
-        if (isset($this->session->data['comment'])) {
-            $data['comment'] = $this->session->data['comment'];
+        if (isset(Session::p()->data['comment'])) {
+            $data['comment'] = Session::p()->data['comment'];
         } else {
             $data['comment'] = '';
         }
@@ -110,10 +110,10 @@ class ShippingMethod extends Controller {
         // Validate if shipping address has been set.
         Theme::model('account/address');
         
-        if (Customer::isLogged() && isset($this->session->data['shipping_address_id'])) {
-            $shipping_address = AccountAddress::getAddress($this->session->data['shipping_address_id']);
-        } elseif (isset($this->session->data['guest'])) {
-            $shipping_address = $this->session->data['guest']['shipping'];
+        if (Customer::isLogged() && isset(Session::p()->data['shipping_address_id'])) {
+            $shipping_address = AccountAddress::getAddress(Session::p()->data['shipping_address_id']);
+        } elseif (isset(Session::p()->data['guest'])) {
+            $shipping_address = Session::p()->data['guest']['shipping'];
         }
         
         if (empty($shipping_address)) {
@@ -121,7 +121,7 @@ class ShippingMethod extends Controller {
         }
         
         // Validate cart has products and has stock.
-        if ((!Cart::hasProducts() && empty($this->session->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
+        if ((!Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
             $json['redirect'] = Url::link('checkout/cart');
         }
         
@@ -145,22 +145,22 @@ class ShippingMethod extends Controller {
         }
         
         if (!$json) {
-            if (!isset($this->request->post['shipping_method'])) {
+            if (!isset(Request::p()->post['shipping_method'])) {
                 $json['error']['warning'] = Lang::get('lang_error_shipping');
             } else {
-                $shipping = explode('.', $this->request->post['shipping_method']);
+                $shipping = explode('.', Request::p()->post['shipping_method']);
                 
-                if (!isset($shipping[0]) || !isset($shipping[1]) || !isset($this->session->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]])) {
+                if (!isset($shipping[0]) || !isset($shipping[1]) || !isset(Session::p()->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]])) {
                     $json['error']['warning'] = Lang::get('lang_error_shipping');
                 }
             }
             
             if (!$json) {
-                $shipping = explode('.', $this->request->post['shipping_method']);
+                $shipping = explode('.', Request::p()->post['shipping_method']);
                 
-                $this->session->data['shipping_method'] = $this->session->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]];
+                Session::p()->data['shipping_method'] = Session::p()->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]];
                 
-                $this->session->data['comment'] = strip_tags($this->request->post['comment']);
+                Session::p()->data['comment'] = strip_tags(Request::p()->post['comment']);
             }
         }
         

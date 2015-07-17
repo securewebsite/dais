@@ -25,8 +25,8 @@ class Waitlist extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('account/waitlist');
         
-        if (isset($this->request->get['event_id']) && Customer::isLogged()) {
-            AccountWaitlist::remove($this->request->get['event_id'], Customer::getId());
+        if (isset(Request::p()->get['event_id']) && Customer::isLogged()) {
+            AccountWaitlist::remove(Request::p()->get['event_id'], Customer::getId());
             Response::redirect(Url::link('account/waitlist', '', 'SSL'));
         }
         

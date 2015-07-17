@@ -26,8 +26,8 @@ class Maintenance extends Controller {
         if (Config::get('config_maintenance')) {
             $route = '';
             
-            if (isset($this->request->get['route'])) {
-                $part = explode('/', $this->request->get['route']);
+            if (isset(Request::p()->get['route'])) {
+                $part = explode('/', Request::p()->get['route']);
                 
                 if (isset($part[0])) {
                     $route.= $part[0];

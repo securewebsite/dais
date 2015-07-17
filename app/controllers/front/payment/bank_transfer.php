@@ -49,6 +49,6 @@ class BankTransfer extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        CheckoutOrder::confirm($this->session->data['order_id'], Config::get('bank_transfer_order_status_id'), $data['comment'], true);
+        CheckoutOrder::confirm(Session::p()->data['order_id'], Config::get('bank_transfer_order_status_id'), $data['comment'], true);
     }
 }

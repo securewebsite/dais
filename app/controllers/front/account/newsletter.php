@@ -22,7 +22,7 @@ class Newsletter extends Controller {
     
     public function index() {
         if (!Customer::isLogged()) {
-            $this->session->data['redirect'] = Url::link('account/newsletter', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/newsletter', '', 'SSL');
             
             Response::redirect(Url::link('account/login', '', 'SSL'));
         }
@@ -31,12 +31,12 @@ class Newsletter extends Controller {
         
         Theme::setTitle(Lang::get('lang_heading_title'));
         
-        if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+        if (Request::p()->server['REQUEST_METHOD'] == 'POST') {
             Theme::model('account/customer');
             
-            AccountCustomer::editNewsletter($this->request->post['newsletter']);
+            AccountCustomer::editNewsletter(Request::p()->post['newsletter']);
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('account/dashboard', '', 'SSL'));
         }

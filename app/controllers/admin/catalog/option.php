@@ -41,23 +41,23 @@ class Option extends Controller {
         
         Theme::model('catalog/option');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            CatalogOption::addOption($this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            CatalogOption::addOption(Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/option', '' . $url, 'SSL'));
@@ -75,23 +75,23 @@ class Option extends Controller {
         
         Theme::model('catalog/option');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            CatalogOption::editOption($this->request->get['option_id'], $this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            CatalogOption::editOption(Request::p()->get['option_id'], Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/option', '' . $url, 'SSL'));
@@ -109,25 +109,25 @@ class Option extends Controller {
         
         Theme::model('catalog/option');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $option_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $option_id) {
                 CatalogOption::deleteOption($option_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/option', '' . $url, 'SSL'));
@@ -141,36 +141,36 @@ class Option extends Controller {
     protected function getList() {
         $data = Theme::language('catalog/option');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'od.name';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'catalog/option', $url);
@@ -189,9 +189,9 @@ class Option extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/option/update', '' . '&option_id=' . $result['option_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/option/update', '' . 'option_id=' . $result['option_id'] . $url, 'SSL'));
             
-            $data['options'][] = array('option_id' => $result['option_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'selected' => isset($this->request->post['selected']) && in_array($result['option_id'], $this->request->post['selected']), 'action' => $action);
+            $data['options'][] = array('option_id' => $result['option_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['option_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -200,10 +200,10 @@ class Option extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -216,21 +216,21 @@ class Option extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('catalog/option', '' . '&sort=od.name' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('catalog/option', '' . '&sort=o.sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('catalog/option', '' . 'sort=od.name' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('catalog/option', '' . 'sort=o.sort_order' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate($option_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/option', '' . $url . '&page={page}', 'SSL'));
@@ -268,64 +268,64 @@ class Option extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'catalog/option', $url);
         
-        if (!isset($this->request->get['option_id'])) {
+        if (!isset(Request::p()->get['option_id'])) {
             $data['action'] = Url::link('catalog/option/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/option/update', '' . '&option_id=' . $this->request->get['option_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/option/update', '' . 'option_id=' . Request::p()->get['option_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('catalog/option', '' . $url, 'SSL');
         
-        if (isset($this->request->get['option_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $option_info = CatalogOption::getOption($this->request->get['option_id']);
+        if (isset(Request::p()->get['option_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $option_info = CatalogOption::getOption(Request::p()->get['option_id']);
         }
         
         Theme::model('locale/language');
         
         $data['languages'] = LocaleLanguage::getLanguages();
         
-        if (isset($this->request->post['option_description'])) {
-            $data['option_description'] = $this->request->post['option_description'];
-        } elseif (isset($this->request->get['option_id'])) {
-            $data['option_description'] = CatalogOption::getOptionDescriptions($this->request->get['option_id']);
+        if (isset(Request::p()->post['option_description'])) {
+            $data['option_description'] = Request::p()->post['option_description'];
+        } elseif (isset(Request::p()->get['option_id'])) {
+            $data['option_description'] = CatalogOption::getOptionDescriptions(Request::p()->get['option_id']);
         } else {
             $data['option_description'] = array();
         }
         
-        if (isset($this->request->post['type'])) {
-            $data['type'] = $this->request->post['type'];
+        if (isset(Request::p()->post['type'])) {
+            $data['type'] = Request::p()->post['type'];
         } elseif (!empty($option_info)) {
             $data['type'] = $option_info['type'];
         } else {
             $data['type'] = '';
         }
         
-        if (isset($this->request->post['sort_order'])) {
-            $data['sort_order'] = $this->request->post['sort_order'];
+        if (isset(Request::p()->post['sort_order'])) {
+            $data['sort_order'] = Request::p()->post['sort_order'];
         } elseif (!empty($option_info)) {
             $data['sort_order'] = $option_info['sort_order'];
         } else {
             $data['sort_order'] = '';
         }
         
-        if (isset($this->request->post['option_value'])) {
-            $option_values = $this->request->post['option_value'];
-        } elseif (isset($this->request->get['option_id'])) {
-            $option_values = CatalogOption::getOptionValueDescriptions($this->request->get['option_id']);
+        if (isset(Request::p()->post['option_value'])) {
+            $option_values = Request::p()->post['option_value'];
+        } elseif (isset(Request::p()->get['option_id'])) {
+            $option_values = CatalogOption::getOptionValueDescriptions(Request::p()->get['option_id']);
         } else {
             $option_values = array();
         }
@@ -360,18 +360,18 @@ class Option extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        foreach ($this->request->post['option_description'] as $language_id => $value) {
+        foreach (Request::p()->post['option_description'] as $language_id => $value) {
             if ((Encode::strlen($value['name']) < 1) || (Encode::strlen($value['name']) > 128)) {
                 $this->error['name'][$language_id] = Lang::get('lang_error_name');
             }
         }
         
-        if (($this->request->post['type'] == 'select' || $this->request->post['type'] == 'radio' || $this->request->post['type'] == 'checkbox') && !isset($this->request->post['option_value'])) {
+        if ((Request::p()->post['type'] == 'select' || Request::p()->post['type'] == 'radio' || Request::p()->post['type'] == 'checkbox') && !isset(Request::p()->post['option_value'])) {
             $this->error['warning'] = Lang::get('lang_error_type');
         }
         
-        if (isset($this->request->post['option_value'])) {
-            foreach ($this->request->post['option_value'] as $option_value_id => $option_value) {
+        if (isset(Request::p()->post['option_value'])) {
+            foreach (Request::p()->post['option_value'] as $option_value_id => $option_value) {
                 foreach ($option_value['option_value_description'] as $language_id => $option_value_description) {
                     if ((Encode::strlen($option_value_description['name']) < 1) || (Encode::strlen($option_value_description['name']) > 128)) {
                         $this->error['option_value'][$option_value_id][$language_id] = Lang::get('lang_error_option_value');
@@ -392,7 +392,7 @@ class Option extends Controller {
         
         Theme::model('catalog/product');
         
-        foreach ($this->request->post['selected'] as $option_id) {
+        foreach (Request::p()->post['selected'] as $option_id) {
             $product_total = CatalogProduct::getTotalProductsByOptionId($option_id);
             
             if ($product_total) {
@@ -408,14 +408,14 @@ class Option extends Controller {
     public function autocomplete() {
         $json = array();
         
-        if (isset($this->request->get['filter_name'])) {
+        if (isset(Request::p()->get['filter_name'])) {
             Lang::load('catalog/option');
             
             Theme::model('catalog/option');
             
             Theme::model('tool/image');
             
-            $filter = array('filter_name' => $this->request->get['filter_name'], 'start' => 0, 'limit' => 20);
+            $filter = array('filter_name' => Request::p()->get['filter_name'], 'start' => 0, 'limit' => 20);
             
             $options = CatalogOption::getOptions($filter);
             

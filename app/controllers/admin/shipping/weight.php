@@ -27,9 +27,9 @@ class Weight extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('weight', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('weight', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/shipping', '', 'SSL'));
         }
@@ -52,14 +52,14 @@ class Weight extends Controller {
         $geo_zones = LocaleGeoZone::getGeoZones();
         
         foreach ($geo_zones as $geo_zone) {
-            if (isset($this->request->post['weight_' . $geo_zone['geo_zone_id'] . '_rate'])) {
-                $data['weight_' . $geo_zone['geo_zone_id'] . '_rate'] = $this->request->post['weight_' . $geo_zone['geo_zone_id'] . '_rate'];
+            if (isset(Request::p()->post['weight_' . $geo_zone['geo_zone_id'] . '_rate'])) {
+                $data['weight_' . $geo_zone['geo_zone_id'] . '_rate'] = Request::p()->post['weight_' . $geo_zone['geo_zone_id'] . '_rate'];
             } else {
                 $data['weight_' . $geo_zone['geo_zone_id'] . '_rate'] = Config::get('weight_' . $geo_zone['geo_zone_id'] . '_rate');
             }
             
-            if (isset($this->request->post['weight_' . $geo_zone['geo_zone_id'] . '_status'])) {
-                $data['weight_' . $geo_zone['geo_zone_id'] . '_status'] = $this->request->post['weight_' . $geo_zone['geo_zone_id'] . '_status'];
+            if (isset(Request::p()->post['weight_' . $geo_zone['geo_zone_id'] . '_status'])) {
+                $data['weight_' . $geo_zone['geo_zone_id'] . '_status'] = Request::p()->post['weight_' . $geo_zone['geo_zone_id'] . '_status'];
             } else {
                 $data['weight_' . $geo_zone['geo_zone_id'] . '_status'] = Config::get('weight_' . $geo_zone['geo_zone_id'] . '_status');
             }
@@ -67,8 +67,8 @@ class Weight extends Controller {
         
         $data['geo_zones'] = $geo_zones;
         
-        if (isset($this->request->post['weight_tax_class_id'])) {
-            $data['weight_tax_class_id'] = $this->request->post['weight_tax_class_id'];
+        if (isset(Request::p()->post['weight_tax_class_id'])) {
+            $data['weight_tax_class_id'] = Request::p()->post['weight_tax_class_id'];
         } else {
             $data['weight_tax_class_id'] = Config::get('weight_tax_class_id');
         }
@@ -77,14 +77,14 @@ class Weight extends Controller {
         
         $data['tax_classes'] = LocaleTaxClass::getTaxClasses();
         
-        if (isset($this->request->post['weight_status'])) {
-            $data['weight_status'] = $this->request->post['weight_status'];
+        if (isset(Request::p()->post['weight_status'])) {
+            $data['weight_status'] = Request::p()->post['weight_status'];
         } else {
             $data['weight_status'] = Config::get('weight_status');
         }
         
-        if (isset($this->request->post['weight_sort_order'])) {
-            $data['weight_sort_order'] = $this->request->post['weight_sort_order'];
+        if (isset(Request::p()->post['weight_sort_order'])) {
+            $data['weight_sort_order'] = Request::p()->post['weight_sort_order'];
         } else {
             $data['weight_sort_order'] = Config::get('weight_sort_order');
         }

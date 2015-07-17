@@ -41,24 +41,24 @@ class Register extends Controller {
         
         Theme::model('account/customer');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            AccountCustomer::addCustomer($this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            AccountCustomer::addCustomer(Request::post());
             
-            Customer::login($this->request->post['email'], $this->request->post['password']);
+            Customer::login(Request::p()->post['email'], Request::p()->post['password']);
             
-            unset($this->session->data['guest']);
+            unset(Session::p()->data['guest']);
 
             // Default Shipping Address
             if (Config::get('config_tax_customer') == 'shipping') {
-                $this->session->data['shipping_country_id'] = $this->request->post['country_id'];
-                $this->session->data['shipping_zone_id']    = $this->request->post['zone_id'];
-                $this->session->data['shipping_postcode']   = $this->request->post['postcode'];               
+                Session::p()->data['shipping_country_id'] = Request::p()->post['country_id'];
+                Session::p()->data['shipping_zone_id']    = Request::p()->post['zone_id'];
+                Session::p()->data['shipping_postcode']   = Request::p()->post['postcode'];               
             }
 
             // Default Payment Address
             if (Config::get('config_tax_customer') == 'payment') {
-                $this->session->data['payment_country_id'] = $this->request->post['country_id'];
-                $this->session->data['payment_zone_id']    = $this->request->post['zone_id'];          
+                Session::p()->data['payment_country_id'] = Request::p()->post['country_id'];
+                Session::p()->data['payment_zone_id']    = Request::p()->post['zone_id'];          
             }
             
             Response::redirect(Url::link('account/success'));
@@ -160,38 +160,38 @@ class Register extends Controller {
         
         $data['action'] = Url::link('account/register', '', 'SSL');
         
-        if (isset($this->request->post['username'])) {
-            $data['username'] = $this->request->post['username'];
+        if (isset(Request::p()->post['username'])) {
+            $data['username'] = Request::p()->post['username'];
         } else {
             $data['username'] = '';
         }
 
-        if (isset($this->request->post['firstname'])) {
-            $data['firstname'] = $this->request->post['firstname'];
+        if (isset(Request::p()->post['firstname'])) {
+            $data['firstname'] = Request::p()->post['firstname'];
         } else {
             $data['firstname'] = '';
         }
 
-        if (isset($this->request->post['lastname'])) {
-            $data['lastname'] = $this->request->post['lastname'];
+        if (isset(Request::p()->post['lastname'])) {
+            $data['lastname'] = Request::p()->post['lastname'];
         } else {
             $data['lastname'] = '';
         }
         
-        if (isset($this->request->post['email'])) {
-            $data['email'] = $this->request->post['email'];
+        if (isset(Request::p()->post['email'])) {
+            $data['email'] = Request::p()->post['email'];
         } else {
             $data['email'] = '';
         }
 
-        if (isset($this->request->post['telephone'])) {
-            $data['telephone'] = $this->request->post['telephone'];
+        if (isset(Request::p()->post['telephone'])) {
+            $data['telephone'] = Request::p()->post['telephone'];
         } else {
             $data['telephone'] = '';
         }
 
-        if (isset($this->request->post['company'])) {
-            $data['company'] = $this->request->post['company'];
+        if (isset(Request::p()->post['company'])) {
+            $data['company'] = Request::p()->post['company'];
         } else {
             $data['company'] = '';
         }
@@ -210,64 +210,64 @@ class Register extends Controller {
             }
         }
         
-        if (isset($this->request->post['customer_group_id'])) {
-            $data['customer_group_id'] = $this->request->post['customer_group_id'];
+        if (isset(Request::p()->post['customer_group_id'])) {
+            $data['customer_group_id'] = Request::p()->post['customer_group_id'];
         } else {
             $data['customer_group_id'] = Config::get('config_customer_group_id');
         }
 
         // Company ID
-        if (isset($this->request->post['company_id'])) {
-            $data['company_id'] = $this->request->post['company_id'];
+        if (isset(Request::p()->post['company_id'])) {
+            $data['company_id'] = Request::p()->post['company_id'];
         } else {
             $data['company_id'] = '';
         }
 
         // Tax ID
-        if (isset($this->request->post['tax_id'])) {
-            $data['tax_id'] = $this->request->post['tax_id'];
+        if (isset(Request::p()->post['tax_id'])) {
+            $data['tax_id'] = Request::p()->post['tax_id'];
         } else {
             $data['tax_id'] = '';
         }
 
-        if (isset($this->request->post['address_1'])) {
-            $data['address_1'] = $this->request->post['address_1'];
+        if (isset(Request::p()->post['address_1'])) {
+            $data['address_1'] = Request::p()->post['address_1'];
         } else {
             $data['address_1'] = '';
         }
 
-        if (isset($this->request->post['address_2'])) {
-            $data['address_2'] = $this->request->post['address_2'];
+        if (isset(Request::p()->post['address_2'])) {
+            $data['address_2'] = Request::p()->post['address_2'];
         } else {
             $data['address_2'] = '';
         }
 
-        if (isset($this->request->post['postcode'])) {
-            $data['postcode'] = $this->request->post['postcode'];
-        } elseif (isset($this->session->data['shipping_postcode'])) {
-            $data['postcode'] = $this->session->data['shipping_postcode'];      
+        if (isset(Request::p()->post['postcode'])) {
+            $data['postcode'] = Request::p()->post['postcode'];
+        } elseif (isset(Session::p()->data['shipping_postcode'])) {
+            $data['postcode'] = Session::p()->data['shipping_postcode'];      
         } else {
             $data['postcode'] = '';
         }
 
-        if (isset($this->request->post['city'])) {
-            $data['city'] = $this->request->post['city'];
+        if (isset(Request::p()->post['city'])) {
+            $data['city'] = Request::p()->post['city'];
         } else {
             $data['city'] = '';
         }
 
-        if (isset($this->request->post['country_id'])) {
-            $data['country_id'] = $this->request->post['country_id'];
-        } elseif (isset($this->session->data['shipping_country_id'])) {
-            $data['country_id'] = $this->session->data['shipping_country_id'];      
+        if (isset(Request::p()->post['country_id'])) {
+            $data['country_id'] = Request::p()->post['country_id'];
+        } elseif (isset(Session::p()->data['shipping_country_id'])) {
+            $data['country_id'] = Session::p()->data['shipping_country_id'];      
         } else {    
             $data['country_id'] = Config::get('config_country_id');
         }
 
-        if (isset($this->request->post['zone_id'])) {
-            $data['zone_id'] = $this->request->post['zone_id'];
-        } elseif (isset($this->session->data['shipping_zone_id'])) {
-            $data['zone_id'] = $this->session->data['shipping_zone_id'];            
+        if (isset(Request::p()->post['zone_id'])) {
+            $data['zone_id'] = Request::p()->post['zone_id'];
+        } elseif (isset(Session::p()->data['shipping_zone_id'])) {
+            $data['zone_id'] = Session::p()->data['shipping_zone_id'];            
         } else {
             $data['zone_id'] = '';
         }
@@ -278,20 +278,20 @@ class Register extends Controller {
 
         $data['countries'] = LocaleCountry::getCountries();
         
-        if (isset($this->request->post['password'])) {
-            $data['password'] = $this->request->post['password'];
+        if (isset(Request::p()->post['password'])) {
+            $data['password'] = Request::p()->post['password'];
         } else {
             $data['password'] = '';
         }
         
-        if (isset($this->request->post['confirm'])) {
-            $data['confirm'] = $this->request->post['confirm'];
+        if (isset(Request::p()->post['confirm'])) {
+            $data['confirm'] = Request::p()->post['confirm'];
         } else {
             $data['confirm'] = '';
         }
 
-        if (isset($this->request->post['newsletter'])) {
-            $data['newsletter'] = $this->request->post['newsletter'];
+        if (isset(Request::p()->post['newsletter'])) {
+            $data['newsletter'] = Request::p()->post['newsletter'];
         } else {
             $data['newsletter'] = '';
         }
@@ -315,8 +315,8 @@ class Register extends Controller {
             $data['lang_error_req_account'] = ''; 
         }
         
-        if (isset($this->request->post['agree'])) {
-            $data['agree'] = $this->request->post['agree'];
+        if (isset(Request::p()->post['agree'])) {
+            $data['agree'] = Request::p()->post['agree'];
         } else {
             $data['agree'] = false;
         }
@@ -381,8 +381,8 @@ class Register extends Controller {
 
             $data['vanity_base'] = Config::get('http.server');
 
-            if (isset($this->request->post['affiliate'])):
-                $data['affiliate'] = $this->request->post['affiliate'];
+            if (isset(Request::p()->post['affiliate'])):
+                $data['affiliate'] = Request::p()->post['affiliate'];
             else:
                 $data['affiliate']['status']              = 0;
                 $data['affiliate']['website']             = '';
@@ -416,8 +416,8 @@ class Register extends Controller {
                     $data['lang_error_req_affiliate'] = '';
                 endif;
 
-                if (isset($this->request->post['affiliate_agree'])):
-                    $data['affiliate_agree'] = $this->request->post['affiliate_agree'];
+                if (isset(Request::p()->post['affiliate_agree'])):
+                    $data['affiliate_agree'] = Request::p()->post['affiliate_agree'];
                 else:
                     $data['affiliate_agree'] = false;
                 endif;
@@ -437,8 +437,8 @@ class Register extends Controller {
         // Customer Group
         Theme::model('account/customer_group');
 
-        if (isset($this->request->post['customer_group_id']) && is_array(Config::get('config_customer_group_display')) && in_array($this->request->post['customer_group_id'], Config::get('config_customer_group_display'))) {
-            $customer_group_id = $this->request->post['customer_group_id'];
+        if (isset(Request::p()->post['customer_group_id']) && is_array(Config::get('config_customer_group_display')) && in_array(Request::p()->post['customer_group_id'], Config::get('config_customer_group_display'))) {
+            $customer_group_id = Request::p()->post['customer_group_id'];
         } else {
             $customer_group_id = Config::get('config_customer_group_id');
         }
@@ -447,34 +447,34 @@ class Register extends Controller {
 
         if ($customer_group) {  
             // Company ID
-            if ($customer_group['company_id_display'] && $customer_group['company_id_required'] && empty($this->request->post['company_id'])) {
+            if ($customer_group['company_id_display'] && $customer_group['company_id_required'] && empty(Request::p()->post['company_id'])) {
                 $this->error['company_id'] = Lang::get('lang_error_company_id');
             }
 
             // Tax ID 
-            if ($customer_group['tax_id_display'] && $customer_group['tax_id_required'] && empty($this->request->post['tax_id'])) {
+            if ($customer_group['tax_id_display'] && $customer_group['tax_id_required'] && empty(Request::p()->post['tax_id'])) {
                 $this->error['tax_id'] = Lang::get('lang_error_tax_id');
             }                       
         }
 
-        if ((Encode::strlen($this->request->post['address_1']) < 3) || (Encode::strlen($this->request->post['address_1']) > 128)) {
+        if ((Encode::strlen(Request::p()->post['address_1']) < 3) || (Encode::strlen(Request::p()->post['address_1']) > 128)) {
             $this->error['address_1'] = Lang::get('lang_error_address_1');
         }
 
-        if ((Encode::strlen($this->request->post['city']) < 2) || (Encode::strlen($this->request->post['city']) > 128)) {
+        if ((Encode::strlen(Request::p()->post['city']) < 2) || (Encode::strlen(Request::p()->post['city']) > 128)) {
             $this->error['city'] = Lang::get('lang_error_city');
         }
 
         Theme::model('locale/country');
 
-        $country_info = LocaleCountry::getCountry($this->request->post['country_id']);
+        $country_info = LocaleCountry::getCountry(Request::p()->post['country_id']);
 
         if ($country_info) {
-            if ($country_info['postcode_required'] && (Encode::strlen($this->request->post['postcode']) < 2) || (Encode::strlen($this->request->post['postcode']) > 10)) {
+            if ($country_info['postcode_required'] && (Encode::strlen(Request::p()->post['postcode']) < 2) || (Encode::strlen(Request::p()->post['postcode']) > 10)) {
                 $this->error['postcode'] = Lang::get('lang_error_postcode');
             }
 
-            if (Config::get('config_vat') && $this->request->post['tax_id'] && ($this->vat->validate($country_info['iso_code_2'], $this->request->post['tax_id']) == 'invalid')) {
+            if (Config::get('config_vat') && Request::p()->post['tax_id'] && ($this->vat->validate($country_info['iso_code_2'], Request::p()->post['tax_id']) == 'invalid')) {
                 $this->error['tax_id'] = Lang::get('lang_error_vat');
             }
         }
@@ -484,40 +484,40 @@ class Register extends Controller {
             
             $page_info = ContentPage::getPage(Config::get('config_account_id'));
             
-            if ($page_info && !isset($this->request->post['agree'])) {
+            if ($page_info && !isset(Request::p()->post['agree'])) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_agree'), $page_info['title']);
             }
         }
 
-        if (!empty($this->request->post['affiliate']) && $this->request->post['affiliate']['status'] == 1):
-            if (Encode::strlen($this->request->post['affiliate']['tax']) < 1):
+        if (!empty(Request::p()->post['affiliate']) && Request::p()->post['affiliate']['status'] == 1):
+            if (Encode::strlen(Request::p()->post['affiliate']['tax']) < 1):
                 $this->error['tax'] = Lang::get('lang_error_tax_id');
             endif;
 
-            if (Encode::strlen($this->request->post['affiliate']['slug']) < 1):
+            if (Encode::strlen(Request::p()->post['affiliate']['slug']) < 1):
                 $this->error['slug'] = Lang::get('lang_error_vanity');
             endif;
 
-            if (!$this->request->post['affiliate']['payment_method']):
+            if (!Request::p()->post['affiliate']['payment_method']):
                 $this->error['payment_method'] = Lang::get('lang_error_payment_method');
             else:
-                if ($this->request->post['affiliate']['payment_method'] == 'cheque' && Encode::strlen($this->request->post['affiliate']['cheque']) < 1):
+                if (Request::p()->post['affiliate']['payment_method'] == 'cheque' && Encode::strlen(Request::p()->post['affiliate']['cheque']) < 1):
                     $this->error['cheque'] = Lang::get('lang_error_cheque');
                 endif;
 
-                if ($this->request->post['affiliate']['payment_method'] == 'paypal' && Encode::strlen($this->request->post['affiliate']['paypal']) < 1):
+                if (Request::p()->post['affiliate']['payment_method'] == 'paypal' && Encode::strlen(Request::p()->post['affiliate']['paypal']) < 1):
                     $this->error['paypal'] = Lang::get('lang_error_paypal');
                 endif;
 
-                if ($this->request->post['affiliate']['payment_method'] == 'bank' && Encode::strlen($this->request->post['affiliate']['bank_name']) < 1):
+                if (Request::p()->post['affiliate']['payment_method'] == 'bank' && Encode::strlen(Request::p()->post['affiliate']['bank_name']) < 1):
                     $this->error['bank_name'] = Lang::get('lang_error_bank_name');
                 endif;
 
-                if ($this->request->post['affiliate']['payment_method'] == 'bank' && Encode::strlen($this->request->post['affiliate']['bank_account_name']) < 1):
+                if (Request::p()->post['affiliate']['payment_method'] == 'bank' && Encode::strlen(Request::p()->post['affiliate']['bank_account_name']) < 1):
                     $this->error['bank_account_name'] = Lang::get('lang_error_bank_account_name');
                 endif;
 
-                if ($this->request->post['affiliate']['payment_method'] == 'bank' && Encode::strlen($this->request->post['affiliate']['bank_account_number']) < 1):
+                if (Request::p()->post['affiliate']['payment_method'] == 'bank' && Encode::strlen(Request::p()->post['affiliate']['bank_account_number']) < 1):
                     $this->error['bank_account_number'] = Lang::get('lang_error_bank_account_number');
                 endif;
             endif;
@@ -536,7 +536,7 @@ class Register extends Controller {
         
         $json['valid'] = true;
         
-        if (AccountCustomer::getTotalCustomersByUsername($this->request->get['username'])):
+        if (AccountCustomer::getTotalCustomersByUsername(Request::p()->get['username'])):
             $json['valid']   = false;
             $json['message'] = Lang::get('lang_error_uexists');
         endif;
@@ -552,7 +552,7 @@ class Register extends Controller {
         
         $json['valid'] = true;
         
-        if (AccountCustomer::getTotalCustomersByEmail($this->request->get['email'])):
+        if (AccountCustomer::getTotalCustomersByEmail(Request::p()->get['email'])):
             $json['valid']   = false;
             $json['message'] = Lang::get('lang_error_exists');
         endif;
@@ -565,12 +565,12 @@ class Register extends Controller {
         
         Theme::model('locale/country');
         
-        $country_info = LocaleCountry::getCountry($this->request->get['country_id']);
+        $country_info = LocaleCountry::getCountry(Request::p()->get['country_id']);
         
         if ($country_info) {
             Theme::model('locale/zone');
             
-            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => LocaleZone::getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
+            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => LocaleZone::getZonesByCountryId(Request::p()->get['country_id']), 'status' => $country_info['status']);
         }
         
         $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
@@ -586,13 +586,13 @@ class Register extends Controller {
         
         $json['valid'] = true;
         
-        if (!isset($this->request->get['affiliate']['slug']) || Encode::strlen($this->request->get['affiliate']['slug']) < 1):
+        if (!isset(Request::p()->get['affiliate']['slug']) || Encode::strlen(Request::p()->get['affiliate']['slug']) < 1):
             $json['valid']   = false;
             $json['message'] = Lang::get('lang_error_slug');
         else:
             
             // build slug
-            $slug = Url::build_slug($this->request->get['affiliate']['slug']);
+            $slug = Url::build_slug(Request::p()->get['affiliate']['slug']);
             
             // check that the slug is globally unique
             $query = ToolUtility::findSlugByName($slug);

@@ -33,9 +33,9 @@ class Event extends Controller {
         Theme::language('calendar/event');
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('calendar/event');
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
-            CalendarEvent::addEvent($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_add_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
+            CalendarEvent::addEvent(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_add_success');
             Response::redirect(Url::link('calendar/event', '', 'SSL'));
         endif;
         $this->getForm();
@@ -45,9 +45,9 @@ class Event extends Controller {
         Theme::language('calendar/event');
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('calendar/event');
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
-            CalendarEvent::editEvent($this->request->get['event_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_edit_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
+            CalendarEvent::editEvent(Request::p()->get['event_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_edit_success');
             Response::redirect(Url::link('calendar/event', '', 'SSL'));
         endif;
         $this->getForm();
@@ -57,11 +57,11 @@ class Event extends Controller {
         Theme::language('calendar/event');
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('calendar/event');
-        if (isset($this->request->post['selected']) && $this->validateDelete()):
-            foreach ($this->request->post['selected'] as $event_id):
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()):
+            foreach (Request::p()->post['selected'] as $event_id):
                 CalendarEvent::deleteEvent($event_id);
             endforeach;
-            $this->session->data['success'] = Lang::get('lang_text_delete_success');
+            Session::p()->data['success'] = Lang::get('lang_text_delete_success');
             Response::redirect(Url::link('calendar/event', '', 'SSL'));
         endif;
         $this->getList();
@@ -71,9 +71,9 @@ class Event extends Controller {
         Theme::language('calendar/event');
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('calendar/event');
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateFormPresenter()):
-            CalendarEvent::addPresenter($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_add_i_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateFormPresenter()):
+            CalendarEvent::addPresenter(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_add_i_success');
             Response::redirect(Url::link('calendar/event/presenter_list', '', 'SSL'));
         endif;
         $this->presenter_form();
@@ -83,9 +83,9 @@ class Event extends Controller {
         Theme::language('calendar/event');
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('calendar/event');
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateFormPresenter()):
-            CalendarEvent::editPresenter($this->request->get['presenter_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_edit_i_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateFormPresenter()):
+            CalendarEvent::editPresenter(Request::p()->get['presenter_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_edit_i_success');
             Response::redirect(Url::link('calendar/event/presenter_list', '', 'SSL'));
         endif;
         $this->presenter_form();
@@ -95,11 +95,11 @@ class Event extends Controller {
         Theme::language('calendar/event');
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('calendar/event');
-        if (isset($this->request->post['selected']) && $this->validateDeletePresenter()):
-            foreach ($this->request->post['selected'] as $presenter_id):
+        if (isset(Request::p()->post['selected']) && $this->validateDeletePresenter()):
+            foreach (Request::p()->post['selected'] as $presenter_id):
                 CalendarEvent::deletePresenter($presenter_id);
             endforeach;
-            $this->session->data['success'] = Lang::get('lang_text_delete_i_success');
+            Session::p()->data['success'] = Lang::get('lang_text_delete_i_success');
             Response::redirect(Url::link('calendar/event/presenter_list', '', 'SSL'));
         endif;
         $this->presenter_list();
@@ -109,7 +109,7 @@ class Event extends Controller {
         Theme::language('calendar/event');
         Theme::model('calendar/event');
         $json = array();
-        $results = CalendarEvent::addToWaitList($this->request->post);
+        $results = CalendarEvent::addToWaitList(Request::post());
         if ($results == 1):
             $success = 1;
             $message = Lang::get('lang_text_add_waitlist_success');
@@ -129,11 +129,11 @@ class Event extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('calendar/event');
         $json = array();
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateRoster()):
-            $exists = CalendarEvent::checkAttendee($this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateRoster()):
+            $exists = CalendarEvent::checkAttendee(Request::post());
             if (!$exists):
-                CalendarEvent::addAttendee($this->request->post);
-                $results     = CalendarEvent::getRoster($this->request->post['event_id']);
+                CalendarEvent::addAttendee(Request::post());
+                $results     = CalendarEvent::getRoster(Request::p()->post['event_id']);
                 $roster_html = '';
                 if ($results):
                     foreach ($results as $result):
@@ -150,7 +150,7 @@ class Event extends Controller {
                     $roster_html .= '<td class="text-center" colspan="3">' . Lang::get('lang_text_no_attendees') . '</td>';
                     $roster_html .= '</tr>';
                 endif;
-                $available = CalendarEvent::getAvailable($this->request->post['event_id']);
+                $available = CalendarEvent::getAvailable(Request::p()->post['event_id']);
                 $json = array(
                     'success'   => 1, 
                     'message'   => Lang::get('lang_text_add_s_success'), 
@@ -172,15 +172,15 @@ class Event extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('calendar/event');
         
-        if (isset($this->request->post['selected']) && $this->validateRoster()):
+        if (isset(Request::p()->post['selected']) && $this->validateRoster()):
             $a = 0;
-            foreach ($this->request->post['selected'] as $attendee_id):
-                CalendarEvent::deleteAttendee($this->request->get['event_id'], $attendee_id);
+            foreach (Request::p()->post['selected'] as $attendee_id):
+                CalendarEvent::deleteAttendee(Request::p()->get['event_id'], $attendee_id);
                 $a++;
             endforeach;
-            CalendarEvent::updateSeats($this->request->get['event_id'], $a);
-            $this->session->data['success'] = Lang::get('lang_text_delete_s_success');
-            Response::redirect(Url::link('calendar/event/roster', '' . '&event_id=' . $this->request->get['event_id'], 'SSL'));
+            CalendarEvent::updateSeats(Request::p()->get['event_id'], $a);
+            Session::p()->data['success'] = Lang::get('lang_text_delete_s_success');
+            Response::redirect(Url::link('calendar/event/roster', '' . 'event_id=' . Request::p()->get['event_id'], 'SSL'));
         endif;
         $this->roster();
     }
@@ -192,24 +192,24 @@ class Event extends Controller {
         
         if (isset($this->error['warning'])):
             $data['error_warning'] = $this->error['warning'];
-        elseif (isset($this->session->data['error_warning'])):
-            $data['error_warning'] = $this->session->data['error_warning'];
-            unset($this->session->data['error_warning']);
+        elseif (isset(Session::p()->data['error_warning'])):
+            $data['error_warning'] = Session::p()->data['error_warning'];
+            unset(Session::p()->data['error_warning']);
         else:
             $data['error_warning'] = '';
         endif;
         
-        if (isset($this->session->data['success'])):
-            $data['success'] = $this->session->data['success'];
-            unset($this->session->data['success']);
+        if (isset(Session::p()->data['success'])):
+            $data['success'] = Session::p()->data['success'];
+            unset(Session::p()->data['success']);
         else:
             $data['success'] = '';
         endif;
         
         Breadcrumb::add('lang_heading_title', 'calendar/event');
-        Breadcrumb::add('lang_column_waitlist', 'calendar/event/get_wait_list', '&event_id=' . $this->request->get['event_id']);
+        Breadcrumb::add('lang_column_waitlist', 'calendar/event/get_wait_list', '&event_id=' . Request::p()->get['event_id']);
         
-        $results = CalendarEvent::getWaitListAttendees($this->request->get['event_id']);
+        $results = CalendarEvent::getWaitListAttendees(Request::p()->get['event_id']);
         
         $data['attendees'] = array();
         
@@ -218,11 +218,11 @@ class Event extends Controller {
                 $actions = array();
                 $actions[] = array(
                     'text' => Lang::get('lang_text_add'), 
-                    'href' => Url::link('calendar/event/add_to_event', '' . '&event_id=' . $result['event_id'] . '&customer_id=' . $result['customer_id'], 'SSL')
+                    'href' => Url::link('calendar/event/add_to_event', '' . 'event_id=' . $result['event_id'] . '&customer_id=' . $result['customer_id'], 'SSL')
                 );
                 $actions[] = array(
                     'text' => Lang::get('lang_text_remove'), 
-                    'href' => Url::link('calendar/event/remove_from_list', '' . '&event_id=' . $result['event_id'] . '&event_wait_list_id=' . $result['event_wait_list_id'], 'SSL')
+                    'href' => Url::link('calendar/event/remove_from_list', '' . 'event_id=' . $result['event_id'] . '&event_wait_list_id=' . $result['event_wait_list_id'], 'SSL')
                 );
                 
                 Theme::model('people/customer');
@@ -238,7 +238,7 @@ class Event extends Controller {
             endforeach;
         endif;
         
-        $data['clear_list'] = Url::link('calendar/event/empty_wait_list', 'event_id=' . $this->request->get['event_id'], 'SSL');
+        $data['clear_list'] = Url::link('calendar/event/empty_wait_list', 'event_id=' . Request::p()->get['event_id'], 'SSL');
         $data['cancel']     = Url::link('calendar/event', '', 'SSL');
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
@@ -251,22 +251,22 @@ class Event extends Controller {
     public function add_to_event() {
         Theme::language('calendar/event');
         Theme::model('calendar/event');
-        CalendarEvent::addToEvent($this->request->get);
-        $this->session->data['success'] = Lang::get('lang_text_add_to_event');
-        Response::redirect(Url::link('calendar/event/get_wait_list', '' . '&event_id=' . $this->request->get['event_id'], 'SSL'));
+        CalendarEvent::addToEvent(Request::get());
+        Session::p()->data['success'] = Lang::get('lang_text_add_to_event');
+        Response::redirect(Url::link('calendar/event/get_wait_list', '' . 'event_id=' . Request::p()->get['event_id'], 'SSL'));
     }
     
     public function remove_from_list() {
         Theme::language('calendar/event');
         Theme::model('calendar/event');
-        CalendarEvent::removeFromList($this->request->get['event_wait_list_id']);
-        $this->session->data['success'] = Lang::get('lang_text_remove_from_list');
-        Response::redirect(Url::link('calendar/event/get_wait_list', '' . '&event_id=' . $this->request->get['event_id'], 'SSL'));
+        CalendarEvent::removeFromList(Request::p()->get['event_wait_list_id']);
+        Session::p()->data['success'] = Lang::get('lang_text_remove_from_list');
+        Response::redirect(Url::link('calendar/event/get_wait_list', '' . 'event_id=' . Request::p()->get['event_id'], 'SSL'));
     }
     
     public function empty_wait_list() {
         Theme::model('calendar/event');
-        CalendarEvent::emptyWaitList($this->request->get['event_id']);
+        CalendarEvent::emptyWaitList(Request::p()->get['event_id']);
         Response::redirect(Url::link('calendar/event', '', 'SSL'));
     }
     
@@ -275,16 +275,16 @@ class Event extends Controller {
         
         if (isset($this->error['warning'])):
             $data['error_warning'] = $this->error['warning'];
-        elseif (isset($this->session->data['error_warning'])):
-            $data['error_warning'] = $this->session->data['error_warning'];
-            unset($this->session->data['error_warning']);
+        elseif (isset(Session::p()->data['error_warning'])):
+            $data['error_warning'] = Session::p()->data['error_warning'];
+            unset(Session::p()->data['error_warning']);
         else:
             $data['error_warning'] = '';
         endif;
         
-        if (isset($this->session->data['success'])):
-            $data['success'] = $this->session->data['success'];
-            unset($this->session->data['success']);
+        if (isset(Session::p()->data['success'])):
+            $data['success'] = Session::p()->data['success'];
+            unset(Session::p()->data['success']);
         else:
             $data['success'] = '';
         endif;
@@ -304,12 +304,12 @@ class Event extends Controller {
                 
                 $actions[] = array(
                     'text' => Lang::get('lang_text_edit'), 
-                    'href' => Url::link('calendar/event/update', '' . '&event_id=' . $result['event_id'], 'SSL')
+                    'href' => Url::link('calendar/event/update', '' . 'event_id=' . $result['event_id'], 'SSL')
                 );
                 
                 $actions[] = array(
                     'text' => Lang::get('lang_text_roster'), 
-                    'href' => Url::link('calendar/event/roster', '' . '&event_id=' . $result['event_id'], 'SSL')
+                    'href' => Url::link('calendar/event/roster', '' . 'event_id=' . $result['event_id'], 'SSL')
                 );
                 
                 if ($result['link']):
@@ -328,9 +328,9 @@ class Event extends Controller {
                     'seats'         => $result['seats'], 
                     'filled'        => $result['seats'] - $result['filled'], 
                     'waitlist'      => CalendarEvent::getWaitListCount($result['event_id']), 
-                    'waitlist_href' => Url::link('calendar/event/get_wait_list', '' . '&event_id=' . $result['event_id'], 'SSL'), 
+                    'waitlist_href' => Url::link('calendar/event/get_wait_list', '' . 'event_id=' . $result['event_id'], 'SSL'), 
                     'presenter'     => CalendarEvent::getPresenterName($result['presenter_id']), 
-                    'selected'      => isset($this->request->post['selected']) && in_array($result['result_id'], $this->request->post['selected']), 
+                    'selected'      => isset(Request::p()->post['selected']) && in_array($result['result_id'], Request::p()->post['selected']), 
                     'action'        => $actions
                 );
             endforeach;
@@ -436,18 +436,18 @@ class Event extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'calendar/event');
         
-        if (!isset($this->request->get['event_id'])) {
+        if (!isset(Request::p()->get['event_id'])) {
             $data['action'] = Url::link('calendar/event/insert', '', 'SSL');
             $data['method'] = 'insert';
         } else {
-            $data['action'] = Url::link('calendar/event/update', '' . '&event_id=' . $this->request->get['event_id'], 'SSL');
+            $data['action'] = Url::link('calendar/event/update', '' . 'event_id=' . Request::p()->get['event_id'], 'SSL');
             $data['method'] = 'edit';
         }
         
         $data['cancel'] = Url::link('calendar/event', '', 'SSL');
         
-        if (isset($this->request->get['event_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $event_info = CalendarEvent::getEvent($this->request->get['event_id']);
+        if (isset(Request::p()->get['event_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $event_info = CalendarEvent::getEvent(Request::p()->get['event_id']);
         }
         
         $data['days']  = array(
@@ -470,40 +470,40 @@ class Event extends Controller {
             $page_info    = ContentPage::getEventPage($event_info['page_id']);
         }
         
-        if (isset($this->request->post['name'])) {
-            $data['name'] = html_entity_decode($this->request->post['name']);
+        if (isset(Request::p()->post['name'])) {
+            $data['name'] = html_entity_decode(Request::p()->post['name']);
         } elseif (!empty($event_info)) {
             $data['name'] = html_entity_decode($event_info['event_name']);
         } else {
             $data['name'] = '';
         }
 
-        if (isset($this->request->post['product_id'])) {
-            $data['product_id'] = $this->request->post['product_id'];
+        if (isset(Request::p()->post['product_id'])) {
+            $data['product_id'] = Request::p()->post['product_id'];
         } elseif (!empty($event_info)) {
             $data['product_id'] = $event_info['product_id'];
         } else {
             $data['product_id'] = 0;
         }
 
-        if (isset($this->request->post['page_id'])) {
-            $data['page_id'] = $this->request->post['page_id'];
+        if (isset(Request::p()->post['page_id'])) {
+            $data['page_id'] = Request::p()->post['page_id'];
         } elseif (!empty($event_info)) {
             $data['page_id'] = $event_info['page_id'];
         } else {
             $data['page_id'] = 0;
         }
 
-        if (isset($this->request->post['model'])) {
-            $data['model'] = html_entity_decode($this->request->post['model']);
+        if (isset(Request::p()->post['model'])) {
+            $data['model'] = html_entity_decode(Request::p()->post['model']);
         } elseif (!empty($event_info)) {
             $data['model'] = html_entity_decode($event_info['model']);
         } else {
             $data['model'] = '';
         }
         
-        if (isset($this->request->post['sku'])) {
-            $data['sku'] = html_entity_decode($this->request->post['sku']);
+        if (isset(Request::p()->post['sku'])) {
+            $data['sku'] = html_entity_decode(Request::p()->post['sku']);
         } elseif (!empty($product_info)) {
             $data['sku'] = html_entity_decode($product_info['sku']);
         } else {
@@ -514,16 +514,16 @@ class Event extends Controller {
         
         $data['stores'] = SettingStore::getStores();
         
-        if (isset($this->request->post['product_store'])) {
-            $data['product_store'] = $this->request->post['product_store'];
+        if (isset(Request::p()->post['product_store'])) {
+            $data['product_store'] = Request::p()->post['product_store'];
         } elseif (!empty($event_info) && $event_info['product_id'] > 0) {
             $data['product_store'] = CatalogProduct::getProductStores($data['product_id']);
         } else {
             $data['product_store'] = array(0);
         }
         
-        if (isset($this->request->post['page_store'])) {
-            $data['page_store'] = $this->request->post['page_store'];
+        if (isset(Request::p()->post['page_store'])) {
+            $data['page_store'] = Request::p()->post['page_store'];
         } elseif (!empty($event_info) && $event_info['page_id'] > 0) {
             $data['page_store'] = ContentPage::getPageStores($data['page_id']);
         } else {
@@ -534,8 +534,8 @@ class Event extends Controller {
         
         $data['stock_statuses'] = LocaleStockStatus::getStockStatuses();
         
-        if (isset($this->request->post['stock_status_id'])) {
-            $data['stock_status_id'] = $this->request->post['stock_status_id'];
+        if (isset(Request::p()->post['stock_status_id'])) {
+            $data['stock_status_id'] = Request::p()->post['stock_status_id'];
         } elseif (!empty($product_info)) {
             $data['stock_status_id'] = $product_info['stock_status_id'];
         } else {
@@ -548,16 +548,16 @@ class Event extends Controller {
         
         $data['categories'] = CatalogCategory::getCategories($filter);
         
-        if (isset($this->request->post['product_category'])) {
-            $data['product_category'] = $this->request->post['product_category'];
+        if (isset(Request::p()->post['product_category'])) {
+            $data['product_category'] = Request::p()->post['product_category'];
         } elseif (!empty($event_info)) {
             $data['product_category'] = CatalogProduct::getProductCategories($data['product_id']);
         } else {
             $data['product_category'] = array();
         }
         
-        if (isset($this->request->post['visibility'])) {
-            $data['visibility'] = $this->request->post['visibility'];
+        if (isset(Request::p()->post['visibility'])) {
+            $data['visibility'] = Request::p()->post['visibility'];
         } elseif (!empty($event_info)) {
             $data['visibility'] = $event_info['visibility'];
         } else {
@@ -568,128 +568,128 @@ class Event extends Controller {
         
         $data['customer_groups'] = PeopleCustomerGroup::getCustomerGroups();
         
-        if (isset($this->request->post['event_length'])) {
-            $data['event_length'] = $this->request->post['event_length'];
+        if (isset(Request::p()->post['event_length'])) {
+            $data['event_length'] = Request::p()->post['event_length'];
         } elseif (!empty($event_info)) {
             $data['event_length'] = $event_info['event_length'];
         } else {
             $data['event_length'] = 1;
         }
         
-        if (isset($this->request->post['event_days'])) {
-            $data['event_days'] = $this->request->post['event_days'];
+        if (isset(Request::p()->post['event_days'])) {
+            $data['event_days'] = Request::p()->post['event_days'];
         } elseif (!empty($event_info)) {
             $data['event_days'] = unserialize($event_info['event_days']);
         } else {
             $data['event_days'] = array();
         }
         
-        if (isset($this->request->post['event_date'])) {
-            $data['event_date'] = $this->request->post['event_date'];
+        if (isset(Request::p()->post['event_date'])) {
+            $data['event_date'] = Request::p()->post['event_date'];
         } elseif (!empty($event_info)) {
             $data['event_date'] = date('Y-m-d', strtotime($event_info['date_time']));
         } else {
             $data['event_date'] = '';
         }
         
-        if (isset($this->request->post['event_time'])) {
-            $data['event_time'] = $this->request->post['event_time'];
+        if (isset(Request::p()->post['event_time'])) {
+            $data['event_time'] = Request::p()->post['event_time'];
         } elseif (!empty($event_info)) {
             $data['event_time'] = date('g:i A', strtotime($event_info['date_time']));
         } else {
             $data['event_time'] = '';
         }
         
-        if (isset($this->request->post['location'])) {
-            $data['location'] = $this->request->post['location'];
+        if (isset(Request::p()->post['location'])) {
+            $data['location'] = Request::p()->post['location'];
         } elseif (!empty($event_info)) {
             $data['location'] = $event_info['location'];
         } else {
             $data['location'] = '';
         }
         
-        if (isset($this->request->post['online'])) {
-            $data['online'] = $this->request->post['online'];
+        if (isset(Request::p()->post['online'])) {
+            $data['online'] = Request::p()->post['online'];
         } elseif (!empty($event_info)) {
             $data['online'] = $event_info['online'];
         } else {
             $data['online'] = '';
         }
         
-        if (isset($this->request->post['link'])) {
-            $data['link'] = $this->request->post['link'];
+        if (isset(Request::p()->post['link'])) {
+            $data['link'] = Request::p()->post['link'];
         } elseif (!empty($event_info)) {
             $data['link'] = $event_info['link'];
         } else {
             $data['link'] = '';
         }
         
-        if (isset($this->request->post['telephone'])) {
-            $data['telephone'] = $this->request->post['telephone'];
+        if (isset(Request::p()->post['telephone'])) {
+            $data['telephone'] = Request::p()->post['telephone'];
         } elseif (!empty($event_info)) {
             $data['telephone'] = $event_info['telephone'];
         } else {
             $data['telephone'] = '';
         }
         
-        if (isset($this->request->post['cost'])) {
-            $data['cost'] = $this->request->post['cost'];
+        if (isset(Request::p()->post['cost'])) {
+            $data['cost'] = Request::p()->post['cost'];
         } elseif (!empty($event_info)) {
             $data['cost'] = $event_info['cost'];
         } else {
             $data['cost'] = '';
         }
         
-        if (isset($this->request->post['seats'])) {
-            $data['seats'] = $this->request->post['seats'];
+        if (isset(Request::p()->post['seats'])) {
+            $data['seats'] = Request::p()->post['seats'];
         } elseif (!empty($event_info)) {
             $data['seats'] = $event_info['seats'];
         } else {
             $data['seats'] = '';
         }
         
-        if (isset($this->request->post['presenter_tab'])) {
-            $data['presenter_tab'] = $this->request->post['presenter_tab'];
+        if (isset(Request::p()->post['presenter_tab'])) {
+            $data['presenter_tab'] = Request::p()->post['presenter_tab'];
         } elseif (!empty($event_info)) {
             $data['presenter_tab'] = $event_info['presenter_tab'];
         } else {
             $data['presenter_tab'] = '';
         }
         
-        if (isset($this->request->post['presenter'])) {
-            $data['presenter'] = $this->request->post['presenter'];
+        if (isset(Request::p()->post['presenter'])) {
+            $data['presenter'] = Request::p()->post['presenter'];
         } elseif (!empty($event_info)) {
             $data['presenter'] = $event_info['presenter_id'];
         } else {
             $data['presenter'] = '';
         }
         
-        if (isset($this->request->post['description'])) {
-            $data['description'] = html_entity_decode($this->request->post['description']);
+        if (isset(Request::p()->post['description'])) {
+            $data['description'] = html_entity_decode(Request::p()->post['description']);
         } elseif (!empty($event_info)) {
             $data['description'] = html_entity_decode($event_info['description']);
         } else {
             $data['description'] = '';
         }
         
-        if (isset($this->request->post['refundable'])) {
-            $data['refundable'] = $this->request->post['refundable'];
+        if (isset(Request::p()->post['refundable'])) {
+            $data['refundable'] = Request::p()->post['refundable'];
         } elseif (!empty($event_info)) {
             $data['refundable'] = $event_info['refundable'];
         } else {
             $data['refundable'] = '';
         }
 
-        if (isset($this->request->post['is_product'])) {
-            $data['is_product'] = $this->request->post['is_product'];
+        if (isset(Request::p()->post['is_product'])) {
+            $data['is_product'] = Request::p()->post['is_product'];
         } elseif (!empty($event_info) && (int)$event_info['product_id'] > 0) {
             $data['is_product'] = 1;
         } else {
             $data['is_product'] = 0;
         }
         
-        if (isset($this->request->post['slug'])) {
-            $data['slug'] = $this->request->post['slug'];
+        if (isset(Request::p()->post['slug'])) {
+            $data['slug'] = Request::p()->post['slug'];
         } elseif (!empty($product_info) && $event_info['product_id'] > 0) {
             $data['slug'] = $product_info['slug'];
         } elseif (!empty($page_info) && $event_info['page_id'] > 0) {
@@ -698,24 +698,24 @@ class Event extends Controller {
             $data['slug'] = '';
         }
 
-        if (isset($this->request->post['page_status'])) {
-            $data['page_status'] = (int)$this->request->post['page_status'];
+        if (isset(Request::p()->post['page_status'])) {
+            $data['page_status'] = (int)Request::p()->post['page_status'];
         } elseif (!empty($page_info)) {
             $data['page_status'] = (int)$page_info['status'];
         } else {
             $data['page_status'] = 1;
         }
  
-        if (isset($this->request->post['status'])) {
-            $data['status'] = $this->request->post['status'];
+        if (isset(Request::p()->post['status'])) {
+            $data['status'] = Request::p()->post['status'];
         } elseif (!empty($product_info)) {
             $data['status'] = $product_info['status'];
         } else {
             $data['status'] = 1;
         }
 
-        if (isset($this->request->post['event_class'])) {
-            $data['event_class'] = $this->request->post['event_class'];
+        if (isset(Request::p()->post['event_class'])) {
+            $data['event_class'] = Request::p()->post['event_class'];
         } elseif (!empty($event_info)) {
             $data['event_class'] = $event_info['event_class'];
         } else {
@@ -759,16 +759,16 @@ class Event extends Controller {
         
         if (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
-        } elseif (isset($this->session->data['error_warning'])) {
-            $data['error_warning'] = $this->session->data['error_warning'];
-            unset($this->session->data['error_warning']);
+        } elseif (isset(Session::p()->data['error_warning'])) {
+            $data['error_warning'] = Session::p()->data['error_warning'];
+            unset(Session::p()->data['error_warning']);
         } else {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
-            unset($this->session->data['success']);
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -790,7 +790,7 @@ class Event extends Controller {
                 
                 $action[] = array(
                     'text' => Lang::get('lang_text_edit'), 
-                    'href' => Url::link('calendar/event/update_presenter', '' . '&presenter_id=' . $result['presenter_id'], 'SSL')
+                    'href' => Url::link('calendar/event/update_presenter', '' . 'presenter_id=' . $result['presenter_id'], 'SSL')
                 );
 
                 if ($result['image'] && file_exists(Config::get('path.image') . $result['image'])):
@@ -847,28 +847,28 @@ class Event extends Controller {
         Breadcrumb::add('lang_heading_title', 'calendar/event');
         Breadcrumb::add('lang_text_presenter_tab', 'calendar/event/presenter_list');
         
-        if (!isset($this->request->get['presenter_id'])) {
+        if (!isset(Request::p()->get['presenter_id'])) {
             $data['action'] = Url::link('calendar/event/insert_presenter', '', 'SSL');
         } else {
-            $data['action'] = Url::link('calendar/event/update_presenter', '' . '&presenter_id=' . $this->request->get['presenter_id'], 'SSL');
+            $data['action'] = Url::link('calendar/event/update_presenter', '' . 'presenter_id=' . Request::p()->get['presenter_id'], 'SSL');
         }
         
         $data['cancel'] = Url::link('calendar/event/presenter_list', '', 'SSL');
         
-        if (isset($this->request->get['presenter_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $event_info = CalendarEvent::getPresenter($this->request->get['presenter_id']);
+        if (isset(Request::p()->get['presenter_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $event_info = CalendarEvent::getPresenter(Request::p()->get['presenter_id']);
         }
         
-        if (isset($this->request->post['presenter_name'])) {
-            $data['presenter_name'] = $this->request->post['presenter_name'];
+        if (isset(Request::p()->post['presenter_name'])) {
+            $data['presenter_name'] = Request::p()->post['presenter_name'];
         } elseif (!empty($event_info)) {
             $data['presenter_name'] = $event_info['presenter_name'];
         } else {
             $data['presenter_name'] = '';
         }
 
-        if (isset($this->request->post['presenter_image'])) {
-            $data['presenter_image'] = $this->request->post['presenter_image'];
+        if (isset(Request::p()->post['presenter_image'])) {
+            $data['presenter_image'] = Request::p()->post['presenter_image'];
         } elseif (!empty($event_info)) {
             $data['presenter_image'] = $event_info['image'];
         } else {
@@ -885,24 +885,24 @@ class Event extends Controller {
         
         $data['no_image'] = ToolImage::resize('placeholder.png', 100, 100);
 
-        if (isset($this->request->post['facebook'])) {
-            $data['facebook'] = $this->request->post['facebook'];
+        if (isset(Request::p()->post['facebook'])) {
+            $data['facebook'] = Request::p()->post['facebook'];
         } elseif (!empty($event_info)) {
             $data['facebook'] = $event_info['facebook'];
         } else {
             $data['facebook'] = '';
         }
 
-        if (isset($this->request->post['twitter'])) {
-            $data['twitter'] = $this->request->post['twitter'];
+        if (isset(Request::p()->post['twitter'])) {
+            $data['twitter'] = Request::p()->post['twitter'];
         } elseif (!empty($event_info)) {
             $data['twitter'] = $event_info['twitter'];
         } else {
             $data['twitter'] = '';
         }
 
-        if (isset($this->request->post['bio'])) {
-            $data['bio'] = $this->request->post['bio'];
+        if (isset(Request::p()->post['bio'])) {
+            $data['bio'] = Request::p()->post['bio'];
         } elseif (!empty($event_info)) {
             $data['bio'] = $event_info['bio'];
         } else {
@@ -921,10 +921,10 @@ class Event extends Controller {
         Theme::setTitle(Lang::get('lang_text_roster'));
         Theme::model('calendar/event');
         
-        if (isset($this->request->post['event_id'])) {
-            $event_id = $this->request->post['event_id'];
-        } elseif (isset($this->request->get['event_id'])) {
-            $event_id = $this->request->get['event_id'];
+        if (isset(Request::p()->post['event_id'])) {
+            $event_id = Request::p()->post['event_id'];
+        } elseif (isset(Request::p()->get['event_id'])) {
+            $event_id = Request::p()->get['event_id'];
         } else {
             $event_id = '';
         }
@@ -935,15 +935,15 @@ class Event extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
-            unset($this->session->data['success']);
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
         
         Breadcrumb::add('lang_heading_title', 'calendar/event');
-        Breadcrumb::add('lang_text_roster', 'calendar/event/roster', '&event_id=' . $this->request->get['event_id']);
+        Breadcrumb::add('lang_text_roster', 'calendar/event/roster', '&event_id=' . Request::p()->get['event_id']);
         
         Theme::model('people/customer');
         
@@ -967,7 +967,7 @@ class Event extends Controller {
         $data['seats']      = CalendarEvent::getSeats($event_id);
         $data['available']  = CalendarEvent::getAvailable($event_id);
         $data['event_id']   = $event_id;
-        $data['delete']     = Url::link('calendar/event/delete_attendee', '' . '&event_id=' . $event_id, 'SSL');
+        $data['delete']     = Url::link('calendar/event/delete_attendee', '' . 'event_id=' . $event_id, 'SSL');
         $data['cancel']     = Url::link('calendar/event', '', 'SSL');
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
@@ -982,10 +982,10 @@ class Event extends Controller {
     public function autocomplete() {
         $json = array();
         
-        if (isset($this->request->get['name'])) {
+        if (isset(Request::p()->get['name'])) {
             Theme::model('people/customer');
             
-            $filter = array('filter_username' => $this->request->get['name'], 'start' => 0, 'limit' => 20);
+            $filter = array('filter_username' => Request::p()->get['name'], 'start' => 0, 'limit' => 20);
             
             $results = PeopleCustomer::getCustomers($filter);
             
@@ -1015,55 +1015,55 @@ class Event extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if ((Encode::strlen($this->request->post['name']) < 1) || (Encode::strlen($this->request->post['name']) > 150)) {
+        if ((Encode::strlen(Request::p()->post['name']) < 1) || (Encode::strlen(Request::p()->post['name']) > 150)) {
             $this->error['name'] = Lang::get('lang_error_name');
         }
         
-        if ($this->request->post['slug'] == "") {
+        if (Request::p()->post['slug'] == "") {
             $this->error['slug'] = Lang::get('lang_error_slug');
         }
         
-        if ($this->request->post['is_product']):
-            if ((Encode::strlen($this->request->post['model']) < 1) || (Encode::strlen($this->request->post['model']) > 50)):
+        if (Request::p()->post['is_product']):
+            if ((Encode::strlen(Request::p()->post['model']) < 1) || (Encode::strlen(Request::p()->post['model']) > 50)):
                 $this->error['model'] = Lang::get('lang_error_model');
             endif;
 
-            if ($this->request->post['cost'] == ""):
+            if (Request::p()->post['cost'] == ""):
                 $this->error['cost'] = Lang::get('lang_error_cost');
             endif;
         endif;
         
-        if ((Encode::strlen($this->request->post['event_length']) < 1) || (Encode::strlen($this->request->post['event_length']) > 40)) {
+        if ((Encode::strlen(Request::p()->post['event_length']) < 1) || (Encode::strlen(Request::p()->post['event_length']) > 40)) {
             $this->error['event_length'] = Lang::get('lang_error_event_length');
         }
         
-        if ($this->request->post['event_date'] == "" || date('Y-m-d', time()) >= date('Y-m-d', strtotime($this->request->post['event_date']))) {
+        if (Request::p()->post['event_date'] == "" || date('Y-m-d', time()) >= date('Y-m-d', strtotime(Request::p()->post['event_date']))) {
             $this->error['event_date'] = Lang::get('lang_error_event_date');
         }
         
-        if ($this->request->post['event_time'] == "") {
+        if (Request::p()->post['event_time'] == "") {
             $this->error['event_time'] = Lang::get('lang_error_event_time');
         }
         
-        if ($this->request->post['online']):
-            if (Encode::strlen($this->request->post['link']) < 1):
+        if (Request::p()->post['online']):
+            if (Encode::strlen(Request::p()->post['link']) < 1):
                 $this->error['link'] = Lang::get('lang_error_link');
             endif;
         else:
-            if ((Encode::strlen($this->request->post['location']) < 1) || (Encode::strlen($this->request->post['location']) > 200)) {
+            if ((Encode::strlen(Request::p()->post['location']) < 1) || (Encode::strlen(Request::p()->post['location']) > 200)) {
                 $this->error['location'] = Lang::get('lang_error_location');
             }
         endif;
         
-        if (!isset($this->request->post['event_days'])) {
+        if (!isset(Request::p()->post['event_days'])) {
             $this->error['event_days'] = Lang::get('lang_error_event_days');
         }
         
-        if ($this->request->post['seats'] == "") {
+        if (Request::p()->post['seats'] == "") {
             $this->error['seats'] = Lang::get('lang_error_seats');
         }
         
-        if (Encode::strlen($this->request->post['description']) < 25) {
+        if (Encode::strlen(Request::p()->post['description']) < 25) {
             $this->error['description'] = Lang::get('lang_error_description');
         }
         
@@ -1086,11 +1086,11 @@ class Event extends Controller {
         if (!User::hasPermission('modify', 'calendar/event')) {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
-        if ((Encode::strlen($this->request->post['presenter_name']) < 1) || (Encode::strlen($this->request->post['presenter_name']) > 150)) {
+        if ((Encode::strlen(Request::p()->post['presenter_name']) < 1) || (Encode::strlen(Request::p()->post['presenter_name']) > 150)) {
             $this->error['presenter_name'] = Lang::get('lang_error_presenter_name');
         }
         
-        if (Encode::strlen($this->request->post['bio']) < 25) {
+        if (Encode::strlen(Request::p()->post['bio']) < 25) {
             $this->error['bio'] = Lang::get('lang_error_bio');
         }
         

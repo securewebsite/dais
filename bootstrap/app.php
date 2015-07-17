@@ -177,5 +177,5 @@ $app = new Dais\Application(
 */
 
 $app->boot();
-//var_dump($app);exit;
+//var_dump($app['cache']);exit;
 return $app;

@@ -31,8 +31,8 @@ class Reset extends Controller {
             Response::redirect(Url::link('common/login', '', 'SSL'));
         endif;
         
-        if (isset($this->request->get['code'])):
-            $code = $this->request->get['code'];
+        if (isset(Request::p()->get['code'])):
+            $code = Request::p()->get['code'];
         else:
             $code = '';
         endif;
@@ -44,9 +44,9 @@ class Reset extends Controller {
         if ($user_info):
             $data = Theme::language('common/reset');
             
-            if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
-                PeopleUser::editPassword($user_info['user_id'], $this->request->post['password']);
-                $this->session->data['success'] = Lang::get('lang_text_success');
+            if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
+                PeopleUser::editPassword($user_info['user_id'], Request::p()->post['password']);
+                Session::p()->data['success'] = Lang::get('lang_text_success');
                 Response::redirect(Url::link('common/login', '', 'SSL'));
             endif;
             
@@ -58,9 +58,9 @@ class Reset extends Controller {
                 $data['error_warning'] = '';
             endif;
             
-            if (isset($this->session->data['success'])):
-                $data['success'] = $this->session->data['success'];
-                unset($this->session->data['success']);
+            if (isset(Session::p()->data['success'])):
+                $data['success'] = Session::p()->data['success'];
+                unset(Session::p()->data['success']);
             else:
                 $data['success'] = '';
             endif;
@@ -80,14 +80,14 @@ class Reset extends Controller {
             $data['action'] = Url::link('common/reset', 'code=' . $code, 'SSL');
             $data['cancel'] = Url::link('common/login', '', 'SSL');
             
-            if (isset($this->request->post['password'])):
-                $data['password'] = $this->request->post['password'];
+            if (isset(Request::p()->post['password'])):
+                $data['password'] = Request::p()->post['password'];
             else:
                 $data['password'] = '';
             endif;
             
-            if (isset($this->request->post['confirm'])):
-                $data['confirm'] = $this->request->post['confirm'];
+            if (isset(Request::p()->post['confirm'])):
+                $data['confirm'] = Request::p()->post['confirm'];
             else:
                 $data['confirm'] = '';
             endif;
@@ -107,11 +107,11 @@ class Reset extends Controller {
     }
     
     protected function validate() {
-        if ((Encode::strlen($this->request->post['password']) < 4) || (Encode::strlen($this->request->post['password']) > 20)):
+        if ((Encode::strlen(Request::p()->post['password']) < 4) || (Encode::strlen(Request::p()->post['password']) > 20)):
             $this->error['password'] = Lang::get('lang_error_password');
         endif;
         
-        if ($this->request->post['confirm'] != $this->request->post['password']):
+        if (Request::p()->post['confirm'] != Request::p()->post['password']):
             $this->error['confirm'] = Lang::get('lang_error_confirm');
         endif;
         

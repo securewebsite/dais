@@ -353,16 +353,16 @@
         },
         {
             "name": "foil/foil",
-            "version": "dev-master",
+            "version": "0.6.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Giuseppe-Mazzapica/Foil.git",
-                "reference": "863a54b9bc3a964f670a12baa2826d2d25c2936a"
+                "url": "https://github.com/FoilPHP/Foil.git",
+                "reference": "9910b5af721dd7698cd4349dc0a0c4dac78039dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Giuseppe-Mazzapica/Foil/zipball/863a54b9bc3a964f670a12baa2826d2d25c2936a",
-                "reference": "863a54b9bc3a964f670a12baa2826d2d25c2936a",
+                "url": "https://api.github.com/repos/FoilPHP/Foil/zipball/9910b5af721dd7698cd4349dc0a0c4dac78039dd",
+                "reference": "9910b5af721dd7698cd4349dc0a0c4dac78039dd",
                 "shasum": ""
             },
             "require": {
@@ -409,7 +409,7 @@
                 "template engine",
                 "templates"
             ],
-            "time": "2015-06-21 11:45:55"
+            "time": "2015-07-06 01:06:26"
         },
         {
             "name": "guzzle/guzzle",

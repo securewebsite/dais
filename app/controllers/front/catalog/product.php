@@ -30,10 +30,10 @@ class Product extends Controller {
             ->register('datetimepicker.min', 'bootstrap.min')
             ->register('gallery.min', 'bootstrap.min');
         
-        if (isset($this->request->get['path'])) {
+        if (isset(Request::p()->get['path'])) {
             $path = '';
             
-            $parts = explode('_', (string)$this->request->get['path']);
+            $parts = explode('_', (string)Request::p()->get['path']);
             
             $category_id = (int)array_pop($parts);
             
@@ -57,100 +57,100 @@ class Product extends Controller {
             if ($category_info) {
                 $url = '';
                 
-                if (isset($this->request->get['sort'])) {
-                    $url.= '&sort=' . $this->request->get['sort'];
+                if (isset(Request::p()->get['sort'])) {
+                    $url.= '&sort=' . Request::p()->get['sort'];
                 }
                 
-                if (isset($this->request->get['order'])) {
-                    $url.= '&order=' . $this->request->get['order'];
+                if (isset(Request::p()->get['order'])) {
+                    $url.= '&order=' . Request::p()->get['order'];
                 }
                 
-                if (isset($this->request->get['page'])) {
-                    $url.= '&page=' . $this->request->get['page'];
+                if (isset(Request::p()->get['page'])) {
+                    $url.= '&page=' . Request::p()->get['page'];
                 }
                 
-                if (isset($this->request->get['limit'])) {
-                    $url.= '&limit=' . $this->request->get['limit'];
+                if (isset(Request::p()->get['limit'])) {
+                    $url.= '&limit=' . Request::p()->get['limit'];
                 }
                 
-                Breadcrumb::add($category_info['name'], 'catalog/category', 'path=' . $this->request->get['path'] . $url);
+                Breadcrumb::add($category_info['name'], 'catalog/category', 'path=' . Request::p()->get['path'] . $url);
             }
         }
         
         Theme::model('catalog/manufacturer');
         
-        if (isset($this->request->get['manufacturer_id'])) {
+        if (isset(Request::p()->get['manufacturer_id'])) {
             Breadcrumb::add('lang_text_brand', 'catalog/manufacturer');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
-            if (isset($this->request->get['limit'])) {
-                $url.= '&limit=' . $this->request->get['limit'];
+            if (isset(Request::p()->get['limit'])) {
+                $url.= '&limit=' . Request::p()->get['limit'];
             }
             
-            $manufacturer_info = CatalogManufacturer::getManufacturer($this->request->get['manufacturer_id']);
+            $manufacturer_info = CatalogManufacturer::getManufacturer(Request::p()->get['manufacturer_id']);
             
             if ($manufacturer_info) {
-                Breadcrumb::add($manufacturer_info['name'], 'catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url);
+                Breadcrumb::add($manufacturer_info['name'], 'catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . $url);
             }
         }
         
-        if (isset($this->request->get['search']) || isset($this->request->get['tag'])) {
+        if (isset(Request::p()->get['search']) || isset(Request::p()->get['tag'])) {
             $url = '';
             
-            if (isset($this->request->get['search'])) {
-                $url.= '&search=' . $this->request->get['search'];
+            if (isset(Request::p()->get['search'])) {
+                $url.= '&search=' . Request::p()->get['search'];
             }
             
-            if (isset($this->request->get['tag'])) {
-                $url.= '&tag=' . $this->request->get['tag'];
+            if (isset(Request::p()->get['tag'])) {
+                $url.= '&tag=' . Request::p()->get['tag'];
             }
             
-            if (isset($this->request->get['description'])) {
-                $url.= '&description=' . $this->request->get['description'];
+            if (isset(Request::p()->get['description'])) {
+                $url.= '&description=' . Request::p()->get['description'];
             }
             
-            if (isset($this->request->get['category_id'])) {
-                $url.= '&category_id=' . $this->request->get['category_id'];
+            if (isset(Request::p()->get['category_id'])) {
+                $url.= '&category_id=' . Request::p()->get['category_id'];
             }
             
-            if (isset($this->request->get['sub_category'])) {
-                $url.= '&sub_category=' . $this->request->get['sub_category'];
+            if (isset(Request::p()->get['sub_category'])) {
+                $url.= '&sub_category=' . Request::p()->get['sub_category'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
-            if (isset($this->request->get['limit'])) {
-                $url.= '&limit=' . $this->request->get['limit'];
+            if (isset(Request::p()->get['limit'])) {
+                $url.= '&limit=' . Request::p()->get['limit'];
             }
             
             Breadcrumb::add('lang_text_search', 'catalog/search', $url);
         }
         
-        if (isset($this->request->get['product_id'])) {
-            $product_id = (int)$this->request->get['product_id'];
+        if (isset(Request::p()->get['product_id'])) {
+            $product_id = (int)Request::p()->get['product_id'];
         } else {
             $product_id = 0;
         }
@@ -166,55 +166,55 @@ class Product extends Controller {
         if ($product_info) {
             $url = '';
             
-            if (isset($this->request->get['path'])) {
-                $url.= '&path=' . $this->request->get['path'];
+            if (isset(Request::p()->get['path'])) {
+                $url.= '&path=' . Request::p()->get['path'];
             }
             
-            if (isset($this->request->get['filter'])) {
-                $url.= '&filter=' . $this->request->get['filter'];
+            if (isset(Request::p()->get['filter'])) {
+                $url.= '&filter=' . Request::p()->get['filter'];
             }
             
-            if (isset($this->request->get['manufacturer_id'])) {
-                $url.= '&manufacturer_id=' . $this->request->get['manufacturer_id'];
+            if (isset(Request::p()->get['manufacturer_id'])) {
+                $url.= '&manufacturer_id=' . Request::p()->get['manufacturer_id'];
             }
             
-            if (isset($this->request->get['search'])) {
-                $url.= '&search=' . $this->request->get['search'];
+            if (isset(Request::p()->get['search'])) {
+                $url.= '&search=' . Request::p()->get['search'];
             }
             
-            if (isset($this->request->get['tag'])) {
-                $url.= '&tag=' . $this->request->get['tag'];
+            if (isset(Request::p()->get['tag'])) {
+                $url.= '&tag=' . Request::p()->get['tag'];
             }
             
-            if (isset($this->request->get['description'])) {
-                $url.= '&description=' . $this->request->get['description'];
+            if (isset(Request::p()->get['description'])) {
+                $url.= '&description=' . Request::p()->get['description'];
             }
             
-            if (isset($this->request->get['category_id'])) {
-                $url.= '&category_id=' . $this->request->get['category_id'];
+            if (isset(Request::p()->get['category_id'])) {
+                $url.= '&category_id=' . Request::p()->get['category_id'];
             }
             
-            if (isset($this->request->get['sub_category'])) {
-                $url.= '&sub_category=' . $this->request->get['sub_category'];
+            if (isset(Request::p()->get['sub_category'])) {
+                $url.= '&sub_category=' . Request::p()->get['sub_category'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
-            if (isset($this->request->get['limit'])) {
-                $url.= '&limit=' . $this->request->get['limit'];
+            if (isset(Request::p()->get['limit'])) {
+                $url.= '&limit=' . Request::p()->get['limit'];
             }
             
-            Breadcrumb::add($product_info['name'], 'catalog/product', 'product_id=' . $this->request->get['product_id'] . $url);
+            Breadcrumb::add($product_info['name'], 'catalog/product', 'product_id=' . Request::p()->get['product_id'] . $url);
             
             Theme::setTitle($product_info['name']);
             Theme::setDescription($product_info['meta_description']);
@@ -230,7 +230,7 @@ class Product extends Controller {
             
             $data['tab_review'] = sprintf(Lang::get('lang_tab_review'), $product_info['reviews']);
             
-            $data['product_id']    = $this->request->get['product_id'];
+            $data['product_id']    = Request::p()->get['product_id'];
             $data['manufacturer']  = $product_info['manufacturer'];
             $data['manufacturers'] = Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $product_info['manufacturer_id']);
             $data['model']         = $product_info['model'];
@@ -359,7 +359,7 @@ class Product extends Controller {
             
             $data['images'] = array();
             
-            $results = CatalogProduct::getProductImages($this->request->get['product_id']);
+            $results = CatalogProduct::getProductImages(Request::p()->get['product_id']);
             
             foreach ($results as $result) {
                 $data['images'][] = array('popup' => ToolImage::resize($result['image'], Config::get('config_image_popup_width'), Config::get('config_image_popup_height')), 'thumb' => ToolImage::resize($result['image'], Config::get('config_image_additional_width'), Config::get('config_image_additional_height')));
@@ -383,7 +383,7 @@ class Product extends Controller {
                 $data['tax'] = false;
             }
             
-            $discounts = CatalogProduct::getProductDiscounts($this->request->get['product_id']);
+            $discounts = CatalogProduct::getProductDiscounts(Request::p()->get['product_id']);
             
             $data['discounts'] = array();
             
@@ -393,7 +393,7 @@ class Product extends Controller {
             
             $data['options'] = array();
             
-            foreach (CatalogProduct::getProductOptions($this->request->get['product_id']) as $option) {
+            foreach (CatalogProduct::getProductOptions(Request::p()->get['product_id']) as $option) {
                 if ($option['type'] == 'select' || $option['type'] == 'radio' || $option['type'] == 'checkbox' || $option['type'] == 'image') {
                     $option_value_data = array();
                     
@@ -437,11 +437,11 @@ class Product extends Controller {
             $data['reviews']          = sprintf(Lang::get('lang_text_reviews'), (int)$product_info['reviews']);
             $data['rating']           = (int)$product_info['rating'];
             $data['description']      = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
-            $data['attribute_groups'] = CatalogProduct::getProductAttributes($this->request->get['product_id']);
+            $data['attribute_groups'] = CatalogProduct::getProductAttributes(Request::p()->get['product_id']);
             
             $data['products'] = array();
             
-            $results = CatalogProduct::getProductRelated($this->request->get['product_id']);
+            $results = CatalogProduct::getProductRelated(Request::p()->get['product_id']);
             
             foreach ($results as $result) {
                 if ($result['image']) {
@@ -496,7 +496,7 @@ class Product extends Controller {
             
             $data['recurrings'] = CatalogProduct::getAllRecurring($product_info['product_id']);
             
-            CatalogProduct::updateViewed($this->request->get['product_id']);
+            CatalogProduct::updateViewed(Request::p()->get['product_id']);
             
             Theme::loadjs('javascript/catalog/product', $data);
             
@@ -513,52 +513,52 @@ class Product extends Controller {
         } else {
             $url = '';
             
-            if (isset($this->request->get['path'])) {
-                $url.= '&path=' . $this->request->get['path'];
+            if (isset(Request::p()->get['path'])) {
+                $url.= '&path=' . Request::p()->get['path'];
             }
             
-            if (isset($this->request->get['filter'])) {
-                $url.= '&filter=' . $this->request->get['filter'];
+            if (isset(Request::p()->get['filter'])) {
+                $url.= '&filter=' . Request::p()->get['filter'];
             }
             
-            if (isset($this->request->get['manufacturer_id'])) {
-                $url.= '&manufacturer_id=' . $this->request->get['manufacturer_id'];
+            if (isset(Request::p()->get['manufacturer_id'])) {
+                $url.= '&manufacturer_id=' . Request::p()->get['manufacturer_id'];
             }
             
-            if (isset($this->request->get['search'])) {
-                $url.= '&search=' . $this->request->get['search'];
+            if (isset(Request::p()->get['search'])) {
+                $url.= '&search=' . Request::p()->get['search'];
             }
             
-            if (isset($this->request->get['tag'])) {
-                $url.= '&tag=' . $this->request->get['tag'];
+            if (isset(Request::p()->get['tag'])) {
+                $url.= '&tag=' . Request::p()->get['tag'];
             }
             
-            if (isset($this->request->get['description'])) {
-                $url.= '&description=' . $this->request->get['description'];
+            if (isset(Request::p()->get['description'])) {
+                $url.= '&description=' . Request::p()->get['description'];
             }
             
-            if (isset($this->request->get['category_id'])) {
-                $url.= '&category_id=' . $this->request->get['category_id'];
+            if (isset(Request::p()->get['category_id'])) {
+                $url.= '&category_id=' . Request::p()->get['category_id'];
             }
             
-            if (isset($this->request->get['sub_category'])) {
-                $url.= '&sub_category=' . $this->request->get['sub_category'];
+            if (isset(Request::p()->get['sub_category'])) {
+                $url.= '&sub_category=' . Request::p()->get['sub_category'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
-            if (isset($this->request->get['limit'])) {
-                $url.= '&limit=' . $this->request->get['limit'];
+            if (isset(Request::p()->get['limit'])) {
+                $url.= '&limit=' . Request::p()->get['limit'];
             }
             
             Breadcrumb::add('lang_text_error', 'catalog/product', 'product_id=' . $product_id . $url);
@@ -569,7 +569,7 @@ class Product extends Controller {
             
             $data['continue'] = Url::link('shop/home');
             
-            Response::addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
+            Response::addHeader(Request::p()->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
@@ -588,7 +588,7 @@ class Product extends Controller {
         Theme::language('catalog/product');
         Theme::model('catalog/product');
         
-        $results = CatalogProduct::joinWaitList($this->request->post['event_id'], Customer::getId());
+        $results = CatalogProduct::joinWaitList(Request::p()->post['event_id'], Customer::getId());
         
         if ($results) {
             $message = '<div class="alert alert-success">' . Lang::get('lang_text_join_success') . '</div>';
@@ -606,23 +606,23 @@ class Product extends Controller {
         
         Theme::model('catalog/review');
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $data['reviews'] = array();
         
-        $review_total = CatalogReview::getTotalReviewsByProductId($this->request->get['product_id']);
+        $review_total = CatalogReview::getTotalReviewsByProductId(Request::p()->get['product_id']);
         
-        $results = CatalogReview::getReviewsByProductId($this->request->get['product_id'], ($page - 1) * 5, 5);
+        $results = CatalogReview::getReviewsByProductId(Request::p()->get['product_id'], ($page - 1) * 5, 5);
         
         foreach ($results as $result) {
             $data['reviews'][] = array('author' => $result['author'], 'text' => $result['text'], 'rating' => (int)$result['rating'], 'reviews' => sprintf(Lang::get('lang_text_reviews'), (int)$review_total), 'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])));
         }
         
-        $data['pagination'] = Theme::paginate($review_total, $page, 5, Lang::get('lang_text_pagination'), Url::link('catalog/product/review', 'product_id=' . $this->request->get['product_id'] . '&page={page}'));
+        $data['pagination'] = Theme::paginate($review_total, $page, 5, Lang::get('lang_text_pagination'), Url::link('catalog/product/review', 'product_id=' . Request::p()->get['product_id'] . '&page={page}'));
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
@@ -633,20 +633,20 @@ class Product extends Controller {
         Theme::language('catalog/product');
         Theme::model('catalog/product');
         
-        if (isset($this->request->post['product_id'])) {
-            $product_id = $this->request->post['product_id'];
+        if (isset(Request::p()->post['product_id'])) {
+            $product_id = Request::p()->post['product_id'];
         } else {
             $product_id = 0;
         }
         
-        if (isset($this->request->post['recurring_id'])) {
-            $recurring_id = $this->request->post['recurring_id'];
+        if (isset(Request::p()->post['recurring_id'])) {
+            $recurring_id = Request::p()->post['recurring_id'];
         } else {
             $recurring_id = 0;
         }
         
-        if (isset($this->request->post['quantity'])) {
-            $quantity = $this->request->post['quantity'];
+        if (isset(Request::p()->post['quantity'])) {
+            $quantity = Request::p()->post['quantity'];
         } else {
             $quantity = 1;
         }
@@ -691,27 +691,27 @@ class Product extends Controller {
         
         $json = array();
         
-        if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-            if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 25)) {
+        if (Request::p()->server['REQUEST_METHOD'] == 'POST') {
+            if ((Encode::strlen(Request::p()->post['name']) < 3) || (Encode::strlen(Request::p()->post['name']) > 25)) {
                 $json['error'] = Lang::get('lang_error_name');
             }
             
-            if ((Encode::strlen($this->request->post['text']) < 25) || (Encode::strlen($this->request->post['text']) > 1000)) {
+            if ((Encode::strlen(Request::p()->post['text']) < 25) || (Encode::strlen(Request::p()->post['text']) > 1000)) {
                 $json['error'] = Lang::get('lang_error_text');
             }
             
-            if (empty($this->request->post['rating'])) {
+            if (empty(Request::p()->post['rating'])) {
                 $json['error'] = Lang::get('lang_error_rating');
             }
             
-            if (empty($this->session->data['captcha']) || ($this->session->data['captcha'] != $this->request->post['captcha'])) {
+            if (empty(Session::p()->data['captcha']) || (Session::p()->data['captcha'] != Request::p()->post['captcha'])) {
                 $json['error'] = Lang::get('lang_error_captcha');
             }
             
             if (!isset($json['error'])) {
-                unset($this->session->data['captcha']);
+                unset(Session::p()->data['captcha']);
                 
-                CatalogReview::addReview($this->request->get['product_id'], $this->request->post);
+                CatalogReview::addReview(Request::p()->get['product_id'], Request::post());
                 
                 $json['success'] = Lang::get('lang_text_success');
             }
@@ -725,7 +725,7 @@ class Product extends Controller {
     public function captcha() {
         $captcha = new Captcha();
         
-        $this->session->data['captcha'] = $captcha->getCode();
+        Session::p()->data['captcha'] = $captcha->getCode();
         
         Theme::listen(__CLASS__, __FUNCTION__);
         
@@ -737,8 +737,8 @@ class Product extends Controller {
         
         $json = array();
         
-        if (!empty($this->request->files['file']['name'])) {
-            $filename = basename(preg_replace('/[^a-zA-Z0-9\.\-\s+]/', '', html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8')));
+        if (!empty(Request::p()->files['file']['name'])) {
+            $filename = basename(preg_replace('/[^a-zA-Z0-9\.\-\s+]/', '', html_entity_decode(Request::p()->files['file']['name'], ENT_QUOTES, 'UTF-8')));
             
             if ((Encode::strlen($filename) < 3) || (Encode::strlen($filename) > 64)) {
                 $json['error'] = Lang::get('lang_error_filename');
@@ -766,31 +766,31 @@ class Product extends Controller {
                 $allowed[] = trim($filetype);
             }
             
-            if (!in_array($this->request->files['file']['type'], $allowed)) {
+            if (!in_array(Request::p()->files['file']['type'], $allowed)) {
                 $json['error'] = Lang::get('lang_error_filetype');
             }
             
             // Check to see if any PHP files are trying to be uploaded
-            $content = file_get_contents($this->request->files['file']['tmp_name']);
+            $content = file_get_contents(Request::p()->files['file']['tmp_name']);
             
             if (preg_match('/\<\?php/i', $content)) {
                 $json['error'] = Lang::get('lang_error_filetype');
             }
             
-            if ($this->request->files['file']['error'] != UPLOAD_ERR_OK) {
-                $json['error'] = Lang::get('lang_error_upload_' . $this->request->files['file']['error']);
+            if (Request::p()->files['file']['error'] != UPLOAD_ERR_OK) {
+                $json['error'] = Lang::get('lang_error_upload_' . Request::p()->files['file']['error']);
             }
         } else {
             $json['error'] = Lang::get('lang_error_upload');
         }
         
-        if (!$json && is_uploaded_file($this->request->files['file']['tmp_name']) && file_exists($this->request->files['file']['tmp_name'])) {
+        if (!$json && is_uploaded_file(Request::p()->files['file']['tmp_name']) && file_exists(Request::p()->files['file']['tmp_name'])) {
             $file = basename($filename) . '.' . md5(mt_rand());
             
             // Hide the uploaded file name so people can not link to it directly.
             $json['file'] = $this->encryption->encrypt($file);
             
-            move_uploaded_file($this->request->files['file']['tmp_name'], Config::get('path.download') . $file);
+            move_uploaded_file(Request::p()->files['file']['tmp_name'], Config::get('path.download') . $file);
             
             $json['success'] = Lang::get('lang_text_upload');
         }

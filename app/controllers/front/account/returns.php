@@ -26,7 +26,7 @@ class Returns extends Controller {
     
     public function index() {
         if (!Customer::isLogged()) {
-            $this->session->data['redirect'] = Url::link('account/returns', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/returns', '', 'SSL');
             
             Response::redirect(Url::link('account/login', '', 'SSL'));
         }
@@ -38,16 +38,16 @@ class Returns extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'account/returns', $url, true, 'SSL');
         
         Theme::model('account/returns');
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
@@ -92,14 +92,14 @@ class Returns extends Controller {
     public function info() {
         $data = Theme::language('account/returns');
         
-        if (isset($this->request->get['return_id'])) {
-            $return_id = $this->request->get['return_id'];
+        if (isset(Request::p()->get['return_id'])) {
+            $return_id = Request::p()->get['return_id'];
         } else {
             $return_id = 0;
         }
         
         if (!Customer::isLogged()) {
-            $this->session->data['redirect'] = Url::link('account/returns/info', 'return_id=' . $return_id, 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/returns/info', 'return_id=' . $return_id, 'SSL');
             
             Response::redirect(Url::link('account/login', '', 'SSL'));
         }
@@ -115,12 +115,12 @@ class Returns extends Controller {
             
             $url = '';
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Breadcrumb::add('lang_heading_title', 'account/returns', $url, true, 'SSL');
-            Breadcrumb::add('lang_text_return', 'account/returns/info', 'return_id=' . $this->request->get['return_id'] . $url, true, 'SSL');
+            Breadcrumb::add('lang_text_return', 'account/returns/info', 'return_id=' . Request::p()->get['return_id'] . $url, true, 'SSL');
             
             $data['return_id']    = $return_info['return_id'];
             $data['order_id']     = $return_info['order_id'];
@@ -140,7 +140,7 @@ class Returns extends Controller {
             
             $data['histories'] = array();
             
-            $results = AccountReturns::getReturnHistories($this->request->get['return_id']);
+            $results = AccountReturns::getReturnHistories(Request::p()->get['return_id']);
             
             foreach ($results as $result) {
                 $data['histories'][] = array(
@@ -168,8 +168,8 @@ class Returns extends Controller {
             
             $url = '';
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Breadcrumb::add('lang_text_return', 'account/returns/info', 'return_id=' . $return_id . $url, true, 'SSL');
@@ -177,7 +177,7 @@ class Returns extends Controller {
             $data['heading_title'] = Lang::get('lang_text_return');
             $data['continue'] = Url::link('account/returns', '', 'SSL');
             
-            Response::addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
+            Response::addHeader(Request::p()->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
@@ -196,9 +196,9 @@ class Returns extends Controller {
         
         JS::register('datetimepicker.min', 'bootstrap.min');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            unset($this->session->data['captcha']);
-            AccountReturns::addReturn($this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            unset(Session::p()->data['captcha']);
+            AccountReturns::addReturn(Request::post());
             
             Response::redirect(Url::link('account/returns/success', '', 'SSL'));
         }
@@ -272,94 +272,94 @@ class Returns extends Controller {
         
         Theme::model('account/order');
         
-        if (isset($this->request->get['order_id'])) {
-            $order_info = AccountOrder::getOrder($this->request->get['order_id']);
+        if (isset(Request::p()->get['order_id'])) {
+            $order_info = AccountOrder::getOrder(Request::p()->get['order_id']);
         }
         
         Theme::model('catalog/product');
         
-        if (isset($this->request->get['product_id'])) {
-            $product_info = CatalogProduct::getProduct($this->request->get['product_id']);
+        if (isset(Request::p()->get['product_id'])) {
+            $product_info = CatalogProduct::getProduct(Request::p()->get['product_id']);
         }
         
-        if (isset($this->request->post['order_id'])) {
-            $data['order_id'] = $this->request->post['order_id'];
+        if (isset(Request::p()->post['order_id'])) {
+            $data['order_id'] = Request::p()->post['order_id'];
         } elseif (!empty($order_info)) {
             $data['order_id'] = $order_info['order_id'];
         } else {
             $data['order_id'] = '';
         }
         
-        if (isset($this->request->post['date_ordered'])) {
-            $data['date_ordered'] = $this->request->post['date_ordered'];
+        if (isset(Request::p()->post['date_ordered'])) {
+            $data['date_ordered'] = Request::p()->post['date_ordered'];
         } elseif (!empty($order_info)) {
             $data['date_ordered'] = date('Y-m-d', strtotime($order_info['date_added']));
         } else {
             $data['date_ordered'] = '';
         }
         
-        if (isset($this->request->post['firstname'])) {
-            $data['firstname'] = $this->request->post['firstname'];
+        if (isset(Request::p()->post['firstname'])) {
+            $data['firstname'] = Request::p()->post['firstname'];
         } elseif (!empty($order_info)) {
             $data['firstname'] = $order_info['firstname'];
         } else {
             $data['firstname'] = Customer::getFirstName();
         }
         
-        if (isset($this->request->post['lastname'])) {
-            $data['lastname'] = $this->request->post['lastname'];
+        if (isset(Request::p()->post['lastname'])) {
+            $data['lastname'] = Request::p()->post['lastname'];
         } elseif (!empty($order_info)) {
             $data['lastname'] = $order_info['lastname'];
         } else {
             $data['lastname'] = Customer::getLastName();
         }
         
-        if (isset($this->request->post['email'])) {
-            $data['email'] = $this->request->post['email'];
+        if (isset(Request::p()->post['email'])) {
+            $data['email'] = Request::p()->post['email'];
         } elseif (!empty($order_info)) {
             $data['email'] = $order_info['email'];
         } else {
             $data['email'] = Customer::getEmail();
         }
         
-        if (isset($this->request->post['telephone'])) {
-            $data['telephone'] = $this->request->post['telephone'];
+        if (isset(Request::p()->post['telephone'])) {
+            $data['telephone'] = Request::p()->post['telephone'];
         } elseif (!empty($order_info)) {
             $data['telephone'] = $order_info['telephone'];
         } else {
             $data['telephone'] = Customer::getTelephone();
         }
         
-        if (isset($this->request->post['product'])) {
-            $data['product'] = $this->request->post['product'];
+        if (isset(Request::p()->post['product'])) {
+            $data['product'] = Request::p()->post['product'];
         } elseif (!empty($product_info)) {
             $data['product'] = $product_info['name'];
         } else {
             $data['product'] = '';
         }
         
-        if (isset($this->request->post['model'])) {
-            $data['model'] = $this->request->post['model'];
+        if (isset(Request::p()->post['model'])) {
+            $data['model'] = Request::p()->post['model'];
         } elseif (!empty($product_info)) {
             $data['model'] = $product_info['model'];
         } else {
             $data['model'] = '';
         }
         
-        if (isset($this->request->post['quantity'])) {
-            $data['quantity'] = $this->request->post['quantity'];
+        if (isset(Request::p()->post['quantity'])) {
+            $data['quantity'] = Request::p()->post['quantity'];
         } else {
             $data['quantity'] = 1;
         }
         
-        if (isset($this->request->post['opened'])) {
-            $data['opened'] = $this->request->post['opened'];
+        if (isset(Request::p()->post['opened'])) {
+            $data['opened'] = Request::p()->post['opened'];
         } else {
             $data['opened'] = false;
         }
         
-        if (isset($this->request->post['return_reason_id'])) {
-            $data['return_reason_id'] = $this->request->post['return_reason_id'];
+        if (isset(Request::p()->post['return_reason_id'])) {
+            $data['return_reason_id'] = Request::p()->post['return_reason_id'];
         } else {
             $data['return_reason_id'] = '';
         }
@@ -368,14 +368,14 @@ class Returns extends Controller {
         
         $data['return_reasons'] = LocaleReturnReason::getReturnReasons();
         
-        if (isset($this->request->post['comment'])) {
-            $data['comment'] = $this->request->post['comment'];
+        if (isset(Request::p()->post['comment'])) {
+            $data['comment'] = Request::p()->post['comment'];
         } else {
             $data['comment'] = '';
         }
         
-        if (isset($this->request->post['captcha'])) {
-            $data['captcha'] = $this->request->post['captcha'];
+        if (isset(Request::p()->post['captcha'])) {
+            $data['captcha'] = Request::p()->post['captcha'];
         } else {
             $data['captcha'] = '';
         }
@@ -394,8 +394,8 @@ class Returns extends Controller {
             $data['text_agree'] = '';
         }
         
-        if (isset($this->request->post['agree'])) {
-            $data['agree'] = $this->request->post['agree'];
+        if (isset(Request::p()->post['agree'])) {
+            $data['agree'] = Request::p()->post['agree'];
         } else {
             $data['agree'] = false;
         }
@@ -437,39 +437,39 @@ class Returns extends Controller {
     }
     
     protected function validate() {
-        if (!$this->request->post['order_id']) {
+        if (!Request::p()->post['order_id']) {
             $this->error['order_id'] = Lang::get('lang_error_order_id');
         }
         
-        if ((Encode::strlen($this->request->post['firstname']) < 1) || (Encode::strlen($this->request->post['firstname']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['firstname']) < 1) || (Encode::strlen(Request::p()->post['firstname']) > 32)) {
             $this->error['firstname'] = Lang::get('lang_error_firstname');
         }
         
-        if ((Encode::strlen($this->request->post['lastname']) < 1) || (Encode::strlen($this->request->post['lastname']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['lastname']) < 1) || (Encode::strlen(Request::p()->post['lastname']) > 32)) {
             $this->error['lastname'] = Lang::get('lang_error_lastname');
         }
         
-        if ((Encode::strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['email'])) {
+        if ((Encode::strlen(Request::p()->post['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', Request::p()->post['email'])) {
             $this->error['email'] = Lang::get('lang_error_email');
         }
         
-        if ((Encode::strlen($this->request->post['telephone']) < 3) || (Encode::strlen($this->request->post['telephone']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['telephone']) < 3) || (Encode::strlen(Request::p()->post['telephone']) > 32)) {
             $this->error['telephone'] = Lang::get('lang_error_telephone');
         }
         
-        if ((Encode::strlen($this->request->post['product']) < 1) || (Encode::strlen($this->request->post['product']) > 255)) {
+        if ((Encode::strlen(Request::p()->post['product']) < 1) || (Encode::strlen(Request::p()->post['product']) > 255)) {
             $this->error['product'] = Lang::get('lang_error_product');
         }
         
-        if ((Encode::strlen($this->request->post['model']) < 1) || (Encode::strlen($this->request->post['model']) > 64)) {
+        if ((Encode::strlen(Request::p()->post['model']) < 1) || (Encode::strlen(Request::p()->post['model']) > 64)) {
             $this->error['model'] = Lang::get('lang_error_model');
         }
         
-        if (empty($this->request->post['return_reason_id'])) {
+        if (empty(Request::p()->post['return_reason_id'])) {
             $this->error['reason'] = Lang::get('lang_error_reason');
         }
         
-        if (empty($this->session->data['captcha']) || ($this->session->data['captcha'] != $this->request->post['captcha'])) {
+        if (empty(Session::p()->data['captcha']) || (Session::p()->data['captcha'] != Request::p()->post['captcha'])) {
             $this->error['captcha'] = Lang::get('lang_error_captcha');
         }
         
@@ -478,7 +478,7 @@ class Returns extends Controller {
             
             $page_info = ContentPage::getPage(Config::get('config_return_id'));
             
-            if ($page_info && !isset($this->request->post['agree'])) {
+            if ($page_info && !isset(Request::p()->post['agree'])) {
                 $this->error['warning'] = sprintf(Lang::get('lang_error_agree'), $page_info['title']);
             }
         }
@@ -491,7 +491,7 @@ class Returns extends Controller {
     public function captcha() {
         $captcha = new Captcha();
         
-        $this->session->data['captcha'] = $captcha->getCode();
+        Session::p()->data['captcha'] = $captcha->getCode();
         
         Theme::listen(__CLASS__, __FUNCTION__);
         

@@ -36,7 +36,7 @@ class Affiliate extends Controller {
 
 	public function index() {
         if (!Customer::isLogged()):
-            $this->session->data['redirect'] = Url::link('account/affiliate', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/affiliate', '', 'SSL');
             Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
         
@@ -50,7 +50,7 @@ class Affiliate extends Controller {
 
     public function update() {
 		if (!Customer::isLogged()):
-            $this->session->data['redirect'] = Url::link('account/affiliate', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/affiliate', '', 'SSL');
             Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
 
@@ -59,10 +59,10 @@ class Affiliate extends Controller {
 
         Theme::setTitle(Lang::get('lang_heading_title'));
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
-        	AccountAffiliate::editSettings($this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
+        	AccountAffiliate::editSettings(Request::post());
 
-        	$this->session->data['success'] = Lang::get('lang_text_success');
+        	Session::p()->data['success'] = Lang::get('lang_text_success');
         	Response::redirect(Url::link('account/dashboard', '', 'SSL'));
         endif;
 
@@ -73,7 +73,7 @@ class Affiliate extends Controller {
 
 	public function register() {
 		if (!Customer::isLogged()):
-            $this->session->data['redirect'] = Url::link('account/affiliate', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/affiliate', '', 'SSL');
             Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
 
@@ -82,7 +82,7 @@ class Affiliate extends Controller {
 
         Theme::setTitle(Lang::get('lang_heading_title'));
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateRegister()):
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateRegister()):
         	AccountAffiliate::addAffiliate();
         	Response::redirect(Url::link('account/affiliate', '', 'SSL'));
         endif;
@@ -94,7 +94,7 @@ class Affiliate extends Controller {
 
 	public function getForm() {
 		if (!Customer::isLogged()):
-            $this->session->data['redirect'] = Url::link('account/affiliate', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/affiliate', '', 'SSL');
             Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
         
@@ -106,9 +106,9 @@ class Affiliate extends Controller {
         Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
         Breadcrumb::add('lang_heading_title', 'account/affiliate', null, true, 'SSL');
         
-        if (isset($this->session->data['warning'])):
-            $data['warning'] = $this->session->data['warning'];
-            unset($this->session->data['warning']);
+        if (isset(Session::p()->data['warning'])):
+            $data['warning'] = Session::p()->data['warning'];
+            unset(Session::p()->data['warning']);
         elseif (isset($this->error['warning'])):
             $data['warning'] = $this->error['warning'];
         else:
@@ -118,7 +118,7 @@ class Affiliate extends Controller {
         $data['action'] = Url::link('account/affiliate/update', '', 'SSL');
         $data['enroll'] = Url::link('account/affiliate/register', '', 'SSL');
 
-		if ($this->request->server['REQUEST_METHOD'] != 'POST'):
+		if (Request::p()->server['REQUEST_METHOD'] != 'POST'):
 			$customer_info = AccountAffiliate::getSettings();
 		endif;
         
@@ -169,15 +169,15 @@ class Affiliate extends Controller {
 			$data['js_error_agree'] = '';
         endif;
 
-        if (isset($this->request->post['agree'])):
-            $data['agree'] = $this->request->post['agree'];
+        if (isset(Request::p()->post['agree'])):
+            $data['agree'] = Request::p()->post['agree'];
         else:
             $data['agree'] = false;
         endif;
 
         foreach ($defaults as $key => $value):
-            if (isset($this->request->post[$key])):
-                $data[$key] = $this->request->post[$key];
+            if (isset(Request::p()->post[$key])):
+                $data[$key] = Request::p()->post[$key];
             elseif (!empty($customer_info)):
                 $data[$key] = $customer_info[$key];
             else:
@@ -199,8 +199,8 @@ class Affiliate extends Controller {
 
 		$data['commissions'] = array();
 
-        if (isset($this->request->get['page'])):
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])):
+            $page = Request::p()->get['page'];
         else:
             $page = 1;
         endif;
@@ -246,17 +246,17 @@ class Affiliate extends Controller {
 
 	public function autocomplete() {
         if (!Customer::isLogged()):
-            $this->session->data['redirect'] = Url::link('account/affiliate', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/affiliate', '', 'SSL');
             Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
 
         $json = array();
         
-        if (isset($this->request->get['filter_name'])):
+        if (isset(Request::p()->get['filter_name'])):
             Theme::model('catalog/product');
             
             $filter = array(
-				'filter_name' => $this->request->get['filter_name'], 
+				'filter_name' => Request::p()->get['filter_name'], 
 				'start'       => 0, 
 				'limit'       => 20
             );
@@ -282,7 +282,7 @@ class Affiliate extends Controller {
             
             $page_info = ContentPage::getPage(Config::get('config_affiliate_terms'));
             
-            if ($page_info && !isset($this->request->post['agree'])):
+            if ($page_info && !isset(Request::p()->post['agree'])):
                 $this->error['warning'] = sprintf(Lang::get('lang_error_agree'), $page_info['title']);
             endif;
         endif;
@@ -297,34 +297,34 @@ class Affiliate extends Controller {
     }
 
 	private function validate() {
-        if (Encode::strlen($this->request->post['tax_id']) < 1):
+        if (Encode::strlen(Request::p()->post['tax_id']) < 1):
             $this->error['tax_id'] = Lang::get('lang_error_tax_id');
         endif;
 
-        if (Encode::strlen($this->request->post['slug']) < 1):
+        if (Encode::strlen(Request::p()->post['slug']) < 1):
             $this->error['slug'] = Lang::get('lang_error_slug');
         endif;
 
-        if (!$this->request->post['payment_method']):
+        if (!Request::p()->post['payment_method']):
             $this->error['payment'] = Lang::get('lang_error_payment');
         else:
-            if ($this->request->post['payment_method'] == 'cheque' && Encode::strlen($this->request->post['cheque']) < 1):
+            if (Request::p()->post['payment_method'] == 'cheque' && Encode::strlen(Request::p()->post['cheque']) < 1):
                 $this->error['cheque'] = Lang::get('lang_error_cheque');
             endif;
 
-            if ($this->request->post['payment_method'] == 'paypal' && Encode::strlen($this->request->post['paypal']) < 1):
+            if (Request::p()->post['payment_method'] == 'paypal' && Encode::strlen(Request::p()->post['paypal']) < 1):
                 $this->error['paypal'] = Lang::get('lang_error_paypal');
             endif;
 
-            if ($this->request->post['payment_method'] == 'bank' && Encode::strlen($this->request->post['bank_name']) < 1):
+            if (Request::p()->post['payment_method'] == 'bank' && Encode::strlen(Request::p()->post['bank_name']) < 1):
                 $this->error['bank_name'] = Lang::get('lang_error_bank_name');
             endif;
 
-            if ($this->request->post['payment_method'] == 'bank' && Encode::strlen($this->request->post['bank_account_name']) < 1):
+            if (Request::p()->post['payment_method'] == 'bank' && Encode::strlen(Request::p()->post['bank_account_name']) < 1):
                 $this->error['bank_account_name'] = Lang::get('lang_error_account_name');
             endif;
 
-            if ($this->request->post['payment_method'] == 'bank' && Encode::strlen($this->request->post['bank_account_number']) < 1):
+            if (Request::p()->post['payment_method'] == 'bank' && Encode::strlen(Request::p()->post['bank_account_number']) < 1):
                 $this->error['bank_account_number'] = Lang::get('lang_error_account_number');
             endif;
         endif;
@@ -340,7 +340,7 @@ class Affiliate extends Controller {
 
     public function slug() {
         if (!Customer::isLogged()):
-            $this->session->data['redirect'] = Url::link('account/affiliate', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/affiliate', '', 'SSL');
             Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
 
@@ -349,12 +349,12 @@ class Affiliate extends Controller {
         
         $json = array();
         
-        if (!isset($this->request->get['name']) || Encode::strlen($this->request->get['name']) < 1):
+        if (!isset(Request::p()->get['name']) || Encode::strlen(Request::p()->get['name']) < 1):
             $json['error'] = Lang::get('lang_error_slug');
         else:
             
             // build slug
-            $slug = Url::build_slug($this->request->get['name']);
+            $slug = Url::build_slug(Request::p()->get['name']);
             
             // check that the slug is globally unique
             $query = ToolUtility::findSlugByName($slug);

@@ -27,9 +27,9 @@ class SubTotal extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('sub_total', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('sub_total', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/total', '', 'SSL'));
         }
@@ -46,14 +46,14 @@ class SubTotal extends Controller {
         $data['action'] = Url::link('total/sub_total', '', 'SSL');
         $data['cancel'] = Url::link('module/total', '', 'SSL');
         
-        if (isset($this->request->post['sub_total_status'])) {
-            $data['sub_total_status'] = $this->request->post['sub_total_status'];
+        if (isset(Request::p()->post['sub_total_status'])) {
+            $data['sub_total_status'] = Request::p()->post['sub_total_status'];
         } else {
             $data['sub_total_status'] = Config::get('sub_total_status');
         }
         
-        if (isset($this->request->post['sub_total_sort_order'])) {
-            $data['sub_total_sort_order'] = $this->request->post['sub_total_sort_order'];
+        if (isset(Request::p()->post['sub_total_sort_order'])) {
+            $data['sub_total_sort_order'] = Request::p()->post['sub_total_sort_order'];
         } else {
             $data['sub_total_sort_order'] = Config::get('sub_total_sort_order');
         }

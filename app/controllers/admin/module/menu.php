@@ -37,14 +37,14 @@ class Menu extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('module/menu');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            ModuleMenu::addMenu($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            ModuleMenu::addMenu(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('module/menu', '' . $url, 'SSL'));
@@ -60,14 +60,14 @@ class Menu extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('module/menu');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            ModuleMenu::editMenu($this->request->get['menu_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            ModuleMenu::editMenu(Request::p()->get['menu_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('module/menu', '' . $url, 'SSL'));
@@ -83,17 +83,17 @@ class Menu extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('module/menu');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $menu_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $menu_id) {
                 ModuleMenu::deleteMenu($menu_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('module/menu', '' . $url, 'SSL'));
@@ -107,16 +107,16 @@ class Menu extends Controller {
     public function getList() {
         $data = Theme::language('module/menu');
         
-        if (isset($this->request->get['page'])):
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])):
+            $page = Request::p()->get['page'];
         else:
             $page = 1;
         endif;
         
         $url = '';
         
-        if (isset($this->request->get['page'])):
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])):
+            $url.= '&page=' . Request::p()->get['page'];
         endif;
         
         Breadcrumb::add('lang_heading_title', 'module/menu');
@@ -139,7 +139,7 @@ class Menu extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('module/menu/update', '' . '&menu_id=' . $result['menu_id'] . $url, 'SSL')
+                'href' => Url::link('module/menu/update', '' . 'menu_id=' . $result['menu_id'] . $url, 'SSL')
             );
             
             $data['menus'][] = array(
@@ -147,7 +147,7 @@ class Menu extends Controller {
                 'name'     => $result['name'], 
                 'type'     => Lang::get('lang_text_' . $result['type']), 
                 'status'   => $result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled'), 
-                'selected' => isset($this->request->post['selected']) && in_array($result['menu_id'], $this->request->post['selected']), 
+                'selected' => isset(Request::p()->post['selected']) && in_array($result['menu_id'], Request::p()->post['selected']), 
                 'action'   => $action
             );
         endforeach;
@@ -158,9 +158,9 @@ class Menu extends Controller {
             $data['error_warning'] = '';
         endif;
         
-        if (isset($this->session->data['success'])):
-            $data['success'] = $this->session->data['success'];
-            unset($this->session->data['success']);
+        if (isset(Session::p()->data['success'])):
+            $data['success'] = Session::p()->data['success'];
+            unset(Session::p()->data['success']);
         else:
             $data['success'] = '';
         endif;
@@ -195,30 +195,30 @@ class Menu extends Controller {
         
         // Hack for passing error to ajax delivered panels
         if (isset($this->error['items'])):
-            $this->session->data['error_items'] = $this->error['items'];
+            Session::p()->data['error_items'] = $this->error['items'];
         endif;
         
         $url = '';
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'module/menu', $url);
         
-        if (!isset($this->request->get['menu_id'])):
+        if (!isset(Request::p()->get['menu_id'])):
             $data['action'] = Url::link('module/menu/insert', '' . $url, 'SSL');
         else:
-            $data['action'] = Url::link('module/menu/update', '' . '&menu_id=' . $this->request->get['menu_id'] . $url, 'SSL');
+            $data['action'] = Url::link('module/menu/update', '' . 'menu_id=' . Request::p()->get['menu_id'] . $url, 'SSL');
         endif;
         
         $data['cancel'] = Url::link('module/menu', '' . $url, 'SSL');
         
         $data['menu_id'] = false;
         
-        if (isset($this->request->get['menu_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $results = ModuleMenu::getMenu($this->request->get['menu_id']);
-            $data['menu_id'] = $this->request->get['menu_id'];
+        if (isset(Request::p()->get['menu_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $results = ModuleMenu::getMenu(Request::p()->get['menu_id']);
+            $data['menu_id'] = Request::p()->get['menu_id'];
         }
         
         $fields = array(
@@ -229,8 +229,8 @@ class Menu extends Controller {
         );
         
         foreach ($fields as $field):
-            if (isset($this->request->post[$field])):
-                $data[$field] = $this->request->post[$field];
+            if (isset(Request::p()->post[$field])):
+                $data[$field] = Request::p()->post[$field];
             elseif (!empty($results)):
                 $data[$field] = $results[$field];
             else:
@@ -273,15 +273,15 @@ class Menu extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         endif;
         
-        if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['name']) < 3) || (Encode::strlen(Request::p()->post['name']) > 32)) {
             $this->error['name'] = Lang::get('lang_error_name');
         }
         
-        if (!$this->request->post['type']):
+        if (!Request::p()->post['type']):
             $this->error['type'] = Lang::get('lang_error_type');
         endif;
         
-        if (!isset($this->request->post['menu_item'])):
+        if (!isset(Request::p()->post['menu_item'])):
             $this->error['items'] = Lang::get('lang_error_items');
         endif;
         
@@ -312,16 +312,16 @@ class Menu extends Controller {
         
         $data['menu_items'] = array();
         
-        if (isset($this->request->get['menu_id'])):
-            $result = ModuleMenu::getMenu($this->request->get['menu_id']);
+        if (isset(Request::p()->get['menu_id'])):
+            $result = ModuleMenu::getMenu(Request::p()->get['menu_id']);
             if ($result['type'] === 'product_category'):
                 $data['menu_items'] = $result['items'];
             endif;
         endif;
         
-        if (isset($this->session->data['error_items'])):
-            $data['error_items'] = $this->session->data['error_items'];
-            unset($this->session->data['error_items']);
+        if (isset(Session::p()->data['error_items'])):
+            $data['error_items'] = Session::p()->data['error_items'];
+            unset(Session::p()->data['error_items']);
         else:
             $data['error_items'] = '';
         endif;
@@ -352,16 +352,16 @@ class Menu extends Controller {
         
         $data['menu_items'] = array();
         
-        if (isset($this->request->get['menu_id'])):
-            $result = ModuleMenu::getMenu($this->request->get['menu_id']);
+        if (isset(Request::p()->get['menu_id'])):
+            $result = ModuleMenu::getMenu(Request::p()->get['menu_id']);
             if ($result['type'] === 'content_category'):
                 $data['menu_items'] = $result['items'];
             endif;
         endif;
         
-        if (isset($this->session->data['error_items'])):
-            $data['error_items'] = $this->session->data['error_items'];
-            unset($this->session->data['error_items']);
+        if (isset(Session::p()->data['error_items'])):
+            $data['error_items'] = Session::p()->data['error_items'];
+            unset(Session::p()->data['error_items']);
         else:
             $data['error_items'] = '';
         endif;
@@ -392,8 +392,8 @@ class Menu extends Controller {
         
         $data['menu_items'] = array();
         
-        if (isset($this->request->get['menu_id'])):
-            $result = ModuleMenu::getMenu($this->request->get['menu_id']);
+        if (isset(Request::p()->get['menu_id'])):
+            $result = ModuleMenu::getMenu(Request::p()->get['menu_id']);
             if ($result['type'] === 'page'):
                 $data['menu_items'] = $result['items'];
             endif;
@@ -425,8 +425,8 @@ class Menu extends Controller {
         
         $data['menu_items'] = array();
         
-        if (isset($this->request->get['menu_id'])):
-            $result = ModuleMenu::getMenu($this->request->get['menu_id']);
+        if (isset(Request::p()->get['menu_id'])):
+            $result = ModuleMenu::getMenu(Request::p()->get['menu_id']);
             if ($result['type'] === 'post'):
                 $data['menu_items'] = $result['items'];
             endif;
@@ -457,16 +457,16 @@ class Menu extends Controller {
         
         $data['menu_items'] = array();
         
-        if (isset($this->request->get['menu_id'])):
-            $result = ModuleMenu::getMenu($this->request->get['menu_id']);
+        if (isset(Request::p()->get['menu_id'])):
+            $result = ModuleMenu::getMenu(Request::p()->get['menu_id']);
             if ($result['type'] === 'custom'):
                 $data['menu_items'] = $result['items'];
             endif;
         endif;
         
-        if (isset($this->session->data['error_items'])):
-            $data['error_items'] = $this->session->data['error_items'];
-            unset($this->session->data['error_items']);
+        if (isset(Session::p()->data['error_items'])):
+            $data['error_items'] = Session::p()->data['error_items'];
+            unset(Session::p()->data['error_items']);
         else:
             $data['error_items'] = '';
         endif;

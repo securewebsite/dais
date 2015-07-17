@@ -23,8 +23,8 @@ class BlogCategory extends Controller {
     public function index($setting) {
         $data = Theme::language('widget/blog_category');
         
-        if (isset($this->request->get['bpath'])) {
-            $parts = explode('_', (string)$this->request->get['bpath']);
+        if (isset(Request::p()->get['bpath'])) {
+            $parts = explode('_', (string)Request::p()->get['bpath']);
         } else {
             $parts = array();
         }

@@ -27,9 +27,9 @@ class Pickup extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('pickup', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('pickup', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/shipping', '', 'SSL'));
         }
@@ -47,8 +47,8 @@ class Pickup extends Controller {
         
         $data['cancel'] = Url::link('module/shipping', '', 'SSL');
         
-        if (isset($this->request->post['pickup_geo_zone_id'])) {
-            $data['pickup_geo_zone_id'] = $this->request->post['pickup_geo_zone_id'];
+        if (isset(Request::p()->post['pickup_geo_zone_id'])) {
+            $data['pickup_geo_zone_id'] = Request::p()->post['pickup_geo_zone_id'];
         } else {
             $data['pickup_geo_zone_id'] = Config::get('pickup_geo_zone_id');
         }
@@ -57,14 +57,14 @@ class Pickup extends Controller {
         
         $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
-        if (isset($this->request->post['pickup_status'])) {
-            $data['pickup_status'] = $this->request->post['pickup_status'];
+        if (isset(Request::p()->post['pickup_status'])) {
+            $data['pickup_status'] = Request::p()->post['pickup_status'];
         } else {
             $data['pickup_status'] = Config::get('pickup_status');
         }
         
-        if (isset($this->request->post['pickup_sort_order'])) {
-            $data['pickup_sort_order'] = $this->request->post['pickup_sort_order'];
+        if (isset(Request::p()->post['pickup_sort_order'])) {
+            $data['pickup_sort_order'] = Request::p()->post['pickup_sort_order'];
         } else {
             $data['pickup_sort_order'] = Config::get('pickup_sort_order');
         }

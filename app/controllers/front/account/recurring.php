@@ -22,7 +22,7 @@ class Recurring extends Controller {
     
     public function index() {
         if (!Customer::isLogged()):
-            $this->session->data['redirect'] = Url::link('account/order', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/order', '', 'SSL');
             Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
         
@@ -32,15 +32,15 @@ class Recurring extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['page'])):
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])):
+            $url.= '&page=' . Request::p()->get['page'];
         endif;
         
         Breadcrumb::add('lang_text_account', 'account/dashboard', $url, true, 'SSL');
         Breadcrumb::add('lang_heading_title', 'account/recurring', $url, true, 'SSL');
         
-        if (isset($this->request->get['page'])):
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])):
+            $page = Request::p()->get['page'];
         else:
             $page = 1;
         endif;
@@ -78,39 +78,39 @@ class Recurring extends Controller {
         $data = Theme::language('account/recurring');
         Theme::model('account/recurring');
         
-        if (isset($this->request->get['recurring_id'])):
-            $recurring_id = $this->request->get['recurring_id'];
+        if (isset(Request::p()->get['recurring_id'])):
+            $recurring_id = Request::p()->get['recurring_id'];
         else:
             $recurring_id = 0;
         endif;
         
         if (!Customer::isLogged()):
-            $this->session->data['redirect'] = Url::link('account/recurring/info', 'recurring_id=' . $recurring_id, 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/recurring/info', 'recurring_id=' . $recurring_id, 'SSL');
             Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
         
-        if (isset($this->session->data['error'])):
-            $data['error_warning'] = $this->session->data['error'];
-            unset($this->session->data['error']);
+        if (isset(Session::p()->data['error'])):
+            $data['error_warning'] = Session::p()->data['error'];
+            unset(Session::p()->data['error']);
         else:
             $data['error_warning'] = '';
         endif;
         
-        if (isset($this->session->data['success'])):
-            $data['success'] = $this->session->data['success'];
-            unset($this->session->data['success']);
+        if (isset(Session::p()->data['success'])):
+            $data['success'] = Session::p()->data['success'];
+            unset(Session::p()->data['success']);
         else:
             $data['success'] = '';
         endif;
         
-        $recurring = AccountRecurring::getRecurring($this->request->get['recurring_id']);
+        $recurring = AccountRecurring::getRecurring(Request::p()->get['recurring_id']);
         
         $data['status_types'] = array(1 => Lang::get('lang_text_status_inactive'), 2 => Lang::get('lang_text_status_active'), 3 => Lang::get('lang_text_status_suspended'), 4 => Lang::get('lang_text_status_cancelled'), 5 => Lang::get('lang_text_status_expired'), 6 => Lang::get('lang_text_status_pending'),);
         
         $data['transaction_types'] = array(0 => Lang::get('lang_text_transaction_date_added'), 1 => Lang::get('lang_text_transaction_payment'), 2 => Lang::get('lang_text_transaction_outstanding_payment'), 3 => Lang::get('lang_text_transaction_skipped'), 4 => Lang::get('lang_text_transaction_failed'), 5 => Lang::get('lang_text_transaction_cancelled'), 6 => Lang::get('lang_text_transaction_suspended'), 7 => Lang::get('lang_text_transaction_suspended_failed'), 8 => Lang::get('lang_text_transaction_outstanding_failed'), 9 => Lang::get('lang_text_transaction_expired'),);
         
         if ($recurring):
-            $recurring['transactions'] = AccountRecurring::getRecurringTransactions($this->request->get['recurring_id']);
+            $recurring['transactions'] = AccountRecurring::getRecurringTransactions(Request::p()->get['recurring_id']);
             $recurring['date_added'] = date(Lang::get('lang_date_format_short'), strtotime($recurring['date_added']));
             $recurring['product_link'] = Url::link('product/product', 'product_id=' . $recurring['product_id'], 'SSL');
             $recurring['order_link'] = Url::link('account/order/info', 'order_id=' . $recurring['order_id'], 'SSL');
@@ -121,12 +121,12 @@ class Recurring extends Controller {
             
             $url = '';
             
-            if (isset($this->request->get['page'])):
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])):
+                $url.= '&page=' . Request::p()->get['page'];
             endif;
             
             Breadcrumb::add('lang_heading_title', 'account/recurring', $url, true, 'SSL');
-            Breadcrumb::add('lang_text_recurring', 'account/recurring/info', 'recurring_id=' . $this->request->get['recurring_id'] . $url, true, 'SSL');
+            Breadcrumb::add('lang_text_recurring', 'account/recurring/info', 'recurring_id=' . Request::p()->get['recurring_id'] . $url, true, 'SSL');
             
             $data['recurring'] = $recurring;
             

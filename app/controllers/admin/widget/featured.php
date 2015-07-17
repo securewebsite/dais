@@ -27,9 +27,9 @@ class Featured extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('featured', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('featured', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/widget', '', 'SSL'));
         }
@@ -52,16 +52,16 @@ class Featured extends Controller {
         $data['action'] = Url::link('widget/featured', '', 'SSL');
         $data['cancel'] = Url::link('module/widget', '', 'SSL');
         
-        if (isset($this->request->post['featured_product'])) {
-            $data['featured_product'] = $this->request->post['featured_product'];
+        if (isset(Request::p()->post['featured_product'])) {
+            $data['featured_product'] = Request::p()->post['featured_product'];
         } else {
             $data['featured_product'] = Config::get('featured_product');
         }
         
         Theme::model('catalog/product');
         
-        if (isset($this->request->post['featured_product'])) {
-            $products = explode(',', $this->request->post['featured_product']);
+        if (isset(Request::p()->post['featured_product'])) {
+            $products = explode(',', Request::p()->post['featured_product']);
         } else {
             $products = explode(',', Config::get('featured_product'));
         }
@@ -78,8 +78,8 @@ class Featured extends Controller {
         
         $data['widgets'] = array();
         
-        if (isset($this->request->post['featured_widget'])) {
-            $data['widgets'] = $this->request->post['featured_widget'];
+        if (isset(Request::p()->post['featured_widget'])) {
+            $data['widgets'] = Request::p()->post['featured_widget'];
         } elseif (Config::get('featured_widget')) {
             $data['widgets'] = Config::get('featured_widget');
         }
@@ -102,8 +102,8 @@ class Featured extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (isset($this->request->post['featured_widget'])) {
-            foreach ($this->request->post['featured_widget'] as $key => $value) {
+        if (isset(Request::p()->post['featured_widget'])) {
+            foreach (Request::p()->post['featured_widget'] as $key => $value) {
                 if (!$value['image_width'] || !$value['image_height']) {
                     $this->error['image'][$key] = Lang::get('lang_error_image');
                 }

@@ -27,9 +27,9 @@ class GiftCard extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('gift_card', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('gift_card', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/total', '', 'SSL'));
         }
@@ -46,14 +46,14 @@ class GiftCard extends Controller {
         $data['action'] = Url::link('total/gift_card', '', 'SSL');
         $data['cancel'] = Url::link('module/total', '', 'SSL');
         
-        if (isset($this->request->post['gift_card_status'])) {
-            $data['gift_card_status'] = $this->request->post['gift_card_status'];
+        if (isset(Request::p()->post['gift_card_status'])) {
+            $data['gift_card_status'] = Request::p()->post['gift_card_status'];
         } else {
             $data['gift_card_status'] = Config::get('gift_card_status');
         }
         
-        if (isset($this->request->post['gift_card_sort_order'])) {
-            $data['gift_card_sort_order'] = $this->request->post['gift_card_sort_order'];
+        if (isset(Request::p()->post['gift_card_sort_order'])) {
+            $data['gift_card_sort_order'] = Request::p()->post['gift_card_sort_order'];
         } else {
             $data['gift_card_sort_order'] = Config::get('gift_card_sort_order');
         }

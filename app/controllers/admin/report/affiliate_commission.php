@@ -24,36 +24,36 @@ class AffiliateCommission extends Controller {
         $data = Theme::language('report/affiliate_commission');
         Theme::setTitle(Lang::get('lang_heading_title'));
         
-        if (isset($this->request->get['filter_date_start'])) {
-            $filter_date_start = $this->request->get['filter_date_start'];
+        if (isset(Request::p()->get['filter_date_start'])) {
+            $filter_date_start = Request::p()->get['filter_date_start'];
         } else {
             $filter_date_start = '';
         }
         
-        if (isset($this->request->get['filter_date_end'])) {
-            $filter_date_end = $this->request->get['filter_date_end'];
+        if (isset(Request::p()->get['filter_date_end'])) {
+            $filter_date_end = Request::p()->get['filter_date_end'];
         } else {
             $filter_date_end = '';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['filter_date_start'])) {
-            $url.= '&filter_date_start=' . $this->request->get['filter_date_start'];
+        if (isset(Request::p()->get['filter_date_start'])) {
+            $url.= '&filter_date_start=' . Request::p()->get['filter_date_start'];
         }
         
-        if (isset($this->request->get['filter_date_end'])) {
-            $url.= '&filter_date_end=' . $this->request->get['filter_date_end'];
+        if (isset(Request::p()->get['filter_date_end'])) {
+            $url.= '&filter_date_end=' . Request::p()->get['filter_date_end'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'report/affiliate_commission', $url);
@@ -76,7 +76,7 @@ class AffiliateCommission extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('people/customer/update', '' . '&customer_id=' . $result['customer_id'] . $url, 'SSL')
+                'href' => Url::link('people/customer/update', '' . 'customer_id=' . $result['customer_id'] . $url, 'SSL')
             );
             
             $data['affiliates'][] = array(
@@ -92,12 +92,12 @@ class AffiliateCommission extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['filter_date_start'])) {
-            $url.= '&filter_date_start=' . $this->request->get['filter_date_start'];
+        if (isset(Request::p()->get['filter_date_start'])) {
+            $url.= '&filter_date_start=' . Request::p()->get['filter_date_start'];
         }
         
-        if (isset($this->request->get['filter_date_end'])) {
-            $url.= '&filter_date_end=' . $this->request->get['filter_date_end'];
+        if (isset(Request::p()->get['filter_date_end'])) {
+            $url.= '&filter_date_end=' . Request::p()->get['filter_date_end'];
         }
         
         $data['pagination'] = Theme::paginate(

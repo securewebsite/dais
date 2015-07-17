@@ -23,8 +23,8 @@ class Category extends Controller {
     public function index($setting) {
         $data = Theme::language('widget/category');
         
-        if (isset($this->request->get['path'])):
-            $parts = explode('_', (string)$this->request->get['path']);
+        if (isset(Request::p()->get['path'])):
+            $parts = explode('_', (string)Request::p()->get['path']);
         else:
             $parts = array();
         endif;

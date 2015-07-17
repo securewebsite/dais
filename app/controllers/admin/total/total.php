@@ -27,9 +27,9 @@ class Total extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('total', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('total', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/total', '', 'SSL'));
         }
@@ -46,14 +46,14 @@ class Total extends Controller {
         $data['action'] = Url::link('total/total', '', 'SSL');
         $data['cancel'] = Url::link('module/total', '', 'SSL');
         
-        if (isset($this->request->post['total_status'])) {
-            $data['total_status'] = $this->request->post['total_status'];
+        if (isset(Request::p()->post['total_status'])) {
+            $data['total_status'] = Request::p()->post['total_status'];
         } else {
             $data['total_status'] = Config::get('total_status');
         }
         
-        if (isset($this->request->post['total_sort_order'])) {
-            $data['total_sort_order'] = $this->request->post['total_sort_order'];
+        if (isset(Request::p()->post['total_sort_order'])) {
+            $data['total_sort_order'] = Request::p()->post['total_sort_order'];
         } else {
             $data['total_sort_order'] = Config::get('total_sort_order');
         }

@@ -33,7 +33,7 @@ class PaypalStandard extends Controller {
         
         Theme::model('checkout/order');
         
-        $order_info = CheckoutOrder::getOrder($this->session->data['order_id']);
+        $order_info = CheckoutOrder::getOrder(Session::p()->data['order_id']);
         
         if ($order_info) {
             $data['business'] = Config::get('paypal_standard_email');
@@ -78,8 +78,8 @@ class PaypalStandard extends Controller {
             $data['zip'] = html_entity_decode($order_info['payment_postcode'], ENT_QUOTES, 'UTF-8');
             $data['country'] = $order_info['payment_iso_code_2'];
             $data['email'] = $order_info['email'];
-            $data['invoice'] = $this->session->data['order_id'] . ' - ' . html_entity_decode($order_info['payment_firstname'], ENT_QUOTES, 'UTF-8') . ' ' . html_entity_decode($order_info['payment_lastname'], ENT_QUOTES, 'UTF-8');
-            $data['lc'] = $this->session->data['language'];
+            $data['invoice'] = Session::p()->data['order_id'] . ' - ' . html_entity_decode($order_info['payment_firstname'], ENT_QUOTES, 'UTF-8') . ' ' . html_entity_decode($order_info['payment_lastname'], ENT_QUOTES, 'UTF-8');
+            $data['lc'] = Session::p()->data['language'];
             $data['return'] = Url::link('checkout/success');
             $data['notify_url'] = Url::link('payment/paypal_standard/callback', '', 'SSL');
             $data['cancel_return'] = Url::link('checkout/checkout', '', 'SSL');
@@ -90,7 +90,7 @@ class PaypalStandard extends Controller {
                 $data['paymentaction'] = 'sale';
             }
             
-            $data['custom'] = $this->session->data['order_id'];
+            $data['custom'] = Session::p()->data['order_id'];
             
             Theme::loadjs('javascript/payment/paypal_standard', $data);
             
@@ -103,8 +103,8 @@ class PaypalStandard extends Controller {
     }
     
     public function callback() {
-        if (isset($this->request->post['custom'])) {
-            $order_id = $this->request->post['custom'];
+        if (isset(Request::p()->post['custom'])) {
+            $order_id = Request::p()->post['custom'];
         } else {
             $order_id = 0;
         }
@@ -116,7 +116,7 @@ class PaypalStandard extends Controller {
         if ($order_info) {
             $request = 'cmd=_notify-validate';
             
-            foreach ($this->request->post as $key => $value) {
+            foreach (Request::post() as $key => $value) {
                 $request.= '&' . $key . '=' . urlencode(html_entity_decode($value, ENT_QUOTES, 'UTF-8'));
             }
             
@@ -144,19 +144,19 @@ class PaypalStandard extends Controller {
                 $this->log->write('PP_STANDARD :: IPN RESPONSE: ' . $response);
             }
             
-            if ((strcmp($response, 'VERIFIED') == 0 || strcmp($response, 'UNVERIFIED') == 0) && isset($this->request->post['payment_status'])) {
+            if ((strcmp($response, 'VERIFIED') == 0 || strcmp($response, 'UNVERIFIED') == 0) && isset(Request::p()->post['payment_status'])) {
                 $order_status_id = Config::get('config_order_status_id');
                 
-                switch ($this->request->post['payment_status']) {
+                switch (Request::p()->post['payment_status']) {
                     case 'Canceled_Reversal':
                         $order_status_id = Config::get('paypal_standard_canceled_reversal_status_id');
                         break;
 
                     case 'Completed':
-                        if ((strtolower($this->request->post['receiver_email']) == strtolower(Config::get('paypal_standard_email'))) && ((float)$this->request->post['mc_gross'] == Currency::format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false))) {
+                        if ((strtolower(Request::p()->post['receiver_email']) == strtolower(Config::get('paypal_standard_email'))) && ((float)Request::p()->post['mc_gross'] == Currency::format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false))) {
                             $order_status_id = Config::get('paypal_standard_completed_status_id');
                         } else {
-                            $this->log->write('PP_STANDARD :: RECEIVER EMAIL MISMATCH! ' . strtolower($this->request->post['receiver_email']));
+                            $this->log->write('PP_STANDARD :: RECEIVER EMAIL MISMATCH! ' . strtolower(Request::p()->post['receiver_email']));
                         }
                         break;
 

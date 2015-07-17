@@ -27,9 +27,9 @@ class Cod extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('cod', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('cod', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/payment', '', 'SSL'));
         }
@@ -47,14 +47,14 @@ class Cod extends Controller {
         
         $data['cancel'] = Url::link('module/payment', '', 'SSL');
         
-        if (isset($this->request->post['cod_total'])) {
-            $data['cod_total'] = $this->request->post['cod_total'];
+        if (isset(Request::p()->post['cod_total'])) {
+            $data['cod_total'] = Request::p()->post['cod_total'];
         } else {
             $data['cod_total'] = Config::get('cod_total');
         }
         
-        if (isset($this->request->post['cod_order_status_id'])) {
-            $data['cod_order_status_id'] = $this->request->post['cod_order_status_id'];
+        if (isset(Request::p()->post['cod_order_status_id'])) {
+            $data['cod_order_status_id'] = Request::p()->post['cod_order_status_id'];
         } else {
             $data['cod_order_status_id'] = Config::get('cod_order_status_id');
         }
@@ -63,8 +63,8 @@ class Cod extends Controller {
         
         $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
-        if (isset($this->request->post['cod_geo_zone_id'])) {
-            $data['cod_geo_zone_id'] = $this->request->post['cod_geo_zone_id'];
+        if (isset(Request::p()->post['cod_geo_zone_id'])) {
+            $data['cod_geo_zone_id'] = Request::p()->post['cod_geo_zone_id'];
         } else {
             $data['cod_geo_zone_id'] = Config::get('cod_geo_zone_id');
         }
@@ -73,14 +73,14 @@ class Cod extends Controller {
         
         $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
-        if (isset($this->request->post['cod_status'])) {
-            $data['cod_status'] = $this->request->post['cod_status'];
+        if (isset(Request::p()->post['cod_status'])) {
+            $data['cod_status'] = Request::p()->post['cod_status'];
         } else {
             $data['cod_status'] = Config::get('cod_status');
         }
         
-        if (isset($this->request->post['cod_sort_order'])) {
-            $data['cod_sort_order'] = $this->request->post['cod_sort_order'];
+        if (isset(Request::p()->post['cod_sort_order'])) {
+            $data['cod_sort_order'] = Request::p()->post['cod_sort_order'];
         } else {
             $data['cod_sort_order'] = Config::get('cod_sort_order');
         }

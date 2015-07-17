@@ -27,9 +27,9 @@ class LowOrderFee extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('low_order_fee', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('low_order_fee', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/total', '', 'SSL'));
         }
@@ -46,20 +46,20 @@ class LowOrderFee extends Controller {
         $data['action'] = Url::link('total/low_order_fee', '', 'SSL');
         $data['cancel'] = Url::link('module/total', '', 'SSL');
         
-        if (isset($this->request->post['low_order_fee_total'])) {
-            $data['low_order_fee_total'] = $this->request->post['low_order_fee_total'];
+        if (isset(Request::p()->post['low_order_fee_total'])) {
+            $data['low_order_fee_total'] = Request::p()->post['low_order_fee_total'];
         } else {
             $data['low_order_fee_total'] = Config::get('low_order_fee_total');
         }
         
-        if (isset($this->request->post['low_order_fee_fee'])) {
-            $data['low_order_fee_fee'] = $this->request->post['low_order_fee_fee'];
+        if (isset(Request::p()->post['low_order_fee_fee'])) {
+            $data['low_order_fee_fee'] = Request::p()->post['low_order_fee_fee'];
         } else {
             $data['low_order_fee_fee'] = Config::get('low_order_fee_fee');
         }
         
-        if (isset($this->request->post['low_order_fee_tax_class_id'])) {
-            $data['low_order_fee_tax_class_id'] = $this->request->post['low_order_fee_tax_class_id'];
+        if (isset(Request::p()->post['low_order_fee_tax_class_id'])) {
+            $data['low_order_fee_tax_class_id'] = Request::p()->post['low_order_fee_tax_class_id'];
         } else {
             $data['low_order_fee_tax_class_id'] = Config::get('low_order_fee_tax_class_id');
         }
@@ -68,14 +68,14 @@ class LowOrderFee extends Controller {
         
         $data['tax_classes'] = LocaleTaxClass::getTaxClasses();
         
-        if (isset($this->request->post['low_order_fee_status'])) {
-            $data['low_order_fee_status'] = $this->request->post['low_order_fee_status'];
+        if (isset(Request::p()->post['low_order_fee_status'])) {
+            $data['low_order_fee_status'] = Request::p()->post['low_order_fee_status'];
         } else {
             $data['low_order_fee_status'] = Config::get('low_order_fee_status');
         }
         
-        if (isset($this->request->post['low_order_fee_sort_order'])) {
-            $data['low_order_fee_sort_order'] = $this->request->post['low_order_fee_sort_order'];
+        if (isset(Request::p()->post['low_order_fee_sort_order'])) {
+            $data['low_order_fee_sort_order'] = Request::p()->post['low_order_fee_sort_order'];
         } else {
             $data['low_order_fee_sort_order'] = Config::get('low_order_fee_sort_order');
         }

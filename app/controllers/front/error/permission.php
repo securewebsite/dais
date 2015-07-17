@@ -24,8 +24,8 @@ class Permission extends Controller {
         $data = Theme::language('error/permission');
         Theme::setTitle(Lang::get('lang_heading_title'));
         
-        if (isset($this->request->get['route'])):
-            $routes = $this->request->get;
+        if (isset(Request::p()->get['route'])):
+            $routes = Request::get();
             unset($routes['_route_']);
             
             $route = $routes['route'];
@@ -37,7 +37,7 @@ class Permission extends Controller {
                 $url = '&' . urldecode(http_build_query($routes, '', '&'));
             endif;
             
-            if (isset($this->request->server['https']) && (($this->request->server['https'] == 'on') || ($this->request->server['https'] == '1'))):
+            if (isset(Request::p()->server['https']) && ((Request::p()->server['https'] == 'on') || (Request::p()->server['https'] == '1'))):
                 $connection = 'ssl';
             else:
                 $connection = 'nonssl';
@@ -51,7 +51,7 @@ class Permission extends Controller {
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         $data = Theme::renderControllers($data);
 
-        Response::addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 401 Unauthorized');
+        Response::addHeader(Request::p()->server['SERVER_PROTOCOL'] . '/1.1 401 Unauthorized');
         Response::setOutput(View::render('error/permission', $data));
     }
 }

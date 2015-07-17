@@ -28,7 +28,7 @@ class PaypalExpress extends Controller {
         /**
          * if there is any other paypal session data, clear it
          */
-        unset($this->session->data['paypal']);
+        unset(Session::p()->data['paypal']);
         
         Theme::loadjs('javascript/payment/paypal_express', $data);
         
@@ -40,7 +40,7 @@ class PaypalExpress extends Controller {
     }
     
     public function express() {
-        if ((!Cart::hasProducts() && empty($this->session->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
+        if ((!Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
             $this->log->write('No product redirect');
             Response::redirect(Url::link('checkout/cart'));
         }
@@ -50,15 +50,15 @@ class PaypalExpress extends Controller {
             /**
              * If the customer is already logged in
              */
-            $this->session->data['paypal']['guest'] = false;
-            unset($this->session->data['guest']);
+            Session::p()->data['paypal']['guest'] = false;
+            unset(Session::p()->data['guest']);
         } else {
             if (Config::get('config_checkout_guest') && !Config::get('config_customer_price') && !Cart::hasDownload() && !Cart::hasRecurringProducts()) {
                 
                 /**
                  * If the guest checkout is allowed (config ok, no login for price and doesn't have downloads)
                  */
-                $this->session->data['paypal']['guest'] = true;
+                Session::p()->data['paypal']['guest'] = true;
             } else {
                 
                 /**
@@ -66,15 +66,15 @@ class PaypalExpress extends Controller {
                  *
                  * Send them to the normal checkout flow.
                  */
-                unset($this->session->data['guest']);
+                unset(Session::p()->data['guest']);
                 Response::redirect(Url::link('checkout/checkout', '', 'SSL'));
             }
         }
         
-        unset($this->session->data['shipping_method']);
-        unset($this->session->data['shipping_methods']);
-        unset($this->session->data['payment_method']);
-        unset($this->session->data['payment_methods']);
+        unset(Session::p()->data['shipping_method']);
+        unset(Session::p()->data['shipping_methods']);
+        unset(Session::p()->data['payment_method']);
+        unset(Session::p()->data['payment_methods']);
         
         Theme::model('payment/paypal_express');
         Theme::model('tool/image');
@@ -104,8 +104,8 @@ class PaypalExpress extends Controller {
             'CHANNELTYPE'        => 'Merchant'
         );
         
-        if (isset($this->session->data['paypal_express_login']['seamless']['access_token']) && (isset($this->session->data['paypal_express_login']['seamless']['customer_id']) && $this->session->data['paypal_express_login']['seamless']['customer_id'] == Customer::getId()) && Config::get('paypal_express_login_seamless')) {
-            $data['IDENTITYACCESSTOKEN'] = $this->session->data['paypal_express_login']['seamless']['access_token'];
+        if (isset(Session::p()->data['paypal_express_login']['seamless']['access_token']) && (isset(Session::p()->data['paypal_express_login']['seamless']['customer_id']) && Session::p()->data['paypal_express_login']['seamless']['customer_id'] == Customer::getId()) && Config::get('paypal_express_login_seamless')) {
+            $data['IDENTITYACCESSTOKEN'] = Session::p()->data['paypal_express_login']['seamless']['access_token'];
         }
         
         $data = array_merge($data, PaymentPaypalExpress::paymentRequestInfo());
@@ -116,7 +116,7 @@ class PaypalExpress extends Controller {
          * If a failed PayPal setup happens, handle it.
          */
         if (!isset($result['TOKEN'])) {
-            $this->session->data['error'] = $result['L_LONGMESSAGE0'];
+            Session::p()->data['error'] = $result['L_LONGMESSAGE0'];
             
             /**
              * Unable to add error message to user as the session errors/success are not
@@ -130,7 +130,7 @@ class PaypalExpress extends Controller {
             Response::redirect(Url::link('checkout/checkout', '', 'SSL'));
         }
         
-        $this->session->data['paypal']['token'] = $result['TOKEN'];
+        Session::p()->data['paypal']['token'] = $result['TOKEN'];
         
         if (Config::get('paypal_express_test') == 1) {
             header('Location: https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $result['TOKEN']);
@@ -149,42 +149,42 @@ class PaypalExpress extends Controller {
         Theme::model('payment/paypal_express');
         $data = array(
             'METHOD' => 'GetExpressCheckoutDetails', 
-            'TOKEN'  => $this->session->data['paypal']['token']
+            'TOKEN'  => Session::p()->data['paypal']['token']
         );
         
         $result = PaymentPaypalExpress::call($data);
-        $this->session->data['paypal']['payerid'] = $result['PAYERID'];
-        $this->session->data['paypal']['result']  = $result;
+        Session::p()->data['paypal']['payerid'] = $result['PAYERID'];
+        Session::p()->data['paypal']['result']  = $result;
         
-        $this->session->data['comment'] = '';
+        Session::p()->data['comment'] = '';
         if (isset($result['PAYMENTREQUEST_0_NOTETEXT'])) {
-            $this->session->data['comment'] = $result['PAYMENTREQUEST_0_NOTETEXT'];
+            Session::p()->data['comment'] = $result['PAYMENTREQUEST_0_NOTETEXT'];
         }
         
-        if ($this->session->data['paypal']['guest'] === true) {
+        if (Session::p()->data['paypal']['guest'] === true) {
             
-            $this->session->data['guest']['customer_group_id'] = Config::get('config_default_visibility');
-            $this->session->data['guest']['firstname']         = trim($result['FIRSTNAME']);
-            $this->session->data['guest']['lastname']          = trim($result['LASTNAME']);
-            $this->session->data['guest']['email']             = trim($result['EMAIL']);
+            Session::p()->data['guest']['customer_group_id'] = Config::get('config_default_visibility');
+            Session::p()->data['guest']['firstname']         = trim($result['FIRSTNAME']);
+            Session::p()->data['guest']['lastname']          = trim($result['LASTNAME']);
+            Session::p()->data['guest']['email']             = trim($result['EMAIL']);
 
             if (isset($result['PHONENUM'])) {
-                $this->session->data['guest']['telephone'] = $result['PHONENUM'];
+                Session::p()->data['guest']['telephone'] = $result['PHONENUM'];
             } else {
-                $this->session->data['guest']['telephone'] = '';
+                Session::p()->data['guest']['telephone'] = '';
             }
             
-            $this->session->data['guest']['payment']['firstname'] = trim($result['FIRSTNAME']);
-            $this->session->data['guest']['payment']['lastname']  = trim($result['LASTNAME']);
+            Session::p()->data['guest']['payment']['firstname'] = trim($result['FIRSTNAME']);
+            Session::p()->data['guest']['payment']['lastname']  = trim($result['LASTNAME']);
             
             if (isset($result['BUSINESS'])) {
-                $this->session->data['guest']['payment']['company'] = $result['BUSINESS'];
+                Session::p()->data['guest']['payment']['company'] = $result['BUSINESS'];
             } else {
-                $this->session->data['guest']['payment']['company'] = '';
+                Session::p()->data['guest']['payment']['company'] = '';
             }
             
-            $this->session->data['guest']['payment']['company_id'] = '';
-            $this->session->data['guest']['payment']['tax_id']     = '';
+            Session::p()->data['guest']['payment']['company_id'] = '';
+            Session::p()->data['guest']['payment']['tax_id']     = '';
             
             if (Cart::hasShipping()) {
                 $shipping_name       = explode(' ', trim($result['PAYMENTREQUEST_0_SHIPTONAME']));
@@ -192,32 +192,32 @@ class PaypalExpress extends Controller {
                 unset($shipping_name[0]);
                 $shipping_last_name  = implode(' ', $shipping_name);
                 
-                $this->session->data['guest']['payment']['address_1'] = $result['PAYMENTREQUEST_0_SHIPTOSTREET'];
+                Session::p()->data['guest']['payment']['address_1'] = $result['PAYMENTREQUEST_0_SHIPTOSTREET'];
                 
                 if (isset($result['PAYMENTREQUEST_0_SHIPTOSTREET2'])) {
-                    $this->session->data['guest']['payment']['address_2'] = $result['PAYMENTREQUEST_0_SHIPTOSTREET2'];
+                    Session::p()->data['guest']['payment']['address_2'] = $result['PAYMENTREQUEST_0_SHIPTOSTREET2'];
                 } else {
-                    $this->session->data['guest']['payment']['address_2'] = '';
+                    Session::p()->data['guest']['payment']['address_2'] = '';
                 }
                 
-                $this->session->data['guest']['payment']['postcode']   = $result['PAYMENTREQUEST_0_SHIPTOZIP'];
-                $this->session->data['guest']['payment']['city']       = $result['PAYMENTREQUEST_0_SHIPTOCITY'];
+                Session::p()->data['guest']['payment']['postcode']   = $result['PAYMENTREQUEST_0_SHIPTOZIP'];
+                Session::p()->data['guest']['payment']['city']       = $result['PAYMENTREQUEST_0_SHIPTOCITY'];
                 
-                $this->session->data['guest']['shipping']['firstname'] = $shipping_first_name;
-                $this->session->data['guest']['shipping']['lastname']  = $shipping_last_name;
-                $this->session->data['guest']['shipping']['company']   = '';
-                $this->session->data['guest']['shipping']['address_1'] = $result['PAYMENTREQUEST_0_SHIPTOSTREET'];
+                Session::p()->data['guest']['shipping']['firstname'] = $shipping_first_name;
+                Session::p()->data['guest']['shipping']['lastname']  = $shipping_last_name;
+                Session::p()->data['guest']['shipping']['company']   = '';
+                Session::p()->data['guest']['shipping']['address_1'] = $result['PAYMENTREQUEST_0_SHIPTOSTREET'];
                 
                 if (isset($result['PAYMENTREQUEST_0_SHIPTOSTREET2'])) {
-                    $this->session->data['guest']['shipping']['address_2'] = $result['PAYMENTREQUEST_0_SHIPTOSTREET2'];
+                    Session::p()->data['guest']['shipping']['address_2'] = $result['PAYMENTREQUEST_0_SHIPTOSTREET2'];
                 } else {
-                    $this->session->data['guest']['shipping']['address_2'] = '';
+                    Session::p()->data['guest']['shipping']['address_2'] = '';
                 }
                 
-                $this->session->data['guest']['shipping']['postcode'] = $result['PAYMENTREQUEST_0_SHIPTOZIP'];
-                $this->session->data['guest']['shipping']['city']     = $result['PAYMENTREQUEST_0_SHIPTOCITY'];
+                Session::p()->data['guest']['shipping']['postcode'] = $result['PAYMENTREQUEST_0_SHIPTOZIP'];
+                Session::p()->data['guest']['shipping']['city']     = $result['PAYMENTREQUEST_0_SHIPTOCITY'];
                 
-                $this->session->data['shipping_postcode']             = $result['PAYMENTREQUEST_0_SHIPTOZIP'];
+                Session::p()->data['shipping_postcode']             = $result['PAYMENTREQUEST_0_SHIPTOZIP'];
                 
                 $country_info = $this->db->query("
 					SELECT * 
@@ -227,29 +227,29 @@ class PaypalExpress extends Controller {
 					LIMIT 1")->row;
                 
                 if ($country_info) {
-                    $this->session->data['guest']['shipping']['country_id']     = $country_info['country_id'];
-                    $this->session->data['guest']['shipping']['country']        = $country_info['name'];
-                    $this->session->data['guest']['shipping']['iso_code_2']     = $country_info['iso_code_2'];
-                    $this->session->data['guest']['shipping']['iso_code_3']     = $country_info['iso_code_3'];
-                    $this->session->data['guest']['shipping']['address_format'] = $country_info['address_format'];
-                    $this->session->data['guest']['payment']['country_id']      = $country_info['country_id'];
-                    $this->session->data['guest']['payment']['country']         = $country_info['name'];
-                    $this->session->data['guest']['payment']['iso_code_2']      = $country_info['iso_code_2'];
-                    $this->session->data['guest']['payment']['iso_code_3']      = $country_info['iso_code_3'];
-                    $this->session->data['guest']['payment']['address_format']  = $country_info['address_format'];
-                    $this->session->data['shipping_country_id']                 = $country_info['country_id'];
+                    Session::p()->data['guest']['shipping']['country_id']     = $country_info['country_id'];
+                    Session::p()->data['guest']['shipping']['country']        = $country_info['name'];
+                    Session::p()->data['guest']['shipping']['iso_code_2']     = $country_info['iso_code_2'];
+                    Session::p()->data['guest']['shipping']['iso_code_3']     = $country_info['iso_code_3'];
+                    Session::p()->data['guest']['shipping']['address_format'] = $country_info['address_format'];
+                    Session::p()->data['guest']['payment']['country_id']      = $country_info['country_id'];
+                    Session::p()->data['guest']['payment']['country']         = $country_info['name'];
+                    Session::p()->data['guest']['payment']['iso_code_2']      = $country_info['iso_code_2'];
+                    Session::p()->data['guest']['payment']['iso_code_3']      = $country_info['iso_code_3'];
+                    Session::p()->data['guest']['payment']['address_format']  = $country_info['address_format'];
+                    Session::p()->data['shipping_country_id']                 = $country_info['country_id'];
                 } else {
-                    $this->session->data['guest']['shipping']['country_id']     = '';
-                    $this->session->data['guest']['shipping']['country']        = '';
-                    $this->session->data['guest']['shipping']['iso_code_2']     = '';
-                    $this->session->data['guest']['shipping']['iso_code_3']     = '';
-                    $this->session->data['guest']['shipping']['address_format'] = '';
-                    $this->session->data['guest']['payment']['country_id']      = '';
-                    $this->session->data['guest']['payment']['country']         = '';
-                    $this->session->data['guest']['payment']['iso_code_2']      = '';
-                    $this->session->data['guest']['payment']['iso_code_3']      = '';
-                    $this->session->data['guest']['payment']['address_format']  = '';
-                    $this->session->data['shipping_country_id']                 = '';
+                    Session::p()->data['guest']['shipping']['country_id']     = '';
+                    Session::p()->data['guest']['shipping']['country']        = '';
+                    Session::p()->data['guest']['shipping']['iso_code_2']     = '';
+                    Session::p()->data['guest']['shipping']['iso_code_3']     = '';
+                    Session::p()->data['guest']['shipping']['address_format'] = '';
+                    Session::p()->data['guest']['payment']['country_id']      = '';
+                    Session::p()->data['guest']['payment']['country']         = '';
+                    Session::p()->data['guest']['payment']['iso_code_2']      = '';
+                    Session::p()->data['guest']['payment']['iso_code_3']      = '';
+                    Session::p()->data['guest']['payment']['address_format']  = '';
+                    Session::p()->data['shipping_country_id']                 = '';
                 }
                 
                 if (isset($result['PAYMENTREQUEST_0_SHIPTOSTATE'])) {
@@ -267,48 +267,48 @@ class PaypalExpress extends Controller {
 					LIMIT 1")->row;
                 
                 if ($zone_info) {
-                    $this->session->data['guest']['shipping']['zone']      = $zone_info['name'];
-                    $this->session->data['guest']['shipping']['zone_code'] = $zone_info['code'];
-                    $this->session->data['guest']['shipping']['zone_id']   = $zone_info['zone_id'];
-                    $this->session->data['guest']['payment']['zone']       = $zone_info['name'];
-                    $this->session->data['guest']['payment']['zone_code']  = $zone_info['code'];
-                    $this->session->data['guest']['payment']['zone_id']    = $zone_info['zone_id'];
-                    $this->session->data['shipping_zone_id']               = $zone_info['zone_id'];
+                    Session::p()->data['guest']['shipping']['zone']      = $zone_info['name'];
+                    Session::p()->data['guest']['shipping']['zone_code'] = $zone_info['code'];
+                    Session::p()->data['guest']['shipping']['zone_id']   = $zone_info['zone_id'];
+                    Session::p()->data['guest']['payment']['zone']       = $zone_info['name'];
+                    Session::p()->data['guest']['payment']['zone_code']  = $zone_info['code'];
+                    Session::p()->data['guest']['payment']['zone_id']    = $zone_info['zone_id'];
+                    Session::p()->data['shipping_zone_id']               = $zone_info['zone_id'];
                 } else {
-                    $this->session->data['guest']['shipping']['zone']      = '';
-                    $this->session->data['guest']['shipping']['zone_code'] = '';
-                    $this->session->data['guest']['shipping']['zone_id']   = '';
-                    $this->session->data['guest']['payment']['zone']       = '';
-                    $this->session->data['guest']['payment']['zone_code']  = '';
-                    $this->session->data['guest']['payment']['zone_id']    = '';
-                    $this->session->data['shipping_zone_id']               = '';
+                    Session::p()->data['guest']['shipping']['zone']      = '';
+                    Session::p()->data['guest']['shipping']['zone_code'] = '';
+                    Session::p()->data['guest']['shipping']['zone_id']   = '';
+                    Session::p()->data['guest']['payment']['zone']       = '';
+                    Session::p()->data['guest']['payment']['zone_code']  = '';
+                    Session::p()->data['guest']['payment']['zone_id']    = '';
+                    Session::p()->data['shipping_zone_id']               = '';
                 }
                 
-                $this->session->data['guest']['shipping_address'] = true;
+                Session::p()->data['guest']['shipping_address'] = true;
             } else {
-                $this->session->data['guest']['payment']['address_1']      = '';
-                $this->session->data['guest']['payment']['address_2']      = '';
-                $this->session->data['guest']['payment']['postcode']       = '';
-                $this->session->data['guest']['payment']['city']           = '';
-                $this->session->data['guest']['payment']['country_id']     = '';
-                $this->session->data['guest']['payment']['country']        = '';
-                $this->session->data['guest']['payment']['iso_code_2']     = '';
-                $this->session->data['guest']['payment']['iso_code_3']     = '';
-                $this->session->data['guest']['payment']['address_format'] = '';
-                $this->session->data['guest']['payment']['zone']           = '';
-                $this->session->data['guest']['payment']['zone_code']      = '';
-                $this->session->data['guest']['payment']['zone_id']        = '';
-                $this->session->data['guest']['shipping_address']          = false;
+                Session::p()->data['guest']['payment']['address_1']      = '';
+                Session::p()->data['guest']['payment']['address_2']      = '';
+                Session::p()->data['guest']['payment']['postcode']       = '';
+                Session::p()->data['guest']['payment']['city']           = '';
+                Session::p()->data['guest']['payment']['country_id']     = '';
+                Session::p()->data['guest']['payment']['country']        = '';
+                Session::p()->data['guest']['payment']['iso_code_2']     = '';
+                Session::p()->data['guest']['payment']['iso_code_3']     = '';
+                Session::p()->data['guest']['payment']['address_format'] = '';
+                Session::p()->data['guest']['payment']['zone']           = '';
+                Session::p()->data['guest']['payment']['zone_code']      = '';
+                Session::p()->data['guest']['payment']['zone_id']        = '';
+                Session::p()->data['guest']['shipping_address']          = false;
             }
             
-            $this->session->data['account'] = 'guest';
+            Session::p()->data['account'] = 'guest';
             
-            unset($this->session->data['shipping_method']);
-            unset($this->session->data['shipping_methods']);
-            unset($this->session->data['payment_method']);
-            unset($this->session->data['payment_methods']);
+            unset(Session::p()->data['shipping_method']);
+            unset(Session::p()->data['shipping_methods']);
+            unset(Session::p()->data['payment_method']);
+            unset(Session::p()->data['payment_methods']);
         } else {
-            unset($this->session->data['guest']);
+            unset(Session::p()->data['guest']);
             
             /**
              * if the user is logged in, add the address to the account and set the ID.
@@ -327,14 +327,14 @@ class PaypalExpress extends Controller {
                     if (trim(strtolower($address['address_1'])) == trim(strtolower($result['PAYMENTREQUEST_0_SHIPTOSTREET'])) && trim(strtolower($address['postcode'])) == trim(strtolower($result['PAYMENTREQUEST_0_SHIPTOZIP']))) {
                         $match = true;
                         
-                        $this->session->data['payment_address_id']  = $address['address_id'];
-                        $this->session->data['payment_country_id']  = $address['country_id'];
-                        $this->session->data['payment_zone_id']     = $address['zone_id'];
+                        Session::p()->data['payment_address_id']  = $address['address_id'];
+                        Session::p()->data['payment_country_id']  = $address['country_id'];
+                        Session::p()->data['payment_zone_id']     = $address['zone_id'];
                         
-                        $this->session->data['shipping_address_id'] = $address['address_id'];
-                        $this->session->data['shipping_country_id'] = $address['country_id'];
-                        $this->session->data['shipping_zone_id']    = $address['zone_id'];
-                        $this->session->data['shipping_postcode']   = $address['postcode'];
+                        Session::p()->data['shipping_address_id'] = $address['address_id'];
+                        Session::p()->data['shipping_country_id'] = $address['country_id'];
+                        Session::p()->data['shipping_zone_id']    = $address['zone_id'];
+                        Session::p()->data['shipping_postcode']   = $address['postcode'];
                         
                         break;
                     }
@@ -380,19 +380,19 @@ class PaypalExpress extends Controller {
                     
                     $address_id = AccountAddress::addAddress($address_data);
                     
-                    $this->session->data['payment_address_id']  = $address_id;
-                    $this->session->data['payment_country_id']  = $address_data['country_id'];
-                    $this->session->data['payment_zone_id']     = $address_data['zone_id'];
+                    Session::p()->data['payment_address_id']  = $address_id;
+                    Session::p()->data['payment_country_id']  = $address_data['country_id'];
+                    Session::p()->data['payment_zone_id']     = $address_data['zone_id'];
                     
-                    $this->session->data['shipping_address_id'] = $address_id;
-                    $this->session->data['shipping_country_id'] = $address_data['country_id'];
-                    $this->session->data['shipping_zone_id']    = $address_data['zone_id'];
-                    $this->session->data['shipping_postcode']   = $address_data['postcode'];
+                    Session::p()->data['shipping_address_id'] = $address_id;
+                    Session::p()->data['shipping_country_id'] = $address_data['country_id'];
+                    Session::p()->data['shipping_zone_id']    = $address_data['zone_id'];
+                    Session::p()->data['shipping_postcode']   = $address_data['postcode'];
                 }
             } else {
-                $this->session->data['payment_address_id'] = '';
-                $this->session->data['payment_country_id'] = '';
-                $this->session->data['payment_zone_id']    = '';
+                Session::p()->data['payment_address_id'] = '';
+                Session::p()->data['payment_country_id'] = '';
+                Session::p()->data['payment_zone_id']    = '';
             }
         }
         
@@ -406,23 +406,23 @@ class PaypalExpress extends Controller {
         Theme::model('tool/image');
         
         // Coupon
-        if (isset($this->request->post['coupon']) && $this->validateCoupon()) {
-            $this->session->data['coupon']  = $this->request->post['coupon'];
-            $this->session->data['success'] = Lang::get('lang_text_coupon');
+        if (isset(Request::p()->post['coupon']) && $this->validateCoupon()) {
+            Session::p()->data['coupon']  = Request::p()->post['coupon'];
+            Session::p()->data['success'] = Lang::get('lang_text_coupon');
             Response::redirect(Url::link('payment/paypal_express/expressConfirm', '', 'SSL'));
         }
         
         // Gift card
-        if (isset($this->request->post['gift_card']) && $this->validateGiftcard()) {
-            $this->session->data['gift_card'] = $this->request->post['gift_card'];
-            $this->session->data['success'] = Lang::get('lang_text_gift_card');
+        if (isset(Request::p()->post['gift_card']) && $this->validateGiftcard()) {
+            Session::p()->data['gift_card'] = Request::p()->post['gift_card'];
+            Session::p()->data['success'] = Lang::get('lang_text_gift_card');
             Response::redirect(Url::link('payment/paypal_express/expressConfirm', '', 'SSL'));
         }
         
         // Reward
-        if (isset($this->request->post['reward']) && $this->validateReward()) {
-            $this->session->data['reward']  = abs($this->request->post['reward']);
-            $this->session->data['success'] = Lang::get('lang_text_reward');
+        if (isset(Request::p()->post['reward']) && $this->validateReward()) {
+            Session::p()->data['reward']  = abs(Request::p()->post['reward']);
+            Session::p()->data['success'] = Lang::get('lang_text_reward');
             Response::redirect(Url::link('payment/paypal_express/expressConfirm', '', 'SSL'));
         }
         
@@ -444,8 +444,8 @@ class PaypalExpress extends Controller {
         $data['button_shipping'] = Lang::get('lang_express_button_shipping');
         $data['button_confirm']  = Lang::get('lang_express_button_confirm');
         
-        if (isset($this->request->post['next'])) {
-            $data['next'] = $this->request->post['next'];
+        if (isset(Request::p()->post['next'])) {
+            $data['next'] = Request::p()->post['next'];
         } else {
             $data['next'] = '';
         }
@@ -559,9 +559,9 @@ class PaypalExpress extends Controller {
              */
             if (Customer::isLogged()) {
                 Theme::model('account/address');
-                $shipping_address = AccountAddress::getAddress($this->session->data['shipping_address_id']);
-            } elseif (isset($this->session->data['guest'])) {
-                $shipping_address = $this->session->data['guest']['shipping'];
+                $shipping_address = AccountAddress::getAddress(Session::p()->data['shipping_address_id']);
+            } elseif (isset(Session::p()->data['guest'])) {
+                $shipping_address = Session::p()->data['guest']['shipping'];
             }
             
             if (!empty($shipping_address)) {
@@ -600,27 +600,27 @@ class PaypalExpress extends Controller {
                         
                         array_multisort($sort_order, SORT_ASC, $quote_data);
                         
-                        $this->session->data['shipping_methods'] = $quote_data;
+                        Session::p()->data['shipping_methods'] = $quote_data;
                         $data['shipping_methods'] = $quote_data;
                         
-                        if (!isset($this->session->data['shipping_method'])) {
+                        if (!isset(Session::p()->data['shipping_method'])) {
                             
                             //default the shipping to the very first option.
                             $key1 = key($quote_data);
                             $key2 = key($quote_data[$key1]['quote']);
-                            $this->session->data['shipping_method'] = $quote_data[$key1]['quote'][$key2];
+                            Session::p()->data['shipping_method'] = $quote_data[$key1]['quote'][$key2];
                         }
                         
-                        $data['code'] = $this->session->data['shipping_method']['code'];
+                        $data['code'] = Session::p()->data['shipping_method']['code'];
                         $data['action_shipping'] = Url::link('payment/paypal_express/shipping', '', 'SSL');
                     } else {
-                        unset($this->session->data['shipping_methods']);
-                        unset($this->session->data['shipping_method']);
+                        unset(Session::p()->data['shipping_methods']);
+                        unset(Session::p()->data['shipping_method']);
                         $data['error_no_shipping'] = Lang::get('lang_error_no_shipping');
                     }
                 } else {
-                    unset($this->session->data['shipping_methods']);
-                    unset($this->session->data['shipping_method']);
+                    unset(Session::p()->data['shipping_methods']);
+                    unset(Session::p()->data['shipping_method']);
                     $data['error_no_shipping'] = Lang::get('lang_error_no_shipping');
                 }
             }
@@ -676,11 +676,11 @@ class PaypalExpress extends Controller {
         /**
          * Payment methods
          */
-        if (Customer::isLogged() && isset($this->session->data['payment_address_id'])) {
+        if (Customer::isLogged() && isset(Session::p()->data['payment_address_id'])) {
             Theme::model('account/address');
-            $payment_address = AccountAddress::getAddress($this->session->data['payment_address_id']);
-        } elseif (isset($this->session->data['guest'])) {
-            $payment_address = $this->session->data['guest']['payment'];
+            $payment_address = AccountAddress::getAddress(Session::p()->data['payment_address_id']);
+        } elseif (isset(Session::p()->data['guest'])) {
+            $payment_address = Session::p()->data['guest']['payment'];
         }
         
         $method_data = array();
@@ -709,28 +709,28 @@ class PaypalExpress extends Controller {
         
         array_multisort($sort_order, SORT_ASC, $method_data);
         
-        $this->session->data['payment_methods'] = $method_data;
-        $this->session->data['payment_method']  = $this->session->data['payment_methods']['paypal_express'];
+        Session::p()->data['payment_methods'] = $method_data;
+        Session::p()->data['payment_method']  = Session::p()->data['payment_methods']['paypal_express'];
         
         $data['action_confirm'] = Url::link('payment/paypal_express/expressComplete', '', 'SSL');
         
-        if (isset($this->session->data['error_warning'])) {
-            $data['error_warning'] = $this->session->data['error_warning'];
-            unset($this->session->data['error_warning']);
+        if (isset(Session::p()->data['error_warning'])) {
+            $data['error_warning'] = Session::p()->data['error_warning'];
+            unset(Session::p()->data['error_warning']);
         } else {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
-            unset($this->session->data['success']);
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
         
-        if (isset($this->session->data['attention'])) {
-            $data['attention'] = $this->session->data['attention'];
-            unset($this->session->data['attention']);
+        if (isset(Session::p()->data['attention'])) {
+            $data['attention'] = Session::p()->data['attention'];
+            unset(Session::p()->data['attention']);
         } else {
             $data['attention'] = '';
         }
@@ -756,10 +756,10 @@ class PaypalExpress extends Controller {
             // Validate if shipping address has been set.
             Theme::model('account/address');
             
-            if (Customer::isLogged() && isset($this->session->data['shipping_address_id'])) {
-                $shipping_address = AccountAddress::getAddress($this->session->data['shipping_address_id']);
-            } elseif (isset($this->session->data['guest'])) {
-                $shipping_address = $this->session->data['guest']['shipping'];
+            if (Customer::isLogged() && isset(Session::p()->data['shipping_address_id'])) {
+                $shipping_address = AccountAddress::getAddress(Session::p()->data['shipping_address_id']);
+            } elseif (isset(Session::p()->data['guest'])) {
+                $shipping_address = Session::p()->data['guest']['shipping'];
             }
             
             if (empty($shipping_address)) {
@@ -767,30 +767,30 @@ class PaypalExpress extends Controller {
             }
             
             // Validate if shipping method has been set.
-            if (!isset($this->session->data['shipping_method'])) {
+            if (!isset(Session::p()->data['shipping_method'])) {
                 $redirect = Url::link('checkout/checkout', '', 'SSL');
             }
         } else {
-            unset($this->session->data['shipping_method']);
-            unset($this->session->data['shipping_methods']);
+            unset(Session::p()->data['shipping_method']);
+            unset(Session::p()->data['shipping_methods']);
         }
         
         // Validate if payment address has been set.
         Theme::model('account/address');
         
-        if (Customer::isLogged() && isset($this->session->data['payment_address_id'])) {
-            $payment_address = AccountAddress::getAddress($this->session->data['payment_address_id']);
-        } elseif (isset($this->session->data['guest'])) {
-            $payment_address = $this->session->data['guest']['payment'];
+        if (Customer::isLogged() && isset(Session::p()->data['payment_address_id'])) {
+            $payment_address = AccountAddress::getAddress(Session::p()->data['payment_address_id']);
+        } elseif (isset(Session::p()->data['guest'])) {
+            $payment_address = Session::p()->data['guest']['payment'];
         }
         
         // Validate if payment method has been set.
-        if (!isset($this->session->data['payment_method'])) {
+        if (!isset(Session::p()->data['payment_method'])) {
             $redirect = Url::link('checkout/checkout', '', 'SSL');
         }
         
         // Validate cart has products and has stock.
-        if ((!Cart::hasProducts() && empty($this->session->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
+        if ((!Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
             $redirect = Url::link('checkout/cart');
         }
         
@@ -858,7 +858,7 @@ class PaypalExpress extends Controller {
                 $data['store_url'] = Config::get('http.server');
             }
             
-            if (Customer::isLogged() && isset($this->session->data['payment_address_id'])) {
+            if (Customer::isLogged() && isset(Session::p()->data['payment_address_id'])) {
                 $data['customer_id']       = Customer::getId();
                 $data['customer_group_id'] = Customer::getGroupId();
                 $data['firstname']         = Customer::getFirstName();
@@ -868,16 +868,16 @@ class PaypalExpress extends Controller {
                 
                 Theme::model('account/address');
                 
-                $payment_address = AccountAddress::getAddress($this->session->data['payment_address_id']);
-            } elseif (isset($this->session->data['guest'])) {
+                $payment_address = AccountAddress::getAddress(Session::p()->data['payment_address_id']);
+            } elseif (isset(Session::p()->data['guest'])) {
                 $data['customer_id']       = 0;
-                $data['customer_group_id'] = $this->session->data['guest']['customer_group_id'];
-                $data['firstname']         = $this->session->data['guest']['firstname'];
-                $data['lastname']          = $this->session->data['guest']['lastname'];
-                $data['email']             = $this->session->data['guest']['email'];
-                $data['telephone']         = $this->session->data['guest']['telephone'];
+                $data['customer_group_id'] = Session::p()->data['guest']['customer_group_id'];
+                $data['firstname']         = Session::p()->data['guest']['firstname'];
+                $data['lastname']          = Session::p()->data['guest']['lastname'];
+                $data['email']             = Session::p()->data['guest']['email'];
+                $data['telephone']         = Session::p()->data['guest']['telephone'];
                 
-                $payment_address = $this->session->data['guest']['payment'];
+                $payment_address = Session::p()->data['guest']['payment'];
             }
             
             $data['payment_firstname']      = isset($payment_address['firstname']) ? $payment_address['firstname'] : '';
@@ -896,22 +896,22 @@ class PaypalExpress extends Controller {
             $data['payment_address_format'] = isset($payment_address['address_format']) ? $payment_address['address_format'] : '';
             
             $data['payment_method'] = '';
-            if (isset($this->session->data['payment_method']['title'])) {
-                $data['payment_method'] = $this->session->data['payment_method']['title'];
+            if (isset(Session::p()->data['payment_method']['title'])) {
+                $data['payment_method'] = Session::p()->data['payment_method']['title'];
             }
             
             $data['payment_code'] = '';
-            if (isset($this->session->data['payment_method']['code'])) {
-                $data['payment_code'] = $this->session->data['payment_method']['code'];
+            if (isset(Session::p()->data['payment_method']['code'])) {
+                $data['payment_code'] = Session::p()->data['payment_method']['code'];
             }
             
             if (Cart::hasShipping()) {
                 if (Customer::isLogged()) {
                     Theme::model('account/address');
                     
-                    $shipping_address = AccountAddress::getAddress($this->session->data['shipping_address_id']);
-                } elseif (isset($this->session->data['guest'])) {
-                    $shipping_address = $this->session->data['guest']['shipping'];
+                    $shipping_address = AccountAddress::getAddress(Session::p()->data['shipping_address_id']);
+                } elseif (isset(Session::p()->data['guest'])) {
+                    $shipping_address = Session::p()->data['guest']['shipping'];
                 }
                 
                 $data['shipping_firstname']      = $shipping_address['firstname'];
@@ -928,13 +928,13 @@ class PaypalExpress extends Controller {
                 $data['shipping_address_format'] = $shipping_address['address_format'];
                 
                 $data['shipping_method'] = '';
-                if (isset($this->session->data['shipping_method']['title'])) {
-                    $data['shipping_method'] = $this->session->data['shipping_method']['title'];
+                if (isset(Session::p()->data['shipping_method']['title'])) {
+                    $data['shipping_method'] = Session::p()->data['shipping_method']['title'];
                 }
                 
                 $data['shipping_code'] = '';
-                if (isset($this->session->data['shipping_method']['code'])) {
-                    $data['shipping_code'] = $this->session->data['shipping_method']['code'];
+                if (isset(Session::p()->data['shipping_method']['code'])) {
+                    $data['shipping_code'] = Session::p()->data['shipping_method']['code'];
                 }
             } else {
                 $data['shipping_firstname']      = '';
@@ -994,8 +994,8 @@ class PaypalExpress extends Controller {
             // Gift Giftcard
             $gift_card_data = array();
             
-            if (!empty($this->session->data['gift_cards'])) {
-                foreach ($this->session->data['gift_cards'] as $gift_card) {
+            if (!empty(Session::p()->data['gift_cards'])) {
+                foreach (Session::p()->data['gift_cards'] as $gift_card) {
                     $gift_card_data[] = array(
                         'description'       => $gift_card['description'], 
                         'code'              => substr(md5(mt_rand()), 0, 10), 
@@ -1013,7 +1013,7 @@ class PaypalExpress extends Controller {
             $data['products']  = $product_data;
             $data['gift_cards'] = $gift_card_data;
             $data['totals']    = $total_data;
-            $data['comment']   = $this->session->data['comment'];
+            $data['comment']   = Session::p()->data['comment'];
             $data['total']     = $total;
 
             $sub_total = Cart::getSubTotal();
@@ -1039,13 +1039,13 @@ class PaypalExpress extends Controller {
              */
             
             // referrer cookie
-            if (!$affiliate_id && isset($this->request->cookie['referrer'])):
-                $affiliate_id = $this->request->cookie['referrer'];
+            if (!$affiliate_id && isset(Request::p()->cookie['referrer'])):
+                $affiliate_id = Request::p()->cookie['referrer'];
             endif;
 
             // affiliate_id cookie
-            if (!$affiliate_id && isset($this->request->cookie['affiliate_id'])):
-                $affiliate_id = $this->request->cookie['affiliate_id'];
+            if (!$affiliate_id && isset(Request::p()->cookie['affiliate_id'])):
+                $affiliate_id = Request::p()->cookie['affiliate_id'];
             endif;
 
             if ($affiliate_id && ($affiliate_id !== Customer::getId())):
@@ -1062,24 +1062,24 @@ class PaypalExpress extends Controller {
             $data['currency_id']    = Currency::getId();
             $data['currency_code']  = Currency::getCode();
             $data['currency_value'] = Currency::getValue(Currency::getCode());
-            $data['ip']             = $this->request->server['REMOTE_ADDR'];
+            $data['ip']             = Request::p()->server['REMOTE_ADDR'];
             
-            if (!empty($this->request->server['HTTP_X_FORWARDED_FOR'])) {
-                $data['forwarded_ip'] = $this->request->server['HTTP_X_FORWARDED_FOR'];
-            } elseif (!empty($this->request->server['HTTP_CLIENT_IP'])) {
-                $data['forwarded_ip'] = $this->request->server['HTTP_CLIENT_IP'];
+            if (!empty(Request::p()->server['HTTP_X_FORWARDED_FOR'])) {
+                $data['forwarded_ip'] = Request::p()->server['HTTP_X_FORWARDED_FOR'];
+            } elseif (!empty(Request::p()->server['HTTP_CLIENT_IP'])) {
+                $data['forwarded_ip'] = Request::p()->server['HTTP_CLIENT_IP'];
             } else {
                 $data['forwarded_ip'] = '';
             }
             
-            if (isset($this->request->server['HTTP_USER_AGENT'])) {
-                $data['user_agent'] = $this->request->server['HTTP_USER_AGENT'];
+            if (isset(Request::p()->server['HTTP_USER_AGENT'])) {
+                $data['user_agent'] = Request::p()->server['HTTP_USER_AGENT'];
             } else {
                 $data['user_agent'] = '';
             }
             
-            if (isset($this->request->server['HTTP_ACCEPT_LANGUAGE'])) {
-                $data['accept_language'] = $this->request->server['HTTP_ACCEPT_LANGUAGE'];
+            if (isset(Request::p()->server['HTTP_ACCEPT_LANGUAGE'])) {
+                $data['accept_language'] = Request::p()->server['HTTP_ACCEPT_LANGUAGE'];
             } else {
                 $data['accept_language'] = '';
             }
@@ -1087,13 +1087,13 @@ class PaypalExpress extends Controller {
             Theme::model('checkout/order');
             
             $order_id = CheckoutOrder::addOrder($data);
-            $this->session->data['order_id'] = $order_id;
+            Session::p()->data['order_id'] = $order_id;
             
             Theme::model('payment/paypal_express');
             
             $paypal_data = array(
-                'TOKEN'                      => $this->session->data['paypal']['token'], 
-                'PAYERID'                    => $this->session->data['paypal']['payerid'], 
+                'TOKEN'                      => Session::p()->data['paypal']['token'], 
+                'PAYERID'                    => Session::p()->data['paypal']['payerid'], 
                 'METHOD'                     => 'DoExpressCheckoutPayment', 
                 'PAYMENTREQUEST_0_NOTIFYURL' => Url::link('payment/paypal_express/ipn', '', 'SSL'), 
                 'RETURNFMFDETAILS'           => 1
@@ -1198,7 +1198,7 @@ class PaypalExpress extends Controller {
                     foreach ($recurring_products as $item) {
                         $data = array(
                             'METHOD'             => 'CreateRecurringPaymentsProfile', 
-                            'TOKEN'              => $this->session->data['paypal']['token'], 
+                            'TOKEN'              => Session::p()->data['paypal']['token'], 
                             'PROFILESTARTDATE'   => gmdate("Y-m-d\TH:i:s\Z", mktime(gmdate("H"), gmdate("i") + 5, gmdate("s"), gmdate("m"), gmdate("d"), gmdate("y"))), 
                             'BILLINGPERIOD'      => $billing_period[$item['recurring']['frequency']], 
                             'BILLINGFREQUENCY'   => $item['recurring']['cycle'], 
@@ -1255,31 +1255,31 @@ class PaypalExpress extends Controller {
                 if (isset($result['REDIRECTREQUIRED']) && $result['REDIRECTREQUIRED'] === true) {
                     
                     //- handle german redirect here
-                    Response::redirect('https://www.paypal.com/cgi-bin/webscr?cmd=_complete-express-checkout&token=' . $this->session->data['paypal']['token']);
+                    Response::redirect('https://www.paypal.com/cgi-bin/webscr?cmd=_complete-express-checkout&token=' . Session::p()->data['paypal']['token']);
                 }
             } else {
                 if ($result['L_ERRORCODE0'] == '10486') {
-                    if (isset($this->session->data['paypal_redirect_count'])) {
+                    if (isset(Session::p()->data['paypal_redirect_count'])) {
                         
-                        if ($this->session->data['paypal_redirect_count'] == 2) {
-                            $this->session->data['paypal_redirect_count'] = 0;
-                            $this->session->data['error'] = Lang::get('lang_error_too_many_failures');
+                        if (Session::p()->data['paypal_redirect_count'] == 2) {
+                            Session::p()->data['paypal_redirect_count'] = 0;
+                            Session::p()->data['error'] = Lang::get('lang_error_too_many_failures');
                             Response::redirect(Url::link('checkout/checkout', '', 'SSL'));
                         } else {
-                            $this->session->data['paypal_redirect_count']++;
+                            Session::p()->data['paypal_redirect_count']++;
                         }
                     } else {
-                        $this->session->data['paypal_redirect_count'] = 1;
+                        Session::p()->data['paypal_redirect_count'] = 1;
                     }
                     
                     if (Config::get('paypal_express_test') == 1) {
-                        Response::redirect('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $this->session->data['paypal']['token']);
+                        Response::redirect('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . Session::p()->data['paypal']['token']);
                     } else {
-                        Response::redirect('https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $this->session->data['paypal']['token']);
+                        Response::redirect('https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . Session::p()->data['paypal']['token']);
                     }
                 }
                 
-                $this->session->data['error'] = $result['L_LONGMESSAGE0'];
+                Session::p()->data['error'] = $result['L_LONGMESSAGE0'];
                 Response::redirect(Url::link('payment/paypal_express/expressConfirm', '', 'SSL'));
             }
         } else {
@@ -1288,7 +1288,7 @@ class PaypalExpress extends Controller {
     }
     
     public function checkout() {
-        if ((!Cart::hasProducts() && empty($this->session->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
+        if ((!Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
             Response::redirect(Url::link('checkout/cart'));
         }
         
@@ -1296,7 +1296,7 @@ class PaypalExpress extends Controller {
         Theme::model('tool/image');
         Theme::model('checkout/order');
         
-        $order_info = CheckoutOrder::getOrder($this->session->data['order_id']);
+        $order_info = CheckoutOrder::getOrder(Session::p()->data['order_id']);
         
         $max_amount = Currency::convert($order_info['total'], Config::get('config_currency'), 'USD');
         $max_amount = min($max_amount * 1.25, 10000);
@@ -1317,8 +1317,8 @@ class PaypalExpress extends Controller {
             'ALLOWNOTE'          => Config::get('paypal_express_allow_note')
         );
         
-        if (isset($this->session->data['paypal_express_login']['seamless']['access_token']) && (isset($this->session->data['paypal_express_login']['seamless']['customer_id']) && $this->session->data['paypal_express_login']['seamless']['customer_id'] == Customer::getId()) && Config::get('paypal_express_login_seamless')) {
-            $data['IDENTITYACCESSTOKEN'] = $this->session->data['paypal_express_login']['seamless']['access_token'];
+        if (isset(Session::p()->data['paypal_express_login']['seamless']['access_token']) && (isset(Session::p()->data['paypal_express_login']['seamless']['customer_id']) && Session::p()->data['paypal_express_login']['seamless']['customer_id'] == Customer::getId()) && Config::get('paypal_express_login_seamless')) {
+            $data['IDENTITYACCESSTOKEN'] = Session::p()->data['paypal_express_login']['seamless']['access_token'];
         }
         
         $data = array_merge($data, PaymentPaypalExpress::paymentRequestInfo());
@@ -1329,7 +1329,7 @@ class PaypalExpress extends Controller {
          * If a failed PayPal setup happens, handle it.
          */
         if (!isset($result['TOKEN'])) {
-            $this->session->data['error'] = $result['L_LONGMESSAGE0'];
+            Session::p()->data['error'] = $result['L_LONGMESSAGE0'];
             
             /**
              * Unable to add error message to user as the session errors/success are not
@@ -1343,7 +1343,7 @@ class PaypalExpress extends Controller {
             Response::redirect(Url::link('checkout/checkout', '', 'SSL'));
         }
         
-        $this->session->data['paypal']['token'] = $result['TOKEN'];
+        Session::p()->data['paypal']['token'] = $result['TOKEN'];
         
         if (Config::get('paypal_express_test') == 1) {
             header('Location: https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $result['TOKEN'] . '&useraction=commit');
@@ -1361,18 +1361,18 @@ class PaypalExpress extends Controller {
         Theme::model('payment/paypal_express');
         Theme::model('checkout/order');
         
-        $data = array('METHOD' => 'GetExpressCheckoutDetails', 'TOKEN' => $this->session->data['paypal']['token']);
+        $data = array('METHOD' => 'GetExpressCheckoutDetails', 'TOKEN' => Session::p()->data['paypal']['token']);
         
         $result = PaymentPaypalExpress::call($data);
         
-        $this->session->data['paypal']['payerid'] = $result['PAYERID'];
-        $this->session->data['paypal']['result'] = $result;
+        Session::p()->data['paypal']['payerid'] = $result['PAYERID'];
+        Session::p()->data['paypal']['result'] = $result;
         
-        $order_id = $this->session->data['order_id'];
+        $order_id = Session::p()->data['order_id'];
         
         $paypal_data = array(
-            'TOKEN'                      => $this->session->data['paypal']['token'], 
-            'PAYERID'                    => $this->session->data['paypal']['payerid'], 
+            'TOKEN'                      => Session::p()->data['paypal']['token'], 
+            'PAYERID'                    => Session::p()->data['paypal']['payerid'], 
             'METHOD'                     => 'DoExpressCheckoutPayment', 
             'PAYMENTREQUEST_0_NOTIFYURL' => Url::link('payment/paypal_express/ipn', '', 'SSL'), 
             'RETURNFMFDETAILS'           => 1
@@ -1475,7 +1475,7 @@ class PaypalExpress extends Controller {
                 foreach ($recurring_products as $item) {
                     $data = array(
                         'METHOD'             => 'CreateRecurringPaymentsProfile', 
-                        'TOKEN'              => $this->session->data['paypal']['token'], 
+                        'TOKEN'              => Session::p()->data['paypal']['token'], 
                         'PROFILESTARTDATE'   => gmdate("Y-m-d\TH:i:s\Z", mktime(gmdate('H'), gmdate('i') + 5, gmdate('s'), gmdate('m'), gmdate('d'), gmdate('y'))), 
                         'BILLINGPERIOD'      => $billing_period[$item['recurring']['frequency']], 
                         'BILLINGFREQUENCY'   => $item['recurring']['cycle'], 
@@ -1530,31 +1530,31 @@ class PaypalExpress extends Controller {
             if (isset($result['REDIRECTREQUIRED']) && $result['REDIRECTREQUIRED'] === true) {
                 
                 //- handle german redirect here
-                Response::redirect('https://www.paypal.com/cgi-bin/webscr?cmd=_complete-express-checkout&token=' . $this->session->data['paypal']['token']);
+                Response::redirect('https://www.paypal.com/cgi-bin/webscr?cmd=_complete-express-checkout&token=' . Session::p()->data['paypal']['token']);
             } else {
                 Response::redirect(Url::link('checkout/success'));
             }
         } else {
             
             if ($result['L_ERRORCODE0'] == '10486') {
-                if (isset($this->session->data['paypal_redirect_count'])) {
+                if (isset(Session::p()->data['paypal_redirect_count'])) {
                     
-                    if ($this->session->data['paypal_redirect_count'] == 2) {
-                        $this->session->data['paypal_redirect_count'] = 0;
-                        $this->session->data['error'] = Lang::get('lang_error_too_many_failures');
+                    if (Session::p()->data['paypal_redirect_count'] == 2) {
+                        Session::p()->data['paypal_redirect_count'] = 0;
+                        Session::p()->data['error'] = Lang::get('lang_error_too_many_failures');
                         
                         Response::redirect(Url::link('checkout/checkout', '', 'SSL'));
                     } else {
-                        $this->session->data['paypal_redirect_count']++;
+                        Session::p()->data['paypal_redirect_count']++;
                     }
                 } else {
-                    $this->session->data['paypal_redirect_count'] = 1;
+                    Session::p()->data['paypal_redirect_count'] = 1;
                 }
                 
                 if (Config::get('paypal_express_test') == 1) {
-                    Response::redirect('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $this->session->data['paypal']['token']);
+                    Response::redirect('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . Session::p()->data['paypal']['token']);
                 } else {
-                    Response::redirect('https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $this->session->data['paypal']['token']);
+                    Response::redirect('https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . Session::p()->data['paypal']['token']);
                 }
             }
             
@@ -1566,9 +1566,9 @@ class PaypalExpress extends Controller {
             
             $data['continue'] = Url::link('checkout/cart', '', 'SSL');
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
             
-            Response::addHeader($this->request->server['SERVER_PROTOCOL'] . ' 404 Not Found');
+            Response::addHeader(Request::p()->server['SERVER_PROTOCOL'] . ' 404 Not Found');
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
@@ -1620,11 +1620,11 @@ class PaypalExpress extends Controller {
         if ((string)$response == "VERIFIED") {
             
             if (Config::get('paypal_express_debug') == 1) {
-                if (isset($this->request->post['transaction_entity'])) $this->log->write($this->request->post['transaction_entity']);
+                if (isset(Request::p()->post['transaction_entity'])) $this->log->write(Request::p()->post['transaction_entity']);
             }
             
-            if (isset($this->request->post['txn_id'])) {
-                $transaction = PaymentPaypalExpress::getTransactionRow($this->request->post['txn_id']);
+            if (isset(Request::p()->post['txn_id'])) {
+                $transaction = PaymentPaypalExpress::getTransactionRow(Request::p()->post['txn_id']);
             } else {
                 $transaction = false;
             }
@@ -1635,20 +1635,20 @@ class PaypalExpress extends Controller {
                 if (Config::get('paypal_express_debug') == 1) $this->log->write('Transaction exists');
                 
                 //if the transaction is pending but the new status is completed
-                if ($transaction['payment_status'] != $this->request->post['payment_status']) {
-                    PaymentExpressIpn::updateStatus($this->request->post['payment_status'], $transaction['transaction_id']);
-                } elseif ($transaction['payment_status'] == 'Pending' && ($transaction['pending_reason'] != $this->request->post['pending_reason'])) {
-                    PaymentExpressIpn::updatePending($this->request->post['pending_reason'], $transaction['transaction_id']);
+                if ($transaction['payment_status'] != Request::p()->post['payment_status']) {
+                    PaymentExpressIpn::updateStatus(Request::p()->post['payment_status'], $transaction['transaction_id']);
+                } elseif ($transaction['payment_status'] == 'Pending' && ($transaction['pending_reason'] != Request::p()->post['pending_reason'])) {
+                    PaymentExpressIpn::updatePending(Request::p()->post['pending_reason'], $transaction['transaction_id']);
                 }
             } else {
                 if (Config::get('paypal_express_debug') == 1) $this->log->write('Transaction does not exist');
                 
                 $parent_transaction = false;
                 
-                if (isset($this->request->post['parent_txn_id'])) {
-                    $parent_transaction = PaymentPaypalExpress::getTransactionRow($this->request->post['parent_txn_id']);
+                if (isset(Request::p()->post['parent_txn_id'])) {
+                    $parent_transaction = PaymentPaypalExpress::getTransactionRow(Request::p()->post['parent_txn_id']);
                 } else {
-                    $parent_transaction = PaymentPaypalExpress::getTransactionRowByReference($this->request->post['recurring_payment_id']);
+                    $parent_transaction = PaymentPaypalExpress::getTransactionRowByReference(Request::p()->post['recurring_payment_id']);
                 }
                 
                 if ($parent_transaction) {
@@ -1658,17 +1658,17 @@ class PaypalExpress extends Controller {
                     //add new related transaction
                     $transaction = array(
                         'paypal_order_id'       => $parent_transaction['paypal_order_id'], 
-                        'transaction_id'        => $this->request->post['txn_id'], 
+                        'transaction_id'        => Request::p()->post['txn_id'], 
                         'parent_transaction_id' => $parent_transaction['transaction_id'], 
                         'note'                  => '', 
                         'msgsubid'              => '', 
-                        'receipt_id'            => (isset($this->request->post['receipt_id']) ? $this->request->post['receipt_id'] : ''), 
-                        'payment_type'          => (isset($this->request->post['payment_type']) ? $this->request->post['payment_type'] : ''), 
-                        'payment_status'        => (isset($this->request->post['payment_status']) ? $this->request->post['payment_status'] : ''), 
-                        'pending_reason'        => (isset($this->request->post['pending_reason']) ? $this->request->post['pending_reason'] : ''), 
-                        'amount'                => $this->request->post['mc_gross'], 
-                        'debug_data'            => json_encode($this->request->post), 
-                        'transaction_entity'    => (isset($this->request->post['transaction_entity']) ? $this->request->post['transaction_entity'] : '')
+                        'receipt_id'            => (isset(Request::p()->post['receipt_id']) ? Request::p()->post['receipt_id'] : ''), 
+                        'payment_type'          => (isset(Request::p()->post['payment_type']) ? Request::p()->post['payment_type'] : ''), 
+                        'payment_status'        => (isset(Request::p()->post['payment_status']) ? Request::p()->post['payment_status'] : ''), 
+                        'pending_reason'        => (isset(Request::p()->post['pending_reason']) ? Request::p()->post['pending_reason'] : ''), 
+                        'amount'                => Request::p()->post['mc_gross'], 
+                        'debug_data'            => json_encode(Request::post()), 
+                        'transaction_entity'    => (isset(Request::p()->post['transaction_entity']) ? Request::p()->post['transaction_entity'] : '')
                     );
                     
                     PaymentPaypalExpress::addTransaction($transaction);
@@ -1676,14 +1676,14 @@ class PaypalExpress extends Controller {
                     /**
                      * If there has been a refund, log this against the parent transaction.
                      */
-                    if (isset($this->request->post['payment_status']) && $this->request->post['payment_status'] == 'Refunded') {
-                        PaymentExpressIpn::processRefund($this->request->post['mc_gross'], $parent_transaction['amount'], $parent_transaction['transaction_id']);
+                    if (isset(Request::p()->post['payment_status']) && Request::p()->post['payment_status'] == 'Refunded') {
+                        PaymentExpressIpn::processRefund(Request::p()->post['mc_gross'], $parent_transaction['amount'], $parent_transaction['transaction_id']);
                     }
                     
                     /**
                      * If the capture payment is now complete
                      */
-                    if (isset($this->request->post['auth_status']) && $this->request->post['auth_status'] == 'Completed' && $parent_transaction['payment_status'] == 'Pending') {
+                    if (isset(Request::p()->post['auth_status']) && Request::p()->post['auth_status'] == 'Completed' && $parent_transaction['payment_status'] == 'Pending') {
                         $captured  = Currency::format(PaymentPaypalExpress::totalCaptured($parent_transaction['paypal_order_id']), false, false, false);
                         $refunded  = Currency::format(PaymentPaypalExpress::totalRefundedOrder($parent_transaction['paypal_order_id']), false, false, false);
                         $remaining = Currency::format($parent_transaction['amount'] - $captured + $refunded, false, false, false);
@@ -1730,20 +1730,20 @@ class PaypalExpress extends Controller {
              * also the reference will match a recurring payment ID
             */
             
-            if (isset($this->request->post['txn_type'])) {
+            if (isset(Request::p()->post['txn_type'])) {
                 
                 //payment
-                if ($this->request->post['txn_type'] == 'recurring_payment') {
-                    $recur = AccountRecurring::getRecurringByRef($this->request->post['recurring_payment_id']);
+                if (Request::p()->post['txn_type'] == 'recurring_payment') {
+                    $recur = AccountRecurring::getRecurringByRef(Request::p()->post['recurring_payment_id']);
                     
                     if ($recur !== false) {
-                        PaymentExpressIpn::processPayment($recur['order_recurring_id'], $this->request->post['amount'], $recur['status']);
+                        PaymentExpressIpn::processPayment($recur['order_recurring_id'], Request::p()->post['amount'], $recur['status']);
                     }
                 }
                 
                 //suspend
-                if ($this->request->post['txn_type'] == 'recurring_payment_suspended') {
-                    $recur = AccountRecurring::getRecurringByRef($this->request->post['recurring_payment_id']);
+                if (Request::p()->post['txn_type'] == 'recurring_payment_suspended') {
+                    $recur = AccountRecurring::getRecurringByRef(Request::p()->post['recurring_payment_id']);
                     
                     if ($recur !== false) {
                         PaymentExpressIpn::processSuspend($recur['order_recurring_id']);
@@ -1751,8 +1751,8 @@ class PaypalExpress extends Controller {
                 }
                 
                 //suspend due to max failed
-                if ($this->request->post['txn_type'] == 'recurring_payment_suspended_due_to_max_failed_payment') {
-                    $recur = AccountRecurring::getRecurringByRef($this->request->post['recurring_payment_id']);
+                if (Request::p()->post['txn_type'] == 'recurring_payment_suspended_due_to_max_failed_payment') {
+                    $recur = AccountRecurring::getRecurringByRef(Request::p()->post['recurring_payment_id']);
                     
                     if ($recur !== false) {
                         PaymentExpressIpn::suspendMaxFailed($recur['order_recurring_id']);
@@ -1760,8 +1760,8 @@ class PaypalExpress extends Controller {
                 }
                 
                 //payment failed
-                if ($this->request->post['txn_type'] == 'recurring_payment_failed') {
-                    $recur = AccountRecurring::getRecurringByRef($this->request->post['recurring_payment_id']);
+                if (Request::p()->post['txn_type'] == 'recurring_payment_failed') {
+                    $recur = AccountRecurring::getRecurringByRef(Request::p()->post['recurring_payment_id']);
                     
                     if ($recur !== false) {
                         PaymentExpressIpn::paymentFailed($recur['order_recurring_id']);
@@ -1769,8 +1769,8 @@ class PaypalExpress extends Controller {
                 }
                 
                 //outstanding payment failed
-                if ($this->request->post['txn_type'] == 'recurring_payment_outstanding_payment_failed') {
-                    $recur = AccountRecurring::getRecurringByRef($this->request->post['recurring_payment_id']);
+                if (Request::p()->post['txn_type'] == 'recurring_payment_outstanding_payment_failed') {
+                    $recur = AccountRecurring::getRecurringByRef(Request::p()->post['recurring_payment_id']);
                     
                     if ($recur !== false) {
                         PaymentExpressIpn::outstandingPaymentFailed($recur['order_recurring_id']);
@@ -1778,17 +1778,17 @@ class PaypalExpress extends Controller {
                 }
                 
                 //outstanding payment
-                if ($this->request->post['txn_type'] == 'recurring_payment_outstanding_payment') {
-                    $recur = AccountRecurring::getRecurringByRef($this->request->post['recurring_payment_id']);
+                if (Request::p()->post['txn_type'] == 'recurring_payment_outstanding_payment') {
+                    $recur = AccountRecurring::getRecurringByRef(Request::p()->post['recurring_payment_id']);
                     
                     if ($recur !== false) {
-                        PaymentExpressIpn::outstandingPayment($recur['order_recurring_id'], $this->request->post['amount'], $recur['status']);
+                        PaymentExpressIpn::outstandingPayment($recur['order_recurring_id'], Request::p()->post['amount'], $recur['status']);
                     }
                 }
                 
                 //date_added
-                if ($this->request->post['txn_type'] == 'recurring_payment_recurring_date_added') {
-                    $recur = AccountRecurring::getRecurringByRef($this->request->post['recurring_payment_id']);
+                if (Request::p()->post['txn_type'] == 'recurring_payment_recurring_date_added') {
+                    $recur = AccountRecurring::getRecurringByRef(Request::p()->post['recurring_payment_id']);
                     
                     if ($recur !== false) {
                         PaymentExpressIpn::dateAdded($recur['order_recurring_id'], $recur['status']);
@@ -1796,8 +1796,8 @@ class PaypalExpress extends Controller {
                 }
                 
                 //canceled
-                if ($this->request->post['txn_type'] == 'recurring_payment_recurring_cancel') {
-                    $recur = AccountRecurring::getRecurringByRef($this->request->post['recurring_payment_id']);
+                if (Request::p()->post['txn_type'] == 'recurring_payment_recurring_cancel') {
+                    $recur = AccountRecurring::getRecurringByRef(Request::p()->post['recurring_payment_id']);
                     
                     if ($recur !== false && $recur['status'] != 3) {
                         PaymentExpressIpn::processCanceled($recur['order_recurring_id']);
@@ -1805,8 +1805,8 @@ class PaypalExpress extends Controller {
                 }
                 
                 //skipped
-                if ($this->request->post['txn_type'] == 'recurring_payment_skipped') {
-                    $recur = AccountRecurring::getRecurringByRef($this->request->post['recurring_payment_id']);
+                if (Request::p()->post['txn_type'] == 'recurring_payment_skipped') {
+                    $recur = AccountRecurring::getRecurringByRef(Request::p()->post['recurring_payment_id']);
                     
                     if ($recur !== false) {
                         PaymentExpressIpn::processSkipped($recur['order_recurring_id']);
@@ -1814,8 +1814,8 @@ class PaypalExpress extends Controller {
                 }
                 
                 //expired
-                if ($this->request->post['txn_type'] == 'recurring_payment_expired') {
-                    $recur = AccountRecurring::getRecurringByRef($this->request->post['recurring_payment_id']);
+                if (Request::p()->post['txn_type'] == 'recurring_payment_expired') {
+                    $recur = AccountRecurring::getRecurringByRef(Request::p()->post['recurring_payment_id']);
                     
                     if ($recur !== false) {
                         PaymentExpressIpn::processExpired($recur['order_recurring_id']);
@@ -1834,7 +1834,7 @@ class PaypalExpress extends Controller {
     }
     
     public function shipping() {
-        $this->shippingValidate($this->request->post['shipping_method']);
+        $this->shippingValidate(Request::p()->post['shipping_method']);
         
         Response::redirect(Url::link('payment/paypal_express/expressConfirm'));
     }
@@ -1844,17 +1844,17 @@ class PaypalExpress extends Controller {
         Theme::language('payment/paypal_express');
         
         if (empty($code)) {
-            $this->session->data['error_warning'] = Lang::get('lang_error_shipping');
+            Session::p()->data['error_warning'] = Lang::get('lang_error_shipping');
             return false;
         } else {
             $shipping = explode('.', $code);
             
-            if (!isset($shipping[0]) || !isset($shipping[1]) || !isset($this->session->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]])) {
-                $this->session->data['error_warning'] = Lang::get('lang_error_shipping');
+            if (!isset($shipping[0]) || !isset($shipping[1]) || !isset(Session::p()->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]])) {
+                Session::p()->data['error_warning'] = Lang::get('lang_error_shipping');
                 return false;
             } else {
-                $this->session->data['shipping_method'] = $this->session->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]];
-                $this->session->data['success'] = Lang::get('lang_text_shipping_updated');
+                Session::p()->data['shipping_method'] = Session::p()->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]];
+                Session::p()->data['success'] = Lang::get('lang_text_shipping_updated');
                 return true;
             }
         }
@@ -1868,7 +1868,7 @@ class PaypalExpress extends Controller {
         Theme::model('payment/paypal_express');
         Theme::language('account/recurring');
         
-        $recur = AccountRecurring::getRecurring($this->request->get['recurring_id']);
+        $recur = AccountRecurring::getRecurring(Request::p()->get['recurring_id']);
         
         if ($recur && !empty($recur['reference'])) {
             
@@ -1889,21 +1889,21 @@ class PaypalExpress extends Controller {
 					WHERE `order_recurring_id` = '" . (int)$recur['order_recurring_id'] . "' 
 					LIMIT 1");
                 
-                $this->session->data['success'] = Lang::get('lang_text_cancelled');
+                Session::p()->data['success'] = Lang::get('lang_text_cancelled');
             } else {
-                $this->session->data['error'] = sprintf(Lang::get('lang_error_not_cancelled'), $result['L_LONGMESSAGE0']);
+                Session::p()->data['error'] = sprintf(Lang::get('lang_error_not_cancelled'), $result['L_LONGMESSAGE0']);
             }
         } else {
-            $this->session->data['error'] = Lang::get('lang_error_not_found');
+            Session::p()->data['error'] = Lang::get('lang_error_not_found');
         }
         
-        Response::redirect(Url::link('account/recurring/info', 'recurring_id=' . $this->request->get['recurring_id'], 'SSL'));
+        Response::redirect(Url::link('account/recurring/info', 'recurring_id=' . Request::p()->get['recurring_id'], 'SSL'));
     }
     
     protected function validateCoupon() {
         Theme::model('checkout/coupon');
         
-        $coupon_info = CheckoutCoupon::getCoupon($this->request->post['coupon']);
+        $coupon_info = CheckoutCoupon::getCoupon(Request::p()->post['coupon']);
         
         $error = '';
         
@@ -1914,7 +1914,7 @@ class PaypalExpress extends Controller {
         if (!$error) {
             return true;
         } else {
-            $this->session->data['error_warning'] = $error;
+            Session::p()->data['error_warning'] = $error;
             return false;
         }
     }
@@ -1922,7 +1922,7 @@ class PaypalExpress extends Controller {
     protected function validateGiftcard() {
         Theme::model('checkout/gift_card');
         
-        $gift_card_info = CheckoutGiftCard::getGiftcard($this->request->post['gift_card']);
+        $gift_card_info = CheckoutGiftCard::getGiftcard(Request::p()->post['gift_card']);
         
         $error = '';
         
@@ -1933,7 +1933,7 @@ class PaypalExpress extends Controller {
         if (!$error) {
             return true;
         } else {
-            $this->session->data['error_warning'] = Lang::get('lang_error_gift_card');;
+            Session::p()->data['error_warning'] = Lang::get('lang_error_gift_card');;
             return false;
         }
     }
@@ -1951,22 +1951,22 @@ class PaypalExpress extends Controller {
         
         $error = '';
         
-        if (empty($this->request->post['reward'])) {
+        if (empty(Request::p()->post['reward'])) {
             $error = Lang::get('lang_error_reward');
         }
         
-        if ($this->request->post['reward'] > $points) {
-            $error = sprintf(Lang::get('lang_error_points'), $this->request->post['reward']);
+        if (Request::p()->post['reward'] > $points) {
+            $error = sprintf(Lang::get('lang_error_points'), Request::p()->post['reward']);
         }
         
-        if ($this->request->post['reward'] > $points_total) {
+        if (Request::p()->post['reward'] > $points_total) {
             $error = sprintf(Lang::get('lang_error_maximum'), $points_total);
         }
         
         if (!$error) {
             return true;
         } else {
-            $this->session->data['error_warning'] = $error;
+            Session::p()->data['error_warning'] = $error;
             return false;
         }
     }
@@ -1974,14 +1974,14 @@ class PaypalExpress extends Controller {
     public function recurringButtons() {
         $data = Theme::language('payment/paypal_express');
         
-        $recur = AccountRecurring::getRecurring($this->request->get['recurring_id']);
+        $recur = AccountRecurring::getRecurring(Request::p()->get['recurring_id']);
         
         $data['buttons'] = array();
         
         if ($recur['status'] == 2 || $recur['status'] == 3) {
             $data['buttons'][] = array(
                 'text' => Lang::get('lang_button_cancel_recurring'), 
-                'link' => Url::link('payment/paypal_express/recurringCancel', 'recurring_id=' . $this->request->get['recurring_id'], 'SSL')
+                'link' => Url::link('payment/paypal_express/recurringCancel', 'recurring_id=' . Request::p()->get['recurring_id'], 'SSL')
             );
         }
         

@@ -24,46 +24,46 @@ class ProductPurchased extends Controller {
         $data = Theme::language('report/product_purchased');
         Theme::setTitle(Lang::get('lang_heading_title'));
         
-        if (isset($this->request->get['filter_date_start'])) {
-            $filter_date_start = $this->request->get['filter_date_start'];
+        if (isset(Request::p()->get['filter_date_start'])) {
+            $filter_date_start = Request::p()->get['filter_date_start'];
         } else {
             $filter_date_start = '';
         }
         
-        if (isset($this->request->get['filter_date_end'])) {
-            $filter_date_end = $this->request->get['filter_date_end'];
+        if (isset(Request::p()->get['filter_date_end'])) {
+            $filter_date_end = Request::p()->get['filter_date_end'];
         } else {
             $filter_date_end = '';
         }
         
-        if (isset($this->request->get['filter_order_status_id'])) {
-            $filter_order_status_id = $this->request->get['filter_order_status_id'];
+        if (isset(Request::p()->get['filter_order_status_id'])) {
+            $filter_order_status_id = Request::p()->get['filter_order_status_id'];
         } else {
             $filter_order_status_id = 0;
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['filter_date_start'])) {
-            $url.= '&filter_date_start=' . $this->request->get['filter_date_start'];
+        if (isset(Request::p()->get['filter_date_start'])) {
+            $url.= '&filter_date_start=' . Request::p()->get['filter_date_start'];
         }
         
-        if (isset($this->request->get['filter_date_end'])) {
-            $url.= '&filter_date_end=' . $this->request->get['filter_date_end'];
+        if (isset(Request::p()->get['filter_date_end'])) {
+            $url.= '&filter_date_end=' . Request::p()->get['filter_date_end'];
         }
         
-        if (isset($this->request->get['filter_order_status_id'])) {
-            $url.= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+        if (isset(Request::p()->get['filter_order_status_id'])) {
+            $url.= '&filter_order_status_id=' . Request::p()->get['filter_order_status_id'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'report/product_purchased', $url);
@@ -88,16 +88,16 @@ class ProductPurchased extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['filter_date_start'])) {
-            $url.= '&filter_date_start=' . $this->request->get['filter_date_start'];
+        if (isset(Request::p()->get['filter_date_start'])) {
+            $url.= '&filter_date_start=' . Request::p()->get['filter_date_start'];
         }
         
-        if (isset($this->request->get['filter_date_end'])) {
-            $url.= '&filter_date_end=' . $this->request->get['filter_date_end'];
+        if (isset(Request::p()->get['filter_date_end'])) {
+            $url.= '&filter_date_end=' . Request::p()->get['filter_date_end'];
         }
         
-        if (isset($this->request->get['filter_order_status_id'])) {
-            $url.= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+        if (isset(Request::p()->get['filter_order_status_id'])) {
+            $url.= '&filter_order_status_id=' . Request::p()->get['filter_order_status_id'];
         }
         
         $data['pagination'] = Theme::paginate($product_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/product_purchased', '' . $url . '&page={page}'));

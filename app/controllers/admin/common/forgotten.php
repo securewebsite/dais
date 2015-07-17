@@ -36,9 +36,9 @@ class Forgotten extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/user');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
             $code    = sha1(uniqid(mt_rand(), true));
-            $user_id = PeopleUser::editCode($this->request->post['email'], $code);
+            $user_id = PeopleUser::editCode(Request::p()->post['email'], $code);
 
             $callback = array(
                 'user_id'  => $user_id,
@@ -51,7 +51,7 @@ class Forgotten extends Controller {
 
             Theme::notify('admin_forgotten_email', $callback);
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             Response::redirect(Url::link('common/login', '', 'SSL'));
         endif;
         
@@ -66,8 +66,8 @@ class Forgotten extends Controller {
         $data['action'] = Url::link('common/forgotten', '', 'SSL');
         $data['cancel'] = Url::link('common/login', '', 'SSL');
         
-        if (isset($this->request->post['email'])):
-            $data['email'] = $this->request->post['email'];
+        if (isset(Request::p()->post['email'])):
+            $data['email'] = Request::p()->post['email'];
         else:
             $data['email'] = '';
         endif;
@@ -79,9 +79,9 @@ class Forgotten extends Controller {
     }
     
     protected function validate() {
-        if (!isset($this->request->post['email'])):
+        if (!isset(Request::p()->post['email'])):
             $this->error['warning'] = Lang::get('lang_error_email');
-        elseif (!PeopleUser::getTotalUsersByEmail($this->request->post['email'])):
+        elseif (!PeopleUser::getTotalUsersByEmail(Request::p()->post['email'])):
             $this->error['warning'] = Lang::get('lang_error_email');
         endif;
         

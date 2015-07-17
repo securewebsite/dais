@@ -27,22 +27,22 @@ class Masonry extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('masonry_widget', $this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('masonry_widget', Request::post());
             Cache::delete('products.masonry');
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
-            if (!empty($this->request->get['continue'])) {
+            if (!empty(Request::p()->get['continue'])) {
                 Response::redirect(Url::link('widget/masonry', '', 'SSL'));
             } else {
                 Response::redirect(Url::link('module/widget', '', 'SSL'));
             }
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -67,16 +67,16 @@ class Masonry extends Controller {
         $data['action'] = Url::link('widget/masonry', '', 'SSL');
         $data['cancel'] = Url::link('module/widget', '', 'SSL');
         
-        if (isset($this->request->post['masonry_cart'])) {
-            $data['masonry_cart'] = $this->request->post['masonry_cart'];
+        if (isset(Request::p()->post['masonry_cart'])) {
+            $data['masonry_cart'] = Request::p()->post['masonry_cart'];
         } else {
             $data['masonry_cart'] = Config::get('masonry_cart');
         }
         
         $data['widgets'] = array();
         
-        if (isset($this->request->post['masonry_widget'])) {
-            $data['widgets'] = $this->request->post['masonry_widget'];
+        if (isset(Request::p()->post['masonry_widget'])) {
+            $data['widgets'] = Request::p()->post['masonry_widget'];
         } elseif (Config::get('masonry_widget')) {
             $data['widgets'] = Config::get('masonry_widget');
         }
@@ -101,8 +101,8 @@ class Masonry extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (isset($this->request->post['masonry_widget'])) {
-            foreach ($this->request->post['masonry_widget'] as $key => $value) {
+        if (isset(Request::p()->post['masonry_widget'])) {
+            foreach (Request::p()->post['masonry_widget'] as $key => $value) {
                 if ($value['span'] == 1 && $value['description']) {
                     $this->error['asterisk'][$key]['description'] = Lang::get('lang_error_asterisk');
                 }

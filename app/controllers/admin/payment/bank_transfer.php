@@ -27,9 +27,9 @@ class BankTransfer extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('bank_transfer', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('bank_transfer', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/payment', '', 'SSL'));
         }
@@ -62,8 +62,8 @@ class BankTransfer extends Controller {
         Theme::model('locale/language');
         
         foreach ($languages as $language) {
-            if (isset($this->request->post['bank_transfer_bank_' . $language['language_id']])) {
-                $data['bank_transfer_bank_' . $language['language_id']] = $this->request->post['bank_transfer_bank_' . $language['language_id']];
+            if (isset(Request::p()->post['bank_transfer_bank_' . $language['language_id']])) {
+                $data['bank_transfer_bank_' . $language['language_id']] = Request::p()->post['bank_transfer_bank_' . $language['language_id']];
             } else {
                 $data['bank_transfer_bank_' . $language['language_id']] = Config::get('bank_transfer_bank_' . $language['language_id']);
             }
@@ -71,14 +71,14 @@ class BankTransfer extends Controller {
         
         $data['languages'] = $languages;
         
-        if (isset($this->request->post['bank_transfer_total'])) {
-            $data['bank_transfer_total'] = $this->request->post['bank_transfer_total'];
+        if (isset(Request::p()->post['bank_transfer_total'])) {
+            $data['bank_transfer_total'] = Request::p()->post['bank_transfer_total'];
         } else {
             $data['bank_transfer_total'] = Config::get('bank_transfer_total');
         }
         
-        if (isset($this->request->post['bank_transfer_order_status_id'])) {
-            $data['bank_transfer_order_status_id'] = $this->request->post['bank_transfer_order_status_id'];
+        if (isset(Request::p()->post['bank_transfer_order_status_id'])) {
+            $data['bank_transfer_order_status_id'] = Request::p()->post['bank_transfer_order_status_id'];
         } else {
             $data['bank_transfer_order_status_id'] = Config::get('bank_transfer_order_status_id');
         }
@@ -87,8 +87,8 @@ class BankTransfer extends Controller {
         
         $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
-        if (isset($this->request->post['bank_transfer_geo_zone_id'])) {
-            $data['bank_transfer_geo_zone_id'] = $this->request->post['bank_transfer_geo_zone_id'];
+        if (isset(Request::p()->post['bank_transfer_geo_zone_id'])) {
+            $data['bank_transfer_geo_zone_id'] = Request::p()->post['bank_transfer_geo_zone_id'];
         } else {
             $data['bank_transfer_geo_zone_id'] = Config::get('bank_transfer_geo_zone_id');
         }
@@ -97,14 +97,14 @@ class BankTransfer extends Controller {
         
         $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
-        if (isset($this->request->post['bank_transfer_status'])) {
-            $data['bank_transfer_status'] = $this->request->post['bank_transfer_status'];
+        if (isset(Request::p()->post['bank_transfer_status'])) {
+            $data['bank_transfer_status'] = Request::p()->post['bank_transfer_status'];
         } else {
             $data['bank_transfer_status'] = Config::get('bank_transfer_status');
         }
         
-        if (isset($this->request->post['bank_transfer_sort_order'])) {
-            $data['bank_transfer_sort_order'] = $this->request->post['bank_transfer_sort_order'];
+        if (isset(Request::p()->post['bank_transfer_sort_order'])) {
+            $data['bank_transfer_sort_order'] = Request::p()->post['bank_transfer_sort_order'];
         } else {
             $data['bank_transfer_sort_order'] = Config::get('bank_transfer_sort_order');
         }
@@ -126,7 +126,7 @@ class BankTransfer extends Controller {
         $languages = LocaleLanguage::getLanguages();
         
         foreach ($languages as $language) {
-            if (!$this->request->post['bank_transfer_bank_' . $language['language_id']]) {
+            if (!Request::p()->post['bank_transfer_bank_' . $language['language_id']]) {
                 $this->error['bank_' . $language['language_id']] = Lang::get('lang_error_bank');
             }
         }

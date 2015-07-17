@@ -21,11 +21,11 @@ use App\Controllers\Controller;
 class Language extends Controller {
     
     public function index() {
-        if (isset($this->request->post['language_code'])) {
-            $this->session->data['language'] = $this->request->post['language_code'];
+        if (isset(Request::p()->post['language_code'])) {
+            Session::p()->data['language'] = Request::p()->post['language_code'];
             
-            if (isset($this->request->post['redirect'])) {
-                Response::redirect($this->request->post['redirect']);
+            if (isset(Request::p()->post['redirect'])) {
+                Response::redirect(Request::p()->post['redirect']);
             } else {
                 Response::redirect(Url::link('shop/home'));
             }
@@ -33,7 +33,7 @@ class Language extends Controller {
         
         $data = Theme::language('widget/language');
         
-        if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+        if (isset(Request::p()->server['HTTPS']) && ((Request::p()->server['HTTPS'] == 'on') || (Request::p()->server['HTTPS'] == '1'))) {
             $connection = 'SSL';
         } else {
             $connection = 'NONSSL';
@@ -41,7 +41,7 @@ class Language extends Controller {
         
         $data['action'] = Url::link('widget/language', '', $connection);
         
-        $data['language_code'] = $this->session->data['language'];
+        $data['language_code'] = Session::p()->data['language'];
         
         Theme::model('locale/language');
         
@@ -55,10 +55,10 @@ class Language extends Controller {
             }
         }
         
-        if (!isset($this->request->get['route'])) {
+        if (!isset(Request::p()->get['route'])) {
             $data['redirect'] = Url::link('shop/home');
         } else {
-            $routes = $this->request->get;
+            $routes = Request::get();
             
             unset($routes['_route_']);
             

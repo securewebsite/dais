@@ -25,16 +25,16 @@ class ProductViewed extends Controller {
         
         Theme::setTitle(Lang::get('lang_heading_title'));
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'report/product_viewed', $url);
@@ -63,21 +63,21 @@ class ProductViewed extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         $data['reset'] = Url::link('report/product_viewed/reset', '' . $url, 'SSL');
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
         
-        $data['pagination'] = Theme::paginate($product_viewed_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/product_viewed', '' . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($product_viewed_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/product_viewed', '' . 'page={page}', 'SSL'));
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
@@ -91,7 +91,7 @@ class ProductViewed extends Controller {
         Theme::model('report/product');
         ReportProduct::reset();
         
-        $this->session->data['success'] = Lang::get('lang_text_success');
+        Session::p()->data['success'] = Lang::get('lang_text_success');
         
         Theme::listen(__CLASS__, __FUNCTION__);
         

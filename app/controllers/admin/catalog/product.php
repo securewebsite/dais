@@ -41,43 +41,43 @@ class Product extends Controller {
         
         Theme::model('catalog/product');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            CatalogProduct::addProduct($this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            CatalogProduct::addProduct(Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['filter_name'])) {
-                $url.= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->get['filter_name'])) {
+                $url.= '&filter_name=' . urlencode(html_entity_decode(Request::p()->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
             
-            if (isset($this->request->get['filter_model'])) {
-                $url.= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->get['filter_model'])) {
+                $url.= '&filter_model=' . urlencode(html_entity_decode(Request::p()->get['filter_model'], ENT_QUOTES, 'UTF-8'));
             }
             
-            if (isset($this->request->get['filter_price'])) {
-                $url.= '&filter_price=' . $this->request->get['filter_price'];
+            if (isset(Request::p()->get['filter_price'])) {
+                $url.= '&filter_price=' . Request::p()->get['filter_price'];
             }
             
-            if (isset($this->request->get['filter_quantity'])) {
-                $url.= '&filter_quantity=' . $this->request->get['filter_quantity'];
+            if (isset(Request::p()->get['filter_quantity'])) {
+                $url.= '&filter_quantity=' . Request::p()->get['filter_quantity'];
             }
             
-            if (isset($this->request->get['filter_status'])) {
-                $url.= '&filter_status=' . $this->request->get['filter_status'];
+            if (isset(Request::p()->get['filter_status'])) {
+                $url.= '&filter_status=' . Request::p()->get['filter_status'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/product', '' . $url, 'SSL'));
@@ -95,43 +95,43 @@ class Product extends Controller {
         
         Theme::model('catalog/product');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            CatalogProduct::editProduct($this->request->get['product_id'], $this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            CatalogProduct::editProduct(Request::p()->get['product_id'], Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['filter_name'])) {
-                $url.= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->get['filter_name'])) {
+                $url.= '&filter_name=' . urlencode(html_entity_decode(Request::p()->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
             
-            if (isset($this->request->get['filter_model'])) {
-                $url.= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->get['filter_model'])) {
+                $url.= '&filter_model=' . urlencode(html_entity_decode(Request::p()->get['filter_model'], ENT_QUOTES, 'UTF-8'));
             }
             
-            if (isset($this->request->get['filter_price'])) {
-                $url.= '&filter_price=' . $this->request->get['filter_price'];
+            if (isset(Request::p()->get['filter_price'])) {
+                $url.= '&filter_price=' . Request::p()->get['filter_price'];
             }
             
-            if (isset($this->request->get['filter_quantity'])) {
-                $url.= '&filter_quantity=' . $this->request->get['filter_quantity'];
+            if (isset(Request::p()->get['filter_quantity'])) {
+                $url.= '&filter_quantity=' . Request::p()->get['filter_quantity'];
             }
             
-            if (isset($this->request->get['filter_status'])) {
-                $url.= '&filter_status=' . $this->request->get['filter_status'];
+            if (isset(Request::p()->get['filter_status'])) {
+                $url.= '&filter_status=' . Request::p()->get['filter_status'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/product', '' . $url, 'SSL'));
@@ -149,45 +149,45 @@ class Product extends Controller {
         
         Theme::model('catalog/product');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $product_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $product_id) {
                 CatalogProduct::deleteProduct($product_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['filter_name'])) {
-                $url.= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->get['filter_name'])) {
+                $url.= '&filter_name=' . urlencode(html_entity_decode(Request::p()->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
             
-            if (isset($this->request->get['filter_model'])) {
-                $url.= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->get['filter_model'])) {
+                $url.= '&filter_model=' . urlencode(html_entity_decode(Request::p()->get['filter_model'], ENT_QUOTES, 'UTF-8'));
             }
             
-            if (isset($this->request->get['filter_price'])) {
-                $url.= '&filter_price=' . $this->request->get['filter_price'];
+            if (isset(Request::p()->get['filter_price'])) {
+                $url.= '&filter_price=' . Request::p()->get['filter_price'];
             }
             
-            if (isset($this->request->get['filter_quantity'])) {
-                $url.= '&filter_quantity=' . $this->request->get['filter_quantity'];
+            if (isset(Request::p()->get['filter_quantity'])) {
+                $url.= '&filter_quantity=' . Request::p()->get['filter_quantity'];
             }
             
-            if (isset($this->request->get['filter_status'])) {
-                $url.= '&filter_status=' . $this->request->get['filter_status'];
+            if (isset(Request::p()->get['filter_status'])) {
+                $url.= '&filter_status=' . Request::p()->get['filter_status'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/product', '' . $url, 'SSL'));
@@ -205,45 +205,45 @@ class Product extends Controller {
         
         Theme::model('catalog/product');
         
-        if (isset($this->request->post['selected']) && $this->validateCopy()) {
-            foreach ($this->request->post['selected'] as $product_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateCopy()) {
+            foreach (Request::p()->post['selected'] as $product_id) {
                 CatalogProduct::copyProduct($product_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['filter_name'])) {
-                $url.= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->get['filter_name'])) {
+                $url.= '&filter_name=' . urlencode(html_entity_decode(Request::p()->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
             
-            if (isset($this->request->get['filter_model'])) {
-                $url.= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->get['filter_model'])) {
+                $url.= '&filter_model=' . urlencode(html_entity_decode(Request::p()->get['filter_model'], ENT_QUOTES, 'UTF-8'));
             }
             
-            if (isset($this->request->get['filter_price'])) {
-                $url.= '&filter_price=' . $this->request->get['filter_price'];
+            if (isset(Request::p()->get['filter_price'])) {
+                $url.= '&filter_price=' . Request::p()->get['filter_price'];
             }
             
-            if (isset($this->request->get['filter_quantity'])) {
-                $url.= '&filter_quantity=' . $this->request->get['filter_quantity'];
+            if (isset(Request::p()->get['filter_quantity'])) {
+                $url.= '&filter_quantity=' . Request::p()->get['filter_quantity'];
             }
             
-            if (isset($this->request->get['filter_status'])) {
-                $url.= '&filter_status=' . $this->request->get['filter_status'];
+            if (isset(Request::p()->get['filter_status'])) {
+                $url.= '&filter_status=' . Request::p()->get['filter_status'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/product', '' . $url, 'SSL'));
@@ -257,86 +257,86 @@ class Product extends Controller {
     protected function getList() {
         $data = Theme::language('catalog/product');
         
-        if (isset($this->request->get['filter_name'])) {
-            $filter_name = $this->request->get['filter_name'];
+        if (isset(Request::p()->get['filter_name'])) {
+            $filter_name = Request::p()->get['filter_name'];
         } else {
             $filter_name = null;
         }
         
-        if (isset($this->request->get['filter_model'])) {
-            $filter_model = $this->request->get['filter_model'];
+        if (isset(Request::p()->get['filter_model'])) {
+            $filter_model = Request::p()->get['filter_model'];
         } else {
             $filter_model = null;
         }
         
-        if (isset($this->request->get['filter_price'])) {
-            $filter_price = $this->request->get['filter_price'];
+        if (isset(Request::p()->get['filter_price'])) {
+            $filter_price = Request::p()->get['filter_price'];
         } else {
             $filter_price = null;
         }
         
-        if (isset($this->request->get['filter_quantity'])) {
-            $filter_quantity = $this->request->get['filter_quantity'];
+        if (isset(Request::p()->get['filter_quantity'])) {
+            $filter_quantity = Request::p()->get['filter_quantity'];
         } else {
             $filter_quantity = null;
         }
         
-        if (isset($this->request->get['filter_status'])) {
-            $filter_status = $this->request->get['filter_status'];
+        if (isset(Request::p()->get['filter_status'])) {
+            $filter_status = Request::p()->get['filter_status'];
         } else {
             $filter_status = null;
         }
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'pd.name';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['filter_name'])) {
-            $url.= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        if (isset(Request::p()->get['filter_name'])) {
+            $url.= '&filter_name=' . urlencode(html_entity_decode(Request::p()->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
         
-        if (isset($this->request->get['filter_model'])) {
-            $url.= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
+        if (isset(Request::p()->get['filter_model'])) {
+            $url.= '&filter_model=' . urlencode(html_entity_decode(Request::p()->get['filter_model'], ENT_QUOTES, 'UTF-8'));
         }
         
-        if (isset($this->request->get['filter_price'])) {
-            $url.= '&filter_price=' . $this->request->get['filter_price'];
+        if (isset(Request::p()->get['filter_price'])) {
+            $url.= '&filter_price=' . Request::p()->get['filter_price'];
         }
         
-        if (isset($this->request->get['filter_quantity'])) {
-            $url.= '&filter_quantity=' . $this->request->get['filter_quantity'];
+        if (isset(Request::p()->get['filter_quantity'])) {
+            $url.= '&filter_quantity=' . Request::p()->get['filter_quantity'];
         }
         
-        if (isset($this->request->get['filter_status'])) {
-            $url.= '&filter_status=' . $this->request->get['filter_status'];
+        if (isset(Request::p()->get['filter_status'])) {
+            $url.= '&filter_status=' . Request::p()->get['filter_status'];
         }
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'catalog/product', $url);
@@ -370,7 +370,7 @@ class Product extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('catalog/product/update', '' . '&product_id=' . $result['product_id'] . $url, 'SSL')
+                'href' => Url::link('catalog/product/update', '' . 'product_id=' . $result['product_id'] . $url, 'SSL')
             );
             
             if ($result['image'] && file_exists(Config::get('path.image') . $result['image'])) {
@@ -391,7 +391,7 @@ class Product extends Controller {
                 }
             }
             
-            $data['products'][] = array('product_id' => $result['product_id'], 'name' => $result['name'], 'model' => $result['model'], 'price' => $result['price'], 'special' => $special, 'image' => $image, 'quantity' => $result['quantity'], 'status' => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 'selected' => isset($this->request->post['selected']) && in_array($result['product_id'], $this->request->post['selected']), 'action' => $action);
+            $data['products'][] = array('product_id' => $result['product_id'], 'name' => $result['name'], 'model' => $result['model'], 'price' => $result['price'], 'special' => $special, 'image' => $image, 'quantity' => $result['quantity'], 'status' => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 'selected' => isset(Request::p()->post['selected']) && in_array($result['product_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -400,34 +400,34 @@ class Product extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
         
         $url = '';
         
-        if (isset($this->request->get['filter_name'])) {
-            $url.= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        if (isset(Request::p()->get['filter_name'])) {
+            $url.= '&filter_name=' . urlencode(html_entity_decode(Request::p()->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
         
-        if (isset($this->request->get['filter_model'])) {
-            $url.= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
+        if (isset(Request::p()->get['filter_model'])) {
+            $url.= '&filter_model=' . urlencode(html_entity_decode(Request::p()->get['filter_model'], ENT_QUOTES, 'UTF-8'));
         }
         
-        if (isset($this->request->get['filter_price'])) {
-            $url.= '&filter_price=' . $this->request->get['filter_price'];
+        if (isset(Request::p()->get['filter_price'])) {
+            $url.= '&filter_price=' . Request::p()->get['filter_price'];
         }
         
-        if (isset($this->request->get['filter_quantity'])) {
-            $url.= '&filter_quantity=' . $this->request->get['filter_quantity'];
+        if (isset(Request::p()->get['filter_quantity'])) {
+            $url.= '&filter_quantity=' . Request::p()->get['filter_quantity'];
         }
         
-        if (isset($this->request->get['filter_status'])) {
-            $url.= '&filter_status=' . $this->request->get['filter_status'];
+        if (isset(Request::p()->get['filter_status'])) {
+            $url.= '&filter_status=' . Request::p()->get['filter_status'];
         }
         
         if ($order == 'ASC') {
@@ -436,45 +436,45 @@ class Product extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('catalog/product', '' . '&sort=pd.name' . $url, 'SSL');
-        $data['sort_model'] = Url::link('catalog/product', '' . '&sort=p.model' . $url, 'SSL');
-        $data['sort_price'] = Url::link('catalog/product', '' . '&sort=p.price' . $url, 'SSL');
-        $data['sort_quantity'] = Url::link('catalog/product', '' . '&sort=p.quantity' . $url, 'SSL');
-        $data['sort_status'] = Url::link('catalog/product', '' . '&sort=p.status' . $url, 'SSL');
-        $data['sort_order'] = Url::link('catalog/product', '' . '&sort=p.sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('catalog/product', '' . 'sort=pd.name' . $url, 'SSL');
+        $data['sort_model'] = Url::link('catalog/product', '' . 'sort=p.model' . $url, 'SSL');
+        $data['sort_price'] = Url::link('catalog/product', '' . 'sort=p.price' . $url, 'SSL');
+        $data['sort_quantity'] = Url::link('catalog/product', '' . 'sort=p.quantity' . $url, 'SSL');
+        $data['sort_status'] = Url::link('catalog/product', '' . 'sort=p.status' . $url, 'SSL');
+        $data['sort_order'] = Url::link('catalog/product', '' . 'sort=p.sort_order' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['filter_name'])) {
-            $url.= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        if (isset(Request::p()->get['filter_name'])) {
+            $url.= '&filter_name=' . urlencode(html_entity_decode(Request::p()->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
         
-        if (isset($this->request->get['filter_model'])) {
-            $url.= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
+        if (isset(Request::p()->get['filter_model'])) {
+            $url.= '&filter_model=' . urlencode(html_entity_decode(Request::p()->get['filter_model'], ENT_QUOTES, 'UTF-8'));
         }
         
-        if (isset($this->request->get['filter_price'])) {
-            $url.= '&filter_price=' . $this->request->get['filter_price'];
+        if (isset(Request::p()->get['filter_price'])) {
+            $url.= '&filter_price=' . Request::p()->get['filter_price'];
         }
         
-        if (isset($this->request->get['filter_quantity'])) {
-            $url.= '&filter_quantity=' . $this->request->get['filter_quantity'];
+        if (isset(Request::p()->get['filter_quantity'])) {
+            $url.= '&filter_quantity=' . Request::p()->get['filter_quantity'];
         }
         
-        if (isset($this->request->get['filter_status'])) {
-            $url.= '&filter_status=' . $this->request->get['filter_status'];
+        if (isset(Request::p()->get['filter_status'])) {
+            $url.= '&filter_status=' . Request::p()->get['filter_status'];
         }
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate($product_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/product', '' . $url . '&page={page}', 'SSL'));
@@ -542,122 +542,122 @@ class Product extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['filter_name'])) {
-            $url.= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        if (isset(Request::p()->get['filter_name'])) {
+            $url.= '&filter_name=' . urlencode(html_entity_decode(Request::p()->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
         
-        if (isset($this->request->get['filter_model'])) {
-            $url.= '&filter_model=' . urlencode(html_entity_decode($this->request->get['filter_model'], ENT_QUOTES, 'UTF-8'));
+        if (isset(Request::p()->get['filter_model'])) {
+            $url.= '&filter_model=' . urlencode(html_entity_decode(Request::p()->get['filter_model'], ENT_QUOTES, 'UTF-8'));
         }
         
-        if (isset($this->request->get['filter_price'])) {
-            $url.= '&filter_price=' . $this->request->get['filter_price'];
+        if (isset(Request::p()->get['filter_price'])) {
+            $url.= '&filter_price=' . Request::p()->get['filter_price'];
         }
         
-        if (isset($this->request->get['filter_quantity'])) {
-            $url.= '&filter_quantity=' . $this->request->get['filter_quantity'];
+        if (isset(Request::p()->get['filter_quantity'])) {
+            $url.= '&filter_quantity=' . Request::p()->get['filter_quantity'];
         }
         
-        if (isset($this->request->get['filter_status'])) {
-            $url.= '&filter_status=' . $this->request->get['filter_status'];
+        if (isset(Request::p()->get['filter_status'])) {
+            $url.= '&filter_status=' . Request::p()->get['filter_status'];
         }
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'catalog/product', $url);
         
-        if (!isset($this->request->get['product_id'])) {
+        if (!isset(Request::p()->get['product_id'])) {
             $data['action'] = Url::link('catalog/product/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/product/update', '' . '&product_id=' . $this->request->get['product_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/product/update', '' . 'product_id=' . Request::p()->get['product_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('catalog/product', '' . $url, 'SSL');
         
-        if (isset($this->request->get['product_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $product_info = CatalogProduct::getProduct($this->request->get['product_id']);
+        if (isset(Request::p()->get['product_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $product_info = CatalogProduct::getProduct(Request::p()->get['product_id']);
         }
         
         Theme::model('locale/language');
         
         $data['languages'] = LocaleLanguage::getLanguages();
         
-        if (isset($this->request->post['product_description'])) {
-            $data['product_description'] = $this->request->post['product_description'];
-        } elseif (isset($this->request->get['product_id'])) {
-            $data['product_description'] = CatalogProduct::getProductDescriptions($this->request->get['product_id']);
+        if (isset(Request::p()->post['product_description'])) {
+            $data['product_description'] = Request::p()->post['product_description'];
+        } elseif (isset(Request::p()->get['product_id'])) {
+            $data['product_description'] = CatalogProduct::getProductDescriptions(Request::p()->get['product_id']);
         } else {
             $data['product_description'] = array();
         }
         
-        if (isset($this->request->post['model'])) {
-            $data['model'] = $this->request->post['model'];
+        if (isset(Request::p()->post['model'])) {
+            $data['model'] = Request::p()->post['model'];
         } elseif (!empty($product_info)) {
             $data['model'] = $product_info['model'];
         } else {
             $data['model'] = '';
         }
         
-        if (isset($this->request->post['sku'])) {
-            $data['sku'] = $this->request->post['sku'];
+        if (isset(Request::p()->post['sku'])) {
+            $data['sku'] = Request::p()->post['sku'];
         } elseif (!empty($product_info)) {
             $data['sku'] = $product_info['sku'];
         } else {
             $data['sku'] = '';
         }
         
-        if (isset($this->request->post['upc'])) {
-            $data['upc'] = $this->request->post['upc'];
+        if (isset(Request::p()->post['upc'])) {
+            $data['upc'] = Request::p()->post['upc'];
         } elseif (!empty($product_info)) {
             $data['upc'] = $product_info['upc'];
         } else {
             $data['upc'] = '';
         }
         
-        if (isset($this->request->post['ean'])) {
-            $data['ean'] = $this->request->post['ean'];
+        if (isset(Request::p()->post['ean'])) {
+            $data['ean'] = Request::p()->post['ean'];
         } elseif (!empty($product_info)) {
             $data['ean'] = $product_info['ean'];
         } else {
             $data['ean'] = '';
         }
         
-        if (isset($this->request->post['jan'])) {
-            $data['jan'] = $this->request->post['jan'];
+        if (isset(Request::p()->post['jan'])) {
+            $data['jan'] = Request::p()->post['jan'];
         } elseif (!empty($product_info)) {
             $data['jan'] = $product_info['jan'];
         } else {
             $data['jan'] = '';
         }
         
-        if (isset($this->request->post['isbn'])) {
-            $data['isbn'] = $this->request->post['isbn'];
+        if (isset(Request::p()->post['isbn'])) {
+            $data['isbn'] = Request::p()->post['isbn'];
         } elseif (!empty($product_info)) {
             $data['isbn'] = $product_info['isbn'];
         } else {
             $data['isbn'] = '';
         }
         
-        if (isset($this->request->post['mpn'])) {
-            $data['mpn'] = $this->request->post['mpn'];
+        if (isset(Request::p()->post['mpn'])) {
+            $data['mpn'] = Request::p()->post['mpn'];
         } elseif (!empty($product_info)) {
             $data['mpn'] = $product_info['mpn'];
         } else {
             $data['mpn'] = '';
         }
         
-        if (isset($this->request->post['location'])) {
-            $data['location'] = $this->request->post['location'];
+        if (isset(Request::p()->post['location'])) {
+            $data['location'] = Request::p()->post['location'];
         } elseif (!empty($product_info)) {
             $data['location'] = $product_info['location'];
         } else {
@@ -668,24 +668,24 @@ class Product extends Controller {
         
         $data['stores'] = SettingStore::getStores();
         
-        if (isset($this->request->post['product_store'])) {
-            $data['product_store'] = $this->request->post['product_store'];
-        } elseif (isset($this->request->get['product_id'])) {
-            $data['product_store'] = CatalogProduct::getProductStores($this->request->get['product_id']);
+        if (isset(Request::p()->post['product_store'])) {
+            $data['product_store'] = Request::p()->post['product_store'];
+        } elseif (isset(Request::p()->get['product_id'])) {
+            $data['product_store'] = CatalogProduct::getProductStores(Request::p()->get['product_id']);
         } else {
             $data['product_store'] = array(0);
         }
         
-        if (isset($this->request->post['slug'])) {
-            $data['slug'] = $this->request->post['slug'];
+        if (isset(Request::p()->post['slug'])) {
+            $data['slug'] = Request::p()->post['slug'];
         } elseif (!empty($product_info)) {
             $data['slug'] = $product_info['slug'];
         } else {
             $data['slug'] = '';
         }
         
-        if (isset($this->request->post['image'])) {
-            $data['image'] = $this->request->post['image'];
+        if (isset(Request::p()->post['image'])) {
+            $data['image'] = Request::p()->post['image'];
         } elseif (!empty($product_info)) {
             $data['image'] = $product_info['image'];
         } else {
@@ -694,24 +694,24 @@ class Product extends Controller {
         
         Theme::model('tool/image');
         
-        if (isset($this->request->post['image']) && file_exists(Config::get('path.image') . $this->request->post['image'])) {
-            $data['thumb'] = ToolImage::resize($this->request->post['image'], 100, 100);
+        if (isset(Request::p()->post['image']) && file_exists(Config::get('path.image') . Request::p()->post['image'])) {
+            $data['thumb'] = ToolImage::resize(Request::p()->post['image'], 100, 100);
         } elseif (!empty($product_info) && $product_info['image'] && file_exists(Config::get('path.image') . $product_info['image'])) {
             $data['thumb'] = ToolImage::resize($product_info['image'], 100, 100);
         } else {
             $data['thumb'] = ToolImage::resize('placeholder.png', 100, 100);
         }
         
-        if (isset($this->request->post['shipping'])) {
-            $data['shipping'] = $this->request->post['shipping'];
+        if (isset(Request::p()->post['shipping'])) {
+            $data['shipping'] = Request::p()->post['shipping'];
         } elseif (!empty($product_info)) {
             $data['shipping'] = $product_info['shipping'];
         } else {
             $data['shipping'] = 1;
         }
         
-        if (isset($this->request->post['price'])) {
-            $data['price'] = $this->request->post['price'];
+        if (isset(Request::p()->post['price'])) {
+            $data['price'] = Request::p()->post['price'];
         } elseif (!empty($product_info)) {
             $data['price'] = $product_info['price'];
         } else {
@@ -722,8 +722,8 @@ class Product extends Controller {
         
         $data['recurrings'] = CatalogRecurring::getRecurrings();
         
-        if (isset($this->request->post['product_recurrings'])) {
-            $data['product_recurrings'] = $this->request->post['product_recurrings'];
+        if (isset(Request::p()->post['product_recurrings'])) {
+            $data['product_recurrings'] = Request::p()->post['product_recurrings'];
         } elseif (!empty($product_info)) {
             $data['product_recurrings'] = CatalogProduct::getRecurrings($product_info['product_id']);
         } else {
@@ -734,48 +734,48 @@ class Product extends Controller {
         
         $data['tax_classes'] = LocaleTaxClass::getTaxClasses();
         
-        if (isset($this->request->post['tax_class_id'])) {
-            $data['tax_class_id'] = $this->request->post['tax_class_id'];
+        if (isset(Request::p()->post['tax_class_id'])) {
+            $data['tax_class_id'] = Request::p()->post['tax_class_id'];
         } elseif (!empty($product_info)) {
             $data['tax_class_id'] = $product_info['tax_class_id'];
         } else {
             $data['tax_class_id'] = 0;
         }
         
-        if (isset($this->request->post['date_available'])) {
-            $data['date_available'] = $this->request->post['date_available'];
+        if (isset(Request::p()->post['date_available'])) {
+            $data['date_available'] = Request::p()->post['date_available'];
         } elseif (!empty($product_info)) {
             $data['date_available'] = date('Y-m-d', strtotime($product_info['date_available']));
         } else {
             $data['date_available'] = date('Y-m-d', time() - 86400);
         }
         
-        if (isset($this->request->post['quantity'])) {
-            $data['quantity'] = $this->request->post['quantity'];
+        if (isset(Request::p()->post['quantity'])) {
+            $data['quantity'] = Request::p()->post['quantity'];
         } elseif (!empty($product_info)) {
             $data['quantity'] = $product_info['quantity'];
         } else {
             $data['quantity'] = 1;
         }
         
-        if (isset($this->request->post['minimum'])) {
-            $data['minimum'] = $this->request->post['minimum'];
+        if (isset(Request::p()->post['minimum'])) {
+            $data['minimum'] = Request::p()->post['minimum'];
         } elseif (!empty($product_info)) {
             $data['minimum'] = $product_info['minimum'];
         } else {
             $data['minimum'] = 1;
         }
         
-        if (isset($this->request->post['subtract'])) {
-            $data['subtract'] = $this->request->post['subtract'];
+        if (isset(Request::p()->post['subtract'])) {
+            $data['subtract'] = Request::p()->post['subtract'];
         } elseif (!empty($product_info)) {
             $data['subtract'] = $product_info['subtract'];
         } else {
             $data['subtract'] = 1;
         }
         
-        if (isset($this->request->post['sort_order'])) {
-            $data['sort_order'] = $this->request->post['sort_order'];
+        if (isset(Request::p()->post['sort_order'])) {
+            $data['sort_order'] = Request::p()->post['sort_order'];
         } elseif (!empty($product_info)) {
             $data['sort_order'] = $product_info['sort_order'];
         } else {
@@ -786,32 +786,32 @@ class Product extends Controller {
         
         $data['stock_statuses'] = LocaleStockStatus::getStockStatuses();
         
-        if (isset($this->request->post['stock_status_id'])) {
-            $data['stock_status_id'] = $this->request->post['stock_status_id'];
+        if (isset(Request::p()->post['stock_status_id'])) {
+            $data['stock_status_id'] = Request::p()->post['stock_status_id'];
         } elseif (!empty($product_info)) {
             $data['stock_status_id'] = $product_info['stock_status_id'];
         } else {
             $data['stock_status_id'] = Config::get('config_stock_status_id');
         }
         
-        if (isset($this->request->post['status'])) {
-            $data['status'] = $this->request->post['status'];
+        if (isset(Request::p()->post['status'])) {
+            $data['status'] = Request::p()->post['status'];
         } elseif (!empty($product_info)) {
             $data['status'] = $product_info['status'];
         } else {
             $data['status'] = 1;
         }
         
-        if (isset($this->request->post['visibility'])) {
-            $data['visibility'] = $this->request->post['visibility'];
+        if (isset(Request::p()->post['visibility'])) {
+            $data['visibility'] = Request::p()->post['visibility'];
         } elseif (!empty($product_info)) {
             $data['visibility'] = $product_info['visibility'];
         } else {
             $data['visibility'] = Config::get('config_default_visibility');
         }
         
-        if (isset($this->request->post['weight'])) {
-            $data['weight'] = $this->request->post['weight'];
+        if (isset(Request::p()->post['weight'])) {
+            $data['weight'] = Request::p()->post['weight'];
         } elseif (!empty($product_info)) {
             $data['weight'] = $product_info['weight'];
         } else {
@@ -822,32 +822,32 @@ class Product extends Controller {
         
         $data['weight_classes'] = LocaleWeightClass::getWeightClasses();
         
-        if (isset($this->request->post['weight_class_id'])) {
-            $data['weight_class_id'] = $this->request->post['weight_class_id'];
+        if (isset(Request::p()->post['weight_class_id'])) {
+            $data['weight_class_id'] = Request::p()->post['weight_class_id'];
         } elseif (!empty($product_info)) {
             $data['weight_class_id'] = $product_info['weight_class_id'];
         } else {
             $data['weight_class_id'] = Config::get('config_weight_class_id');
         }
         
-        if (isset($this->request->post['length'])) {
-            $data['length'] = $this->request->post['length'];
+        if (isset(Request::p()->post['length'])) {
+            $data['length'] = Request::p()->post['length'];
         } elseif (!empty($product_info)) {
             $data['length'] = $product_info['length'];
         } else {
             $data['length'] = '';
         }
         
-        if (isset($this->request->post['width'])) {
-            $data['width'] = $this->request->post['width'];
+        if (isset(Request::p()->post['width'])) {
+            $data['width'] = Request::p()->post['width'];
         } elseif (!empty($product_info)) {
             $data['width'] = $product_info['width'];
         } else {
             $data['width'] = '';
         }
         
-        if (isset($this->request->post['height'])) {
-            $data['height'] = $this->request->post['height'];
+        if (isset(Request::p()->post['height'])) {
+            $data['height'] = Request::p()->post['height'];
         } elseif (!empty($product_info)) {
             $data['height'] = $product_info['height'];
         } else {
@@ -858,8 +858,8 @@ class Product extends Controller {
         
         $data['length_classes'] = LocaleLengthClass::getLengthClasses();
         
-        if (isset($this->request->post['length_class_id'])) {
-            $data['length_class_id'] = $this->request->post['length_class_id'];
+        if (isset(Request::p()->post['length_class_id'])) {
+            $data['length_class_id'] = Request::p()->post['length_class_id'];
         } elseif (!empty($product_info)) {
             $data['length_class_id'] = $product_info['length_class_id'];
         } else {
@@ -868,16 +868,16 @@ class Product extends Controller {
         
         Theme::model('catalog/manufacturer');
         
-        if (isset($this->request->post['manufacturer_id'])) {
-            $data['manufacturer_id'] = $this->request->post['manufacturer_id'];
+        if (isset(Request::p()->post['manufacturer_id'])) {
+            $data['manufacturer_id'] = Request::p()->post['manufacturer_id'];
         } elseif (!empty($product_info)) {
             $data['manufacturer_id'] = $product_info['manufacturer_id'];
         } else {
             $data['manufacturer_id'] = 0;
         }
         
-        if (isset($this->request->post['manufacturer'])) {
-            $data['manufacturer'] = $this->request->post['manufacturer'];
+        if (isset(Request::p()->post['manufacturer'])) {
+            $data['manufacturer'] = Request::p()->post['manufacturer'];
         } elseif (!empty($product_info)) {
             $manufacturer_info = CatalogManufacturer::getManufacturer($product_info['manufacturer_id']);
             
@@ -893,10 +893,10 @@ class Product extends Controller {
         // Categories
         Theme::model('catalog/category');
         
-        if (isset($this->request->post['product_category'])) {
-            $categories = $this->request->post['product_category'];
-        } elseif (isset($this->request->get['product_id'])) {
-            $categories = CatalogProduct::getProductCategories($this->request->get['product_id']);
+        if (isset(Request::p()->post['product_category'])) {
+            $categories = Request::p()->post['product_category'];
+        } elseif (isset(Request::p()->get['product_id'])) {
+            $categories = CatalogProduct::getProductCategories(Request::p()->get['product_id']);
         } else {
             $categories = array();
         }
@@ -914,10 +914,10 @@ class Product extends Controller {
         // Filters
         Theme::model('catalog/filter');
         
-        if (isset($this->request->post['product_filter'])) {
-            $filters = $this->request->post['product_filter'];
-        } elseif (isset($this->request->get['product_id'])) {
-            $filters = CatalogProduct::getProductFilters($this->request->get['product_id']);
+        if (isset(Request::p()->post['product_filter'])) {
+            $filters = Request::p()->post['product_filter'];
+        } elseif (isset(Request::p()->get['product_id'])) {
+            $filters = CatalogProduct::getProductFilters(Request::p()->get['product_id']);
         } else {
             $filters = array();
         }
@@ -935,10 +935,10 @@ class Product extends Controller {
         // Attributes
         Theme::model('catalog/attribute');
         
-        if (isset($this->request->post['product_attribute'])) {
-            $product_attributes = $this->request->post['product_attribute'];
-        } elseif (isset($this->request->get['product_id'])) {
-            $product_attributes = CatalogProduct::getProductAttributes($this->request->get['product_id']);
+        if (isset(Request::p()->post['product_attribute'])) {
+            $product_attributes = Request::p()->post['product_attribute'];
+        } elseif (isset(Request::p()->get['product_id'])) {
+            $product_attributes = CatalogProduct::getProductAttributes(Request::p()->get['product_id']);
         } else {
             $product_attributes = array();
         }
@@ -956,10 +956,10 @@ class Product extends Controller {
         // Options
         Theme::model('catalog/option');
         
-        if (isset($this->request->post['product_option'])) {
-            $product_options = $this->request->post['product_option'];
-        } elseif (isset($this->request->get['product_id'])) {
-            $product_options = CatalogProduct::getProductOptions($this->request->get['product_id']);
+        if (isset(Request::p()->post['product_option'])) {
+            $product_options = Request::p()->post['product_option'];
+        } elseif (isset(Request::p()->get['product_id'])) {
+            $product_options = CatalogProduct::getProductOptions(Request::p()->get['product_id']);
         } else {
             $product_options = array();
         }
@@ -994,27 +994,27 @@ class Product extends Controller {
         
         $data['customer_groups'] = PeopleCustomerGroup::getCustomerGroups();
         
-        if (isset($this->request->post['product_discount'])) {
-            $data['product_discounts'] = $this->request->post['product_discount'];
-        } elseif (isset($this->request->get['product_id'])) {
-            $data['product_discounts'] = CatalogProduct::getProductDiscounts($this->request->get['product_id']);
+        if (isset(Request::p()->post['product_discount'])) {
+            $data['product_discounts'] = Request::p()->post['product_discount'];
+        } elseif (isset(Request::p()->get['product_id'])) {
+            $data['product_discounts'] = CatalogProduct::getProductDiscounts(Request::p()->get['product_id']);
         } else {
             $data['product_discounts'] = array();
         }
         
-        if (isset($this->request->post['product_special'])) {
-            $data['product_specials'] = $this->request->post['product_special'];
-        } elseif (isset($this->request->get['product_id'])) {
-            $data['product_specials'] = CatalogProduct::getProductSpecials($this->request->get['product_id']);
+        if (isset(Request::p()->post['product_special'])) {
+            $data['product_specials'] = Request::p()->post['product_special'];
+        } elseif (isset(Request::p()->get['product_id'])) {
+            $data['product_specials'] = CatalogProduct::getProductSpecials(Request::p()->get['product_id']);
         } else {
             $data['product_specials'] = array();
         }
         
         // Images
-        if (isset($this->request->post['product_image'])) {
-            $product_images = $this->request->post['product_image'];
-        } elseif (isset($this->request->get['product_id'])) {
-            $product_images = CatalogProduct::getProductImages($this->request->get['product_id']);
+        if (isset(Request::p()->post['product_image'])) {
+            $product_images = Request::p()->post['product_image'];
+        } elseif (isset(Request::p()->get['product_id'])) {
+            $product_images = CatalogProduct::getProductImages(Request::p()->get['product_id']);
         } else {
             $product_images = array();
         }
@@ -1036,10 +1036,10 @@ class Product extends Controller {
         // Downloads
         Theme::model('catalog/download');
         
-        if (isset($this->request->post['product_download'])) {
-            $product_downloads = $this->request->post['product_download'];
-        } elseif (isset($this->request->get['product_id'])) {
-            $product_downloads = CatalogProduct::getProductDownloads($this->request->get['product_id']);
+        if (isset(Request::p()->post['product_download'])) {
+            $product_downloads = Request::p()->post['product_download'];
+        } elseif (isset(Request::p()->get['product_id'])) {
+            $product_downloads = CatalogProduct::getProductDownloads(Request::p()->get['product_id']);
         } else {
             $product_downloads = array();
         }
@@ -1054,10 +1054,10 @@ class Product extends Controller {
             }
         }
         
-        if (isset($this->request->post['product_related'])) {
-            $products = $this->request->post['product_related'];
-        } elseif (isset($this->request->get['product_id'])) {
-            $products = CatalogProduct::getProductRelated($this->request->get['product_id']);
+        if (isset(Request::p()->post['product_related'])) {
+            $products = Request::p()->post['product_related'];
+        } elseif (isset(Request::p()->get['product_id'])) {
+            $products = CatalogProduct::getProductRelated(Request::p()->get['product_id']);
         } else {
             $products = array();
         }
@@ -1075,8 +1075,8 @@ class Product extends Controller {
         // adding support for a single customer product
         Theme::model('people/customer');
         
-        if (isset($this->request->post['customer_id'])):
-            $data['customer_id'] = $this->request->post['customer_id'];
+        if (isset(Request::p()->post['customer_id'])):
+            $data['customer_id'] = Request::p()->post['customer_id'];
         elseif (!empty($product_info)):
             $data['customer_id'] = $product_info['customer_id'];
         else:
@@ -1089,26 +1089,26 @@ class Product extends Controller {
             $data['customer'] = '';
         endif;
         
-        if (isset($this->request->post['points'])) {
-            $data['points'] = $this->request->post['points'];
+        if (isset(Request::p()->post['points'])) {
+            $data['points'] = Request::p()->post['points'];
         } elseif (!empty($product_info)) {
             $data['points'] = $product_info['points'];
         } else {
             $data['points'] = '';
         }
         
-        if (isset($this->request->post['product_reward'])) {
-            $data['product_reward'] = $this->request->post['product_reward'];
-        } elseif (isset($this->request->get['product_id'])) {
-            $data['product_reward'] = CatalogProduct::getProductRewards($this->request->get['product_id']);
+        if (isset(Request::p()->post['product_reward'])) {
+            $data['product_reward'] = Request::p()->post['product_reward'];
+        } elseif (isset(Request::p()->get['product_id'])) {
+            $data['product_reward'] = CatalogProduct::getProductRewards(Request::p()->get['product_id']);
         } else {
             $data['product_reward'] = array();
         }
         
-        if (isset($this->request->post['product_layout'])) {
-            $data['product_layout'] = $this->request->post['product_layout'];
-        } elseif (isset($this->request->get['product_id'])) {
-            $data['product_layout'] = CatalogProduct::getProductLayouts($this->request->get['product_id']);
+        if (isset(Request::p()->post['product_layout'])) {
+            $data['product_layout'] = Request::p()->post['product_layout'];
+        } elseif (isset(Request::p()->get['product_id'])) {
+            $data['product_layout'] = CatalogProduct::getProductLayouts(Request::p()->get['product_id']);
         } else {
             $data['product_layout'] = array();
         }
@@ -1131,32 +1131,32 @@ class Product extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        foreach ($this->request->post['product_description'] as $language_id => $value) {
+        foreach (Request::p()->post['product_description'] as $language_id => $value) {
             if ((Encode::strlen($value['name']) < 1) || (Encode::strlen($value['name']) > 255)) {
                 $this->error['name'][$language_id] = Lang::get('lang_error_name');
             }
         }
         
-        if (isset($this->request->post['slug']) && Encode::strlen($this->request->post['slug']) > 0):
+        if (isset(Request::p()->post['slug']) && Encode::strlen(Request::p()->post['slug']) > 0):
             Theme::model('tool/utility');
-            $query = ToolUtility::findSlugByName($this->request->post['slug']);
+            $query = ToolUtility::findSlugByName(Request::p()->post['slug']);
             
-            if (isset($this->request->get['product_id'])):
+            if (isset(Request::p()->get['product_id'])):
                 if ($query):
-                    if ($query != 'product_id:' . $this->request->get['product_id']):
-                        $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), $this->request->post['slug']);
+                    if ($query != 'product_id:' . Request::p()->get['product_id']):
+                        $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), Request::p()->post['slug']);
                     endif;
                 endif;
             else:
                 if ($query):
-                    $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), $this->request->post['slug']);
+                    $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), Request::p()->post['slug']);
                 endif;
             endif;
         else:
             $this->error['slug'] = Lang::get('lang_error_slug');
         endif;
         
-        if ((Encode::strlen($this->request->post['model']) < 1) || (Encode::strlen($this->request->post['model']) > 64)) {
+        if ((Encode::strlen(Request::p()->post['model']) < 1) || (Encode::strlen(Request::p()->post['model']) > 64)) {
             $this->error['model'] = Lang::get('lang_error_model');
         }
         
@@ -1176,7 +1176,7 @@ class Product extends Controller {
 
         Theme::model('calendar/event');
 
-        foreach ($this->request->post['selected'] as $product_id):
+        foreach (Request::p()->post['selected'] as $product_id):
             $event_total = CalendarEvent::getTotalEventsByProductId($product_id);
 
             if ($event_total):
@@ -1202,10 +1202,10 @@ class Product extends Controller {
     public function autouser() {
         $json = array();
         
-        if (isset($this->request->get['name'])) {
+        if (isset(Request::p()->get['name'])) {
             Theme::model('people/customer');
             
-            $filter = array('filter_username' => $this->request->get['name'], 'start' => 0, 'limit' => 20);
+            $filter = array('filter_username' => Request::p()->get['name'], 'start' => 0, 'limit' => 20);
             
             $results = PeopleCustomer::getCustomers($filter);
             
@@ -1228,24 +1228,24 @@ class Product extends Controller {
     public function autocomplete() {
         $json = array();
         
-        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_model']) || isset($this->request->get['filter_category_id'])) {
+        if (isset(Request::p()->get['filter_name']) || isset(Request::p()->get['filter_model']) || isset(Request::p()->get['filter_category_id'])) {
             Theme::model('catalog/product');
             Theme::model('catalog/option');
             
-            if (isset($this->request->get['filter_name'])) {
-                $filter_name = $this->request->get['filter_name'];
+            if (isset(Request::p()->get['filter_name'])) {
+                $filter_name = Request::p()->get['filter_name'];
             } else {
                 $filter_name = '';
             }
             
-            if (isset($this->request->get['filter_model'])) {
-                $filter_model = $this->request->get['filter_model'];
+            if (isset(Request::p()->get['filter_model'])) {
+                $filter_model = Request::p()->get['filter_model'];
             } else {
                 $filter_model = '';
             }
             
-            if (isset($this->request->get['limit'])) {
-                $limit = $this->request->get['limit'];
+            if (isset(Request::p()->get['limit'])) {
+                $limit = Request::p()->get['limit'];
             } else {
                 $limit = 20;
             }
@@ -1296,19 +1296,19 @@ class Product extends Controller {
         
         $json = array();
         
-        if (!isset($this->request->get['name']) || Encode::strlen($this->request->get['name']) < 1):
+        if (!isset(Request::p()->get['name']) || Encode::strlen(Request::p()->get['name']) < 1):
             $json['error'] = Lang::get('lang_error_name_first');
         else:
             
             // build slug
-            $slug = Url::build_slug($this->request->get['name']);
+            $slug = Url::build_slug(Request::p()->get['name']);
             
             // check that the slug is globally unique
             $query = ToolUtility::findSlugByName($slug);
             
             if ($query):
-                if (isset($this->request->get['product_id'])):
-                    if ($query != 'product_id:' . $this->request->get['product_id']):
+                if (isset(Request::p()->get['product_id'])):
+                    if ($query != 'product_id:' . Request::p()->get['product_id']):
                         $json['error'] = sprintf(Lang::get('lang_error_slug_found'), $slug);
                     else:
                         $json['slug'] = $slug;
@@ -1329,8 +1329,8 @@ class Product extends Controller {
     public function description() {
         $json = array();
 
-        if (isset($this->request->post['description']))
-            $json['success'] = $this->keyword->getDescription($this->request->post['description']);
+        if (isset(Request::p()->post['description']))
+            $json['success'] = $this->keyword->getDescription(Request::p()->post['description']);
 
         Response::setOutput(json_encode($json));
     }
@@ -1338,9 +1338,9 @@ class Product extends Controller {
     public function keyword() {
         $json = array();
 
-        if (isset($this->request->post['keywords'])):
+        if (isset(Request::p()->post['keywords'])):
             // let's clean up the data first
-            $keywords        = $this->keyword->getDescription($this->request->post['keywords']);
+            $keywords        = $this->keyword->getDescription(Request::p()->post['keywords']);
             $json['success'] = $this->keyword->getKeywords($keywords);
         endif;
 

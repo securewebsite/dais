@@ -23,7 +23,7 @@ class Header extends Controller {
     public function index() {
         $data['title'] = Theme::getTitle();
         
-        if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))):
+        if (isset(Request::p()->server['HTTPS']) && ((Request::p()->server['HTTPS'] == 'on') || (Request::p()->server['HTTPS'] == '1'))):
             $data['base'] = Config::get('https.server');
         else:
             $data['base'] = Config::get('http.server');

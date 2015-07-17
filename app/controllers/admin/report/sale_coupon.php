@@ -25,36 +25,36 @@ class SaleCoupon extends Controller {
         
         Theme::setTitle(Lang::get('lang_heading_title'));
         
-        if (isset($this->request->get['filter_date_start'])) {
-            $filter_date_start = $this->request->get['filter_date_start'];
+        if (isset(Request::p()->get['filter_date_start'])) {
+            $filter_date_start = Request::p()->get['filter_date_start'];
         } else {
             $filter_date_start = '';
         }
         
-        if (isset($this->request->get['filter_date_end'])) {
-            $filter_date_end = $this->request->get['filter_date_end'];
+        if (isset(Request::p()->get['filter_date_end'])) {
+            $filter_date_end = Request::p()->get['filter_date_end'];
         } else {
             $filter_date_end = '';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['filter_date_start'])) {
-            $url.= '&filter_date_start=' . $this->request->get['filter_date_start'];
+        if (isset(Request::p()->get['filter_date_start'])) {
+            $url.= '&filter_date_start=' . Request::p()->get['filter_date_start'];
         }
         
-        if (isset($this->request->get['filter_date_end'])) {
-            $url.= '&filter_date_end=' . $this->request->get['filter_date_end'];
+        if (isset(Request::p()->get['filter_date_end'])) {
+            $url.= '&filter_date_end=' . Request::p()->get['filter_date_end'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'report/sale_coupon', $url);
@@ -72,19 +72,19 @@ class SaleCoupon extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('sale/coupon/update', '' . '&coupon_id=' . $result['coupon_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('sale/coupon/update', '' . 'coupon_id=' . $result['coupon_id'] . $url, 'SSL'));
             
             $data['coupons'][] = array('name' => $result['name'], 'code' => $result['code'], 'orders' => $result['orders'], 'total' => Currency::format($result['total'], Config::get('config_currency')), 'action' => $action);
         }
         
         $url = '';
         
-        if (isset($this->request->get['filter_date_start'])) {
-            $url.= '&filter_date_start=' . $this->request->get['filter_date_start'];
+        if (isset(Request::p()->get['filter_date_start'])) {
+            $url.= '&filter_date_start=' . Request::p()->get['filter_date_start'];
         }
         
-        if (isset($this->request->get['filter_date_end'])) {
-            $url.= '&filter_date_end=' . $this->request->get['filter_date_end'];
+        if (isset(Request::p()->get['filter_date_end'])) {
+            $url.= '&filter_date_end=' . Request::p()->get['filter_date_end'];
         }
         
         $data['pagination'] = Theme::paginate($coupon_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/sale_coupon', '' . $url . '&page={page}', 'SSL'));

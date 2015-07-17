@@ -27,9 +27,9 @@ class PaypalPro extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('paypal_pro', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('paypal_pro', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/payment', '', 'SSL'));
         }
@@ -65,44 +65,44 @@ class PaypalPro extends Controller {
         
         $data['cancel'] = Url::link('module/payment', '', 'SSL');
         
-        if (isset($this->request->post['paypal_pro_username'])) {
-            $data['paypal_pro_username'] = $this->request->post['paypal_pro_username'];
+        if (isset(Request::p()->post['paypal_pro_username'])) {
+            $data['paypal_pro_username'] = Request::p()->post['paypal_pro_username'];
         } else {
             $data['paypal_pro_username'] = Config::get('paypal_pro_username');
         }
         
-        if (isset($this->request->post['paypal_pro_password'])) {
-            $data['paypal_pro_password'] = $this->request->post['paypal_pro_password'];
+        if (isset(Request::p()->post['paypal_pro_password'])) {
+            $data['paypal_pro_password'] = Request::p()->post['paypal_pro_password'];
         } else {
             $data['paypal_pro_password'] = Config::get('paypal_pro_password');
         }
         
-        if (isset($this->request->post['paypal_pro_signature'])) {
-            $data['paypal_pro_signature'] = $this->request->post['paypal_pro_signature'];
+        if (isset(Request::p()->post['paypal_pro_signature'])) {
+            $data['paypal_pro_signature'] = Request::p()->post['paypal_pro_signature'];
         } else {
             $data['paypal_pro_signature'] = Config::get('paypal_pro_signature');
         }
         
-        if (isset($this->request->post['paypal_pro_test'])) {
-            $data['paypal_pro_test'] = $this->request->post['paypal_pro_test'];
+        if (isset(Request::p()->post['paypal_pro_test'])) {
+            $data['paypal_pro_test'] = Request::p()->post['paypal_pro_test'];
         } else {
             $data['paypal_pro_test'] = Config::get('paypal_pro_test');
         }
         
-        if (isset($this->request->post['paypal_pro_method'])) {
-            $data['paypal_pro_transaction'] = $this->request->post['paypal_pro_transaction'];
+        if (isset(Request::p()->post['paypal_pro_method'])) {
+            $data['paypal_pro_transaction'] = Request::p()->post['paypal_pro_transaction'];
         } else {
             $data['paypal_pro_transaction'] = Config::get('paypal_pro_transaction');
         }
         
-        if (isset($this->request->post['paypal_pro_total'])) {
-            $data['paypal_pro_total'] = $this->request->post['paypal_pro_total'];
+        if (isset(Request::p()->post['paypal_pro_total'])) {
+            $data['paypal_pro_total'] = Request::p()->post['paypal_pro_total'];
         } else {
             $data['paypal_pro_total'] = Config::get('paypal_pro_total');
         }
         
-        if (isset($this->request->post['paypal_pro_order_status_id'])) {
-            $data['paypal_pro_order_status_id'] = $this->request->post['paypal_pro_order_status_id'];
+        if (isset(Request::p()->post['paypal_pro_order_status_id'])) {
+            $data['paypal_pro_order_status_id'] = Request::p()->post['paypal_pro_order_status_id'];
         } else {
             $data['paypal_pro_order_status_id'] = Config::get('paypal_pro_order_status_id');
         }
@@ -111,8 +111,8 @@ class PaypalPro extends Controller {
         
         $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
-        if (isset($this->request->post['paypal_pro_geo_zone_id'])) {
-            $data['paypal_pro_geo_zone_id'] = $this->request->post['paypal_pro_geo_zone_id'];
+        if (isset(Request::p()->post['paypal_pro_geo_zone_id'])) {
+            $data['paypal_pro_geo_zone_id'] = Request::p()->post['paypal_pro_geo_zone_id'];
         } else {
             $data['paypal_pro_geo_zone_id'] = Config::get('paypal_pro_geo_zone_id');
         }
@@ -121,14 +121,14 @@ class PaypalPro extends Controller {
         
         $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
-        if (isset($this->request->post['paypal_pro_status'])) {
-            $data['paypal_pro_status'] = $this->request->post['paypal_pro_status'];
+        if (isset(Request::p()->post['paypal_pro_status'])) {
+            $data['paypal_pro_status'] = Request::p()->post['paypal_pro_status'];
         } else {
             $data['paypal_pro_status'] = Config::get('paypal_pro_status');
         }
         
-        if (isset($this->request->post['paypal_pro_sort_order'])) {
-            $data['paypal_pro_sort_order'] = $this->request->post['paypal_pro_sort_order'];
+        if (isset(Request::p()->post['paypal_pro_sort_order'])) {
+            $data['paypal_pro_sort_order'] = Request::p()->post['paypal_pro_sort_order'];
         } else {
             $data['paypal_pro_sort_order'] = Config::get('paypal_pro_sort_order');
         }
@@ -145,15 +145,15 @@ class PaypalPro extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (!$this->request->post['paypal_pro_username']) {
+        if (!Request::p()->post['paypal_pro_username']) {
             $this->error['username'] = Lang::get('lang_error_username');
         }
         
-        if (!$this->request->post['paypal_pro_password']) {
+        if (!Request::p()->post['paypal_pro_password']) {
             $this->error['password'] = Lang::get('lang_error_password');
         }
         
-        if (!$this->request->post['paypal_pro_signature']) {
+        if (!Request::p()->post['paypal_pro_signature']) {
             $this->error['signature'] = Lang::get('lang_error_signature');
         }
         

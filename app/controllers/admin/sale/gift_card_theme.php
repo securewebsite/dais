@@ -37,22 +37,22 @@ class GiftCardTheme extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('sale/gift_card_theme');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            SaleGiftCardTheme::addGiftcardTheme($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            SaleGiftCardTheme::addGiftcardTheme(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('sale/gift_card_theme', '' . $url, 'SSL'));
@@ -68,22 +68,22 @@ class GiftCardTheme extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('sale/gift_card_theme');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            SaleGiftCardTheme::editGiftcardTheme($this->request->get['gift_card_theme_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            SaleGiftCardTheme::editGiftcardTheme(Request::p()->get['gift_card_theme_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('sale/gift_card_theme', '' . $url, 'SSL'));
@@ -99,25 +99,25 @@ class GiftCardTheme extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('sale/gift_card_theme');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $gift_card_theme_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $gift_card_theme_id) {
                 SaleGiftCardTheme::deleteGiftcardTheme($gift_card_theme_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('sale/gift_card_theme', '' . $url, 'SSL'));
@@ -131,36 +131,36 @@ class GiftCardTheme extends Controller {
     protected function getList() {
         $data = Theme::language('sale/gift_card_theme');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'vtd.name';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'sale/gift_card_theme', $url);
@@ -186,13 +186,13 @@ class GiftCardTheme extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('sale/gift_card_theme/update', '' . '&gift_card_theme_id=' . $result['gift_card_theme_id'] . $url, 'SSL')
+                'href' => Url::link('sale/gift_card_theme/update', '' . 'gift_card_theme_id=' . $result['gift_card_theme_id'] . $url, 'SSL')
             );
             
             $data['gift_card_themes'][] = array(
                 'gift_card_theme_id' => $result['gift_card_theme_id'], 
                 'name'              => $result['name'], 
-                'selected'          => isset($this->request->post['selected']) && in_array($result['gift_card_theme_id'], $this->request->post['selected']), 
+                'selected'          => isset(Request::p()->post['selected']) && in_array($result['gift_card_theme_id'], Request::p()->post['selected']), 
                 'action'            => $action
             );
         }
@@ -203,10 +203,10 @@ class GiftCardTheme extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -219,20 +219,20 @@ class GiftCardTheme extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('sale/gift_card_theme', '' . '&sort=name' . $url, 'SSL');
+        $data['sort_name'] = Url::link('sale/gift_card_theme', '' . 'sort=name' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate(
@@ -276,46 +276,46 @@ class GiftCardTheme extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'sale/gift_card_theme', $url);
         
-        if (!isset($this->request->get['gift_card_theme_id'])) {
+        if (!isset(Request::p()->get['gift_card_theme_id'])) {
             $data['action'] = Url::link('sale/gift_card_theme/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('sale/gift_card_theme/update', '' . '&gift_card_theme_id=' . $this->request->get['gift_card_theme_id'] . $url, 'SSL');
+            $data['action'] = Url::link('sale/gift_card_theme/update', '' . 'gift_card_theme_id=' . Request::p()->get['gift_card_theme_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('sale/gift_card_theme', '' . $url, 'SSL');
         
-        if (isset($this->request->get['gift_card_theme_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $gift_card_theme_info = SaleGiftCardTheme::getGiftcardTheme($this->request->get['gift_card_theme_id']);
+        if (isset(Request::p()->get['gift_card_theme_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $gift_card_theme_info = SaleGiftCardTheme::getGiftcardTheme(Request::p()->get['gift_card_theme_id']);
         }
         
         Theme::model('locale/language');
         
         $data['languages'] = LocaleLanguage::getLanguages();
         
-        if (isset($this->request->post['gift_card_theme_description'])) {
-            $data['gift_card_theme_description'] = $this->request->post['gift_card_theme_description'];
-        } elseif (isset($this->request->get['gift_card_theme_id'])) {
-            $data['gift_card_theme_description'] = SaleGiftCardTheme::getGiftcardThemeDescriptions($this->request->get['gift_card_theme_id']);
+        if (isset(Request::p()->post['gift_card_theme_description'])) {
+            $data['gift_card_theme_description'] = Request::p()->post['gift_card_theme_description'];
+        } elseif (isset(Request::p()->get['gift_card_theme_id'])) {
+            $data['gift_card_theme_description'] = SaleGiftCardTheme::getGiftcardThemeDescriptions(Request::p()->get['gift_card_theme_id']);
         } else {
             $data['gift_card_theme_description'] = array();
         }
         
-        if (isset($this->request->post['image'])) {
-            $data['image'] = $this->request->post['image'];
+        if (isset(Request::p()->post['image'])) {
+            $data['image'] = Request::p()->post['image'];
         } elseif (!empty($gift_card_theme_info)) {
             $data['image'] = $gift_card_theme_info['image'];
         } else {
@@ -344,13 +344,13 @@ class GiftCardTheme extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        foreach ($this->request->post['gift_card_theme_description'] as $language_id => $value) {
+        foreach (Request::p()->post['gift_card_theme_description'] as $language_id => $value) {
             if ((Encode::strlen($value['name']) < 3) || (Encode::strlen($value['name']) > 32)) {
                 $this->error['name'][$language_id] = Lang::get('lang_error_name');
             }
         }
         
-        if (!$this->request->post['image']) {
+        if (!Request::p()->post['image']) {
             $this->error['image'] = Lang::get('lang_error_image');
         }
         
@@ -366,7 +366,7 @@ class GiftCardTheme extends Controller {
         
         Theme::model('sale/gift_card');
         
-        foreach ($this->request->post['selected'] as $gift_card_theme_id) {
+        foreach (Request::p()->post['selected'] as $gift_card_theme_id) {
             $gift_card_total = SaleGiftCard::getTotalGiftcardsByGiftcardThemeId($gift_card_theme_id);
             
             if ($gift_card_total) {

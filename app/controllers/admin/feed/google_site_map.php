@@ -29,10 +29,10 @@ class GoogleSiteMap extends Controller {
         
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('google_site_map', $this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('google_site_map', Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/feed', '', 'SSL'));
         }
@@ -50,8 +50,8 @@ class GoogleSiteMap extends Controller {
         
         $data['cancel'] = Url::link('module/feed', '', 'SSL');
         
-        if (isset($this->request->post['google_site_map_status'])) {
-            $data['google_site_map_status'] = $this->request->post['google_site_map_status'];
+        if (isset(Request::p()->post['google_site_map_status'])) {
+            $data['google_site_map_status'] = Request::p()->post['google_site_map_status'];
         } else {
             $data['google_site_map_status'] = Config::get('google_site_map_status');
         }

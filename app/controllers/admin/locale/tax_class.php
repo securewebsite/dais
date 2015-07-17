@@ -37,22 +37,22 @@ class TaxClass extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('locale/tax_class');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            LocaleTaxClass::addTaxClass($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            LocaleTaxClass::addTaxClass(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/tax_class', '' . $url, 'SSL'));
@@ -68,22 +68,22 @@ class TaxClass extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('locale/tax_class');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            LocaleTaxClass::editTaxClass($this->request->get['tax_class_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            LocaleTaxClass::editTaxClass(Request::p()->get['tax_class_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/tax_class', '' . $url, 'SSL'));
@@ -99,25 +99,25 @@ class TaxClass extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('locale/tax_class');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $tax_class_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $tax_class_id) {
                 LocaleTaxClass::deleteTaxClass($tax_class_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/tax_class', '' . $url, 'SSL'));
@@ -131,36 +131,36 @@ class TaxClass extends Controller {
     protected function getList() {
         $data = Theme::language('locale/tax_class');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'title';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'locale/tax_class', $url);
@@ -179,9 +179,9 @@ class TaxClass extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/tax_class/update', '' . '&tax_class_id=' . $result['tax_class_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/tax_class/update', '' . 'tax_class_id=' . $result['tax_class_id'] . $url, 'SSL'));
             
-            $data['tax_classes'][] = array('tax_class_id' => $result['tax_class_id'], 'title' => $result['title'], 'selected' => isset($this->request->post['selected']) && in_array($result['tax_class_id'], $this->request->post['selected']), 'action' => $action);
+            $data['tax_classes'][] = array('tax_class_id' => $result['tax_class_id'], 'title' => $result['title'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['tax_class_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -190,10 +190,10 @@ class TaxClass extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -206,20 +206,20 @@ class TaxClass extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_title'] = Url::link('locale/tax_class', '' . '&sort=title' . $url, 'SSL');
+        $data['sort_title'] = Url::link('locale/tax_class', '' . 'sort=title' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate($tax_class_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/tax_class', '' . $url . '&page={page}', 'SSL'));
@@ -257,42 +257,42 @@ class TaxClass extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'locale/tax_class', $url);
         
-        if (!isset($this->request->get['tax_class_id'])) {
+        if (!isset(Request::p()->get['tax_class_id'])) {
             $data['action'] = Url::link('locale/tax_class/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/tax_class/update', '' . '&tax_class_id=' . $this->request->get['tax_class_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/tax_class/update', '' . 'tax_class_id=' . Request::p()->get['tax_class_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('locale/tax_class', '' . $url, 'SSL');
         
-        if (isset($this->request->get['tax_class_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $tax_class_info = LocaleTaxClass::getTaxClass($this->request->get['tax_class_id']);
+        if (isset(Request::p()->get['tax_class_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $tax_class_info = LocaleTaxClass::getTaxClass(Request::p()->get['tax_class_id']);
         }
         
-        if (isset($this->request->post['title'])) {
-            $data['title'] = $this->request->post['title'];
+        if (isset(Request::p()->post['title'])) {
+            $data['title'] = Request::p()->post['title'];
         } elseif (!empty($tax_class_info)) {
             $data['title'] = $tax_class_info['title'];
         } else {
             $data['title'] = '';
         }
         
-        if (isset($this->request->post['description'])) {
-            $data['description'] = $this->request->post['description'];
+        if (isset(Request::p()->post['description'])) {
+            $data['description'] = Request::p()->post['description'];
         } elseif (!empty($tax_class_info)) {
             $data['description'] = $tax_class_info['description'];
         } else {
@@ -303,10 +303,10 @@ class TaxClass extends Controller {
         
         $data['tax_rates'] = LocaleTaxRate::getTaxRates();
         
-        if (isset($this->request->post['tax_rule'])) {
-            $data['tax_rules'] = $this->request->post['tax_rule'];
-        } elseif (isset($this->request->get['tax_class_id'])) {
-            $data['tax_rules'] = LocaleTaxClass::getTaxRules($this->request->get['tax_class_id']);
+        if (isset(Request::p()->post['tax_rule'])) {
+            $data['tax_rules'] = Request::p()->post['tax_rule'];
+        } elseif (isset(Request::p()->get['tax_class_id'])) {
+            $data['tax_rules'] = LocaleTaxClass::getTaxRules(Request::p()->get['tax_class_id']);
         } else {
             $data['tax_rules'] = array();
         }
@@ -325,11 +325,11 @@ class TaxClass extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if ((Encode::strlen($this->request->post['title']) < 3) || (Encode::strlen($this->request->post['title']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['title']) < 3) || (Encode::strlen(Request::p()->post['title']) > 32)) {
             $this->error['title'] = Lang::get('lang_error_title');
         }
         
-        if ((Encode::strlen($this->request->post['description']) < 3) || (Encode::strlen($this->request->post['description']) > 255)) {
+        if ((Encode::strlen(Request::p()->post['description']) < 3) || (Encode::strlen(Request::p()->post['description']) > 255)) {
             $this->error['description'] = Lang::get('lang_error_description');
         }
         
@@ -345,7 +345,7 @@ class TaxClass extends Controller {
         
         Theme::model('catalog/product');
         
-        foreach ($this->request->post['selected'] as $tax_class_id) {
+        foreach (Request::p()->post['selected'] as $tax_class_id) {
             $product_total = CatalogProduct::getTotalProductsByTaxClassId($tax_class_id);
             
             if ($product_total) {

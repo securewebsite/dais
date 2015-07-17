@@ -23,7 +23,7 @@ class Wishlist extends Controller {
     
     public function index() {
         if (!Customer::isLogged()) {
-            $this->session->data['redirect'] = Url::link('account/wishlist', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/wishlist', '', 'SSL');
             
             Response::redirect(Url::link('account/login', '', 'SSL'));
         }
@@ -32,18 +32,18 @@ class Wishlist extends Controller {
         Theme::model('catalog/product');
         Theme::model('tool/image');
         
-        if (!isset($this->session->data['wishlist'])) {
-            $this->session->data['wishlist'] = array();
+        if (!isset(Session::p()->data['wishlist'])) {
+            Session::p()->data['wishlist'] = array();
         }
         
-        if (isset($this->request->get['remove'])) {
-            $key = array_search($this->request->get['remove'], $this->session->data['wishlist']);
+        if (isset(Request::p()->get['remove'])) {
+            $key = array_search(Request::p()->get['remove'], Session::p()->data['wishlist']);
             
             if ($key !== false) {
-                unset($this->session->data['wishlist'][$key]);
+                unset(Session::p()->data['wishlist'][$key]);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_remove');
+            Session::p()->data['success'] = Lang::get('lang_text_remove');
             
             Response::redirect(Url::link('account/wishlist'));
         }
@@ -53,17 +53,17 @@ class Wishlist extends Controller {
         Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
         Breadcrumb::add('lang_heading_title', 'account/wishlist', null, true, 'SSL');
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
         
         $data['products'] = array();
         
-        foreach ($this->session->data['wishlist'] as $key => $product_id) {
+        foreach (Session::p()->data['wishlist'] as $key => $product_id) {
             $product_info = CatalogProduct::getProduct($product_id);
             
             if ($product_info) {
@@ -95,7 +95,7 @@ class Wishlist extends Controller {
                 
                 $data['products'][] = array('product_id' => $product_info['product_id'], 'event_id' => $product_info['event_id'], 'thumb' => $image, 'name' => $product_info['name'], 'model' => $product_info['model'], 'stock' => $stock, 'price' => $price, 'special' => $special, 'href' => Url::link('catalog/product', 'product_id=' . $product_info['product_id']), 'remove' => Url::link('account/wishlist', 'remove=' . $product_info['product_id']));
             } else {
-                unset($this->session->data['wishlist'][$key]);
+                unset(Session::p()->data['wishlist'][$key]);
             }
         }
         
@@ -116,12 +116,12 @@ class Wishlist extends Controller {
         
         $json = array();
         
-        if (!isset($this->session->data['wishlist'])) {
-            $this->session->data['wishlist'] = array();
+        if (!isset(Session::p()->data['wishlist'])) {
+            Session::p()->data['wishlist'] = array();
         }
         
-        if (isset($this->request->post['product_id'])) {
-            $product_id = $this->request->post['product_id'];
+        if (isset(Request::p()->post['product_id'])) {
+            $product_id = Request::p()->post['product_id'];
         } else {
             $product_id = 0;
         }
@@ -131,17 +131,17 @@ class Wishlist extends Controller {
         $product_info = CatalogProduct::getProduct($product_id);
         
         if ($product_info) {
-            if (!in_array($this->request->post['product_id'], $this->session->data['wishlist'])) {
-                $this->session->data['wishlist'][] = $this->request->post['product_id'];
+            if (!in_array(Request::p()->post['product_id'], Session::p()->data['wishlist'])) {
+                Session::p()->data['wishlist'][] = Request::p()->post['product_id'];
             }
             
             if (Customer::isLogged()) {
-                $json['success'] = sprintf(Lang::get('lang_text_success'), Url::link('catalog/product', 'product_id=' . $this->request->post['product_id']), $product_info['name'], Url::link('account/wishlist'));
+                $json['success'] = sprintf(Lang::get('lang_text_success'), Url::link('catalog/product', 'product_id=' . Request::p()->post['product_id']), $product_info['name'], Url::link('account/wishlist'));
             } else {
-                $json['success'] = sprintf(Lang::get('lang_text_login'), Url::link('account/login', '', 'SSL'), Url::link('account/register', '', 'SSL'), Url::link('catalog/product', 'product_id=' . $this->request->post['product_id']), $product_info['name'], Url::link('account/wishlist'));
+                $json['success'] = sprintf(Lang::get('lang_text_login'), Url::link('account/login', '', 'SSL'), Url::link('account/register', '', 'SSL'), Url::link('catalog/product', 'product_id=' . Request::p()->post['product_id']), $product_info['name'], Url::link('account/wishlist'));
             }
             
-            $json['total'] = sprintf(Lang::get('lang_text_wishlist'), (isset($this->session->data['wishlist']) ? count($this->session->data['wishlist']) : 0));
+            $json['total'] = sprintf(Lang::get('lang_text_wishlist'), (isset(Session::p()->data['wishlist']) ? count(Session::p()->data['wishlist']) : 0));
         }
         
         $json = Theme::listen(__CLASS__, __FUNCTION__, $json);

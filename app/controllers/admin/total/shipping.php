@@ -27,9 +27,9 @@ class Shipping extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('shipping', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('shipping', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/total', '', 'SSL'));
         }
@@ -46,20 +46,20 @@ class Shipping extends Controller {
         $data['action'] = Url::link('total/shipping', '', 'SSL');
         $data['cancel'] = Url::link('module/total', '', 'SSL');
         
-        if (isset($this->request->post['shipping_estimator'])) {
-            $data['shipping_estimator'] = $this->request->post['shipping_estimator'];
+        if (isset(Request::p()->post['shipping_estimator'])) {
+            $data['shipping_estimator'] = Request::p()->post['shipping_estimator'];
         } else {
             $data['shipping_estimator'] = Config::get('shipping_estimator');
         }
         
-        if (isset($this->request->post['shipping_status'])) {
-            $data['shipping_status'] = $this->request->post['shipping_status'];
+        if (isset(Request::p()->post['shipping_status'])) {
+            $data['shipping_status'] = Request::p()->post['shipping_status'];
         } else {
             $data['shipping_status'] = Config::get('shipping_status');
         }
         
-        if (isset($this->request->post['shipping_sort_order'])) {
-            $data['shipping_sort_order'] = $this->request->post['shipping_sort_order'];
+        if (isset(Request::p()->post['shipping_sort_order'])) {
+            $data['shipping_sort_order'] = Request::p()->post['shipping_sort_order'];
         } else {
             $data['shipping_sort_order'] = Config::get('shipping_sort_order');
         }

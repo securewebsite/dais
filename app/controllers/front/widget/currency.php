@@ -21,14 +21,14 @@ use App\Controllers\Controller;
 class Currency extends Controller {
     
     public function index() {
-        if (isset($this->request->post['currency_code'])) {
-            \Currency::set($this->request->post['currency_code']);
+        if (isset(Request::p()->post['currency_code'])) {
+            \Currency::set(Request::p()->post['currency_code']);
             
-            unset($this->session->data['shipping_method']);
-            unset($this->session->data['shipping_methods']);
+            unset(Session::p()->data['shipping_method']);
+            unset(Session::p()->data['shipping_methods']);
             
-            if (isset($this->request->post['redirect'])) {
-                Response::redirect($this->request->post['redirect']);
+            if (isset(Request::p()->post['redirect'])) {
+                Response::redirect(Request::p()->post['redirect']);
             } else {
                 Response::redirect(Url::link('shop/home'));
             }
@@ -36,7 +36,7 @@ class Currency extends Controller {
         
         $data = Theme::language('widget/currency');
         
-        if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+        if (isset(Request::p()->server['HTTPS']) && ((Request::p()->server['HTTPS'] == 'on') || (Request::p()->server['HTTPS'] == '1'))) {
             $connection = 'SSL';
         } else {
             $connection = 'NONSSL';
@@ -58,10 +58,10 @@ class Currency extends Controller {
             }
         }
         
-        if (!isset($this->request->get['route'])) {
+        if (!isset(Request::p()->get['route'])) {
             $data['redirect'] = Url::link('shop/home');
         } else {
-            $routes = $this->request->get;
+            $routes = Request::get();
             
             unset($routes['_route_']);
             

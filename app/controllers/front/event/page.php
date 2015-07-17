@@ -25,8 +25,8 @@ class Page extends Controller {
         
         Theme::model('content/page');
         
-        if (isset($this->request->get['event_page_id'])):
-            $page_id = (int)$this->request->get['event_page_id'];
+        if (isset(Request::p()->get['event_page_id'])):
+            $page_id = (int)Request::p()->get['event_page_id'];
         else:
             $page_id = 0;
         endif;
@@ -179,7 +179,7 @@ class Page extends Controller {
 			$data['heading_title'] = Lang::get('lang_text_error');
 			$data['continue']      = Url::link('content/home');
             
-            Response::addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
+            Response::addHeader(Request::p()->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             $data = Theme::renderControllers($data);

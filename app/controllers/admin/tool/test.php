@@ -25,10 +25,10 @@ class Test extends Controller {
         
         Theme::setTitle(Lang::get('lang_heading_title'));
         
-        if (isset($this->session->data['success'])):
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])):
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         else:
             $data['success'] = '';
         endif;

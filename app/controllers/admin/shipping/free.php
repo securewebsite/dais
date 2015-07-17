@@ -27,9 +27,9 @@ class Free extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('free', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('free', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/shipping', '', 'SSL'));
         }
@@ -47,14 +47,14 @@ class Free extends Controller {
         
         $data['cancel'] = Url::link('module/shipping', '', 'SSL');
         
-        if (isset($this->request->post['free_total'])) {
-            $data['free_total'] = $this->request->post['free_total'];
+        if (isset(Request::p()->post['free_total'])) {
+            $data['free_total'] = Request::p()->post['free_total'];
         } else {
             $data['free_total'] = Config::get('free_total');
         }
         
-        if (isset($this->request->post['free_geo_zone_id'])) {
-            $data['free_geo_zone_id'] = $this->request->post['free_geo_zone_id'];
+        if (isset(Request::p()->post['free_geo_zone_id'])) {
+            $data['free_geo_zone_id'] = Request::p()->post['free_geo_zone_id'];
         } else {
             $data['free_geo_zone_id'] = Config::get('free_geo_zone_id');
         }
@@ -63,14 +63,14 @@ class Free extends Controller {
         
         $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
-        if (isset($this->request->post['free_status'])) {
-            $data['free_status'] = $this->request->post['free_status'];
+        if (isset(Request::p()->post['free_status'])) {
+            $data['free_status'] = Request::p()->post['free_status'];
         } else {
             $data['free_status'] = Config::get('free_status');
         }
         
-        if (isset($this->request->post['free_sort_order'])) {
-            $data['free_sort_order'] = $this->request->post['free_sort_order'];
+        if (isset(Request::p()->post['free_sort_order'])) {
+            $data['free_sort_order'] = Request::p()->post['free_sort_order'];
         } else {
             $data['free_sort_order'] = Config::get('free_sort_order');
         }

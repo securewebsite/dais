@@ -27,9 +27,9 @@ class SideBarMenu extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('side_bar_menu', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('side_bar_menu', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/widget', '', 'SSL'));
         }
@@ -48,8 +48,8 @@ class SideBarMenu extends Controller {
         
         $data['widgets'] = array();
         
-        if (isset($this->request->post['side_bar_menu_widget'])) {
-            $data['widgets'] = $this->request->post['side_bar_menu_widget'];
+        if (isset(Request::p()->post['side_bar_menu_widget'])) {
+            $data['widgets'] = Request::p()->post['side_bar_menu_widget'];
         } elseif (Config::get('side_bar_menu_widget')) {
             $data['widgets'] = Config::get('side_bar_menu_widget');
         }

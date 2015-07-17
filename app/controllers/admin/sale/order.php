@@ -37,46 +37,46 @@ class Order extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('sale/order');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            SaleOrder::addOrder($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            SaleOrder::addOrder(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['filter_order_id'])) {
-                $url.= '&filter_order_id=' . $this->request->get['filter_order_id'];
+            if (isset(Request::p()->get['filter_order_id'])) {
+                $url.= '&filter_order_id=' . Request::p()->get['filter_order_id'];
             }
             
-            if (isset($this->request->get['filter_customer'])) {
-                $url.= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->get['filter_customer'])) {
+                $url.= '&filter_customer=' . urlencode(html_entity_decode(Request::p()->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
             }
             
-            if (isset($this->request->get['filter_order_status_id'])) {
-                $url.= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+            if (isset(Request::p()->get['filter_order_status_id'])) {
+                $url.= '&filter_order_status_id=' . Request::p()->get['filter_order_status_id'];
             }
             
-            if (isset($this->request->get['filter_total'])) {
-                $url.= '&filter_total=' . $this->request->get['filter_total'];
+            if (isset(Request::p()->get['filter_total'])) {
+                $url.= '&filter_total=' . Request::p()->get['filter_total'];
             }
             
-            if (isset($this->request->get['filter_date_added'])) {
-                $url.= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            if (isset(Request::p()->get['filter_date_added'])) {
+                $url.= '&filter_date_added=' . Request::p()->get['filter_date_added'];
             }
             
-            if (isset($this->request->get['filter_date_modified'])) {
-                $url.= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
+            if (isset(Request::p()->get['filter_date_modified'])) {
+                $url.= '&filter_date_modified=' . Request::p()->get['filter_date_modified'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('sale/order', '' . $url, 'SSL'));
@@ -92,46 +92,46 @@ class Order extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('sale/order');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            SaleOrder::editOrder($this->request->get['order_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            SaleOrder::editOrder(Request::p()->get['order_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['filter_order_id'])) {
-                $url.= '&filter_order_id=' . $this->request->get['filter_order_id'];
+            if (isset(Request::p()->get['filter_order_id'])) {
+                $url.= '&filter_order_id=' . Request::p()->get['filter_order_id'];
             }
             
-            if (isset($this->request->get['filter_customer'])) {
-                $url.= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->get['filter_customer'])) {
+                $url.= '&filter_customer=' . urlencode(html_entity_decode(Request::p()->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
             }
             
-            if (isset($this->request->get['filter_order_status_id'])) {
-                $url.= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+            if (isset(Request::p()->get['filter_order_status_id'])) {
+                $url.= '&filter_order_status_id=' . Request::p()->get['filter_order_status_id'];
             }
             
-            if (isset($this->request->get['filter_total'])) {
-                $url.= '&filter_total=' . $this->request->get['filter_total'];
+            if (isset(Request::p()->get['filter_total'])) {
+                $url.= '&filter_total=' . Request::p()->get['filter_total'];
             }
             
-            if (isset($this->request->get['filter_date_added'])) {
-                $url.= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            if (isset(Request::p()->get['filter_date_added'])) {
+                $url.= '&filter_date_added=' . Request::p()->get['filter_date_added'];
             }
             
-            if (isset($this->request->get['filter_date_modified'])) {
-                $url.= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
+            if (isset(Request::p()->get['filter_date_modified'])) {
+                $url.= '&filter_date_modified=' . Request::p()->get['filter_date_modified'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('sale/order', '' . $url, 'SSL'));
@@ -147,49 +147,49 @@ class Order extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('sale/order');
         
-        if (isset($this->request->post['selected']) && ($this->validateDelete())) {
-            foreach ($this->request->post['selected'] as $order_id) {
+        if (isset(Request::p()->post['selected']) && ($this->validateDelete())) {
+            foreach (Request::p()->post['selected'] as $order_id) {
                 SaleOrder::deleteOrder($order_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['filter_order_id'])) {
-                $url.= '&filter_order_id=' . $this->request->get['filter_order_id'];
+            if (isset(Request::p()->get['filter_order_id'])) {
+                $url.= '&filter_order_id=' . Request::p()->get['filter_order_id'];
             }
             
-            if (isset($this->request->get['filter_customer'])) {
-                $url.= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->get['filter_customer'])) {
+                $url.= '&filter_customer=' . urlencode(html_entity_decode(Request::p()->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
             }
             
-            if (isset($this->request->get['filter_order_status_id'])) {
-                $url.= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+            if (isset(Request::p()->get['filter_order_status_id'])) {
+                $url.= '&filter_order_status_id=' . Request::p()->get['filter_order_status_id'];
             }
             
-            if (isset($this->request->get['filter_total'])) {
-                $url.= '&filter_total=' . $this->request->get['filter_total'];
+            if (isset(Request::p()->get['filter_total'])) {
+                $url.= '&filter_total=' . Request::p()->get['filter_total'];
             }
             
-            if (isset($this->request->get['filter_date_added'])) {
-                $url.= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            if (isset(Request::p()->get['filter_date_added'])) {
+                $url.= '&filter_date_added=' . Request::p()->get['filter_date_added'];
             }
             
-            if (isset($this->request->get['filter_date_modified'])) {
-                $url.= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
+            if (isset(Request::p()->get['filter_date_modified'])) {
+                $url.= '&filter_date_modified=' . Request::p()->get['filter_date_modified'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('sale/order', '' . $url, 'SSL'));
@@ -203,96 +203,96 @@ class Order extends Controller {
     protected function getList() {
         $data = Theme::language('sale/order');
         
-        if (isset($this->request->get['filter_order_id'])) {
-            $filter_order_id = $this->request->get['filter_order_id'];
+        if (isset(Request::p()->get['filter_order_id'])) {
+            $filter_order_id = Request::p()->get['filter_order_id'];
         } else {
             $filter_order_id = null;
         }
         
-        if (isset($this->request->get['filter_customer'])) {
-            $filter_customer = $this->request->get['filter_customer'];
+        if (isset(Request::p()->get['filter_customer'])) {
+            $filter_customer = Request::p()->get['filter_customer'];
         } else {
             $filter_customer = null;
         }
         
-        if (isset($this->request->get['filter_order_status_id'])) {
-            $filter_order_status_id = $this->request->get['filter_order_status_id'];
+        if (isset(Request::p()->get['filter_order_status_id'])) {
+            $filter_order_status_id = Request::p()->get['filter_order_status_id'];
         } else {
             $filter_order_status_id = null;
         }
         
-        if (isset($this->request->get['filter_total'])) {
-            $filter_total = $this->request->get['filter_total'];
+        if (isset(Request::p()->get['filter_total'])) {
+            $filter_total = Request::p()->get['filter_total'];
         } else {
             $filter_total = null;
         }
         
-        if (isset($this->request->get['filter_date_added'])) {
-            $filter_date_added = $this->request->get['filter_date_added'];
+        if (isset(Request::p()->get['filter_date_added'])) {
+            $filter_date_added = Request::p()->get['filter_date_added'];
         } else {
             $filter_date_added = null;
         }
         
-        if (isset($this->request->get['filter_date_modified'])) {
-            $filter_date_modified = $this->request->get['filter_date_modified'];
+        if (isset(Request::p()->get['filter_date_modified'])) {
+            $filter_date_modified = Request::p()->get['filter_date_modified'];
         } else {
             $filter_date_modified = null;
         }
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'o.order_id';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'DESC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['filter_order_id'])) {
-            $url.= '&filter_order_id=' . $this->request->get['filter_order_id'];
+        if (isset(Request::p()->get['filter_order_id'])) {
+            $url.= '&filter_order_id=' . Request::p()->get['filter_order_id'];
         }
         
-        if (isset($this->request->get['filter_customer'])) {
-            $url.= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+        if (isset(Request::p()->get['filter_customer'])) {
+            $url.= '&filter_customer=' . urlencode(html_entity_decode(Request::p()->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
         
-        if (isset($this->request->get['filter_order_status_id'])) {
-            $url.= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+        if (isset(Request::p()->get['filter_order_status_id'])) {
+            $url.= '&filter_order_status_id=' . Request::p()->get['filter_order_status_id'];
         }
         
-        if (isset($this->request->get['filter_total'])) {
-            $url.= '&filter_total=' . $this->request->get['filter_total'];
+        if (isset(Request::p()->get['filter_total'])) {
+            $url.= '&filter_total=' . Request::p()->get['filter_total'];
         }
         
-        if (isset($this->request->get['filter_date_added'])) {
-            $url.= '&filter_date_added=' . $this->request->get['filter_date_added'];
+        if (isset(Request::p()->get['filter_date_added'])) {
+            $url.= '&filter_date_added=' . Request::p()->get['filter_date_added'];
         }
         
-        if (isset($this->request->get['filter_date_modified'])) {
-            $url.= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
+        if (isset(Request::p()->get['filter_date_modified'])) {
+            $url.= '&filter_date_modified=' . Request::p()->get['filter_date_modified'];
         }
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'sale/order', $url);
@@ -325,13 +325,13 @@ class Order extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_view'), 
-                'href' => Url::link('sale/order/info', '' . '&order_id=' . $result['order_id'] . $url, 'SSL')
+                'href' => Url::link('sale/order/info', '' . 'order_id=' . $result['order_id'] . $url, 'SSL')
             );
             
             if (strtotime($result['date_added']) > strtotime('-' . (int)Config::get('config_order_edit') . ' day')) {
                 $action[] = array(
                     'text' => Lang::get('lang_text_edit'), 
-                    'href' => Url::link('sale/order/update', '' . '&order_id=' . $result['order_id'] . $url, 'SSL')
+                    'href' => Url::link('sale/order/update', '' . 'order_id=' . $result['order_id'] . $url, 'SSL')
                 );
             }
             
@@ -342,7 +342,7 @@ class Order extends Controller {
                 'total'         => Currency::format($result['total'], $result['currency_code'], $result['currency_value']), 
                 'date_added'    => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 
                 'date_modified' => date(Lang::get('lang_date_format_short'), strtotime($result['date_modified'])), 
-                'selected'      => isset($this->request->post['selected']) && in_array($result['order_id'], $this->request->post['selected']), 
+                'selected'      => isset(Request::p()->post['selected']) && in_array($result['order_id'], Request::p()->post['selected']), 
                 'action'        => $action
             );
         }
@@ -353,38 +353,38 @@ class Order extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
         
         $url = '';
         
-        if (isset($this->request->get['filter_order_id'])) {
-            $url.= '&filter_order_id=' . $this->request->get['filter_order_id'];
+        if (isset(Request::p()->get['filter_order_id'])) {
+            $url.= '&filter_order_id=' . Request::p()->get['filter_order_id'];
         }
         
-        if (isset($this->request->get['filter_customer'])) {
-            $url.= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+        if (isset(Request::p()->get['filter_customer'])) {
+            $url.= '&filter_customer=' . urlencode(html_entity_decode(Request::p()->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
         
-        if (isset($this->request->get['filter_order_status_id'])) {
-            $url.= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+        if (isset(Request::p()->get['filter_order_status_id'])) {
+            $url.= '&filter_order_status_id=' . Request::p()->get['filter_order_status_id'];
         }
         
-        if (isset($this->request->get['filter_total'])) {
-            $url.= '&filter_total=' . $this->request->get['filter_total'];
+        if (isset(Request::p()->get['filter_total'])) {
+            $url.= '&filter_total=' . Request::p()->get['filter_total'];
         }
         
-        if (isset($this->request->get['filter_date_added'])) {
-            $url.= '&filter_date_added=' . $this->request->get['filter_date_added'];
+        if (isset(Request::p()->get['filter_date_added'])) {
+            $url.= '&filter_date_added=' . Request::p()->get['filter_date_added'];
         }
         
-        if (isset($this->request->get['filter_date_modified'])) {
-            $url.= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
+        if (isset(Request::p()->get['filter_date_modified'])) {
+            $url.= '&filter_date_modified=' . Request::p()->get['filter_date_modified'];
         }
         
         if ($order == 'ASC') {
@@ -393,49 +393,49 @@ class Order extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_order']         = Url::link('sale/order', '' . '&sort=o.order_id' . $url, 'SSL');
-        $data['sort_customer']      = Url::link('sale/order', '' . '&sort=customer' . $url, 'SSL');
-        $data['sort_status']        = Url::link('sale/order', '' . '&sort=status' . $url, 'SSL');
-        $data['sort_total']         = Url::link('sale/order', '' . '&sort=o.total' . $url, 'SSL');
-        $data['sort_date_added']    = Url::link('sale/order', '' . '&sort=o.date_added' . $url, 'SSL');
-        $data['sort_date_modified'] = Url::link('sale/order', '' . '&sort=o.date_modified' . $url, 'SSL');
+        $data['sort_order']         = Url::link('sale/order', '' . 'sort=o.order_id' . $url, 'SSL');
+        $data['sort_customer']      = Url::link('sale/order', '' . 'sort=customer' . $url, 'SSL');
+        $data['sort_status']        = Url::link('sale/order', '' . 'sort=status' . $url, 'SSL');
+        $data['sort_total']         = Url::link('sale/order', '' . 'sort=o.total' . $url, 'SSL');
+        $data['sort_date_added']    = Url::link('sale/order', '' . 'sort=o.date_added' . $url, 'SSL');
+        $data['sort_date_modified'] = Url::link('sale/order', '' . 'sort=o.date_modified' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['filter_order_id'])) {
-            $url.= '&filter_order_id=' . $this->request->get['filter_order_id'];
+        if (isset(Request::p()->get['filter_order_id'])) {
+            $url.= '&filter_order_id=' . Request::p()->get['filter_order_id'];
         }
         
-        if (isset($this->request->get['filter_customer'])) {
-            $url.= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+        if (isset(Request::p()->get['filter_customer'])) {
+            $url.= '&filter_customer=' . urlencode(html_entity_decode(Request::p()->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
         
-        if (isset($this->request->get['filter_order_status_id'])) {
-            $url.= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+        if (isset(Request::p()->get['filter_order_status_id'])) {
+            $url.= '&filter_order_status_id=' . Request::p()->get['filter_order_status_id'];
         }
         
-        if (isset($this->request->get['filter_total'])) {
-            $url.= '&filter_total=' . $this->request->get['filter_total'];
+        if (isset(Request::p()->get['filter_total'])) {
+            $url.= '&filter_total=' . Request::p()->get['filter_total'];
         }
         
-        if (isset($this->request->get['filter_date_added'])) {
-            $url.= '&filter_date_added=' . $this->request->get['filter_date_added'];
+        if (isset(Request::p()->get['filter_date_added'])) {
+            $url.= '&filter_date_added=' . Request::p()->get['filter_date_added'];
         }
         
-        if (isset($this->request->get['filter_date_modified'])) {
-            $url.= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
+        if (isset(Request::p()->get['filter_date_modified'])) {
+            $url.= '&filter_date_modified=' . Request::p()->get['filter_date_modified'];
         }
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate(
@@ -608,64 +608,64 @@ class Order extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['filter_order_id'])) {
-            $url.= '&filter_order_id=' . $this->request->get['filter_order_id'];
+        if (isset(Request::p()->get['filter_order_id'])) {
+            $url.= '&filter_order_id=' . Request::p()->get['filter_order_id'];
         }
         
-        if (isset($this->request->get['filter_customer'])) {
-            $url.= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+        if (isset(Request::p()->get['filter_customer'])) {
+            $url.= '&filter_customer=' . urlencode(html_entity_decode(Request::p()->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
         }
         
-        if (isset($this->request->get['filter_order_status_id'])) {
-            $url.= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+        if (isset(Request::p()->get['filter_order_status_id'])) {
+            $url.= '&filter_order_status_id=' . Request::p()->get['filter_order_status_id'];
         }
         
-        if (isset($this->request->get['filter_total'])) {
-            $url.= '&filter_total=' . $this->request->get['filter_total'];
+        if (isset(Request::p()->get['filter_total'])) {
+            $url.= '&filter_total=' . Request::p()->get['filter_total'];
         }
         
-        if (isset($this->request->get['filter_date_added'])) {
-            $url.= '&filter_date_added=' . $this->request->get['filter_date_added'];
+        if (isset(Request::p()->get['filter_date_added'])) {
+            $url.= '&filter_date_added=' . Request::p()->get['filter_date_added'];
         }
         
-        if (isset($this->request->get['filter_date_modified'])) {
-            $url.= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
+        if (isset(Request::p()->get['filter_date_modified'])) {
+            $url.= '&filter_date_modified=' . Request::p()->get['filter_date_modified'];
         }
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'sale/order', $url);
         
-        if (!isset($this->request->get['order_id'])) {
+        if (!isset(Request::p()->get['order_id'])) {
             $data['action'] = Url::link('sale/order/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('sale/order/update', '' . '&order_id=' . $this->request->get['order_id'] . $url, 'SSL');
+            $data['action'] = Url::link('sale/order/update', '' . 'order_id=' . Request::p()->get['order_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('sale/order', '' . $url, 'SSL');
         
-        if (isset($this->request->get['order_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $order_info = SaleOrder::getOrder($this->request->get['order_id']);
+        if (isset(Request::p()->get['order_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $order_info = SaleOrder::getOrder(Request::p()->get['order_id']);
         }
         
-        if (isset($this->request->get['order_id'])) {
-            $data['order_id'] = $this->request->get['order_id'];
+        if (isset(Request::p()->get['order_id'])) {
+            $data['order_id'] = Request::p()->get['order_id'];
         } else {
             $data['order_id'] = 0;
         }
         
-        if (isset($this->request->post['store_id'])) {
-            $data['store_id'] = $this->request->post['store_id'];
+        if (isset(Request::p()->post['store_id'])) {
+            $data['store_id'] = Request::p()->post['store_id'];
         } elseif (!empty($order_info)) {
             $data['store_id'] = $order_info['store_id'];
         } else {
@@ -676,30 +676,30 @@ class Order extends Controller {
         
         $data['stores'] = SettingStore::getStores();
         
-        if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+        if (isset(Request::p()->server['HTTPS']) && ((Request::p()->server['HTTPS'] == 'on') || (Request::p()->server['HTTPS'] == '1'))) {
             $data['store_url'] = Config::get('https.public');
         } else {
             $data['store_url'] = Config::get('http.public');
         }
         
-        if (isset($this->request->post['customer'])) {
-            $data['customer'] = $this->request->post['customer'];
+        if (isset(Request::p()->post['customer'])) {
+            $data['customer'] = Request::p()->post['customer'];
         } elseif (!empty($order_info)) {
             $data['customer'] = $order_info['customer'];
         } else {
             $data['customer'] = '';
         }
         
-        if (isset($this->request->post['customer_id'])) {
-            $data['customer_id'] = $this->request->post['customer_id'];
+        if (isset(Request::p()->post['customer_id'])) {
+            $data['customer_id'] = Request::p()->post['customer_id'];
         } elseif (!empty($order_info)) {
             $data['customer_id'] = $order_info['customer_id'];
         } else {
             $data['customer_id'] = '';
         }
         
-        if (isset($this->request->post['customer_group_id'])) {
-            $data['customer_group_id'] = $this->request->post['customer_group_id'];
+        if (isset(Request::p()->post['customer_group_id'])) {
+            $data['customer_group_id'] = Request::p()->post['customer_group_id'];
         } elseif (!empty($order_info)) {
             $data['customer_group_id'] = $order_info['customer_group_id'];
         } else {
@@ -710,56 +710,56 @@ class Order extends Controller {
         
         $data['customer_groups'] = PeopleCustomerGroup::getCustomerGroups();
         
-        if (isset($this->request->post['firstname'])) {
-            $data['firstname'] = $this->request->post['firstname'];
+        if (isset(Request::p()->post['firstname'])) {
+            $data['firstname'] = Request::p()->post['firstname'];
         } elseif (!empty($order_info)) {
             $data['firstname'] = $order_info['firstname'];
         } else {
             $data['firstname'] = '';
         }
         
-        if (isset($this->request->post['lastname'])) {
-            $data['lastname'] = $this->request->post['lastname'];
+        if (isset(Request::p()->post['lastname'])) {
+            $data['lastname'] = Request::p()->post['lastname'];
         } elseif (!empty($order_info)) {
             $data['lastname'] = $order_info['lastname'];
         } else {
             $data['lastname'] = '';
         }
         
-        if (isset($this->request->post['email'])) {
-            $data['email'] = $this->request->post['email'];
+        if (isset(Request::p()->post['email'])) {
+            $data['email'] = Request::p()->post['email'];
         } elseif (!empty($order_info)) {
             $data['email'] = $order_info['email'];
         } else {
             $data['email'] = '';
         }
         
-        if (isset($this->request->post['telephone'])) {
-            $data['telephone'] = $this->request->post['telephone'];
+        if (isset(Request::p()->post['telephone'])) {
+            $data['telephone'] = Request::p()->post['telephone'];
         } elseif (!empty($order_info)) {
             $data['telephone'] = $order_info['telephone'];
         } else {
             $data['telephone'] = '';
         }
         
-        if (isset($this->request->post['affiliate_id'])) {
-            $data['affiliate_id'] = $this->request->post['affiliate_id'];
+        if (isset(Request::p()->post['affiliate_id'])) {
+            $data['affiliate_id'] = Request::p()->post['affiliate_id'];
         } elseif (!empty($order_info)) {
             $data['affiliate_id'] = $order_info['affiliate_id'];
         } else {
             $data['affiliate_id'] = '';
         }
         
-        if (isset($this->request->post['affiliate'])) {
-            $data['affiliate'] = $this->request->post['affiliate'];
+        if (isset(Request::p()->post['affiliate'])) {
+            $data['affiliate'] = Request::p()->post['affiliate'];
         } elseif (!empty($order_info)) {
             $data['affiliate'] = ($order_info['affiliate_id'] ? $order_info['affiliate_firstname'] . ' ' . $order_info['affiliate_lastname'] : '');
         } else {
             $data['affiliate'] = '';
         }
         
-        if (isset($this->request->post['order_status_id'])) {
-            $data['order_status_id'] = $this->request->post['order_status_id'];
+        if (isset(Request::p()->post['order_status_id'])) {
+            $data['order_status_id'] = Request::p()->post['order_status_id'];
         } elseif (!empty($order_info)) {
             $data['order_status_id'] = $order_info['order_status_id'];
         } else {
@@ -770,8 +770,8 @@ class Order extends Controller {
         
         $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
-        if (isset($this->request->post['comment'])) {
-            $data['comment'] = $this->request->post['comment'];
+        if (isset(Request::p()->post['comment'])) {
+            $data['comment'] = Request::p()->post['comment'];
         } elseif (!empty($order_info)) {
             $data['comment'] = $order_info['comment'];
         } else {
@@ -780,112 +780,112 @@ class Order extends Controller {
         
         Theme::model('people/customer');
         
-        if (isset($this->request->post['customer_id'])) {
-            $data['addresses'] = PeopleCustomer::getAddresses($this->request->post['customer_id']);
+        if (isset(Request::p()->post['customer_id'])) {
+            $data['addresses'] = PeopleCustomer::getAddresses(Request::p()->post['customer_id']);
         } elseif (!empty($order_info)) {
             $data['addresses'] = PeopleCustomer::getAddresses($order_info['customer_id']);
         } else {
             $data['addresses'] = array();
         }
         
-        if (isset($this->request->post['payment_firstname'])) {
-            $data['payment_firstname'] = $this->request->post['payment_firstname'];
+        if (isset(Request::p()->post['payment_firstname'])) {
+            $data['payment_firstname'] = Request::p()->post['payment_firstname'];
         } elseif (!empty($order_info)) {
             $data['payment_firstname'] = $order_info['payment_firstname'];
         } else {
             $data['payment_firstname'] = '';
         }
         
-        if (isset($this->request->post['payment_lastname'])) {
-            $data['payment_lastname'] = $this->request->post['payment_lastname'];
+        if (isset(Request::p()->post['payment_lastname'])) {
+            $data['payment_lastname'] = Request::p()->post['payment_lastname'];
         } elseif (!empty($order_info)) {
             $data['payment_lastname'] = $order_info['payment_lastname'];
         } else {
             $data['payment_lastname'] = '';
         }
         
-        if (isset($this->request->post['payment_company'])) {
-            $data['payment_company'] = $this->request->post['payment_company'];
+        if (isset(Request::p()->post['payment_company'])) {
+            $data['payment_company'] = Request::p()->post['payment_company'];
         } elseif (!empty($order_info)) {
             $data['payment_company'] = $order_info['payment_company'];
         } else {
             $data['payment_company'] = '';
         }
         
-        if (isset($this->request->post['payment_company_id'])) {
-            $data['payment_company_id'] = $this->request->post['payment_company_id'];
+        if (isset(Request::p()->post['payment_company_id'])) {
+            $data['payment_company_id'] = Request::p()->post['payment_company_id'];
         } elseif (!empty($order_info)) {
             $data['payment_company_id'] = $order_info['payment_company_id'];
         } else {
             $data['payment_company_id'] = '';
         }
         
-        if (isset($this->request->post['payment_tax_id'])) {
-            $data['payment_tax_id'] = $this->request->post['payment_tax_id'];
+        if (isset(Request::p()->post['payment_tax_id'])) {
+            $data['payment_tax_id'] = Request::p()->post['payment_tax_id'];
         } elseif (!empty($order_info)) {
             $data['payment_tax_id'] = $order_info['payment_tax_id'];
         } else {
             $data['payment_tax_id'] = '';
         }
         
-        if (isset($this->request->post['payment_address_1'])) {
-            $data['payment_address_1'] = $this->request->post['payment_address_1'];
+        if (isset(Request::p()->post['payment_address_1'])) {
+            $data['payment_address_1'] = Request::p()->post['payment_address_1'];
         } elseif (!empty($order_info)) {
             $data['payment_address_1'] = $order_info['payment_address_1'];
         } else {
             $data['payment_address_1'] = '';
         }
         
-        if (isset($this->request->post['payment_address_2'])) {
-            $data['payment_address_2'] = $this->request->post['payment_address_2'];
+        if (isset(Request::p()->post['payment_address_2'])) {
+            $data['payment_address_2'] = Request::p()->post['payment_address_2'];
         } elseif (!empty($order_info)) {
             $data['payment_address_2'] = $order_info['payment_address_2'];
         } else {
             $data['payment_address_2'] = '';
         }
         
-        if (isset($this->request->post['payment_city'])) {
-            $data['payment_city'] = $this->request->post['payment_city'];
+        if (isset(Request::p()->post['payment_city'])) {
+            $data['payment_city'] = Request::p()->post['payment_city'];
         } elseif (!empty($order_info)) {
             $data['payment_city'] = $order_info['payment_city'];
         } else {
             $data['payment_city'] = '';
         }
         
-        if (isset($this->request->post['payment_postcode'])) {
-            $data['payment_postcode'] = $this->request->post['payment_postcode'];
+        if (isset(Request::p()->post['payment_postcode'])) {
+            $data['payment_postcode'] = Request::p()->post['payment_postcode'];
         } elseif (!empty($order_info)) {
             $data['payment_postcode'] = $order_info['payment_postcode'];
         } else {
             $data['payment_postcode'] = '';
         }
         
-        if (isset($this->request->post['payment_country_id'])) {
-            $data['payment_country_id'] = $this->request->post['payment_country_id'];
+        if (isset(Request::p()->post['payment_country_id'])) {
+            $data['payment_country_id'] = Request::p()->post['payment_country_id'];
         } elseif (!empty($order_info)) {
             $data['payment_country_id'] = $order_info['payment_country_id'];
         } else {
             $data['payment_country_id'] = '';
         }
         
-        if (isset($this->request->post['payment_zone_id'])) {
-            $data['payment_zone_id'] = $this->request->post['payment_zone_id'];
+        if (isset(Request::p()->post['payment_zone_id'])) {
+            $data['payment_zone_id'] = Request::p()->post['payment_zone_id'];
         } elseif (!empty($order_info)) {
             $data['payment_zone_id'] = $order_info['payment_zone_id'];
         } else {
             $data['payment_zone_id'] = '';
         }
         
-        if (isset($this->request->post['payment_method'])) {
-            $data['payment_method'] = $this->request->post['payment_method'];
+        if (isset(Request::p()->post['payment_method'])) {
+            $data['payment_method'] = Request::p()->post['payment_method'];
         } elseif (!empty($order_info)) {
             $data['payment_method'] = $order_info['payment_method'];
         } else {
             $data['payment_method'] = '';
         }
         
-        if (isset($this->request->post['payment_code'])) {
-            $data['payment_code'] = $this->request->post['payment_code'];
+        if (isset(Request::p()->post['payment_code'])) {
+            $data['payment_code'] = Request::p()->post['payment_code'];
         } elseif (!empty($order_info)) {
             $data['payment_code'] = $order_info['payment_code'];
         } else {
@@ -894,72 +894,72 @@ class Order extends Controller {
 
         $data['payments'] = SaleOrder::getPaymentModules();
         
-        if (isset($this->request->post['shipping_firstname'])) {
-            $data['shipping_firstname'] = $this->request->post['shipping_firstname'];
+        if (isset(Request::p()->post['shipping_firstname'])) {
+            $data['shipping_firstname'] = Request::p()->post['shipping_firstname'];
         } elseif (!empty($order_info)) {
             $data['shipping_firstname'] = $order_info['shipping_firstname'];
         } else {
             $data['shipping_firstname'] = '';
         }
         
-        if (isset($this->request->post['shipping_lastname'])) {
-            $data['shipping_lastname'] = $this->request->post['shipping_lastname'];
+        if (isset(Request::p()->post['shipping_lastname'])) {
+            $data['shipping_lastname'] = Request::p()->post['shipping_lastname'];
         } elseif (!empty($order_info)) {
             $data['shipping_lastname'] = $order_info['shipping_lastname'];
         } else {
             $data['shipping_lastname'] = '';
         }
         
-        if (isset($this->request->post['shipping_company'])) {
-            $data['shipping_company'] = $this->request->post['shipping_company'];
+        if (isset(Request::p()->post['shipping_company'])) {
+            $data['shipping_company'] = Request::p()->post['shipping_company'];
         } elseif (!empty($order_info)) {
             $data['shipping_company'] = $order_info['shipping_company'];
         } else {
             $data['shipping_company'] = '';
         }
         
-        if (isset($this->request->post['shipping_address_1'])) {
-            $data['shipping_address_1'] = $this->request->post['shipping_address_1'];
+        if (isset(Request::p()->post['shipping_address_1'])) {
+            $data['shipping_address_1'] = Request::p()->post['shipping_address_1'];
         } elseif (!empty($order_info)) {
             $data['shipping_address_1'] = $order_info['shipping_address_1'];
         } else {
             $data['shipping_address_1'] = '';
         }
         
-        if (isset($this->request->post['shipping_address_2'])) {
-            $data['shipping_address_2'] = $this->request->post['shipping_address_2'];
+        if (isset(Request::p()->post['shipping_address_2'])) {
+            $data['shipping_address_2'] = Request::p()->post['shipping_address_2'];
         } elseif (!empty($order_info)) {
             $data['shipping_address_2'] = $order_info['shipping_address_2'];
         } else {
             $data['shipping_address_2'] = '';
         }
         
-        if (isset($this->request->post['shipping_city'])) {
-            $data['shipping_city'] = $this->request->post['shipping_city'];
+        if (isset(Request::p()->post['shipping_city'])) {
+            $data['shipping_city'] = Request::p()->post['shipping_city'];
         } elseif (!empty($order_info)) {
             $data['shipping_city'] = $order_info['shipping_city'];
         } else {
             $data['shipping_city'] = '';
         }
         
-        if (isset($this->request->post['shipping_postcode'])) {
-            $data['shipping_postcode'] = $this->request->post['shipping_postcode'];
+        if (isset(Request::p()->post['shipping_postcode'])) {
+            $data['shipping_postcode'] = Request::p()->post['shipping_postcode'];
         } elseif (!empty($order_info)) {
             $data['shipping_postcode'] = $order_info['shipping_postcode'];
         } else {
             $data['shipping_postcode'] = '';
         }
         
-        if (isset($this->request->post['shipping_country_id'])) {
-            $data['shipping_country_id'] = $this->request->post['shipping_country_id'];
+        if (isset(Request::p()->post['shipping_country_id'])) {
+            $data['shipping_country_id'] = Request::p()->post['shipping_country_id'];
         } elseif (!empty($order_info)) {
             $data['shipping_country_id'] = $order_info['shipping_country_id'];
         } else {
             $data['shipping_country_id'] = '';
         }
         
-        if (isset($this->request->post['shipping_zone_id'])) {
-            $data['shipping_zone_id'] = $this->request->post['shipping_zone_id'];
+        if (isset(Request::p()->post['shipping_zone_id'])) {
+            $data['shipping_zone_id'] = Request::p()->post['shipping_zone_id'];
         } elseif (!empty($order_info)) {
             $data['shipping_zone_id'] = $order_info['shipping_zone_id'];
         } else {
@@ -970,16 +970,16 @@ class Order extends Controller {
         
         $data['countries'] = LocaleCountry::getCountries();
         
-        if (isset($this->request->post['shipping_method'])) {
-            $data['shipping_method'] = $this->request->post['shipping_method'];
+        if (isset(Request::p()->post['shipping_method'])) {
+            $data['shipping_method'] = Request::p()->post['shipping_method'];
         } elseif (!empty($order_info)) {
             $data['shipping_method'] = $order_info['shipping_method'];
         } else {
             $data['shipping_method'] = '';
         }
         
-        if (isset($this->request->post['shipping_code'])) {
-            $data['shipping_code'] = $this->request->post['shipping_code'];
+        if (isset(Request::p()->post['shipping_code'])) {
+            $data['shipping_code'] = Request::p()->post['shipping_code'];
         } elseif (!empty($order_info)) {
             $data['shipping_code'] = $order_info['shipping_code'];
         } else {
@@ -988,10 +988,10 @@ class Order extends Controller {
 
         $data['shippings'] = SaleOrder::getShippingModules();
         
-        if (isset($this->request->post['order_product'])) {
-            $order_products = $this->request->post['order_product'];
-        } elseif (isset($this->request->get['order_id'])) {
-            $order_products = SaleOrder::getOrderProducts($this->request->get['order_id']);
+        if (isset(Request::p()->post['order_product'])) {
+            $order_products = Request::p()->post['order_product'];
+        } elseif (isset(Request::p()->get['order_id'])) {
+            $order_products = SaleOrder::getOrderProducts(Request::p()->get['order_id']);
         } else {
             $order_products = array();
         }
@@ -1005,16 +1005,16 @@ class Order extends Controller {
         foreach ($order_products as $order_product) {
             if (isset($order_product['order_option'])) {
                 $order_option = $order_product['order_option'];
-            } elseif (isset($this->request->get['order_id'])) {
-                $order_option = SaleOrder::getOrderOptions($this->request->get['order_id'], $order_product['order_product_id']);
+            } elseif (isset(Request::p()->get['order_id'])) {
+                $order_option = SaleOrder::getOrderOptions(Request::p()->get['order_id'], $order_product['order_product_id']);
             } else {
                 $order_option = array();
             }
             
             if (isset($order_product['order_download'])) {
                 $order_download = $order_product['order_download'];
-            } elseif (isset($this->request->get['order_id'])) {
-                $order_download = SaleOrder::getOrderDownloads($this->request->get['order_id'], $order_product['order_product_id']);
+            } elseif (isset(Request::p()->get['order_id'])) {
+                $order_download = SaleOrder::getOrderDownloads(Request::p()->get['order_id'], $order_product['order_product_id']);
             } else {
                 $order_download = array();
             }
@@ -1034,10 +1034,10 @@ class Order extends Controller {
             );
         }
         
-        if (isset($this->request->post['order_gift_card'])) {
-            $data['order_gift_cards'] = $this->request->post['order_gift_card'];
-        } elseif (isset($this->request->get['order_id'])) {
-            $data['order_gift_cards'] = SaleOrder::getOrderGiftcards($this->request->get['order_id']);
+        if (isset(Request::p()->post['order_gift_card'])) {
+            $data['order_gift_cards'] = Request::p()->post['order_gift_card'];
+        } elseif (isset(Request::p()->get['order_id'])) {
+            $data['order_gift_cards'] = SaleOrder::getOrderGiftcards(Request::p()->get['order_id']);
         } else {
             $data['order_gift_cards'] = array();
         }
@@ -1046,10 +1046,10 @@ class Order extends Controller {
         
         $data['gift_card_themes'] = SaleGiftCardTheme::getGiftcardThemes();
         
-        if (isset($this->request->post['order_total'])) {
-            $data['order_totals'] = $this->request->post['order_total'];
-        } elseif (isset($this->request->get['order_id'])) {
-            $data['order_totals'] = SaleOrder::getOrderTotals($this->request->get['order_id']);
+        if (isset(Request::p()->post['order_total'])) {
+            $data['order_totals'] = Request::p()->post['order_total'];
+        } elseif (isset(Request::p()->get['order_id'])) {
+            $data['order_totals'] = SaleOrder::getOrderTotals(Request::p()->get['order_id']);
         } else {
             $data['order_totals'] = array();
         }
@@ -1068,71 +1068,71 @@ class Order extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if ((Encode::strlen($this->request->post['firstname']) < 1) || (Encode::strlen($this->request->post['firstname']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['firstname']) < 1) || (Encode::strlen(Request::p()->post['firstname']) > 32)) {
             $this->error['firstname'] = Lang::get('lang_error_firstname');
         }
         
-        if ((Encode::strlen($this->request->post['lastname']) < 1) || (Encode::strlen($this->request->post['lastname']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['lastname']) < 1) || (Encode::strlen(Request::p()->post['lastname']) > 32)) {
             $this->error['lastname'] = Lang::get('lang_error_lastname');
         }
         
-        if ((Encode::strlen($this->request->post['email']) > 96) || (!preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['email']))) {
+        if ((Encode::strlen(Request::p()->post['email']) > 96) || (!preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', Request::p()->post['email']))) {
             $this->error['email'] = Lang::get('lang_error_email');
         }
         
-        if ((Encode::strlen($this->request->post['telephone']) < 3) || (Encode::strlen($this->request->post['telephone']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['telephone']) < 3) || (Encode::strlen(Request::p()->post['telephone']) > 32)) {
             $this->error['telephone'] = Lang::get('lang_error_telephone');
         }
         
-        if ((Encode::strlen($this->request->post['payment_firstname']) < 1) || (Encode::strlen($this->request->post['payment_firstname']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['payment_firstname']) < 1) || (Encode::strlen(Request::p()->post['payment_firstname']) > 32)) {
             $this->error['payment_firstname'] = Lang::get('lang_error_firstname');
         }
         
-        if ((Encode::strlen($this->request->post['payment_lastname']) < 1) || (Encode::strlen($this->request->post['payment_lastname']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['payment_lastname']) < 1) || (Encode::strlen(Request::p()->post['payment_lastname']) > 32)) {
             $this->error['payment_lastname'] = Lang::get('lang_error_lastname');
         }
         
-        if ((Encode::strlen($this->request->post['payment_address_1']) < 3) || (Encode::strlen($this->request->post['payment_address_1']) > 128)) {
+        if ((Encode::strlen(Request::p()->post['payment_address_1']) < 3) || (Encode::strlen(Request::p()->post['payment_address_1']) > 128)) {
             $this->error['payment_address_1'] = Lang::get('lang_error_address_1');
         }
         
-        if ((Encode::strlen($this->request->post['payment_city']) < 3) || (Encode::strlen($this->request->post['payment_city']) > 128)) {
+        if ((Encode::strlen(Request::p()->post['payment_city']) < 3) || (Encode::strlen(Request::p()->post['payment_city']) > 128)) {
             $this->error['payment_city'] = Lang::get('lang_error_city');
         }
         
         Theme::model('locale/country');
         
-        $country_info = LocaleCountry::getCountry($this->request->post['payment_country_id']);
+        $country_info = LocaleCountry::getCountry(Request::p()->post['payment_country_id']);
         
         if ($country_info) {
-            if ($country_info['postcode_required'] && (Encode::strlen($this->request->post['payment_postcode']) < 2) || (Encode::strlen($this->request->post['payment_postcode']) > 10)) {
+            if ($country_info['postcode_required'] && (Encode::strlen(Request::p()->post['payment_postcode']) < 2) || (Encode::strlen(Request::p()->post['payment_postcode']) > 10)) {
                 $this->error['payment_postcode'] = Lang::get('lang_error_postcode');
             }
             
-            if (Config::get('config_vat') && $this->request->post['payment_tax_id'] && ($this->vat->validate($country_info['iso_code_2'], $this->request->post['payment_tax_id']) == 'invalid')) {
+            if (Config::get('config_vat') && Request::p()->post['payment_tax_id'] && ($this->vat->validate($country_info['iso_code_2'], Request::p()->post['payment_tax_id']) == 'invalid')) {
                 $this->error['payment_tax_id'] = Lang::get('lang_error_vat');
             }
         }
         
-        if ($this->request->post['payment_country_id'] == '') {
+        if (Request::p()->post['payment_country_id'] == '') {
             $this->error['payment_country'] = Lang::get('lang_error_country');
         }
         
-        if (!isset($this->request->post['payment_zone_id']) || $this->request->post['payment_zone_id'] == '') {
+        if (!isset(Request::p()->post['payment_zone_id']) || Request::p()->post['payment_zone_id'] == '') {
             $this->error['payment_zone'] = Lang::get('lang_error_zone');
         }
         
-        if (!isset($this->request->post['payment_method']) || $this->request->post['payment_method'] == '') {
+        if (!isset(Request::p()->post['payment_method']) || Request::p()->post['payment_method'] == '') {
             $this->error['payment_method'] = Lang::get('lang_error_payment');
         }
         
         // Check if any products require shipping
         $shipping = false;
         
-        if (isset($this->request->post['order_product'])) {
+        if (isset(Request::p()->post['order_product'])) {
             Theme::model('catalog/product');
             
-            foreach ($this->request->post['order_product'] as $order_product) {
+            foreach (Request::p()->post['order_product'] as $order_product) {
                 $product_info = CatalogProduct::getProduct($order_product['product_id']);
                 
                 if ($product_info && $product_info['shipping']) {
@@ -1142,39 +1142,39 @@ class Order extends Controller {
         }
         
         if ($shipping) {
-            if ((Encode::strlen($this->request->post['shipping_firstname']) < 1) || (Encode::strlen($this->request->post['shipping_firstname']) > 32)) {
+            if ((Encode::strlen(Request::p()->post['shipping_firstname']) < 1) || (Encode::strlen(Request::p()->post['shipping_firstname']) > 32)) {
                 $this->error['shipping_firstname'] = Lang::get('lang_error_firstname');
             }
             
-            if ((Encode::strlen($this->request->post['shipping_lastname']) < 1) || (Encode::strlen($this->request->post['shipping_lastname']) > 32)) {
+            if ((Encode::strlen(Request::p()->post['shipping_lastname']) < 1) || (Encode::strlen(Request::p()->post['shipping_lastname']) > 32)) {
                 $this->error['shipping_lastname'] = Lang::get('lang_error_lastname');
             }
             
-            if ((Encode::strlen($this->request->post['shipping_address_1']) < 3) || (Encode::strlen($this->request->post['shipping_address_1']) > 128)) {
+            if ((Encode::strlen(Request::p()->post['shipping_address_1']) < 3) || (Encode::strlen(Request::p()->post['shipping_address_1']) > 128)) {
                 $this->error['shipping_address_1'] = Lang::get('lang_error_address_1');
             }
             
-            if ((Encode::strlen($this->request->post['shipping_city']) < 3) || (Encode::strlen($this->request->post['shipping_city']) > 128)) {
+            if ((Encode::strlen(Request::p()->post['shipping_city']) < 3) || (Encode::strlen(Request::p()->post['shipping_city']) > 128)) {
                 $this->error['shipping_city'] = Lang::get('lang_error_city');
             }
             
             Theme::model('locale/country');
             
-            $country_info = LocaleCountry::getCountry($this->request->post['shipping_country_id']);
+            $country_info = LocaleCountry::getCountry(Request::p()->post['shipping_country_id']);
             
-            if ($country_info && $country_info['postcode_required'] && (Encode::strlen($this->request->post['shipping_postcode']) < 2) || (Encode::strlen($this->request->post['shipping_postcode']) > 10)) {
+            if ($country_info && $country_info['postcode_required'] && (Encode::strlen(Request::p()->post['shipping_postcode']) < 2) || (Encode::strlen(Request::p()->post['shipping_postcode']) > 10)) {
                 $this->error['shipping_postcode'] = Lang::get('lang_error_postcode');
             }
             
-            if ($this->request->post['shipping_country_id'] == '') {
+            if (Request::p()->post['shipping_country_id'] == '') {
                 $this->error['shipping_country'] = Lang::get('lang_error_country');
             }
             
-            if (!isset($this->request->post['shipping_zone_id']) || $this->request->post['shipping_zone_id'] == '') {
+            if (!isset(Request::p()->post['shipping_zone_id']) || Request::p()->post['shipping_zone_id'] == '') {
                 $this->error['shipping_zone'] = Lang::get('lang_error_zone');
             }
             
-            if (!$this->request->post['shipping_method']) {
+            if (!Request::p()->post['shipping_method']) {
                 $this->error['shipping_method'] = Lang::get('lang_error_shipping');
             }
         }
@@ -1203,7 +1203,7 @@ class Order extends Controller {
         
         Theme::model('locale/country');
         
-        $country_info = LocaleCountry::getCountry($this->request->get['country_id']);
+        $country_info = LocaleCountry::getCountry(Request::p()->get['country_id']);
         
         if ($country_info) {
             Theme::model('locale/zone');
@@ -1215,7 +1215,7 @@ class Order extends Controller {
                 'iso_code_3'        => $country_info['iso_code_3'], 
                 'address_format'    => $country_info['address_format'], 
                 'postcode_required' => $country_info['postcode_required'], 
-                'zone'              => LocaleZone::getZonesByCountryId($this->request->get['country_id']), 
+                'zone'              => LocaleZone::getZonesByCountryId(Request::p()->get['country_id']), 
                 'status'            => $country_info['status']
             );
         }
@@ -1228,8 +1228,8 @@ class Order extends Controller {
     public function info() {
         Theme::model('sale/order');
         
-        if (isset($this->request->get['order_id'])) {
-            $order_id = $this->request->get['order_id'];
+        if (isset(Request::p()->get['order_id'])) {
+            $order_id = Request::p()->get['order_id'];
         } else {
             $order_id = 0;
         }
@@ -1249,48 +1249,48 @@ class Order extends Controller {
             
             $url = '';
             
-            if (isset($this->request->get['filter_order_id'])) {
-                $url.= '&filter_order_id=' . $this->request->get['filter_order_id'];
+            if (isset(Request::p()->get['filter_order_id'])) {
+                $url.= '&filter_order_id=' . Request::p()->get['filter_order_id'];
             }
             
-            if (isset($this->request->get['filter_customer'])) {
-                $url.= '&filter_customer=' . urlencode(html_entity_decode($this->request->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->get['filter_customer'])) {
+                $url.= '&filter_customer=' . urlencode(html_entity_decode(Request::p()->get['filter_customer'], ENT_QUOTES, 'UTF-8'));
             }
             
-            if (isset($this->request->get['filter_order_status_id'])) {
-                $url.= '&filter_order_status_id=' . $this->request->get['filter_order_status_id'];
+            if (isset(Request::p()->get['filter_order_status_id'])) {
+                $url.= '&filter_order_status_id=' . Request::p()->get['filter_order_status_id'];
             }
             
-            if (isset($this->request->get['filter_total'])) {
-                $url.= '&filter_total=' . $this->request->get['filter_total'];
+            if (isset(Request::p()->get['filter_total'])) {
+                $url.= '&filter_total=' . Request::p()->get['filter_total'];
             }
             
-            if (isset($this->request->get['filter_date_added'])) {
-                $url.= '&filter_date_added=' . $this->request->get['filter_date_added'];
+            if (isset(Request::p()->get['filter_date_added'])) {
+                $url.= '&filter_date_added=' . Request::p()->get['filter_date_added'];
             }
             
-            if (isset($this->request->get['filter_date_modified'])) {
-                $url.= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
+            if (isset(Request::p()->get['filter_date_modified'])) {
+                $url.= '&filter_date_modified=' . Request::p()->get['filter_date_modified'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Breadcrumb::add('lang_heading_title', 'sale/order', $url);
             
-            $data['invoice'] = Url::link('sale/order/invoice', '' . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
+            $data['invoice'] = Url::link('sale/order/invoice', '' . 'order_id=' . (int)Request::p()->get['order_id'], 'SSL');
             $data['cancel']  = Url::link('sale/order', '' . $url, 'SSL');
             
-            $data['order_id'] = $this->request->get['order_id'];
+            $data['order_id'] = Request::p()->get['order_id'];
             
             if ($order_info['invoice_no']) {
                 $data['invoice_no'] = $order_info['invoice_prefix'] . $order_info['invoice_no'];
@@ -1304,7 +1304,7 @@ class Order extends Controller {
             $data['lastname']   = $order_info['lastname'];
             
             if ($order_info['customer_id']) {
-                $data['customer'] = Url::link('people/customer/update', '' . '&customer_id=' . $order_info['customer_id'], 'SSL');
+                $data['customer'] = Url::link('people/customer/update', '' . 'customer_id=' . $order_info['customer_id'], 'SSL');
             } else {
                 $data['customer'] = '';
             }
@@ -1334,20 +1334,20 @@ class Order extends Controller {
             
             Theme::model('people/customer');
             
-            $data['credit_total']        = PeopleCustomer::getTotalCreditsByOrderId($this->request->get['order_id']);
+            $data['credit_total']        = PeopleCustomer::getTotalCreditsByOrderId(Request::p()->get['order_id']);
             $data['reward']              = $order_info['reward'];
-            $data['reward_total']        = PeopleCustomer::getTotalCustomerRewardsByOrderId($this->request->get['order_id']);
+            $data['reward_total']        = PeopleCustomer::getTotalCustomerRewardsByOrderId(Request::p()->get['order_id']);
             $data['affiliate_firstname'] = $order_info['affiliate_firstname'];
             $data['affiliate_lastname']  = $order_info['affiliate_lastname'];
             
             if ($order_info['affiliate_id']) {
-                $data['affiliate'] = Url::link('people/customer/update', '' . '&customer_id=' . $order_info['affiliate_id'], 'SSL');
+                $data['affiliate'] = Url::link('people/customer/update', '' . 'customer_id=' . $order_info['affiliate_id'], 'SSL');
             } else {
                 $data['affiliate'] = '';
             }
             
             $data['commission']       = Currency::format($order_info['commission'], $order_info['currency_code'], $order_info['currency_value']);
-            $data['commission_total'] = PeopleCustomer::getTotalCommissionsByOrderId($this->request->get['order_id']);
+            $data['commission_total'] = PeopleCustomer::getTotalCommissionsByOrderId(Request::p()->get['order_id']);
             
             Theme::model('locale/order_status');
             
@@ -1390,12 +1390,12 @@ class Order extends Controller {
             
             $data['products'] = array();
             
-            $products = SaleOrder::getOrderProducts($this->request->get['order_id']);
+            $products = SaleOrder::getOrderProducts(Request::p()->get['order_id']);
             
             foreach ($products as $product) {
                 $option_data = array();
                 
-                $options = SaleOrder::getOrderOptions($this->request->get['order_id'], $product['order_product_id']);
+                $options = SaleOrder::getOrderOptions(Request::p()->get['order_id'], $product['order_product_id']);
                 
                 foreach ($options as $option) {
                     if ($option['type'] != 'file') {
@@ -1409,7 +1409,7 @@ class Order extends Controller {
                             'name'  => $option['name'], 
                             'value' => Encode::substr($option['value'], 0, Encode::strrpos($option['value'], '.')), 
                             'type'  => $option['type'], 
-                            'href'  => Url::link('sale/order/download', '' . '&order_id=' . $this->request->get['order_id'] . '&order_option_id=' . $option['order_option_id'], 'SSL')
+                            'href'  => Url::link('sale/order/download', '' . 'order_id=' . Request::p()->get['order_id'] . '&order_option_id=' . $option['order_option_id'], 'SSL')
                         );
                     }
                 }
@@ -1423,28 +1423,28 @@ class Order extends Controller {
                     'quantity'         => $product['quantity'], 
                     'price'            => Currency::format($product['price'] + (Config::get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']), 
                     'total'            => Currency::format($product['total'] + (Config::get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']), 
-                    'href'             => Url::link('catalog/product/update', '' . '&product_id=' . $product['product_id'], 'SSL')
+                    'href'             => Url::link('catalog/product/update', '' . 'product_id=' . $product['product_id'], 'SSL')
                 );
             }
             
             $data['gift_cards'] = array();
             
-            $gift_cards = SaleOrder::getOrderGiftcards($this->request->get['order_id']);
+            $gift_cards = SaleOrder::getOrderGiftcards(Request::p()->get['order_id']);
             
             foreach ($gift_cards as $gift_card) {
                 $data['gift_cards'][] = array(
                     'description' => $gift_card['description'], 
                     'amount'      => Currency::format($gift_card['amount'], $order_info['currency_code'], $order_info['currency_value']), 
-                    'href'        => Url::link('sale/gift_card/update', '' . '&gift_card_id=' . $gift_card['gift_card_id'], 'SSL')
+                    'href'        => Url::link('sale/gift_card/update', '' . 'gift_card_id=' . $gift_card['gift_card_id'], 'SSL')
                 );
             }
             
-            $data['totals'] = SaleOrder::getOrderTotals($this->request->get['order_id']);
+            $data['totals'] = SaleOrder::getOrderTotals(Request::p()->get['order_id']);
             
             $data['downloads'] = array();
             
             foreach ($products as $product) {
-                $results = SaleOrder::getOrderDownloads($this->request->get['order_id'], $product['order_product_id']);
+                $results = SaleOrder::getOrderDownloads(Request::p()->get['order_id'], $product['order_product_id']);
                 
                 foreach ($results as $result) {
                     $data['downloads'][] = array(
@@ -1696,10 +1696,10 @@ class Order extends Controller {
         
         if (!User::hasPermission('modify', 'sale/order')) {
             $json['error'] = Lang::get('lang_error_permission');
-        } elseif (isset($this->request->get['order_id'])) {
+        } elseif (isset(Request::p()->get['order_id'])) {
             Theme::model('sale/order');
             
-            $invoice_no = SaleOrder::createInvoiceNo($this->request->get['order_id']);
+            $invoice_no = SaleOrder::createInvoiceNo(Request::p()->get['order_id']);
             
             if ($invoice_no) {
                 $json['invoice_no'] = $invoice_no;
@@ -1720,18 +1720,18 @@ class Order extends Controller {
         
         if (!User::hasPermission('modify', 'sale/order')) {
             $json['error'] = Lang::get('lang_error_permission');
-        } elseif (isset($this->request->get['order_id'])) {
+        } elseif (isset(Request::p()->get['order_id'])) {
             Theme::model('sale/order');
             
-            $order_info = SaleOrder::getOrder($this->request->get['order_id']);
+            $order_info = SaleOrder::getOrder(Request::p()->get['order_id']);
             
             if ($order_info && $order_info['customer_id']) {
                 Theme::model('people/customer');
                 
-                $credit_total = PeopleCustomer::getTotalCreditsByOrderId($this->request->get['order_id']);
+                $credit_total = PeopleCustomer::getTotalCreditsByOrderId(Request::p()->get['order_id']);
                 
                 if (!$credit_total) {
-                    PeopleCustomer::addCredit($order_info['customer_id'], Lang::get('lang_text_order_id') . ' #' . $this->request->get['order_id'], $order_info['total'], $this->request->get['order_id']);
+                    PeopleCustomer::addCredit($order_info['customer_id'], Lang::get('lang_text_order_id') . ' #' . Request::p()->get['order_id'], $order_info['total'], Request::p()->get['order_id']);
                     
                     $json['success'] = Lang::get('lang_text_credit_added');
                 } else {
@@ -1752,15 +1752,15 @@ class Order extends Controller {
         
         if (!User::hasPermission('modify', 'sale/order')) {
             $json['error'] = Lang::get('lang_error_permission');
-        } elseif (isset($this->request->get['order_id'])) {
+        } elseif (isset(Request::p()->get['order_id'])) {
             Theme::model('sale/order');
             
-            $order_info = SaleOrder::getOrder($this->request->get['order_id']);
+            $order_info = SaleOrder::getOrder(Request::p()->get['order_id']);
             
             if ($order_info && $order_info['customer_id']) {
                 Theme::model('people/customer');
                 
-                PeopleCustomer::deleteCredit($this->request->get['order_id']);
+                PeopleCustomer::deleteCredit(Request::p()->get['order_id']);
                 
                 $json['success'] = Lang::get('lang_text_credit_removed');
             } else {
@@ -1780,18 +1780,18 @@ class Order extends Controller {
         
         if (!User::hasPermission('modify', 'sale/order')) {
             $json['error'] = Lang::get('lang_error_permission');
-        } elseif (isset($this->request->get['order_id'])) {
+        } elseif (isset(Request::p()->get['order_id'])) {
             Theme::model('sale/order');
             
-            $order_info = SaleOrder::getOrder($this->request->get['order_id']);
+            $order_info = SaleOrder::getOrder(Request::p()->get['order_id']);
             
             if ($order_info && $order_info['customer_id']) {
                 Theme::model('people/customer');
                 
-                $reward_total = PeopleCustomer::getTotalCustomerRewardsByOrderId($this->request->get['order_id']);
+                $reward_total = PeopleCustomer::getTotalCustomerRewardsByOrderId(Request::p()->get['order_id']);
                 
                 if (!$reward_total) {
-                    PeopleCustomer::addReward($order_info['customer_id'], Lang::get('lang_text_order_id') . ' #' . $this->request->get['order_id'], $order_info['reward'], $this->request->get['order_id']);
+                    PeopleCustomer::addReward($order_info['customer_id'], Lang::get('lang_text_order_id') . ' #' . Request::p()->get['order_id'], $order_info['reward'], Request::p()->get['order_id']);
                     
                     $json['success'] = Lang::get('lang_text_reward_added');
                 } else {
@@ -1814,15 +1814,15 @@ class Order extends Controller {
         
         if (!User::hasPermission('modify', 'sale/order')) {
             $json['error'] = Lang::get('lang_error_permission');
-        } elseif (isset($this->request->get['order_id'])) {
+        } elseif (isset(Request::p()->get['order_id'])) {
             Theme::model('sale/order');
             
-            $order_info = SaleOrder::getOrder($this->request->get['order_id']);
+            $order_info = SaleOrder::getOrder(Request::p()->get['order_id']);
             
             if ($order_info && $order_info['customer_id']) {
                 Theme::model('people/customer');
                 
-                PeopleCustomer::deleteReward($this->request->get['order_id']);
+                PeopleCustomer::deleteReward(Request::p()->get['order_id']);
                 
                 $json['success'] = Lang::get('lang_text_reward_removed');
             } else {
@@ -1842,18 +1842,18 @@ class Order extends Controller {
         
         if (!User::hasPermission('modify', 'sale/order')) {
             $json['error'] = Lang::get('lang_error_permission');
-        } elseif (isset($this->request->get['order_id'])) {
+        } elseif (isset(Request::p()->get['order_id'])) {
             Theme::model('sale/order');
             
-            $order_info = SaleOrder::getOrder($this->request->get['order_id']);
+            $order_info = SaleOrder::getOrder(Request::p()->get['order_id']);
             
             if ($order_info && $order_info['affiliate_id']) {
                 Theme::model('people/customer');
                 
-                $affiliate_total = PeopleCustomer::getTotalCommissionsByOrderId($this->request->get['order_id']);
+                $affiliate_total = PeopleCustomer::getTotalCommissionsByOrderId(Request::p()->get['order_id']);
                 
                 if (!$affiliate_total) {
-                    PeopleCustomer::addCommission($order_info['affiliate_id'], Lang::get('lang_text_order_id') . ' #' . $this->request->get['order_id'], $order_info['commission'], $this->request->get['order_id']);
+                    PeopleCustomer::addCommission($order_info['affiliate_id'], Lang::get('lang_text_order_id') . ' #' . Request::p()->get['order_id'], $order_info['commission'], Request::p()->get['order_id']);
                     
                     $json['success'] = Lang::get('lang_text_commission_added');
                 } else {
@@ -1876,15 +1876,15 @@ class Order extends Controller {
         
         if (!User::hasPermission('modify', 'sale/order')) {
             $json['error'] = Lang::get('lang_error_permission');
-        } elseif (isset($this->request->get['order_id'])) {
+        } elseif (isset(Request::p()->get['order_id'])) {
             Theme::model('sale/order');
             
-            $order_info = SaleOrder::getOrder($this->request->get['order_id']);
+            $order_info = SaleOrder::getOrder(Request::p()->get['order_id']);
             
             if ($order_info && $order_info['affiliate_id']) {
                 Theme::model('people/customer');
                 
-                PeopleCustomer::deleteCommission($this->request->get['order_id']);
+                PeopleCustomer::deleteCommission(Request::p()->get['order_id']);
                 
                 $json['success'] = Lang::get('lang_text_commission_removed');
             } else {
@@ -1905,27 +1905,27 @@ class Order extends Controller {
         
         Theme::model('sale/order');
         
-        if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+        if (Request::p()->server['REQUEST_METHOD'] == 'POST') {
             if (!User::hasPermission('modify', 'sale/order')) {
                 $data['error'] = Lang::get('lang_error_permission');
             }
             
             if (!$data['error']) {
-                SaleOrder::addOrderHistory($this->request->get['order_id'], $this->request->post);
+                SaleOrder::addOrderHistory(Request::p()->get['order_id'], Request::post());
                 
                 $data['success'] = Lang::get('lang_text_success');
             }
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $data['histories'] = array();
         
-        $results = SaleOrder::getOrderHistories($this->request->get['order_id'], ($page - 1) * 10, 10);
+        $results = SaleOrder::getOrderHistories(Request::p()->get['order_id'], ($page - 1) * 10, 10);
         
         foreach ($results as $result) {
             $data['histories'][] = array(
@@ -1936,14 +1936,14 @@ class Order extends Controller {
             );
         }
         
-        $history_total = SaleOrder::getTotalOrderHistories($this->request->get['order_id']);
+        $history_total = SaleOrder::getTotalOrderHistories(Request::p()->get['order_id']);
         
         $data['pagination'] = Theme::paginate(
             $history_total, 
             $page, 
             10, 
             Lang::get('lang_text_pagination'), 
-            Url::link('sale/order/history', '' . '&order_id=' . $this->request->get['order_id'] . '&page={page}', 'SSL')
+            Url::link('sale/order/history', '' . 'order_id=' . Request::p()->get['order_id'] . '&page={page}', 'SSL')
         );
         
         Theme::loadjs('javascript/sale/order_history', $data);
@@ -1958,13 +1958,13 @@ class Order extends Controller {
     public function download() {
         Theme::model('sale/order');
         
-        if (isset($this->request->get['order_option_id'])) {
-            $order_option_id = $this->request->get['order_option_id'];
+        if (isset(Request::p()->get['order_option_id'])) {
+            $order_option_id = Request::p()->get['order_option_id'];
         } else {
             $order_option_id = 0;
         }
         
-        $option_info = SaleOrder::getOrderOption($this->request->get['order_id'], $order_option_id);
+        $option_info = SaleOrder::getOrderOption(Request::p()->get['order_id'], $order_option_id);
         
         if ($option_info && $option_info['type'] == 'file') {
             $file = Config::get('path.download') . $option_info['value'];
@@ -2008,7 +2008,7 @@ class Order extends Controller {
         
         $json = array();
         
-        if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+        if (Request::p()->server['REQUEST_METHOD'] == 'POST') {
             if (!empty($this->request->files['file']['name'])) {
                 $filename = html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8');
                 
@@ -2098,7 +2098,7 @@ class Order extends Controller {
         
         $data['title'] = Lang::get('lang_heading_title');
         
-        if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+        if (isset(Request::p()->server['HTTPS']) && ((Request::p()->server['HTTPS'] == 'on') || (Request::p()->server['HTTPS'] == '1'))) {
             $data['base'] = Config::get('https.server');
         } else {
             $data['base'] = Config::get('http.server');
@@ -2114,10 +2114,10 @@ class Order extends Controller {
         
         $orders = array();
         
-        if (isset($this->request->post['selected'])) {
-            $orders = $this->request->post['selected'];
-        } elseif (isset($this->request->get['order_id'])) {
-            $orders[] = $this->request->get['order_id'];
+        if (isset(Request::p()->post['selected'])) {
+            $orders = Request::p()->post['selected'];
+        } elseif (isset(Request::p()->get['order_id'])) {
+            $orders[] = Request::p()->get['order_id'];
         }
         
         foreach ($orders as $order_id) {

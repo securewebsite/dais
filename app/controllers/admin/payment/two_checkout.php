@@ -29,10 +29,10 @@ class TwoCheckout extends Controller {
         
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('two_checkout', $this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('two_checkout', Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/payment', '', 'SSL'));
         }
@@ -62,32 +62,32 @@ class TwoCheckout extends Controller {
         
         $data['cancel'] = Url::link('module/payment', '', 'SSL');
         
-        if (isset($this->request->post['two_checkout_account'])) {
-            $data['two_checkout_account'] = $this->request->post['two_checkout_account'];
+        if (isset(Request::p()->post['two_checkout_account'])) {
+            $data['two_checkout_account'] = Request::p()->post['two_checkout_account'];
         } else {
             $data['two_checkout_account'] = Config::get('two_checkout_account');
         }
         
-        if (isset($this->request->post['two_checkout_secret'])) {
-            $data['two_checkout_secret'] = $this->request->post['two_checkout_secret'];
+        if (isset(Request::p()->post['two_checkout_secret'])) {
+            $data['two_checkout_secret'] = Request::p()->post['two_checkout_secret'];
         } else {
             $data['two_checkout_secret'] = Config::get('two_checkout_secret');
         }
         
-        if (isset($this->request->post['two_checkout_test'])) {
-            $data['two_checkout_test'] = $this->request->post['two_checkout_test'];
+        if (isset(Request::p()->post['two_checkout_test'])) {
+            $data['two_checkout_test'] = Request::p()->post['two_checkout_test'];
         } else {
             $data['two_checkout_test'] = Config::get('two_checkout_test');
         }
         
-        if (isset($this->request->post['two_checkout_total'])) {
-            $data['two_checkout_total'] = $this->request->post['two_checkout_total'];
+        if (isset(Request::p()->post['two_checkout_total'])) {
+            $data['two_checkout_total'] = Request::p()->post['two_checkout_total'];
         } else {
             $data['two_checkout_total'] = Config::get('two_checkout_total');
         }
         
-        if (isset($this->request->post['two_checkout_order_status_id'])) {
-            $data['two_checkout_order_status_id'] = $this->request->post['two_checkout_order_status_id'];
+        if (isset(Request::p()->post['two_checkout_order_status_id'])) {
+            $data['two_checkout_order_status_id'] = Request::p()->post['two_checkout_order_status_id'];
         } else {
             $data['two_checkout_order_status_id'] = Config::get('two_checkout_order_status_id');
         }
@@ -96,8 +96,8 @@ class TwoCheckout extends Controller {
         
         $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
-        if (isset($this->request->post['two_checkout_geo_zone_id'])) {
-            $data['two_checkout_geo_zone_id'] = $this->request->post['two_checkout_geo_zone_id'];
+        if (isset(Request::p()->post['two_checkout_geo_zone_id'])) {
+            $data['two_checkout_geo_zone_id'] = Request::p()->post['two_checkout_geo_zone_id'];
         } else {
             $data['two_checkout_geo_zone_id'] = Config::get('two_checkout_geo_zone_id');
         }
@@ -106,14 +106,14 @@ class TwoCheckout extends Controller {
         
         $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
-        if (isset($this->request->post['two_checkout_status'])) {
-            $data['two_checkout_status'] = $this->request->post['two_checkout_status'];
+        if (isset(Request::p()->post['two_checkout_status'])) {
+            $data['two_checkout_status'] = Request::p()->post['two_checkout_status'];
         } else {
             $data['two_checkout_status'] = Config::get('two_checkout_status');
         }
         
-        if (isset($this->request->post['two_checkout_sort_order'])) {
-            $data['two_checkout_sort_order'] = $this->request->post['two_checkout_sort_order'];
+        if (isset(Request::p()->post['two_checkout_sort_order'])) {
+            $data['two_checkout_sort_order'] = Request::p()->post['two_checkout_sort_order'];
         } else {
             $data['two_checkout_sort_order'] = Config::get('two_checkout_sort_order');
         }
@@ -130,11 +130,11 @@ class TwoCheckout extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (!$this->request->post['two_checkout_account']) {
+        if (!Request::p()->post['two_checkout_account']) {
             $this->error['account'] = Lang::get('lang_error_account');
         }
         
-        if (!$this->request->post['two_checkout_secret']) {
+        if (!Request::p()->post['two_checkout_secret']) {
             $this->error['secret'] = Lang::get('lang_error_secret');
         }
         

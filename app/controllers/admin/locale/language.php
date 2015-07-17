@@ -37,22 +37,22 @@ class Language extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('locale/language');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            LocaleLanguage::addLanguage($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            LocaleLanguage::addLanguage(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/language', '' . $url, 'SSL'));
@@ -68,22 +68,22 @@ class Language extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('locale/language');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            LocaleLanguage::editLanguage($this->request->get['language_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            LocaleLanguage::editLanguage(Request::p()->get['language_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/language', '' . $url, 'SSL'));
@@ -99,25 +99,25 @@ class Language extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('locale/language');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $language_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $language_id) {
                 LocaleLanguage::deleteLanguage($language_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/language', '' . $url, 'SSL'));
@@ -131,36 +131,36 @@ class Language extends Controller {
     protected function getList() {
         $data = Theme::language('locale/language');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'name';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'locale/language', $url);
@@ -179,9 +179,9 @@ class Language extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/language/update', '' . '&language_id=' . $result['language_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/language/update', '' . 'language_id=' . $result['language_id'] . $url, 'SSL'));
             
-            $data['languages'][] = array('language_id' => $result['language_id'], 'name' => $result['name'] . (($result['code'] == Config::get('config_language')) ? Lang::get('lang_text_default') : null), 'code' => $result['code'], 'sort_order' => $result['sort_order'], 'selected' => isset($this->request->post['selected']) && in_array($result['language_id'], $this->request->post['selected']), 'action' => $action);
+            $data['languages'][] = array('language_id' => $result['language_id'], 'name' => $result['name'] . (($result['code'] == Config::get('config_language')) ? Lang::get('lang_text_default') : null), 'code' => $result['code'], 'sort_order' => $result['sort_order'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['language_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -190,10 +190,10 @@ class Language extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -206,22 +206,22 @@ class Language extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('locale/language', '' . '&sort=name' . $url, 'SSL');
-        $data['sort_code'] = Url::link('locale/language', '' . '&sort=code' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('locale/language', '' . '&sort=sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('locale/language', '' . 'sort=name' . $url, 'SSL');
+        $data['sort_code'] = Url::link('locale/language', '' . 'sort=code' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('locale/language', '' . 'sort=sort_order' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate($language_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/language', '' . $url . '&page={page}', 'SSL'));
@@ -283,90 +283,90 @@ class Language extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'locale/language', $url);
         
-        if (!isset($this->request->get['language_id'])) {
+        if (!isset(Request::p()->get['language_id'])) {
             $data['action'] = Url::link('locale/language/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/language/update', '' . '&language_id=' . $this->request->get['language_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/language/update', '' . 'language_id=' . Request::p()->get['language_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('locale/language', '' . $url, 'SSL');
         
-        if (isset($this->request->get['language_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $language_info = LocaleLanguage::getLanguage($this->request->get['language_id']);
+        if (isset(Request::p()->get['language_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $language_info = LocaleLanguage::getLanguage(Request::p()->get['language_id']);
         }
         
-        if (isset($this->request->post['name'])) {
-            $data['name'] = $this->request->post['name'];
+        if (isset(Request::p()->post['name'])) {
+            $data['name'] = Request::p()->post['name'];
         } elseif (!empty($language_info)) {
             $data['name'] = $language_info['name'];
         } else {
             $data['name'] = '';
         }
         
-        if (isset($this->request->post['code'])) {
-            $data['code'] = $this->request->post['code'];
+        if (isset(Request::p()->post['code'])) {
+            $data['code'] = Request::p()->post['code'];
         } elseif (!empty($language_info)) {
             $data['code'] = $language_info['code'];
         } else {
             $data['code'] = '';
         }
         
-        if (isset($this->request->post['locale'])) {
-            $data['locale'] = $this->request->post['locale'];
+        if (isset(Request::p()->post['locale'])) {
+            $data['locale'] = Request::p()->post['locale'];
         } elseif (!empty($language_info)) {
             $data['locale'] = $language_info['locale'];
         } else {
             $data['locale'] = '';
         }
         
-        if (isset($this->request->post['image'])) {
-            $data['image'] = $this->request->post['image'];
+        if (isset(Request::p()->post['image'])) {
+            $data['image'] = Request::p()->post['image'];
         } elseif (!empty($language_info)) {
             $data['image'] = $language_info['image'];
         } else {
             $data['image'] = '';
         }
         
-        if (isset($this->request->post['directory'])) {
-            $data['directory'] = $this->request->post['directory'];
+        if (isset(Request::p()->post['directory'])) {
+            $data['directory'] = Request::p()->post['directory'];
         } elseif (!empty($language_info)) {
             $data['directory'] = $language_info['directory'];
         } else {
             $data['directory'] = '';
         }
         
-        if (isset($this->request->post['filename'])) {
-            $data['filename'] = $this->request->post['filename'];
+        if (isset(Request::p()->post['filename'])) {
+            $data['filename'] = Request::p()->post['filename'];
         } elseif (!empty($language_info)) {
             $data['filename'] = $language_info['filename'];
         } else {
             $data['filename'] = '';
         }
         
-        if (isset($this->request->post['sort_order'])) {
-            $data['sort_order'] = $this->request->post['sort_order'];
+        if (isset(Request::p()->post['sort_order'])) {
+            $data['sort_order'] = Request::p()->post['sort_order'];
         } elseif (!empty($language_info)) {
             $data['sort_order'] = $language_info['sort_order'];
         } else {
             $data['sort_order'] = '';
         }
         
-        if (isset($this->request->post['status'])) {
-            $data['status'] = $this->request->post['status'];
+        if (isset(Request::p()->post['status'])) {
+            $data['status'] = Request::p()->post['status'];
         } elseif (!empty($language_info)) {
             $data['status'] = $language_info['status'];
         } else {
@@ -385,27 +385,27 @@ class Language extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['name']) < 3) || (Encode::strlen(Request::p()->post['name']) > 32)) {
             $this->error['name'] = Lang::get('lang_error_name');
         }
         
-        if (Encode::strlen($this->request->post['code']) < 2) {
+        if (Encode::strlen(Request::p()->post['code']) < 2) {
             $this->error['code'] = Lang::get('lang_error_code');
         }
         
-        if (!$this->request->post['locale']) {
+        if (!Request::p()->post['locale']) {
             $this->error['locale'] = Lang::get('lang_error_locale');
         }
         
-        if (!$this->request->post['directory']) {
+        if (!Request::p()->post['directory']) {
             $this->error['directory'] = Lang::get('lang_error_directory');
         }
         
-        if (!$this->request->post['filename']) {
+        if (!Request::p()->post['filename']) {
             $this->error['filename'] = Lang::get('lang_error_filename');
         }
         
-        if ((Encode::strlen($this->request->post['image']) < 3) || (Encode::strlen($this->request->post['image']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['image']) < 3) || (Encode::strlen(Request::p()->post['image']) > 32)) {
             $this->error['image'] = Lang::get('lang_error_image');
         }
         
@@ -422,7 +422,7 @@ class Language extends Controller {
         Theme::model('setting/store');
         Theme::model('sale/order');
         
-        foreach ($this->request->post['selected'] as $language_id) {
+        foreach (Request::p()->post['selected'] as $language_id) {
             $language_info = LocaleLanguage::getLanguage($language_id);
             
             if ($language_info) {

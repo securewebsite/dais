@@ -37,22 +37,22 @@ class Comment extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('content/comment');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            ContentComment::addComment($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            ContentComment::addComment(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('content/comment', '' . $url, 'SSL'));
@@ -68,22 +68,22 @@ class Comment extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('content/comment');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            ContentComment::editComment($this->request->get['comment_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            ContentComment::editComment(Request::p()->get['comment_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('content/comment', '' . $url, 'SSL'));
@@ -99,25 +99,25 @@ class Comment extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('content/comment');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $comment_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $comment_id) {
                 ContentComment::deleteComment($comment_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('content/comment', '' . $url, 'SSL'));
@@ -131,36 +131,36 @@ class Comment extends Controller {
     private function getList() {
         $data = Theme::language('content/comment');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'r.date_added';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'content/comment');
@@ -178,9 +178,9 @@ class Comment extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('content/comment/update', '' . '&comment_id=' . $result['comment_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('content/comment/update', '' . 'comment_id=' . $result['comment_id'] . $url, 'SSL'));
             
-            $data['comments'][] = array('comment_id' => $result['comment_id'], 'name' => $result['name'], 'author' => $result['author'], 'rating' => $result['rating'], 'status' => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 'selected' => isset($this->request->post['selected']) && in_array($result['comment_id'], $this->request->post['selected']), 'action' => $action);
+            $data['comments'][] = array('comment_id' => $result['comment_id'], 'name' => $result['name'], 'author' => $result['author'], 'rating' => $result['rating'], 'status' => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 'selected' => isset(Request::p()->post['selected']) && in_array($result['comment_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -189,10 +189,10 @@ class Comment extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -205,24 +205,24 @@ class Comment extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_post'] = Url::link('content/comment', '' . '&sort=pd.name' . $url, 'SSL');
-        $data['sort_author'] = Url::link('content/comment', '' . '&sort=r.author' . $url, 'SSL');
-        $data['sort_rating'] = Url::link('content/comment', '' . '&sort=r.rating' . $url, 'SSL');
-        $data['sort_status'] = Url::link('content/comment', '' . '&sort=r.status' . $url, 'SSL');
-        $data['sort_date_added'] = Url::link('content/comment', '' . '&sort=r.date_added' . $url, 'SSL');
+        $data['sort_post'] = Url::link('content/comment', '' . 'sort=pd.name' . $url, 'SSL');
+        $data['sort_author'] = Url::link('content/comment', '' . 'sort=r.author' . $url, 'SSL');
+        $data['sort_rating'] = Url::link('content/comment', '' . 'sort=r.rating' . $url, 'SSL');
+        $data['sort_status'] = Url::link('content/comment', '' . 'sort=r.status' . $url, 'SSL');
+        $data['sort_date_added'] = Url::link('content/comment', '' . 'sort=r.date_added' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate($comment_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('content/comment', '' . $url . '&page={page}', 'SSL'));
@@ -272,76 +272,76 @@ class Comment extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'content/comment');
         
-        if (!isset($this->request->get['comment_id'])) {
+        if (!isset(Request::p()->get['comment_id'])) {
             $data['action'] = Url::link('content/comment/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('content/comment/update', '' . '&comment_id=' . $this->request->get['comment_id'] . $url, 'SSL');
+            $data['action'] = Url::link('content/comment/update', '' . 'comment_id=' . Request::p()->get['comment_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('content/comment', '' . $url, 'SSL');
         
-        if (isset($this->request->get['comment_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $comment_info = ContentComment::getComment($this->request->get['comment_id']);
+        if (isset(Request::p()->get['comment_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $comment_info = ContentComment::getComment(Request::p()->get['comment_id']);
         }
         
         Theme::model('content/post');
         
-        if (isset($this->request->post['post_id'])) {
-            $data['post_id'] = $this->request->post['post_id'];
+        if (isset(Request::p()->post['post_id'])) {
+            $data['post_id'] = Request::p()->post['post_id'];
         } elseif (!empty($comment_info)) {
             $data['post_id'] = $comment_info['post_id'];
         } else {
             $data['post_id'] = '';
         }
         
-        if (isset($this->request->post['post'])) {
-            $data['post'] = $this->request->post['post'];
+        if (isset(Request::p()->post['post'])) {
+            $data['post'] = Request::p()->post['post'];
         } elseif (!empty($comment_info)) {
             $data['post'] = $comment_info['post'];
         } else {
             $data['post'] = '';
         }
         
-        if (isset($this->request->post['author'])) {
-            $data['author'] = $this->request->post['author'];
+        if (isset(Request::p()->post['author'])) {
+            $data['author'] = Request::p()->post['author'];
         } elseif (!empty($comment_info)) {
             $data['author'] = $comment_info['author'];
         } else {
             $data['author'] = '';
         }
         
-        if (isset($this->request->post['text'])) {
-            $data['text'] = $this->request->post['text'];
+        if (isset(Request::p()->post['text'])) {
+            $data['text'] = Request::p()->post['text'];
         } elseif (!empty($comment_info)) {
             $data['text'] = $comment_info['text'];
         } else {
             $data['text'] = '';
         }
         
-        if (isset($this->request->post['rating'])) {
-            $data['rating'] = $this->request->post['rating'];
+        if (isset(Request::p()->post['rating'])) {
+            $data['rating'] = Request::p()->post['rating'];
         } elseif (!empty($comment_info)) {
             $data['rating'] = $comment_info['rating'];
         } else {
             $data['rating'] = '';
         }
         
-        if (isset($this->request->post['status'])) {
-            $data['status'] = $this->request->post['status'];
+        if (isset(Request::p()->post['status'])) {
+            $data['status'] = Request::p()->post['status'];
         } elseif (!empty($comment_info)) {
             $data['status'] = $comment_info['status'];
         } else {
@@ -360,19 +360,19 @@ class Comment extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (!$this->request->post['post_id']) {
+        if (!Request::p()->post['post_id']) {
             $this->error['post'] = Lang::get('lang_error_post');
         }
         
-        if ((Encode::strlen($this->request->post['author']) < 3) || (Encode::strlen($this->request->post['author']) > 64)) {
+        if ((Encode::strlen(Request::p()->post['author']) < 3) || (Encode::strlen(Request::p()->post['author']) > 64)) {
             $this->error['author'] = Lang::get('lang_error_author');
         }
         
-        if (Encode::strlen($this->request->post['text']) < 1) {
+        if (Encode::strlen(Request::p()->post['text']) < 1) {
             $this->error['text'] = Lang::get('lang_error_text');
         }
         
-        if (!isset($this->request->post['rating'])) {
+        if (!isset(Request::p()->post['rating'])) {
             $this->error['rating'] = Lang::get('lang_error_rating');
         }
         

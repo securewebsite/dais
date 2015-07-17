@@ -27,9 +27,9 @@ class FreeCheckout extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('free_checkout', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('free_checkout', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/payment', '', 'SSL'));
         }
@@ -47,8 +47,8 @@ class FreeCheckout extends Controller {
         
         $data['cancel'] = Url::link('module/payment', '', 'SSL');
         
-        if (isset($this->request->post['free_checkout_order_status_id'])) {
-            $data['free_checkout_order_status_id'] = $this->request->post['free_checkout_order_status_id'];
+        if (isset(Request::p()->post['free_checkout_order_status_id'])) {
+            $data['free_checkout_order_status_id'] = Request::p()->post['free_checkout_order_status_id'];
         } else {
             $data['free_checkout_order_status_id'] = Config::get('free_checkout_order_status_id');
         }
@@ -57,14 +57,14 @@ class FreeCheckout extends Controller {
         
         $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
-        if (isset($this->request->post['free_checkout_status'])) {
-            $data['free_checkout_status'] = $this->request->post['free_checkout_status'];
+        if (isset(Request::p()->post['free_checkout_status'])) {
+            $data['free_checkout_status'] = Request::p()->post['free_checkout_status'];
         } else {
             $data['free_checkout_status'] = Config::get('free_checkout_status');
         }
         
-        if (isset($this->request->post['free_checkout_sort_order'])) {
-            $data['free_checkout_sort_order'] = $this->request->post['free_checkout_sort_order'];
+        if (isset(Request::p()->post['free_checkout_sort_order'])) {
+            $data['free_checkout_sort_order'] = Request::p()->post['free_checkout_sort_order'];
         } else {
             $data['free_checkout_sort_order'] = Config::get('free_checkout_sort_order');
         }

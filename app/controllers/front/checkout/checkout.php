@@ -23,7 +23,7 @@ class Checkout extends Controller {
     public function index() {
         
         // Validate cart has products and has stock.
-        if ((!Cart::hasProducts() && empty($this->session->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
+        if ((!Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
             Response::redirect(Url::link('checkout/cart'));
         }
         
@@ -63,8 +63,8 @@ class Checkout extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        if (isset($this->request->get['quickconfirm'])) {
-            $data['quickconfirm'] = $this->request->get['quickconfirm'];
+        if (isset(Request::p()->get['quickconfirm'])) {
+            $data['quickconfirm'] = Request::p()->get['quickconfirm'];
         }
         
         Response::setOutput(View::render('checkout/checkout', $data));
@@ -75,12 +75,12 @@ class Checkout extends Controller {
         
         Theme::model('locale/country');
         
-        $country_info = LocaleCountry::getCountry($this->request->get['country_id']);
+        $country_info = LocaleCountry::getCountry(Request::p()->get['country_id']);
         
         if ($country_info) {
             Theme::model('locale/zone');
             
-            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => LocaleZone::getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
+            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => LocaleZone::getZonesByCountryId(Request::p()->get['country_id']), 'status' => $country_info['status']);
         }
         
         $json = Theme::listen(__CLASS__, __FUNCTION__, $json);

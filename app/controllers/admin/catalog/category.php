@@ -37,14 +37,14 @@ class Category extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('catalog/category');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            CatalogCategory::addCategory($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            CatalogCategory::addCategory(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/category', '' . $url, 'SSL'));
@@ -60,14 +60,14 @@ class Category extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('catalog/category');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            CatalogCategory::editCategory($this->request->get['category_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            CatalogCategory::editCategory(Request::p()->get['category_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/category', '' . $url, 'SSL'));
@@ -83,17 +83,17 @@ class Category extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('catalog/category');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $category_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $category_id) {
                 CatalogCategory::deleteCategory($category_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/category', '' . $url, 'SSL'));
@@ -111,7 +111,7 @@ class Category extends Controller {
         
         if ($this->validateRepair()) {
             CatalogCategory::repairCategories();
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('catalog/category', '', 'SSL'));
         }
@@ -124,16 +124,16 @@ class Category extends Controller {
     protected function getList() {
         $data = Theme::language('catalog/category');
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'catalog/category', $url);
@@ -153,9 +153,9 @@ class Category extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/category/update', '' . '&category_id=' . $result['category_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/category/update', '' . 'category_id=' . $result['category_id'] . $url, 'SSL'));
             
-            $data['categories'][] = array('category_id' => $result['category_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'selected' => isset($this->request->post['selected']) && in_array($result['category_id'], $this->request->post['selected']), 'action' => $action);
+            $data['categories'][] = array('category_id' => $result['category_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['category_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -164,10 +164,10 @@ class Category extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -204,46 +204,46 @@ class Category extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'catalog/category', $url);
         
-        if (!isset($this->request->get['category_id'])) {
+        if (!isset(Request::p()->get['category_id'])) {
             $data['action'] = Url::link('catalog/category/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/category/update', '' . '&category_id=' . $this->request->get['category_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/category/update', '' . 'category_id=' . Request::p()->get['category_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('catalog/category', '' . $url, 'SSL');
         
-        if (isset($this->request->get['category_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $category_info = CatalogCategory::getCategory($this->request->get['category_id']);
+        if (isset(Request::p()->get['category_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $category_info = CatalogCategory::getCategory(Request::p()->get['category_id']);
         }
         
         Theme::model('locale/language');
         
         $data['languages'] = LocaleLanguage::getLanguages();
         
-        if (isset($this->request->post['category_description'])) {
-            $data['category_description'] = $this->request->post['category_description'];
-        } elseif (isset($this->request->get['category_id'])) {
-            $data['category_description'] = CatalogCategory::getCategoryDescriptions($this->request->get['category_id']);
+        if (isset(Request::p()->post['category_description'])) {
+            $data['category_description'] = Request::p()->post['category_description'];
+        } elseif (isset(Request::p()->get['category_id'])) {
+            $data['category_description'] = CatalogCategory::getCategoryDescriptions(Request::p()->get['category_id']);
         } else {
             $data['category_description'] = array();
         }
         
-        if (isset($this->request->post['path'])) {
-            $data['path'] = $this->request->post['path'];
+        if (isset(Request::p()->post['path'])) {
+            $data['path'] = Request::p()->post['path'];
         } elseif (!empty($category_info)) {
             $data['path'] = $category_info['path'];
         } else {
             $data['path'] = '';
         }
         
-        if (isset($this->request->post['parent_id'])) {
-            $data['parent_id'] = $this->request->post['parent_id'];
+        if (isset(Request::p()->post['parent_id'])) {
+            $data['parent_id'] = Request::p()->post['parent_id'];
         } elseif (!empty($category_info)) {
             $data['parent_id'] = $category_info['parent_id'];
         } else {
@@ -252,10 +252,10 @@ class Category extends Controller {
         
         Theme::model('catalog/filter');
         
-        if (isset($this->request->post['category_filter'])) {
-            $filters = $this->request->post['category_filter'];
-        } elseif (isset($this->request->get['category_id'])) {
-            $filters = CatalogCategory::getCategoryFilters($this->request->get['category_id']);
+        if (isset(Request::p()->post['category_filter'])) {
+            $filters = Request::p()->post['category_filter'];
+        } elseif (isset(Request::p()->get['category_id'])) {
+            $filters = CatalogCategory::getCategoryFilters(Request::p()->get['category_id']);
         } else {
             $filters = array();
         }
@@ -274,24 +274,24 @@ class Category extends Controller {
         
         $data['stores'] = SettingStore::getStores();
         
-        if (isset($this->request->post['category_store'])) {
-            $data['category_store'] = $this->request->post['category_store'];
-        } elseif (isset($this->request->get['category_id'])) {
-            $data['category_store'] = CatalogCategory::getCategoryStores($this->request->get['category_id']);
+        if (isset(Request::p()->post['category_store'])) {
+            $data['category_store'] = Request::p()->post['category_store'];
+        } elseif (isset(Request::p()->get['category_id'])) {
+            $data['category_store'] = CatalogCategory::getCategoryStores(Request::p()->get['category_id']);
         } else {
             $data['category_store'] = array(0);
         }
         
-        if (isset($this->request->post['slug'])) {
-            $data['slug'] = $this->request->post['slug'];
+        if (isset(Request::p()->post['slug'])) {
+            $data['slug'] = Request::p()->post['slug'];
         } elseif (!empty($category_info)) {
             $data['slug'] = $category_info['slug'];
         } else {
             $data['slug'] = '';
         }
         
-        if (isset($this->request->post['image'])) {
-            $data['image'] = $this->request->post['image'];
+        if (isset(Request::p()->post['image'])) {
+            $data['image'] = Request::p()->post['image'];
         } elseif (!empty($category_info)) {
             $data['image'] = $category_info['image'];
         } else {
@@ -300,8 +300,8 @@ class Category extends Controller {
         
         Theme::model('tool/image');
         
-        if (isset($this->request->post['image']) && file_exists(Config::get('path.image') . $this->request->post['image'])) {
-            $data['thumb'] = ToolImage::resize($this->request->post['image'], 100, 100);
+        if (isset(Request::p()->post['image']) && file_exists(Config::get('path.image') . Request::p()->post['image'])) {
+            $data['thumb'] = ToolImage::resize(Request::p()->post['image'], 100, 100);
         } elseif (!empty($category_info) && $category_info['image'] && file_exists(Config::get('path.image') . $category_info['image'])) {
             $data['thumb'] = ToolImage::resize($category_info['image'], 100, 100);
         } else {
@@ -310,42 +310,42 @@ class Category extends Controller {
         
         $data['no_image'] = ToolImage::resize('placeholder.png', 100, 100);
         
-        if (isset($this->request->post['top'])) {
-            $data['top'] = $this->request->post['top'];
+        if (isset(Request::p()->post['top'])) {
+            $data['top'] = Request::p()->post['top'];
         } elseif (!empty($category_info)) {
             $data['top'] = $category_info['top'];
         } else {
             $data['top'] = 0;
         }
         
-        if (isset($this->request->post['columns'])) {
-            $data['columns'] = $this->request->post['columns'];
+        if (isset(Request::p()->post['columns'])) {
+            $data['columns'] = Request::p()->post['columns'];
         } elseif (!empty($category_info)) {
             $data['columns'] = $category_info['columns'];
         } else {
             $data['columns'] = 1;
         }
         
-        if (isset($this->request->post['sort_order'])) {
-            $data['sort_order'] = $this->request->post['sort_order'];
+        if (isset(Request::p()->post['sort_order'])) {
+            $data['sort_order'] = Request::p()->post['sort_order'];
         } elseif (!empty($category_info)) {
             $data['sort_order'] = $category_info['sort_order'];
         } else {
             $data['sort_order'] = 0;
         }
         
-        if (isset($this->request->post['status'])) {
-            $data['status'] = $this->request->post['status'];
+        if (isset(Request::p()->post['status'])) {
+            $data['status'] = Request::p()->post['status'];
         } elseif (!empty($category_info)) {
             $data['status'] = $category_info['status'];
         } else {
             $data['status'] = 1;
         }
         
-        if (isset($this->request->post['category_layout'])) {
-            $data['category_layout'] = $this->request->post['category_layout'];
-        } elseif (isset($this->request->get['category_id'])) {
-            $data['category_layout'] = CatalogCategory::getCategoryLayouts($this->request->get['category_id']);
+        if (isset(Request::p()->post['category_layout'])) {
+            $data['category_layout'] = Request::p()->post['category_layout'];
+        } elseif (isset(Request::p()->get['category_id'])) {
+            $data['category_layout'] = CatalogCategory::getCategoryLayouts(Request::p()->get['category_id']);
         } else {
             $data['category_layout'] = array();
         }
@@ -368,25 +368,25 @@ class Category extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        foreach ($this->request->post['category_description'] as $language_id => $value) {
+        foreach (Request::p()->post['category_description'] as $language_id => $value) {
             if ((Encode::strlen($value['name']) < 2) || (Encode::strlen($value['name']) > 255)) {
                 $this->error['name'][$language_id] = Lang::get('lang_error_name');
             }
         }
         
-        if (isset($this->request->post['slug']) && Encode::strlen($this->request->post['slug']) > 0):
+        if (isset(Request::p()->post['slug']) && Encode::strlen(Request::p()->post['slug']) > 0):
             Theme::model('tool/utility');
-            $query = ToolUtility::findSlugByName($this->request->post['slug']);
+            $query = ToolUtility::findSlugByName(Request::p()->post['slug']);
             
-            if (isset($this->request->get['category_id'])):
+            if (isset(Request::p()->get['category_id'])):
                 if ($query):
-                    if ($query != 'category_id:' . $this->request->get['category_id']):
-                        $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), $this->request->post['slug']);
+                    if ($query != 'category_id:' . Request::p()->get['category_id']):
+                        $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), Request::p()->post['slug']);
                     endif;
                 endif;
             else:
                 if ($query):
-                    $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), $this->request->post['slug']);
+                    $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), Request::p()->post['slug']);
                 endif;
             endif;
         else:
@@ -425,10 +425,10 @@ class Category extends Controller {
     public function autocomplete() {
         $json = array();
         
-        if (isset($this->request->get['filter_name'])) {
+        if (isset(Request::p()->get['filter_name'])) {
             Theme::model('catalog/category');
             
-            $filter = array('filter_name' => $this->request->get['filter_name'], 'start' => 0, 'limit' => 20);
+            $filter = array('filter_name' => Request::p()->get['filter_name'], 'start' => 0, 'limit' => 20);
             
             $results = CatalogCategory::getCategories($filter);
             
@@ -456,19 +456,19 @@ class Category extends Controller {
         
         $json = array();
         
-        if (!isset($this->request->get['name']) || Encode::strlen($this->request->get['name']) < 1):
+        if (!isset(Request::p()->get['name']) || Encode::strlen(Request::p()->get['name']) < 1):
             $json['error'] = Lang::get('lang_error_name_first');
         else:
             
             // build slug
-            $slug = Url::build_slug($this->request->get['name']);
+            $slug = Url::build_slug(Request::p()->get['name']);
             
             // check that the slug is globally unique
             $query = ToolUtility::findSlugByName($slug);
             
             if ($query):
-                if (isset($this->request->get['category_id'])):
-                    if ($query != 'category_id:' . $this->request->get['category_id']):
+                if (isset(Request::p()->get['category_id'])):
+                    if ($query != 'category_id:' . Request::p()->get['category_id']):
                         $json['error'] = sprintf(Lang::get('lang_error_slug_found'), $slug);
                     else:
                         $json['slug'] = $slug;
@@ -489,8 +489,8 @@ class Category extends Controller {
     public function description() {
         $json = array();
 
-        if (isset($this->request->post['description']))
-            $json['success'] = $this->keyword->getDescription($this->request->post['description']);
+        if (isset(Request::p()->post['description']))
+            $json['success'] = $this->keyword->getDescription(Request::p()->post['description']);
 
         Response::setOutput(json_encode($json));
     }
@@ -498,9 +498,9 @@ class Category extends Controller {
     public function keyword() {
         $json = array();
 
-        if (isset($this->request->post['keywords'])):
+        if (isset(Request::p()->post['keywords'])):
             // let's clean up the data first
-            $keywords        = $this->keyword->getDescription($this->request->post['keywords']);
+            $keywords        = $this->keyword->getDescription(Request::p()->post['keywords']);
             $json['success'] = $this->keyword->getKeywords($keywords);
         endif;
 

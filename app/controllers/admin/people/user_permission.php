@@ -37,22 +37,22 @@ class UserPermission extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/user_group');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            PeopleUserGroup::addUserGroup($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            PeopleUserGroup::addUserGroup(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('people/user_permission', '' . $url, 'SSL'));
@@ -68,22 +68,22 @@ class UserPermission extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/user_group');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            PeopleUserGroup::editUserGroup($this->request->get['user_group_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            PeopleUserGroup::editUserGroup(Request::p()->get['user_group_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('people/user_permission', '' . $url, 'SSL'));
@@ -99,25 +99,25 @@ class UserPermission extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/user_group');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $user_group_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $user_group_id) {
                 PeopleUserGroup::deleteUserGroup($user_group_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('people/user_permission', '' . $url, 'SSL'));
@@ -131,36 +131,36 @@ class UserPermission extends Controller {
     protected function getList() {
         $data = Theme::language('people/user_group');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'name';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'people/user_permission', $url);
@@ -179,9 +179,9 @@ class UserPermission extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/user_permission/update', '' . '&user_group_id=' . $result['user_group_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/user_permission/update', '' . 'user_group_id=' . $result['user_group_id'] . $url, 'SSL'));
             
-            $data['user_groups'][] = array('user_group_id' => $result['user_group_id'], 'name' => $result['name'], 'selected' => isset($this->request->post['selected']) && in_array($result['user_group_id'], $this->request->post['selected']), 'action' => $action);
+            $data['user_groups'][] = array('user_group_id' => $result['user_group_id'], 'name' => $result['name'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['user_group_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -190,10 +190,10 @@ class UserPermission extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -206,20 +206,20 @@ class UserPermission extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('people/user_permission', '' . '&sort=name' . $url, 'SSL');
+        $data['sort_name'] = Url::link('people/user_permission', '' . 'sort=name' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate($user_group_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('people/user_permission', '' . $url . '&page={page}', 'SSL'));
@@ -251,34 +251,34 @@ class UserPermission extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'people/user_permission', $url);
         
-        if (!isset($this->request->get['user_group_id'])) {
+        if (!isset(Request::p()->get['user_group_id'])) {
             $data['action'] = Url::link('people/user_permission/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('people/user_permission/update', '' . '&user_group_id=' . $this->request->get['user_group_id'] . $url, 'SSL');
+            $data['action'] = Url::link('people/user_permission/update', '' . 'user_group_id=' . Request::p()->get['user_group_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('people/user_permission', '' . $url, 'SSL');
         
-        if (isset($this->request->get['user_group_id']) && $this->request->server['REQUEST_METHOD'] != 'POST') {
-            $user_group_info = PeopleUserGroup::getUserGroup($this->request->get['user_group_id']);
+        if (isset(Request::p()->get['user_group_id']) && Request::p()->server['REQUEST_METHOD'] != 'POST') {
+            $user_group_info = PeopleUserGroup::getUserGroup(Request::p()->get['user_group_id']);
         }
         
-        if (isset($this->request->post['name'])) {
-            $data['name'] = $this->request->post['name'];
+        if (isset(Request::p()->post['name'])) {
+            $data['name'] = Request::p()->post['name'];
         } elseif (!empty($user_group_info)) {
             $data['name'] = $user_group_info['name'];
         } else {
@@ -321,16 +321,16 @@ class UserPermission extends Controller {
             endif;
         endforeach;
         
-        if (isset($this->request->post['permission']['access'])) {
-            $data['access'] = $this->request->post['permission']['access'];
+        if (isset(Request::p()->post['permission']['access'])) {
+            $data['access'] = Request::p()->post['permission']['access'];
         } elseif (isset($user_group_info['permission']['access'])) {
             $data['access'] = $user_group_info['permission']['access'];
         } else {
             $data['access'] = array();
         }
         
-        if (isset($this->request->post['permission']['modify'])) {
-            $data['modify'] = $this->request->post['permission']['modify'];
+        if (isset(Request::p()->post['permission']['modify'])) {
+            $data['modify'] = Request::p()->post['permission']['modify'];
         } elseif (isset($user_group_info['permission']['modify'])) {
             $data['modify'] = $user_group_info['permission']['modify'];
         } else {
@@ -349,7 +349,7 @@ class UserPermission extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 64)) {
+        if ((Encode::strlen(Request::p()->post['name']) < 3) || (Encode::strlen(Request::p()->post['name']) > 64)) {
             $this->error['name'] = Lang::get('lang_error_name');
         }
         
@@ -365,7 +365,7 @@ class UserPermission extends Controller {
         
         Theme::model('people/user');
         
-        foreach ($this->request->post['selected'] as $user_group_id) {
+        foreach (Request::p()->post['selected'] as $user_group_id) {
             $user_total = PeopleUser::getTotalUsersByGroupId($user_group_id);
             
             if ($user_total) {

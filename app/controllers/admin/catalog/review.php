@@ -41,27 +41,27 @@ class Review extends Controller {
         
         Theme::model('catalog/review');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            CatalogReview::addReview($this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            CatalogReview::addReview(Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['filter_status'])) {
-                $url.= '&filter_status=' . $this->request->get['filter_status'];
+            if (isset(Request::p()->get['filter_status'])) {
+                $url.= '&filter_status=' . Request::p()->get['filter_status'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/review', '' . $url, 'SSL'));
@@ -79,27 +79,27 @@ class Review extends Controller {
         
         Theme::model('catalog/review');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            CatalogReview::editReview($this->request->get['review_id'], $this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            CatalogReview::editReview(Request::p()->get['review_id'], Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['filter_status'])) {
-                $url.= '&filter_status=' . $this->request->get['filter_status'];
+            if (isset(Request::p()->get['filter_status'])) {
+                $url.= '&filter_status=' . Request::p()->get['filter_status'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/review', '' . $url, 'SSL'));
@@ -117,29 +117,29 @@ class Review extends Controller {
         
         Theme::model('catalog/review');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $review_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $review_id) {
                 CatalogReview::deleteReview($review_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['filter_status'])) {
-                $url.= '&filter_status=' . $this->request->get['filter_status'];
+            if (isset(Request::p()->get['filter_status'])) {
+                $url.= '&filter_status=' . Request::p()->get['filter_status'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/review', '' . $url, 'SSL'));
@@ -153,46 +153,46 @@ class Review extends Controller {
     protected function getList() {
         $data = Theme::language('catalog/review');
         
-        if (isset($this->request->get['filter_status'])):
-            $filter_status = $this->request->get['filter_status'];
+        if (isset(Request::p()->get['filter_status'])):
+            $filter_status = Request::p()->get['filter_status'];
         else:
             $filter_status = 1;
         endif;
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'r.date_added';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['filter_status'])) {
-            $url.= '&filter_status=' . $this->request->get['filter_status'];
+        if (isset(Request::p()->get['filter_status'])) {
+            $url.= '&filter_status=' . Request::p()->get['filter_status'];
         }
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'catalog/review', $url);
@@ -211,9 +211,9 @@ class Review extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/review/update', '' . '&review_id=' . $result['review_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/review/update', '' . 'review_id=' . $result['review_id'] . $url, 'SSL'));
             
-            $data['reviews'][] = array('review_id' => $result['review_id'], 'name' => $result['name'], 'author' => $result['author'], 'rating' => $result['rating'], 'status' => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 'selected' => isset($this->request->post['selected']) && in_array($result['review_id'], $this->request->post['selected']), 'action' => $action);
+            $data['reviews'][] = array('review_id' => $result['review_id'], 'name' => $result['name'], 'author' => $result['author'], 'rating' => $result['rating'], 'status' => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 'selected' => isset(Request::p()->post['selected']) && in_array($result['review_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -222,18 +222,18 @@ class Review extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
         
         $url = '';
         
-        if (isset($this->request->get['filter_status'])) {
-            $url.= '&filter_status=' . $this->request->get['filter_status'];
+        if (isset(Request::p()->get['filter_status'])) {
+            $url.= '&filter_status=' . Request::p()->get['filter_status'];
         }
         
         if ($order == 'ASC') {
@@ -242,28 +242,28 @@ class Review extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_product'] = Url::link('catalog/review', '' . '&sort=pd.name' . $url, 'SSL');
-        $data['sort_author'] = Url::link('catalog/review', '' . '&sort=r.author' . $url, 'SSL');
-        $data['sort_rating'] = Url::link('catalog/review', '' . '&sort=r.rating' . $url, 'SSL');
-        $data['sort_status'] = Url::link('catalog/review', '' . '&sort=r.status' . $url, 'SSL');
-        $data['sort_date_added'] = Url::link('catalog/review', '' . '&sort=r.date_added' . $url, 'SSL');
+        $data['sort_product'] = Url::link('catalog/review', '' . 'sort=pd.name' . $url, 'SSL');
+        $data['sort_author'] = Url::link('catalog/review', '' . 'sort=r.author' . $url, 'SSL');
+        $data['sort_rating'] = Url::link('catalog/review', '' . 'sort=r.rating' . $url, 'SSL');
+        $data['sort_status'] = Url::link('catalog/review', '' . 'sort=r.status' . $url, 'SSL');
+        $data['sort_date_added'] = Url::link('catalog/review', '' . 'sort=r.date_added' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['filter_status'])) {
-            $url.= '&filter_status=' . $this->request->get['filter_status'];
+        if (isset(Request::p()->get['filter_status'])) {
+            $url.= '&filter_status=' . Request::p()->get['filter_status'];
         }
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate($review_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/review', '' . $url . '&page={page}', 'SSL'));
@@ -314,80 +314,80 @@ class Review extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['filter_status'])) {
-            $url.= '&filter_status=' . $this->request->get['filter_status'];
+        if (isset(Request::p()->get['filter_status'])) {
+            $url.= '&filter_status=' . Request::p()->get['filter_status'];
         }
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'catalog/review', $url);
         
-        if (!isset($this->request->get['review_id'])) {
+        if (!isset(Request::p()->get['review_id'])) {
             $data['action'] = Url::link('catalog/review/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/review/update', '' . '&review_id=' . $this->request->get['review_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/review/update', '' . 'review_id=' . Request::p()->get['review_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('catalog/review', '' . $url, 'SSL');
         
-        if (isset($this->request->get['review_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $review_info = CatalogReview::getReview($this->request->get['review_id']);
+        if (isset(Request::p()->get['review_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $review_info = CatalogReview::getReview(Request::p()->get['review_id']);
         }
         
         Theme::model('catalog/product');
         
-        if (isset($this->request->post['product_id'])) {
-            $data['product_id'] = $this->request->post['product_id'];
+        if (isset(Request::p()->post['product_id'])) {
+            $data['product_id'] = Request::p()->post['product_id'];
         } elseif (!empty($review_info)) {
             $data['product_id'] = $review_info['product_id'];
         } else {
             $data['product_id'] = '';
         }
         
-        if (isset($this->request->post['product'])) {
-            $data['product'] = $this->request->post['product'];
+        if (isset(Request::p()->post['product'])) {
+            $data['product'] = Request::p()->post['product'];
         } elseif (!empty($review_info)) {
             $data['product'] = $review_info['product'];
         } else {
             $data['product'] = '';
         }
         
-        if (isset($this->request->post['author'])) {
-            $data['author'] = $this->request->post['author'];
+        if (isset(Request::p()->post['author'])) {
+            $data['author'] = Request::p()->post['author'];
         } elseif (!empty($review_info)) {
             $data['author'] = $review_info['author'];
         } else {
             $data['author'] = '';
         }
         
-        if (isset($this->request->post['text'])) {
-            $data['text'] = $this->request->post['text'];
+        if (isset(Request::p()->post['text'])) {
+            $data['text'] = Request::p()->post['text'];
         } elseif (!empty($review_info)) {
             $data['text'] = $review_info['text'];
         } else {
             $data['text'] = '';
         }
         
-        if (isset($this->request->post['rating'])) {
-            $data['rating'] = $this->request->post['rating'];
+        if (isset(Request::p()->post['rating'])) {
+            $data['rating'] = Request::p()->post['rating'];
         } elseif (!empty($review_info)) {
             $data['rating'] = $review_info['rating'];
         } else {
             $data['rating'] = '';
         }
         
-        if (isset($this->request->post['status'])) {
-            $data['status'] = $this->request->post['status'];
+        if (isset(Request::p()->post['status'])) {
+            $data['status'] = Request::p()->post['status'];
         } elseif (!empty($review_info)) {
             $data['status'] = $review_info['status'];
         } else {
@@ -406,19 +406,19 @@ class Review extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (!$this->request->post['product_id']) {
+        if (!Request::p()->post['product_id']) {
             $this->error['product'] = Lang::get('lang_error_product');
         }
         
-        if ((Encode::strlen($this->request->post['author']) < 3) || (Encode::strlen($this->request->post['author']) > 64)) {
+        if ((Encode::strlen(Request::p()->post['author']) < 3) || (Encode::strlen(Request::p()->post['author']) > 64)) {
             $this->error['author'] = Lang::get('lang_error_author');
         }
         
-        if (Encode::strlen($this->request->post['text']) < 1) {
+        if (Encode::strlen(Request::p()->post['text']) < 1) {
             $this->error['text'] = Lang::get('lang_error_text');
         }
         
-        if (!isset($this->request->post['rating'])) {
+        if (!isset(Request::p()->post['rating'])) {
             $this->error['rating'] = Lang::get('lang_error_rating');
         }
         

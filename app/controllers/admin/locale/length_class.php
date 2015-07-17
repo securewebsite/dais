@@ -37,22 +37,22 @@ class LengthClass extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('locale/length_class');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            LocaleLengthClass::addLengthClass($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            LocaleLengthClass::addLengthClass(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/length_class', '' . $url, 'SSL'));
@@ -68,22 +68,22 @@ class LengthClass extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('locale/length_class');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            LocaleLengthClass::editLengthClass($this->request->get['length_class_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            LocaleLengthClass::editLengthClass(Request::p()->get['length_class_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/length_class', '' . $url, 'SSL'));
@@ -99,25 +99,25 @@ class LengthClass extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('locale/length_class');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $length_class_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $length_class_id) {
                 LocaleLengthClass::deleteLengthClass($length_class_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/length_class', '' . $url, 'SSL'));
@@ -131,36 +131,36 @@ class LengthClass extends Controller {
     protected function getList() {
         $data = Theme::language('locale/length_class');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'title';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'locale/length_class', $url);
@@ -179,9 +179,9 @@ class LengthClass extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/length_class/update', '' . '&length_class_id=' . $result['length_class_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/length_class/update', '' . 'length_class_id=' . $result['length_class_id'] . $url, 'SSL'));
             
-            $data['length_classes'][] = array('length_class_id' => $result['length_class_id'], 'title' => $result['title'] . (($result['unit'] == Config::get('config_length_class')) ? Lang::get('lang_text_default') : null), 'unit' => $result['unit'], 'value' => $result['value'], 'selected' => isset($this->request->post['selected']) && in_array($result['length_class_id'], $this->request->post['selected']), 'action' => $action);
+            $data['length_classes'][] = array('length_class_id' => $result['length_class_id'], 'title' => $result['title'] . (($result['unit'] == Config::get('config_length_class')) ? Lang::get('lang_text_default') : null), 'unit' => $result['unit'], 'value' => $result['value'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['length_class_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -190,10 +190,10 @@ class LengthClass extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -206,22 +206,22 @@ class LengthClass extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_title'] = Url::link('locale/length_class', '' . '&sort=title' . $url, 'SSL');
-        $data['sort_unit'] = Url::link('locale/length_class', '' . '&sort=unit' . $url, 'SSL');
-        $data['sort_value'] = Url::link('locale/length_class', '' . '&sort=value' . $url, 'SSL');
+        $data['sort_title'] = Url::link('locale/length_class', '' . 'sort=title' . $url, 'SSL');
+        $data['sort_unit'] = Url::link('locale/length_class', '' . 'sort=unit' . $url, 'SSL');
+        $data['sort_value'] = Url::link('locale/length_class', '' . 'sort=value' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate($length_class_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/length_class', '' . $url . '&page={page}', 'SSL'));
@@ -259,46 +259,46 @@ class LengthClass extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'locale/length_class', $url);
         
-        if (!isset($this->request->get['length_class_id'])) {
+        if (!isset(Request::p()->get['length_class_id'])) {
             $data['action'] = Url::link('locale/length_class/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/length_class/update', '' . '&length_class_id=' . $this->request->get['length_class_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/length_class/update', '' . 'length_class_id=' . Request::p()->get['length_class_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('locale/length_class', '' . $url, 'SSL');
         
-        if (isset($this->request->get['length_class_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $length_class_info = LocaleLengthClass::getLengthClass($this->request->get['length_class_id']);
+        if (isset(Request::p()->get['length_class_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $length_class_info = LocaleLengthClass::getLengthClass(Request::p()->get['length_class_id']);
         }
         
         Theme::model('locale/language');
         
         $data['languages'] = LocaleLanguage::getLanguages();
         
-        if (isset($this->request->post['length_class_description'])) {
-            $data['length_class_description'] = $this->request->post['length_class_description'];
-        } elseif (isset($this->request->get['length_class_id'])) {
-            $data['length_class_description'] = LocaleLengthClass::getLengthClassDescriptions($this->request->get['length_class_id']);
+        if (isset(Request::p()->post['length_class_description'])) {
+            $data['length_class_description'] = Request::p()->post['length_class_description'];
+        } elseif (isset(Request::p()->get['length_class_id'])) {
+            $data['length_class_description'] = LocaleLengthClass::getLengthClassDescriptions(Request::p()->get['length_class_id']);
         } else {
             $data['length_class_description'] = array();
         }
         
-        if (isset($this->request->post['value'])) {
-            $data['value'] = $this->request->post['value'];
+        if (isset(Request::p()->post['value'])) {
+            $data['value'] = Request::p()->post['value'];
         } elseif (!empty($length_class_info)) {
             $data['value'] = $length_class_info['value'];
         } else {
@@ -317,7 +317,7 @@ class LengthClass extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        foreach ($this->request->post['length_class_description'] as $language_id => $value) {
+        foreach (Request::p()->post['length_class_description'] as $language_id => $value) {
             if ((Encode::strlen($value['title']) < 3) || (Encode::strlen($value['title']) > 32)) {
                 $this->error['title'][$language_id] = Lang::get('lang_error_title');
             }
@@ -339,7 +339,7 @@ class LengthClass extends Controller {
         
         Theme::model('catalog/product');
         
-        foreach ($this->request->post['selected'] as $length_class_id) {
+        foreach (Request::p()->post['selected'] as $length_class_id) {
             if (Config::get('config_length_class_id') == $length_class_id) {
                 $this->error['warning'] = Lang::get('lang_error_default');
             }

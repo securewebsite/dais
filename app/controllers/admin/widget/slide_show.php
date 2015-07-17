@@ -27,9 +27,9 @@ class SlideShow extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('slide_show', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('slide_show', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/widget', '', 'SSL'));
         }
@@ -54,8 +54,8 @@ class SlideShow extends Controller {
         
         $data['widgets'] = array();
         
-        if (isset($this->request->post['slide_show_widget'])) {
-            $data['widgets'] = $this->request->post['slide_show_widget'];
+        if (isset(Request::p()->post['slide_show_widget'])) {
+            $data['widgets'] = Request::p()->post['slide_show_widget'];
         } elseif (Config::get('slide_show_widget')) {
             $data['widgets'] = Config::get('slide_show_widget');
         }
@@ -82,8 +82,8 @@ class SlideShow extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (isset($this->request->post['slide_show_widget'])) {
-            foreach ($this->request->post['slide_show_widget'] as $key => $value) {
+        if (isset(Request::p()->post['slide_show_widget'])) {
+            foreach (Request::p()->post['slide_show_widget'] as $key => $value) {
                 if (!$value['width'] || !$value['height']) {
                     $this->error['dimension'][$key] = Lang::get('lang_error_dimension');
                 }

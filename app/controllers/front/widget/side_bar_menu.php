@@ -34,11 +34,11 @@ class SideBarMenu extends Controller {
         $path  = false;
         $bpath = false;
         
-        if (isset($this->request->get['path'])):
-            $parts = explode('_', (string)$this->request->get['path']);
+        if (isset(Request::p()->get['path'])):
+            $parts = explode('_', (string)Request::p()->get['path']);
             $path  = true;
-        elseif (isset($this->request->get['bpath'])):
-            $parts = explode('_', (string)$this->request->get['bpath']);
+        elseif (isset(Request::p()->get['bpath'])):
+            $parts = explode('_', (string)Request::p()->get['bpath']);
             $bpath = true;
         else:
             $parts = array();

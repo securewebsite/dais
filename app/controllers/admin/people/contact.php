@@ -24,9 +24,9 @@ class Contact extends Controller {
         $data = Theme::language('people/contact');
         Theme::setTitle(Lang::get('lang_heading_title'));
         
-        if (isset($this->session->data['success'])):
-            $data['success'] = $this->session->data['success'];
-            unset($this->session->data['success']);
+        if (isset(Session::p()->data['success'])):
+            $data['success'] = Session::p()->data['success'];
+            unset(Session::p()->data['success']);
         endif;
         
         Breadcrumb::add('lang_heading_title', 'people/contact');
@@ -52,20 +52,20 @@ class Contact extends Controller {
         
         $json = array();
         
-        if ($this->request->server['REQUEST_METHOD'] == 'POST'):
+        if (Request::p()->server['REQUEST_METHOD'] == 'POST'):
             if (!\User::hasPermission('modify', 'people/contact')):
                 $json['error']['warning'] = Lang::get('lang_error_permission');
             endif;
             
-            if (!$this->request->post['subject']):
+            if (!Request::p()->post['subject']):
                 $json['error']['subject'] = Lang::get('lang_error_subject');
             endif;
             
-            if (!$this->request->post['contact_text']):
+            if (!Request::p()->post['contact_text']):
                 $json['error']['text'] = Lang::get('lang_error_text');
             endif;
 
-            if (!$this->request->post['contact_html']):
+            if (!Request::p()->post['contact_html']):
                 $json['error']['html'] = Lang::get('lang_error_html');
             endif;
             
@@ -74,8 +74,8 @@ class Contact extends Controller {
                 Theme::model('people/customer_group');
                 Theme::model('sale/order');
                 
-                if (isset($this->request->get['page'])):
-                    $page = $this->request->get['page'];
+                if (isset(Request::p()->get['page'])):
+                    $page = Request::p()->get['page'];
                 else:
                     $page = 1;
                 endif;
@@ -83,7 +83,7 @@ class Contact extends Controller {
                 $email_total = 0;
                 $emails      = array();
                 
-                switch ($this->request->post['to']):
+                switch (Request::p()->post['to']):
                     case 'newsletter':
                         $customer_data = array(
                             'filter_newsletter' => 1, 
@@ -113,7 +113,7 @@ class Contact extends Controller {
                         break;
                     case 'customer_group':
                         $customer_data = array(
-                            'filter_customer_group_id' => $this->request->post['customer_group_id'], 
+                            'filter_customer_group_id' => Request::p()->post['customer_group_id'], 
                             'start'                    => ($page - 1) * 10, 
                             'limit'                    => 10
                         );
@@ -126,8 +126,8 @@ class Contact extends Controller {
                         endforeach;
                         break;
                     case 'customer':
-                        if (!empty($this->request->post['customer'])):
-                            foreach ($this->request->post['customer'] as $customer_id):
+                        if (!empty(Request::p()->post['customer'])):
+                            foreach (Request::p()->post['customer'] as $customer_id):
                                 $customer_info = PeopleCustomer::getCustomer($customer_id);
                                 
                                 if ($customer_info):
@@ -150,8 +150,8 @@ class Contact extends Controller {
                         endforeach;
                         break;
                     case 'affiliate':
-                        if (!empty($this->request->post['affiliate'])):
-                            foreach ($this->request->post['affiliate'] as $affiliate_id):
+                        if (!empty(Request::p()->post['affiliate'])):
+                            foreach (Request::p()->post['affiliate'] as $affiliate_id):
                                 $affiliate_info = PeopleCustomer::getCustomer($affiliate_id);
                                 
                                 if ($affiliate_info):
@@ -161,9 +161,9 @@ class Contact extends Controller {
                         endif;
                         break;
                     case 'product':
-                        if (isset($this->request->post['product'])):
-                            $email_total = SaleOrder::getTotalCustomersByProductsOrdered($this->request->post['product']);
-                            $results     = SaleOrder::getCustomersByProductsOrdered($this->request->post['product'], ($page - 1) * 10, 10);
+                        if (isset(Request::p()->post['product'])):
+                            $email_total = SaleOrder::getTotalCustomersByProductsOrdered(Request::p()->post['product']);
+                            $results     = SaleOrder::getCustomersByProductsOrdered(Request::p()->post['product'], ($page - 1) * 10, 10);
                             
                             foreach ($results as $result):
                                 $emails[] = $result['customer_id'];
@@ -183,7 +183,7 @@ class Contact extends Controller {
                     endif;
                     
                     if ($end < $email_total):
-                        $json['next'] = str_replace('&amp;', '&', Url::link('people/contact/send', '' . '&page=' . ($page + 1), 'SSL'));
+                        $json['next'] = str_replace('&amp;', '&', Url::link('people/contact/send', '' . 'page=' . ($page + 1), 'SSL'));
                     else:
                         $json['next'] = '';
                     endif;
@@ -192,18 +192,18 @@ class Contact extends Controller {
                         $json['redirect'] = '';
                     else:
                         $json['redirect'] = str_replace('&amp;', '&', Url::link('people/contact', '', 'SSL'));
-                        $this->session->data['success'] = Lang::get('lang_text_success');
+                        Session::p()->data['success'] = Lang::get('lang_text_success');
                     endif;
 
                     $content = array(
-                        'text' => html_entity_decode($this->request->post['contact_text'], ENT_QUOTES, 'UTF-8'),
-                        'html' => html_entity_decode($this->request->post['contact_html'], ENT_QUOTES, 'UTF-8')
+                        'text' => html_entity_decode(Request::p()->post['contact_text'], ENT_QUOTES, 'UTF-8'),
+                        'html' => html_entity_decode(Request::p()->post['contact_html'], ENT_QUOTES, 'UTF-8')
                     );
                     
                     foreach ($emails as $customer_id):
                         $callback = array(
                             'customer_id' => $customer_id,
-                            'subject'     => $this->request->post['subject'],
+                            'subject'     => Request::p()->post['subject'],
                             'content'     => $content,
                             'callback'    => array(
                                 'class'  => __CLASS__,

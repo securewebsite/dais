@@ -26,8 +26,8 @@ class NotFound extends Controller {
         
         Theme::setTitle(Lang::get('lang_heading_title'));
         
-        if (isset($this->request->get['route'])):
-            $routes = $this->request->get;
+        if (isset(Request::p()->get['route'])):
+            $routes = Request::get();
             
             unset($routes['_route_']);
             
@@ -41,7 +41,7 @@ class NotFound extends Controller {
                 $url = '&' . urldecode(http_build_query($routes, '', '&'));
             endif;
             
-            if (isset($this->request->server['https']) && (($this->request->server['https'] == 'on') || ($this->request->server['https'] == '1'))):
+            if (isset(Request::p()->server['https']) && ((Request::p()->server['https'] == 'on') || (Request::p()->server['https'] == '1'))):
                 $connection = 'ssl';
             else:
                 $connection = 'nonssl';
@@ -50,7 +50,7 @@ class NotFound extends Controller {
             Breadcrumb::add('lang_breadcrumb_error', $route, $url, true, $connection);
         endif;
         
-        Response::addheader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 not found');
+        Response::addheader(Request::p()->server['SERVER_PROTOCOL'] . '/1.1 404 not found');
 
         $data['heading_title'] = Lang::get('lang_page_title');
         $data['continue']      = Url::link('shop/home');

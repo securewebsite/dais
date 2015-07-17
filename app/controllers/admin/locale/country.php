@@ -41,23 +41,23 @@ class Country extends Controller {
         
         Theme::model('locale/country');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            LocaleCountry::addCountry($this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            LocaleCountry::addCountry(Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/country', '' . $url, 'SSL'));
@@ -75,23 +75,23 @@ class Country extends Controller {
         
         Theme::model('locale/country');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            LocaleCountry::editCountry($this->request->get['country_id'], $this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            LocaleCountry::editCountry(Request::p()->get['country_id'], Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/country', '' . $url, 'SSL'));
@@ -109,25 +109,25 @@ class Country extends Controller {
         
         Theme::model('locale/country');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $country_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $country_id) {
                 LocaleCountry::deleteCountry($country_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/country', '' . $url, 'SSL'));
@@ -141,36 +141,36 @@ class Country extends Controller {
     protected function getList() {
         $data = Theme::language('locale/country');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'name';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'locale/country', $url);
@@ -189,9 +189,9 @@ class Country extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/country/update', '' . '&country_id=' . $result['country_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/country/update', '' . 'country_id=' . $result['country_id'] . $url, 'SSL'));
             
-            $data['countries'][] = array('country_id' => $result['country_id'], 'name' => $result['name'] . (($result['country_id'] == Config::get('config_country_id')) ? Lang::get('lang_text_default') : null), 'iso_code_2' => $result['iso_code_2'], 'iso_code_3' => $result['iso_code_3'], 'selected' => isset($this->request->post['selected']) && in_array($result['country_id'], $this->request->post['selected']), 'action' => $action);
+            $data['countries'][] = array('country_id' => $result['country_id'], 'name' => $result['name'] . (($result['country_id'] == Config::get('config_country_id')) ? Lang::get('lang_text_default') : null), 'iso_code_2' => $result['iso_code_2'], 'iso_code_3' => $result['iso_code_3'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['country_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -200,10 +200,10 @@ class Country extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -216,22 +216,22 @@ class Country extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('locale/country', '' . '&sort=name' . $url, 'SSL');
-        $data['sort_iso_code_2'] = Url::link('locale/country', '' . '&sort=iso_code_2' . $url, 'SSL');
-        $data['sort_iso_code_3'] = Url::link('locale/country', '' . '&sort=iso_code_3' . $url, 'SSL');
+        $data['sort_name'] = Url::link('locale/country', '' . 'sort=name' . $url, 'SSL');
+        $data['sort_iso_code_2'] = Url::link('locale/country', '' . 'sort=iso_code_2' . $url, 'SSL');
+        $data['sort_iso_code_3'] = Url::link('locale/country', '' . 'sort=iso_code_3' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate($country_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/country', '' . $url . '&page={page}', 'SSL'));
@@ -263,74 +263,74 @@ class Country extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'locale/country', $url);
         
-        if (!isset($this->request->get['country_id'])) {
+        if (!isset(Request::p()->get['country_id'])) {
             $data['action'] = Url::link('locale/country/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/country/update', '' . '&country_id=' . $this->request->get['country_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/country/update', '' . 'country_id=' . Request::p()->get['country_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('locale/country', '' . $url, 'SSL');
         
-        if (isset($this->request->get['country_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $country_info = LocaleCountry::getCountry($this->request->get['country_id']);
+        if (isset(Request::p()->get['country_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $country_info = LocaleCountry::getCountry(Request::p()->get['country_id']);
         }
         
-        if (isset($this->request->post['name'])) {
-            $data['name'] = $this->request->post['name'];
+        if (isset(Request::p()->post['name'])) {
+            $data['name'] = Request::p()->post['name'];
         } elseif (!empty($country_info)) {
             $data['name'] = $country_info['name'];
         } else {
             $data['name'] = '';
         }
         
-        if (isset($this->request->post['iso_code_2'])) {
-            $data['iso_code_2'] = $this->request->post['iso_code_2'];
+        if (isset(Request::p()->post['iso_code_2'])) {
+            $data['iso_code_2'] = Request::p()->post['iso_code_2'];
         } elseif (!empty($country_info)) {
             $data['iso_code_2'] = $country_info['iso_code_2'];
         } else {
             $data['iso_code_2'] = '';
         }
         
-        if (isset($this->request->post['iso_code_3'])) {
-            $data['iso_code_3'] = $this->request->post['iso_code_3'];
+        if (isset(Request::p()->post['iso_code_3'])) {
+            $data['iso_code_3'] = Request::p()->post['iso_code_3'];
         } elseif (!empty($country_info)) {
             $data['iso_code_3'] = $country_info['iso_code_3'];
         } else {
             $data['iso_code_3'] = '';
         }
         
-        if (isset($this->request->post['address_format'])) {
-            $data['address_format'] = $this->request->post['address_format'];
+        if (isset(Request::p()->post['address_format'])) {
+            $data['address_format'] = Request::p()->post['address_format'];
         } elseif (!empty($country_info)) {
             $data['address_format'] = $country_info['address_format'];
         } else {
             $data['address_format'] = '';
         }
         
-        if (isset($this->request->post['postcode_required'])) {
-            $data['postcode_required'] = $this->request->post['postcode_required'];
+        if (isset(Request::p()->post['postcode_required'])) {
+            $data['postcode_required'] = Request::p()->post['postcode_required'];
         } elseif (!empty($country_info)) {
             $data['postcode_required'] = $country_info['postcode_required'];
         } else {
             $data['postcode_required'] = 0;
         }
         
-        if (isset($this->request->post['status'])) {
-            $data['status'] = $this->request->post['status'];
+        if (isset(Request::p()->post['status'])) {
+            $data['status'] = Request::p()->post['status'];
         } elseif (!empty($country_info)) {
             $data['status'] = $country_info['status'];
         } else {
@@ -349,7 +349,7 @@ class Country extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 128)) {
+        if ((Encode::strlen(Request::p()->post['name']) < 3) || (Encode::strlen(Request::p()->post['name']) > 128)) {
             $this->error['name'] = Lang::get('lang_error_name');
         }
         
@@ -368,7 +368,7 @@ class Country extends Controller {
         Theme::model('locale/zone');
         Theme::model('locale/geo_zone');
         
-        foreach ($this->request->post['selected'] as $country_id) {
+        foreach (Request::p()->post['selected'] as $country_id) {
             if (Config::get('config_country_id') == $country_id) {
                 $this->error['warning'] = Lang::get('lang_error_default');
             }

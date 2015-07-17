@@ -53,16 +53,16 @@ class Dashboard extends Controller {
         
         $data['token'] = Session::get('token');
         
-        if (isset($this->session->data['success'])):
-            $data['success'] = $this->session->data['success'];
-            unset($this->session->data['success']);
+        if (isset(Session::p()->data['success'])):
+            $data['success'] = Session::p()->data['success'];
+            unset(Session::p()->data['success']);
         else:
             $data['success'] = '';
         endif;
         
-        if (isset($this->session->data['warning'])):
-            $data['error_warning'] = $this->session->data['warning'];
-            unset($this->session->data['warning']);
+        if (isset(Session::p()->data['warning'])):
+            $data['error_warning'] = Session::p()->data['warning'];
+            unset(Session::p()->data['warning']);
         else:
             $data['error_warning'] = '';
         endif;
@@ -141,8 +141,8 @@ class Dashboard extends Controller {
         $json['order']['label']    = Lang::get('lang_text_order');
         $json['customer']['label'] = Lang::get('lang_text_customer');
         
-        if (isset($this->request->get['range'])) {
-            $range = $this->request->get['range'];
+        if (isset(Request::p()->get['range'])) {
+            $range = Request::p()->get['range'];
         } else {
             $range = 'day';
         }
@@ -237,8 +237,8 @@ class Dashboard extends Controller {
     public function login() {
         $route = '';
         
-        if (isset($this->request->get['route'])) {
-            $part = explode('/', $this->request->get['route']);
+        if (isset(Request::p()->get['route'])) {
+            $part = explode('/', Request::p()->get['route']);
             
             if (isset($part[0])) {
                 $route.= $part[0];
@@ -261,7 +261,7 @@ class Dashboard extends Controller {
             return new Action('common/login');
         }
         
-        if (isset($this->request->get['route'])) {
+        if (isset(Request::p()->get['route'])) {
             $ignore = array(
                 'common/login',
                 'common/logout',
@@ -290,10 +290,10 @@ class Dashboard extends Controller {
     }
     
     public function permission() {
-        if (isset($this->request->get['route'])) {
+        if (isset(Request::p()->get['route'])) {
             $route = '';
             
-            $part = explode('/', $this->request->get['route']);
+            $part = explode('/', Request::p()->get['route']);
             
             if (isset($part[0])) {
                 $route.= $part[0];
@@ -399,7 +399,7 @@ class Dashboard extends Controller {
         if (!$this->error):
             Theme::model('report/dashboard');
             ReportDashboard::setLastAccess(User::getId());
-            $this->session->data['user_last_access'] = time();
+            Session::p()->data['user_last_access'] = time();
         endif;
         
         return !$this->error;

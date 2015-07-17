@@ -27,10 +27,10 @@ class BestSeller extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('best_seller', $this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('best_seller', Request::post());
             Cache::delete('products.best_seller');
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/widget', '', 'SSL'));
         }
@@ -55,8 +55,8 @@ class BestSeller extends Controller {
         
         $data['widgets'] = array();
         
-        if (isset($this->request->post['best_seller_widget'])) {
-            $data['widgets'] = $this->request->post['best_seller_widget'];
+        if (isset(Request::p()->post['best_seller_widget'])) {
+            $data['widgets'] = Request::p()->post['best_seller_widget'];
         } elseif (Config::get('best_seller_widget')) {
             $data['widgets'] = Config::get('best_seller_widget');
         }
@@ -79,8 +79,8 @@ class BestSeller extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (isset($this->request->post['best_seller_widget'])) {
-            foreach ($this->request->post['best_seller_widget'] as $key => $value) {
+        if (isset(Request::p()->post['best_seller_widget'])) {
+            foreach (Request::p()->post['best_seller_widget'] as $key => $value) {
                 if (!$value['image_width'] || !$value['image_height']) {
                     $this->error['image'][$key] = Lang::get('lang_error_image');
                 }

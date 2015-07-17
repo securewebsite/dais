@@ -28,26 +28,26 @@ class Special extends Controller {
         
         JS::register('storage.min', 'jquery.min');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'p.sort_order';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
-        if (isset($this->request->get['limit'])) {
-            $limit = $this->request->get['limit'];
+        if (isset(Request::p()->get['limit'])) {
+            $limit = Request::p()->get['limit'];
         } else {
             $limit = Config::get('config_catalog_limit');
         }
@@ -56,25 +56,25 @@ class Special extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        if (isset($this->request->get['limit'])) {
-            $url.= '&limit=' . $this->request->get['limit'];
+        if (isset(Request::p()->get['limit'])) {
+            $url.= '&limit=' . Request::p()->get['limit'];
         }
         
         Breadcrumb::add('lang_heading_title', 'catalog/special', $url);
         
-        $data['text_compare'] = sprintf(Lang::get('lang_text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
+        $data['text_compare'] = sprintf(Lang::get('lang_text_compare'), (isset(Session::p()->data['compare']) ? count(Session::p()->data['compare']) : 0));
         
         $data['compare'] = Url::link('catalog/compare');
         
@@ -124,8 +124,8 @@ class Special extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['limit'])) {
-            $url.= '&limit=' . $this->request->get['limit'];
+        if (isset(Request::p()->get['limit'])) {
+            $url.= '&limit=' . Request::p()->get['limit'];
         }
         
         $data['sorts'] = array();
@@ -152,12 +152,12 @@ class Special extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['limits'] = array();
@@ -172,16 +172,16 @@ class Special extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['limit'])) {
-            $url.= '&limit=' . $this->request->get['limit'];
+        if (isset(Request::p()->get['limit'])) {
+            $url.= '&limit=' . Request::p()->get['limit'];
         }
         
         $data['pagination'] = Theme::paginate($product_total, $page, $limit, Lang::get('lang_text_pagination'), Url::link('catalog/special', $url . '&page={page}'));
@@ -192,8 +192,8 @@ class Special extends Controller {
         
         $cookie = 'list';
         
-        if (isset($this->request->cookie['display'])):
-            $cookie = $this->request->cookie['display'];
+        if (isset(Request::p()->cookie['display'])):
+            $cookie = Request::p()->cookie['display'];
         endif;
         
         $data['display'] = $cookie;

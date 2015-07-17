@@ -22,7 +22,7 @@ class Credit extends Controller {
     
     public function index() {
         if (!Customer::isLogged()):
-            $this->session->data['redirect'] = Url::link('account/credit', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/credit', '', 'SSL');
             Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
         
@@ -36,8 +36,8 @@ class Credit extends Controller {
         
         $data['column_amount'] = sprintf(Lang::get('lang_column_amount'), Config::get('config_currency'));
         
-        if (isset($this->request->get['page'])):
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])):
+            $page = Request::p()->get['page'];
         else:
             $page = 1;
         endif;

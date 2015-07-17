@@ -71,32 +71,32 @@ class Manufacturer extends Controller {
         
         JS::register('storage.min', 'jquery.min');
         
-        if (isset($this->request->get['manufacturer_id'])) {
-            $manufacturer_id = (int)$this->request->get['manufacturer_id'];
+        if (isset(Request::p()->get['manufacturer_id'])) {
+            $manufacturer_id = (int)Request::p()->get['manufacturer_id'];
         } else {
             $manufacturer_id = 0;
         }
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'p.sort_order';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
-        if (isset($this->request->get['limit'])) {
-            $limit = $this->request->get['limit'];
+        if (isset(Request::p()->get['limit'])) {
+            $limit = Request::p()->get['limit'];
         } else {
             $limit = Config::get('config_catalog_limit');
         }
@@ -112,27 +112,27 @@ class Manufacturer extends Controller {
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
-            if (isset($this->request->get['limit'])) {
-                $url.= '&limit=' . $this->request->get['limit'];
+            if (isset(Request::p()->get['limit'])) {
+                $url.= '&limit=' . Request::p()->get['limit'];
             }
             
-            Breadcrumb::add($manufacturer_info['name'], 'catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url);
+            Breadcrumb::add($manufacturer_info['name'], 'catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . $url);
             
             $data['heading_title'] = $manufacturer_info['name'];
             
-            $data['text_compare'] = sprintf(Lang::get('lang_text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
+            $data['text_compare'] = sprintf(Lang::get('lang_text_compare'), (isset(Session::p()->data['compare']) ? count(Session::p()->data['compare']) : 0));
             
             $data['compare'] = Url::link('catalog/compare');
             
@@ -180,40 +180,40 @@ class Manufacturer extends Controller {
             
             $url = '';
             
-            if (isset($this->request->get['limit'])) {
-                $url.= '&limit=' . $this->request->get['limit'];
+            if (isset(Request::p()->get['limit'])) {
+                $url.= '&limit=' . Request::p()->get['limit'];
             }
             
             $data['sorts'] = array();
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_default'), 'value' => 'p.sort_order-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.sort_order&order=ASC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_default'), 'value' => 'p.sort_order-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.sort_order&order=ASC' . $url));
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_name_asc'), 'value' => 'pd.name-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=pd.name&order=ASC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_name_asc'), 'value' => 'pd.name-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=pd.name&order=ASC' . $url));
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_name_desc'), 'value' => 'pd.name-DESC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=pd.name&order=DESC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_name_desc'), 'value' => 'pd.name-DESC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=pd.name&order=DESC' . $url));
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_price_asc'), 'value' => 'p.price-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.price&order=ASC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_price_asc'), 'value' => 'p.price-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.price&order=ASC' . $url));
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_price_desc'), 'value' => 'p.price-DESC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.price&order=DESC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_price_desc'), 'value' => 'p.price-DESC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.price&order=DESC' . $url));
             
             if (Config::get('config_review_status')) {
-                $data['sorts'][] = array('text' => Lang::get('lang_text_rating_desc'), 'value' => 'rating-DESC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=rating&order=DESC' . $url));
+                $data['sorts'][] = array('text' => Lang::get('lang_text_rating_desc'), 'value' => 'rating-DESC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=rating&order=DESC' . $url));
                 
-                $data['sorts'][] = array('text' => Lang::get('lang_text_rating_asc'), 'value' => 'rating-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=rating&order=ASC' . $url));
+                $data['sorts'][] = array('text' => Lang::get('lang_text_rating_asc'), 'value' => 'rating-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=rating&order=ASC' . $url));
             }
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_model_asc'), 'value' => 'p.model-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.model&order=ASC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_model_asc'), 'value' => 'p.model-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.model&order=ASC' . $url));
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_model_desc'), 'value' => 'p.model-DESC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&sort=p.model&order=DESC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_model_desc'), 'value' => 'p.model-DESC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.model&order=DESC' . $url));
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
             $data['limits'] = array();
@@ -223,24 +223,24 @@ class Manufacturer extends Controller {
             sort($limits);
             
             foreach ($limits as $value) {
-                $data['limits'][] = array('text' => $value, 'value' => $value, 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&limit=' . $value));
+                $data['limits'][] = array('text' => $value, 'value' => $value, 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . $url . '&limit=' . $value));
             }
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['limit'])) {
-                $url.= '&limit=' . $this->request->get['limit'];
+            if (isset(Request::p()->get['limit'])) {
+                $url.= '&limit=' . Request::p()->get['limit'];
             }
             
-            $data['pagination'] = Theme::paginate($product_total, $page, $limit, Lang::get('lang_text_pagination'), Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . $url . '&page={page}'));
+            $data['pagination'] = Theme::paginate($product_total, $page, $limit, Lang::get('lang_text_pagination'), Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . $url . '&page={page}'));
             
             $data['sort'] = $sort;
             $data['order'] = $order;
@@ -248,8 +248,8 @@ class Manufacturer extends Controller {
             
             $cookie = 'list';
             
-            if (isset($this->request->cookie['display'])):
-                $cookie = $this->request->cookie['display'];
+            if (isset(Request::p()->cookie['display'])):
+                $cookie = Request::p()->cookie['display'];
             endif;
             
             $data['display'] = $cookie;
@@ -267,24 +267,24 @@ class Manufacturer extends Controller {
         } else {
             $url = '';
             
-            if (isset($this->request->get['manufacturer_id'])) {
-                $url.= '&manufacturer_id=' . $this->request->get['manufacturer_id'];
+            if (isset(Request::p()->get['manufacturer_id'])) {
+                $url.= '&manufacturer_id=' . Request::p()->get['manufacturer_id'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
-            if (isset($this->request->get['limit'])) {
-                $url.= '&limit=' . $this->request->get['limit'];
+            if (isset(Request::p()->get['limit'])) {
+                $url.= '&limit=' . Request::p()->get['limit'];
             }
             
             Breadcrumb::add('lang_text_error', 'catalog/manufacturer', $url);
@@ -295,7 +295,7 @@ class Manufacturer extends Controller {
             
             $data['continue'] = Url::link('shop/home');
             
-            Response::addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
+            Response::addHeader(Request::p()->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             

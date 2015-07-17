@@ -23,10 +23,10 @@ class Cart extends Controller {
     public function index() {
         $data = Theme::language('shop/cart');
         
-        if (isset($this->request->get['remove'])) {
-            \Cart::remove($this->request->get['remove']);
+        if (isset(Request::p()->get['remove'])) {
+            \Cart::remove(Request::p()->get['remove']);
             
-            unset($this->session->data['gift_cards'][$this->request->get['remove']]);
+            unset(Session::p()->data['gift_cards'][Request::p()->get['remove']]);
         }
         
         // Totals
@@ -67,7 +67,7 @@ class Cart extends Controller {
         
         $data['totals'] = $total_data;
         
-        $data['text_items'] = sprintf(Lang::get('lang_text_items'), \Cart::countProducts() + (isset($this->session->data['gift_cards']) ? count($this->session->data['gift_cards']) : 0), Currency::format($total));
+        $data['text_items'] = sprintf(Lang::get('lang_text_items'), \Cart::countProducts() + (isset(Session::p()->data['gift_cards']) ? count(Session::p()->data['gift_cards']) : 0), Currency::format($total));
         
         Theme::model('tool/image');
         
@@ -129,8 +129,8 @@ class Cart extends Controller {
         // Gift card
         $data['gift_cards'] = array();
         
-        if (!empty($this->session->data['gift_cards'])) {
-            foreach ($this->session->data['gift_cards'] as $key => $gift_card) {
+        if (!empty(Session::p()->data['gift_cards'])) {
+            foreach (Session::p()->data['gift_cards'] as $key => $gift_card) {
                 $data['gift_cards'][] = array(
                     'key'         => $key, 
                     'description' => $gift_card['description'], 

@@ -23,7 +23,7 @@ class Order extends Controller {
     
     public function index() {
         if (!Customer::isLogged()) {
-            $this->session->data['redirect'] = Url::link('account/order', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/order', '', 'SSL');
             
             Response::redirect(Url::link('account/login', '', 'SSL'));
         }
@@ -32,16 +32,16 @@ class Order extends Controller {
         
         Theme::model('account/order');
         
-        if (isset($this->request->get['order_id'])) {
-            $order_info = AccountOrder::getOrder($this->request->get['order_id']);
+        if (isset(Request::p()->get['order_id'])) {
+            $order_info = AccountOrder::getOrder(Request::p()->get['order_id']);
             
             if ($order_info) {
-                $order_products = AccountOrder::getOrderProducts($this->request->get['order_id']);
+                $order_products = AccountOrder::getOrderProducts(Request::p()->get['order_id']);
                 
                 foreach ($order_products as $order_product) {
                     $option_data = array();
                     
-                    $order_options = AccountOrder::getOrderOptions($this->request->get['order_id'], $order_product['order_product_id']);
+                    $order_options = AccountOrder::getOrderOptions(Request::p()->get['order_id'], $order_product['order_product_id']);
                     
                     foreach ($order_options as $order_option) {
                         if ($order_option['type'] == 'select' || $order_option['type'] == 'radio') {
@@ -55,7 +55,7 @@ class Order extends Controller {
                         }
                     }
                     
-                    $this->session->data['success'] = sprintf(Lang::get('lang_text_success'), $this->request->get['order_id']);
+                    Session::p()->data['success'] = sprintf(Lang::get('lang_text_success'), Request::p()->get['order_id']);
                     
                     Cart::add($order_product['product_id'], $order_product['quantity'], $option_data);
                 }
@@ -70,14 +70,14 @@ class Order extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'account/order', $url, true, 'SSL');
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
@@ -127,14 +127,14 @@ class Order extends Controller {
     public function info() {
         $data = Theme::language('account/order');
         
-        if (isset($this->request->get['order_id'])) {
-            $order_id = $this->request->get['order_id'];
+        if (isset(Request::p()->get['order_id'])) {
+            $order_id = Request::p()->get['order_id'];
         } else {
             $order_id = 0;
         }
         
         if (!Customer::isLogged()) {
-            $this->session->data['redirect'] = Url::link('account/order/info', 'order_id=' . $order_id, 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/order/info', 'order_id=' . $order_id, 'SSL');
             
             Response::redirect(Url::link('account/login', '', 'SSL'));
         }
@@ -150,12 +150,12 @@ class Order extends Controller {
             
             $url = '';
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Breadcrumb::add('lang_heading_title', 'account/order', $url, true, 'SSL');
-            Breadcrumb::add('lang_text_order', 'account/order/info', 'order_id=' . $this->request->get['order_id'] . $url, true, 'SSL');
+            Breadcrumb::add('lang_text_order', 'account/order/info', 'order_id=' . Request::p()->get['order_id'] . $url, true, 'SSL');
             
             if ($order_info['invoice_no']) {
                 $data['invoice_no'] = $order_info['invoice_prefix'] . $order_info['invoice_no'];
@@ -163,7 +163,7 @@ class Order extends Controller {
                 $data['invoice_no'] = '';
             }
             
-            $data['order_id'] = $this->request->get['order_id'];
+            $data['order_id'] = Request::p()->get['order_id'];
             $data['date_added'] = date(Lang::get('lang_date_format_short'), strtotime($order_info['date_added']));
             
             if ($order_info['payment_address_format']) {
@@ -254,12 +254,12 @@ class Order extends Controller {
             
             $data['products'] = array();
             
-            $products = AccountOrder::getOrderProducts($this->request->get['order_id']);
+            $products = AccountOrder::getOrderProducts(Request::p()->get['order_id']);
             
             foreach ($products as $product) {
                 $option_data = array();
                 
-                $options = AccountOrder::getOrderOptions($this->request->get['order_id'], $product['order_product_id']);
+                $options = AccountOrder::getOrderOptions(Request::p()->get['order_id'], $product['order_product_id']);
                 
                 foreach ($options as $option) {
                     if ($option['type'] != 'file') {
@@ -288,7 +288,7 @@ class Order extends Controller {
             // Giftcard
             $data['gift_cards'] = array();
             
-            $gift_cards = AccountOrder::getOrderGiftcards($this->request->get['order_id']);
+            $gift_cards = AccountOrder::getOrderGiftcards(Request::p()->get['order_id']);
             
             foreach ($gift_cards as $gift_card) {
                 $data['gift_cards'][] = array(
@@ -297,13 +297,13 @@ class Order extends Controller {
                 );
             }
             
-            $data['totals'] = AccountOrder::getOrderTotals($this->request->get['order_id']);
+            $data['totals'] = AccountOrder::getOrderTotals(Request::p()->get['order_id']);
             
             $data['comment'] = nl2br($order_info['comment']);
             
             $data['histories'] = array();
             
-            $results = AccountOrder::getOrderHistories($this->request->get['order_id']);
+            $results = AccountOrder::getOrderHistories(Request::p()->get['order_id']);
             
             foreach ($results as $result) {
                 $data['histories'][] = array(
@@ -334,7 +334,7 @@ class Order extends Controller {
             
             $data['continue'] = Url::link('account/order', '', 'SSL');
             
-            Response::addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
+            Response::addHeader(Request::p()->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             

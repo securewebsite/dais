@@ -26,18 +26,18 @@ class Plugin extends Controller {
         
         Breadcrumb::add('lang_heading_plugin', 'module/plugin');
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
         
-        if (isset($this->session->data['error'])) {
-            $data['error'] = $this->session->data['error'];
+        if (isset(Session::p()->data['error'])) {
+            $data['error'] = Session::p()->data['error'];
             
-            unset($this->session->data['error']);
+            unset(Session::p()->data['error']);
         } else {
             $data['error'] = '';
         }
@@ -68,13 +68,13 @@ class Plugin extends Controller {
                 $action = array();
                 
                 if (!in_array($module, $modules)) {
-                    $action[] = array('text' => Lang::get('lang_text_install'), 'href' => Url::link('module/plugin/install', '' . '&module=' . $module, 'SSL'));
+                    $action[] = array('text' => Lang::get('lang_text_install'), 'href' => Url::link('module/plugin/install', '' . 'module=' . $module, 'SSL'));
                 } else {
                     if (is_readable(Config::get('path.plugin') . $module . '/admin/controller/' . $module . '.php')):
                         $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('plugin/' . $module . '', '', 'SSL'));
                     endif;
                     
-                    $action[] = array('text' => Lang::get('lang_text_uninstall'), 'href' => Url::link('module/plugin/uninstall', '' . '&module=' . $module, 'SSL'));
+                    $action[] = array('text' => Lang::get('lang_text_uninstall'), 'href' => Url::link('module/plugin/uninstall', '' . 'module=' . $module, 'SSL'));
                 }
                 
                 $data['modules'][] = array('name' => Lang::get('lang_heading_title'), 'action' => $action);
@@ -92,7 +92,7 @@ class Plugin extends Controller {
         Lang::load('module/plugin');
         
         if (!User::hasPermission('modify', 'module/plugin')) {
-            $this->session->data['error'] = Lang::get('lang_error_permission');
+            Session::p()->data['error'] = Lang::get('lang_error_permission');
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
@@ -100,16 +100,16 @@ class Plugin extends Controller {
         } else {
             Theme::model('setting/module');
             
-            SettingModule::install('plugin', $this->request->get['module']);
+            SettingModule::install('plugin', Request::p()->get['module']);
             
-            if (is_readable(Config::get('path.plugin') . $this->request->get['module'] . '/controller/' . $this->request->get['module'] . '.php')):
+            if (is_readable(Config::get('path.plugin') . Request::p()->get['module'] . '/controller/' . Request::p()->get['module'] . '.php')):
                 Theme::model('people/user_group');
                 
-                PeopleUserGroup::addPermission(User::getId(), 'access', 'plugin/' . $this->request->get['module']);
-                PeopleUserGroup::addPermission(User::getId(), 'modify', 'plugin/' . $this->request->get['module']);
+                PeopleUserGroup::addPermission(User::getId(), 'access', 'plugin/' . Request::p()->get['module']);
+                PeopleUserGroup::addPermission(User::getId(), 'modify', 'plugin/' . Request::p()->get['module']);
             endif;
             
-            $this->plugin->install($this->request->get['module']);
+            $this->plugin->install(Request::p()->get['module']);
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
@@ -121,7 +121,7 @@ class Plugin extends Controller {
         Lang::load('module/plugin');
         
         if (!User::hasPermission('modify', 'module/plugin')) {
-            $this->session->data['error'] = Lang::get('lang_error_permission');
+            Session::p()->data['error'] = Lang::get('lang_error_permission');
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
@@ -130,10 +130,10 @@ class Plugin extends Controller {
             Theme::model('setting/module');
             Theme::model('setting/setting');
             
-            SettingModule::uninstall('plugin', $this->request->get['module']);
-            SettingSetting::deleteSetting($this->request->get['module']);
+            SettingModule::uninstall('plugin', Request::p()->get['module']);
+            SettingSetting::deleteSetting(Request::p()->get['module']);
             
-            $this->plugin->uninstall($this->request->get['module']);
+            $this->plugin->uninstall(Request::p()->get['module']);
             
             Theme::listen(__CLASS__, __FUNCTION__);
             

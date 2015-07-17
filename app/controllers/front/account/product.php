@@ -22,7 +22,7 @@ class Product extends Controller {
     
     public function index() {
         if (!Customer::isLogged()) {
-            $this->session->data['redirect'] = Url::link('account/product', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/product', '', 'SSL');
             Response::redirect(Url::link('account/login', '', 'SSL'));
         }
         

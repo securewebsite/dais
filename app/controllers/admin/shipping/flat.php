@@ -27,9 +27,9 @@ class Flat extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('flat', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('flat', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/shipping', '', 'SSL'));
         }
@@ -47,14 +47,14 @@ class Flat extends Controller {
         
         $data['cancel'] = Url::link('module/shipping', '', 'SSL');
         
-        if (isset($this->request->post['flat_cost'])) {
-            $data['flat_cost'] = $this->request->post['flat_cost'];
+        if (isset(Request::p()->post['flat_cost'])) {
+            $data['flat_cost'] = Request::p()->post['flat_cost'];
         } else {
             $data['flat_cost'] = Config::get('flat_cost');
         }
         
-        if (isset($this->request->post['flat_tax_class_id'])) {
-            $data['flat_tax_class_id'] = $this->request->post['flat_tax_class_id'];
+        if (isset(Request::p()->post['flat_tax_class_id'])) {
+            $data['flat_tax_class_id'] = Request::p()->post['flat_tax_class_id'];
         } else {
             $data['flat_tax_class_id'] = Config::get('flat_tax_class_id');
         }
@@ -63,8 +63,8 @@ class Flat extends Controller {
         
         $data['tax_classes'] = LocaleTaxClass::getTaxClasses();
         
-        if (isset($this->request->post['flat_geo_zone_id'])) {
-            $data['flat_geo_zone_id'] = $this->request->post['flat_geo_zone_id'];
+        if (isset(Request::p()->post['flat_geo_zone_id'])) {
+            $data['flat_geo_zone_id'] = Request::p()->post['flat_geo_zone_id'];
         } else {
             $data['flat_geo_zone_id'] = Config::get('flat_geo_zone_id');
         }
@@ -73,14 +73,14 @@ class Flat extends Controller {
         
         $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
-        if (isset($this->request->post['flat_status'])) {
-            $data['flat_status'] = $this->request->post['flat_status'];
+        if (isset(Request::p()->post['flat_status'])) {
+            $data['flat_status'] = Request::p()->post['flat_status'];
         } else {
             $data['flat_status'] = Config::get('flat_status');
         }
         
-        if (isset($this->request->post['flat_sort_order'])) {
-            $data['flat_sort_order'] = $this->request->post['flat_sort_order'];
+        if (isset(Request::p()->post['flat_sort_order'])) {
+            $data['flat_sort_order'] = Request::p()->post['flat_sort_order'];
         } else {
             $data['flat_sort_order'] = Config::get('flat_sort_order');
         }

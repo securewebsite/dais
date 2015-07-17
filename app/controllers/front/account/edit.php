@@ -24,7 +24,7 @@ class Edit extends Controller {
     
     public function index() {
         if (!Customer::isLogged()) {
-            $this->session->data['redirect'] = Url::link('account/edit', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/edit', '', 'SSL');
             Response::redirect(Url::link('account/login', '', 'SSL'));
         }
         
@@ -33,9 +33,9 @@ class Edit extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('account/customer');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            AccountCustomer::editCustomer($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            AccountCustomer::editCustomer(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             Response::redirect(Url::link('account/dashboard', '', 'SSL'));
         }
         
@@ -74,7 +74,7 @@ class Edit extends Controller {
         
         $data['action'] = Url::link('account/edit', '', 'SSL');
         
-        if ($this->request->server['REQUEST_METHOD'] != 'POST') {
+        if (Request::p()->server['REQUEST_METHOD'] != 'POST') {
             $customer_info = AccountCustomer::getCustomer(Customer::getId());
         }
         
@@ -84,32 +84,32 @@ class Edit extends Controller {
             $data['username'] = '';
         endif;
         
-        if (isset($this->request->post['firstname'])) {
-            $data['firstname'] = $this->request->post['firstname'];
+        if (isset(Request::p()->post['firstname'])) {
+            $data['firstname'] = Request::p()->post['firstname'];
         } elseif (isset($customer_info)) {
             $data['firstname'] = $customer_info['firstname'];
         } else {
             $data['firstname'] = '';
         }
         
-        if (isset($this->request->post['lastname'])) {
-            $data['lastname'] = $this->request->post['lastname'];
+        if (isset(Request::p()->post['lastname'])) {
+            $data['lastname'] = Request::p()->post['lastname'];
         } elseif (isset($customer_info)) {
             $data['lastname'] = $customer_info['lastname'];
         } else {
             $data['lastname'] = '';
         }
         
-        if (isset($this->request->post['email'])) {
-            $data['email'] = $this->request->post['email'];
+        if (isset(Request::p()->post['email'])) {
+            $data['email'] = Request::p()->post['email'];
         } elseif (isset($customer_info)) {
             $data['email'] = $customer_info['email'];
         } else {
             $data['email'] = '';
         }
         
-        if (isset($this->request->post['telephone'])) {
-            $data['telephone'] = $this->request->post['telephone'];
+        if (isset(Request::p()->post['telephone'])) {
+            $data['telephone'] = Request::p()->post['telephone'];
         } elseif (isset($customer_info)) {
             $data['telephone'] = $customer_info['telephone'];
         } else {
@@ -129,23 +129,23 @@ class Edit extends Controller {
     }
     
     protected function validate() {
-        if ((Encode::strlen($this->request->post['firstname']) < 1) || (Encode::strlen($this->request->post['firstname']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['firstname']) < 1) || (Encode::strlen(Request::p()->post['firstname']) > 32)) {
             $this->error['firstname'] = Lang::get('lang_error_firstname');
         }
         
-        if ((Encode::strlen($this->request->post['lastname']) < 1) || (Encode::strlen($this->request->post['lastname']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['lastname']) < 1) || (Encode::strlen(Request::p()->post['lastname']) > 32)) {
             $this->error['lastname'] = Lang::get('lang_error_lastname');
         }
         
-        if ((Encode::strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['email'])) {
+        if ((Encode::strlen(Request::p()->post['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', Request::p()->post['email'])) {
             $this->error['email'] = Lang::get('lang_error_email');
         }
         
-        if ((Customer::getEmail() != $this->request->post['email']) && AccountCustomer::getTotalCustomersByEmail($this->request->post['email'])) {
+        if ((Customer::getEmail() != Request::p()->post['email']) && AccountCustomer::getTotalCustomersByEmail(Request::p()->post['email'])) {
             $this->error['warning'] = Lang::get('lang_error_exists');
         }
         
-        if ((Encode::strlen($this->request->post['telephone']) < 3) || (Encode::strlen($this->request->post['telephone']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['telephone']) < 3) || (Encode::strlen(Request::p()->post['telephone']) > 32)) {
             $this->error['telephone'] = Lang::get('lang_error_telephone');
         }
         

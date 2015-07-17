@@ -35,29 +35,29 @@ class Manual extends Controller {
             Cart::clear();
             Customer::logout();
             
-            unset($this->session->data['shipping_method']);
-            unset($this->session->data['shipping_methods']);
-            unset($this->session->data['payment_method']);
-            unset($this->session->data['payment_methods']);
-            unset($this->session->data['coupon']);
-            unset($this->session->data['reward']);
-            unset($this->session->data['gift_card']);
-            unset($this->session->data['gift_cards']);
+            unset(Session::p()->data['shipping_method']);
+            unset(Session::p()->data['shipping_methods']);
+            unset(Session::p()->data['payment_method']);
+            unset(Session::p()->data['payment_methods']);
+            unset(Session::p()->data['coupon']);
+            unset(Session::p()->data['reward']);
+            unset(Session::p()->data['gift_card']);
+            unset(Session::p()->data['gift_cards']);
             
             // Settings
             Theme::model('setting/setting');
             
-            $settings = SettingSetting::getSetting('config', $this->request->post['store_id']);
+            $settings = SettingSetting::getSetting('config', Request::p()->post['store_id']);
             
             foreach ($settings as $key => $value) {
                 Config::set($key, $value);
             }
             
             // Customer
-            if ($this->request->post['customer_id']) {
+            if (Request::p()->post['customer_id']) {
                 Theme::model('account/customer');
                 
-                $customer_info = AccountCustomer::getCustomer($this->request->post['customer_id']);
+                $customer_info = AccountCustomer::getCustomer(Request::p()->post['customer_id']);
                 
                 if ($customer_info) {
                     Customer::login($customer_info['email'], '', true);
@@ -68,14 +68,14 @@ class Manual extends Controller {
             } else {
                 
                 // Customer Group
-                Config::set('config_customer_group_id', $this->request->post['customer_group_id']);
+                Config::set('config_customer_group_id', Request::p()->post['customer_group_id']);
             }
             
             // Product
             Theme::model('catalog/product');
             
-            if (isset($this->request->post['order_product'])) {
-                foreach ($this->request->post['order_product'] as $order_product) {
+            if (isset(Request::p()->post['order_product'])) {
+                foreach (Request::p()->post['order_product'] as $order_product) {
                     $product_info = CatalogProduct::getProduct($order_product['product_id']);
                     
                     if ($product_info) {
@@ -98,23 +98,23 @@ class Manual extends Controller {
                 }
             }
             
-            if (isset($this->request->post['product_id'])) {
-                $product_info = CatalogProduct::getProduct($this->request->post['product_id']);
+            if (isset(Request::p()->post['product_id'])) {
+                $product_info = CatalogProduct::getProduct(Request::p()->post['product_id']);
                 
                 if ($product_info) {
-                    if (isset($this->request->post['quantity'])) {
-                        $quantity = $this->request->post['quantity'];
+                    if (isset(Request::p()->post['quantity'])) {
+                        $quantity = Request::p()->post['quantity'];
                     } else {
                         $quantity = 1;
                     }
                     
-                    if (isset($this->request->post['option'])) {
-                        $option = array_filter($this->request->post['option']);
+                    if (isset(Request::p()->post['option'])) {
+                        $option = array_filter(Request::p()->post['option']);
                     } else {
                         $option = array();
                     }
                     
-                    $product_options = CatalogProduct::getProductOptions($this->request->post['product_id']);
+                    $product_options = CatalogProduct::getProductOptions(Request::p()->post['product_id']);
                     
                     foreach ($product_options as $product_option) {
                         if ($product_option['required'] && empty($option[$product_option['product_option_id']])) {
@@ -123,7 +123,7 @@ class Manual extends Controller {
                     }
                     
                     if (!isset($json['error']['product']['option'])) {
-                        Cart::add($this->request->post['product_id'], $quantity, $option);
+                        Cart::add(Request::p()->post['product_id'], $quantity, $option);
                     }
                 }
             }
@@ -135,12 +135,12 @@ class Manual extends Controller {
             
             // Tax
             if (Cart::hasShipping()) {
-                Tax::setShippingAddress($this->request->post['shipping_country_id'], $this->request->post['shipping_zone_id']);
+                Tax::setShippingAddress(Request::p()->post['shipping_country_id'], Request::p()->post['shipping_zone_id']);
             } else {
                 Tax::setShippingAddress(Config::get('config_country_id'), Config::get('config_zone_id'));
             }
             
-            Tax::setPaymentAddress($this->request->post['payment_country_id'], $this->request->post['payment_zone_id']);
+            Tax::setPaymentAddress(Request::p()->post['payment_country_id'], Request::p()->post['payment_zone_id']);
             Tax::setStoreAddress(Config::get('config_country_id'), Config::get('config_zone_id'));
             
             // Products
@@ -200,11 +200,11 @@ class Manual extends Controller {
             }
             
             // Giftcard
-            $this->session->data['gift_cards'] = array();
+            Session::p()->data['gift_cards'] = array();
             
-            if (isset($this->request->post['order_gift_card'])) {
-                foreach ($this->request->post['order_gift_card'] as $gift_card) {
-                    $this->session->data['gift_cards'][] = array(
+            if (isset(Request::p()->post['order_gift_card'])) {
+                foreach (Request::p()->post['order_gift_card'] as $gift_card) {
+                    Session::p()->data['gift_cards'][] = array(
                         'gift_card_id'       => $gift_card['gift_card_id'], 
                         'description'       => $gift_card['description'], 
                         'code'              => substr(md5(mt_rand()), 0, 10), 
@@ -220,24 +220,24 @@ class Manual extends Controller {
             }
             
             // Add a new gift_card if set
-            if (isset($this->request->post['from_name']) && isset($this->request->post['from_email']) && isset($this->request->post['to_name']) && isset($this->request->post['to_email']) && isset($this->request->post['amount'])) {
-                if ((Encode::strlen($this->request->post['from_name']) < 1) || (Encode::strlen($this->request->post['from_name']) > 64)) {
+            if (isset(Request::p()->post['from_name']) && isset(Request::p()->post['from_email']) && isset(Request::p()->post['to_name']) && isset(Request::p()->post['to_email']) && isset(Request::p()->post['amount'])) {
+                if ((Encode::strlen(Request::p()->post['from_name']) < 1) || (Encode::strlen(Request::p()->post['from_name']) > 64)) {
                     $json['error']['gift_cards']['from_name'] = Lang::get('lang_error_from_name');
                 }
                 
-                if ((Encode::strlen($this->request->post['from_email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['from_email'])) {
+                if ((Encode::strlen(Request::p()->post['from_email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', Request::p()->post['from_email'])) {
                     $json['error']['gift_cards']['from_email'] = Lang::get('lang_error_email');
                 }
                 
-                if ((Encode::strlen($this->request->post['to_name']) < 1) || (Encode::strlen($this->request->post['to_name']) > 64)) {
+                if ((Encode::strlen(Request::p()->post['to_name']) < 1) || (Encode::strlen(Request::p()->post['to_name']) > 64)) {
                     $json['error']['gift_cards']['to_name'] = Lang::get('lang_error_to_name');
                 }
                 
-                if ((Encode::strlen($this->request->post['to_email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['to_email'])) {
+                if ((Encode::strlen(Request::p()->post['to_email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', Request::p()->post['to_email'])) {
                     $json['error']['gift_cards']['to_email'] = Lang::get('lang_error_email');
                 }
                 
-                if (($this->request->post['amount'] < 1) || ($this->request->post['amount'] > 1000)) {
+                if ((Request::p()->post['amount'] < 1) || (Request::p()->post['amount'] > 1000)) {
                     $json['error']['gift_cards']['amount'] = sprintf(Lang::get('lang_error_amount'), Currency::format(1, false, 1), Currency::format(1000, false, 1) . ' ' . Config::get('config_currency'));
                 }
                 
@@ -245,13 +245,13 @@ class Manual extends Controller {
                     $gift_card_data = array(
                         'order_id'          => 0, 
                         'code'              => substr(md5(mt_rand()), 0, 10), 
-                        'from_name'         => $this->request->post['from_name'], 
-                        'from_email'        => $this->request->post['from_email'], 
-                        'to_name'           => $this->request->post['to_name'], 
-                        'to_email'          => $this->request->post['to_email'], 
-                        'gift_card_theme_id' => $this->request->post['gift_card_theme_id'], 
-                        'message'           => $this->request->post['message'], 
-                        'amount'            => $this->request->post['amount'], 
+                        'from_name'         => Request::p()->post['from_name'], 
+                        'from_email'        => Request::p()->post['from_email'], 
+                        'to_name'           => Request::p()->post['to_name'], 
+                        'to_email'          => Request::p()->post['to_email'], 
+                        'gift_card_theme_id' => Request::p()->post['gift_card_theme_id'], 
+                        'message'           => Request::p()->post['message'], 
+                        'amount'            => Request::p()->post['amount'], 
                         'status'            => true
                     );
                     
@@ -259,24 +259,24 @@ class Manual extends Controller {
                     
                     $gift_card_id = CheckoutGiftCard::addGiftcard(0, $gift_card_data);
                     
-                    $this->session->data['gift_cards'][] = array(
+                    Session::p()->data['gift_cards'][] = array(
                         'gift_card_id'       => $gift_card_id, 
-                        'description'       => sprintf(Lang::get('lang_text_for'), Currency::format($this->request->post['amount'], Config::get('config_currency')), $this->request->post['to_name']), 
+                        'description'       => sprintf(Lang::get('lang_text_for'), Currency::format(Request::p()->post['amount'], Config::get('config_currency')), Request::p()->post['to_name']), 
                         'code'              => substr(md5(mt_rand()), 0, 10), 
-                        'from_name'         => $this->request->post['from_name'], 
-                        'from_email'        => $this->request->post['from_email'], 
-                        'to_name'           => $this->request->post['to_name'], 
-                        'to_email'          => $this->request->post['to_email'], 
-                        'gift_card_theme_id' => $this->request->post['gift_card_theme_id'], 
-                        'message'           => $this->request->post['message'], 
-                        'amount'            => $this->request->post['amount']
+                        'from_name'         => Request::p()->post['from_name'], 
+                        'from_email'        => Request::p()->post['from_email'], 
+                        'to_name'           => Request::p()->post['to_name'], 
+                        'to_email'          => Request::p()->post['to_email'], 
+                        'gift_card_theme_id' => Request::p()->post['gift_card_theme_id'], 
+                        'message'           => Request::p()->post['message'], 
+                        'amount'            => Request::p()->post['amount']
                     );
                 }
             }
             
             $json['order_gift_card'] = array();
             
-            foreach ($this->session->data['gift_cards'] as $gift_card) {
+            foreach (Session::p()->data['gift_cards'] as $gift_card) {
                 $json['order_gift_card'][] = array(
                     'gift_card_id'       => $gift_card['gift_card_id'], 
                     'description'       => $gift_card['description'], 
@@ -303,25 +303,25 @@ class Manual extends Controller {
             if (Cart::hasShipping()) {
                 Theme::model('locale/country');
                 
-                $country_info = LocaleCountry::getCountry($this->request->post['shipping_country_id']);
+                $country_info = LocaleCountry::getCountry(Request::p()->post['shipping_country_id']);
                 
-                if ($country_info && $country_info['postcode_required'] && (Encode::strlen($this->request->post['shipping_postcode']) < 2) || (Encode::strlen($this->request->post['shipping_postcode']) > 10)) {
+                if ($country_info && $country_info['postcode_required'] && (Encode::strlen(Request::p()->post['shipping_postcode']) < 2) || (Encode::strlen(Request::p()->post['shipping_postcode']) > 10)) {
                     $json['error']['shipping']['postcode'] = Lang::get('lang_error_postcode');
                 }
                 
-                if ($this->request->post['shipping_country_id'] == '') {
+                if (Request::p()->post['shipping_country_id'] == '') {
                     $json['error']['shipping']['country'] = Lang::get('lang_error_country');
                 }
                 
-                if (!isset($this->request->post['shipping_zone_id']) || $this->request->post['shipping_zone_id'] == '') {
+                if (!isset(Request::p()->post['shipping_zone_id']) || Request::p()->post['shipping_zone_id'] == '') {
                     $json['error']['shipping']['zone'] = Lang::get('lang_error_zone');
                 }
                 
                 Theme::model('locale/country');
                 
-                $country_info = LocaleCountry::getCountry($this->request->post['shipping_country_id']);
+                $country_info = LocaleCountry::getCountry(Request::p()->post['shipping_country_id']);
                 
-                if ($country_info && $country_info['postcode_required'] && (Encode::strlen($this->request->post['shipping_postcode']) < 2) || (Encode::strlen($this->request->post['shipping_postcode']) > 10)) {
+                if ($country_info && $country_info['postcode_required'] && (Encode::strlen(Request::p()->post['shipping_postcode']) < 2) || (Encode::strlen(Request::p()->post['shipping_postcode']) > 10)) {
                     $json['error']['shipping']['postcode'] = Lang::get('lang_error_postcode');
                 }
                 
@@ -338,7 +338,7 @@ class Manual extends Controller {
                         $address_format = '';
                     }
                     
-                    $zone_info = LocaleZone::getZone($this->request->post['shipping_zone_id']);
+                    $zone_info = LocaleZone::getZone(Request::p()->post['shipping_zone_id']);
                     
                     if ($zone_info) {
                         $zone      = $zone_info['name'];
@@ -349,17 +349,17 @@ class Manual extends Controller {
                     }
                     
                     $address_data = array(
-                        'firstname'      => $this->request->post['shipping_firstname'], 
-                        'lastname'       => $this->request->post['shipping_lastname'], 
-                        'company'        => $this->request->post['shipping_company'], 
-                        'address_1'      => $this->request->post['shipping_address_1'], 
-                        'address_2'      => $this->request->post['shipping_address_2'], 
-                        'postcode'       => $this->request->post['shipping_postcode'], 
-                        'city'           => $this->request->post['shipping_city'], 
-                        'zone_id'        => $this->request->post['shipping_zone_id'], 
+                        'firstname'      => Request::p()->post['shipping_firstname'], 
+                        'lastname'       => Request::p()->post['shipping_lastname'], 
+                        'company'        => Request::p()->post['shipping_company'], 
+                        'address_1'      => Request::p()->post['shipping_address_1'], 
+                        'address_2'      => Request::p()->post['shipping_address_2'], 
+                        'postcode'       => Request::p()->post['shipping_postcode'], 
+                        'city'           => Request::p()->post['shipping_city'], 
+                        'zone_id'        => Request::p()->post['shipping_zone_id'], 
                         'zone'           => $zone, 
                         'zone_code'      => $zone_code, 
-                        'country_id'     => $this->request->post['shipping_country_id'], 
+                        'country_id'     => Request::p()->post['shipping_country_id'], 
                         'country'        => $country, 
                         'iso_code_2'     => $iso_code_2, 
                         'iso_code_3'     => $iso_code_3, 
@@ -395,50 +395,50 @@ class Manual extends Controller {
                     
                     if (!$json['shipping_method']) {
                         $json['error']['shipping_method'] = Lang::get('lang_error_no_shipping');
-                    } elseif ($this->request->post['shipping_code']) {
-                        $shipping = explode('.', $this->request->post['shipping_code']);
+                    } elseif (Request::p()->post['shipping_code']) {
+                        $shipping = explode('.', Request::p()->post['shipping_code']);
                         
                         if (!isset($shipping[0]) || !isset($shipping[1]) || !isset($json['shipping_method'][$shipping[0]]['quote'][$shipping[1]])) {
                             $json['error']['shipping_method'] = Lang::get('lang_error_shipping');
                         } else {
-                            $this->session->data['shipping_method'] = $json['shipping_method'][$shipping[0]]['quote'][$shipping[1]];
+                            Session::p()->data['shipping_method'] = $json['shipping_method'][$shipping[0]]['quote'][$shipping[1]];
                         }
                     }
                 }
             }
             
             // Coupon
-            if (!empty($this->request->post['coupon'])) {
+            if (!empty(Request::p()->post['coupon'])) {
                 Theme::model('checkout/coupon');
                 
-                $coupon_info = CheckoutCoupon::getCoupon($this->request->post['coupon']);
+                $coupon_info = CheckoutCoupon::getCoupon(Request::p()->post['coupon']);
                 
                 if ($coupon_info) {
-                    $this->session->data['coupon'] = $this->request->post['coupon'];
+                    Session::p()->data['coupon'] = Request::p()->post['coupon'];
                 } else {
                     $json['error']['coupon'] = Lang::get('lang_error_coupon');
                 }
             }
             
             // Giftcard
-            if (!empty($this->request->post['gift_card'])) {
+            if (!empty(Request::p()->post['gift_card'])) {
                 Theme::model('checkout/gift_card');
                 
-                $gift_card_info = CheckoutGiftCard::getGiftcard($this->request->post['gift_card']);
+                $gift_card_info = CheckoutGiftCard::getGiftcard(Request::p()->post['gift_card']);
                 
                 if ($gift_card_info) {
-                    $this->session->data['gift_card'] = $this->request->post['gift_card'];
+                    Session::p()->data['gift_card'] = Request::p()->post['gift_card'];
                 } else {
                     $json['error']['gift_card'] = Lang::get('lang_error_gift_card');
                 }
             }
             
             // Reward Points
-            if (!empty($this->request->post['reward'])) {
+            if (!empty(Request::p()->post['reward'])) {
                 $points = Customer::getRewardPoints();
                 
-                if ($this->request->post['reward'] > $points) {
-                    $json['error']['reward'] = sprintf(Lang::get('lang_error_points'), $this->request->post['reward']);
+                if (Request::p()->post['reward'] > $points) {
+                    $json['error']['reward'] = sprintf(Lang::get('lang_error_points'), Request::p()->post['reward']);
                 }
                 
                 if (!isset($json['error']['reward'])) {
@@ -450,12 +450,12 @@ class Manual extends Controller {
                         }
                     }
                     
-                    if ($this->request->post['reward'] > $points_total) {
+                    if (Request::p()->post['reward'] > $points_total) {
                         $json['error']['reward'] = sprintf(Lang::get('lang_error_maximum'), $points_total);
                     }
                     
                     if (!isset($json['error']['reward'])) {
-                        $this->session->data['reward'] = $this->request->post['reward'];
+                        Session::p()->data['reward'] = Request::p()->post['reward'];
                     }
                 }
             }
@@ -493,18 +493,18 @@ class Manual extends Controller {
             }
             
             // Payment
-            if ($this->request->post['payment_country_id'] == '') {
+            if (Request::p()->post['payment_country_id'] == '') {
                 $json['error']['payment']['country'] = Lang::get('lang_error_country');
             }
             
-            if (!isset($this->request->post['payment_zone_id']) || $this->request->post['payment_zone_id'] == '') {
+            if (!isset(Request::p()->post['payment_zone_id']) || Request::p()->post['payment_zone_id'] == '') {
                 $json['error']['payment']['zone'] = Lang::get('lang_error_zone');
             }
             
             if (!isset($json['error']['payment'])) {
                 $json['payment_methods'] = array();
                 
-                $country_info = LocaleCountry::getCountry($this->request->post['payment_country_id']);
+                $country_info = LocaleCountry::getCountry(Request::p()->post['payment_country_id']);
                 
                 if ($country_info) {
                     $country        = $country_info['name'];
@@ -518,7 +518,7 @@ class Manual extends Controller {
                     $address_format = '';
                 }
                 
-                $zone_info = LocaleZone::getZone($this->request->post['payment_zone_id']);
+                $zone_info = LocaleZone::getZone(Request::p()->post['payment_zone_id']);
                 
                 if ($zone_info) {
                     $zone = $zone_info['name'];
@@ -529,17 +529,17 @@ class Manual extends Controller {
                 }
                 
                 $address_data = array(
-                    'firstname'      => $this->request->post['payment_firstname'], 
-                    'lastname'       => $this->request->post['payment_lastname'], 
-                    'company'        => $this->request->post['payment_company'], 
-                    'address_1'      => $this->request->post['payment_address_1'], 
-                    'address_2'      => $this->request->post['payment_address_2'], 
-                    'postcode'       => $this->request->post['payment_postcode'], 
-                    'city'           => $this->request->post['payment_city'], 
-                    'zone_id'        => $this->request->post['payment_zone_id'], 
+                    'firstname'      => Request::p()->post['payment_firstname'], 
+                    'lastname'       => Request::p()->post['payment_lastname'], 
+                    'company'        => Request::p()->post['payment_company'], 
+                    'address_1'      => Request::p()->post['payment_address_1'], 
+                    'address_2'      => Request::p()->post['payment_address_2'], 
+                    'postcode'       => Request::p()->post['payment_postcode'], 
+                    'city'           => Request::p()->post['payment_city'], 
+                    'zone_id'        => Request::p()->post['payment_zone_id'], 
                     'zone'           => $zone, 
                     'zone_code'      => $zone_code, 
-                    'country_id'     => $this->request->post['payment_country_id'], 
+                    'country_id'     => Request::p()->post['payment_country_id'], 
                     'country'        => $country, 
                     'iso_code_2'     => $iso_code_2, 
                     'iso_code_3'     => $iso_code_3, 
@@ -572,8 +572,8 @@ class Manual extends Controller {
                 
                 if (!$json['payment_method']) {
                     $json['error']['payment_method'] = Lang::get('lang_error_no_payment');
-                } elseif ($this->request->post['payment_code']) {
-                    if (!isset($json['payment_method'][$this->request->post['payment_code']])) {
+                } elseif (Request::p()->post['payment_code']) {
+                    if (!isset($json['payment_method'][Request::p()->post['payment_code']])) {
                         $json['error']['payment_method'] = Lang::get('lang_error_payment');
                     }
                 }
@@ -589,14 +589,14 @@ class Manual extends Controller {
             Cart::clear();
             Customer::logout();
             
-            unset($this->session->data['shipping_method']);
-            unset($this->session->data['shipping_methods']);
-            unset($this->session->data['payment_method']);
-            unset($this->session->data['payment_methods']);
-            unset($this->session->data['coupon']);
-            unset($this->session->data['reward']);
-            unset($this->session->data['gift_card']);
-            unset($this->session->data['gift_cards']);
+            unset(Session::p()->data['shipping_method']);
+            unset(Session::p()->data['shipping_methods']);
+            unset(Session::p()->data['payment_method']);
+            unset(Session::p()->data['payment_methods']);
+            unset(Session::p()->data['coupon']);
+            unset(Session::p()->data['reward']);
+            unset(Session::p()->data['gift_card']);
+            unset(Session::p()->data['gift_cards']);
         } else {
             $json['error']['warning'] = Lang::get('lang_error_permission');
         }

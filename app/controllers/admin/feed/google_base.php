@@ -29,10 +29,10 @@ class GoogleBase extends Controller {
         
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('google_base', $this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('google_base', Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/feed', '', 'SSL'));
         }
@@ -50,8 +50,8 @@ class GoogleBase extends Controller {
         
         $data['cancel'] = Url::link('module/feed', '', 'SSL');
         
-        if (isset($this->request->post['google_base_status'])) {
-            $data['google_base_status'] = $this->request->post['google_base_status'];
+        if (isset(Request::p()->post['google_base_status'])) {
+            $data['google_base_status'] = Request::p()->post['google_base_status'];
         } else {
             $data['google_base_status'] = Config::get('google_base_status');
         }

@@ -28,18 +28,18 @@ class Share extends Controller {
 
         Breadcrumb::add('lang_heading_title', 'module/share');
 
-        if (isset($this->session->data['success'])):
-            $data['success'] = $this->session->data['success'];
-            unset($this->session->data['success']);
+        if (isset(Session::p()->data['success'])):
+            $data['success'] = Session::p()->data['success'];
+            unset(Session::p()->data['success']);
         else:
             $data['success'] = '';
         endif;
         
         Theme::model('setting/setting');
 
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
-            SettingSetting::editSetting('share_bar', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
+            SettingSetting::editSetting('share_bar', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/share', '', 'SSL'));
         endif;
@@ -52,72 +52,72 @@ class Share extends Controller {
 
         $settings = SettingSetting::getSetting('share_bar');
 
-        if (isset($this->request->post['facebook_enabled'])):
-        	$data['facebook_enabled'] = $this->request->post['facebook_enabled'];
+        if (isset(Request::p()->post['facebook_enabled'])):
+        	$data['facebook_enabled'] = Request::p()->post['facebook_enabled'];
         elseif(!empty($settings['facebook_enabled'])):
         	$data['facebook_enabled'] = $settings['facebook_enabled'];
         else:
         	$data['facebook_enabled'] = false;
         endif;
 
-        if (isset($this->request->post['twitter_enabled'])):
-        	$data['twitter_enabled'] = $this->request->post['twitter_enabled'];
+        if (isset(Request::p()->post['twitter_enabled'])):
+        	$data['twitter_enabled'] = Request::p()->post['twitter_enabled'];
         elseif(!empty($settings['twitter_enabled'])):
         	$data['twitter_enabled'] = $settings['twitter_enabled'];
         else:
         	$data['twitter_enabled'] = false;
         endif;
 
-        if (isset($this->request->post['google_enabled'])):
-        	$data['google_enabled'] = $this->request->post['google_enabled'];
+        if (isset(Request::p()->post['google_enabled'])):
+        	$data['google_enabled'] = Request::p()->post['google_enabled'];
         elseif(!empty($settings['google_enabled'])):
         	$data['google_enabled'] = $settings['google_enabled'];
         else:
         	$data['google_enabled'] = false;
         endif;
 
-        if (isset($this->request->post['linkedin_enabled'])):
-        	$data['linkedin_enabled'] = $this->request->post['linkedin_enabled'];
+        if (isset(Request::p()->post['linkedin_enabled'])):
+        	$data['linkedin_enabled'] = Request::p()->post['linkedin_enabled'];
         elseif(!empty($settings['linkedin_enabled'])):
         	$data['linkedin_enabled'] = $settings['linkedin_enabled'];
         else:
         	$data['linkedin_enabled'] = false;
         endif;
 
-        if (isset($this->request->post['pinterest_enabled'])):
-        	$data['pinterest_enabled'] = $this->request->post['pinterest_enabled'];
+        if (isset(Request::p()->post['pinterest_enabled'])):
+        	$data['pinterest_enabled'] = Request::p()->post['pinterest_enabled'];
         elseif(!empty($settings['pinterest_enabled'])):
         	$data['pinterest_enabled'] = $settings['pinterest_enabled'];
         else:
         	$data['pinterest_enabled'] = false;
         endif;
 
-        if (isset($this->request->post['tumblr_enabled'])):
-        	$data['tumblr_enabled'] = $this->request->post['tumblr_enabled'];
+        if (isset(Request::p()->post['tumblr_enabled'])):
+        	$data['tumblr_enabled'] = Request::p()->post['tumblr_enabled'];
         elseif(!empty($settings['tumblr_enabled'])):
         	$data['tumblr_enabled'] = $settings['tumblr_enabled'];
         else:
         	$data['tumblr_enabled'] = false;
         endif;
 
-        if (isset($this->request->post['digg_enabled'])):
-        	$data['digg_enabled'] = $this->request->post['digg_enabled'];
+        if (isset(Request::p()->post['digg_enabled'])):
+        	$data['digg_enabled'] = Request::p()->post['digg_enabled'];
         elseif(!empty($settings['digg_enabled'])):
         	$data['digg_enabled'] = $settings['digg_enabled'];
         else:
         	$data['digg_enabled'] = false;
         endif;
 
-        if (isset($this->request->post['stumbleupon_enabled'])):
-        	$data['stumbleupon_enabled'] = $this->request->post['stumbleupon_enabled'];
+        if (isset(Request::p()->post['stumbleupon_enabled'])):
+        	$data['stumbleupon_enabled'] = Request::p()->post['stumbleupon_enabled'];
         elseif(!empty($settings['stumbleupon_enabled'])):
         	$data['stumbleupon_enabled'] = $settings['stumbleupon_enabled'];
         else:
         	$data['stumbleupon_enabled'] = false;
         endif;
 
-        if (isset($this->request->post['delicious_enabled'])):
-        	$data['delicious_enabled'] = $this->request->post['delicious_enabled'];
+        if (isset(Request::p()->post['delicious_enabled'])):
+        	$data['delicious_enabled'] = Request::p()->post['delicious_enabled'];
         elseif(!empty($settings['delicious_enabled'])):
         	$data['delicious_enabled'] = $settings['delicious_enabled'];
         else:

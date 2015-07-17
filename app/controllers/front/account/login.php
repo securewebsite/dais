@@ -27,30 +27,30 @@ class Login extends Controller {
         Theme::model('account/customer');
         
         // Login override for admin users
-        if (!empty($this->request->get['token'])) {
+        if (!empty(Request::p()->get['token'])) {
             Customer::logout();
             Cart::clear();
             
-            unset($this->session->data['wishlist']);
-            unset($this->session->data['shipping_address_id']);
-            unset($this->session->data['shipping_country_id']);
-            unset($this->session->data['shipping_zone_id']);
-            unset($this->session->data['shipping_postcode']);
-            unset($this->session->data['shipping_method']);
-            unset($this->session->data['shipping_methods']);
-            unset($this->session->data['payment_address_id']);
-            unset($this->session->data['payment_country_id']);
-            unset($this->session->data['payment_zone_id']);
-            unset($this->session->data['payment_method']);
-            unset($this->session->data['payment_methods']);
-            unset($this->session->data['comment']);
-            unset($this->session->data['order_id']);
-            unset($this->session->data['coupon']);
-            unset($this->session->data['reward']);
-            unset($this->session->data['gift_card']);
-            unset($this->session->data['gift_cards']);
+            unset(Session::p()->data['wishlist']);
+            unset(Session::p()->data['shipping_address_id']);
+            unset(Session::p()->data['shipping_country_id']);
+            unset(Session::p()->data['shipping_zone_id']);
+            unset(Session::p()->data['shipping_postcode']);
+            unset(Session::p()->data['shipping_method']);
+            unset(Session::p()->data['shipping_methods']);
+            unset(Session::p()->data['payment_address_id']);
+            unset(Session::p()->data['payment_country_id']);
+            unset(Session::p()->data['payment_zone_id']);
+            unset(Session::p()->data['payment_method']);
+            unset(Session::p()->data['payment_methods']);
+            unset(Session::p()->data['comment']);
+            unset(Session::p()->data['order_id']);
+            unset(Session::p()->data['coupon']);
+            unset(Session::p()->data['reward']);
+            unset(Session::p()->data['gift_card']);
+            unset(Session::p()->data['gift_cards']);
             
-            $customer_info = AccountCustomer::getCustomerByToken($this->request->get['token']);
+            $customer_info = AccountCustomer::getCustomerByToken(Request::p()->get['token']);
             
             if ($customer_info && Customer::login($customer_info['email'], '', true)) {
                 
@@ -61,21 +61,21 @@ class Login extends Controller {
                 
                 if ($address_info) {
                     if (Config::get('config_tax_customer') == 'shipping') {
-                        $this->session->data['shipping_country_id'] = $address_info['country_id'];
-                        $this->session->data['shipping_zone_id'] = $address_info['zone_id'];
-                        $this->session->data['shipping_postcode'] = $address_info['postcode'];
+                        Session::p()->data['shipping_country_id'] = $address_info['country_id'];
+                        Session::p()->data['shipping_zone_id'] = $address_info['zone_id'];
+                        Session::p()->data['shipping_postcode'] = $address_info['postcode'];
                     }
                     
                     if (Config::get('config_tax_customer') == 'payment') {
-                        $this->session->data['payment_country_id'] = $address_info['country_id'];
-                        $this->session->data['payment_zone_id'] = $address_info['zone_id'];
+                        Session::p()->data['payment_country_id'] = $address_info['country_id'];
+                        Session::p()->data['payment_zone_id'] = $address_info['zone_id'];
                     }
                 } else {
-                    unset($this->session->data['shipping_country_id']);
-                    unset($this->session->data['shipping_zone_id']);
-                    unset($this->session->data['shipping_postcode']);
-                    unset($this->session->data['payment_country_id']);
-                    unset($this->session->data['payment_zone_id']);
+                    unset(Session::p()->data['shipping_country_id']);
+                    unset(Session::p()->data['shipping_zone_id']);
+                    unset(Session::p()->data['shipping_postcode']);
+                    unset(Session::p()->data['payment_country_id']);
+                    unset(Session::p()->data['payment_zone_id']);
                 }
                 
                 Theme::trigger('front_customer_login', array('customer_id' => Customer::getId()));
@@ -92,8 +92,8 @@ class Login extends Controller {
         
         Theme::setTitle(Lang::get('lang_heading_title'));
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            unset($this->session->data['guest']);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            unset(Session::p()->data['guest']);
             
             // Default Shipping Address
             Theme::model('account/address');
@@ -102,25 +102,25 @@ class Login extends Controller {
             
             if ($address_info) {
                 if (Config::get('config_tax_customer') == 'shipping') {
-                    $this->session->data['shipping_country_id'] = $address_info['country_id'];
-                    $this->session->data['shipping_zone_id'] = $address_info['zone_id'];
-                    $this->session->data['shipping_postcode'] = $address_info['postcode'];
+                    Session::p()->data['shipping_country_id'] = $address_info['country_id'];
+                    Session::p()->data['shipping_zone_id'] = $address_info['zone_id'];
+                    Session::p()->data['shipping_postcode'] = $address_info['postcode'];
                 }
                 
                 if (Config::get('config_tax_customer') == 'payment') {
-                    $this->session->data['payment_country_id'] = $address_info['country_id'];
-                    $this->session->data['payment_zone_id'] = $address_info['zone_id'];
+                    Session::p()->data['payment_country_id'] = $address_info['country_id'];
+                    Session::p()->data['payment_zone_id'] = $address_info['zone_id'];
                 }
             } else {
-                unset($this->session->data['shipping_country_id']);
-                unset($this->session->data['shipping_zone_id']);
-                unset($this->session->data['shipping_postcode']);
-                unset($this->session->data['payment_country_id']);
-                unset($this->session->data['payment_zone_id']);
+                unset(Session::p()->data['shipping_country_id']);
+                unset(Session::p()->data['shipping_zone_id']);
+                unset(Session::p()->data['shipping_postcode']);
+                unset(Session::p()->data['payment_country_id']);
+                unset(Session::p()->data['payment_zone_id']);
             }
             
-            if (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], Config::get('config_url')) !== false || strpos($this->request->post['redirect'], Config::get('config_ssl')) !== false)) {
-                Response::redirect(str_replace('&amp;', '&', $this->request->post['redirect']));
+            if (isset(Request::p()->post['redirect']) && (strpos(Request::p()->post['redirect'], Config::get('config_url')) !== false || strpos(Request::p()->post['redirect'], Config::get('config_ssl')) !== false)) {
+                Response::redirect(str_replace('&amp;', '&', Request::p()->post['redirect']));
             } else {
                 Response::redirect(Url::link('account/dashboard', '', 'SSL'));
             }
@@ -142,32 +142,32 @@ class Login extends Controller {
         $data['register']  = Url::link('account/register', '', 'SSL');
         $data['forgotten'] = Url::link('account/forgotten', '', 'SSL');
         
-        if (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], Config::get('config_url')) !== false || strpos($this->request->post['redirect'], Config::get('config_ssl')) !== false)) {
-            $data['redirect'] = $this->request->post['redirect'];
-        } elseif (isset($this->session->data['redirect'])) {
-            $data['redirect'] = $this->session->data['redirect'];
+        if (isset(Request::p()->post['redirect']) && (strpos(Request::p()->post['redirect'], Config::get('config_url')) !== false || strpos(Request::p()->post['redirect'], Config::get('config_ssl')) !== false)) {
+            $data['redirect'] = Request::p()->post['redirect'];
+        } elseif (isset(Session::p()->data['redirect'])) {
+            $data['redirect'] = Session::p()->data['redirect'];
             
-            unset($this->session->data['redirect']);
+            unset(Session::p()->data['redirect']);
         } else {
             $data['redirect'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
         
-        if (isset($this->request->post['email'])) {
-            $data['email'] = $this->request->post['email'];
+        if (isset(Request::p()->post['email'])) {
+            $data['email'] = Request::p()->post['email'];
         } else {
             $data['email'] = '';
         }
         
-        if (isset($this->request->post['password'])) {
-            $data['password'] = $this->request->post['password'];
+        if (isset(Request::p()->post['password'])) {
+            $data['password'] = Request::p()->post['password'];
         } else {
             $data['password'] = '';
         }
@@ -180,11 +180,11 @@ class Login extends Controller {
     }
     
     protected function validate() {
-        if (!Customer::login($this->request->post['email'], $this->request->post['password'])) {
+        if (!Customer::login(Request::p()->post['email'], Request::p()->post['password'])) {
             $this->error['warning'] = Lang::get('lang_error_login');
         }
         
-        $customer_info = AccountCustomer::getCustomerByEmail($this->request->post['email']);
+        $customer_info = AccountCustomer::getCustomerByEmail(Request::p()->post['email']);
         
         if ($customer_info && !$customer_info['approved']) {
             $this->error['warning'] = Lang::get('lang_error_approved');

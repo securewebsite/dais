@@ -30,10 +30,10 @@ class Post extends Controller {
         
         Theme::model('content/category');
         
-        if (isset($this->request->get['bpath'])) {
+        if (isset(Request::p()->get['bpath'])) {
             $path = '';
             
-            foreach (explode('_', $this->request->get['bpath']) as $path_id) {
+            foreach (explode('_', Request::p()->get['bpath']) as $path_id) {
                 if (!$path) {
                     $path = $path_id;
                 } else {
@@ -50,38 +50,38 @@ class Post extends Controller {
         
         Theme::model('content/author');
         
-        if (isset($this->request->get['author_id'])) {
-            $author_info = ContentAuthor::getAuthor($this->request->get['author_id']);
+        if (isset(Request::p()->get['author_id'])) {
+            $author_info = ContentAuthor::getAuthor(Request::p()->get['author_id']);
             
             if ($author_info) {
-                Breadcrumb::add($author_info['name'], 'content/search', 'author_id=' . $this->request->get['author_id']);
+                Breadcrumb::add($author_info['name'], 'content/search', 'author_id=' . Request::p()->get['author_id']);
             }
         }
         
-        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_tag'])) {
+        if (isset(Request::p()->get['filter_name']) || isset(Request::p()->get['filter_tag'])) {
             $url = '';
             
-            if (isset($this->request->get['filter_name'])) {
-                $url.= '&filter_name=' . $this->request->get['filter_name'];
+            if (isset(Request::p()->get['filter_name'])) {
+                $url.= '&filter_name=' . Request::p()->get['filter_name'];
             }
             
-            if (isset($this->request->get['filter_tag'])) {
-                $url.= '&filter_tag=' . $this->request->get['filter_tag'];
+            if (isset(Request::p()->get['filter_tag'])) {
+                $url.= '&filter_tag=' . Request::p()->get['filter_tag'];
             }
             
-            if (isset($this->request->get['filter_description'])) {
-                $url.= '&filter_description=' . $this->request->get['filter_description'];
+            if (isset(Request::p()->get['filter_description'])) {
+                $url.= '&filter_description=' . Request::p()->get['filter_description'];
             }
             
-            if (isset($this->request->get['filter_category_id'])) {
-                $url.= '&filter_category_id=' . $this->request->get['filter_category_id'];
+            if (isset(Request::p()->get['filter_category_id'])) {
+                $url.= '&filter_category_id=' . Request::p()->get['filter_category_id'];
             }
             
             Breadcrumb::add('lang_text_search', 'content/search', $url);
         }
         
-        if (isset($this->request->get['post_id'])) {
-            $post_id = (int)$this->request->get['post_id'];
+        if (isset(Request::p()->get['post_id'])) {
+            $post_id = (int)Request::p()->get['post_id'];
         } else {
             $post_id = 0;
         }
@@ -103,31 +103,31 @@ class Post extends Controller {
                 endif;
             endif;
             
-            if (isset($this->request->get['path'])) {
-                $url.= '&path=' . $this->request->get['path'];
+            if (isset(Request::p()->get['path'])) {
+                $url.= '&path=' . Request::p()->get['path'];
             }
             
-            if (isset($this->request->get['author_id'])) {
-                $url.= '&author_id=' . $this->request->get['author_id'];
+            if (isset(Request::p()->get['author_id'])) {
+                $url.= '&author_id=' . Request::p()->get['author_id'];
             }
             
-            if (isset($this->request->get['filter_name'])) {
-                $url.= '&filter_name=' . $this->request->get['filter_name'];
+            if (isset(Request::p()->get['filter_name'])) {
+                $url.= '&filter_name=' . Request::p()->get['filter_name'];
             }
             
-            if (isset($this->request->get['filter_tag'])) {
-                $url.= '&filter_tag=' . $this->request->get['filter_tag'];
+            if (isset(Request::p()->get['filter_tag'])) {
+                $url.= '&filter_tag=' . Request::p()->get['filter_tag'];
             }
             
-            if (isset($this->request->get['filter_description'])) {
-                $url.= '&filter_description=' . $this->request->get['filter_description'];
+            if (isset(Request::p()->get['filter_description'])) {
+                $url.= '&filter_description=' . Request::p()->get['filter_description'];
             }
             
-            if (isset($this->request->get['filter_category_id'])) {
-                $url.= '&filter_category_id=' . $this->request->get['filter_category_id'];
+            if (isset(Request::p()->get['filter_category_id'])) {
+                $url.= '&filter_category_id=' . Request::p()->get['filter_category_id'];
             }
             
-            Breadcrumb::add($post_info['name'], 'content/post', $url . '&post_id=' . $this->request->get['post_id']);
+            Breadcrumb::add($post_info['name'], 'content/post', $url . '&post_id=' . Request::p()->get['post_id']);
             
             Theme::setTitle(Config::get('config_name') . ' - ' . $post_info['name']);
             Theme::setDescription($post_info['meta_description']);
@@ -140,9 +140,9 @@ class Post extends Controller {
             
             Theme::model('content/comment');
             
-            $data['tab_comment'] = sprintf(Lang::get('lang_tab_comment'), ContentComment::getTotalCommentsByPostId($this->request->get['post_id']));
+            $data['tab_comment'] = sprintf(Lang::get('lang_tab_comment'), ContentComment::getTotalCommentsByPostId(Request::p()->get['post_id']));
             
-            $data['post_id']   = $this->request->get['post_id'];
+            $data['post_id']   = Request::p()->get['post_id'];
             $data['author_id'] = $post_info['author_id'];
             
             Theme::model('tool/image');
@@ -156,7 +156,7 @@ class Post extends Controller {
             
             $data['images'] = array();
             
-            $results = ContentPost::getPostImages($this->request->get['post_id']);
+            $results = ContentPost::getPostImages(Request::p()->get['post_id']);
             
             foreach ($results as $result) {
                 $data['images'][] = array(
@@ -184,7 +184,7 @@ class Post extends Controller {
             
             $data['posts'] = array();
             
-            $results = ContentPost::getPostRelated($this->request->get['post_id']);
+            $results = ContentPost::getPostRelated(Request::p()->get['post_id']);
             
             foreach ($results as $result) {
                 if ($result['image']) {
@@ -224,7 +224,7 @@ class Post extends Controller {
 
             endif;
             
-            if (isset($this->request->get['to_comments'])) {
+            if (isset(Request::p()->get['to_comments'])) {
                 $data['to_comments'] = true;
             } else {
                 $data['to_comments'] = false;
@@ -232,7 +232,7 @@ class Post extends Controller {
             
             $data['prev_post'] = array();
             
-            $prev_post_id = ContentPost::getPrevPostId($this->request->get['post_id']);
+            $prev_post_id = ContentPost::getPrevPostId(Request::p()->get['post_id']);
             
             if ($prev_post_id) {
                 $prev_post_info = ContentPost::getPost($prev_post_id);
@@ -244,7 +244,7 @@ class Post extends Controller {
             
             $data['next_post'] = array();
             
-            $next_post_id = ContentPost::getNextPostId($this->request->get['post_id']);
+            $next_post_id = ContentPost::getNextPostId(Request::p()->get['post_id']);
             
             if ($next_post_id) {
                 $next_post_info = ContentPost::getPost($next_post_id);
@@ -254,9 +254,9 @@ class Post extends Controller {
                 }
             }
             
-            ContentPost::updateViewed($this->request->get['post_id']);
+            ContentPost::updateViewed(Request::p()->get['post_id']);
             
-            $categories = ContentCategory::getCategoriesByPostId($this->request->get['post_id']);
+            $categories = ContentCategory::getCategoriesByPostId(Request::p()->get['post_id']);
             
             $posted_in = array();
             
@@ -283,8 +283,8 @@ class Post extends Controller {
             
             // Search
             
-            if (isset($this->request->get['filter_name'])) {
-                $data['filter_name'] = $this->request->get['filter_name'];
+            if (isset(Request::p()->get['filter_name'])) {
+                $data['filter_name'] = Request::p()->get['filter_name'];
             } else {
                 $data['filter_name'] = '';
             }
@@ -299,28 +299,28 @@ class Post extends Controller {
         } else {
             $url = '';
             
-            if (isset($this->request->get['path'])) {
-                $url.= '&path=' . $this->request->get['path'];
+            if (isset(Request::p()->get['path'])) {
+                $url.= '&path=' . Request::p()->get['path'];
             }
             
-            if (isset($this->request->get['author_id'])) {
-                $url.= '&author_id=' . $this->request->get['author_id'];
+            if (isset(Request::p()->get['author_id'])) {
+                $url.= '&author_id=' . Request::p()->get['author_id'];
             }
             
-            if (isset($this->request->get['filter_name'])) {
-                $url.= '&filter_name=' . $this->request->get['filter_name'];
+            if (isset(Request::p()->get['filter_name'])) {
+                $url.= '&filter_name=' . Request::p()->get['filter_name'];
             }
             
-            if (isset($this->request->get['filter_tag'])) {
-                $url.= '&filter_tag=' . $this->request->get['filter_tag'];
+            if (isset(Request::p()->get['filter_tag'])) {
+                $url.= '&filter_tag=' . Request::p()->get['filter_tag'];
             }
             
-            if (isset($this->request->get['filter_description'])) {
-                $url.= '&filter_description=' . $this->request->get['filter_description'];
+            if (isset(Request::p()->get['filter_description'])) {
+                $url.= '&filter_description=' . Request::p()->get['filter_description'];
             }
             
-            if (isset($this->request->get['filter_category_id'])) {
-                $url.= '&filter_category_id=' . $this->request->get['filter_category_id'];
+            if (isset(Request::p()->get['filter_category_id'])) {
+                $url.= '&filter_category_id=' . Request::p()->get['filter_category_id'];
             }
             
             Breadcrumb::add('lang_text_error', 'content/post', $url . '&post_id=' . $post_id);
@@ -347,20 +347,20 @@ class Post extends Controller {
         $data['text_on'] = Lang::get('lang_text_on');
         $data['text_no_comments'] = Lang::get('lang_text_no_comments');
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $data['comments'] = array();
         
-        $comment_total = ContentComment::getTotalCommentsByPostId($this->request->get['post_id']);
+        $comment_total = ContentComment::getTotalCommentsByPostId(Request::p()->get['post_id']);
         
-        $results = ContentComment::getCommentsByPostId($this->request->get['post_id'], ($page - 1) * 5, 5);
+        $results = ContentComment::getCommentsByPostId(Request::p()->get['post_id'], ($page - 1) * 5, 5);
         
         foreach ($results as $result) {
-            if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+            if (isset(Request::p()->server['HTTPS']) && ((Request::p()->server['HTTPS'] == 'on') || (Request::p()->server['HTTPS'] == '1'))) {
                 $http = 'https://';
             } else {
                 $http = 'http://';
@@ -383,7 +383,7 @@ class Post extends Controller {
             $comment_total, 
             $page, 5, 
             Lang::get('lang_text_pagination'), 
-            Url::link('content/post/comment', 'post_id=' . $this->request->get['post_id'] . '&page={page}')
+            Url::link('content/post/comment', 'post_id=' . Request::p()->get['post_id'] . '&page={page}')
         );
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
@@ -397,29 +397,29 @@ class Post extends Controller {
         
         $json = array();
         
-        if ($this->request->server['REQUEST_METHOD'] == 'POST') {
-            if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 25)) {
+        if (Request::p()->server['REQUEST_METHOD'] == 'POST') {
+            if ((Encode::strlen(Request::p()->post['name']) < 3) || (Encode::strlen(Request::p()->post['name']) > 25)) {
                 $json['error'] = Lang::get('lang_error_name');
             }
             
-            if ((Encode::strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['email'])) {
+            if ((Encode::strlen(Request::p()->post['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', Request::p()->post['email'])) {
                 $json['error'] = Lang::get('lang_error_email');
             }
             
-            if ((Encode::strlen($this->request->post['text']) < 25) || (Encode::strlen($this->request->post['text']) > 1000)) {
+            if ((Encode::strlen(Request::p()->post['text']) < 25) || (Encode::strlen(Request::p()->post['text']) > 1000)) {
                 $json['error'] = Lang::get('lang_error_text');
             }
             
-            if (empty($this->request->post['rating'])) {
+            if (empty(Request::p()->post['rating'])) {
                 $json['error'] = Lang::get('lang_error_rating');
             }
             
-            if (empty($this->session->data['captcha']) || ($this->session->data['captcha'] != $this->request->post['captcha'])) {
+            if (empty(Session::p()->data['captcha']) || (Session::p()->data['captcha'] != Request::p()->post['captcha'])) {
                 $json['error'] = Lang::get('lang_error_captcha');
             }
             
             if (!isset($json['error'])) {
-                ContentComment::addComment($this->request->get['post_id'], $this->request->post);
+                ContentComment::addComment(Request::p()->get['post_id'], Request::post());
                 
                 if (Config::get('blog_comment_require_approve')) {
                     $json['success'] = Lang::get('lang_text_success_approve_required');
@@ -439,7 +439,7 @@ class Post extends Controller {
     public function captcha() {
         $captcha = new Captcha;
         
-        $this->session->data['captcha'] = $captcha->getCode();
+        Session::p()->data['captcha'] = $captcha->getCode();
         
         Theme::listen(__CLASS__, __FUNCTION__);
         

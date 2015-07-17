@@ -35,7 +35,7 @@ class FileManager extends Controller {
         
         $data['title'] = Lang::get('lang_heading_title');
         
-        if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+        if (isset(Request::p()->server['HTTPS']) && ((Request::p()->server['HTTPS'] == 'on') || (Request::p()->server['HTTPS'] == '1'))) {
             $data['base'] = Config::get('https.server');
         } else {
             $data['base'] = Config::get('http.server');
@@ -47,8 +47,8 @@ class FileManager extends Controller {
         
         $data['no_image'] = ToolImage::resize('placeholder.png', 100, 100);
         
-        if (isset($this->request->get['field'])) {
-            $data['field'] = $this->request->get['field'];
+        if (isset(Request::p()->get['field'])) {
+            $data['field'] = Request::p()->get['field'];
         } else {
             $data['field'] = '';
         }
@@ -71,8 +71,8 @@ class FileManager extends Controller {
     public function image() {
         Theme::model('tool/image');
         
-        if (isset($this->request->get['image'])) {
-            Response::setOutput(ToolImage::resize(html_entity_decode($this->request->get['image'], ENT_QUOTES, 'UTF-8'), 100, 100));
+        if (isset(Request::p()->get['image'])) {
+            Response::setOutput(ToolImage::resize(html_entity_decode(Request::p()->get['image'], ENT_QUOTES, 'UTF-8'), 100, 100));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -81,8 +81,8 @@ class FileManager extends Controller {
     public function directory() {
         $json = array();
         
-        if (isset($this->request->post['directory'])) {
-            $directories = glob(rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', $this->request->post['directory']), '/') . '/*', GLOB_ONLYDIR);
+        if (isset(Request::p()->post['directory'])) {
+            $directories = glob(rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', Request::p()->post['directory']), '/') . '/*', GLOB_ONLYDIR);
             
             if ($directories) {
                 $i = 0;
@@ -110,8 +110,8 @@ class FileManager extends Controller {
     public function files() {
         $json = array();
         
-        if (!empty($this->request->post['directory'])) {
-            $directory = Config::get('path.image') . 'data/' . str_replace('../', '', $this->request->post['directory']);
+        if (!empty(Request::p()->post['directory'])) {
+            $directory = Config::get('path.image') . 'data/' . str_replace('../', '', Request::p()->post['directory']);
         } else {
             $directory = Config::get('path.image') . 'data/';
         }
@@ -155,15 +155,15 @@ class FileManager extends Controller {
         
         $json = array();
         
-        if (isset($this->request->post['directory'])) {
-            if (isset($this->request->post['name']) || $this->request->post['name']) {
-                $directory = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', $this->request->post['directory']), '/');
+        if (isset(Request::p()->post['directory'])) {
+            if (isset(Request::p()->post['name']) || Request::p()->post['name']) {
+                $directory = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', Request::p()->post['directory']), '/');
                 
                 if (!is_dir($directory)) {
                     $json['error'] = Lang::get('lang_error_directory');
                 }
                 
-                if (file_exists($directory . '/' . str_replace('../', '', $this->request->post['name']))) {
+                if (file_exists($directory . '/' . str_replace('../', '', Request::p()->post['name']))) {
                     $json['error'] = Lang::get('lang_error_exists');
                 }
             } else {
@@ -178,7 +178,7 @@ class FileManager extends Controller {
         }
         
         if (!isset($json['error'])) {
-            mkdir($directory . '/' . str_replace('../', '', $this->request->post['name']), 0777);
+            mkdir($directory . '/' . str_replace('../', '', Request::p()->post['name']), 0777);
             
             $json['success'] = Lang::get('lang_text_create');
         }
@@ -193,8 +193,8 @@ class FileManager extends Controller {
         
         $json = array();
         
-        if (isset($this->request->post['path'])) {
-            $path = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', html_entity_decode($this->request->post['path'], ENT_QUOTES, 'UTF-8')), '/');
+        if (isset(Request::p()->post['path'])) {
+            $path = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', html_entity_decode(Request::p()->post['path'], ENT_QUOTES, 'UTF-8')), '/');
             
             if (!file_exists($path)) {
                 $json['error'] = Lang::get('lang_error_select');
@@ -255,8 +255,8 @@ class FileManager extends Controller {
         
         $json = array();
         
-        if (isset($this->request->post['from']) && isset($this->request->post['to'])) {
-            $from = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', html_entity_decode($this->request->post['from'], ENT_QUOTES, 'UTF-8')), '/');
+        if (isset(Request::p()->post['from']) && isset(Request::p()->post['to'])) {
+            $from = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', html_entity_decode(Request::p()->post['from'], ENT_QUOTES, 'UTF-8')), '/');
             
             if (!file_exists($from)) {
                 $json['error'] = Lang::get('lang_error_missing');
@@ -266,7 +266,7 @@ class FileManager extends Controller {
                 $json['error'] = Lang::get('lang_error_default');
             }
             
-            $to = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', html_entity_decode($this->request->post['to'], ENT_QUOTES, 'UTF-8')), '/');
+            $to = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', html_entity_decode(Request::p()->post['to'], ENT_QUOTES, 'UTF-8')), '/');
             
             if (!file_exists($to)) {
                 $json['error'] = Lang::get('lang_error_move');
@@ -299,12 +299,12 @@ class FileManager extends Controller {
         
         $json = array();
         
-        if (isset($this->request->post['path']) && isset($this->request->post['name'])) {
-            if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 255)) {
+        if (isset(Request::p()->post['path']) && isset(Request::p()->post['name'])) {
+            if ((Encode::strlen(Request::p()->post['name']) < 3) || (Encode::strlen(Request::p()->post['name']) > 255)) {
                 $json['error'] = Lang::get('lang_error_filename');
             }
             
-            $old_name = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', html_entity_decode($this->request->post['path'], ENT_QUOTES, 'UTF-8')), '/');
+            $old_name = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', html_entity_decode(Request::p()->post['path'], ENT_QUOTES, 'UTF-8')), '/');
             
             if (!file_exists($old_name) || $old_name == Config::get('path.image') . 'data') {
                 $json['error'] = Lang::get('lang_error_copy');
@@ -316,7 +316,7 @@ class FileManager extends Controller {
                 $ext = '';
             }
             
-            $new_name = dirname($old_name) . '/' . str_replace('../', '', html_entity_decode($this->request->post['name'], ENT_QUOTES, 'UTF-8') . $ext);
+            $new_name = dirname($old_name) . '/' . str_replace('../', '', html_entity_decode(Request::p()->post['name'], ENT_QUOTES, 'UTF-8') . $ext);
             
             if (file_exists($new_name)) {
                 $json['error'] = Lang::get('lang_error_exists');
@@ -385,12 +385,12 @@ class FileManager extends Controller {
         
         $json = array();
         
-        if (isset($this->request->post['path']) && isset($this->request->post['name'])) {
-            if ((Encode::strlen($this->request->post['name']) < 3) || (Encode::strlen($this->request->post['name']) > 255)) {
+        if (isset(Request::p()->post['path']) && isset(Request::p()->post['name'])) {
+            if ((Encode::strlen(Request::p()->post['name']) < 3) || (Encode::strlen(Request::p()->post['name']) > 255)) {
                 $json['error'] = Lang::get('lang_error_filename');
             }
             
-            $old_name = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', html_entity_decode($this->request->post['path'], ENT_QUOTES, 'UTF-8')), '/');
+            $old_name = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', html_entity_decode(Request::p()->post['path'], ENT_QUOTES, 'UTF-8')), '/');
             
             if (!file_exists($old_name) || $old_name == Config::get('path.image') . 'data') {
                 $json['error'] = Lang::get('lang_error_rename');
@@ -402,7 +402,7 @@ class FileManager extends Controller {
                 $ext = '';
             }
             
-            $new_name = dirname($old_name) . '/' . str_replace('../', '', html_entity_decode($this->request->post['name'], ENT_QUOTES, 'UTF-8') . $ext);
+            $new_name = dirname($old_name) . '/' . str_replace('../', '', html_entity_decode(Request::p()->post['name'], ENT_QUOTES, 'UTF-8') . $ext);
             
             if (file_exists($new_name)) {
                 $json['error'] = Lang::get('lang_error_exists');
@@ -429,7 +429,7 @@ class FileManager extends Controller {
         
         $json = array();
         
-        if (isset($this->request->post['directory'])) {
+        if (isset(Request::p()->post['directory'])) {
             if (isset($this->request->files['image']) && $this->request->files['image']['tmp_name']) {
                 $filename = basename(html_entity_decode($this->request->files['image']['name'], ENT_QUOTES, 'UTF-8'));
                 
@@ -437,7 +437,7 @@ class FileManager extends Controller {
                     $json['error'] = Lang::get('lang_error_filename');
                 }
                 
-                $directory = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', $this->request->post['directory']), '/');
+                $directory = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', Request::p()->post['directory']), '/');
                 
                 if (!is_dir($directory)) {
                     $json['error'] = Lang::get('lang_error_directory');
@@ -498,7 +498,7 @@ class FileManager extends Controller {
         
         $json = array();
         
-        if (isset($this->request->post['directory'])) {
+        if (isset(Request::p()->post['directory'])) {
             if (isset($this->request->files['image']) && $this->request->files['image']['tmp_name']) {
                 $filename = basename(html_entity_decode($this->request->files['image']['name'], ENT_QUOTES, 'UTF-8'));
                 
@@ -506,7 +506,7 @@ class FileManager extends Controller {
                     $json['error'] = Lang::get('lang_error_filename');
                 }
                 
-                $directory = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', $this->request->post['directory']), '/');
+                $directory = rtrim(Config::get('path.image') . 'data/' . str_replace('../', '', Request::p()->post['directory']), '/');
                 
                 if (!is_dir($directory)) {
                     $json['error'] = Lang::get('lang_error_directory');
@@ -551,7 +551,7 @@ class FileManager extends Controller {
         
         if (!isset($json['error'])) {
             if (@move_uploaded_file($this->request->files['image']['tmp_name'], $directory . '/' . $filename)) {
-                $json['success'] = PUBLIC_IMAGE . $this->request->post['directory'] . '/' . $filename;
+                $json['success'] = PUBLIC_IMAGE . Request::p()->post['directory'] . '/' . $filename;
             } else {
                 $json['error'] = Lang::get('lang_error_uploaded');
             }

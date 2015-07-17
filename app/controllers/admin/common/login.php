@@ -31,18 +31,18 @@ class Login extends Controller {
             Response::redirect(Url::link('common/dashboard', '', 'SSL'));
         }
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             
             Response::makeToken();
             
-            if (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], Config::get('http.server')) === 0 || strpos($this->request->post['redirect'], Config::get('https.server')) === 0)) {
-                Response::redirect($this->request->post['redirect']);
+            if (isset(Request::p()->post['redirect']) && (strpos(Request::p()->post['redirect'], Config::get('http.server')) === 0 || strpos(Request::p()->post['redirect'], Config::get('https.server')) === 0)) {
+                Response::redirect(Request::p()->post['redirect']);
             } else {
                 Response::redirect(Url::link('common/dashboard', '', 'SSL'));
             }
         }
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && !Response::match()):
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && !Response::match()):
             $this->error['warning'] = Lang::get('lang_error_token');
         endif;
         
@@ -52,32 +52,32 @@ class Login extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
         
         $data['action'] = Url::link('common/login', '', 'SSL');
         
-        if (isset($this->request->post['user_name'])) {
-            $data['user_name'] = $this->request->post['user_name'];
+        if (isset(Request::p()->post['user_name'])) {
+            $data['user_name'] = Request::p()->post['user_name'];
         } else {
             $data['user_name'] = '';
         }
         
-        if (isset($this->request->post['password'])) {
-            $data['password'] = $this->request->post['password'];
+        if (isset(Request::p()->post['password'])) {
+            $data['password'] = Request::p()->post['password'];
         } else {
             $data['password'] = '';
         }
         
-        if (isset($this->request->get['route'])) {
-            $route = $this->request->get['route'];
+        if (isset(Request::p()->get['route'])) {
+            $route = Request::p()->get['route'];
             
-            unset($this->request->get['route']);
+            unset(Request::p()->get['route']);
             
             if (!is_null(User::getToken())) {
                 User::unsetToken();
@@ -85,8 +85,8 @@ class Login extends Controller {
             
             $url = '';
             
-            if ($this->request->get) {
-                $url.= http_build_query($this->request->get);
+            if (!is_null(Request::get())) {
+                $url .= http_build_query(Request::get());
             }
             
             $data['redirect'] = Url::link($route, $url, 'SSL');
@@ -110,7 +110,7 @@ class Login extends Controller {
     }
     
     protected function validate() {
-        if (!isset($this->request->post['user_name']) || !isset($this->request->post['password']) || !User::login($this->request->post['user_name'], $this->request->post['password'])) {
+        if (!isset(Request::p()->post['user_name']) || !isset(Request::p()->post['password']) || !User::login(Request::p()->post['user_name'], Request::p()->post['password'])) {
             $this->error['warning'] = Lang::get('lang_error_login');
         }
         

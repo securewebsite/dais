@@ -26,26 +26,26 @@ class PostHeader extends Controller {
         Theme::model('catalog/product');
         Theme::model('content/page');
         
-        if (isset($this->request->get['route'])) {
-            $route = (string)$this->request->get['route'];
+        if (isset(Request::p()->get['route'])) {
+            $route = (string)Request::p()->get['route'];
         } else {
             $route = Theme::getstyle() . '/home';
         }
         
         $layout_id = 0;
         
-        if ($route == 'catalog/category' && isset($this->request->get['path'])) {
-            $path = explode('_', (string)$this->request->get['path']);
+        if ($route == 'catalog/category' && isset(Request::p()->get['path'])) {
+            $path = explode('_', (string)Request::p()->get['path']);
             
             $layout_id = CatalogCategory::getCategoryLayoutId(end($path));
         }
         
-        if ($route == 'catalog/product' && isset($this->request->get['product_id'])) {
-            $layout_id = CatalogProduct::getProductLayoutId($this->request->get['product_id']);
+        if ($route == 'catalog/product' && isset(Request::p()->get['product_id'])) {
+            $layout_id = CatalogProduct::getProductLayoutId(Request::p()->get['product_id']);
         }
         
-        if ($route == 'content/page' && isset($this->request->get['page_id'])) {
-            $layout_id = ContentPage::getPageLayoutId($this->request->get['page_id']);
+        if ($route == 'content/page' && isset(Request::p()->get['page_id'])) {
+            $layout_id = ContentPage::getPageLayoutId(Request::p()->get['page_id']);
         }
         
         if (!$layout_id) {

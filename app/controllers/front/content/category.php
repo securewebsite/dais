@@ -31,34 +31,34 @@ class Category extends Controller {
         Theme::model('content/post');
         Theme::model('tool/image');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'p.date_added';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'DESC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
-        if (isset($this->request->get['limit'])) {
-            $limit = $this->request->get['limit'];
+        if (isset(Request::p()->get['limit'])) {
+            $limit = Request::p()->get['limit'];
         } else {
             $limit = Config::get('config_catalog_limit');
         }
         
-        if (isset($this->request->get['bpath'])) {
+        if (isset(Request::p()->get['bpath'])) {
             $path = '';
             
-            $parts = explode('_', (string)$this->request->get['bpath']);
+            $parts = explode('_', (string)Request::p()->get['bpath']);
             
             foreach ($parts as $path_id) {
                 if (!$path) {
@@ -103,16 +103,16 @@ class Category extends Controller {
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['limit'])) {
-                $url.= '&limit=' . $this->request->get['limit'];
+            if (isset(Request::p()->get['limit'])) {
+                $url.= '&limit=' . Request::p()->get['limit'];
             }
 
             $data['tags'] = false;
@@ -152,7 +152,7 @@ class Category extends Controller {
                 
                 $data['categories'][] = array(
                     'name' => $result['name'] . ($post_total ? ' (' . $post_total . ')' : ''), 
-                    'href' => Url::link('content/category', 'bpath=' . $this->request->get['bpath'] . '_' . $result['category_id'] . $url), 
+                    'href' => Url::link('content/category', 'bpath=' . Request::p()->get['bpath'] . '_' . $result['category_id'] . $url), 
                     'pic'  => $img
                 );
                 
@@ -200,24 +200,24 @@ class Category extends Controller {
                 
                 $comment_text = ($result['comments'] == 1) ? rtrim(Lang::get('lang_text_comments'), 's') : Lang::get('lang_text_comments');
                 
-                $data['posts'][] = array('post_id' => $result['post_id'], 'author_name' => $result['author_name'], 'thumb' => $image, 'name' => $result['name'], 'short' => Encode::substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 450) . '..', 'blurb' => Encode::substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 200) . '..', 'rating' => $rating, 'views' => sprintf(Lang::get('lang_text_views'), (int)$result['viewed']), 'comments' => sprintf($comment_text, (int)$result['comments']), 'href' => Url::link('content/post', 'bpath=' . $this->request->get['bpath'] . '&post_id=' . $result['post_id']), 'comments_href' => Url::link('content/post', 'post_id=' . $result['post_id'] . '&to_comments=1'), 'author_href' => Url::link('content/search', '&filter_author_id=' . $result['author_id']), 'date_added' => date(Lang::get('lang_post_date'), strtotime($result['date_added'])), 'categories' => $posted_in_categories);
+                $data['posts'][] = array('post_id' => $result['post_id'], 'author_name' => $result['author_name'], 'thumb' => $image, 'name' => $result['name'], 'short' => Encode::substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 450) . '..', 'blurb' => Encode::substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 200) . '..', 'rating' => $rating, 'views' => sprintf(Lang::get('lang_text_views'), (int)$result['viewed']), 'comments' => sprintf($comment_text, (int)$result['comments']), 'href' => Url::link('content/post', 'bpath=' . Request::p()->get['bpath'] . '&post_id=' . $result['post_id']), 'comments_href' => Url::link('content/post', 'post_id=' . $result['post_id'] . '&to_comments=1'), 'author_href' => Url::link('content/search', '&filter_author_id=' . $result['author_id']), 'date_added' => date(Lang::get('lang_post_date'), strtotime($result['date_added'])), 'categories' => $posted_in_categories);
             }
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['limit'])) {
-                $url.= '&limit=' . $this->request->get['limit'];
+            if (isset(Request::p()->get['limit'])) {
+                $url.= '&limit=' . Request::p()->get['limit'];
             }
             
-            $data['pagination'] = Theme::paginate($post_total, $page, $limit, Lang::get('lang_text_pagination'), Url::link('content/category', 'bpath=' . $this->request->get['bpath'] . $url . '&page={page}'));
+            $data['pagination'] = Theme::paginate($post_total, $page, $limit, Lang::get('lang_text_pagination'), Url::link('content/category', 'bpath=' . Request::p()->get['bpath'] . $url . '&page={page}'));
             
             $data['sort'] = $sort;
             $data['order'] = $order;
@@ -227,8 +227,8 @@ class Category extends Controller {
             
             // Search
             
-            if (isset($this->request->get['filter_name'])) {
-                $data['filter_name'] = $this->request->get['filter_name'];
+            if (isset(Request::p()->get['filter_name'])) {
+                $data['filter_name'] = Request::p()->get['filter_name'];
             } else {
                 $data['filter_name'] = '';
             }
@@ -241,24 +241,24 @@ class Category extends Controller {
         } else {
             $url = '';
             
-            if (isset($this->request->get['bpath'])) {
-                $url.= '&bpath=' . $this->request->get['bpath'];
+            if (isset(Request::p()->get['bpath'])) {
+                $url.= '&bpath=' . Request::p()->get['bpath'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
-            if (isset($this->request->get['limit'])) {
-                $url.= '&limit=' . $this->request->get['limit'];
+            if (isset(Request::p()->get['limit'])) {
+                $url.= '&limit=' . Request::p()->get['limit'];
             }
             
             Breadcrumb::add('lang_text_error', 'content/category', $url);
@@ -271,8 +271,8 @@ class Category extends Controller {
             
             // Search
             
-            if (isset($this->request->get['filter_name'])) {
-                $data['filter_name'] = $this->request->get['filter_name'];
+            if (isset(Request::p()->get['filter_name'])) {
+                $data['filter_name'] = Request::p()->get['filter_name'];
             } else {
                 $data['filter_name'] = '';
             }

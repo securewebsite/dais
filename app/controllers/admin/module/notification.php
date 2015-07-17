@@ -36,14 +36,14 @@ class Notification extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('module/notification');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
-            ModuleNotification::addNotification($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
+            ModuleNotification::addNotification(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['page'])):
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])):
+                $url.= '&page=' . Request::p()->get['page'];
             endif;
             
             Response::redirect(Url::link('module/notification', '' . $url, 'SSL'));
@@ -59,14 +59,14 @@ class Notification extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('module/notification');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
-            ModuleNotification::editNotification($this->request->get['notification_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()):
+            ModuleNotification::editNotification(Request::p()->get['notification_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
 
-            if (isset($this->request->get['page'])):
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])):
+                $url.= '&page=' . Request::p()->get['page'];
             endif;
             
             Response::redirect(Url::link('module/notification', '' . $url, 'SSL'));
@@ -82,17 +82,17 @@ class Notification extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('module/notification');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()):
-            foreach ($this->request->post['selected'] as $notification_id):
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()):
+            foreach (Request::p()->post['selected'] as $notification_id):
                 ModuleNotification::deleteNotification($notification_id);
             endforeach;
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['page'])):
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])):
+                $url.= '&page=' . Request::p()->get['page'];
             endif;
             
             Response::redirect(Url::link('module/notification', '' . $url, 'SSL'));
@@ -109,9 +109,9 @@ class Notification extends Controller {
 
 		$url = '';
 
-		if (isset($this->request->get['page'])):
-            $page = $this->request->get['page'];
-        	$url .= '&page=' . $this->request->get['page'];
+		if (isset(Request::p()->get['page'])):
+            $page = Request::p()->get['page'];
+        	$url .= '&page=' . Request::p()->get['page'];
         else:
             $page = 1;
         endif;
@@ -136,7 +136,7 @@ class Notification extends Controller {
             
             $action[] = array(
             	'text' => Lang::get('lang_text_edit'), 
-            	'href' => Url::link('module/notification/update', '' . '&notification_id=' . $result['email_id'] . $url, 'SSL')
+            	'href' => Url::link('module/notification/update', '' . 'notification_id=' . $result['email_id'] . $url, 'SSL')
             );
 
             // Let's display a nice name
@@ -158,7 +158,7 @@ class Notification extends Controller {
                 'priority'        => $priority,
                 'type'            => $type,
                 'is_system'       => $result['is_system'],
-                'selected'        => isset($this->request->post['selected']) && in_array($result['email_id'], $this->request->post['selected']), 
+                'selected'        => isset(Request::p()->post['selected']) && in_array($result['email_id'], Request::p()->post['selected']), 
                 'action'          => $action
             );
         endforeach;
@@ -169,17 +169,17 @@ class Notification extends Controller {
             $data['error_warning'] = '';
         endif;
         
-        if (isset($this->session->data['success'])):
-            $data['success'] = $this->session->data['success'];
-            unset($this->session->data['success']);
+        if (isset(Session::p()->data['success'])):
+            $data['success'] = Session::p()->data['success'];
+            unset(Session::p()->data['success']);
         else:
             $data['success'] = '';
         endif;
         
         $url = '';
 
-        if (isset($this->request->get['page'])):
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])):
+            $url.= '&page=' . Request::p()->get['page'];
         endif;
 
         $data['pagination'] = Theme::paginate(
@@ -239,62 +239,62 @@ class Notification extends Controller {
 
         $url = '';
         
-        if (isset($this->request->get['page'])):
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])):
+            $url.= '&page=' . Request::p()->get['page'];
         endif;
         
         Breadcrumb::add('lang_heading_title', 'module/notification', $url);
 
-        if (!isset($this->request->get['notification_id'])):
+        if (!isset(Request::p()->get['notification_id'])):
             $data['action'] = Url::link('module/notification/insert', '' . $url, 'SSL');
         else:
-            $data['action'] = Url::link('module/notification/update', '' . '&notification_id=' . $this->request->get['notification_id'] . $url, 'SSL');
+            $data['action'] = Url::link('module/notification/update', '' . 'notification_id=' . Request::p()->get['notification_id'] . $url, 'SSL');
         endif;
         
         $data['cancel'] = Url::link('module/notification', '' . $url, 'SSL');
         
-        if (isset($this->request->get['notification_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')):
-            $notification_info = ModuleNotification::getNotification($this->request->get['notification_id']);
+        if (isset(Request::p()->get['notification_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')):
+            $notification_info = ModuleNotification::getNotification(Request::p()->get['notification_id']);
         endif;
         
         Theme::model('locale/language');
         
         $data['languages'] = LocaleLanguage::getLanguages();
         
-        if (isset($this->request->post['email_content'])):
-            $data['email_content'] = $this->request->post['email_content'];
-        elseif (isset($this->request->get['notification_id'])):
-            $data['email_content'] = ModuleNotification::getNotificationContent($this->request->get['notification_id']);
+        if (isset(Request::p()->post['email_content'])):
+            $data['email_content'] = Request::p()->post['email_content'];
+        elseif (isset(Request::p()->get['notification_id'])):
+            $data['email_content'] = ModuleNotification::getNotificationContent(Request::p()->get['notification_id']);
         else:
             $data['email_content'] = array();
         endif;
 
-        if (isset($this->request->post['email_slug'])):
-            $data['email_slug'] = $this->request->post['email_slug'];
+        if (isset(Request::p()->post['email_slug'])):
+            $data['email_slug'] = Request::p()->post['email_slug'];
         elseif (!empty($notification_info)):
             $data['email_slug'] = $notification_info['email_slug'];
         else:
             $data['email_slug'] = '';
         endif;
 
-        if (isset($this->request->post['is_system'])):
-        	$data['is_system'] = $this->request->post['is_system'];
+        if (isset(Request::p()->post['is_system'])):
+        	$data['is_system'] = Request::p()->post['is_system'];
         elseif (!empty($notification_info)):
             $data['is_system'] = $notification_info['is_system'];
         else:
             $data['is_system'] = 0;
         endif;
 
-        if (isset($this->request->post['configurable'])):
-            $data['configurable'] = $this->request->post['configurable'];
+        if (isset(Request::p()->post['configurable'])):
+            $data['configurable'] = Request::p()->post['configurable'];
         elseif (!empty($notification_info)):
             $data['configurable'] = $notification_info['configurable'];
         else:
             $data['configurable'] = 0;
         endif;
 
-        if (isset($this->request->post['config_description'])):
-            $data['config_description'] = $this->request->post['config_description'];
+        if (isset(Request::p()->post['config_description'])):
+            $data['config_description'] = Request::p()->post['config_description'];
         elseif (!empty($notification_info)):
             $data['config_description'] = $notification_info['config_description'];
         else:
@@ -302,16 +302,16 @@ class Notification extends Controller {
         endif;
 
         // Customer: 1  Admin: 2
-        if (isset($this->request->post['recipient'])):
-            $data['recipient'] = $this->request->post['recipient'];
+        if (isset(Request::p()->post['recipient'])):
+            $data['recipient'] = Request::p()->post['recipient'];
         elseif (!empty($notification_info)):
             $data['recipient'] = $notification_info['recipient'];
         else:
             $data['recipient'] = 1;
         endif;
 
-        if (isset($this->request->post['priority'])):
-            $data['priority'] = $this->request->post['priority'];
+        if (isset(Request::p()->post['priority'])):
+            $data['priority'] = Request::p()->post['priority'];
         elseif (!empty($notification_info)):
             $data['priority'] = $notification_info['priority'];
         else:
@@ -333,7 +333,7 @@ class Notification extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         endif;
         
-        foreach ($this->request->post['email_content'] as $language_id => $value):
+        foreach (Request::p()->post['email_content'] as $language_id => $value):
             if (Encode::strlen($value['text']) < 1):
                 $this->error['text'][$language_id] = Lang::get('lang_error_text');
             endif;
@@ -347,11 +347,11 @@ class Notification extends Controller {
             endif;
         endforeach;
         
-        if (isset($this->request->post['email_slug']) && Encode::strlen($this->request->post['email_slug']) < 1):
+        if (isset(Request::p()->post['email_slug']) && Encode::strlen(Request::p()->post['email_slug']) < 1):
             $this->error['email_slug'] = Lang::get('lang_error_email_slug');
         endif;
 
-        if ($this->request->post['configurable'] === true && Encode::strlen($this->request->post['config_description']) < 3):
+        if (Request::p()->post['configurable'] === true && Encode::strlen(Request::p()->post['config_description']) < 3):
             $this->error['description'] = Lang::get('lang_error_description');
         endif;
         
@@ -371,7 +371,7 @@ class Notification extends Controller {
 
         $count = 0;
 
-        foreach ($this->request->post['selected'] as $email_id):
+        foreach (Request::p()->post['selected'] as $email_id):
         	$check = ModuleNotification::checkSystem($email_id);
         	if ($check):
         		$count++;

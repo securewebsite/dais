@@ -37,22 +37,22 @@ class ReturnStatus extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('locale/return_status');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            LocaleReturnStatus::addReturnStatus($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            LocaleReturnStatus::addReturnStatus(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/return_status', '' . $url, 'SSL'));
@@ -68,22 +68,22 @@ class ReturnStatus extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('locale/return_status');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            LocaleReturnStatus::editReturnStatus($this->request->get['return_status_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            LocaleReturnStatus::editReturnStatus(Request::p()->get['return_status_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/return_status', '' . $url, 'SSL'));
@@ -99,25 +99,25 @@ class ReturnStatus extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('locale/return_status');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $return_status_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $return_status_id) {
                 LocaleReturnStatus::deleteReturnStatus($return_status_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/return_status', '' . $url, 'SSL'));
@@ -131,36 +131,36 @@ class ReturnStatus extends Controller {
     protected function getList() {
         $data = Theme::language('locale/return_status');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'name';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'locale/return_status', $url);
@@ -179,9 +179,9 @@ class ReturnStatus extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/return_status/update', '' . '&return_status_id=' . $result['return_status_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/return_status/update', '' . 'return_status_id=' . $result['return_status_id'] . $url, 'SSL'));
             
-            $data['return_statuses'][] = array('return_status_id' => $result['return_status_id'], 'name' => $result['name'] . (($result['return_status_id'] == Config::get('config_return_status_id')) ? Lang::get('lang_text_default') : null), 'selected' => isset($this->request->post['selected']) && in_array($result['return_status_id'], $this->request->post['selected']), 'action' => $action);
+            $data['return_statuses'][] = array('return_status_id' => $result['return_status_id'], 'name' => $result['name'] . (($result['return_status_id'] == Config::get('config_return_status_id')) ? Lang::get('lang_text_default') : null), 'selected' => isset(Request::p()->post['selected']) && in_array($result['return_status_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -190,10 +190,10 @@ class ReturnStatus extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -206,20 +206,20 @@ class ReturnStatus extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('locale/return_status', '' . '&sort=name' . $url, 'SSL');
+        $data['sort_name'] = Url::link('locale/return_status', '' . 'sort=name' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate($return_status_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/return_status', '' . $url . '&page={page}', 'SSL'));
@@ -251,24 +251,24 @@ class ReturnStatus extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'locale/return_status', $url);
         
-        if (!isset($this->request->get['return_status_id'])) {
+        if (!isset(Request::p()->get['return_status_id'])) {
             $data['action'] = Url::link('locale/return_status/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/return_status/update', '' . '&return_status_id=' . $this->request->get['return_status_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/return_status/update', '' . 'return_status_id=' . Request::p()->get['return_status_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('locale/return_status', '' . $url, 'SSL');
@@ -277,10 +277,10 @@ class ReturnStatus extends Controller {
         
         $data['languages'] = LocaleLanguage::getLanguages();
         
-        if (isset($this->request->post['return_status'])) {
-            $data['return_status'] = $this->request->post['return_status'];
-        } elseif (isset($this->request->get['return_status_id'])) {
-            $data['return_status'] = LocaleReturnStatus::getReturnStatusDescriptions($this->request->get['return_status_id']);
+        if (isset(Request::p()->post['return_status'])) {
+            $data['return_status'] = Request::p()->post['return_status'];
+        } elseif (isset(Request::p()->get['return_status_id'])) {
+            $data['return_status'] = LocaleReturnStatus::getReturnStatusDescriptions(Request::p()->get['return_status_id']);
         } else {
             $data['return_status'] = array();
         }
@@ -297,7 +297,7 @@ class ReturnStatus extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        foreach ($this->request->post['return_status'] as $language_id => $value) {
+        foreach (Request::p()->post['return_status'] as $language_id => $value) {
             if ((Encode::strlen($value['name']) < 3) || (Encode::strlen($value['name']) > 32)) {
                 $this->error['name'][$language_id] = Lang::get('lang_error_name');
             }
@@ -315,7 +315,7 @@ class ReturnStatus extends Controller {
         
         Theme::model('sale/returns');
         
-        foreach ($this->request->post['selected'] as $return_status_id) {
+        foreach (Request::p()->post['selected'] as $return_status_id) {
             if (Config::get('config_return_status_id') == $return_status_id) {
                 $this->error['warning'] = Lang::get('lang_error_default');
             }

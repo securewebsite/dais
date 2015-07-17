@@ -41,23 +41,23 @@ class Currency extends Controller {
         
         Theme::model('locale/currency');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            LocaleCurrency::addCurrency($this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            LocaleCurrency::addCurrency(Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/currency', '' . $url, 'SSL'));
@@ -75,23 +75,23 @@ class Currency extends Controller {
         
         Theme::model('locale/currency');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            LocaleCurrency::editCurrency($this->request->get['currency_id'], $this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            LocaleCurrency::editCurrency(Request::p()->get['currency_id'], Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/currency', '' . $url, 'SSL'));
@@ -109,25 +109,25 @@ class Currency extends Controller {
         
         Theme::model('locale/currency');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $currency_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $currency_id) {
                 LocaleCurrency::deleteCurrency($currency_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/currency', '' . $url, 'SSL'));
@@ -141,36 +141,36 @@ class Currency extends Controller {
     protected function getList() {
         $data = Theme::language('locale/currency');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'title';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'locale/currency', $url);
@@ -189,9 +189,9 @@ class Currency extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/currency/update', '' . '&currency_id=' . $result['currency_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/currency/update', '' . 'currency_id=' . $result['currency_id'] . $url, 'SSL'));
             
-            $data['currencies'][] = array('currency_id' => $result['currency_id'], 'title' => $result['title'] . (($result['code'] == Config::get('config_currency')) ? Lang::get('lang_text_default') : null), 'code' => $result['code'], 'value' => $result['value'], 'date_modified' => date(Lang::get('lang_date_format_short'), strtotime($result['date_modified'])), 'selected' => isset($this->request->post['selected']) && in_array($result['currency_id'], $this->request->post['selected']), 'action' => $action);
+            $data['currencies'][] = array('currency_id' => $result['currency_id'], 'title' => $result['title'] . (($result['code'] == Config::get('config_currency')) ? Lang::get('lang_text_default') : null), 'code' => $result['code'], 'value' => $result['value'], 'date_modified' => date(Lang::get('lang_date_format_short'), strtotime($result['date_modified'])), 'selected' => isset(Request::p()->post['selected']) && in_array($result['currency_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -200,10 +200,10 @@ class Currency extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -216,23 +216,23 @@ class Currency extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_title'] = Url::link('locale/currency', '' . '&sort=title' . $url, 'SSL');
-        $data['sort_code'] = Url::link('locale/currency', '' . '&sort=code' . $url, 'SSL');
-        $data['sort_value'] = Url::link('locale/currency', '' . '&sort=value' . $url, 'SSL');
-        $data['sort_date_modified'] = Url::link('locale/currency', '' . '&sort=date_modified' . $url, 'SSL');
+        $data['sort_title'] = Url::link('locale/currency', '' . 'sort=title' . $url, 'SSL');
+        $data['sort_code'] = Url::link('locale/currency', '' . 'sort=code' . $url, 'SSL');
+        $data['sort_value'] = Url::link('locale/currency', '' . 'sort=value' . $url, 'SSL');
+        $data['sort_date_modified'] = Url::link('locale/currency', '' . 'sort=date_modified' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate($currency_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/currency', '' . $url . '&page={page}', 'SSL'));
@@ -270,82 +270,82 @@ class Currency extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'locale/currency', $url);
         
-        if (!isset($this->request->get['currency_id'])) {
+        if (!isset(Request::p()->get['currency_id'])) {
             $data['action'] = Url::link('locale/currency/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/currency/update', '' . '&currency_id=' . $this->request->get['currency_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/currency/update', '' . 'currency_id=' . Request::p()->get['currency_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('locale/currency', '' . $url, 'SSL');
         
-        if (isset($this->request->get['currency_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $currency_info = LocaleCurrency::getCurrency($this->request->get['currency_id']);
+        if (isset(Request::p()->get['currency_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $currency_info = LocaleCurrency::getCurrency(Request::p()->get['currency_id']);
         }
         
-        if (isset($this->request->post['title'])) {
-            $data['title'] = $this->request->post['title'];
+        if (isset(Request::p()->post['title'])) {
+            $data['title'] = Request::p()->post['title'];
         } elseif (!empty($currency_info)) {
             $data['title'] = $currency_info['title'];
         } else {
             $data['title'] = '';
         }
         
-        if (isset($this->request->post['code'])) {
-            $data['code'] = $this->request->post['code'];
+        if (isset(Request::p()->post['code'])) {
+            $data['code'] = Request::p()->post['code'];
         } elseif (!empty($currency_info)) {
             $data['code'] = $currency_info['code'];
         } else {
             $data['code'] = '';
         }
         
-        if (isset($this->request->post['symbol_left'])) {
-            $data['symbol_left'] = $this->request->post['symbol_left'];
+        if (isset(Request::p()->post['symbol_left'])) {
+            $data['symbol_left'] = Request::p()->post['symbol_left'];
         } elseif (!empty($currency_info)) {
             $data['symbol_left'] = $currency_info['symbol_left'];
         } else {
             $data['symbol_left'] = '';
         }
         
-        if (isset($this->request->post['symbol_right'])) {
-            $data['symbol_right'] = $this->request->post['symbol_right'];
+        if (isset(Request::p()->post['symbol_right'])) {
+            $data['symbol_right'] = Request::p()->post['symbol_right'];
         } elseif (!empty($currency_info)) {
             $data['symbol_right'] = $currency_info['symbol_right'];
         } else {
             $data['symbol_right'] = '';
         }
         
-        if (isset($this->request->post['decimal_place'])) {
-            $data['decimal_place'] = $this->request->post['decimal_place'];
+        if (isset(Request::p()->post['decimal_place'])) {
+            $data['decimal_place'] = Request::p()->post['decimal_place'];
         } elseif (!empty($currency_info)) {
             $data['decimal_place'] = $currency_info['decimal_place'];
         } else {
             $data['decimal_place'] = '';
         }
         
-        if (isset($this->request->post['value'])) {
-            $data['value'] = $this->request->post['value'];
+        if (isset(Request::p()->post['value'])) {
+            $data['value'] = Request::p()->post['value'];
         } elseif (!empty($currency_info)) {
             $data['value'] = $currency_info['value'];
         } else {
             $data['value'] = '';
         }
         
-        if (isset($this->request->post['status'])) {
-            $data['status'] = $this->request->post['status'];
+        if (isset(Request::p()->post['status'])) {
+            $data['status'] = Request::p()->post['status'];
         } elseif (!empty($currency_info)) {
             $data['status'] = $currency_info['status'];
         } else {
@@ -364,11 +364,11 @@ class Currency extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if ((Encode::strlen($this->request->post['title']) < 3) || (Encode::strlen($this->request->post['title']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['title']) < 3) || (Encode::strlen(Request::p()->post['title']) > 32)) {
             $this->error['title'] = Lang::get('lang_error_title');
         }
         
-        if (Encode::strlen($this->request->post['code']) != 3) {
+        if (Encode::strlen(Request::p()->post['code']) != 3) {
             $this->error['code'] = Lang::get('lang_error_code');
         }
         
@@ -385,7 +385,7 @@ class Currency extends Controller {
         Theme::model('setting/store');
         Theme::model('sale/order');
         
-        foreach ($this->request->post['selected'] as $currency_id) {
+        foreach (Request::p()->post['selected'] as $currency_id) {
             $currency_info = LocaleCurrency::getCurrency($currency_id);
             
             if ($currency_info) {

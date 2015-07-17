@@ -25,7 +25,7 @@ class Address extends Controller {
     
     public function index() {
         if (!Customer::isLogged()) {
-            $this->session->data['redirect'] = Url::link('account/address', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/address', '', 'SSL');
             
             Response::redirect(Url::link('account/login', '', 'SSL'));
         }
@@ -41,7 +41,7 @@ class Address extends Controller {
     
     public function insert() {
         if (!Customer::isLogged()) {
-            $this->session->data['redirect'] = Url::link('account/address', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/address', '', 'SSL');
             
             Response::redirect(Url::link('account/login', '', 'SSL'));
         }
@@ -52,10 +52,10 @@ class Address extends Controller {
         
         Theme::model('account/address');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            AccountAddress::addAddress($this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            AccountAddress::addAddress(Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_insert');
+            Session::p()->data['success'] = Lang::get('lang_text_insert');
             
             Response::redirect(Url::link('account/address', '', 'SSL'));
         }
@@ -67,7 +67,7 @@ class Address extends Controller {
     
     public function update() {
         if (!Customer::isLogged()) {
-            $this->session->data['redirect'] = Url::link('account/address', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/address', '', 'SSL');
             
             Response::redirect(Url::link('account/login', '', 'SSL'));
         }
@@ -78,32 +78,32 @@ class Address extends Controller {
         
         Theme::model('account/address');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            AccountAddress::editAddress($this->request->get['address_id'], $this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            AccountAddress::editAddress(Request::p()->get['address_id'], Request::post());
             
             // Default Shipping Address
-            if (isset($this->session->data['shipping_address_id']) && ($this->request->get['address_id'] == $this->session->data['shipping_address_id'])) {
-                $this->session->data['shipping_country_id'] = $this->request->post['country_id'];
-                $this->session->data['shipping_zone_id'] = $this->request->post['zone_id'];
-                $this->session->data['shipping_postcode'] = $this->request->post['postcode'];
+            if (isset(Session::p()->data['shipping_address_id']) && (Request::p()->get['address_id'] == Session::p()->data['shipping_address_id'])) {
+                Session::p()->data['shipping_country_id'] = Request::p()->post['country_id'];
+                Session::p()->data['shipping_zone_id'] = Request::p()->post['zone_id'];
+                Session::p()->data['shipping_postcode'] = Request::p()->post['postcode'];
                 
-                unset($this->session->data['shipping_method']);
-                unset($this->session->data['shipping_methods']);
+                unset(Session::p()->data['shipping_method']);
+                unset(Session::p()->data['shipping_methods']);
             }
             
             // Default Payment Address
-            if (isset($this->session->data['payment_address_id']) && ($this->request->get['address_id'] == $this->session->data['payment_address_id'])) {
-                $this->session->data['payment_country_id'] = $this->request->post['country_id'];
-                $this->session->data['payment_zone_id'] = $this->request->post['zone_id'];
+            if (isset(Session::p()->data['payment_address_id']) && (Request::p()->get['address_id'] == Session::p()->data['payment_address_id'])) {
+                Session::p()->data['payment_country_id'] = Request::p()->post['country_id'];
+                Session::p()->data['payment_zone_id'] = Request::p()->post['zone_id'];
                 
-                unset($this->session->data['payment_method']);
-                unset($this->session->data['payment_methods']);
+                unset(Session::p()->data['payment_method']);
+                unset(Session::p()->data['payment_methods']);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_update');
+            Session::p()->data['success'] = Lang::get('lang_text_update');
             
-            if (!$this->session->data['address_complete']):
-                $this->session->data['address_complete'] = true;
+            if (!Session::p()->data['address_complete']):
+                Session::p()->data['address_complete'] = true;
             endif;
             
             Response::redirect(Url::link('account/address', '', 'SSL'));
@@ -116,7 +116,7 @@ class Address extends Controller {
     
     public function delete() {
         if (!Customer::isLogged()) {
-            $this->session->data['redirect'] = Url::link('account/address', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/address', '', 'SSL');
             
             Response::redirect(Url::link('account/login', '', 'SSL'));
         }
@@ -127,29 +127,29 @@ class Address extends Controller {
         
         Theme::model('account/address');
         
-        if (isset($this->request->get['address_id']) && $this->validateDelete()) {
-            AccountAddress::deleteAddress($this->request->get['address_id']);
+        if (isset(Request::p()->get['address_id']) && $this->validateDelete()) {
+            AccountAddress::deleteAddress(Request::p()->get['address_id']);
             
             // Default Shipping Address
-            if (isset($this->session->data['shipping_address_id']) && ($this->request->get['address_id'] == $this->session->data['shipping_address_id'])) {
-                unset($this->session->data['shipping_address_id']);
-                unset($this->session->data['shipping_country_id']);
-                unset($this->session->data['shipping_zone_id']);
-                unset($this->session->data['shipping_postcode']);
-                unset($this->session->data['shipping_method']);
-                unset($this->session->data['shipping_methods']);
+            if (isset(Session::p()->data['shipping_address_id']) && (Request::p()->get['address_id'] == Session::p()->data['shipping_address_id'])) {
+                unset(Session::p()->data['shipping_address_id']);
+                unset(Session::p()->data['shipping_country_id']);
+                unset(Session::p()->data['shipping_zone_id']);
+                unset(Session::p()->data['shipping_postcode']);
+                unset(Session::p()->data['shipping_method']);
+                unset(Session::p()->data['shipping_methods']);
             }
             
             // Default Payment Address
-            if (isset($this->session->data['payment_address_id']) && ($this->request->get['address_id'] == $this->session->data['payment_address_id'])) {
-                unset($this->session->data['payment_address_id']);
-                unset($this->session->data['payment_country_id']);
-                unset($this->session->data['payment_zone_id']);
-                unset($this->session->data['payment_method']);
-                unset($this->session->data['payment_methods']);
+            if (isset(Session::p()->data['payment_address_id']) && (Request::p()->get['address_id'] == Session::p()->data['payment_address_id'])) {
+                unset(Session::p()->data['payment_address_id']);
+                unset(Session::p()->data['payment_country_id']);
+                unset(Session::p()->data['payment_zone_id']);
+                unset(Session::p()->data['payment_method']);
+                unset(Session::p()->data['payment_methods']);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_delete');
+            Session::p()->data['success'] = Lang::get('lang_text_delete');
             
             Response::redirect(Url::link('account/address', '', 'SSL'));
         }
@@ -171,10 +171,10 @@ class Address extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -243,10 +243,10 @@ class Address extends Controller {
         Breadcrumb::add('lang_text_account', 'account/dashboard', null, true, 'SSL');
         Breadcrumb::add('lang_heading_title', 'account/address', null, true, 'SSL');
         
-        if (!isset($this->request->get['address_id'])) {
+        if (!isset(Request::p()->get['address_id'])) {
             Breadcrumb::add('lang_text_edit_address', 'account/address/edit', null, true, 'SSL');
         } else {
-            Breadcrumb::add('lang_text_edit_address', 'account/address/edit', 'address_id=' . $this->request->get['address_id'], true, 'SSL');
+            Breadcrumb::add('lang_text_edit_address', 'account/address/edit', 'address_id=' . Request::p()->get['address_id'], true, 'SSL');
         }
         
         if (isset($this->error['firstname'])) {
@@ -303,50 +303,50 @@ class Address extends Controller {
             $data['error_zone'] = '';
         }
         
-        if (!isset($this->request->get['address_id'])) {
+        if (!isset(Request::p()->get['address_id'])) {
             $data['action'] = Url::link('account/address/insert', '', 'SSL');
         } else {
-            $data['action'] = Url::link('account/address/update', 'address_id=' . $this->request->get['address_id'], 'SSL');
+            $data['action'] = Url::link('account/address/update', 'address_id=' . Request::p()->get['address_id'], 'SSL');
         }
         
-        if (isset($this->request->get['address_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $address_info = AccountAddress::getAddress($this->request->get['address_id']);
+        if (isset(Request::p()->get['address_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $address_info = AccountAddress::getAddress(Request::p()->get['address_id']);
         }
         
-        if (isset($this->request->post['firstname'])) {
-            $data['firstname'] = $this->request->post['firstname'];
+        if (isset(Request::p()->post['firstname'])) {
+            $data['firstname'] = Request::p()->post['firstname'];
         } elseif (!empty($address_info)) {
             $data['firstname'] = $address_info['firstname'];
         } else {
             $data['firstname'] = '';
         }
         
-        if (isset($this->request->post['lastname'])) {
-            $data['lastname'] = $this->request->post['lastname'];
+        if (isset(Request::p()->post['lastname'])) {
+            $data['lastname'] = Request::p()->post['lastname'];
         } elseif (!empty($address_info)) {
             $data['lastname'] = $address_info['lastname'];
         } else {
             $data['lastname'] = '';
         }
         
-        if (isset($this->request->post['company'])) {
-            $data['company'] = $this->request->post['company'];
+        if (isset(Request::p()->post['company'])) {
+            $data['company'] = Request::p()->post['company'];
         } elseif (!empty($address_info)) {
             $data['company'] = $address_info['company'];
         } else {
             $data['company'] = '';
         }
         
-        if (isset($this->request->post['company_id'])) {
-            $data['company_id'] = $this->request->post['company_id'];
+        if (isset(Request::p()->post['company_id'])) {
+            $data['company_id'] = Request::p()->post['company_id'];
         } elseif (!empty($address_info)) {
             $data['company_id'] = $address_info['company_id'];
         } else {
             $data['company_id'] = '';
         }
         
-        if (isset($this->request->post['tax_id'])) {
-            $data['tax_id'] = $this->request->post['tax_id'];
+        if (isset(Request::p()->post['tax_id'])) {
+            $data['tax_id'] = Request::p()->post['tax_id'];
         } elseif (!empty($address_info)) {
             $data['tax_id'] = $address_info['tax_id'];
         } else {
@@ -369,48 +369,48 @@ class Address extends Controller {
             $data['tax_id_display'] = '';
         }
         
-        if (isset($this->request->post['address_1'])) {
-            $data['address_1'] = $this->request->post['address_1'];
+        if (isset(Request::p()->post['address_1'])) {
+            $data['address_1'] = Request::p()->post['address_1'];
         } elseif (!empty($address_info)) {
             $data['address_1'] = $address_info['address_1'];
         } else {
             $data['address_1'] = '';
         }
         
-        if (isset($this->request->post['address_2'])) {
-            $data['address_2'] = $this->request->post['address_2'];
+        if (isset(Request::p()->post['address_2'])) {
+            $data['address_2'] = Request::p()->post['address_2'];
         } elseif (!empty($address_info)) {
             $data['address_2'] = $address_info['address_2'];
         } else {
             $data['address_2'] = '';
         }
         
-        if (isset($this->request->post['postcode'])) {
-            $data['postcode'] = $this->request->post['postcode'];
+        if (isset(Request::p()->post['postcode'])) {
+            $data['postcode'] = Request::p()->post['postcode'];
         } elseif (!empty($address_info)) {
             $data['postcode'] = $address_info['postcode'];
         } else {
             $data['postcode'] = '';
         }
         
-        if (isset($this->request->post['city'])) {
-            $data['city'] = $this->request->post['city'];
+        if (isset(Request::p()->post['city'])) {
+            $data['city'] = Request::p()->post['city'];
         } elseif (!empty($address_info)) {
             $data['city'] = $address_info['city'];
         } else {
             $data['city'] = '';
         }
         
-        if (isset($this->request->post['country_id'])) {
-            $data['country_id'] = $this->request->post['country_id'];
+        if (isset(Request::p()->post['country_id'])) {
+            $data['country_id'] = Request::p()->post['country_id'];
         } elseif (!empty($address_info)) {
             $data['country_id'] = $address_info['country_id'];
         } else {
             $data['country_id'] = Config::get('config_country_id');
         }
         
-        if (isset($this->request->post['zone_id'])) {
-            $data['zone_id'] = $this->request->post['zone_id'];
+        if (isset(Request::p()->post['zone_id'])) {
+            $data['zone_id'] = Request::p()->post['zone_id'];
         } elseif (!empty($address_info)) {
             $data['zone_id'] = $address_info['zone_id'];
         } else {
@@ -423,10 +423,10 @@ class Address extends Controller {
         
         $data['countries'] = LocaleCountry::getCountries();
         
-        if (isset($this->request->post['default'])) {
-            $data['default'] = $this->request->post['default'];
-        } elseif (isset($this->request->get['address_id'])) {
-            $data['default'] = Customer::getAddressId() == $this->request->get['address_id'];
+        if (isset(Request::p()->post['default'])) {
+            $data['default'] = Request::p()->post['default'];
+        } elseif (isset(Request::p()->get['address_id'])) {
+            $data['default'] = Customer::getAddressId() == Request::p()->get['address_id'];
         } else {
             $data['default'] = false;
         }
@@ -444,41 +444,41 @@ class Address extends Controller {
     }
     
     protected function validateForm() {
-        if ((Encode::strlen($this->request->post['firstname']) < 1) || (Encode::strlen($this->request->post['firstname']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['firstname']) < 1) || (Encode::strlen(Request::p()->post['firstname']) > 32)) {
             $this->error['firstname'] = Lang::get('lang_error_firstname');
         }
         
-        if ((Encode::strlen($this->request->post['lastname']) < 1) || (Encode::strlen($this->request->post['lastname']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['lastname']) < 1) || (Encode::strlen(Request::p()->post['lastname']) > 32)) {
             $this->error['lastname'] = Lang::get('lang_error_lastname');
         }
         
-        if ((Encode::strlen($this->request->post['address_1']) < 3) || (Encode::strlen($this->request->post['address_1']) > 128)) {
+        if ((Encode::strlen(Request::p()->post['address_1']) < 3) || (Encode::strlen(Request::p()->post['address_1']) > 128)) {
             $this->error['address_1'] = Lang::get('lang_error_address_1');
         }
         
-        if ((Encode::strlen($this->request->post['city']) < 2) || (Encode::strlen($this->request->post['city']) > 128)) {
+        if ((Encode::strlen(Request::p()->post['city']) < 2) || (Encode::strlen(Request::p()->post['city']) > 128)) {
             $this->error['city'] = Lang::get('lang_error_city');
         }
         
         Theme::model('locale/country');
         
-        $country_info = LocaleCountry::getCountry($this->request->post['country_id']);
+        $country_info = LocaleCountry::getCountry(Request::p()->post['country_id']);
         
         if ($country_info) {
-            if ($country_info['postcode_required'] && (Encode::strlen($this->request->post['postcode']) < 2) || (Encode::strlen($this->request->post['postcode']) > 10)) {
+            if ($country_info['postcode_required'] && (Encode::strlen(Request::p()->post['postcode']) < 2) || (Encode::strlen(Request::p()->post['postcode']) > 10)) {
                 $this->error['postcode'] = Lang::get('lang_error_postcode');
             }
             
-            if (Config::get('config_vat') && !empty($this->request->post['tax_id']) && ($this->vat->validate($country_info['iso_code_2'], $this->request->post['tax_id']) == 'invalid')) {
+            if (Config::get('config_vat') && !empty(Request::p()->post['tax_id']) && ($this->vat->validate($country_info['iso_code_2'], Request::p()->post['tax_id']) == 'invalid')) {
                 $this->error['tax_id'] = Lang::get('lang_error_vat');
             }
         }
         
-        if ($this->request->post['country_id'] == '') {
+        if (Request::p()->post['country_id'] == '') {
             $this->error['country'] = Lang::get('lang_error_country');
         }
         
-        if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] == '') {
+        if (!isset(Request::p()->post['zone_id']) || Request::p()->post['zone_id'] == '') {
             $this->error['zone'] = Lang::get('lang_error_zone');
         }
         
@@ -492,7 +492,7 @@ class Address extends Controller {
             $this->error['warning'] = Lang::get('lang_error_delete');
         }
         
-        if (Customer::getAddressId() == $this->request->get['address_id']) {
+        if (Customer::getAddressId() == Request::p()->get['address_id']) {
             $this->error['warning'] = Lang::get('lang_error_default');
         }
         
@@ -506,12 +506,12 @@ class Address extends Controller {
         
         Theme::model('locale/country');
         
-        $country_info = LocaleCountry::getCountry($this->request->get['country_id']);
+        $country_info = LocaleCountry::getCountry(Request::p()->get['country_id']);
         
         if ($country_info) {
             Theme::model('locale/zone');
             
-            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => LocaleZone::getZonesByCountryId($this->request->get['country_id']), 'status' => $country_info['status']);
+            $json = array('country_id' => $country_info['country_id'], 'name' => $country_info['name'], 'iso_code_2' => $country_info['iso_code_2'], 'iso_code_3' => $country_info['iso_code_3'], 'address_format' => $country_info['address_format'], 'postcode_required' => $country_info['postcode_required'], 'zone' => LocaleZone::getZonesByCountryId(Request::p()->get['country_id']), 'status' => $country_info['status']);
         }
         
         $json = Theme::listen(__CLASS__, __FUNCTION__, $json);

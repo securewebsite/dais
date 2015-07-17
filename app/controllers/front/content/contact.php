@@ -66,13 +66,13 @@ class Contact extends Controller {
         
         $json = array();
 
-        if ($this->request->server['REQUEST_METHOD'] == 'POST'):
-            unset($this->session->data['captcha']);
+        if (Request::p()->server['REQUEST_METHOD'] == 'POST'):
+            unset(Session::p()->data['captcha']);
             $json['success'] = Lang::get('lang_text_message');
 
             $callback = array(
                 'user_id'  => Config::get('config_admin_email_user'),
-                'post'     => $this->request->post,
+                'post'     => Request::post(),
                 'callback' => array(
                     'class'  => __CLASS__,
                     'method' => 'public_contact_admin'
@@ -87,11 +87,11 @@ class Contact extends Controller {
              * Build our customer contact notification
              */
             
-            $split    = explode(' ', $this->request->post['name']);
+            $split    = explode(' ', Request::p()->post['name']);
             $callback = array(
                 'firstname' => $split[0],
                 'lastname'  => isset($split[1]) ? $split[1] : '',
-                'email'     => $this->request->post['email']
+                'email'     => Request::p()->post['email']
             );
 
             $this->notify->setGenericCustomer($callback);
@@ -119,7 +119,7 @@ class Contact extends Controller {
     }
     
     public function captcha() {
-        echo $this->session->data['captcha'];
+        echo Session::p()->data['captcha'];
     }
 
     public function public_contact_admin($data, $message) {

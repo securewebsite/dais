@@ -27,22 +27,22 @@ class PostWall extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('post_wall_widget', $this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('post_wall_widget', Request::post());
             Cache::delete('posts.masonry');
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
-            if (!empty($this->request->get['continue'])) {
+            if (!empty(Request::p()->get['continue'])) {
                 Response::redirect(Url::link('widget/post_wall', '', 'SSL'));
             } else {
                 Response::redirect(Url::link('module/widget', '', 'SSL'));
             }
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -67,8 +67,8 @@ class PostWall extends Controller {
         
         $data['widgets'] = array();
         
-        if (isset($this->request->post['post_wall_widget'])) {
-            $data['widgets'] = $this->request->post['post_wall_widget'];
+        if (isset(Request::p()->post['post_wall_widget'])) {
+            $data['widgets'] = Request::p()->post['post_wall_widget'];
         } elseif (Config::get('post_wall_widget')) {
             $data['widgets'] = Config::get('post_wall_widget');
         }
@@ -93,8 +93,8 @@ class PostWall extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (isset($this->request->post['post_wall_widget'])) {
-            foreach ($this->request->post['post_wall_widget'] as $key => $value) {
+        if (isset(Request::p()->post['post_wall_widget'])) {
+            foreach (Request::p()->post['post_wall_widget'] as $key => $value) {
                 if ($value['span'] == 1 && $value['description']) {
                     $this->error['asterisk'][$key]['description'] = Lang::get('lang_error_asterisk');
                 }

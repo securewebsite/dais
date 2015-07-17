@@ -37,22 +37,22 @@ class Recurring extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('catalog/recurring');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            CatalogRecurring::addRecurring($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            CatalogRecurring::addRecurring(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/recurring', '' . $url, 'SSL'));
@@ -68,22 +68,22 @@ class Recurring extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('catalog/recurring');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            CatalogRecurring::editRecurring($this->request->get['recurring_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            CatalogRecurring::editRecurring(Request::p()->get['recurring_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/recurring', '' . $url, 'SSL'));
@@ -99,25 +99,25 @@ class Recurring extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('catalog/recurring');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $recurring_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $recurring_id) {
                 CatalogRecurring::deleteRecurring($recurring_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/recurring', '' . $url, 'SSL'));
@@ -133,25 +133,25 @@ class Recurring extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('catalog/recurring');
         
-        if (isset($this->request->post['selected']) && $this->validateCopy()) {
-            foreach ($this->request->post['selected'] as $recurring_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateCopy()) {
+            foreach (Request::p()->post['selected'] as $recurring_id) {
                 CatalogRecurring::copyRecurring($recurring_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/recurring', '' . $url, 'SSL'));
@@ -165,36 +165,36 @@ class Recurring extends Controller {
     protected function getList() {
         $data = Theme::language('catalog/recurring');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'r.sort_order';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'catalog/recurring');
@@ -212,7 +212,7 @@ class Recurring extends Controller {
         $results = CatalogRecurring::getRecurrings($filter_data);
         
         foreach ($results as $result) {
-            $data['recurrings'][] = array('recurring_id' => $result['recurring_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'edit' => Url::link('catalog/recurring/edit', '' . '&recurring_id=' . $result['recurring_id'] . $url, 'SSL'));
+            $data['recurrings'][] = array('recurring_id' => $result['recurring_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'edit' => Url::link('catalog/recurring/edit', '' . 'recurring_id=' . $result['recurring_id'] . $url, 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -221,16 +221,16 @@ class Recurring extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
         
-        if (isset($this->request->post['selected'])) {
-            $data['selected'] = (array)$this->request->post['selected'];
+        if (isset(Request::p()->post['selected'])) {
+            $data['selected'] = (array)Request::p()->post['selected'];
         } else {
             $data['selected'] = array();
         }
@@ -243,21 +243,21 @@ class Recurring extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('catalog/recurring', '' . '&sort=pd.name' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('catalog/recurring', '' . '&sort=p.sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('catalog/recurring', '' . 'sort=pd.name' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('catalog/recurring', '' . 'sort=p.sort_order' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate($recurring_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/recurring', '' . $url . '&page={page}', 'SSL'));
@@ -289,46 +289,46 @@ class Recurring extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'catalog/recurring');
         
-        if (!isset($this->request->get['recurring_id'])) {
+        if (!isset(Request::p()->get['recurring_id'])) {
             $data['action'] = Url::link('catalog/recurring/add', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/recurring/edit', '' . '&recurring_id=' . $this->request->get['recurring_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/recurring/edit', '' . 'recurring_id=' . Request::p()->get['recurring_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('catalog/recurring', '' . $url, 'SSL');
         
-        if (isset($this->request->get['recurring_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $recurring_info = CatalogRecurring::getRecurring($this->request->get['recurring_id']);
+        if (isset(Request::p()->get['recurring_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $recurring_info = CatalogRecurring::getRecurring(Request::p()->get['recurring_id']);
         }
         
         Theme::model('locale/language');
         
         $data['languages'] = LocaleLanguage::getLanguages();
         
-        if (isset($this->request->post['recurring_description'])) {
-            $data['recurring_description'] = $this->request->post['recurring_description'];
+        if (isset(Request::p()->post['recurring_description'])) {
+            $data['recurring_description'] = Request::p()->post['recurring_description'];
         } elseif (!empty($recurring_info)) {
             $data['recurring_description'] = CatalogRecurring::getRecurringDescription($recurring_info['recurring_id']);
         } else {
             $data['recurring_description'] = array();
         }
         
-        if (isset($this->request->post['price'])) {
-            $data['price'] = $this->request->post['price'];
+        if (isset(Request::p()->post['price'])) {
+            $data['price'] = Request::p()->post['price'];
         } elseif (!empty($recurring_info)) {
             $data['price'] = $recurring_info['price'];
         } else {
@@ -347,79 +347,79 @@ class Recurring extends Controller {
         
         $data['frequencies'][] = array('text' => Lang::get('lang_text_year'), 'value' => 'year');
         
-        if (isset($this->request->post['frequency'])) {
-            $data['frequency'] = $this->request->post['frequency'];
+        if (isset(Request::p()->post['frequency'])) {
+            $data['frequency'] = Request::p()->post['frequency'];
         } elseif (!empty($recurring_info)) {
             $data['frequency'] = $recurring_info['frequency'];
         } else {
             $data['frequency'] = '';
         }
         
-        if (isset($this->request->post['duration'])) {
-            $data['duration'] = $this->request->post['duration'];
+        if (isset(Request::p()->post['duration'])) {
+            $data['duration'] = Request::p()->post['duration'];
         } elseif (!empty($recurring_info)) {
             $data['duration'] = $recurring_info['duration'];
         } else {
             $data['duration'] = 0;
         }
         
-        if (isset($this->request->post['cycle'])) {
-            $data['cycle'] = $this->request->post['cycle'];
+        if (isset(Request::p()->post['cycle'])) {
+            $data['cycle'] = Request::p()->post['cycle'];
         } elseif (!empty($recurring_info)) {
             $data['cycle'] = $recurring_info['cycle'];
         } else {
             $data['cycle'] = 1;
         }
         
-        if (isset($this->request->post['status'])) {
-            $data['status'] = $this->request->post['status'];
+        if (isset(Request::p()->post['status'])) {
+            $data['status'] = Request::p()->post['status'];
         } elseif (!empty($recurring_info)) {
             $data['status'] = $recurring_info['status'];
         } else {
             $data['status'] = 0;
         }
         
-        if (isset($this->request->post['trial_price'])) {
-            $data['trial_price'] = $this->request->post['trial_price'];
+        if (isset(Request::p()->post['trial_price'])) {
+            $data['trial_price'] = Request::p()->post['trial_price'];
         } elseif (!empty($recurring_info)) {
             $data['trial_price'] = $recurring_info['trial_price'];
         } else {
             $data['trial_price'] = 0.00;
         }
         
-        if (isset($this->request->post['trial_frequency'])) {
-            $data['trial_frequency'] = $this->request->post['trial_frequency'];
+        if (isset(Request::p()->post['trial_frequency'])) {
+            $data['trial_frequency'] = Request::p()->post['trial_frequency'];
         } elseif (!empty($recurring_info)) {
             $data['trial_frequency'] = $recurring_info['trial_frequency'];
         } else {
             $data['trial_frequency'] = '';
         }
         
-        if (isset($this->request->post['trial_duration'])) {
-            $data['trial_duration'] = $this->request->post['trial_duration'];
+        if (isset(Request::p()->post['trial_duration'])) {
+            $data['trial_duration'] = Request::p()->post['trial_duration'];
         } elseif (!empty($recurring_info)) {
             $data['trial_duration'] = $recurring_info['trial_duration'];
         } else {
             $data['trial_duration'] = '0';
         }
         
-        if (isset($this->request->post['trial_cycle'])) {
-            $data['trial_cycle'] = $this->request->post['trial_cycle'];
+        if (isset(Request::p()->post['trial_cycle'])) {
+            $data['trial_cycle'] = Request::p()->post['trial_cycle'];
         } elseif (!empty($recurring_info)) {
             $data['trial_cycle'] = $recurring_info['trial_cycle'];
         } else {
             $data['trial_cycle'] = '1';
         }
-        if (isset($this->request->post['trial_status'])) {
-            $data['trial_status'] = $this->request->post['trial_status'];
+        if (isset(Request::p()->post['trial_status'])) {
+            $data['trial_status'] = Request::p()->post['trial_status'];
         } elseif (!empty($recurring_info)) {
             $data['trial_status'] = $recurring_info['trial_status'];
         } else {
             $data['trial_status'] = 0;
         }
         
-        if (isset($this->request->post['sort_order'])) {
-            $data['sort_order'] = $this->request->post['sort_order'];
+        if (isset(Request::p()->post['sort_order'])) {
+            $data['sort_order'] = Request::p()->post['sort_order'];
         } elseif (!empty($recurring_info)) {
             $data['sort_order'] = $recurring_info['sort_order'];
         } else {
@@ -440,7 +440,7 @@ class Recurring extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        foreach ($this->request->post['recurring_description'] as $language_id => $value) {
+        foreach (Request::p()->post['recurring_description'] as $language_id => $value) {
             if ((Encode::strlen($value['name']) < 3) || (Encode::strlen($value['name']) > 255)) {
                 $this->error['name'][$language_id] = Lang::get('lang_error_name');
             }
@@ -464,7 +464,7 @@ class Recurring extends Controller {
         
         Theme::model('catalog/product');
         
-        foreach ($this->request->post['selected'] as $recurring_id) {
+        foreach (Request::p()->post['selected'] as $recurring_id) {
             $product_total = CatalogProduct::getTotalProductsByRcurringId($recurring_id);
             
             if ($product_total) {

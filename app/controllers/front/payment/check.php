@@ -52,6 +52,6 @@ class Check extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        CheckoutOrder::confirm($this->session->data['order_id'], Config::get('check_order_status_id'), $data['comment'], true);
+        CheckoutOrder::confirm(Session::p()->data['order_id'], Config::get('check_order_status_id'), $data['comment'], true);
     }
 }

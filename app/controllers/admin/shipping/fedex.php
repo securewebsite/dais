@@ -27,9 +27,9 @@ class Fedex extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('fedex', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('fedex', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/shipping', '', 'SSL'));
         }
@@ -77,44 +77,44 @@ class Fedex extends Controller {
         
         $data['cancel'] = Url::link('module/shipping', '', 'SSL');
         
-        if (isset($this->request->post['fedex_key'])) {
-            $data['fedex_key'] = $this->request->post['fedex_key'];
+        if (isset(Request::p()->post['fedex_key'])) {
+            $data['fedex_key'] = Request::p()->post['fedex_key'];
         } else {
             $data['fedex_key'] = Config::get('fedex_key');
         }
         
-        if (isset($this->request->post['fedex_password'])) {
-            $data['fedex_password'] = $this->request->post['fedex_password'];
+        if (isset(Request::p()->post['fedex_password'])) {
+            $data['fedex_password'] = Request::p()->post['fedex_password'];
         } else {
             $data['fedex_password'] = Config::get('fedex_password');
         }
         
-        if (isset($this->request->post['fedex_account'])) {
-            $data['fedex_account'] = $this->request->post['fedex_account'];
+        if (isset(Request::p()->post['fedex_account'])) {
+            $data['fedex_account'] = Request::p()->post['fedex_account'];
         } else {
             $data['fedex_account'] = Config::get('fedex_account');
         }
         
-        if (isset($this->request->post['fedex_meter'])) {
-            $data['fedex_meter'] = $this->request->post['fedex_meter'];
+        if (isset(Request::p()->post['fedex_meter'])) {
+            $data['fedex_meter'] = Request::p()->post['fedex_meter'];
         } else {
             $data['fedex_meter'] = Config::get('fedex_meter');
         }
         
-        if (isset($this->request->post['fedex_postcode'])) {
-            $data['fedex_postcode'] = $this->request->post['fedex_postcode'];
+        if (isset(Request::p()->post['fedex_postcode'])) {
+            $data['fedex_postcode'] = Request::p()->post['fedex_postcode'];
         } else {
             $data['fedex_postcode'] = Config::get('fedex_postcode');
         }
         
-        if (isset($this->request->post['fedex_test'])) {
-            $data['fedex_test'] = $this->request->post['fedex_test'];
+        if (isset(Request::p()->post['fedex_test'])) {
+            $data['fedex_test'] = Request::p()->post['fedex_test'];
         } else {
             $data['fedex_test'] = Config::get('fedex_test');
         }
         
-        if (isset($this->request->post['fedex_service'])) {
-            $data['fedex_service'] = $this->request->post['fedex_service'];
+        if (isset(Request::p()->post['fedex_service'])) {
+            $data['fedex_service'] = Request::p()->post['fedex_service'];
         } elseif ($this->config->has('fedex_service')) {
             $data['fedex_service'] = Config::get('fedex_service');
         } else {
@@ -165,44 +165,44 @@ class Fedex extends Controller {
         
         $data['services'][] = array('text' => Lang::get('lang_text_standard_overnight'), 'value' => 'STANDARD_OVERNIGHT');
         
-        if (isset($this->request->post['fedex_dropoff_type'])) {
-            $data['fedex_dropoff_type'] = $this->request->post['fedex_dropoff_type'];
+        if (isset(Request::p()->post['fedex_dropoff_type'])) {
+            $data['fedex_dropoff_type'] = Request::p()->post['fedex_dropoff_type'];
         } else {
             $data['fedex_dropoff_type'] = Config::get('fedex_dropoff_type');
         }
         
-        if (isset($this->request->post['fedex_packaging_type'])) {
-            $data['fedex_packaging_type'] = $this->request->post['fedex_packaging_type'];
+        if (isset(Request::p()->post['fedex_packaging_type'])) {
+            $data['fedex_packaging_type'] = Request::p()->post['fedex_packaging_type'];
         } else {
             $data['fedex_packaging_type'] = Config::get('fedex_packaging_type');
         }
         
-        if (isset($this->request->post['fedex_rate_type'])) {
-            $data['fedex_rate_type'] = $this->request->post['fedex_rate_type'];
+        if (isset(Request::p()->post['fedex_rate_type'])) {
+            $data['fedex_rate_type'] = Request::p()->post['fedex_rate_type'];
         } else {
             $data['fedex_rate_type'] = Config::get('fedex_rate_type');
         }
         
-        if (isset($this->request->post['fedex_destination_type'])) {
-            $data['fedex_destination_type'] = $this->request->post['fedex_destination_type'];
+        if (isset(Request::p()->post['fedex_destination_type'])) {
+            $data['fedex_destination_type'] = Request::p()->post['fedex_destination_type'];
         } else {
             $data['fedex_destination_type'] = Config::get('fedex_destination_type');
         }
         
-        if (isset($this->request->post['fedex_display_time'])) {
-            $data['fedex_display_time'] = $this->request->post['fedex_display_time'];
+        if (isset(Request::p()->post['fedex_display_time'])) {
+            $data['fedex_display_time'] = Request::p()->post['fedex_display_time'];
         } else {
             $data['fedex_display_time'] = Config::get('fedex_display_time');
         }
         
-        if (isset($this->request->post['fedex_display_weight'])) {
-            $data['fedex_display_weight'] = $this->request->post['fedex_display_weight'];
+        if (isset(Request::p()->post['fedex_display_weight'])) {
+            $data['fedex_display_weight'] = Request::p()->post['fedex_display_weight'];
         } else {
             $data['fedex_display_weight'] = Config::get('fedex_display_weight');
         }
         
-        if (isset($this->request->post['fedex_weight_class_id'])) {
-            $data['fedex_weight_class_id'] = $this->request->post['fedex_weight_class_id'];
+        if (isset(Request::p()->post['fedex_weight_class_id'])) {
+            $data['fedex_weight_class_id'] = Request::p()->post['fedex_weight_class_id'];
         } else {
             $data['fedex_weight_class_id'] = Config::get('fedex_weight_class_id');
         }
@@ -211,8 +211,8 @@ class Fedex extends Controller {
         
         $data['weight_classes'] = LocaleWeightClass::getWeightClasses();
         
-        if (isset($this->request->post['fedex_tax_class_id'])) {
-            $data['fedex_tax_class_id'] = $this->request->post['fedex_tax_class_id'];
+        if (isset(Request::p()->post['fedex_tax_class_id'])) {
+            $data['fedex_tax_class_id'] = Request::p()->post['fedex_tax_class_id'];
         } else {
             $data['fedex_tax_class_id'] = Config::get('fedex_tax_class_id');
         }
@@ -221,8 +221,8 @@ class Fedex extends Controller {
         
         $data['tax_classes'] = LocaleTaxClass::getTaxClasses();
         
-        if (isset($this->request->post['fedex_geo_zone_id'])) {
-            $data['fedex_geo_zone_id'] = $this->request->post['fedex_geo_zone_id'];
+        if (isset(Request::p()->post['fedex_geo_zone_id'])) {
+            $data['fedex_geo_zone_id'] = Request::p()->post['fedex_geo_zone_id'];
         } else {
             $data['fedex_geo_zone_id'] = Config::get('fedex_geo_zone_id');
         }
@@ -231,14 +231,14 @@ class Fedex extends Controller {
         
         $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
-        if (isset($this->request->post['fedex_status'])) {
-            $data['fedex_status'] = $this->request->post['fedex_status'];
+        if (isset(Request::p()->post['fedex_status'])) {
+            $data['fedex_status'] = Request::p()->post['fedex_status'];
         } else {
             $data['fedex_status'] = Config::get('fedex_status');
         }
         
-        if (isset($this->request->post['fedex_sort_order'])) {
-            $data['fedex_sort_order'] = $this->request->post['fedex_sort_order'];
+        if (isset(Request::p()->post['fedex_sort_order'])) {
+            $data['fedex_sort_order'] = Request::p()->post['fedex_sort_order'];
         } else {
             $data['fedex_sort_order'] = Config::get('fedex_sort_order');
         }
@@ -255,23 +255,23 @@ class Fedex extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (!$this->request->post['fedex_key']) {
+        if (!Request::p()->post['fedex_key']) {
             $this->error['key'] = Lang::get('lang_error_key');
         }
         
-        if (!$this->request->post['fedex_password']) {
+        if (!Request::p()->post['fedex_password']) {
             $this->error['password'] = Lang::get('lang_error_password');
         }
         
-        if (!$this->request->post['fedex_account']) {
+        if (!Request::p()->post['fedex_account']) {
             $this->error['account'] = Lang::get('lang_error_account');
         }
         
-        if (!$this->request->post['fedex_meter']) {
+        if (!Request::p()->post['fedex_meter']) {
             $this->error['meter'] = Lang::get('lang_error_meter');
         }
         
-        if (!$this->request->post['fedex_postcode']) {
+        if (!Request::p()->post['fedex_postcode']) {
             $this->error['postcode'] = Lang::get('lang_error_postcode');
         }
         

@@ -41,23 +41,23 @@ class Filter extends Controller {
         
         Theme::model('catalog/filter');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            CatalogFilter::addFilter($this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            CatalogFilter::addFilter(Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/filter', '' . $url, 'SSL'));
@@ -75,23 +75,23 @@ class Filter extends Controller {
         
         Theme::model('catalog/filter');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            CatalogFilter::editFilter($this->request->get['filter_group_id'], $this->request->post);
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            CatalogFilter::editFilter(Request::p()->get['filter_group_id'], Request::post());
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/filter', '' . $url, 'SSL'));
@@ -109,25 +109,25 @@ class Filter extends Controller {
         
         Theme::model('catalog/filter');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $filter_group_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $filter_group_id) {
                 CatalogFilter::deleteFilter($filter_group_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('catalog/filter', '' . $url, 'SSL'));
@@ -141,36 +141,36 @@ class Filter extends Controller {
     protected function getList() {
         $data = Theme::language('catalog/filter');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'fgd.name';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'catalog/filter', $url);
@@ -189,9 +189,9 @@ class Filter extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/filter/update', '' . '&filter_group_id=' . $result['filter_group_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/filter/update', '' . 'filter_group_id=' . $result['filter_group_id'] . $url, 'SSL'));
             
-            $data['filters'][] = array('filter_group_id' => $result['filter_group_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'selected' => isset($this->request->post['selected']) && in_array($result['filter_group_id'], $this->request->post['selected']), 'action' => $action);
+            $data['filters'][] = array('filter_group_id' => $result['filter_group_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['filter_group_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -200,10 +200,10 @@ class Filter extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -216,21 +216,21 @@ class Filter extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('catalog/filter', '' . '&sort=fgd.name' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('catalog/filter', '' . '&sort=fg.sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('catalog/filter', '' . 'sort=fgd.name' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('catalog/filter', '' . 'sort=fg.sort_order' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate($filter_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/filter', '' . $url . '&page={page}', 'SSL'));
@@ -268,56 +268,56 @@ class Filter extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'catalog/filter', $url);
         
-        if (!isset($this->request->get['filter_group_id'])) {
+        if (!isset(Request::p()->get['filter_group_id'])) {
             $data['action'] = Url::link('catalog/filter/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/filter/update', '' . '&filter_group_id=' . $this->request->get['filter_group_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/filter/update', '' . 'filter_group_id=' . Request::p()->get['filter_group_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('catalog/filter', '' . $url, 'SSL');
         
-        if (isset($this->request->get['filter_group_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $filter_group_info = CatalogFilter::getFilterGroup($this->request->get['filter_group_id']);
+        if (isset(Request::p()->get['filter_group_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $filter_group_info = CatalogFilter::getFilterGroup(Request::p()->get['filter_group_id']);
         }
         
         Theme::model('locale/language');
         
         $data['languages'] = LocaleLanguage::getLanguages();
         
-        if (isset($this->request->post['filter_group_description'])) {
-            $data['filter_group_description'] = $this->request->post['filter_group_description'];
-        } elseif (isset($this->request->get['filter_group_id'])) {
-            $data['filter_group_description'] = CatalogFilter::getFilterGroupDescriptions($this->request->get['filter_group_id']);
+        if (isset(Request::p()->post['filter_group_description'])) {
+            $data['filter_group_description'] = Request::p()->post['filter_group_description'];
+        } elseif (isset(Request::p()->get['filter_group_id'])) {
+            $data['filter_group_description'] = CatalogFilter::getFilterGroupDescriptions(Request::p()->get['filter_group_id']);
         } else {
             $data['filter_group_description'] = array();
         }
         
-        if (isset($this->request->post['sort_order'])) {
-            $data['sort_order'] = $this->request->post['sort_order'];
+        if (isset(Request::p()->post['sort_order'])) {
+            $data['sort_order'] = Request::p()->post['sort_order'];
         } elseif (!empty($filter_group_info)) {
             $data['sort_order'] = $filter_group_info['sort_order'];
         } else {
             $data['sort_order'] = '';
         }
         
-        if (isset($this->request->post['filters'])) {
-            $data['filters'] = $this->request->post['filter'];
-        } elseif (isset($this->request->get['filter_group_id'])) {
-            $data['filters'] = CatalogFilter::getFilterDescriptions($this->request->get['filter_group_id']);
+        if (isset(Request::p()->post['filters'])) {
+            $data['filters'] = Request::p()->post['filter'];
+        } elseif (isset(Request::p()->get['filter_group_id'])) {
+            $data['filters'] = CatalogFilter::getFilterDescriptions(Request::p()->get['filter_group_id']);
         } else {
             $data['filters'] = array();
         }
@@ -336,14 +336,14 @@ class Filter extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        foreach ($this->request->post['filter_group_description'] as $language_id => $value) {
+        foreach (Request::p()->post['filter_group_description'] as $language_id => $value) {
             if ((Encode::strlen($value['name']) < 1) || (Encode::strlen($value['name']) > 64)) {
                 $this->error['group'][$language_id] = Lang::get('lang_error_group');
             }
         }
         
-        if (isset($this->request->post['filter'])) {
-            foreach ($this->request->post['filter'] as $filter_id => $filter) {
+        if (isset(Request::p()->post['filter'])) {
+            foreach (Request::p()->post['filter'] as $filter_id => $filter) {
                 foreach ($filter['filter_description'] as $language_id => $filter_description) {
                     if ((Encode::strlen($filter_description['name']) < 1) || (Encode::strlen($filter_description['name']) > 64)) {
                         $this->error['filter'][$filter_id][$language_id] = Lang::get('lang_error_name');
@@ -370,10 +370,10 @@ class Filter extends Controller {
     public function autocomplete() {
         $json = array();
         
-        if (isset($this->request->get['filter_name'])) {
+        if (isset(Request::p()->get['filter_name'])) {
             Theme::model('catalog/filter');
             
-            $filter = array('filter_name' => $this->request->get['filter_name'], 'start' => 0, 'limit' => 20);
+            $filter = array('filter_name' => Request::p()->get['filter_name'], 'start' => 0, 'limit' => 20);
             
             $filters = CatalogFilter::getFilters($filter);
             

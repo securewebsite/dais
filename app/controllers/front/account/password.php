@@ -24,7 +24,7 @@ class Password extends Controller {
     
     public function index() {
         if (!Customer::isLogged()) {
-            $this->session->data['redirect'] = Url::link('account/password', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/password', '', 'SSL');
             Response::redirect(Url::link('account/login', '', 'SSL'));
         }
         
@@ -32,12 +32,12 @@ class Password extends Controller {
         
         Theme::setTitle(Lang::get('lang_heading_title'));
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             Theme::model('account/customer');
             
-            AccountCustomer::editPassword(Customer::getId(), $this->request->post['password']);
+            AccountCustomer::editPassword(Customer::getId(), Request::p()->post['password']);
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('account/dashboard', '', 'SSL'));
         }
@@ -59,14 +59,14 @@ class Password extends Controller {
         
         $data['action'] = Url::link('account/password', '', 'SSL');
         
-        if (isset($this->request->post['password'])) {
-            $data['password'] = $this->request->post['password'];
+        if (isset(Request::p()->post['password'])) {
+            $data['password'] = Request::p()->post['password'];
         } else {
             $data['password'] = '';
         }
         
-        if (isset($this->request->post['confirm'])) {
-            $data['confirm'] = $this->request->post['confirm'];
+        if (isset(Request::p()->post['confirm'])) {
+            $data['confirm'] = Request::p()->post['confirm'];
         } else {
             $data['confirm'] = '';
         }
@@ -84,11 +84,11 @@ class Password extends Controller {
     }
     
     protected function validate() {
-        if ((Encode::strlen($this->request->post['password']) < 4) || (Encode::strlen($this->request->post['password']) > 20)) {
+        if ((Encode::strlen(Request::p()->post['password']) < 4) || (Encode::strlen(Request::p()->post['password']) > 20)) {
             $this->error['password'] = Lang::get('lang_error_password');
         }
         
-        if ($this->request->post['confirm'] != $this->request->post['password']) {
+        if (Request::p()->post['confirm'] != Request::p()->post['password']) {
             $this->error['confirm'] = Lang::get('lang_error_confirm');
         }
         

@@ -27,9 +27,9 @@ class Reward extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('reward', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('reward', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/total', '', 'SSL'));
         }
@@ -46,14 +46,14 @@ class Reward extends Controller {
         $data['action'] = Url::link('total/reward', '', 'SSL');
         $data['cancel'] = Url::link('module/total', '', 'SSL');
         
-        if (isset($this->request->post['reward_status'])) {
-            $data['reward_status'] = $this->request->post['reward_status'];
+        if (isset(Request::p()->post['reward_status'])) {
+            $data['reward_status'] = Request::p()->post['reward_status'];
         } else {
             $data['reward_status'] = Config::get('reward_status');
         }
         
-        if (isset($this->request->post['reward_sort_order'])) {
-            $data['reward_sort_order'] = $this->request->post['reward_sort_order'];
+        if (isset(Request::p()->post['reward_sort_order'])) {
+            $data['reward_sort_order'] = Request::p()->post['reward_sort_order'];
         } else {
             $data['reward_sort_order'] = Config::get('reward_sort_order');
         }

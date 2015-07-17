@@ -55,7 +55,7 @@ class AuthorizeNet extends Controller {
         
         Theme::model('checkout/order');
         
-        $order_info = CheckoutOrder::getOrder($this->session->data['order_id']);
+        $order_info = CheckoutOrder::getOrder(Session::p()->data['order_id']);
         
         $send = array();
         
@@ -75,17 +75,17 @@ class AuthorizeNet extends Controller {
         $send['x_zip'] = html_entity_decode($order_info['payment_postcode'], ENT_QUOTES, 'UTF-8');
         $send['x_country'] = html_entity_decode($order_info['payment_country'], ENT_QUOTES, 'UTF-8');
         $send['x_phone'] = $order_info['telephone'];
-        $send['x_customer_ip'] = $this->request->server['REMOTE_ADDR'];
+        $send['x_customer_ip'] = Request::p()->server['REMOTE_ADDR'];
         $send['x_email'] = $order_info['email'];
         $send['x_description'] = html_entity_decode(Config::get('config_name'), ENT_QUOTES, 'UTF-8');
         $send['x_amount'] = Currency::format($order_info['total'], $order_info['currency_code'], 1.00000, false);
         $send['x_currency_code'] = Currency::getCode();
         $send['x_method'] = 'CC';
         $send['x_type'] = (Config::get('authorize_net_method') == 'capture') ? 'AUTH_CAPTURE' : 'AUTH_ONLY';
-        $send['x_card_num'] = str_replace(' ', '', $this->request->post['cc_number']);
-        $send['x_exp_date'] = $this->request->post['cc_expire_date_month'] . $this->request->post['cc_expire_date_year'];
-        $send['x_card_code'] = $this->request->post['cc_cvv2'];
-        $send['x_invoice_num'] = $this->session->data['order_id'];
+        $send['x_card_num'] = str_replace(' ', '', Request::p()->post['cc_number']);
+        $send['x_exp_date'] = Request::p()->post['cc_expire_date_month'] . Request::p()->post['cc_expire_date_year'];
+        $send['x_card_code'] = Request::p()->post['cc_cvv2'];
+        $send['x_invoice_num'] = Session::p()->data['order_id'];
         $send['x_solution_id'] = 'A1000015';
         
         /* Customer Shipping Address Fields */
@@ -138,7 +138,7 @@ class AuthorizeNet extends Controller {
             
             if ($response_info[1] == '1') {
                 if (strtoupper($response_info[38]) == strtoupper(md5(Config::get('authorize_net_hash') . Config::get('authorize_net_login') . $response_info[7] . Currency::format($order_info['total'], $order_info['currency_code'], 1.00000, false)))) {
-                    CheckoutOrder::confirm($this->session->data['order_id'], Config::get('config_order_status_id'));
+                    CheckoutOrder::confirm(Session::p()->data['order_id'], Config::get('config_order_status_id'));
                     
                     $message = '';
                     
@@ -162,7 +162,7 @@ class AuthorizeNet extends Controller {
                         $message.= 'Cardholder Authentication Verification Response: ' . $response_info['40'] . "\n";
                     }
                     
-                    CheckoutOrder::update($this->session->data['order_id'], Config::get('authorize_net_order_status_id'), $message);
+                    CheckoutOrder::update(Session::p()->data['order_id'], Config::get('authorize_net_order_status_id'), $message);
                 }
                 
                 $json['success'] = Url::link('checkout/success', '', 'SSL');

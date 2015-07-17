@@ -27,9 +27,9 @@ class BlogHotTopics extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('blog_hot_topics', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('blog_hot_topics', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/widget', '', 'SSL'));
         }
@@ -48,8 +48,8 @@ class BlogHotTopics extends Controller {
         
         $data['widgets'] = array();
         
-        if (isset($this->request->post['blog_hot_topics_widget'])) {
-            $data['widgets'] = $this->request->post['blog_hot_topics_widget'];
+        if (isset(Request::p()->post['blog_hot_topics_widget'])) {
+            $data['widgets'] = Request::p()->post['blog_hot_topics_widget'];
         } elseif (Config::get('blog_hot_topics_widget')) {
             $data['widgets'] = Config::get('blog_hot_topics_widget');
         }

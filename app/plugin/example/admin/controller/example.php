@@ -27,7 +27,7 @@ class Example extends Controller {
     public function index() {
         $data = Plugin::language('example');
         
-        Theme::setTitle($this->language->get('lang_heading_title'));
+        Theme::setTitle(Lang::get('lang_heading_title'));
         
         Breadcrumb::add('lang_text_plugin', 'module/plugin');
         Breadcrumb::add('lang_heading_title', 'plugin/example');

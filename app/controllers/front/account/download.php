@@ -22,7 +22,7 @@ class Download extends Controller {
     
     public function index() {
         if (!Customer::isLogged()) {
-            $this->session->data['redirect'] = Url::link('account/download', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/download', '', 'SSL');
             
             Response::redirect(Url::link('account/login', '', 'SSL'));
         }
@@ -40,8 +40,8 @@ class Download extends Controller {
         
         if ($download_total) {
             
-            if (isset($this->request->get['page'])) {
-                $page = $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $page = Request::p()->get['page'];
             } else {
                 $page = 1;
             }
@@ -88,7 +88,7 @@ class Download extends Controller {
             
             $data['continue'] = Url::link('account/dashboard', '', 'SSL');
             
-            Response::addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
+            Response::addHeader(Request::p()->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
@@ -103,15 +103,15 @@ class Download extends Controller {
     
     public function download() {
         if (!Customer::isLogged()) {
-            $this->session->data['redirect'] = Url::link('account/download', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/download', '', 'SSL');
             
             Response::redirect(Url::link('account/login', '', 'SSL'));
         }
         
         Theme::model('account/download');
         
-        if (isset($this->request->get['order_download_id'])) {
-            $order_download_id = $this->request->get['order_download_id'];
+        if (isset(Request::p()->get['order_download_id'])) {
+            $order_download_id = Request::p()->get['order_download_id'];
         } else {
             $order_download_id = 0;
         }
@@ -137,7 +137,7 @@ class Download extends Controller {
                     
                     readfile($file, 'rb');
                     
-                    AccountDownload::updateRemaining($this->request->get['order_download_id']);
+                    AccountDownload::updateRemaining(Request::p()->get['order_download_id']);
                 } else {
                     trigger_error('Error: Could not find file ' . $file . '!');
                 }

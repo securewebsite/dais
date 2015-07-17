@@ -27,9 +27,9 @@ class Item extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('item', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('item', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/shipping', '', 'SSL'));
         }
@@ -47,14 +47,14 @@ class Item extends Controller {
         
         $data['cancel'] = Url::link('module/shipping', '', 'SSL');
         
-        if (isset($this->request->post['item_cost'])) {
-            $data['item_cost'] = $this->request->post['item_cost'];
+        if (isset(Request::p()->post['item_cost'])) {
+            $data['item_cost'] = Request::p()->post['item_cost'];
         } else {
             $data['item_cost'] = Config::get('item_cost');
         }
         
-        if (isset($this->request->post['item_tax_class_id'])) {
-            $data['item_tax_class_id'] = $this->request->post['item_tax_class_id'];
+        if (isset(Request::p()->post['item_tax_class_id'])) {
+            $data['item_tax_class_id'] = Request::p()->post['item_tax_class_id'];
         } else {
             $data['item_tax_class_id'] = Config::get('item_tax_class_id');
         }
@@ -63,8 +63,8 @@ class Item extends Controller {
         
         $data['tax_classes'] = LocaleTaxClass::getTaxClasses();
         
-        if (isset($this->request->post['item_geo_zone_id'])) {
-            $data['item_geo_zone_id'] = $this->request->post['item_geo_zone_id'];
+        if (isset(Request::p()->post['item_geo_zone_id'])) {
+            $data['item_geo_zone_id'] = Request::p()->post['item_geo_zone_id'];
         } else {
             $data['item_geo_zone_id'] = Config::get('item_geo_zone_id');
         }
@@ -73,14 +73,14 @@ class Item extends Controller {
         
         $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
-        if (isset($this->request->post['item_status'])) {
-            $data['item_status'] = $this->request->post['item_status'];
+        if (isset(Request::p()->post['item_status'])) {
+            $data['item_status'] = Request::p()->post['item_status'];
         } else {
             $data['item_status'] = Config::get('item_status');
         }
         
-        if (isset($this->request->post['item_sort_order'])) {
-            $data['item_sort_order'] = $this->request->post['item_sort_order'];
+        if (isset(Request::p()->post['item_sort_order'])) {
+            $data['item_sort_order'] = Request::p()->post['item_sort_order'];
         } else {
             $data['item_sort_order'] = Config::get('item_sort_order');
         }

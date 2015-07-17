@@ -31,9 +31,9 @@ class Forgotten extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('account/customer');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()):
             $code        = sha1(uniqid(mt_rand(), true));
-            $customer_id = AccountCustomer::editCode($this->request->post['email'], $code);
+            $customer_id = AccountCustomer::editCode(Request::p()->post['email'], $code);
 
             $callback = array(
                 'customer_id' => $customer_id,
@@ -46,7 +46,7 @@ class Forgotten extends Controller {
             
             Theme::notify('public_customer_forgotten', $callback);
 
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;
         
@@ -72,9 +72,9 @@ class Forgotten extends Controller {
     }
     
     protected function validate() {
-        if (!isset($this->request->post['email'])):
+        if (!isset(Request::p()->post['email'])):
             $this->error['warning'] = Lang::get('lang_error_email');
-        elseif (!AccountCustomer::getTotalCustomersByEmail($this->request->post['email'])):
+        elseif (!AccountCustomer::getTotalCustomersByEmail(Request::p()->post['email'])):
             $this->error['warning'] = Lang::get('lang_error_email');
         endif;
         

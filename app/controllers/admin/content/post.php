@@ -37,30 +37,30 @@ class Post extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('content/post');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            ContentPost::addPost($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            ContentPost::addPost(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['filter_name'])) {
-                $url.= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->get['filter_name'])) {
+                $url.= '&filter_name=' . urlencode(html_entity_decode(Request::p()->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
             
-            if (isset($this->request->get['filter_status'])) {
-                $url.= '&filter_status=' . $this->request->get['filter_status'];
+            if (isset(Request::p()->get['filter_status'])) {
+                $url.= '&filter_status=' . Request::p()->get['filter_status'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('content/post', '' . $url, 'SSL'));
@@ -76,30 +76,30 @@ class Post extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('content/post');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            ContentPost::editPost($this->request->get['post_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            ContentPost::editPost(Request::p()->get['post_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['filter_name'])) {
-                $url.= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->get['filter_name'])) {
+                $url.= '&filter_name=' . urlencode(html_entity_decode(Request::p()->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
             
-            if (isset($this->request->get['filter_status'])) {
-                $url.= '&filter_status=' . $this->request->get['filter_status'];
+            if (isset(Request::p()->get['filter_status'])) {
+                $url.= '&filter_status=' . Request::p()->get['filter_status'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('content/post', '' . $url, 'SSL'));
@@ -115,33 +115,33 @@ class Post extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('content/post');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $post_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $post_id) {
                 ContentPost::deletePost($post_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['filter_name'])) {
-                $url.= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->get['filter_name'])) {
+                $url.= '&filter_name=' . urlencode(html_entity_decode(Request::p()->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
             
-            if (isset($this->request->get['filter_status'])) {
-                $url.= '&filter_status=' . $this->request->get['filter_status'];
+            if (isset(Request::p()->get['filter_status'])) {
+                $url.= '&filter_status=' . Request::p()->get['filter_status'];
             }
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('content/post', '' . $url, 'SSL'));
@@ -155,96 +155,96 @@ class Post extends Controller {
     private function getList() {
         $data = Theme::language('content/post');
         
-        if (isset($this->request->get['filter_name'])) {
-            $filter_name = $this->request->get['filter_name'];
+        if (isset(Request::p()->get['filter_name'])) {
+            $filter_name = Request::p()->get['filter_name'];
         } else {
             $filter_name = null;
         }
         
-        if (isset($this->request->get['filter_author_id'])) {
-            $filter_author_id = $this->request->get['filter_author_id'];
+        if (isset(Request::p()->get['filter_author_id'])) {
+            $filter_author_id = Request::p()->get['filter_author_id'];
         } else {
             $filter_author_id = null;
         }
         
-        if (isset($this->request->get['filter_category_id'])) {
-            $filter_category_id = $this->request->get['filter_category_id'];
+        if (isset(Request::p()->get['filter_category_id'])) {
+            $filter_category_id = Request::p()->get['filter_category_id'];
         } else {
             $filter_category_id = null;
         }
         
-        if (isset($this->request->get['filter_status'])) {
-            $filter_status = $this->request->get['filter_status'];
+        if (isset(Request::p()->get['filter_status'])) {
+            $filter_status = Request::p()->get['filter_status'];
         } else {
             $filter_status = null;
         }
         
-        if (isset($this->request->get['filter_date_added'])) {
-            $filter_date_added = $this->request->get['filter_date_added'];
+        if (isset(Request::p()->get['filter_date_added'])) {
+            $filter_date_added = Request::p()->get['filter_date_added'];
         } else {
             $filter_date_added = null;
         }
         
-        if (isset($this->request->get['filter_date_modified'])) {
-            $filter_date_modified = $this->request->get['filter_date_modified'];
+        if (isset(Request::p()->get['filter_date_modified'])) {
+            $filter_date_modified = Request::p()->get['filter_date_modified'];
         } else {
             $filter_date_modified = null;
         }
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'p.post_id';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'DESC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['filter_name'])) {
-            $url.= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        if (isset(Request::p()->get['filter_name'])) {
+            $url.= '&filter_name=' . urlencode(html_entity_decode(Request::p()->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
         
-        if (isset($this->request->get['filter_author_id'])) {
-            $url.= '&filter_author_id=' . $this->request->get['filter_author_id'];
+        if (isset(Request::p()->get['filter_author_id'])) {
+            $url.= '&filter_author_id=' . Request::p()->get['filter_author_id'];
         }
         
-        if (isset($this->request->get['filter_category_id'])) {
-            $url.= '&filter_category_id=' . $this->request->get['filter_category_id'];
+        if (isset(Request::p()->get['filter_category_id'])) {
+            $url.= '&filter_category_id=' . Request::p()->get['filter_category_id'];
         }
         
-        if (isset($this->request->get['filter_status'])) {
-            $url.= '&filter_status=' . $this->request->get['filter_status'];
+        if (isset(Request::p()->get['filter_status'])) {
+            $url.= '&filter_status=' . Request::p()->get['filter_status'];
         }
         
-        if (isset($this->request->get['filter_date_added'])) {
-            $url.= '&filter_date_added=' . $this->request->get['filter_date_added'];
+        if (isset(Request::p()->get['filter_date_added'])) {
+            $url.= '&filter_date_added=' . Request::p()->get['filter_date_added'];
         }
         
-        if (isset($this->request->get['filter_date_modified'])) {
-            $url.= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
+        if (isset(Request::p()->get['filter_date_modified'])) {
+            $url.= '&filter_date_modified=' . Request::p()->get['filter_date_modified'];
         }
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'content/post');
@@ -278,7 +278,7 @@ class Post extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('content/post/update', '' . '&post_id=' . $result['post_id'] . $url, 'SSL')
+                'href' => Url::link('content/post/update', '' . 'post_id=' . $result['post_id'] . $url, 'SSL')
             );
             
             if ($result['image'] && file_exists(Config::get('path.image') . $result['image'])) {
@@ -299,7 +299,7 @@ class Post extends Controller {
                 'date_added'    => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 
                 'date_modified' => ($result['date_modified'] != '0000-00-00 00:00:00') ? date(Lang::get('lang_date_format_short'), strtotime($result['date_modified'])) : '-', 
                 'viewed'        => $result['viewed'], 'status' => $status, 
-                'selected'      => isset($this->request->post['selected']) && in_array($result['post_id'], $this->request->post['selected']), 
+                'selected'      => isset(Request::p()->post['selected']) && in_array($result['post_id'], Request::p()->post['selected']), 
                 'action'        => $action
             );
         }
@@ -310,42 +310,42 @@ class Post extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
         
         $url = '';
         
-        if (isset($this->request->get['filter_name'])) {
-            $url.= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        if (isset(Request::p()->get['filter_name'])) {
+            $url.= '&filter_name=' . urlencode(html_entity_decode(Request::p()->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
         
-        if (isset($this->request->get['filter_author_id'])) {
-            $url.= '&filter_author_id=' . $this->request->get['filter_author_id'];
+        if (isset(Request::p()->get['filter_author_id'])) {
+            $url.= '&filter_author_id=' . Request::p()->get['filter_author_id'];
         }
         
-        if (isset($this->request->get['filter_category_id'])) {
-            $url.= '&filter_category_id=' . $this->request->get['filter_category_id'];
+        if (isset(Request::p()->get['filter_category_id'])) {
+            $url.= '&filter_category_id=' . Request::p()->get['filter_category_id'];
         }
         
-        if (isset($this->request->get['filter_status'])) {
-            $url.= '&filter_status=' . $this->request->get['filter_status'];
+        if (isset(Request::p()->get['filter_status'])) {
+            $url.= '&filter_status=' . Request::p()->get['filter_status'];
         }
         
-        if (isset($this->request->get['filter_date_added'])) {
-            $url.= '&filter_date_added=' . $this->request->get['filter_date_added'];
+        if (isset(Request::p()->get['filter_date_added'])) {
+            $url.= '&filter_date_added=' . Request::p()->get['filter_date_added'];
         }
         
-        if (isset($this->request->get['filter_date_modified'])) {
-            $url.= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
+        if (isset(Request::p()->get['filter_date_modified'])) {
+            $url.= '&filter_date_modified=' . Request::p()->get['filter_date_modified'];
         }
         
-        if (isset($this->request->get['filter_status'])) {
-            $url.= '&filter_status=' . $this->request->get['filter_status'];
+        if (isset(Request::p()->get['filter_status'])) {
+            $url.= '&filter_status=' . Request::p()->get['filter_status'];
         }
         
         if ($order == 'ASC') {
@@ -354,53 +354,53 @@ class Post extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name']          = Url::link('content/post', '' . '&sort=pd.name' . $url, 'SSL');
-        $data['sort_status']        = Url::link('content/post', '' . '&sort=p.status' . $url, 'SSL');
-        $data['sort_viewed']        = Url::link('content/post', '' . '&sort=p.viewed' . $url, 'SSL');
-        $data['sort_date_added']    = Url::link('content/post', '' . '&sort=p.date_added' . $url, 'SSL');
-        $data['sort_date_modified'] = Url::link('content/post', '' . '&sort=p.date_modified' . $url, 'SSL');
-        $data['sort_order']         = Url::link('content/post', '' . '&sort=p.sort_order' . $url, 'SSL');
+        $data['sort_name']          = Url::link('content/post', '' . 'sort=pd.name' . $url, 'SSL');
+        $data['sort_status']        = Url::link('content/post', '' . 'sort=p.status' . $url, 'SSL');
+        $data['sort_viewed']        = Url::link('content/post', '' . 'sort=p.viewed' . $url, 'SSL');
+        $data['sort_date_added']    = Url::link('content/post', '' . 'sort=p.date_added' . $url, 'SSL');
+        $data['sort_date_modified'] = Url::link('content/post', '' . 'sort=p.date_modified' . $url, 'SSL');
+        $data['sort_order']         = Url::link('content/post', '' . 'sort=p.sort_order' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['filter_name'])) {
-            $url.= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        if (isset(Request::p()->get['filter_name'])) {
+            $url.= '&filter_name=' . urlencode(html_entity_decode(Request::p()->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
         
-        if (isset($this->request->get['filter_author_id'])) {
-            $url.= '&filter_author_id=' . $this->request->get['filter_author_id'];
+        if (isset(Request::p()->get['filter_author_id'])) {
+            $url.= '&filter_author_id=' . Request::p()->get['filter_author_id'];
         }
         
-        if (isset($this->request->get['filter_category_id'])) {
-            $url.= '&filter_category_id=' . $this->request->get['filter_category_id'];
+        if (isset(Request::p()->get['filter_category_id'])) {
+            $url.= '&filter_category_id=' . Request::p()->get['filter_category_id'];
         }
         
-        if (isset($this->request->get['filter_status'])) {
-            $url.= '&filter_status=' . $this->request->get['filter_status'];
+        if (isset(Request::p()->get['filter_status'])) {
+            $url.= '&filter_status=' . Request::p()->get['filter_status'];
         }
         
-        if (isset($this->request->get['filter_date_added'])) {
-            $url.= '&filter_date_added=' . $this->request->get['filter_date_added'];
+        if (isset(Request::p()->get['filter_date_added'])) {
+            $url.= '&filter_date_added=' . Request::p()->get['filter_date_added'];
         }
         
-        if (isset($this->request->get['filter_date_modified'])) {
-            $url.= '&filter_date_modified=' . $this->request->get['filter_date_modified'];
+        if (isset(Request::p()->get['filter_date_modified'])) {
+            $url.= '&filter_date_modified=' . Request::p()->get['filter_date_modified'];
         }
         
-        if (isset($this->request->get['filter_status'])) {
-            $url.= '&filter_status=' . $this->request->get['filter_status'];
+        if (isset(Request::p()->get['filter_status'])) {
+            $url.= '&filter_status=' . Request::p()->get['filter_status'];
         }
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
 
         $data['posted_by'] = Config::get('blog_posted_by');
@@ -479,48 +479,48 @@ class Post extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['filter_name'])) {
-            $url.= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        if (isset(Request::p()->get['filter_name'])) {
+            $url.= '&filter_name=' . urlencode(html_entity_decode(Request::p()->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
         
-        if (isset($this->request->get['filter_status'])) {
-            $url.= '&filter_status=' . $this->request->get['filter_status'];
+        if (isset(Request::p()->get['filter_status'])) {
+            $url.= '&filter_status=' . Request::p()->get['filter_status'];
         }
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'content/post');
         
-        if (!isset($this->request->get['post_id'])) {
+        if (!isset(Request::p()->get['post_id'])) {
             $data['action'] = Url::link('content/post/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('content/post/update', '' . '&post_id=' . $this->request->get['post_id'] . $url, 'SSL');
+            $data['action'] = Url::link('content/post/update', '' . 'post_id=' . Request::p()->get['post_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('content/post', '' . $url, 'SSL');
         
-        if (isset($this->request->get['post_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $post_info = ContentPost::getPost($this->request->get['post_id']);
+        if (isset(Request::p()->get['post_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $post_info = ContentPost::getPost(Request::p()->get['post_id']);
         }
         
         Theme::model('locale/language');
         
         $data['languages'] = LocaleLanguage::getLanguages();
         
-        if (isset($this->request->post['post_description'])) {
-            $data['post_description'] = $this->request->post['post_description'];
-        } elseif (isset($this->request->get['post_id'])) {
-            $data['post_description'] = ContentPost::getPostDescriptions($this->request->get['post_id']);
+        if (isset(Request::p()->post['post_description'])) {
+            $data['post_description'] = Request::p()->post['post_description'];
+        } elseif (isset(Request::p()->get['post_id'])) {
+            $data['post_description'] = ContentPost::getPostDescriptions(Request::p()->get['post_id']);
         } else {
             $data['post_description'] = array();
         }
@@ -529,24 +529,24 @@ class Post extends Controller {
         
         $data['stores'] = SettingStore::getStores();
         
-        if (isset($this->request->post['post_store'])) {
-            $data['post_store'] = $this->request->post['post_store'];
-        } elseif (isset($this->request->get['post_id'])) {
-            $data['post_store'] = ContentPost::getPostStores($this->request->get['post_id']);
+        if (isset(Request::p()->post['post_store'])) {
+            $data['post_store'] = Request::p()->post['post_store'];
+        } elseif (isset(Request::p()->get['post_id'])) {
+            $data['post_store'] = ContentPost::getPostStores(Request::p()->get['post_id']);
         } else {
             $data['post_store'] = array(0);
         }
         
-        if (isset($this->request->post['slug'])) {
-            $data['slug'] = $this->request->post['slug'];
+        if (isset(Request::p()->post['slug'])) {
+            $data['slug'] = Request::p()->post['slug'];
         } elseif (!empty($post_info)) {
             $data['slug'] = $post_info['slug'];
         } else {
             $data['slug'] = '';
         }
         
-        if (isset($this->request->post['author_id'])) {
-            $data['author_id'] = $this->request->post['author_id'];
+        if (isset(Request::p()->post['author_id'])) {
+            $data['author_id'] = Request::p()->post['author_id'];
         } elseif (!empty($post_info)) {
             $data['author_id'] = $post_info['author_id'];
         } else {
@@ -565,8 +565,8 @@ class Post extends Controller {
             endif;
         endforeach;
         
-        if (isset($this->request->post['image'])) {
-            $data['image'] = $this->request->post['image'];
+        if (isset(Request::p()->post['image'])) {
+            $data['image'] = Request::p()->post['image'];
         } elseif (!empty($post_info)) {
             $data['image'] = $post_info['image'];
         } else {
@@ -575,32 +575,32 @@ class Post extends Controller {
         
         Theme::model('tool/image');
         
-        if (isset($this->request->post['image']) && file_exists(Config::get('path.image') . $this->request->post['image'])) {
-            $data['thumb'] = ToolImage::resize($this->request->post['image'], 100, 100);
+        if (isset(Request::p()->post['image']) && file_exists(Config::get('path.image') . Request::p()->post['image'])) {
+            $data['thumb'] = ToolImage::resize(Request::p()->post['image'], 100, 100);
         } elseif (!empty($post_info) && $post_info['image'] && file_exists(Config::get('path.image') . $post_info['image'])) {
             $data['thumb'] = ToolImage::resize($post_info['image'], 100, 100);
         } else {
             $data['thumb'] = ToolImage::resize('placeholder.png', 100, 100);
         }
         
-        if (isset($this->request->post['date_available'])) {
-            $data['date_available'] = $this->request->post['date_available'];
+        if (isset(Request::p()->post['date_available'])) {
+            $data['date_available'] = Request::p()->post['date_available'];
         } elseif (!empty($post_info)) {
             $data['date_available'] = date('Y-m-d', strtotime($post_info['date_available']));
         } else {
             $data['date_available'] = date('Y-m-d', time() - 86400);
         }
         
-        if (isset($this->request->post['sort_order'])) {
-            $data['sort_order'] = $this->request->post['sort_order'];
+        if (isset(Request::p()->post['sort_order'])) {
+            $data['sort_order'] = Request::p()->post['sort_order'];
         } elseif (!empty($post_info)) {
             $data['sort_order'] = $post_info['sort_order'];
         } else {
             $data['sort_order'] = 1;
         }
         
-        if (isset($this->request->post['visibility'])) {
-            $data['visibility'] = $this->request->post['visibility'];
+        if (isset(Request::p()->post['visibility'])) {
+            $data['visibility'] = Request::p()->post['visibility'];
         } elseif (!empty($post_info)) {
             $data['visibility'] = $post_info['visibility'];
         } else {
@@ -611,18 +611,18 @@ class Post extends Controller {
         
         $data['customer_groups'] = PeopleCustomerGroup::getCustomerGroups();
         
-        if (isset($this->request->post['status'])) {
-            $data['status'] = $this->request->post['status'];
+        if (isset(Request::p()->post['status'])) {
+            $data['status'] = Request::p()->post['status'];
         } elseif (!empty($post_info)) {
             $data['status'] = $post_info['status'];
         } else {
             $data['status'] = 1;
         }
         
-        if (isset($this->request->post['post_image'])) {
-            $post_images = $this->request->post['product_image'];
-        } elseif (isset($this->request->get['post_id'])) {
-            $post_images = ContentPost::getPostImages($this->request->get['post_id']);
+        if (isset(Request::p()->post['post_image'])) {
+            $post_images = Request::p()->post['product_image'];
+        } elseif (isset(Request::p()->get['post_id'])) {
+            $post_images = ContentPost::getPostImages(Request::p()->get['post_id']);
         } else {
             $post_images = array();
         }
@@ -645,18 +645,18 @@ class Post extends Controller {
         
         $data['categories'] = ContentCategory::getCategories(0);
         
-        if (isset($this->request->post['post_category'])) {
-            $data['post_category'] = $this->request->post['post_category'];
-        } elseif (isset($this->request->get['post_id'])) {
-            $data['post_category'] = ContentPost::getPostCategories($this->request->get['post_id']);
+        if (isset(Request::p()->post['post_category'])) {
+            $data['post_category'] = Request::p()->post['post_category'];
+        } elseif (isset(Request::p()->get['post_id'])) {
+            $data['post_category'] = ContentPost::getPostCategories(Request::p()->get['post_id']);
         } else {
             $data['post_category'] = array();
         }
         
-        if (isset($this->request->post['post_related'])) {
-            $posts = $this->request->post['post_related'];
-        } elseif (isset($this->request->get['post_id'])) {
-            $posts = ContentPost::getPostRelated($this->request->get['post_id']);
+        if (isset(Request::p()->post['post_related'])) {
+            $posts = Request::p()->post['post_related'];
+        } elseif (isset(Request::p()->get['post_id'])) {
+            $posts = ContentPost::getPostRelated(Request::p()->get['post_id']);
         } else {
             $posts = array();
         }
@@ -677,10 +677,10 @@ class Post extends Controller {
             $data['is_admin_group'] = false;
         }
         
-        if (isset($this->request->post['post_layout'])) {
-            $data['post_layout'] = $this->request->post['post_layout'];
-        } elseif (isset($this->request->get['post_id'])) {
-            $data['post_layout'] = ContentPost::getPostLayouts($this->request->get['post_id']);
+        if (isset(Request::p()->post['post_layout'])) {
+            $data['post_layout'] = Request::p()->post['post_layout'];
+        } elseif (isset(Request::p()->get['post_id'])) {
+            $data['post_layout'] = ContentPost::getPostLayouts(Request::p()->get['post_id']);
         } else {
             $data['post_layout'] = array();
         }
@@ -703,7 +703,7 @@ class Post extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        foreach ($this->request->post['post_description'] as $language_id => $value) {
+        foreach (Request::p()->post['post_description'] as $language_id => $value) {
             if ((Encode::strlen($value['name']) < 1) || (Encode::strlen($value['name']) > 255)) {
                 $this->error['name'][$language_id] = Lang::get('lang_error_name');
             }
@@ -713,19 +713,19 @@ class Post extends Controller {
             }
         }
         
-        if (isset($this->request->post['slug']) && Encode::strlen($this->request->post['slug']) > 0):
+        if (isset(Request::p()->post['slug']) && Encode::strlen(Request::p()->post['slug']) > 0):
             Theme::model('tool/utility');
-            $query = ToolUtility::findSlugByName($this->request->post['slug']);
+            $query = ToolUtility::findSlugByName(Request::p()->post['slug']);
             
-            if (isset($this->request->get['post_id'])):
+            if (isset(Request::p()->get['post_id'])):
                 if ($query):
-                    if ($query != 'post_id:' . $this->request->get['post_id']):
-                        $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), $this->request->post['slug']);
+                    if ($query != 'post_id:' . Request::p()->get['post_id']):
+                        $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), Request::p()->post['slug']);
                     endif;
                 endif;
             else:
                 if ($query):
-                    $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), $this->request->post['slug']);
+                    $this->error['slug'] = sprintf(Lang::get('lang_error_slug_found'), Request::p()->post['slug']);
                 endif;
             endif;
         else:
@@ -754,29 +754,29 @@ class Post extends Controller {
     public function autocomplete() {
         $json = array();
         
-        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_category_id'])) {
+        if (isset(Request::p()->get['filter_name']) || isset(Request::p()->get['filter_category_id'])) {
             Theme::model('content/post');
             
-            if (isset($this->request->get['filter_name'])) {
-                $filter_name = $this->request->get['filter_name'];
+            if (isset(Request::p()->get['filter_name'])) {
+                $filter_name = Request::p()->get['filter_name'];
             } else {
                 $filter_name = '';
             }
             
-            if (isset($this->request->get['filter_category_id'])) {
-                $filter_category_id = $this->request->get['filter_category_id'];
+            if (isset(Request::p()->get['filter_category_id'])) {
+                $filter_category_id = Request::p()->get['filter_category_id'];
             } else {
                 $filter_category_id = '';
             }
             
-            if (isset($this->request->get['filter_sub_category'])) {
-                $filter_sub_category = $this->request->get['filter_sub_category'];
+            if (isset(Request::p()->get['filter_sub_category'])) {
+                $filter_sub_category = Request::p()->get['filter_sub_category'];
             } else {
                 $filter_sub_category = '';
             }
             
-            if (isset($this->request->get['limit'])) {
-                $limit = $this->request->get['limit'];
+            if (isset(Request::p()->get['limit'])) {
+                $limit = Request::p()->get['limit'];
             } else {
                 $limit = 20;
             }
@@ -804,11 +804,11 @@ class Post extends Controller {
             'limit'       => 20
         );
         
-        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_user_name'])):
+        if (isset(Request::p()->get['filter_name']) || isset(Request::p()->get['filter_user_name'])):
             Theme::model('people/user');
             
-            if (isset($this->request->get['filter_name'])) $filter['filter_name'] = $this->request->get['filter_name']; 
-            if (isset($this->request->get['filter_user_name'])) $filter['filter_user_name'] = $this->request->get['filter_user_name'];
+            if (isset(Request::p()->get['filter_name'])) $filter['filter_name'] = Request::p()->get['filter_name']; 
+            if (isset(Request::p()->get['filter_user_name'])) $filter['filter_user_name'] = Request::p()->get['filter_user_name'];
             
             $results = PeopleUser::getUsers($filter);
             
@@ -846,19 +846,19 @@ class Post extends Controller {
         
         $json = array();
         
-        if (!isset($this->request->get['name']) || Encode::strlen($this->request->get['name']) < 1):
+        if (!isset(Request::p()->get['name']) || Encode::strlen(Request::p()->get['name']) < 1):
             $json['error'] = Lang::get('lang_error_name_first');
         else:
             
             // build slug
-            $slug = Url::build_slug($this->request->get['name']);
+            $slug = Url::build_slug(Request::p()->get['name']);
             
             // check that the slug is globally unique
             $query = ToolUtility::findSlugByName($slug);
             
             if ($query):
-                if (isset($this->request->get['post_id'])):
-                    if ($query != 'post_id:' . $this->request->get['post_id']):
+                if (isset(Request::p()->get['post_id'])):
+                    if ($query != 'post_id:' . Request::p()->get['post_id']):
                         $json['error'] = sprintf(Lang::get('lang_error_slug_found'), $slug);
                     else:
                         $json['slug'] = $slug;
@@ -879,8 +879,8 @@ class Post extends Controller {
     public function description() {
         $json = array();
 
-        if (isset($this->request->post['description']))
-            $json['success'] = $this->keyword->getDescription($this->request->post['description']);
+        if (isset(Request::p()->post['description']))
+            $json['success'] = $this->keyword->getDescription(Request::p()->post['description']);
 
         Response::setOutput(json_encode($json));
     }
@@ -888,9 +888,9 @@ class Post extends Controller {
     public function keyword() {
         $json = array();
 
-        if (isset($this->request->post['keywords'])):
+        if (isset(Request::p()->post['keywords'])):
             // let's clean up the data first
-            $keywords        = $this->keyword->getDescription($this->request->post['keywords']);
+            $keywords        = $this->keyword->getDescription(Request::p()->post['keywords']);
             $json['success'] = $this->keyword->getKeywords($keywords);
         endif;
 

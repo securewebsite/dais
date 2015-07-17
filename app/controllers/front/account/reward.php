@@ -22,7 +22,7 @@ class Reward extends Controller {
     
     public function index() {
         if (!Customer::isLogged()) {
-            $this->session->data['redirect'] = Url::link('account/reward', '', 'SSL');
+            Session::p()->data['redirect'] = Url::link('account/reward', '', 'SSL');
             
             Response::redirect(Url::link('account/login', '', 'SSL'));
         }
@@ -35,8 +35,8 @@ class Reward extends Controller {
         
         Theme::model('account/reward');
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }

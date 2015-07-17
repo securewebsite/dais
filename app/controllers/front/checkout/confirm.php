@@ -28,10 +28,10 @@ class Confirm extends Controller {
             // Validate if shipping address has been set.
             Theme::model('account/address');
             
-            if (Customer::isLogged() && isset($this->session->data['shipping_address_id'])):
-                $shipping_address = AccountAddress::getAddress($this->session->data['shipping_address_id']);
-            elseif (isset($this->session->data['guest'])):
-                $shipping_address = $this->session->data['guest']['shipping'];
+            if (Customer::isLogged() && isset(Session::p()->data['shipping_address_id'])):
+                $shipping_address = AccountAddress::getAddress(Session::p()->data['shipping_address_id']);
+            elseif (isset(Session::p()->data['guest'])):
+                $shipping_address = Session::p()->data['guest']['shipping'];
             endif;
             
             if (empty($shipping_address)):
@@ -39,21 +39,21 @@ class Confirm extends Controller {
             endif;
             
             // Validate if shipping method has been set.
-            if (!isset($this->session->data['shipping_method'])):
+            if (!isset(Session::p()->data['shipping_method'])):
                 $redirect = Url::link('checkout/checkout', '', 'SSL');
             endif;
         else:
-            unset($this->session->data['shipping_method']);
-            unset($this->session->data['shipping_methods']);
+            unset(Session::p()->data['shipping_method']);
+            unset(Session::p()->data['shipping_methods']);
         endif;
         
         // Validate if payment address has been set.
         Theme::model('account/address');
         
-        if (Customer::isLogged() && isset($this->session->data['payment_address_id'])):
-            $payment_address = AccountAddress::getAddress($this->session->data['payment_address_id']);
-        elseif (isset($this->session->data['guest'])):
-            $payment_address = $this->session->data['guest']['payment'];
+        if (Customer::isLogged() && isset(Session::p()->data['payment_address_id'])):
+            $payment_address = AccountAddress::getAddress(Session::p()->data['payment_address_id']);
+        elseif (isset(Session::p()->data['guest'])):
+            $payment_address = Session::p()->data['guest']['payment'];
         endif;
         
         if (empty($payment_address)):
@@ -61,12 +61,12 @@ class Confirm extends Controller {
         endif;
         
         // Validate if payment method has been set.
-        if (!isset($this->session->data['payment_method'])):
+        if (!isset(Session::p()->data['payment_method'])):
             $redirect = Url::link('checkout/checkout', '', 'SSL');
         endif;
         
         // Validate cart has products and has stock.
-        if ((!Cart::hasProducts() && empty($this->session->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))):
+        if ((!Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))):
             $redirect = Url::link('checkout/cart');
         endif;
         
@@ -144,16 +144,16 @@ class Confirm extends Controller {
                 
                 Theme::model('account/address');
                 
-                $payment_address = AccountAddress::getAddress($this->session->data['payment_address_id']);
-            elseif (isset($this->session->data['guest'])):
+                $payment_address = AccountAddress::getAddress(Session::p()->data['payment_address_id']);
+            elseif (isset(Session::p()->data['guest'])):
                 $order['customer_id']       = 0;
-                $order['customer_group_id'] = $this->session->data['guest']['customer_group_id'];
-                $order['firstname']         = $this->session->data['guest']['firstname'];
-                $order['lastname']          = $this->session->data['guest']['lastname'];
-                $order['email']             = $this->session->data['guest']['email'];
-                $order['telephone']         = $this->session->data['guest']['telephone'];
+                $order['customer_group_id'] = Session::p()->data['guest']['customer_group_id'];
+                $order['firstname']         = Session::p()->data['guest']['firstname'];
+                $order['lastname']          = Session::p()->data['guest']['lastname'];
+                $order['email']             = Session::p()->data['guest']['email'];
+                $order['telephone']         = Session::p()->data['guest']['telephone'];
                 
-                $payment_address = $this->session->data['guest']['payment'];
+                $payment_address = Session::p()->data['guest']['payment'];
             endif;
             
             $order['payment_firstname']      = $payment_address['firstname'];
@@ -171,14 +171,14 @@ class Confirm extends Controller {
             $order['payment_country_id']     = $payment_address['country_id'];
             $order['payment_address_format'] = $payment_address['address_format'];
             
-            if (isset($this->session->data['payment_method']['title'])):
-                $order['payment_method'] = $this->session->data['payment_method']['title'];
+            if (isset(Session::p()->data['payment_method']['title'])):
+                $order['payment_method'] = Session::p()->data['payment_method']['title'];
             else:
                 $order['payment_method'] = '';
             endif;
             
-            if (isset($this->session->data['payment_method']['code'])):
-                $order['payment_code'] = $this->session->data['payment_method']['code'];
+            if (isset(Session::p()->data['payment_method']['code'])):
+                $order['payment_code'] = Session::p()->data['payment_method']['code'];
             else:
                 $order['payment_code'] = '';
             endif;
@@ -186,9 +186,9 @@ class Confirm extends Controller {
             if (Cart::hasShipping()):
                 if (Customer::isLogged()):
                     Theme::model('account/address');
-                    $shipping_address = AccountAddress::getAddress($this->session->data['shipping_address_id']);
-                elseif (isset($this->session->data['guest'])):
-                    $shipping_address = $this->session->data['guest']['shipping'];
+                    $shipping_address = AccountAddress::getAddress(Session::p()->data['shipping_address_id']);
+                elseif (isset(Session::p()->data['guest'])):
+                    $shipping_address = Session::p()->data['guest']['shipping'];
                 endif;
                 
                 $order['shipping_firstname']      = $shipping_address['firstname'];
@@ -204,14 +204,14 @@ class Confirm extends Controller {
                 $order['shipping_country_id']     = $shipping_address['country_id'];
                 $order['shipping_address_format'] = $shipping_address['address_format'];
                 
-                if (isset($this->session->data['shipping_method']['title'])):
-                    $order['shipping_method'] = $this->session->data['shipping_method']['title'];
+                if (isset(Session::p()->data['shipping_method']['title'])):
+                    $order['shipping_method'] = Session::p()->data['shipping_method']['title'];
                 else:
                     $order['shipping_method'] = '';
                 endif;
                 
-                if (isset($this->session->data['shipping_method']['code'])):
-                    $order['shipping_code'] = $this->session->data['shipping_method']['code'];
+                if (isset(Session::p()->data['shipping_method']['code'])):
+                    $order['shipping_code'] = Session::p()->data['shipping_method']['code'];
                 else:
                     $order['shipping_code'] = '';
                 endif;
@@ -273,8 +273,8 @@ class Confirm extends Controller {
             // Gift card
             $gift_card_data = array();
             
-            if (!empty($this->session->data['gift_cards'])):
-                foreach ($this->session->data['gift_cards'] as $gift_card):
+            if (!empty(Session::p()->data['gift_cards'])):
+                foreach (Session::p()->data['gift_cards'] as $gift_card):
                     $gift_card_data[] = array(
                         'description'       => $gift_card['description'], 
                         'code'              => substr(md5(mt_rand()), 0, 10), 
@@ -292,7 +292,7 @@ class Confirm extends Controller {
             $order['products']  = $product_data;
             $order['gift_cards'] = $gift_card_data;
             $order['totals']    = $total_data;
-            $order['comment']   = $this->session->data['comment'];
+            $order['comment']   = Session::p()->data['comment'];
             $order['total']     = $total;
             
             /**
@@ -330,13 +330,13 @@ class Confirm extends Controller {
              */
             
             // referrer cookie
-            if (!$affiliate_id && isset($this->request->cookie['referrer'])):
-                $affiliate_id = $this->request->cookie['referrer'];
+            if (!$affiliate_id && isset(Request::p()->cookie['referrer'])):
+                $affiliate_id = Request::p()->cookie['referrer'];
             endif;
             
             // affiliate_id cookie
-            if (!$affiliate_id && isset($this->request->cookie['affiliate_id'])):
-                $affiliate_id = $this->request->cookie['affiliate_id'];
+            if (!$affiliate_id && isset(Request::p()->cookie['affiliate_id'])):
+                $affiliate_id = Request::p()->cookie['affiliate_id'];
             endif;
 
             if ($affiliate_id && ($affiliate_id !== Customer::getId())):
@@ -353,31 +353,31 @@ class Confirm extends Controller {
             $order['currency_id']    = Currency::getId();
             $order['currency_code']  = Currency::getCode();
             $order['currency_value'] = Currency::getValue(Currency::getCode());
-            $order['ip']             = $this->request->server['REMOTE_ADDR'];
+            $order['ip']             = Request::p()->server['REMOTE_ADDR'];
             
-            if (!empty($this->request->server['HTTP_X_FORWARDED_FOR'])):
-                $order['forwarded_ip'] = $this->request->server['HTTP_X_FORWARDED_FOR'];
-            elseif (!empty($this->request->server['HTTP_CLIENT_IP'])):
-                $order['forwarded_ip'] = $this->request->server['HTTP_CLIENT_IP'];
+            if (!empty(Request::p()->server['HTTP_X_FORWARDED_FOR'])):
+                $order['forwarded_ip'] = Request::p()->server['HTTP_X_FORWARDED_FOR'];
+            elseif (!empty(Request::p()->server['HTTP_CLIENT_IP'])):
+                $order['forwarded_ip'] = Request::p()->server['HTTP_CLIENT_IP'];
             else:
                 $order['forwarded_ip'] = '';
             endif;
             
-            if (isset($this->request->server['HTTP_USER_AGENT'])):
-                $order['user_agent'] = $this->request->server['HTTP_USER_AGENT'];
+            if (isset(Request::p()->server['HTTP_USER_AGENT'])):
+                $order['user_agent'] = Request::p()->server['HTTP_USER_AGENT'];
             else:
                 $order['user_agent'] = '';
             endif;
             
-            if (isset($this->request->server['HTTP_ACCEPT_LANGUAGE'])):
-                $order['accept_language'] = $this->request->server['HTTP_ACCEPT_LANGUAGE'];
+            if (isset(Request::p()->server['HTTP_ACCEPT_LANGUAGE'])):
+                $order['accept_language'] = Request::p()->server['HTTP_ACCEPT_LANGUAGE'];
             else:
                 $order['accept_language'] = '';
             endif;
             
             Theme::model('checkout/order');
             
-            $this->session->data['order_id'] = CheckoutOrder::addOrder($order);
+            Session::p()->data['order_id'] = CheckoutOrder::addOrder($order);
             
             $data['products'] = array();
             
@@ -438,8 +438,8 @@ class Confirm extends Controller {
             // Gift Giftcard
             $data['gift_cards'] = array();
             
-            if (!empty($this->session->data['gift_cards'])):
-                foreach ($this->session->data['gift_cards'] as $gift_card):
+            if (!empty(Session::p()->data['gift_cards'])):
+                foreach (Session::p()->data['gift_cards'] as $gift_card):
                     $data['gift_cards'][] = array(
                         'description' => $gift_card['description'], 
                         'amount'      => Currency::format($gift_card['amount'])
@@ -448,7 +448,7 @@ class Confirm extends Controller {
             endif;
             
             $data['totals']  = $total_data;
-            $data['payment'] = Theme::controller('payment/' . $this->session->data['payment_method']['code']);
+            $data['payment'] = Theme::controller('payment/' . Session::p()->data['payment_method']['code']);
         else:
             $data['redirect'] = $redirect;
         endif;

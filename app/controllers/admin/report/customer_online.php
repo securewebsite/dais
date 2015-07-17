@@ -24,36 +24,36 @@ class CustomerOnline extends Controller {
         $data = Theme::language('report/customer_online');
         Theme::setTitle(Lang::get('lang_heading_title'));
         
-        if (isset($this->request->get['filter_ip'])) {
-            $filter_ip = $this->request->get['filter_ip'];
+        if (isset(Request::p()->get['filter_ip'])) {
+            $filter_ip = Request::p()->get['filter_ip'];
         } else {
             $filter_ip = null;
         }
         
-        if (isset($this->request->get['filter_customer'])) {
-            $filter_customer = $this->request->get['filter_customer'];
+        if (isset(Request::p()->get['filter_customer'])) {
+            $filter_customer = Request::p()->get['filter_customer'];
         } else {
             $filter_customer = null;
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['filter_customer'])) {
-            $url.= '&filter_customer=' . urlencode($this->request->get['filter_customer']);
+        if (isset(Request::p()->get['filter_customer'])) {
+            $url.= '&filter_customer=' . urlencode(Request::p()->get['filter_customer']);
         }
         
-        if (isset($this->request->get['filter_ip'])) {
-            $url.= '&filter_ip=' . $this->request->get['filter_ip'];
+        if (isset(Request::p()->get['filter_ip'])) {
+            $url.= '&filter_ip=' . Request::p()->get['filter_ip'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'report/customer_online', $url);
@@ -73,7 +73,7 @@ class CustomerOnline extends Controller {
             $action = array();
             
             if ($result['customer_id']) {
-                $action[] = array('text' => 'Edit', 'href' => Url::link('people/customer/update', '' . '&customer_id=' . $result['customer_id'], 'SSL'));
+                $action[] = array('text' => 'Edit', 'href' => Url::link('people/customer/update', '' . 'customer_id=' . $result['customer_id'], 'SSL'));
             }
             
             $customer_info = PeopleCustomer::getCustomer($result['customer_id']);
@@ -89,12 +89,12 @@ class CustomerOnline extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['filter_customer'])) {
-            $url.= '&filter_customer=' . urlencode($this->request->get['filter_customer']);
+        if (isset(Request::p()->get['filter_customer'])) {
+            $url.= '&filter_customer=' . urlencode(Request::p()->get['filter_customer']);
         }
         
-        if (isset($this->request->get['filter_ip'])) {
-            $url.= '&filter_ip=' . $this->request->get['filter_ip'];
+        if (isset(Request::p()->get['filter_ip'])) {
+            $url.= '&filter_ip=' . Request::p()->get['filter_ip'];
         }
         
         $data['pagination'] = Theme::paginate($customer_total, $page, 20, Lang::get('lang_text_pagination'), Url::link('report/customer_online', '' . $url . '&page={page}', 'SSL'));

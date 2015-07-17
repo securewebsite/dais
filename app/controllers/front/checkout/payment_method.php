@@ -25,10 +25,10 @@ class PaymentMethod extends Controller {
         
         Theme::model('account/address');
         
-        if (Customer::isLogged() && isset($this->session->data['payment_address_id'])) {
-            $payment_address = AccountAddress::getAddress($this->session->data['payment_address_id']);
-        } elseif (isset($this->session->data['guest'])) {
-            $payment_address = $this->session->data['guest']['payment'];
+        if (Customer::isLogged() && isset(Session::p()->data['payment_address_id'])) {
+            $payment_address = AccountAddress::getAddress(Session::p()->data['payment_address_id']);
+        } elseif (isset(Session::p()->data['guest'])) {
+            $payment_address = Session::p()->data['guest']['payment'];
         }
         
         if (!empty($payment_address)) {
@@ -95,29 +95,29 @@ class PaymentMethod extends Controller {
             
             array_multisort($sort_order, SORT_ASC, $method_data);
             
-            $this->session->data['payment_methods'] = $method_data;
+            Session::p()->data['payment_methods'] = $method_data;
         }
         
-        if (empty($this->session->data['payment_methods'])) {
+        if (empty(Session::p()->data['payment_methods'])) {
             $data['error_warning'] = sprintf(Lang::get('lang_error_no_payment'), Url::link('content/contact'));
         } else {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['payment_methods'])) {
-            $data['payment_methods'] = $this->session->data['payment_methods'];
+        if (isset(Session::p()->data['payment_methods'])) {
+            $data['payment_methods'] = Session::p()->data['payment_methods'];
         } else {
             $data['payment_methods'] = array();
         }
         
-        if (isset($this->session->data['payment_method']['code'])) {
-            $data['code'] = $this->session->data['payment_method']['code'];
+        if (isset(Session::p()->data['payment_method']['code'])) {
+            $data['code'] = Session::p()->data['payment_method']['code'];
         } else {
             $data['code'] = '';
         }
         
-        if (isset($this->session->data['comment'])) {
-            $data['comment'] = $this->session->data['comment'];
+        if (isset(Session::p()->data['comment'])) {
+            $data['comment'] = Session::p()->data['comment'];
         } else {
             $data['comment'] = '';
         }
@@ -136,8 +136,8 @@ class PaymentMethod extends Controller {
             $data['text_agree'] = '';
         }
         
-        if (isset($this->session->data['agree'])) {
-            $data['agree'] = $this->session->data['agree'];
+        if (isset(Session::p()->data['agree'])) {
+            $data['agree'] = Session::p()->data['agree'];
         } else {
             $data['agree'] = '';
         }
@@ -155,10 +155,10 @@ class PaymentMethod extends Controller {
         // Validate if payment address has been set.
         Theme::model('account/address');
         
-        if (Customer::isLogged() && isset($this->session->data['payment_address_id'])) {
-            $payment_address = AccountAddress::getAddress($this->session->data['payment_address_id']);
-        } elseif (isset($this->session->data['guest'])) {
-            $payment_address = $this->session->data['guest']['payment'];
+        if (Customer::isLogged() && isset(Session::p()->data['payment_address_id'])) {
+            $payment_address = AccountAddress::getAddress(Session::p()->data['payment_address_id']);
+        } elseif (isset(Session::p()->data['guest'])) {
+            $payment_address = Session::p()->data['guest']['payment'];
         }
         
         if (empty($payment_address)) {
@@ -166,7 +166,7 @@ class PaymentMethod extends Controller {
         }
         
         // Validate cart has products and has stock.
-        if ((!Cart::hasProducts() && empty($this->session->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
+        if ((!Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
             $json['redirect'] = Url::link('checkout/cart');
         }
         
@@ -190,9 +190,9 @@ class PaymentMethod extends Controller {
         }
         
         if (!$json) {
-            if (!isset($this->request->post['payment_method'])) {
+            if (!isset(Request::p()->post['payment_method'])) {
                 $json['error']['warning'] = Lang::get('lang_error_payment');
-            } elseif (!isset($this->session->data['payment_methods'][$this->request->post['payment_method']])) {
+            } elseif (!isset(Session::p()->data['payment_methods'][Request::p()->post['payment_method']])) {
                 $json['error']['warning'] = Lang::get('lang_error_payment');
             }
             
@@ -201,15 +201,15 @@ class PaymentMethod extends Controller {
                 
                 $page_info = ContentPage::getPage(Config::get('config_checkout_id'));
                 
-                if ($page_info && !isset($this->request->post['agree'])) {
+                if ($page_info && !isset(Request::p()->post['agree'])) {
                     $json['error']['warning'] = sprintf(Lang::get('lang_error_agree'), $page_info['title']);
                 }
             }
             
             if (!$json) {
-                $this->session->data['payment_method'] = $this->session->data['payment_methods'][$this->request->post['payment_method']];
+                Session::p()->data['payment_method'] = Session::p()->data['payment_methods'][Request::p()->post['payment_method']];
                 
-                $this->session->data['comment'] = strip_tags($this->request->post['comment']);
+                Session::p()->data['comment'] = strip_tags(Request::p()->post['comment']);
             }
         }
         

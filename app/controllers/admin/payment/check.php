@@ -27,9 +27,9 @@ class Check extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('setting/setting');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
-            SettingSetting::editSetting('check', $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            SettingSetting::editSetting('check', Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             Response::redirect(Url::link('module/payment', '', 'SSL'));
         }
@@ -53,20 +53,20 @@ class Check extends Controller {
         
         $data['cancel'] = Url::link('module/payment', '', 'SSL');
         
-        if (isset($this->request->post['check_payable'])) {
-            $data['check_payable'] = $this->request->post['check_payable'];
+        if (isset(Request::p()->post['check_payable'])) {
+            $data['check_payable'] = Request::p()->post['check_payable'];
         } else {
             $data['check_payable'] = Config::get('check_payable');
         }
         
-        if (isset($this->request->post['check_total'])) {
-            $data['check_total'] = $this->request->post['check_total'];
+        if (isset(Request::p()->post['check_total'])) {
+            $data['check_total'] = Request::p()->post['check_total'];
         } else {
             $data['check_total'] = Config::get('check_total');
         }
         
-        if (isset($this->request->post['check_order_status_id'])) {
-            $data['check_order_status_id'] = $this->request->post['check_order_status_id'];
+        if (isset(Request::p()->post['check_order_status_id'])) {
+            $data['check_order_status_id'] = Request::p()->post['check_order_status_id'];
         } else {
             $data['check_order_status_id'] = Config::get('check_order_status_id');
         }
@@ -75,8 +75,8 @@ class Check extends Controller {
         
         $data['order_statuses'] = LocaleOrderStatus::getOrderStatuses();
         
-        if (isset($this->request->post['check_geo_zone_id'])) {
-            $data['check_geo_zone_id'] = $this->request->post['check_geo_zone_id'];
+        if (isset(Request::p()->post['check_geo_zone_id'])) {
+            $data['check_geo_zone_id'] = Request::p()->post['check_geo_zone_id'];
         } else {
             $data['check_geo_zone_id'] = Config::get('check_geo_zone_id');
         }
@@ -85,14 +85,14 @@ class Check extends Controller {
         
         $data['geo_zones'] = LocaleGeoZone::getGeoZones();
         
-        if (isset($this->request->post['check_status'])) {
-            $data['check_status'] = $this->request->post['check_status'];
+        if (isset(Request::p()->post['check_status'])) {
+            $data['check_status'] = Request::p()->post['check_status'];
         } else {
             $data['check_status'] = Config::get('check_status');
         }
         
-        if (isset($this->request->post['check_sort_order'])) {
-            $data['check_sort_order'] = $this->request->post['check_sort_order'];
+        if (isset(Request::p()->post['check_sort_order'])) {
+            $data['check_sort_order'] = Request::p()->post['check_sort_order'];
         } else {
             $data['check_sort_order'] = Config::get('check_sort_order');
         }
@@ -109,7 +109,7 @@ class Check extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if (!$this->request->post['check_payable']) {
+        if (!Request::p()->post['check_payable']) {
             $this->error['payable'] = Lang::get('lang_error_payable');
         }
         

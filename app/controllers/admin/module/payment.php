@@ -27,18 +27,18 @@ class Payment extends Controller {
         
         Breadcrumb::add('lang_heading_payment', 'module/payment');
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
         
-        if (isset($this->session->data['error'])) {
-            $data['error'] = $this->session->data['error'];
+        if (isset(Session::p()->data['error'])) {
+            $data['error'] = Session::p()->data['error'];
             
-            unset($this->session->data['error']);
+            unset(Session::p()->data['error']);
         } else {
             $data['error'] = '';
         }
@@ -71,11 +71,11 @@ class Payment extends Controller {
                 $action = array();
                 
                 if (!in_array($module, $modules)) {
-                    $action[] = array('text' => Lang::get('lang_text_install'), 'href' => Url::link('module/payment/install', '' . '&module=' . $module, 'SSL'));
+                    $action[] = array('text' => Lang::get('lang_text_install'), 'href' => Url::link('module/payment/install', '' . 'module=' . $module, 'SSL'));
                 } else {
                     $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('payment/' . $module . '', '', 'SSL'));
                     
-                    $action[] = array('text' => Lang::get('lang_text_uninstall'), 'href' => Url::link('module/payment/uninstall', '' . '&module=' . $module, 'SSL'));
+                    $action[] = array('text' => Lang::get('lang_text_uninstall'), 'href' => Url::link('module/payment/uninstall', '' . 'module=' . $module, 'SSL'));
                 }
                 
                 $data['modules'][] = array('name' => Lang::get('lang_heading_title'), 'status' => Config::get($module . '_status') ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled'), 'sort_order' => Config::get($module . '_sort_order'), 'action' => $action);
@@ -93,7 +93,7 @@ class Payment extends Controller {
         Lang::load('module/payment');
         
         if (!User::hasPermission('modify', 'module/payment')) {
-            $this->session->data['error'] = Lang::get('lang_error_permission');
+            Session::p()->data['error'] = Lang::get('lang_error_permission');
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
@@ -101,20 +101,20 @@ class Payment extends Controller {
         } else {
             Theme::model('setting/module');
             
-            SettingModule::install('payment', $this->request->get['module']);
+            SettingModule::install('payment', Request::p()->get['module']);
             
             Theme::model('people/user_group');
             
-            PeopleUserGroup::addPermission(User::getId(), 'access', 'payment/' . $this->request->get['module']);
-            PeopleUserGroup::addPermission(User::getId(), 'modify', 'payment/' . $this->request->get['module']);
+            PeopleUserGroup::addPermission(User::getId(), 'access', 'payment/' . Request::p()->get['module']);
+            PeopleUserGroup::addPermission(User::getId(), 'modify', 'payment/' . Request::p()->get['module']);
             
             $base_path  = Config::get('path.application') . 'payment' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'payment' . SEP;
             
-            if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
+            if (is_readable($file = $theme_path . Request::p()->get['module'] . '.php')):
                 $class = Naming::class_from_filename($file);
             else:
-                $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
+                $class = Naming::class_from_filename($base_path . Request::p()->get['module'] . '.php');
             endif;
             
             $class = new $class;
@@ -133,7 +133,7 @@ class Payment extends Controller {
         Lang::load('module/payment');
         
         if (!User::hasPermission('modify', 'module/payment')) {
-            $this->session->data['error'] = Lang::get('lang_error_permission');
+            Session::p()->data['error'] = Lang::get('lang_error_permission');
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
@@ -142,16 +142,16 @@ class Payment extends Controller {
             Theme::model('setting/module');
             Theme::model('setting/setting');
             
-            SettingModule::uninstall('payment', $this->request->get['module']);
-            SettingSetting::deleteSetting($this->request->get['module']);
+            SettingModule::uninstall('payment', Request::p()->get['module']);
+            SettingSetting::deleteSetting(Request::p()->get['module']);
             
             $base_path  = Config::get('path.application') . 'payment' . SEP;
             $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'payment' . SEP;
             
-            if (is_readable($file = $theme_path . $this->request->get['module'] . '.php')):
+            if (is_readable($file = $theme_path . Request::p()->get['module'] . '.php')):
                 $class = Naming::class_from_filename($file);
             else:
-                $class = Naming::class_from_filename($base_path . $this->request->get['module'] . '.php');
+                $class = Naming::class_from_filename($base_path . Request::p()->get['module'] . '.php');
             endif;
             
             $class = new $class;

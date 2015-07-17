@@ -25,76 +25,76 @@ class Cart extends Controller {
     public function index() {
         $data = Theme::language('checkout/cart');
         
-        if (!isset($this->session->data['gift_cards'])) {
-            $this->session->data['gift_cards'] = array();
+        if (!isset(Session::p()->data['gift_cards'])) {
+            Session::p()->data['gift_cards'] = array();
         }
         
         // Update
-        if (!empty($this->request->post['quantity'])) {
-            foreach ($this->request->post['quantity'] as $key => $value) {
+        if (!empty(Request::p()->post['quantity'])) {
+            foreach (Request::p()->post['quantity'] as $key => $value) {
                 Cart::update($key, $value);
             }
             
-            unset($this->session->data['shipping_method']);
-            unset($this->session->data['shipping_methods']);
-            unset($this->session->data['payment_method']);
-            unset($this->session->data['payment_methods']);
-            unset($this->session->data['reward']);
+            unset(Session::p()->data['shipping_method']);
+            unset(Session::p()->data['shipping_methods']);
+            unset(Session::p()->data['payment_method']);
+            unset(Session::p()->data['payment_methods']);
+            unset(Session::p()->data['reward']);
             
             Response::redirect(Url::link('checkout/cart'));
         }
         
         // Remove
-        if (isset($this->request->get['remove'])) {
-            Cart::remove($this->request->get['remove']);
+        if (isset(Request::p()->get['remove'])) {
+            Cart::remove(Request::p()->get['remove']);
             
-            unset($this->session->data['gift_cards'][$this->request->get['remove']]);
+            unset(Session::p()->data['gift_cards'][Request::p()->get['remove']]);
             
-            $this->session->data['success'] = Lang::get('lang_text_remove');
+            Session::p()->data['success'] = Lang::get('lang_text_remove');
             
-            unset($this->session->data['shipping_method']);
-            unset($this->session->data['shipping_methods']);
-            unset($this->session->data['payment_method']);
-            unset($this->session->data['payment_methods']);
-            unset($this->session->data['reward']);
+            unset(Session::p()->data['shipping_method']);
+            unset(Session::p()->data['shipping_methods']);
+            unset(Session::p()->data['payment_method']);
+            unset(Session::p()->data['payment_methods']);
+            unset(Session::p()->data['reward']);
             
             Response::redirect(Url::link('checkout/cart'));
         }
         
         // Coupon
-        if (isset($this->request->post['coupon']) && $this->validateCoupon()) {
-            $this->session->data['coupon'] = $this->request->post['coupon'];
+        if (isset(Request::p()->post['coupon']) && $this->validateCoupon()) {
+            Session::p()->data['coupon'] = Request::p()->post['coupon'];
             
-            $this->session->data['success'] = Lang::get('lang_text_coupon');
+            Session::p()->data['success'] = Lang::get('lang_text_coupon');
             
             Response::redirect(Url::link('checkout/cart'));
         }
         
         // Gift card
-        if (isset($this->request->post['gift_card']) && $this->validateGiftcard()) {
-            $this->session->data['gift_card'] = $this->request->post['gift_card'];
+        if (isset(Request::p()->post['gift_card']) && $this->validateGiftcard()) {
+            Session::p()->data['gift_card'] = Request::p()->post['gift_card'];
             
-            $this->session->data['success'] = Lang::get('lang_text_gift_card');
+            Session::p()->data['success'] = Lang::get('lang_text_gift_card');
             
             Response::redirect(Url::link('checkout/cart'));
         }
         
         // Reward
-        if (isset($this->request->post['reward']) && $this->validateReward()) {
-            $this->session->data['reward'] = abs($this->request->post['reward']);
+        if (isset(Request::p()->post['reward']) && $this->validateReward()) {
+            Session::p()->data['reward'] = abs(Request::p()->post['reward']);
             
-            $this->session->data['success'] = Lang::get('lang_text_reward');
+            Session::p()->data['success'] = Lang::get('lang_text_reward');
             
             Response::redirect(Url::link('checkout/cart'));
         }
         
         // Shipping
-        if (isset($this->request->post['shipping_method']) && $this->validateShipping()) {
-            $shipping = explode('.', $this->request->post['shipping_method']);
+        if (isset(Request::p()->post['shipping_method']) && $this->validateShipping()) {
+            $shipping = explode('.', Request::p()->post['shipping_method']);
             
-            $this->session->data['shipping_method'] = $this->session->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]];
+            Session::p()->data['shipping_method'] = Session::p()->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]];
             
-            $this->session->data['success'] = Lang::get('lang_text_shipping');
+            Session::p()->data['success'] = Lang::get('lang_text_shipping');
             
             Response::redirect(Url::link('checkout/cart'));
         }
@@ -103,7 +103,7 @@ class Cart extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'checkout/cart');
         
-        if (Cart::hasProducts() || !empty($this->session->data['gift_cards'])) {
+        if (Cart::hasProducts() || !empty(Session::p()->data['gift_cards'])) {
             $points = Customer::getRewardPoints();
             
             $points_total = 0;
@@ -131,10 +131,10 @@ class Cart extends Controller {
                 $data['attention'] = '';
             }
             
-            if (isset($this->session->data['success'])) {
-                $data['success'] = $this->session->data['success'];
+            if (isset(Session::p()->data['success'])) {
+                $data['success'] = Session::p()->data['success'];
                 
-                unset($this->session->data['success']);
+                unset(Session::p()->data['success']);
             } else {
                 $data['success'] = '';
             }
@@ -247,8 +247,8 @@ class Cart extends Controller {
             // Gift card
             $data['gift_cards'] = array();
             
-            if (!empty($this->session->data['gift_cards'])) {
-                foreach ($this->session->data['gift_cards'] as $key => $gift_card) {
+            if (!empty(Session::p()->data['gift_cards'])) {
+                foreach (Session::p()->data['gift_cards'] as $key => $gift_card) {
                     $data['gift_cards'][] = array(
                         'key' => $key, 
                         'description' => $gift_card['description'], 
@@ -258,48 +258,48 @@ class Cart extends Controller {
                 }
             }
             
-            if (isset($this->request->post['next'])) {
-                $data['next'] = $this->request->post['next'];
+            if (isset(Request::p()->post['next'])) {
+                $data['next'] = Request::p()->post['next'];
             } else {
                 $data['next'] = '';
             }
             
             $data['coupon_status'] = Config::get('coupon_status');
             
-            if (isset($this->request->post['coupon'])) {
-                $data['coupon'] = $this->request->post['coupon'];
-            } elseif (isset($this->session->data['coupon'])) {
-                $data['coupon'] = $this->session->data['coupon'];
+            if (isset(Request::p()->post['coupon'])) {
+                $data['coupon'] = Request::p()->post['coupon'];
+            } elseif (isset(Session::p()->data['coupon'])) {
+                $data['coupon'] = Session::p()->data['coupon'];
             } else {
                 $data['coupon'] = '';
             }
             
             $data['gift_card_status'] = Config::get('gift_card_status');
             
-            if (isset($this->request->post['gift_card'])) {
-                $data['gift_card'] = $this->request->post['gift_card'];
-            } elseif (isset($this->session->data['gift_card'])) {
-                $data['gift_card'] = $this->session->data['gift_card'];
+            if (isset(Request::p()->post['gift_card'])) {
+                $data['gift_card'] = Request::p()->post['gift_card'];
+            } elseif (isset(Session::p()->data['gift_card'])) {
+                $data['gift_card'] = Session::p()->data['gift_card'];
             } else {
                 $data['gift_card'] = '';
             }
             
             $data['reward_status'] = ($points && $points_total && Config::get('reward_status'));
             
-            if (isset($this->request->post['reward'])) {
-                $data['reward'] = $this->request->post['reward'];
-            } elseif (isset($this->session->data['reward'])) {
-                $data['reward'] = $this->session->data['reward'];
+            if (isset(Request::p()->post['reward'])) {
+                $data['reward'] = Request::p()->post['reward'];
+            } elseif (isset(Session::p()->data['reward'])) {
+                $data['reward'] = Session::p()->data['reward'];
             } else {
                 $data['reward'] = '';
             }
             
             $data['shipping_status'] = Config::get('shipping_status') && Config::get('shipping_estimator') && Cart::hasShipping();
             
-            if (isset($this->request->post['country_id'])) {
-                $data['country_id'] = $this->request->post['country_id'];
-            } elseif (isset($this->session->data['shipping_country_id'])) {
-                $data['country_id'] = $this->session->data['shipping_country_id'];
+            if (isset(Request::p()->post['country_id'])) {
+                $data['country_id'] = Request::p()->post['country_id'];
+            } elseif (isset(Session::p()->data['shipping_country_id'])) {
+                $data['country_id'] = Session::p()->data['shipping_country_id'];
             } else {
                 $data['country_id'] = Config::get('config_country_id');
             }
@@ -308,28 +308,28 @@ class Cart extends Controller {
             
             $data['countries'] = LocaleCountry::getCountries();
             
-            if (isset($this->request->post['zone_id'])) {
-                $data['zone_id'] = $this->request->post['zone_id'];
-            } elseif (isset($this->session->data['shipping_zone_id'])) {
-                $data['zone_id'] = $this->session->data['shipping_zone_id'];
+            if (isset(Request::p()->post['zone_id'])) {
+                $data['zone_id'] = Request::p()->post['zone_id'];
+            } elseif (isset(Session::p()->data['shipping_zone_id'])) {
+                $data['zone_id'] = Session::p()->data['shipping_zone_id'];
             } else {
                 $data['zone_id'] = '';
             }
             
             $data['params'] = htmlentities('{"zone_id":"' . $data['zone_id'] . '","select":"' . Lang::get('lang_text_select') . '","none":"' . Lang::get('lang_text_none') . '"}');
             
-            if (isset($this->request->post['postcode'])) {
-                $data['postcode'] = $this->request->post['postcode'];
-            } elseif (isset($this->session->data['shipping_postcode'])) {
-                $data['postcode'] = $this->session->data['shipping_postcode'];
+            if (isset(Request::p()->post['postcode'])) {
+                $data['postcode'] = Request::p()->post['postcode'];
+            } elseif (isset(Session::p()->data['shipping_postcode'])) {
+                $data['postcode'] = Session::p()->data['shipping_postcode'];
             } else {
                 $data['postcode'] = '';
             }
             
-            if (isset($this->request->post['shipping_method'])) {
-                $data['shipping_method'] = $this->request->post['shipping_method'];
-            } elseif (isset($this->session->data['shipping_method'])) {
-                $data['shipping_method'] = $this->session->data['shipping_method']['code'];
+            if (isset(Request::p()->post['shipping_method'])) {
+                $data['shipping_method'] = Request::p()->post['shipping_method'];
+            } elseif (isset(Session::p()->data['shipping_method'])) {
+                $data['shipping_method'] = Session::p()->data['shipping_method']['code'];
             } else {
                 $data['shipping_method'] = '';
             }
@@ -399,7 +399,7 @@ class Cart extends Controller {
             
             $data['continue'] = Url::link('shop/home');
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             
@@ -415,7 +415,7 @@ class Cart extends Controller {
     protected function validateCoupon() {
         Theme::model('checkout/coupon');
         
-        $coupon_info = CheckoutCoupon::getCoupon($this->request->post['coupon']);
+        $coupon_info = CheckoutCoupon::getCoupon(Request::p()->post['coupon']);
         
         if (!$coupon_info) {
             $this->error['warning'] = Lang::get('lang_error_coupon');
@@ -429,7 +429,7 @@ class Cart extends Controller {
     protected function validateGiftcard() {
         Theme::model('checkout/gift_card');
         
-        $gift_card_info = CheckoutGiftCard::getGiftcard($this->request->post['gift_card']);
+        $gift_card_info = CheckoutGiftCard::getGiftcard(Request::p()->post['gift_card']);
         
         if (!$gift_card_info) {
             $this->error['warning'] = Lang::get('lang_error_gift_card');
@@ -451,15 +451,15 @@ class Cart extends Controller {
             }
         }
         
-        if (empty($this->request->post['reward'])) {
+        if (empty(Request::p()->post['reward'])) {
             $this->error['warning'] = Lang::get('lang_error_reward');
         }
         
-        if ($this->request->post['reward'] > $points) {
-            $this->error['warning'] = sprintf(Lang::get('lang_error_points'), $this->request->post['reward']);
+        if (Request::p()->post['reward'] > $points) {
+            $this->error['warning'] = sprintf(Lang::get('lang_error_points'), Request::p()->post['reward']);
         }
         
-        if ($this->request->post['reward'] > $points_total) {
+        if (Request::p()->post['reward'] > $points_total) {
             $this->error['warning'] = sprintf(Lang::get('lang_error_maximum'), $points_total);
         }
         
@@ -469,10 +469,10 @@ class Cart extends Controller {
     }
     
     protected function validateShipping() {
-        if (!empty($this->request->post['shipping_method'])) {
-            $shipping = explode('.', $this->request->post['shipping_method']);
+        if (!empty(Request::p()->post['shipping_method'])) {
+            $shipping = explode('.', Request::p()->post['shipping_method']);
             
-            if (!isset($shipping[0]) || !isset($shipping[1]) || !isset($this->session->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]])) {
+            if (!isset($shipping[0]) || !isset($shipping[1]) || !isset(Session::p()->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]])) {
                 $this->error['warning'] = Lang::get('lang_error_shipping');
             }
         } else {
@@ -489,8 +489,8 @@ class Cart extends Controller {
         
         $json = array();
         
-        if (isset($this->request->post['product_id'])) {
-            $product_id = $this->request->post['product_id'];
+        if (isset(Request::p()->post['product_id'])) {
+            $product_id = Request::p()->post['product_id'];
         } else {
             $product_id = 0;
         }
@@ -498,7 +498,7 @@ class Cart extends Controller {
         Theme::model('catalog/product');
         
         // this is a custom piece for private products
-        if (isset($this->request->post['cp']) && $this->request->post['cp'] == 1):
+        if (isset(Request::p()->post['cp']) && Request::p()->post['cp'] == 1):
             Theme::model('account/product');
             $product_info = AccountProduct::getProduct($product_id, Customer::getId());
         else:
@@ -506,23 +506,23 @@ class Cart extends Controller {
         endif;
         
         if ($product_info) {
-            if (isset($this->request->post['quantity'])) {
-                $quantity = $this->request->post['quantity'];
+            if (isset(Request::p()->post['quantity'])) {
+                $quantity = Request::p()->post['quantity'];
             } else {
                 $quantity = 1;
             }
             
-            if (isset($this->request->post['event_id'])):
+            if (isset(Request::p()->post['event_id'])):
                 $json['redirect'] = Url::link('catalog/product', 'product_id=' . $product_id);
             endif;
             
-            if (isset($this->request->post['option'])) {
-                $option = array_filter($this->request->post['option']);
+            if (isset(Request::p()->post['option'])) {
+                $option = array_filter(Request::p()->post['option']);
             } else {
                 $option = array();
             }
             
-            $product_options = CatalogProduct::getProductOptions($this->request->post['product_id']);
+            $product_options = CatalogProduct::getProductOptions(Request::p()->post['product_id']);
             
             foreach ($product_options as $product_option) {
                 if ($product_option['required'] && empty($option[$product_option['product_option_id']])) {
@@ -530,8 +530,8 @@ class Cart extends Controller {
                 }
             }
             
-            if (isset($this->request->post['recurring_id'])) {
-                $recurring_id = $this->request->post['recurring_id'];
+            if (isset(Request::p()->post['recurring_id'])) {
+                $recurring_id = Request::p()->post['recurring_id'];
             } else {
                 $recurring_id = 0;
             }
@@ -551,14 +551,14 @@ class Cart extends Controller {
             }
             
             if (!$json) {
-                Cart::add($this->request->post['product_id'], $quantity, $option, $recurring_id);
+                Cart::add(Request::p()->post['product_id'], $quantity, $option, $recurring_id);
                 
-                $json['success'] = sprintf(Lang::get('lang_text_success'), Url::link('catalog/product', 'product_id=' . $this->request->post['product_id']), $product_info['name'], Url::link('checkout/cart'));
+                $json['success'] = sprintf(Lang::get('lang_text_success'), Url::link('catalog/product', 'product_id=' . Request::p()->post['product_id']), $product_info['name'], Url::link('checkout/cart'));
                 
-                unset($this->session->data['shipping_method']);
-                unset($this->session->data['shipping_methods']);
-                unset($this->session->data['payment_method']);
-                unset($this->session->data['payment_methods']);
+                unset(Session::p()->data['shipping_method']);
+                unset(Session::p()->data['shipping_methods']);
+                unset(Session::p()->data['payment_method']);
+                unset(Session::p()->data['payment_methods']);
                 
                 // Totals
                 Theme::model('setting/module');
@@ -596,9 +596,9 @@ class Cart extends Controller {
                     }
                 }
                 
-                $json['total'] = sprintf(Lang::get('lang_text_items'), Cart::countProducts() + (isset($this->session->data['gift_cards']) ? count($this->session->data['gift_cards']) : 0), Currency::format($total));
+                $json['total'] = sprintf(Lang::get('lang_text_items'), Cart::countProducts() + (isset(Session::p()->data['gift_cards']) ? count(Session::p()->data['gift_cards']) : 0), Currency::format($total));
             } else {
-                $json['redirect'] = str_replace('&amp;', '&', Url::link('catalog/product', 'product_id=' . $this->request->post['product_id']));
+                $json['redirect'] = str_replace('&amp;', '&', Url::link('catalog/product', 'product_id=' . Request::p()->post['product_id']));
             }
         }
         
@@ -613,18 +613,18 @@ class Cart extends Controller {
         $json = array();
         
         // Remove
-        if (isset($this->request->post['remove'])) {
-            Cart::remove($this->request->post['remove']);
+        if (isset(Request::p()->post['remove'])) {
+            Cart::remove(Request::p()->post['remove']);
             
-            unset($this->session->data['gift_cards'][$this->request->post['remove']]);
+            unset(Session::p()->data['gift_cards'][Request::p()->post['remove']]);
             
-            $this->session->data['success'] = Lang::get('lang_text_remove');
+            Session::p()->data['success'] = Lang::get('lang_text_remove');
             
-            unset($this->session->data['shipping_method']);
-            unset($this->session->data['shipping_methods']);
-            unset($this->session->data['payment_method']);
-            unset($this->session->data['payment_methods']);
-            unset($this->session->data['reward']);
+            unset(Session::p()->data['shipping_method']);
+            unset(Session::p()->data['shipping_methods']);
+            unset(Session::p()->data['payment_method']);
+            unset(Session::p()->data['payment_methods']);
+            unset(Session::p()->data['reward']);
             
             // Totals
             Theme::model('setting/module');
@@ -662,7 +662,7 @@ class Cart extends Controller {
                 array_multisort($sort_order, SORT_ASC, $total_data);
             }
             
-            $json['total'] = sprintf(Lang::get('lang_text_items'), Cart::countProducts() + (isset($this->session->data['gift_cards']) ? count($this->session->data['gift_cards']) : 0), Currency::format($total));
+            $json['total'] = sprintf(Lang::get('lang_text_items'), Cart::countProducts() + (isset(Session::p()->data['gift_cards']) ? count(Session::p()->data['gift_cards']) : 0), Currency::format($total));
         }
         
         $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
@@ -683,29 +683,29 @@ class Cart extends Controller {
             $json['error']['warning'] = sprintf(Lang::get('lang_error_no_shipping'), Url::link('content/contact'));
         }
         
-        if ($this->request->post['country_id'] == '') {
+        if (Request::p()->post['country_id'] == '') {
             $json['error']['country'] = Lang::get('lang_error_country');
         }
         
-        if (!isset($this->request->post['zone_id']) || $this->request->post['zone_id'] == '') {
+        if (!isset(Request::p()->post['zone_id']) || Request::p()->post['zone_id'] == '') {
             $json['error']['zone'] = Lang::get('lang_error_zone');
         }
         
         Theme::model('locale/country');
         
-        $country_info = LocaleCountry::getCountry($this->request->post['country_id']);
+        $country_info = LocaleCountry::getCountry(Request::p()->post['country_id']);
         
-        if ($country_info && $country_info['postcode_required'] && (Encode::strlen($this->request->post['postcode']) < 2) || (Encode::strlen($this->request->post['postcode']) > 10)) {
+        if ($country_info && $country_info['postcode_required'] && (Encode::strlen(Request::p()->post['postcode']) < 2) || (Encode::strlen(Request::p()->post['postcode']) > 10)) {
             $json['error']['postcode'] = Lang::get('lang_error_postcode');
         }
         
         if (!$json) {
-            Tax::setShippingAddress($this->request->post['country_id'], $this->request->post['zone_id']);
+            Tax::setShippingAddress(Request::p()->post['country_id'], Request::p()->post['zone_id']);
             
             // Default Shipping Address
-            $this->session->data['shipping_country_id'] = $this->request->post['country_id'];
-            $this->session->data['shipping_zone_id'] = $this->request->post['zone_id'];
-            $this->session->data['shipping_postcode'] = $this->request->post['postcode'];
+            Session::p()->data['shipping_country_id'] = Request::p()->post['country_id'];
+            Session::p()->data['shipping_zone_id'] = Request::p()->post['zone_id'];
+            Session::p()->data['shipping_postcode'] = Request::p()->post['postcode'];
             
             if ($country_info) {
                 $country        = $country_info['name'];
@@ -721,7 +721,7 @@ class Cart extends Controller {
             
             Theme::model('locale/zone');
             
-            $zone_info = LocaleZone::getZone($this->request->post['zone_id']);
+            $zone_info = LocaleZone::getZone(Request::p()->post['zone_id']);
             
             if ($zone_info) {
                 $zone = $zone_info['name'];
@@ -737,12 +737,12 @@ class Cart extends Controller {
                 'company'        => '', 
                 'address_1'      => '', 
                 'address_2'      => '', 
-                'postcode'       => $this->request->post['postcode'], 
+                'postcode'       => Request::p()->post['postcode'], 
                 'city'           => '', 
-                'zone_id'        => $this->request->post['zone_id'], 
+                'zone_id'        => Request::p()->post['zone_id'], 
                 'zone'           => $zone, 
                 'zone_code'      => $zone_code, 
-                'country_id'     => $this->request->post['country_id'], 
+                'country_id'     => Request::p()->post['country_id'], 
                 'country'        => $country, 
                 'iso_code_2'     => $iso_code_2, 
                 'iso_code_3'     => $iso_code_3, 
@@ -780,10 +780,10 @@ class Cart extends Controller {
             
             array_multisort($sort_order, SORT_ASC, $quote_data);
             
-            $this->session->data['shipping_methods'] = $quote_data;
+            Session::p()->data['shipping_methods'] = $quote_data;
             
-            if ($this->session->data['shipping_methods']) {
-                $json['shipping_method'] = $this->session->data['shipping_methods'];
+            if (Session::p()->data['shipping_methods']) {
+                $json['shipping_method'] = Session::p()->data['shipping_methods'];
             } else {
                 $json['error']['warning'] = sprintf(Lang::get('lang_error_no_shipping'), Url::link('content/contact'));
             }
@@ -799,7 +799,7 @@ class Cart extends Controller {
         
         Theme::model('locale/country');
         
-        $country_info = LocaleCountry::getCountry($this->request->get['country_id']);
+        $country_info = LocaleCountry::getCountry(Request::p()->get['country_id']);
         
         if ($country_info) {
             Theme::model('locale/zone');
@@ -811,7 +811,7 @@ class Cart extends Controller {
                 'iso_code_3'        => $country_info['iso_code_3'], 
                 'address_format'    => $country_info['address_format'], 
                 'postcode_required' => $country_info['postcode_required'], 
-                'zone'              => LocaleZone::getZonesByCountryId($this->request->get['country_id']), 
+                'zone'              => LocaleZone::getZonesByCountryId(Request::p()->get['country_id']), 
                 'status'            => $country_info['status']
             );
         }

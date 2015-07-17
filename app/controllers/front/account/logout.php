@@ -29,24 +29,24 @@ class Logout extends Controller {
             Customer::logout();
             Cart::clear();
             
-            unset($this->session->data['wishlist']);
-            unset($this->session->data['shipping_address_id']);
-            unset($this->session->data['shipping_country_id']);
-            unset($this->session->data['shipping_zone_id']);
-            unset($this->session->data['shipping_postcode']);
-            unset($this->session->data['shipping_method']);
-            unset($this->session->data['shipping_methods']);
-            unset($this->session->data['payment_address_id']);
-            unset($this->session->data['payment_country_id']);
-            unset($this->session->data['payment_zone_id']);
-            unset($this->session->data['payment_method']);
-            unset($this->session->data['payment_methods']);
-            unset($this->session->data['comment']);
-            unset($this->session->data['order_id']);
-            unset($this->session->data['coupon']);
-            unset($this->session->data['reward']);
-            unset($this->session->data['gift_card']);
-            unset($this->session->data['gift_cards']);
+            unset(Session::p()->data['wishlist']);
+            unset(Session::p()->data['shipping_address_id']);
+            unset(Session::p()->data['shipping_country_id']);
+            unset(Session::p()->data['shipping_zone_id']);
+            unset(Session::p()->data['shipping_postcode']);
+            unset(Session::p()->data['shipping_method']);
+            unset(Session::p()->data['shipping_methods']);
+            unset(Session::p()->data['payment_address_id']);
+            unset(Session::p()->data['payment_country_id']);
+            unset(Session::p()->data['payment_zone_id']);
+            unset(Session::p()->data['payment_method']);
+            unset(Session::p()->data['payment_methods']);
+            unset(Session::p()->data['comment']);
+            unset(Session::p()->data['order_id']);
+            unset(Session::p()->data['coupon']);
+            unset(Session::p()->data['reward']);
+            unset(Session::p()->data['gift_card']);
+            unset(Session::p()->data['gift_cards']);
             
             Theme::trigger('front_customer_logout', array('customer_id' => $customer_id));
         }

@@ -21,7 +21,7 @@ use App\Controllers\Controller;
 class Captcha extends Controller {
     
     public function index() {
-        $this->session->data['captcha'] = substr(sha1(mt_rand()), 17, 6);
+        Session::p()->data['captcha'] = substr(sha1(mt_rand()), 17, 6);
         
         $image = imagecreatetruecolor(150, 35);
         
@@ -45,7 +45,7 @@ class Captcha extends Controller {
         imagefilledrectangle($image, 0, 0, 0, $height - 1, $black);
         imagefilledrectangle($image, 0, $height - 1, $width, $height - 1, $black);
         
-        imagestring($image, 10, intval(($width - (strlen($this->session->data['captcha']) * 9)) / 2), intval(($height - 15) / 2), $this->session->data['captcha'], $black);
+        imagestring($image, 10, intval(($width - (strlen(Session::p()->data['captcha']) * 9)) / 2), intval(($height - 15) / 2), Session::p()->data['captcha'], $black);
         
         Theme::listen(__CLASS__, __FUNCTION__);
         

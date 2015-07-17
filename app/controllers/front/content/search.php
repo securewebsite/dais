@@ -31,118 +31,118 @@ class Search extends Controller {
             Breadcrumb::add(Config::get('config_name'), 'content/home');
         endif;
         
-        if (isset($this->request->get['filter_name'])) {
-            $filter_name = $this->request->get['filter_name'];
+        if (isset(Request::p()->get['filter_name'])) {
+            $filter_name = Request::p()->get['filter_name'];
         } else {
             $filter_name = '';
         }
         
-        if (isset($this->request->get['filter_tag'])) {
-            $filter_tag = $this->request->get['filter_tag'];
+        if (isset(Request::p()->get['filter_tag'])) {
+            $filter_tag = Request::p()->get['filter_tag'];
         } else {
             $filter_tag = '';
         }
         
-        if (isset($this->request->get['filter_description'])) {
-            $filter_description = $this->request->get['filter_description'];
+        if (isset(Request::p()->get['filter_description'])) {
+            $filter_description = Request::p()->get['filter_description'];
         } else {
             $filter_description = '';
         }
         
-        if (isset($this->request->get['filter_category_id'])) {
-            $filter_category_id = $this->request->get['filter_category_id'];
+        if (isset(Request::p()->get['filter_category_id'])) {
+            $filter_category_id = Request::p()->get['filter_category_id'];
         } else {
             $filter_category_id = 0;
         }
         
-        if (isset($this->request->get['filter_sub_category'])) {
-            $filter_sub_category = $this->request->get['filter_sub_category'];
+        if (isset(Request::p()->get['filter_sub_category'])) {
+            $filter_sub_category = Request::p()->get['filter_sub_category'];
         } else {
             $filter_sub_category = '';
         }
         
-        if (isset($this->request->get['filter_author_id'])) {
-            $filter_author_id = $this->request->get['filter_author_id'];
+        if (isset(Request::p()->get['filter_author_id'])) {
+            $filter_author_id = Request::p()->get['filter_author_id'];
         } else {
             $filter_author_id = '';
         }
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'p.date_added';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'DESC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
-        if (isset($this->request->get['limit'])) {
-            $limit = $this->request->get['limit'];
+        if (isset(Request::p()->get['limit'])) {
+            $limit = Request::p()->get['limit'];
         } else {
             $limit = Config::get('config_catalog_limit');
         }
         
-        if (isset($this->request->get['filter_name'])) {
-            Theme::setTitle(Lang::get('lang_heading_title') . ' - ' . $this->request->get['filter_name']);
+        if (isset(Request::p()->get['filter_name'])) {
+            Theme::setTitle(Lang::get('lang_heading_title') . ' - ' . Request::p()->get['filter_name']);
         } else {
             Theme::setTitle(Lang::get('lang_heading_title'));
         }
         
         $url = '';
         
-        if (isset($this->request->get['filter_name'])) {
-            $url.= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+        if (isset(Request::p()->get['filter_name'])) {
+            $url.= '&filter_name=' . urlencode(html_entity_decode(Request::p()->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
         
-        if (isset($this->request->get['filter_tag'])) {
-            $url.= '&filter_tag=' . urlencode(html_entity_decode($this->request->get['filter_tag'], ENT_QUOTES, 'UTF-8'));
+        if (isset(Request::p()->get['filter_tag'])) {
+            $url.= '&filter_tag=' . urlencode(html_entity_decode(Request::p()->get['filter_tag'], ENT_QUOTES, 'UTF-8'));
         }
         
-        if (isset($this->request->get['filter_description'])) {
-            $url.= '&filter_description=' . $this->request->get['filter_description'];
+        if (isset(Request::p()->get['filter_description'])) {
+            $url.= '&filter_description=' . Request::p()->get['filter_description'];
         }
         
-        if (isset($this->request->get['filter_category_id'])) {
-            $url.= '&filter_category_id=' . $this->request->get['filter_category_id'];
+        if (isset(Request::p()->get['filter_category_id'])) {
+            $url.= '&filter_category_id=' . Request::p()->get['filter_category_id'];
         }
         
-        if (isset($this->request->get['filter_sub_category'])) {
-            $url.= '&filter_sub_category=' . $this->request->get['filter_sub_category'];
+        if (isset(Request::p()->get['filter_sub_category'])) {
+            $url.= '&filter_sub_category=' . Request::p()->get['filter_sub_category'];
         }
         
-        if (isset($this->request->get['filter_author_id'])) {
-            $url.= '&filter_author_id=' . $this->request->get['filter_author_id'];
+        if (isset(Request::p()->get['filter_author_id'])) {
+            $url.= '&filter_author_id=' . Request::p()->get['filter_author_id'];
         }
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        if (isset($this->request->get['limit'])) {
-            $url.= '&limit=' . $this->request->get['limit'];
+        if (isset(Request::p()->get['limit'])) {
+            $url.= '&limit=' . Request::p()->get['limit'];
         }
         
         Breadcrumb::add('lang_heading_title', 'content/search', $url);
         
-        if (isset($this->request->get['filter_name'])) {
-            $data['heading_title'] = Lang::get('lang_heading_title') . ' - ' . $this->request->get['filter_name'];
+        if (isset(Request::p()->get['filter_name'])) {
+            $data['heading_title'] = Lang::get('lang_heading_title') . ' - ' . Request::p()->get['filter_name'];
         } else {
             $data['heading_title'] = Lang::get('lang_heading_title');
         }
@@ -176,7 +176,7 @@ class Search extends Controller {
         
         $data['posts'] = array();
         
-        if (isset($this->request->get['filter_name']) || isset($this->request->get['filter_tag']) || isset($this->request->get['filter_author_id']) || isset($this->request->get['filter_category_id'])) {
+        if (isset(Request::p()->get['filter_name']) || isset(Request::p()->get['filter_tag']) || isset(Request::p()->get['filter_author_id']) || isset(Request::p()->get['filter_category_id'])) {
             
             $filter = array('filter_name' => $filter_name, 'filter_tag' => $filter_tag, 'filter_description' => $filter_description, 'filter_category_id' => $filter_category_id, 'filter_sub_category' => $filter_sub_category, 'filter_author_id' => $filter_author_id, 'sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $limit, 'limit' => $limit);
             
@@ -206,32 +206,32 @@ class Search extends Controller {
             
             $url = '';
             
-            if (isset($this->request->get['filter_name'])) {
-                $url.= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->get['filter_name'])) {
+                $url.= '&filter_name=' . urlencode(html_entity_decode(Request::p()->get['filter_name'], ENT_QUOTES, 'UTF-8'));
             }
             
-            if (isset($this->request->get['filter_tag'])) {
-                $url.= '&filter_tag=' . urlencode(html_entity_decode($this->request->get['filter_tag'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->get['filter_tag'])) {
+                $url.= '&filter_tag=' . urlencode(html_entity_decode(Request::p()->get['filter_tag'], ENT_QUOTES, 'UTF-8'));
             }
             
-            if (isset($this->request->get['filter_description'])) {
-                $url.= '&filter_description=' . $this->request->get['filter_description'];
+            if (isset(Request::p()->get['filter_description'])) {
+                $url.= '&filter_description=' . Request::p()->get['filter_description'];
             }
             
-            if (isset($this->request->get['filter_category_id'])) {
-                $url.= '&filter_category_id=' . $this->request->get['filter_category_id'];
+            if (isset(Request::p()->get['filter_category_id'])) {
+                $url.= '&filter_category_id=' . Request::p()->get['filter_category_id'];
             }
             
-            if (isset($this->request->get['filter_sub_category'])) {
-                $url.= '&filter_sub_category=' . $this->request->get['filter_sub_category'];
+            if (isset(Request::p()->get['filter_sub_category'])) {
+                $url.= '&filter_sub_category=' . Request::p()->get['filter_sub_category'];
             }
             
-            if (isset($this->request->get['filter_author_id'])) {
-                $url.= '&filter_author_id=' . $this->request->get['filter_author_id'];
+            if (isset(Request::p()->get['filter_author_id'])) {
+                $url.= '&filter_author_id=' . Request::p()->get['filter_author_id'];
             }
             
-            if (isset($this->request->get['limit'])) {
-                $url.= '&limit=' . $this->request->get['limit'];
+            if (isset(Request::p()->get['limit'])) {
+                $url.= '&limit=' . Request::p()->get['limit'];
             }
             
             $data['pagination'] = Theme::paginate($post_total, $page, $limit, Lang::get('lang_text_pagination'), Url::link('content/search', $url . '&page={page}'));

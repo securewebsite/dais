@@ -26,8 +26,8 @@ class HeaderMenu extends Controller {
         Theme::model('design/layout');
         Theme::model('setting/menu');
         
-        if (isset($this->request->get['route'])):
-            $route = (string)$this->request->get['route'];
+        if (isset(Request::p()->get['route'])):
+            $route = (string)Request::p()->get['route'];
         else:
             $route = Theme::getstyle() . '/home';
         endif;

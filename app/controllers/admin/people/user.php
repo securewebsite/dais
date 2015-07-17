@@ -37,22 +37,22 @@ class User extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/user');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            PeopleUser::addUser($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            PeopleUser::addUser(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('people/user', '' . $url, 'SSL'));
@@ -68,22 +68,22 @@ class User extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/user');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            PeopleUser::editUser($this->request->get['user_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            PeopleUser::editUser(Request::p()->get['user_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('people/user', '' . $url, 'SSL'));
@@ -99,25 +99,25 @@ class User extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('people/user');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $user_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $user_id) {
                 PeopleUser::deleteUser($user_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('people/user', '' . $url, 'SSL'));
@@ -131,36 +131,36 @@ class User extends Controller {
     protected function getList() {
         $data = Theme::language('people/user');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'user_name';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'people/user', $url);
@@ -186,7 +186,7 @@ class User extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('people/user/update', '' . '&user_id=' . $result['user_id'] . $url, 'SSL')
+                'href' => Url::link('people/user/update', '' . 'user_id=' . $result['user_id'] . $url, 'SSL')
             );
             
             $data['users'][] = array(
@@ -194,7 +194,7 @@ class User extends Controller {
                 'user_name'  => $result['user_name'], 
                 'status'     => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 
                 'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 
-                'selected'   => isset($this->request->post['selected']) && in_array($result['user_id'], $this->request->post['selected']), 
+                'selected'   => isset(Request::p()->post['selected']) && in_array($result['user_id'], Request::p()->post['selected']), 
                 'action'     => $action
             );
         }
@@ -205,10 +205,10 @@ class User extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -221,22 +221,22 @@ class User extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_user_name']  = Url::link('people/user', '' . '&sort=user_name' . $url, 'SSL');
-        $data['sort_status']     = Url::link('people/user', '' . '&sort=status' . $url, 'SSL');
-        $data['sort_date_added'] = Url::link('people/user', '' . '&sort=date_added' . $url, 'SSL');
+        $data['sort_user_name']  = Url::link('people/user', '' . 'sort=user_name' . $url, 'SSL');
+        $data['sort_status']     = Url::link('people/user', '' . 'sort=status' . $url, 'SSL');
+        $data['sort_date_added'] = Url::link('people/user', '' . 'sort=date_added' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate(
@@ -304,78 +304,78 @@ class User extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'people/user', $url);
         
-        if (!isset($this->request->get['user_id'])) {
+        if (!isset(Request::p()->get['user_id'])) {
             $data['action'] = Url::link('people/user/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('people/user/update', '' . '&user_id=' . $this->request->get['user_id'] . $url, 'SSL');
+            $data['action'] = Url::link('people/user/update', '' . 'user_id=' . Request::p()->get['user_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('people/user', '' . $url, 'SSL');
         
-        if (isset($this->request->get['user_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
-            $user_info = PeopleUser::getUser($this->request->get['user_id']);
+        if (isset(Request::p()->get['user_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
+            $user_info = PeopleUser::getUser(Request::p()->get['user_id']);
         }
         
-        if (isset($this->request->post['user_name'])) {
-            $data['user_name'] = $this->request->post['user_name'];
+        if (isset(Request::p()->post['user_name'])) {
+            $data['user_name'] = Request::p()->post['user_name'];
         } elseif (!empty($user_info)) {
             $data['user_name'] = $user_info['user_name'];
         } else {
             $data['user_name'] = '';
         }
         
-        if (isset($this->request->post['password'])) {
-            $data['password'] = $this->request->post['password'];
+        if (isset(Request::p()->post['password'])) {
+            $data['password'] = Request::p()->post['password'];
         } else {
             $data['password'] = '';
         }
         
-        if (isset($this->request->post['confirm'])) {
-            $data['confirm'] = $this->request->post['confirm'];
+        if (isset(Request::p()->post['confirm'])) {
+            $data['confirm'] = Request::p()->post['confirm'];
         } else {
             $data['confirm'] = '';
         }
         
-        if (isset($this->request->post['firstname'])) {
-            $data['firstname'] = $this->request->post['firstname'];
+        if (isset(Request::p()->post['firstname'])) {
+            $data['firstname'] = Request::p()->post['firstname'];
         } elseif (!empty($user_info)) {
             $data['firstname'] = $user_info['firstname'];
         } else {
             $data['firstname'] = '';
         }
         
-        if (isset($this->request->post['lastname'])) {
-            $data['lastname'] = $this->request->post['lastname'];
+        if (isset(Request::p()->post['lastname'])) {
+            $data['lastname'] = Request::p()->post['lastname'];
         } elseif (!empty($user_info)) {
             $data['lastname'] = $user_info['lastname'];
         } else {
             $data['lastname'] = '';
         }
         
-        if (isset($this->request->post['email'])) {
-            $data['email'] = $this->request->post['email'];
+        if (isset(Request::p()->post['email'])) {
+            $data['email'] = Request::p()->post['email'];
         } elseif (!empty($user_info)) {
             $data['email'] = $user_info['email'];
         } else {
             $data['email'] = '';
         }
         
-        if (isset($this->request->post['user_group_id'])) {
-            $data['user_group_id'] = $this->request->post['user_group_id'];
+        if (isset(Request::p()->post['user_group_id'])) {
+            $data['user_group_id'] = Request::p()->post['user_group_id'];
         } elseif (!empty($user_info)) {
             $data['user_group_id'] = $user_info['user_group_id'];
         } else {
@@ -386,8 +386,8 @@ class User extends Controller {
         
         $data['user_groups'] = PeopleUserGroup::getUserGroups();
         
-        if (isset($this->request->post['status'])) {
-            $data['status'] = $this->request->post['status'];
+        if (isset(Request::p()->post['status'])) {
+            $data['status'] = Request::p()->post['status'];
         } elseif (!empty($user_info)) {
             $data['status'] = $user_info['status'];
         } else {
@@ -406,40 +406,40 @@ class User extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        if ((Encode::strlen($this->request->post['user_name']) < 3) || (Encode::strlen($this->request->post['user_name']) > 20)) {
+        if ((Encode::strlen(Request::p()->post['user_name']) < 3) || (Encode::strlen(Request::p()->post['user_name']) > 20)) {
             $this->error['user_name'] = Lang::get('lang_error_user_name');
         }
         
-        $user_info = PeopleUser::getUserByUsername($this->request->post['user_name']);
+        $user_info = PeopleUser::getUserByUsername(Request::p()->post['user_name']);
         
-        if (!isset($this->request->get['user_id'])) {
+        if (!isset(Request::p()->get['user_id'])) {
             if ($user_info) {
                 $this->error['warning'] = Lang::get('lang_error_exists');
             }
         } else {
-            if ($user_info && ($this->request->get['user_id'] != $user_info['user_id'])) {
+            if ($user_info && (Request::p()->get['user_id'] != $user_info['user_id'])) {
                 $this->error['warning'] = Lang::get('lang_error_exists');
             }
         }
         
-        if ((Encode::strlen($this->request->post['firstname']) < 1) || (Encode::strlen($this->request->post['firstname']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['firstname']) < 1) || (Encode::strlen(Request::p()->post['firstname']) > 32)) {
             $this->error['firstname'] = Lang::get('lang_error_firstname');
         }
         
-        if ((Encode::strlen($this->request->post['lastname']) < 1) || (Encode::strlen($this->request->post['lastname']) > 32)) {
+        if ((Encode::strlen(Request::p()->post['lastname']) < 1) || (Encode::strlen(Request::p()->post['lastname']) > 32)) {
             $this->error['lastname'] = Lang::get('lang_error_lastname');
         }
 
-        if ((Encode::strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['email'])):
+        if ((Encode::strlen(Request::p()->post['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', Request::p()->post['email'])):
             $this->error['email'] = Lang::get('lang_error_email');
         endif;
         
-        if ($this->request->post['password'] || (!isset($this->request->get['user_id']))) {
-            if ((Encode::strlen($this->request->post['password']) < 4) || (Encode::strlen($this->request->post['password']) > 20)) {
+        if (Request::p()->post['password'] || (!isset(Request::p()->get['user_id']))) {
+            if ((Encode::strlen(Request::p()->post['password']) < 4) || (Encode::strlen(Request::p()->post['password']) > 20)) {
                 $this->error['password'] = Lang::get('lang_error_password');
             }
             
-            if ($this->request->post['password'] != $this->request->post['confirm']) {
+            if (Request::p()->post['password'] != Request::p()->post['confirm']) {
                 $this->error['confirm'] = Lang::get('lang_error_confirm');
             }
         }
@@ -454,7 +454,7 @@ class User extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        foreach ($this->request->post['selected'] as $user_id) {
+        foreach (Request::p()->post['selected'] as $user_id) {
             if (\User::getId() == $user_id) {
                 $this->error['warning'] = Lang::get('lang_error_account');
             }

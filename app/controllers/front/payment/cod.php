@@ -39,6 +39,6 @@ class Cod extends Controller {
         
         Theme::listen(__CLASS__, __FUNCTION__);
         
-        CheckoutOrder::confirm($this->session->data['order_id'], Config::get('cod_order_status_id'));
+        CheckoutOrder::confirm(Session::p()->data['order_id'], Config::get('cod_order_status_id'));
     }
 }

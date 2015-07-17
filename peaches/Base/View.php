@@ -29,4 +29,8 @@ class View extends Template {
 
 		return $this->buffer;
 	}
+
+	public function make($template, $data) {
+		return $this->render($template, $data);
+	}
 }

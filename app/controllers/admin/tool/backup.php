@@ -27,7 +27,7 @@ class Backup extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('tool/backup');
         
-        if ($this->request->server['REQUEST_METHOD'] == 'POST' && User::hasPermission('modify', 'tool/backup')) {
+        if (Request::p()->server['REQUEST_METHOD'] == 'POST' && User::hasPermission('modify', 'tool/backup')) {
             if (is_uploaded_file($this->request->files['import']['tmp_name'])) {
                 $content = file_get_contents($this->request->files['import']['tmp_name']);
             } else {
@@ -36,7 +36,7 @@ class Backup extends Controller {
             
             if ($content) {
                 ToolBackup::restore($content);
-                $this->session->data['success'] = Lang::get('lang_text_success');
+                Session::p()->data['success'] = Lang::get('lang_text_success');
                 
                 Response::redirect(Url::link('tool/backup', '', 'SSL'));
             } else {
@@ -44,20 +44,20 @@ class Backup extends Controller {
             }
         }
         
-        if (isset($this->session->data['error'])) {
-            $data['error_warning'] = $this->session->data['error'];
+        if (isset(Session::p()->data['error'])) {
+            $data['error_warning'] = Session::p()->data['error'];
             
-            unset($this->session->data['error']);
+            unset(Session::p()->data['error']);
         } elseif (isset($this->error['warning'])) {
             $data['error_warning'] = $this->error['warning'];
         } else {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -78,8 +78,8 @@ class Backup extends Controller {
     public function backup() {
         Lang::load('tool/backup');
         
-        if (!isset($this->request->post['backup'])) {
-            $this->session->data['error'] = Lang::get('lang_error_backup');
+        if (!isset(Request::p()->post['backup'])) {
+            Session::p()->data['error'] = Lang::get('lang_error_backup');
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
@@ -96,9 +96,9 @@ class Backup extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::setOutput(ToolBackup::backup($this->request->post['backup']));
+            Response::setOutput(ToolBackup::backup(Request::p()->post['backup']));
         } else {
-            $this->session->data['error'] = Lang::get('lang_error_permission');
+            Session::p()->data['error'] = Lang::get('lang_error_permission');
             
             Theme::listen(__CLASS__, __FUNCTION__);
             

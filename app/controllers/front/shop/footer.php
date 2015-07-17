@@ -28,8 +28,8 @@ class Footer extends Controller {
         
         $route = 'shop/home';
         
-        if (isset($this->request->get['route'])):
-            $route = $this->request->get['route'];
+        if (isset(Request::p()->get['route'])):
+            $route = Request::p()->get['route'];
         endif;
         
         $data['route'] = $route;
@@ -37,20 +37,20 @@ class Footer extends Controller {
         if (Config::get('config_customer_online')):
             Theme::model('tool/online');
             
-            if (isset($this->request->server['REMOTE_ADDR'])):
-                $ip = $this->request->server['REMOTE_ADDR'];
+            if (isset(Request::p()->server['REMOTE_ADDR'])):
+                $ip = Request::p()->server['REMOTE_ADDR'];
             else:
                 $ip = '';
             endif;
             
-            if (isset($this->request->server['HTTP_HOST']) && isset($this->request->server['REQUEST_URI'])):
-                $url = 'http://' . $this->request->server['HTTP_HOST'] . $this->request->server['REQUEST_URI'];
+            if (isset(Request::p()->server['HTTP_HOST']) && isset(Request::p()->server['REQUEST_URI'])):
+                $url = 'http://' . Request::p()->server['HTTP_HOST'] . Request::p()->server['REQUEST_URI'];
             else:
                 $url = '';
             endif;
             
-            if (isset($this->request->server['HTTP_REFERER'])):
-                $referer = $this->request->server['HTTP_REFERER'];
+            if (isset(Request::p()->server['HTTP_REFERER'])):
+                $referer = Request::p()->server['HTTP_REFERER'];
             else:
                 $referer = '';
             endif;
@@ -58,7 +58,7 @@ class Footer extends Controller {
             ToolOnline::whosonline($ip, Customer::getId(), $url, $referer);
         endif;
 
-        if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))):
+        if (isset(Request::p()->server['HTTPS']) && ((Request::p()->server['HTTPS'] == 'on') || (Request::p()->server['HTTPS'] == '1'))):
             $server = Config::get('config_ssl');
         else:
             $server = Config::get('config_url');

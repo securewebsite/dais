@@ -25,9 +25,9 @@ class Login extends Controller {
         
         $data['guest_checkout'] = (Config::get('config_guest_checkout') && !Config::get('config_customer_price') && !Cart::hasDownload());
         
-        if (isset($this->session->data['account'])) {
-            $data['account'] = $this->session->data['account'];
-            unset($this->session->data['account']);
+        if (isset(Session::p()->data['account'])) {
+            $data['account'] = Session::p()->data['account'];
+            unset(Session::p()->data['account']);
         } else {
             $data['account'] = 'register';
         }
@@ -52,18 +52,18 @@ class Login extends Controller {
             $json['redirect'] = Url::link('checkout/checkout', '', 'SSL');
         }
         
-        if ((!Cart::hasProducts() && empty($this->session->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
+        if ((!Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
             $json['redirect'] = Url::link('checkout/cart');
         }
         
         if (!$json) {
-            if (!Customer::login($this->request->post['email'], $this->request->post['password'])) {
+            if (!Customer::login(Request::p()->post['email'], Request::p()->post['password'])) {
                 $json['error']['warning'] = Lang::get('lang_error_login');
             }
             
             Theme::model('account/customer');
             
-            $customer_info = AccountCustomer::getCustomerByEmail($this->request->post['email']);
+            $customer_info = AccountCustomer::getCustomerByEmail(Request::p()->post['email']);
             
             if ($customer_info && !$customer_info['approved']) {
                 $json['error']['warning'] = Lang::get('lang_error_approved');
@@ -71,7 +71,7 @@ class Login extends Controller {
         }
         
         if (!$json) {
-            unset($this->session->data['guest']);
+            unset(Session::p()->data['guest']);
             
             // Default Addresses
             Theme::model('account/address');
@@ -80,21 +80,21 @@ class Login extends Controller {
             
             if ($address_info) {
                 if (Config::get('config_tax_customer') == 'shipping') {
-                    $this->session->data['shipping_country_id'] = $address_info['country_id'];
-                    $this->session->data['shipping_zone_id'] = $address_info['zone_id'];
-                    $this->session->data['shipping_postcode'] = $address_info['postcode'];
+                    Session::p()->data['shipping_country_id'] = $address_info['country_id'];
+                    Session::p()->data['shipping_zone_id'] = $address_info['zone_id'];
+                    Session::p()->data['shipping_postcode'] = $address_info['postcode'];
                 }
                 
                 if (Config::get('config_tax_customer') == 'payment') {
-                    $this->session->data['payment_country_id'] = $address_info['country_id'];
-                    $this->session->data['payment_zone_id'] = $address_info['zone_id'];
+                    Session::p()->data['payment_country_id'] = $address_info['country_id'];
+                    Session::p()->data['payment_zone_id'] = $address_info['zone_id'];
                 }
             } else {
-                unset($this->session->data['shipping_country_id']);
-                unset($this->session->data['shipping_zone_id']);
-                unset($this->session->data['shipping_postcode']);
-                unset($this->session->data['payment_country_id']);
-                unset($this->session->data['payment_zone_id']);
+                unset(Session::p()->data['shipping_country_id']);
+                unset(Session::p()->data['shipping_zone_id']);
+                unset(Session::p()->data['shipping_postcode']);
+                unset(Session::p()->data['payment_country_id']);
+                unset(Session::p()->data['payment_zone_id']);
             }
             
             $json['redirect'] = Url::link('checkout/checkout', '', 'SSL');

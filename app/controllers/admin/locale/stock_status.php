@@ -37,22 +37,22 @@ class StockStatus extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('locale/stock_status');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            LocaleStockStatus::addStockStatus($this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            LocaleStockStatus::addStockStatus(Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/stock_status', '' . $url, 'SSL'));
@@ -68,22 +68,22 @@ class StockStatus extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('locale/stock_status');
         
-        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-            LocaleStockStatus::editStockStatus($this->request->get['stock_status_id'], $this->request->post);
-            $this->session->data['success'] = Lang::get('lang_text_success');
+        if ((Request::p()->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+            LocaleStockStatus::editStockStatus(Request::p()->get['stock_status_id'], Request::post());
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/stock_status', '' . $url, 'SSL'));
@@ -99,25 +99,25 @@ class StockStatus extends Controller {
         Theme::setTitle(Lang::get('lang_heading_title'));
         Theme::model('locale/stock_status');
         
-        if (isset($this->request->post['selected']) && $this->validateDelete()) {
-            foreach ($this->request->post['selected'] as $stock_status_id) {
+        if (isset(Request::p()->post['selected']) && $this->validateDelete()) {
+            foreach (Request::p()->post['selected'] as $stock_status_id) {
                 LocaleStockStatus::deleteStockStatus($stock_status_id);
             }
             
-            $this->session->data['success'] = Lang::get('lang_text_success');
+            Session::p()->data['success'] = Lang::get('lang_text_success');
             
             $url = '';
             
-            if (isset($this->request->get['sort'])) {
-                $url.= '&sort=' . $this->request->get['sort'];
+            if (isset(Request::p()->get['sort'])) {
+                $url.= '&sort=' . Request::p()->get['sort'];
             }
             
-            if (isset($this->request->get['order'])) {
-                $url.= '&order=' . $this->request->get['order'];
+            if (isset(Request::p()->get['order'])) {
+                $url.= '&order=' . Request::p()->get['order'];
             }
             
-            if (isset($this->request->get['page'])) {
-                $url.= '&page=' . $this->request->get['page'];
+            if (isset(Request::p()->get['page'])) {
+                $url.= '&page=' . Request::p()->get['page'];
             }
             
             Response::redirect(Url::link('locale/stock_status', '' . $url, 'SSL'));
@@ -131,36 +131,36 @@ class StockStatus extends Controller {
     protected function getList() {
         $data = Theme::language('locale/stock_status');
         
-        if (isset($this->request->get['sort'])) {
-            $sort = $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $sort = Request::p()->get['sort'];
         } else {
             $sort = 'name';
         }
         
-        if (isset($this->request->get['order'])) {
-            $order = $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $order = Request::p()->get['order'];
         } else {
             $order = 'ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $page = $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $page = Request::p()->get['page'];
         } else {
             $page = 1;
         }
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'locale/stock_status', $url);
@@ -179,9 +179,9 @@ class StockStatus extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/stock_status/update', '' . '&stock_status_id=' . $result['stock_status_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/stock_status/update', '' . 'stock_status_id=' . $result['stock_status_id'] . $url, 'SSL'));
             
-            $data['stock_statuses'][] = array('stock_status_id' => $result['stock_status_id'], 'name' => $result['name'] . (($result['stock_status_id'] == Config::get('config_stock_status_id')) ? Lang::get('lang_text_default') : null), 'selected' => isset($this->request->post['selected']) && in_array($result['stock_status_id'], $this->request->post['selected']), 'action' => $action);
+            $data['stock_statuses'][] = array('stock_status_id' => $result['stock_status_id'], 'name' => $result['name'] . (($result['stock_status_id'] == Config::get('config_stock_status_id')) ? Lang::get('lang_text_default') : null), 'selected' => isset(Request::p()->post['selected']) && in_array($result['stock_status_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -190,10 +190,10 @@ class StockStatus extends Controller {
             $data['error_warning'] = '';
         }
         
-        if (isset($this->session->data['success'])) {
-            $data['success'] = $this->session->data['success'];
+        if (isset(Session::p()->data['success'])) {
+            $data['success'] = Session::p()->data['success'];
             
-            unset($this->session->data['success']);
+            unset(Session::p()->data['success']);
         } else {
             $data['success'] = '';
         }
@@ -206,20 +206,20 @@ class StockStatus extends Controller {
             $url.= '&order=ASC';
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('locale/stock_status', '' . '&sort=name' . $url, 'SSL');
+        $data['sort_name'] = Url::link('locale/stock_status', '' . 'sort=name' . $url, 'SSL');
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
         $data['pagination'] = Theme::paginate($stock_status_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/stock_status', '' . $url . '&page={page}', 'SSL'));
@@ -251,24 +251,24 @@ class StockStatus extends Controller {
         
         $url = '';
         
-        if (isset($this->request->get['sort'])) {
-            $url.= '&sort=' . $this->request->get['sort'];
+        if (isset(Request::p()->get['sort'])) {
+            $url.= '&sort=' . Request::p()->get['sort'];
         }
         
-        if (isset($this->request->get['order'])) {
-            $url.= '&order=' . $this->request->get['order'];
+        if (isset(Request::p()->get['order'])) {
+            $url.= '&order=' . Request::p()->get['order'];
         }
         
-        if (isset($this->request->get['page'])) {
-            $url.= '&page=' . $this->request->get['page'];
+        if (isset(Request::p()->get['page'])) {
+            $url.= '&page=' . Request::p()->get['page'];
         }
         
         Breadcrumb::add('lang_heading_title', 'locale/stock_status', $url);
         
-        if (!isset($this->request->get['stock_status_id'])) {
+        if (!isset(Request::p()->get['stock_status_id'])) {
             $data['action'] = Url::link('locale/stock_status/insert', '' . $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/stock_status/update', '' . '&stock_status_id=' . $this->request->get['stock_status_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/stock_status/update', '' . 'stock_status_id=' . Request::p()->get['stock_status_id'] . $url, 'SSL');
         }
         
         $data['cancel'] = Url::link('locale/stock_status', '' . $url, 'SSL');
@@ -277,10 +277,10 @@ class StockStatus extends Controller {
         
         $data['languages'] = LocaleLanguage::getLanguages();
         
-        if (isset($this->request->post['stock_status'])) {
-            $data['stock_status'] = $this->request->post['stock_status'];
-        } elseif (isset($this->request->get['stock_status_id'])) {
-            $data['stock_status'] = LocaleStockStatus::getStockStatusDescriptions($this->request->get['stock_status_id']);
+        if (isset(Request::p()->post['stock_status'])) {
+            $data['stock_status'] = Request::p()->post['stock_status'];
+        } elseif (isset(Request::p()->get['stock_status_id'])) {
+            $data['stock_status'] = LocaleStockStatus::getStockStatusDescriptions(Request::p()->get['stock_status_id']);
         } else {
             $data['stock_status'] = array();
         }
@@ -297,7 +297,7 @@ class StockStatus extends Controller {
             $this->error['warning'] = Lang::get('lang_error_permission');
         }
         
-        foreach ($this->request->post['stock_status'] as $language_id => $value) {
+        foreach (Request::p()->post['stock_status'] as $language_id => $value) {
             if ((Encode::strlen($value['name']) < 3) || (Encode::strlen($value['name']) > 32)) {
                 $this->error['name'][$language_id] = Lang::get('lang_error_name');
             }
@@ -316,7 +316,7 @@ class StockStatus extends Controller {
         Theme::model('setting/store');
         Theme::model('catalog/product');
         
-        foreach ($this->request->post['selected'] as $stock_status_id) {
+        foreach (Request::p()->post['selected'] as $stock_status_id) {
             if (Config::get('config_stock_status_id') == $stock_status_id) {
                 $this->error['warning'] = Lang::get('lang_error_default');
             }
