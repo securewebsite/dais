@@ -168,7 +168,7 @@ class Application extends Container implements ApplicationContract {
         Start::detect(); // Include our start file that detects server goodness
 
         if (env('APP_DEBUG') == 'true'):
-           //$this->register(new Services\Utility\WhoopsService); 
+           $this->register(new Services\Utility\WhoopsService); 
         endif;
 
         $this->registerAliases();
