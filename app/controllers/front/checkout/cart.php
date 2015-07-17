@@ -32,7 +32,7 @@ class Cart extends Controller {
         // Update
         if (!empty(Request::p()->post['quantity'])) {
             foreach (Request::p()->post['quantity'] as $key => $value) {
-                Cart::update($key, $value);
+                \Cart::update($key, $value);
             }
             
             unset(Session::p()->data['shipping_method']);
@@ -46,7 +46,7 @@ class Cart extends Controller {
         
         // Remove
         if (isset(Request::p()->get['remove'])) {
-            Cart::remove(Request::p()->get['remove']);
+            \Cart::remove(Request::p()->get['remove']);
             
             unset(Session::p()->data['gift_cards'][Request::p()->get['remove']]);
             
@@ -103,12 +103,12 @@ class Cart extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'checkout/cart');
         
-        if (Cart::hasProducts() || !empty(Session::p()->data['gift_cards'])) {
+        if (\Cart::hasProducts() || !empty(Session::p()->data['gift_cards'])) {
             $points = Customer::getRewardPoints();
             
             $points_total = 0;
             
-            foreach (Cart::getProducts() as $product) {
+            foreach (\Cart::getProducts() as $product) {
                 if ($product['points']) {
                     $points_total+= $product['points'];
                 }
@@ -119,7 +119,7 @@ class Cart extends Controller {
             
             if (isset($this->error['warning'])) {
                 $data['error_warning'] = $this->error['warning'];
-            } elseif (!Cart::hasStock() && (!Config::get('config_stock_checkout') || Config::get('config_stock_warning'))) {
+            } elseif (!\Cart::hasStock() && (!Config::get('config_stock_checkout') || Config::get('config_stock_warning'))) {
                 $data['error_warning'] = Lang::get('lang_error_stock');
             } else {
                 $data['error_warning'] = '';
@@ -142,7 +142,7 @@ class Cart extends Controller {
             $data['action'] = Url::link('checkout/cart');
             
             if (Config::get('config_cart_weight')) {
-                $data['weight'] = $this->weight->format(Cart::getWeight(), Config::get('config_weight_class_id'), Lang::get('lang_decimal_point'), Lang::get('lang_thousand_point'));
+                $data['weight'] = $this->weight->format(\Cart::getWeight(), Config::get('config_weight_class_id'), Lang::get('lang_decimal_point'), Lang::get('lang_thousand_point'));
             } else {
                 $data['weight'] = '';
             }
@@ -151,7 +151,7 @@ class Cart extends Controller {
             
             $data['products'] = array();
             
-            $products = Cart::getProducts();
+            $products = \Cart::getProducts();
             
             foreach ($products as $product) {
                 $product_total = 0;
@@ -294,7 +294,7 @@ class Cart extends Controller {
                 $data['reward'] = '';
             }
             
-            $data['shipping_status'] = Config::get('shipping_status') && Config::get('shipping_estimator') && Cart::hasShipping();
+            $data['shipping_status'] = Config::get('shipping_status') && Config::get('shipping_estimator') && \Cart::hasShipping();
             
             if (isset(Request::p()->post['country_id'])) {
                 $data['country_id'] = Request::p()->post['country_id'];
@@ -339,7 +339,7 @@ class Cart extends Controller {
             
             $total_data = array();
             $total = 0;
-            $taxes = Cart::getTaxes();
+            $taxes = \Cart::getTaxes();
             
             // Display prices
             if ((Config::get('config_customer_price') && Customer::isLogged()) || !Config::get('config_customer_price')) {
@@ -445,7 +445,7 @@ class Cart extends Controller {
         
         $points_total = 0;
         
-        foreach (Cart::getProducts() as $product) {
+        foreach (\Cart::getProducts() as $product) {
             if ($product['points']) {
                 $points_total+= $product['points'];
             }
@@ -551,7 +551,7 @@ class Cart extends Controller {
             }
             
             if (!$json) {
-                Cart::add(Request::p()->post['product_id'], $quantity, $option, $recurring_id);
+                \Cart::add(Request::p()->post['product_id'], $quantity, $option, $recurring_id);
                 
                 $json['success'] = sprintf(Lang::get('lang_text_success'), Url::link('catalog/product', 'product_id=' . Request::p()->post['product_id']), $product_info['name'], Url::link('checkout/cart'));
                 
@@ -565,7 +565,7 @@ class Cart extends Controller {
                 
                 $total_data = array();
                 $total = 0;
-                $taxes = Cart::getTaxes();
+                $taxes = \Cart::getTaxes();
                 
                 // Display prices
                 if ((Config::get('config_customer_price') && Customer::isLogged()) || !Config::get('config_customer_price')) {
@@ -596,7 +596,7 @@ class Cart extends Controller {
                     }
                 }
                 
-                $json['total'] = sprintf(Lang::get('lang_text_items'), Cart::countProducts() + (isset(Session::p()->data['gift_cards']) ? count(Session::p()->data['gift_cards']) : 0), Currency::format($total));
+                $json['total'] = sprintf(Lang::get('lang_text_items'), \Cart::countProducts() + (isset(Session::p()->data['gift_cards']) ? count(Session::p()->data['gift_cards']) : 0), Currency::format($total));
             } else {
                 $json['redirect'] = str_replace('&amp;', '&', Url::link('catalog/product', 'product_id=' . Request::p()->post['product_id']));
             }
@@ -614,7 +614,7 @@ class Cart extends Controller {
         
         // Remove
         if (isset(Request::p()->post['remove'])) {
-            Cart::remove(Request::p()->post['remove']);
+            \Cart::remove(Request::p()->post['remove']);
             
             unset(Session::p()->data['gift_cards'][Request::p()->post['remove']]);
             
@@ -631,7 +631,7 @@ class Cart extends Controller {
             
             $total_data = array();
             $total = 0;
-            $taxes = Cart::getTaxes();
+            $taxes = \Cart::getTaxes();
             
             // Display prices
             if ((Config::get('config_customer_price') && Customer::isLogged()) || !Config::get('config_customer_price')) {
@@ -662,7 +662,7 @@ class Cart extends Controller {
                 array_multisort($sort_order, SORT_ASC, $total_data);
             }
             
-            $json['total'] = sprintf(Lang::get('lang_text_items'), Cart::countProducts() + (isset(Session::p()->data['gift_cards']) ? count(Session::p()->data['gift_cards']) : 0), Currency::format($total));
+            $json['total'] = sprintf(Lang::get('lang_text_items'), \Cart::countProducts() + (isset(Session::p()->data['gift_cards']) ? count(Session::p()->data['gift_cards']) : 0), Currency::format($total));
         }
         
         $json = Theme::listen(__CLASS__, __FUNCTION__, $json);
@@ -675,11 +675,11 @@ class Cart extends Controller {
         
         $json = array();
         
-        if (!Cart::hasProducts()) {
+        if (!\Cart::hasProducts()) {
             $json['error']['warning'] = Lang::get('lang_error_product');
         }
         
-        if (!Cart::hasShipping()) {
+        if (!\Cart::hasShipping()) {
             $json['error']['warning'] = sprintf(Lang::get('lang_error_no_shipping'), Url::link('content/contact'));
         }
         

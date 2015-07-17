@@ -109,12 +109,12 @@ class GuestShipping extends Controller {
         }
         
         // Validate cart has products and has stock.
-        if ((!Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
+        if ((!\Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!\Cart::hasStock() && !Config::get('config_stock_checkout'))) {
             $json['redirect'] = Url::link('checkout/cart');
         }
         
         // Check if guest checkout is avaliable.
-        if (!Config::get('config_guest_checkout') || Config::get('config_customer_price') || Cart::hasDownload()) {
+        if (!Config::get('config_guest_checkout') || Config::get('config_customer_price') || \Cart::hasDownload()) {
             $json['redirect'] = Url::link('checkout/checkout', '', 'SSL');
         }
         

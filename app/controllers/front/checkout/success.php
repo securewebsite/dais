@@ -22,7 +22,7 @@ class Success extends Controller {
     
     public function index() {
         if (isset(Session::p()->data['order_id'])) {
-            Cart::clear();
+            \Cart::clear();
             
             unset(Session::p()->data['shipping_method']);
             unset(Session::p()->data['shipping_methods']);

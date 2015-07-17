@@ -23,12 +23,12 @@ class Checkout extends Controller {
     public function index() {
         
         // Validate cart has products and has stock.
-        if ((!Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
+        if ((!\Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!\Cart::hasStock() && !Config::get('config_stock_checkout'))) {
             Response::redirect(Url::link('checkout/cart'));
         }
         
         // Validate minimum quantity requirments.
-        $products = Cart::getProducts();
+        $products = \Cart::getProducts();
         
         foreach ($products as $product) {
             $product_total = 0;
@@ -52,7 +52,7 @@ class Checkout extends Controller {
         Breadcrumb::add('lang_heading_title', 'checkout/checkout', null, true, 'SSL');
         
         $data['logged'] = Customer::isLogged();
-        $data['shipping_required'] = Cart::hasShipping();
+        $data['shipping_required'] = \Cart::hasShipping();
         
         Theme::loadjs('javascript/checkout/checkout', $data);
         

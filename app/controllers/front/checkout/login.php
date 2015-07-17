@@ -23,7 +23,7 @@ class Login extends Controller {
     public function index() {
         $data = Theme::language('checkout/checkout');
         
-        $data['guest_checkout'] = (Config::get('config_guest_checkout') && !Config::get('config_customer_price') && !Cart::hasDownload());
+        $data['guest_checkout'] = (Config::get('config_guest_checkout') && !Config::get('config_customer_price') && !\Cart::hasDownload());
         
         if (isset(Session::p()->data['account'])) {
             $data['account'] = Session::p()->data['account'];
@@ -52,7 +52,7 @@ class Login extends Controller {
             $json['redirect'] = Url::link('checkout/checkout', '', 'SSL');
         }
         
-        if ((!Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
+        if ((!\Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!\Cart::hasStock() && !Config::get('config_stock_checkout'))) {
             $json['redirect'] = Url::link('checkout/cart');
         }
         

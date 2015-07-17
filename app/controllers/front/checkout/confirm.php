@@ -23,7 +23,7 @@ class Confirm extends Controller {
     public function index() {
         $redirect = '';
         
-        if (Cart::hasShipping()):
+        if (\Cart::hasShipping()):
             
             // Validate if shipping address has been set.
             Theme::model('account/address');
@@ -66,12 +66,12 @@ class Confirm extends Controller {
         endif;
         
         // Validate cart has products and has stock.
-        if ((!Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))):
+        if ((!\Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!\Cart::hasStock() && !Config::get('config_stock_checkout'))):
             $redirect = Url::link('checkout/cart');
         endif;
         
         // Validate minimum quantity requirments.
-        $products = Cart::getProducts();
+        $products = \Cart::getProducts();
         
         foreach ($products as $product):
             $product_total = 0;
@@ -91,7 +91,7 @@ class Confirm extends Controller {
         if (!$redirect):
             $total_data = array();
             $total      = 0;
-            $taxes      = Cart::getTaxes();
+            $taxes      = \Cart::getTaxes();
             
             Theme::model('setting/module');
             
@@ -183,7 +183,7 @@ class Confirm extends Controller {
                 $order['payment_code'] = '';
             endif;
             
-            if (Cart::hasShipping()):
+            if (\Cart::hasShipping()):
                 if (Customer::isLogged()):
                     Theme::model('account/address');
                     $shipping_address = AccountAddress::getAddress(Session::p()->data['shipping_address_id']);
@@ -234,7 +234,7 @@ class Confirm extends Controller {
             
             $product_data = array();
             
-            foreach (Cart::getProducts() as $product):
+            foreach (\Cart::getProducts() as $product):
                 $option_data = array();
                 
                 foreach ($product['option'] as $option):
@@ -305,7 +305,7 @@ class Confirm extends Controller {
             /**
              * We'll need our sub_total to calculate the commission
              */
-            $sub_total = Cart::getSubTotal();
+            $sub_total = \Cart::getSubTotal();
 
             // Load model
             
@@ -381,7 +381,7 @@ class Confirm extends Controller {
             
             $data['products'] = array();
             
-            foreach (Cart::getProducts() as $product):
+            foreach (\Cart::getProducts() as $product):
                 $option_data = array();
                 
                 foreach ($product['option'] as $option):

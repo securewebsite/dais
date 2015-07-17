@@ -32,7 +32,7 @@ class Manual extends Controller {
         if ($this->user->isLogged() && $this->user->hasPermission('modify', 'sale/order')) {
             
             // Reset everything
-            Cart::clear();
+            \Cart::clear();
             Customer::logout();
             
             unset(Session::p()->data['shipping_method']);
@@ -61,7 +61,7 @@ class Manual extends Controller {
                 
                 if ($customer_info) {
                     Customer::login($customer_info['email'], '', true);
-                    Cart::clear();
+                    \Cart::clear();
                 } else {
                     $json['error']['customer'] = Lang::get('lang_error_customer');
                 }
@@ -93,7 +93,7 @@ class Manual extends Controller {
                             }
                         }
                         
-                        Cart::add($order_product['product_id'], $order_product['quantity'], $option_data);
+                        \Cart::add($order_product['product_id'], $order_product['quantity'], $option_data);
                     }
                 }
             }
@@ -123,18 +123,18 @@ class Manual extends Controller {
                     }
                     
                     if (!isset($json['error']['product']['option'])) {
-                        Cart::add(Request::p()->post['product_id'], $quantity, $option);
+                        \Cart::add(Request::p()->post['product_id'], $quantity, $option);
                     }
                 }
             }
             
             // Stock
-            if (!Cart::hasStock() && (!Config::get('config_stock_checkout') || Config::get('config_stock_warning'))) {
+            if (!\Cart::hasStock() && (!Config::get('config_stock_checkout') || Config::get('config_stock_warning'))) {
                 $json['error']['product']['stock'] = Lang::get('lang_error_stock');
             }
             
             // Tax
-            if (Cart::hasShipping()) {
+            if (\Cart::hasShipping()) {
                 Tax::setShippingAddress(Request::p()->post['shipping_country_id'], Request::p()->post['shipping_zone_id']);
             } else {
                 Tax::setShippingAddress(Config::get('config_country_id'), Config::get('config_zone_id'));
@@ -146,7 +146,7 @@ class Manual extends Controller {
             // Products
             $json['order_product'] = array();
             
-            $products = Cart::getProducts();
+            $products = \Cart::getProducts();
             
             foreach ($products as $product) {
                 $product_total = 0;
@@ -300,7 +300,7 @@ class Manual extends Controller {
             // Shipping
             $json['shipping_method'] = array();
             
-            if (Cart::hasShipping()) {
+            if (\Cart::hasShipping()) {
                 Theme::model('locale/country');
                 
                 $country_info = LocaleCountry::getCountry(Request::p()->post['shipping_country_id']);
@@ -444,7 +444,7 @@ class Manual extends Controller {
                 if (!isset($json['error']['reward'])) {
                     $points_total = 0;
                     
-                    foreach (Cart::getProducts() as $product) {
+                    foreach (\Cart::getProducts() as $product) {
                         if ($product['points']) {
                             $points_total+= $product['points'];
                         }
@@ -463,7 +463,7 @@ class Manual extends Controller {
             // Totals
             $json['order_total'] = array();
             $total = 0;
-            $taxes = Cart::getTaxes();
+            $taxes = \Cart::getTaxes();
             
             $sort_order = array();
             
@@ -586,7 +586,7 @@ class Manual extends Controller {
             }
             
             // Reset everything
-            Cart::clear();
+            \Cart::clear();
             Customer::logout();
             
             unset(Session::p()->data['shipping_method']);

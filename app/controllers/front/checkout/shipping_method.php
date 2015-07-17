@@ -103,7 +103,7 @@ class ShippingMethod extends Controller {
         $json = array();
         
         // Validate if shipping is required. If not the customer should not have reached this page.
-        if (!Cart::hasShipping()) {
+        if (!\Cart::hasShipping()) {
             $json['redirect'] = Url::link('checkout/checkout', '', 'SSL');
         }
         
@@ -121,12 +121,12 @@ class ShippingMethod extends Controller {
         }
         
         // Validate cart has products and has stock.
-        if ((!Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
+        if ((!\Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!\Cart::hasStock() && !Config::get('config_stock_checkout'))) {
             $json['redirect'] = Url::link('checkout/cart');
         }
         
         // Validate minimum quantity requirments.
-        $products = Cart::getProducts();
+        $products = \Cart::getProducts();
         
         foreach ($products as $product) {
             $product_total = 0;

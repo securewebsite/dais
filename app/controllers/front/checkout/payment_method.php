@@ -36,7 +36,7 @@ class PaymentMethod extends Controller {
             // Totals
             $total_data = array();
             $total = 0;
-            $taxes = Cart::getTaxes();
+            $taxes = \Cart::getTaxes();
             
             Theme::model('setting/module');
             
@@ -65,7 +65,7 @@ class PaymentMethod extends Controller {
             
             $results = SettingModule::getModules('payment');
             
-            $cart_has_recurring = Cart::hasRecurringProducts();
+            $cart_has_recurring = \Cart::hasRecurringProducts();
             
             foreach ($results as $result) {
                 if (Config::get($result['code'] . '_status')) {
@@ -166,12 +166,12 @@ class PaymentMethod extends Controller {
         }
         
         // Validate cart has products and has stock.
-        if ((!Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
+        if ((!\Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!\Cart::hasStock() && !Config::get('config_stock_checkout'))) {
             $json['redirect'] = Url::link('checkout/cart');
         }
         
         // Validate minimum quantity requirments.
-        $products = Cart::getProducts();
+        $products = \Cart::getProducts();
         
         foreach ($products as $product) {
             $product_total = 0;
