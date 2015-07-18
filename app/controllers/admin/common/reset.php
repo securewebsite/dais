@@ -17,7 +17,6 @@
 namespace App\Controllers\Admin\Common;
 
 use App\Controllers\Controller;
-use Dais\Base\Action;
 
 class Reset extends Controller {
     private $error = array();

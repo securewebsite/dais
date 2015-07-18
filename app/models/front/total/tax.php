@@ -23,7 +23,7 @@ class Tax extends Model {
             if ($value > 0):
                 $total_data[] = array(
                     'code'       => 'tax', 
-                    'title'      => Tax::getRateName($key), 
+                    'title'      => \Tax::getRateName($key), 
                     'text'       => Currency::format($value), 
                     'value'      => $value, 
                     'sort_order' => Config::get('tax_sort_order')

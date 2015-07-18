@@ -19,7 +19,7 @@ namespace App\Theme\Front\Ghost;
 use Dais\Contracts\ThemeContract;
 use Dais\Base\Theme as BaseTheme;
 
-class Theme extends BaseTheme implements ThemeContract {
+class Ghost extends BaseTheme implements ThemeContract {
 
 	public function __construct() {
 		$this->path();

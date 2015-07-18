@@ -26,7 +26,7 @@ class Cart extends Controller {
         $data = Theme::language('checkout/cart');
         
         if (!isset(Session::p()->data['gift_cards'])) {
-            Session::p()->data['gift_cards'] = array();
+            Session::p()->data['gift_cards'] = [];
         }
         
         // Update

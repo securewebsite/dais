@@ -17,7 +17,6 @@
 namespace App\Controllers\Admin\Module;
 
 use App\Controllers\Controller;
-use Dais\Support\Naming;
 
 class Total extends Controller {
     

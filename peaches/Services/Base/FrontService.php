@@ -16,7 +16,6 @@
 
 namespace Dais\Services\Base;
 
-use Dais\Base\Action;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Dais\Services\Providers\Base\Front;
@@ -29,8 +28,7 @@ class FrontService implements ServiceProviderInterface {
 
 		$app['front'] = function ($app) use($actions) {
             $front = new Front;
-	        $front->dispatch($actions['action'], $actions['error']);
-
+	    	$front->dispatch($actions['action'], $actions['error']);
             return $front;
         };
 	}

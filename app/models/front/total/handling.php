@@ -25,7 +25,7 @@ class Handling extends Model {
             $total_data[] = array('code' => 'handling', 'title' => Lang::get('lang_text_handling'), 'text' => Currency::format(Config::get('handling_fee')), 'value' => Config::get('handling_fee'), 'sort_order' => Config::get('handling_sort_order'));
             
             if (Config::get('handling_tax_class_id')) {
-                $tax_rates = Tax::getRates(Config::get('handling_fee'), Config::get('handling_tax_class_id'));
+                $tax_rates = \Tax::getRates(Config::get('handling_fee'), Config::get('handling_tax_class_id'));
                 
                 foreach ($tax_rates as $tax_rate) {
                     if (!isset($taxes[$tax_rate['tax_rate_id']])) {

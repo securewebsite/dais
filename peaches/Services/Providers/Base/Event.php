@@ -16,8 +16,6 @@
 
 namespace Dais\Services\Providers\Base;
 
-use Dais\Support\Naming;
-
 class Event {
     
     private $events = array();

@@ -47,18 +47,13 @@ class LanguageService implements ServiceProviderInterface {
 
         unset($key);
 
-        foreach ($languages as $key => $value):
-            $languages[$key]['directory'] = ucfirst($value['directory']);
-            $languages[$key]['filename']  = ucfirst($value['filename']);
-        endforeach;
+        $this->build($languages);
 
-        $app['language'] = function($app) use($languages) {
-            $this->build($languages);
+        $code     = Session::get('language');
+        $language = new Language($languages[$code]['directory']);
+        $language->load($languages[$code]['filename']);
 
-            $code     = Session::get('language');
-            $language = new Language($languages[$code]['directory']);
-            $language->load($languages[$code]['filename']);
-
+        $app['language'] = function($app) use($language) {
             return $language;
         };
     }

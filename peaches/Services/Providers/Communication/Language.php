@@ -16,8 +16,6 @@
 
 namespace Dais\Services\Providers\Communication;
 
-use Dais\Support\Naming;
-
 class Language {
     
     private $default = 'english';

@@ -25,30 +25,29 @@ class ViewService implements ServiceProviderInterface {
  
 	public function register(Container $app) {
 
-         $app['foil.options'] = [
-               'ext'            => 'tpl',
-               'template_class' => 'Dais\Base\View',
-               'folders'        => [$app['theme']->getPath() . 'view'],
-          ];
+        $app['foil.options'] = [
+            'ext'            => 'tpl',
+            'template_class' => 'Dais\Base\View',
+            'folders'        => [$app['theme']->getPath() . 'view'],
+        ];
 
-          $app['foil.boostrap'] = function(Container $app) {
-                return Foil::boot($app['foil.options']);
-          };
+        $app['foil.boostrap'] = function(Container $app) {
+            return Foil::boot($app['foil.options']);
+        };
 
-          // an example on how Foil extesions can be placed in the mix
-          $app['foil.uri.options'] = [
-                'host'   => env('APP_ENV'),
-          ];
+        $app['foil.uri.options'] = [
+            'host'   => env('APP_ENV'),
+        ];
 
-          $app['foil.uri'] = function(Container $app) {
-                return new Uri();
-          };
+        $app['foil.uri'] = function(Container $app) {
+            return new Uri();
+        };
 
-          $app['foil'] = function(Container $app) {
-                $engine = $app['foil.boostrap']->engine();
-                $engine->loadExtension($app['foil.uri'], $app['foil.uri.options']);
+        $app['foil'] = function(Container $app) {
+            $engine = $app['foil.boostrap']->engine();
+            $engine->loadExtension($app['foil.uri'], $app['foil.uri.options']);
 
-                return $engine;
-          };
+            return $engine;
+        };
     } 
 }

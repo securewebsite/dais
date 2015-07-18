@@ -17,7 +17,6 @@
 namespace App\Controllers\Admin\Sale;
 
 use App\Controllers\Controller;
-use Dais\Base\Action;
 
 class Recurring extends Controller {
     

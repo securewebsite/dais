@@ -16,8 +16,6 @@
 
 namespace Dais\Base;
 
-use Dais\Support\Naming;
-
 final class Action {
     
     protected $file;

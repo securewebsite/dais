@@ -54,7 +54,6 @@ class Application extends Container implements ApplicationContract {
         $this->setBasePath($basePath);
 
         $this->registerBaseServices();
-        $this->registerBaseProviders();
     }
 
     /*
@@ -69,7 +68,25 @@ class Application extends Container implements ApplicationContract {
 
     public function boot() {
         $this->registerFinalProviders();
+        
         $this->loadServiceProviders();
+
+        // We need to load our model facades
+        switch($this['config']->get('active.facade')):
+            case FRONT_FACADE:
+                $models = $this->registerModels('front');
+                break;
+            case ADMIN_FACADE:
+                $models = $this->registerModels('admin');
+                break;
+        endswitch;
+
+        $aliases = Alias::getInstance()->getAliases();
+
+        $aliases = array_merge($aliases, $models);
+
+        Alias::getInstance($aliases)->register(static::ROOT_NAMESPACE_ANY);
+
         $this->isBooted = true;
     }
 
@@ -172,17 +189,16 @@ class Application extends Container implements ApplicationContract {
         endif;
 
         $this->registerAliases();
-        $loader = Alias::getInstance();
+        $this->registerApplicationService();
+
+        Alias::getInstance(static::$aliases)->register(static::ROOT_NAMESPACE_ANY);
         
         foreach(static::$aliases as $class => $alias):
-            $loader->alias($class, $alias);
             $this->registerAlias($class, $alias);
             unset(static::$aliases[$class]);
         endforeach;
-
-        $loader->register(static::ROOT_NAMESPACE_ANY);
         
-        $this->registerApplicationService();
+        $this->registerBaseProviders();
     }
 
     protected function registerApplicationService() {
@@ -317,6 +333,8 @@ class Application extends Container implements ApplicationContract {
             'Plugin'      => 'Dais\Facades\Plugin',
             'Router'      => 'Dais\Facades\Router',
             'Front'       => 'Dais\Facades\Front',
+            'Naming'      => 'Dais\Support\Naming',
+            'Action'      => 'Dais\Base\Action',
         ];
 
         foreach($aliases as $class => $alias):
@@ -443,13 +461,7 @@ class Application extends Container implements ApplicationContract {
             ],
         ];
 
-        $loader = Alias::getInstance();
-
-        foreach($models[$module] as $class => $alias):
-            $loader->alias($class, $alias);
-        endforeach;
-
-        $loader->register();
+        return $models[$module];
     }
 
     /*
@@ -509,16 +521,6 @@ class Application extends Container implements ApplicationContract {
         if (!$this->isBooted):
             $this->boot();
         endif;
-        
-        // We need to load our model facades
-        switch($this['config']->get('active.facade')):
-            case FRONT_FACADE:
-                $this->registerModels('front');
-                break;
-            case ADMIN_FACADE:
-                $this->registerModels('admin');
-                break;
-        endswitch;
         
         $this['front']->output();
     }

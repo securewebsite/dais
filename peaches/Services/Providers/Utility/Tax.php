@@ -155,7 +155,7 @@ class Tax {
 						ON (tr2.tax_rate_id = tr2cg.tax_rate_id) 
 					LEFT JOIN " . DB::prefix() . "zone_to_geo_zone z2gz 
 						ON (tr2.geo_zone_id = z2gz.geo_zone_id) 
-					LEFT JOIN " . DB::prefix() . "}geo_zone gz 
+					LEFT JOIN " . DB::prefix() . "geo_zone gz 
 						ON (tr2.geo_zone_id = gz.geo_zone_id) 
 					WHERE tr1.tax_class_id = '" . (int)$tax_class_id . "' 
 					AND tr1.based = 'payment' 
@@ -163,7 +163,7 @@ class Tax {
 					AND z2gz.country_id = '" . (int)$this->payment_address['country_id'] . "' 
 					AND (z2gz.zone_id = '0' OR z2gz.zone_id = '" . (int)$this->payment_address['zone_id'] . "') 
 					ORDER BY tr1.priority ASC
-				");
+			");
 			
 			foreach ($tax_query->rows as $result):
 				$tax_rates[$result['tax_rate_id']] = array(

@@ -44,7 +44,7 @@ class Reward extends Model {
                         $discount = $product['total'] * ($this->session->data['reward'] / $points_total);
                         
                         if ($product['tax_class_id']):
-                            $tax_rates = Tax::getRates($product['total'] - ($product['total'] - $discount), $product['tax_class_id']);
+                            $tax_rates = \Tax::getRates($product['total'] - ($product['total'] - $discount), $product['tax_class_id']);
                             
                             foreach ($tax_rates as $tax_rate):
                                 if ($tax_rate['type'] == 'P'):

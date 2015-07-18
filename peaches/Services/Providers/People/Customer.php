@@ -36,23 +36,23 @@ class Customer {
     
     public function __construct() {
         
-        if (!is_null(Session::get('customer_id'))):
-            $this->customer_id         = Session::get('customer_id');
-            $this->username            = Session::get('username');
-            $this->firstname           = Session::get('firstname');
-            $this->lastname            = Session::get('lastname');
-            $this->email               = Session::get('email');
-            $this->telephone           = Session::get('telephone');
-            $this->newsletter          = Session::get('newsletter');
-            $this->customer_group_id   = Session::get('customer_group_id');
-            $this->customer_group_name = Session::get('customer_group_name');
-            $this->address_id          = Session::get('address_id');
-            $this->referral_id         = Session::get('referral_id');
-            $this->customer_products   = Session::get('customer_products');
-            $this->is_affiliate        = Session::get('is_affiliate');
+        if (isset(Session::p()->data['customer_id'])):
+            $this->customer_id         = Session::p()->data['customer_id'];
+            $this->username            = Session::p()->data['username'];
+            $this->firstname           = Session::p()->data['firstname'];
+            $this->lastname            = Session::p()->data['lastname'];
+            $this->email               = Session::p()->data['email'];
+            $this->telephone           = Session::p()->data['telephone'];
+            $this->newsletter          = Session::p()->data['newsletter'];
+            $this->customer_group_id   = Session::p()->data['customer_group_id'];
+            $this->customer_group_name = Session::p()->data['customer_group_name'];
+            $this->address_id          = Session::p()->data['address_id'];
+            $this->referral_id         = Session::p()->data['referral_id'];
+            $this->customer_products   = Session::p()->data['customer_products'];
+            $this->is_affiliate        = Session::p()->data['is_affiliate'];
 
             if ($this->is_affiliate):
-                $this->code = Session::get('code');
+                $this->code = Session::p()->data['code'];
             else:
                 $this->code = false;
             endif;
@@ -60,8 +60,8 @@ class Customer {
             DB::query("
                 UPDATE " . DB::prefix() . "customer 
                 SET 
-                    cart = '" . DB::escape(!is_null(Session::get('cart')) ? serialize(Session::get('cart')) : '') . "', 
-                    wishlist = '" . DB::escape(!is_null(Session::get('wishlist')) ? serialize(Session::get('wishlist')) : '') . "', 
+                    cart = '" . DB::escape(isset(Session::p()->data['cart']) ? serialize(Session::p()->data['cart']) : '') . "', 
+                    wishlist = '" . DB::escape(isset(Session::p()->data['wishlist']) ? serialize(Session::p()->data['wishlist']) : '') . "', 
                     ip = '" . DB::escape(Request::server('REMOTE_ADDR')) . "' 
                 WHERE customer_id = '" . (int)$this->customer_id . "'
             ");
@@ -88,15 +88,15 @@ class Customer {
                 AND approved = '1'
             ");
         endif;
-        
+        //Response::test($customer_query->rows);
         if ($customer_query->num_rows):
-            Session::set('customer_id', $customer_query->row['customer_id']);
+            Session::p()->data['customer_id'] = $customer_query->row['customer_id'];
             
             if ($customer_query->row['cart'] && is_string($customer_query->row['cart'])):
                 $cart = unserialize($customer_query->row['cart']);
                 
                 foreach ($cart as $key => $value):
-                    if (!array_key_exists($key, Session::get('cart'))):
+                    if (!array_key_exists($key, Session::p()->data['cart'])):
                         Session::p()->data['cart'][$key] = $value;
                     else:
                         Session::p()->data['cart'][$key] += $value;
@@ -105,31 +105,31 @@ class Customer {
             endif;
             
             if ($customer_query->row['wishlist'] && is_string($customer_query->row['wishlist'])):
-                if (is_null(Session::get('wishlist'))):
-                    Session::set('wishlist', array());
+                if (!isset(Session::p()->data['wishlist'])):
+                    Session::p()->data['wishlist'] = [];
                 endif;
                 
                 $wishlist = unserialize($customer_query->row['wishlist']);
                 
                 foreach ($wishlist as $product_id):
-                    if (!in_array($product_id, Session::get('wishlist'))):
+                    if (!in_array($product_id, Session::p()->data['wishlist'])):
                         Session::p()->data['wishlist'][] = $product_id;
                     endif;
                 endforeach;
             endif;
             
-            Session::set('customer_id', $customer_query->row['customer_id']);
-            Session::set('username', $customer_query->row['username']);
-            Session::set('firstname', $customer_query->row['firstname']);
-            Session::set('lastname', $customer_query->row['lastname']);
-            Session::set('email', $customer_query->row['email']);
-            Session::set('telephone', $customer_query->row['telephone']);
-            Session::set('newsletter', $customer_query->row['newsletter']);
-            Session::set('customer_group_id', $customer_query->row['customer_group_id']);
-            Session::set('address_id', $customer_query->row['address_id']);
-            Session::set('referral_id', $customer_query->row['referral_id']);
-            Session::set('is_affiliate', $customer_query->row['is_affiliate']);
-            Session::set('code', $customer_query->row['code']);
+            Session::p()->data['customer_id']       = $customer_query->row['customer_id'];
+            Session::p()->data['username']          = $customer_query->row['username'];
+            Session::p()->data['firstname']         = $customer_query->row['firstname'];
+            Session::p()->data['lastname']          = $customer_query->row['lastname'];
+            Session::p()->data['email']             = $customer_query->row['email'];
+            Session::p()->data['telephone']         = $customer_query->row['telephone'];
+            Session::p()->data['newsletter']        = $customer_query->row['newsletter'];
+            Session::p()->data['customer_group_id'] = $customer_query->row['customer_group_id'];
+            Session::p()->data['address_id']        = $customer_query->row['address_id'];
+            Session::p()->data['referral_id']       = $customer_query->row['referral_id'];
+            Session::p()->data['is_affiliate']      = $customer_query->row['is_affiliate'];
+            Session::p()->data['code']              = $customer_query->row['code'];
 
             $customer_group_query = DB::query("
                 SELECT name 
@@ -137,7 +137,7 @@ class Customer {
                 WHERE customer_group_id = '" . (int)$customer_query->row['customer_group_id'] . "' 
                 AND language_id = '" . (int)Config::get('config_language_id') . "'");
             
-            Session::get('customer_group_name', strtolower($customer_group_query->row['name']));
+            Session::p()->data['customer_group_name'] = strtolower($customer_group_query->row['name']);
             
             DB::query("
                 UPDATE " . DB::prefix() . "customer 
@@ -156,11 +156,11 @@ class Customer {
                 AND visibility <= '" . (int)$customer_query->row['customer_group_id'] . "' 
                 AND date_available < NOW()");
             
-            Session::set('customer_products', array());
+            Session::p()->data['customer_products'] = [];
             
             if ($query->num_rows):
                 foreach ($query->rows as $product_id):
-                    if (!in_array($product_id, Session::get('customer_products'))):
+                    if (!in_array($product_id, Session::p()->data['customer_products'])):
                         Session::p()->data['customer_products'][] = $product_id;
                     endif;
                 endforeach;
@@ -176,8 +176,8 @@ class Customer {
         DB::query("
             UPDATE " . DB::prefix() . "customer 
             SET 
-                cart     = '" . DB::escape(!is_null(Session::get('cart')) ? serialize(Session::get('cart')) : '') . "', 
-                wishlist = '" . DB::escape(!is_null(Session::get('wishlist')) ? serialize(Session::get('wishlist')) : '') . "' 
+                cart     = '" . DB::escape(isset(Session::p()->data['cart']) ? serialize(Session::p()->data['cart']) : '') . "', 
+                wishlist = '" . DB::escape(isset(Session::p()->data['wishlist']) ? serialize(Session::p()->data['wishlist']) : '') . "' 
             WHERE customer_id = '" . (int)$this->customer_id . "'
         ");
         
@@ -255,12 +255,12 @@ class Customer {
     }
     
     public function setGroupId($group_id) {
-        Session::set('customer_group_id', $group_id);
+        Session::p()->data['customer_group_id'] = $group_id;
         $this->customer_group_id = $group_id;
     }
     
     public function setGroupName($name) {    
-        Session::set('customer_group_name', $name);
+        Session::p()->data['customer_group_name'] = $name;
         $this->customer_group_name = $name;
     }
     
@@ -273,7 +273,7 @@ class Customer {
     }
 
     public function setReferralId($id) {
-        Session::set('referral_id', $id);
+        Session::p()->data['referral_id'] = $id;
         $this->referral_id = $id;
     }
     
@@ -290,7 +290,7 @@ class Customer {
     }
 
     public function setAffiliate() {
-        Session::set('is_affiliate', 1);
+        Session::p()->data['is_affiliate'] = 1;
         $this->is_affiliate = 1;
     }
 
@@ -299,7 +299,7 @@ class Customer {
     }
 
     public function setCode($code) {
-        Session::set('code', $code);
+        Session::p()->data['code'] = $code;
         $this->code = $code;
     }
     

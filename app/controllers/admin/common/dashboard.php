@@ -17,7 +17,6 @@
 namespace App\Controllers\Admin\Common;
 
 use App\Controllers\Controller;
-use Dais\Base\Action;
 
 class Dashboard extends Controller {
     

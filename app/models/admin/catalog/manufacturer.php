@@ -164,7 +164,8 @@ class Manufacturer extends Model {
             FROM " . DB::prefix() . "manufacturer";
         
         if (!empty($data['filter_name'])) {
-            $sql.= " WHERE name LIKE {DB::escape($data['filter_name']) }%";
+            $filter = DB::escape($data['filter_name']);
+            $sql.= " WHERE name LIKE {$filter}%";
         }
         
         $sort_data = array('name', 'sort_order');

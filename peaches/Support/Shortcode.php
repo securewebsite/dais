@@ -16,8 +16,6 @@
 
 namespace Dais\Support;
 
-use Dais\Base\Action;
-
 class Shortcode {
 	
 	public $shortcode_tags = array();

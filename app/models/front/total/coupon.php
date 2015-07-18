@@ -66,7 +66,7 @@ class Coupon extends Model {
                         endif;
                         
                         if ($product['tax_class_id']):
-                            $tax_rates = Tax::getRates($product['total'] - ($product['total'] - $discount), $product['tax_class_id']);
+                            $tax_rates = \Tax::getRates($product['total'] - ($product['total'] - $discount), $product['tax_class_id']);
                             
                             foreach ($tax_rates as $tax_rate):
                                 if ($tax_rate['type'] == 'P'):
@@ -81,7 +81,7 @@ class Coupon extends Model {
                 
                 if ($coupon_info['shipping'] && isset($this->session->data['shipping_method'])):
                     if (!empty($this->session->data['shipping_method']['tax_class_id'])):
-                        $tax_rates = Tax::getRates($this->session->data['shipping_method']['cost'], $this->session->data['shipping_method']['tax_class_id']);
+                        $tax_rates = \Tax::getRates($this->session->data['shipping_method']['cost'], $this->session->data['shipping_method']['tax_class_id']);
                         
                         foreach ($tax_rates as $tax_rate):
                             if ($tax_rate['type'] == 'P'):

@@ -19,7 +19,7 @@ namespace App\Theme\Admin\Bs3;
 use Dais\Contracts\ThemeContract;
 use Dais\Base\Theme as BaseTheme;
 
-class Theme extends BaseTheme implements ThemeContract {
+class Bs3 extends BaseTheme implements ThemeContract {
 
 	protected $assetPath;
 

@@ -16,9 +16,6 @@
 
 namespace Dais\Services\Providers\Base;
 
-use Dais\Base\Action;
-use Dais\Support\Naming;
-
 class Router {
 
 	public function dispatch() {

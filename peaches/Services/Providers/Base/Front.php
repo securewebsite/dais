@@ -16,8 +16,6 @@
 
 namespace Dais\Services\Providers\Base;
 
-use Dais\Base\Action;
-
 final class Front {
 
     private $pre_action = array();

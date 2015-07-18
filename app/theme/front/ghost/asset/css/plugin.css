@@ -87,6 +87,10 @@
 .radio .ctrl-overlay {
   border-radius: 100px;
 }
+.radio .ctrl-overlay.fa-circle:before,
+.radio .ctrl-overlay.fa-circle-o:before {
+  margin-left: 2.5px;
+}
 .ctrl-overlay {
   content: "";
   position: absolute;

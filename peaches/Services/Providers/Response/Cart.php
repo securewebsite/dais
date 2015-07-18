@@ -18,17 +18,17 @@ namespace Dais\Services\Providers\Response;
 
 class Cart {
     
-    private $data = array();
+    private $data = [];
     
     public function __construct() {
-        if (is_null(Session::get('cart')) || !is_array(Session::get('cart'))):
-            Session::set('cart', array());
+        if (!isset(Session::p()->data['cart']) || !is_array(Session::p()->data['cart'])):
+            Session::p()->data['cart'] = [];
         endif;
     }
     
     public function getProducts() {
-        if (!$this->data):
-            foreach (Session::get('cart') as $key => $quantity):
+        if (empty($this->data)):
+            foreach (Session::p()->data['cart'] as $key => $quantity):
                 $product    = explode(':', $key);
                 $product_id = $product[0];
                 $stock      = true;
@@ -47,7 +47,7 @@ class Cart {
                 else:
                     $recurring_id = 0;
                 endif;
-                
+
                 $product_query = DB::query("
                     SELECT * 
                     FROM " . DB::prefix() . "product p 
@@ -248,7 +248,7 @@ class Cart {
                     // Product Discounts
                     $discount_quantity = 0;
                     
-                    foreach (Session::get('cart') as $key_2 => $quantity_2):
+                    foreach (Session::p()->data['cart'] as $key_2 => $quantity_2):
                         $product_2 = explode(':', $key_2);
                         
                         if ($product_2[0] == $product_id):
@@ -407,18 +407,6 @@ class Cart {
         return $this->data;
     }
     
-    public function getRecurringProducts() {
-        $recurring_products = array();
-        
-        foreach ($this->getProducts() as $key => $value):
-            if ($value['recurring']):
-                $recurring_products[$key] = $value;
-            endif;
-        endforeach;
-        
-        return $recurring_products;
-    }
-    
     public function add($product_id, $qty = 1, $option, $recurring_id = '') {
         $key     = (int)$product_id . ':';
         
@@ -440,7 +428,7 @@ class Cart {
             endif;
         endif;
         
-        $this->data = array();
+        $this->data = [];
     }
     
     public function update($key, $qty) {
@@ -450,7 +438,7 @@ class Cart {
             $this->remove($key);
         endif;
         
-        $this->data = array();
+        $this->data = [];
     }
     
     public function remove($key) {
@@ -458,18 +446,20 @@ class Cart {
             unset(Session::p()->data['cart'][$key]);
         endif;
         
-        $this->data = array();
+        $this->data = [];
     }
     
     public function clear() { 
-        Session::set('cart', array());
-        $this->data = array();
+        Session::p()->data['cart'] = [];
+        $this->data = [];
     }
     
     public function getWeight() {        
         $weight_data = 0;
+
+        $products = (!empty($this->data)) ? $this->data : $this->getProducts();
         
-        foreach ($this->getProducts() as $product):
+        foreach ($products as $product):
             if ($product['shipping']):
                 $weight_data+= Weight::convert($product['weight'], $product['weight_class_id'], Config::get('config_weight_class_id'));
             endif;
@@ -481,7 +471,9 @@ class Cart {
     public function getSubTotal() {
         $total = 0;
         
-        foreach ($this->getProducts() as $product):
+        $products = (!empty($this->data)) ? $this->data : $this->getProducts();
+
+        foreach ($products as $product):
             $total+= $product['total'];
         endforeach;
         
@@ -490,8 +482,10 @@ class Cart {
     
     public function getTaxes() {
         $tax_data = array();
+
+        $products = (!empty($this->data)) ? $this->data : $this->getProducts();
         
-        foreach ($this->getProducts() as $product):
+        foreach ($products as $product):
             if ($product['tax_class_id']):
                 $tax_rates = Tax::getRates($product['price'], $product['tax_class_id']);
                 
@@ -510,8 +504,10 @@ class Cart {
     
     public function getTotal() {
         $total = 0;
+
+        $products = (!empty($this->data)) ? $this->data : $this->getProducts();
         
-        foreach ($this->getProducts() as $product):
+        foreach ($products as $product):
             $total+= Tax::calculate($product['price'], $product['tax_class_id'], Config::get('config_tax')) * $product['quantity'];
         endforeach;
         
@@ -521,7 +517,7 @@ class Cart {
     public function countProducts() {
         $product_total = 0;
         
-        $products = $this->getProducts();
+        $products = (!empty($this->data)) ? $this->data : $this->getProducts();
         
         foreach ($products as $product):
             $product_total+= $product['quantity'];
@@ -529,9 +525,23 @@ class Cart {
         
         return $product_total;
     }
+
+    public function getRecurringProducts() {
+        $recurring_products = array();
+
+        $products = (!empty($this->data)) ? $this->data : $this->getProducts();
+        
+        foreach ($products as $key => $value):
+            if ($value['recurring']):
+                $recurring_products[$key] = $value;
+            endif;
+        endforeach;
+        
+        return $recurring_products;
+    }
     
     public function hasProducts() {
-        return count(Session::get('cart'));
+        return count(Session::p()->data['cart']);
     }
     
     public function hasRecurringProducts() {
@@ -540,8 +550,10 @@ class Cart {
     
     public function hasStock() {
         $stock = true;
+
+        $products = (!empty($this->data)) ? $this->data : $this->getProducts();
         
-        foreach ($this->getProducts() as $product):
+        foreach ($products as $product):
             if (!$product['stock']):
                 $stock = false;
             endif;
@@ -552,8 +564,10 @@ class Cart {
     
     public function hasShipping() {
         $shipping = false;
+
+        $products = (!empty($this->data)) ? $this->data : $this->getProducts();
         
-        foreach ($this->getProducts() as $product):
+        foreach ($products as $product):
             if ($product['shipping']):
                 $shipping = true;
                 break;
@@ -565,8 +579,10 @@ class Cart {
     
     public function hasDownload() {
         $download = false;
+
+        $products = (!empty($this->data)) ? $this->data : $this->getProducts();
         
-        foreach ($this->getProducts() as $product):
+        foreach ($products as $product):
             if ($product['download']):
                 $download = true;
                 break;

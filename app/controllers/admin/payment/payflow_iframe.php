@@ -17,7 +17,6 @@
 namespace App\Controllers\Admin\Payment;
 
 use App\Controllers\Controller;
-use Dais\Base\Action;
 
 class PayflowIframe extends Controller {
     

@@ -18,17 +18,19 @@ namespace Dais\Services\Base;
 
 use Exception;
 use Pimple\Container;
-use Dais\Support\Naming;
 use Pimple\ServiceProviderInterface;
 
 class ThemeService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
 		
-		$app['theme'] = function ($app) {
-            $file  = $app['config']->get('path.theme') . $app['config']->get('theme.name') . SEP . 'theme.php';
-			$class = Naming::class_from_filename($file);
+		$file  = $app['config']->get('path.theme') . 
+				 $app['config']->get('theme.name') . SEP . 
+				 $app['config']->get('theme.name') . '.php';
+				 
+		$class = Naming::class_from_filename($file);
 
+		$app['theme'] = function ($app) use($class) {
 			return new $class;
         };
 	}

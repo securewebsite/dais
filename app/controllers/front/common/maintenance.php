@@ -17,7 +17,6 @@
 namespace App\Controllers\Front\Common;
 
 use App\Controllers\Controller;
-use Dais\Base\Action;
 use Dais\Services\Providers\User;
 
 class Maintenance extends Controller {

@@ -29,7 +29,7 @@ class Shipping extends Model {
             );
             
             if ($this->session->data['shipping_method']['tax_class_id']):
-                $tax_rates = Tax::getRates($this->session->data['shipping_method']['cost'], $this->session->data['shipping_method']['tax_class_id']);
+                $tax_rates = \Tax::getRates($this->session->data['shipping_method']['cost'], $this->session->data['shipping_method']['tax_class_id']);
                 
                 foreach ($tax_rates as $tax_rate):
                     if (!isset($taxes[$tax_rate['tax_rate_id']])):

@@ -16,10 +16,6 @@
 
 namespace Dais\Base;
 
-use Dais\Base\View;
-use Dais\Base\Action;
-use Dais\Support\Naming;
-
 abstract class Theme {
     
     protected $title;
@@ -169,17 +165,12 @@ abstract class Theme {
 
     /*
     |--------------------------------------------------------------------------
-    |   Views and Javascript
+    |   Javascript
     |--------------------------------------------------------------------------
     |
-    |   Set and render views and javascript for the theme.
+    |   Set and render javascript for the theme.
     |
     */
-    
-    public function view($template, $data = []) {
-        //$view = new View();
-        return \View::render($template, $data); 
-    }
     
     public function loadjs($file, $data, $path = '') {
         JS::load($file, $data, $path);
