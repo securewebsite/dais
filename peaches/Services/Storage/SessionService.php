@@ -25,20 +25,19 @@ use Dais\Services\Providers\Storage\Session;
 class SessionService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
-        
-		$session = new Session($app['config']->get('path.sessions'));
+        $app['session'] = function ($app) {
+            $session = new Session($app['config']->get('path.sessions'));
             
-        switch ($app['config']->get('active.facade')):
-            case ADMIN_FACADE:
-                $session->admin_session(new FileHandler);
-                break;
+            switch ($app['config']->get('active.facade')):
+                case ADMIN_FACADE:
+                    $session->admin_session(new FileHandler);
+                    break;
 
-            case FRONT_FACADE:
-                $session->front_session(new DatabaseHandler);
-                break;
-        endswitch;
+                case FRONT_FACADE:
+                    $session->front_session(new DatabaseHandler);
+                    break;
+            endswitch;
 
-        $app['session'] = function ($app) use($session) {
             return $session;
         };
 	}
