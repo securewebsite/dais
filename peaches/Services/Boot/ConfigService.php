@@ -23,14 +23,14 @@ use Dais\Services\Providers\Boot\Config;
 class ConfigService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
-		$app['config'] = function ($app) {
-            // convert our global $_ENV to a more elegant array for paths
-            $env = array();
+		// convert our global $_ENV to a more elegant array for paths
+        $env = array();
 
-            foreach($_ENV as $key => $value):
-                $env[strtolower(str_replace('_', '.', $key))] = $value;
-            endforeach;
-
+        foreach($_ENV as $key => $value):
+            $env[strtolower(str_replace('_', '.', $key))] = $value;
+        endforeach;
+        
+        $app['config'] = function ($app) use($env) {
             return new Config($app, $env);
         };
 	}

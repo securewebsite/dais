@@ -23,11 +23,12 @@ use Dais\Services\Providers\Response\Response;
 class ResponseService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
-		$app['response'] = function ($app) {
-            $response = new Response;
-	        $response->addHeader('Content-Type: text/html; charset=utf-8');
-	        $response->setCompression($app['config']->get('config_compression'));
+		
+		$response = new Response;
+	    $response->addHeader('Content-Type: text/html; charset=utf-8');
+	    $response->setCompression($app['config']->get('config_compression'));
 
+		$app['response'] = function ($app) use($response) {
             return $response;
         };
 	}

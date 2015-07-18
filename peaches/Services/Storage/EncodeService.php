@@ -25,14 +25,14 @@ use Dais\Services\Providers\Utility\Mbstring;
 class EncodeService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
-        $app['encode'] = function($app) {
-            if (extension_loaded('mbstring')):
-                mb_internal_encoding('UTF-8');
-                $adapter = new Mbstring;
-            elseif (function_exists('iconv')):
-                $adapter = new Iconv;
-            endif;
-
+        if (extension_loaded('mbstring')):
+            mb_internal_encoding('UTF-8');
+            $adapter = new Mbstring;
+        elseif (function_exists('iconv')):
+            $adapter = new Iconv;
+        endif;
+            
+        $app['encode'] = function($app) use($adapter) {
             return new Encode($adapter);
         };        
     }

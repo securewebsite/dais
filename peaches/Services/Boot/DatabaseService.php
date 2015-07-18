@@ -25,17 +25,17 @@ use Pimple\ServiceProviderInterface;
 class DatabaseService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
-        $app['db'] = function ($app) {
-			switch(env('DB_DRIVER')):
-                case 'mpdo':
-                case 'mysql':
-                    $driver = new Mpdo;
-                    break;
-                case 'mysqli':
-                    $driver = new Mysqli; 
-                    break;
-            endswitch;
+        switch(env('DB_DRIVER')):
+            case 'mpdo':
+            case 'mysql':
+                $driver = new Mpdo;
+                break;
+            case 'mysqli':
+                $driver = new Mysqli; 
+                break;
+        endswitch;
 
+        $app['db'] = function ($app) use($driver) {
             return new Db($driver);
 		};
 	}

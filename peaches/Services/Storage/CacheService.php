@@ -26,20 +26,20 @@ use Dais\Services\Providers\Storage\Cache;
 class CacheService implements ServiceProviderInterface {
 
 	public function register(Container $app) {
-        $app['cache'] = function($app) {
-            switch ($app['config']->get('config_cache_type_id')):
-                case 'apc':
-                    $driver = new Apc;
-                    break;
-                case 'mem':
-                    $driver = new Mem;
-                    $driver->connect();
-                    break;
-                case 'file':
-                    $driver = new File;
-                    break;
-            endswitch;
-
+        switch ($app['config']->get('config_cache_type_id')):
+            case 'apc':
+                $driver = new Apc;
+                break;
+            case 'mem':
+                $driver = new Mem;
+                $driver->connect();
+                break;
+            case 'file':
+                $driver = new File;
+                break;
+        endswitch;
+            
+        $app['cache'] = function($app) use($driver) {
             return new Cache($driver);
         };
 	}

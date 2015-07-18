@@ -17,7 +17,6 @@
 namespace Dais\Services\Providers\Base;
 
 use Dais\Base\View;
-use Dais\Base\Controller;
 
 class Plugin {
     
