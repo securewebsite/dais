@@ -18,9 +18,11 @@
         "laravel/lumen-framework": "5.1.*",
         "vlucas/phpdotenv": "~1.0",
         "guzzlehttp/guzzle": "6.*",
+        "swiftmailer/swiftmailer": "@stable"
+    },
+    "require-dev": {
         "raveren/kint": "^1.0",
         "filp/whoops": "1.*",
-        "swiftmailer/swiftmailer": "@stable"
     },
     "autoload": {
         "classmap": [
