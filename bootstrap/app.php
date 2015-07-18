@@ -177,5 +177,5 @@ $app = new Dais\Application(
 */
 
 $app->boot();
-//var_dump(spl_autoload_functions());exit;
+
 return $app;
