@@ -16,10 +16,10 @@
 
 namespace Api\Console;
 
+use Dais\Console\Console;
 use Illuminate\Console\Scheduling\Schedule;
-use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
-class Kernel extends ConsoleKernel {
+class Kernel extends Console {
 
     /**
      * The Artisan commands provided by your application.

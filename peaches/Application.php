@@ -24,11 +24,11 @@ use Dais\Contracts\ApplicationContract;
 
 class Application extends Container implements ApplicationContract {
 
-    const VERSION = '1.0.1';
-
     const ROOT_NAMESPACE_GLOBAL = false;
 
     const ROOT_NAMESPACE_ANY    = true;
+
+    protected static $version;
 
     protected static $instance;
 
@@ -49,6 +49,8 @@ class Application extends Container implements ApplicationContract {
     protected $isBooted = false;
 
     public function __construct($basePath = null) {
+        static::$version = env('APP_VERSION');
+
         static::setInstance($this);
 
         $this->setBasePath($basePath);
@@ -63,7 +65,7 @@ class Application extends Container implements ApplicationContract {
     */
    
     public function version() {
-        return static::VERSION;
+        return static::$version;
     }
 
     public function boot() {
