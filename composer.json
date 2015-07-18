@@ -22,7 +22,7 @@
     },
     "require-dev": {
         "raveren/kint": "^1.0",
-        "filp/whoops": "1.*",
+        "filp/whoops": "1.*"
     },
     "autoload": {
         "classmap": [
