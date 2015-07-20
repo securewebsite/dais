@@ -121,7 +121,7 @@
 				</div>
 				<?php if ($gift_card_id) { ?>
 				<div class="tab-pane" id="tab-history">
-					<div id="history" data-href="index.php?route=sale/gift_card/history&gift_card_id=<?= $gift_card_id; ?>"></div>
+					<div id="history" data-href="sale/gift_card/history/gift_card_id/<?= $gift_card_id; ?>"></div>
 				</div>
 				<?php } ?>
 			</div>

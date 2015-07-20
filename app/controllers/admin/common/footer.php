@@ -28,6 +28,13 @@ class Footer extends Controller {
         $data['javascript']  = Theme::controller('common/javascript');
         $data['text_footer'] = sprintf(Lang::get('lang_text_footer'), App::version());
 
+        $route = null;
+        
+        if (isset(Request::p()->get['route'])):
+            $route = Request::p()->get['route'];
+        endif;
+        
+		$data['route']   = $route;
 		$key             = JS::compile();
 		$data['js_link'] = Config::get('https.public') . 'asset/js/' . Filecache::get_key($key, 'js');
         

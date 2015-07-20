@@ -23,12 +23,6 @@ class Router {
 
 	public function dispatch() {
 
-		if (!is_null(Request::get('route'))):
-			
-			$action = new Action(Request::get('route'));
-
-        endif;
-
 		if (!is_null(Request::get('_route_'))):
 
 			static::$current = Request::get('_route_');
@@ -41,46 +35,45 @@ class Router {
             if ($segments[0] == 'search'):
                 Request::get('route', 'search/search');
 
+                static::$route = 'search/search';
+
                 if (end($segments) !== 'search'):
                     Request::post('search', end($segments));
                 endif;
-
-                $action = new Action(Request::get('route'));
             endif;
 			
 			// This handles all native files :not custom routes
-			if (!is_null(Naming::file_from_route($controller))):
-				$args = (count($segments) % 2) ? static::to_assoc(3) : static::to_assoc(2);
-
-				Request::get('route', static::$route);
-				
-				foreach($args as $key => $value):
-					Request::get($key, $value);
-				endforeach;
-
-				$action = new Action(Request::get('route'));
+			if (!static::$route):
+				if (!is_null(Naming::file_from_route($controller))):
+					$args = (count($segments) % 2) ? static::to_assoc(3) : static::to_assoc(2);
+					
+					foreach($args as $key => $value):
+						Request::get($key, $value);
+					endforeach;
+					
+				endif;
 			endif;
 			
 			// This handles any custom routes
-			foreach (Routes::getCustomRoutes() as $key => $value):
-                if ($key === Request::get('_route_')):
-                    if (!is_null(Naming::file_from_route($value))):
-                    	Request::get('route', $value);
-
-						$action = new Action(Request::get('route'));
-					endif;
-                endif;
-            endforeach;
+			if (!static::$route):
+				foreach (Routes::getCustomRoutes() as $key => $value):
+	                if ($key === static::$current):
+	                    if (!is_null(Naming::file_from_route($value))):
+	                    	static::$route = $value;
+						endif;
+	                endif;
+	            endforeach;
+            endif;
 
             // This handles all slug routes
-            $result = $this->iterate($segments);
-			
-			if (!empty($result)):
-				Request::get('route', $result['controller']);
-
-				$action = new Action(Request::get('route'));
+            if (!static::$route):
+	            $result = $this->iterate($segments);
+				
+				if (!empty($result)):
+					static::$route = $result['controller'];
+				endif;
 			endif;
-
+			
 		endif;
 
 		$error = new Action('error/not_found');
@@ -93,8 +86,12 @@ class Router {
                 $default = new Action('common/dashboard');
                 break;
         endswitch;
+        
+        $route = (static::$route) ? static::$route : 'error/not_found';
+        
+        Request::get('route', $route);
 
-        $actions['action'] = (!is_null(Request::get('route'))) ? $action : $default;
+        $actions['action'] = (static::$route) ? new Action(static::$route) : $default;
         $actions['error']  = $error;
 
         return $actions;

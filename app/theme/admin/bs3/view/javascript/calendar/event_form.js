@@ -10,23 +10,23 @@ var $url;
 
 if (is_product == 1) {
 	$('#page-panel').hide(function(){
-		$url = 'index.php?route=catalog/product/slug';
+		$url = 'catalog/product/slug';
 	});
 } else {
 	$('#product-panel').hide(function(){
-		$url = 'index.php?route=content/page/slug';
+		$url = 'content/page/slug';
 	});
 }
 
 $(document).on('change', 'input[name="is_product"]', function() {
 	$('#page-panel').slideToggle(function(){
 		if ($(this).is(':hidden')) {
-			$url = 'index.php?route=catalog/product/slug';
+			$url = 'catalog/product/slug';
 		}
 	});
 	$('#product-panel').slideToggle(function(){
 		if ($(this).is(':hidden')) {
-			$url = 'index.php?route=content/page/slug';
+			$url = 'content/page/slug';
 		}
 	});
 });

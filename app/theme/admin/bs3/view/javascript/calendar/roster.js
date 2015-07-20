@@ -3,7 +3,7 @@ $(document).on('click', '#add_waitlist', function() {
 	if ($('input[name=\'customer\']').val() != "") {
 		var dataString = 'event_id=<?= $event_id; ?>&attendee_id=' + $('input[name=\'attendee_id\']').val();
 		$.ajax({
-			url: 'index.php?route=calendar/event/add_to_wait_list',
+			url: 'calendar/event/add_to_wait_list',
 			type: 'POST',
 			dataType: 'json',
 			data: dataString,
@@ -38,7 +38,7 @@ $(document).on('click', '#add_attendee', function() {
 	if ($('input[name=\'customer\']').val() != "") {
 		var dataString = 'event_id=<?= $event_id; ?>&attendee_id=' + $('input[name=\'attendee_id\']').val();
 		$.ajax({
-			url: 'index.php?route=calendar/event/insert_attendee',
+			url: 'calendar/event/insert_attendee',
 			type: 'POST',
 			dataType: 'json',
 			data: dataString,
@@ -77,7 +77,7 @@ $(document).on('click', '#add_attendee', function() {
 var mapped={};
 $('input[name="customer"]').typeahead({
 	source:function(q,process){
-		return $.getJSON('index.php?route=calendar/event/autocomplete&name='+encodeURIComponent(q),function(json){
+		return $.getJSON('calendar/event/autocomplete&name='+encodeURIComponent(q),function(json){
 			var data=[];
 			$.each(json,function(i,item){
 				mapped[item.name]=item;

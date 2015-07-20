@@ -35,7 +35,7 @@ new AjaxUpload('#button-option-<?= $option['product_option_id']; ?>',{
 <script>
 $('select[name=\'recurring_id\'], input[name="quantity"]').change(function(){
 	$.ajax({
-		url: 'index.php?route=catalog/product/getRecurringDescription',
+		url: 'catalog/product/getRecurringDescription',
 		type: 'post',
 		data: $('input[name=\'product_id\'], input[name=\'quantity\'], select[name=\'recurring_id\']'),
 		dataType: 'json',
@@ -54,7 +54,7 @@ $('select[name=\'recurring_id\'], input[name="quantity"]').change(function(){
 <?php if (isset($event_id) && $event_id > 0): ?>
 $(document).on('click', '#button-waitlist', function() {
 	$.ajax({
-		url: 'index.php?route=catalog/product/join_wait_list',
+		url: 'catalog/product/join_wait_list',
 		type: 'POST',
 		dataType: 'json',
 		data: 'event_id=<?= $event_id; ?>',

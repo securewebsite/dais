@@ -1,6 +1,6 @@
 <script>
 new AjaxUpload('#button-upload', {
-	action: 'index.php?route=catalog/download/upload',
+	action: 'catalog/download/upload',
 	name: 'file',
 	autoSubmit: true,
 	responseType: 'json',

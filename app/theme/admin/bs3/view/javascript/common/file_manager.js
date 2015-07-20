@@ -6,7 +6,7 @@ $(function(){
 			var offset=$(el).offset();
 			if((offset.top>0)&&(offset.top<height)&&$(el).find('img').attr('src')=='<?= $no_image; ?>'){
 				$.ajax({
-					url:'index.php?route=common/filemanager/image&image='+encodeURIComponent('data/'+$(el).find('input[name="image"]').val()),
+					url:'common/filemanager/image/image/'+encodeURIComponent('data/'+$(el).find('input[name="image"]').val()),
 					dataType:'html',
 					success:function(html){
 						$(el).find('img').attr('src',html);
@@ -16,11 +16,11 @@ $(function(){
 		});
 	});
 	$('#column-left').tree({
-		data:{opts:{url:'index.php?route=common/filemanager/directory'}},
+		data:{opts:{url:'common/filemanager/directory'}},
 		callback:{	
 			onselect:function(a){
 				$.ajax({
-					url:'index.php?route=common/filemanager/files',
+					url:'common/filemanager/files',
 					type:'post',
 					data:'directory='+encodeURIComponent($(a).attr('directory')),
 					dataType:'json',
@@ -54,7 +54,7 @@ $(function(){
 			$('#dialog button[type="submit"]').click(function(e){
 				e.preventDefault();
 				$.ajax({
-					url:'index.php?route=common/filemanager/create',
+					url:'common/filemanager/create',
 					type:'post',
 					data:'directory='+encodeURIComponent($(tree.selected).attr('directory'))+'&name='+encodeURIComponent($('#dialog input[name="name"]').val()),
 					dataType:'json',
@@ -80,7 +80,7 @@ $(function(){
 		});
 		if(path){
 			$.ajax({
-				url:'index.php?route=common/filemanager/delete',
+				url:'common/filemanager/delete',
 				type:'post',
 				data:'path='+encodeURIComponent(path),
 				dataType:'json',
@@ -106,7 +106,7 @@ $(function(){
 			var tree=$.tree.focused();
 			if(tree.selected){
 				$.ajax({
-					url:'index.php?route=common/filemanager/delete',
+					url:'common/filemanager/delete',
 					type:'post',
 					data:'path='+encodeURIComponent($(tree.selected).attr('directory')),
 					dataType:'json',
@@ -137,13 +137,13 @@ $(function(){
 		html += '</div>';
 		$('body').prepend(html);
 		$('#dialog').modal({backdrop:false});
-		$('#dialog select[name="to"]').load('index.php?route=common/filemanager/folders');
+		$('#dialog select[name="to"]').load('common/filemanager/folders');
 		$('#dialog button[type="submit"]').click(function(e){
 			e.preventDefault();
 			path=$('#column-right .btn.active').find('input[name="image"]').val();
 			if(path){												
 				$.ajax({
-					url:'index.php?route=common/filemanager/move',
+					url:'common/filemanager/move',
 					type:'post',
 					data:'from='+encodeURIComponent(path)+'&to='+encodeURIComponent($('#dialog select[name="to"]').val()),
 					dataType:'json',
@@ -154,7 +154,7 @@ $(function(){
 			}else{
 				var tree=$.tree.focused();
 				$.ajax({
-					url:'index.php?route=common/filemanager/move',
+					url:'common/filemanager/move',
 					type:'post',
 					data:'from='+encodeURIComponent($(tree.selected).attr('directory'))+'&to='+encodeURIComponent($('#dialog select[name="to"]').val()),
 					dataType:'json',
@@ -175,13 +175,13 @@ $(function(){
 	});
 	$('#copy').click(function(){
 		openDialog('<?= $lang_button_copy; ?>','<?= $lang_entry_copy; ?>');
-		$('#dialog select[name="to"]').load('index.php?route=common/filemanager/folders');
+		$('#dialog select[name="to"]').load('common/filemanager/folders');
 		$('#dialog button[type="submit"]').click(function(e){
 			e.preventDefault();
 			path=$('#column-right .btn.active').find('input[name="image"]').val();
 			if(path){												
 				$.ajax({
-					url:'index.php?route=common/filemanager/copy',
+					url:'common/filemanager/copy',
 					type:'post',
 					data:'path='+encodeURIComponent(path)+'&name='+encodeURIComponent($('#dialog input[name="name"]').val()),
 					dataType:'json',
@@ -192,7 +192,7 @@ $(function(){
 			}else{
 				var tree=$.tree.focused();
 				$.ajax({
-					url:'index.php?route=common/filemanager/copy',
+					url:'common/filemanager/copy',
 					type:'post',
 					data:'path='+encodeURIComponent($(tree.selected).attr('directory'))+'&name='+encodeURIComponent($('#dialog input[name="name"]').val()),
 					dataType:'json',
@@ -218,7 +218,7 @@ $(function(){
 			path=$('#column-right .btn.active').find('input[name="image"]').val();
 			if(path){
 				$.ajax({
-					url:'index.php?route=common/filemanager/rename',
+					url:'common/filemanager/rename',
 					type:'post',
 					data:'path='+encodeURIComponent(path)+'&name='+encodeURIComponent($('#dialog input[name="name"]').val()),
 					dataType:'json',
@@ -229,7 +229,7 @@ $(function(){
 			}else{
 				var tree=$.tree.focused();
 				$.ajax({ 
-					url:'index.php?route=common/filemanager/rename',
+					url:'common/filemanager/rename',
 					type:'post',
 					data:'path='+encodeURIComponent($(tree.selected).attr('directory'))+'&name='+encodeURIComponent($('#dialog input[name="name"]').val()),
 					dataType:'json',
@@ -251,7 +251,7 @@ $(function(){
 });
 $(function(){
 	$("#upload").ajaxUpload({
-		url:'index.php?route=common/filemanager/upload',
+		url:'common/filemanager/upload',
 		name:'image',
 		onSubmit:function(file,extension){
 			var tree=$.tree.focused();

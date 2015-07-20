@@ -1,25 +1,77 @@
 $(window).load(function() {
-	if ($('footer').length > 0) {
-	}
+	if ($('footer').length > 0) { }
 });
 
-function getRoute(){
-	return decodeURI((RegExp('route=(.+?)(&|$)').exec(location.search)||[,null])[1]);
-}
-
-navUrl = getRoute();
-
-if(!navUrl){
-	$('#nav-home').addClass('active');
-} else {
-	parts=navUrl.split('/');
-	if(parts[0]=='account'&&parts[1]!='wishlist'){
+if (route) {
+	parts = route.split('/');
+	if (parts[0] == 'content' && parts[1] == 'home') {
+		$('#nav-blog').addClass('active');
+	} else if (parts[0] == 'shop' && parts[1] == 'home') {
+		$('#nav-shop').addClass('active');
+	} else if (parts[0] == 'account' && parts[1] != 'wishlist') {
 		$('#nav-account').addClass('active');
-	}else{
-		obj=$('#nav-'+parts[1]);
-		if(obj.length){
+	} else {
+		obj = $('#nav-' + parts[1]);
+		if (obj.length) {
 			$(obj).addClass('active');
 		}
+	}
+}
+
+(function ($) {
+    $.fn.stickyTabs = function() {
+        context = this
+        
+        // get our current page url
+        var href = window.location.href;
+
+        // get the base url so we can replace it in the tab
+        var url  = window.location.protocol + "//" + window.location.host;
+
+        // Show the tab corresponding with the hash in the URL, or the first tab.
+        var showTabFromHash = function() {
+          var hash = window.location.hash;
+          var selector = hash ? 'a[href="' + hash + '"]' : 'li:first-child a';
+          $(selector, context).tab('show');
+        }
+
+        // Set the correct tab when the page loads
+        showTabFromHash(context)
+
+        // Set the correct tab when a user uses their back/forward button
+        window.addEventListener('hashchange', showTabFromHash, false);
+
+        // Change the URL when tabs are clicked
+        $('a', context).on('click', function(e) {
+          // replace tab base url with current page url
+          var newurl = this.href.replace(url, href);
+          // push to history
+          history.pushState(null, null, newurl);
+        });
+
+        return this;
+    };
+}(jQuery));
+
+
+function trackingLink() {
+	var href = window.location.href;
+	var url  = href.split('?z=');
+
+	history.pushState(null, null, url[0]);
+}
+
+function searchLink() {
+	var href   = window.location.href.replace(/.*?:\/\//g, "");
+	var url    = href.split('/');
+	var domain = url.shift(0);
+
+	if (url[0] == 'search') {
+		url.pop();
+
+		var newurl = window.location.protocol + '//' + domain + '/' + url.join('/');
+		
+		history.pushState(null, null, newurl);
 	}
 }
 
@@ -50,6 +102,9 @@ $(document).ready(function(){
 		$('#display-list').addClass('active');
 	}
 
+	trackingLink();
+	//searchLink();
+
 	$('#currency a').on('click',function(e){
 		e.preventDefault();
 		$('#currency input[name="currency_code"]').val($(this).attr('href'));
@@ -58,10 +113,11 @@ $(document).ready(function(){
 
 	$('form[id^="search-"]').submit(function(e){
 		e.preventDefault();
-		url=$('base').attr('href')+'catalog/search';
-		$.each($(this).serializeArray(),function(i,field){
+		url = $('base').attr('href') + 'search';
+		$.each($(this).serializeArray(), function(i, field){
 			if($.trim(field.value)!=0){
-				url+='&'+field.name+'='+encodeURIComponent(field.value);
+				var string = field.value.replace(/\s+/g, '+');
+				url += '/' + encodeURI(string);
 			}
 		});
 		location=url;
@@ -73,14 +129,16 @@ $(document).ready(function(){
 	});
 
 	$('input[name="payment"]:checked').change();
+
+	$('.nav-tabs').stickyTabs();
 	
-	$('#review').load('index.php?route=catalog/product/review&product_id='+$('input[name="product_id"]').val());
+	$('#review').load('catalog/product/review/product_id/'+$('input[name="product_id"]').val());
 	
-	if(typeof Typeahead != "undefined") {
+	if ($('#affiliate-product')) {
 		var mapped={};
-		$('input[name="product"]').typeahead({
+		$('#affiliate-product').typeahead({
 			source:function(q,process){
-				return $.getJSON('index.php?route=affiliate/tracking/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+				return $.getJSON('account/affiliate/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 					var data=[];
 					$.each(json,function(i,item){
 						mapped[item.name]=item.link;
@@ -90,7 +148,7 @@ $(document).ready(function(){
 				});
 			},
 			updater:function(item){
-				$('textarea[name="link"]').val(mapped[item]);
+				$('#affiliate-link').val(mapped[item]);
 				return item;
 			}
 		});
@@ -176,7 +234,7 @@ $(window).load(function(){
 			html +=	'		"techOrder": ["youtube"],'; 
 			html +=	'		"quality": "720", ';
 			html +=	'		"plugins": { "watermark": {';
-			html +=	'			"file": "asset/redtent/img/watermark.png",';
+			html +=	'			"file": "asset/ghost/img/watermark.png",';
 			html +=	'			"opacity": "0.3"';
 			html +=	'		}},';
 			html +=	'		"src": "' + uri + '" ';
@@ -227,7 +285,7 @@ $(document).on('click','button[id^="button-"],[data-cart]',function(e){
 });
 $(document).on('click','#button-cart',function(){
 	$.ajax({
-		url:'index.php?route=checkout/cart/add',
+		url:'checkout/cart/add',
 		type:'post',
 		data:$('#product-info').serialize(),
 		dataType:'json',
@@ -246,7 +304,7 @@ $(document).on('click','#button-cart',function(){
 			if(json['success']){
 				alertMessage('success',json['success']);
 				$('#cart-total').html(json['total']);
-				$('#cart').load('index.php?route=shop/cart/info #cart>*');
+				$('#cart').load('shop/cart/info #cart>*');
 			}
 		}
 	});
@@ -254,19 +312,19 @@ $(document).on('click','#button-cart',function(){
 $(document).on('click', '[data-remove]', function(e) {
 	e.preventDefault();
 	$.ajax({
-		url: 'index.php?route=checkout/cart/remove',
+		url: 'checkout/cart/remove',
 		type: 'post',
 		data: 'remove=' + $(this).attr('data-remove'),
 		dataType: 'json',    			
 		success: function(json) {
 			$('#cart-total').html(json['total']);
-			$('#cart').load('index.php?route=shop/cart/info #cart>*');
+			$('#cart').load('shop/cart/info #cart>*');
 		}
 	});	
 });
 $('[data-cart]').not('[data-event]').click(function(){
 	$.ajax({
-		url:'index.php?route=checkout/cart/add',
+		url:'checkout/cart/add',
 		type:'post',
 		data:'product_id='+$(this).data('cart')+'&quantity=1',
 		dataType:'json',
@@ -277,14 +335,14 @@ $('[data-cart]').not('[data-event]').click(function(){
 			if(json['success']){
 				alertMessage('success',json['success']);
 				$('#cart-total').html(json['total']);
-				$('#cart').load('index.php?route=shop/cart/info #cart>*');
+				$('#cart').load('shop/cart/info #cart>*');
 			}
 		}
 	});
 });
 $('[data-event]').click(function(){
 	$.ajax({
-		url:'index.php?route=checkout/cart/add',
+		url:'checkout/cart/add',
 		type:'post',
 		data:'product_id='+$(this).data('cart')+'&event_id='+$(this).data('event')+'quantity=1',
 		dataType:'json',
@@ -295,14 +353,14 @@ $('[data-event]').click(function(){
 			if(json['success']){
 				alertMessage('success',json['success']);
 				$('#cart-total').html(json['total']);
-				$('#cart').load('index.php?route=shop/cart/info #cart>*');
+				$('#cart').load('shop/cart/info #cart>*');
 			}
 		}
 	});
 });
 $('[data-customer-product]').click(function(){
 	$.ajax({
-		url:'index.php?route=checkout/cart/add',
+		url:'checkout/cart/add',
 		type:'post',
 		data:'product_id='+$(this).data('customer-product')+'&quantity=1&cp=1',
 		dataType:'json',
@@ -313,14 +371,14 @@ $('[data-customer-product]').click(function(){
 			if(json['success']){
 				alertMessage('success',json['success']);
 				$('#cart-total').html(json['total']);
-				$('#cart').load('index.php?route=shop/cart/info #cart>*');
+				$('#cart').load('shop/cart/info #cart>*');
 			}
 		}
 	});
 });
 function addToWishList(product_id){
 	$.ajax({
-		url:'index.php?route=account/wishlist/add',
+		url:'account/wishlist/add',
 		type:'post',
 		data:'product_id='+product_id,
 		dataType:'json',
@@ -334,7 +392,7 @@ function addToWishList(product_id){
 }
 function addToCompare(product_id){
 	$.ajax({
-		url:'index.php?route=catalog/compare/add',
+		url:'catalog/compare/add',
 		type:'post',
 		data:'product_id='+product_id,
 		dataType:'json',
@@ -348,7 +406,7 @@ function addToCompare(product_id){
 }
 function addReview(product_id,btn){
 	$.ajax({
-		url:'index.php?route=catalog/product/write&product_id='+product_id,
+		url:'catalog/product/write/product_id/'+product_id,
 		type:'post',
 		dataType:'json',
 		data:$('#review-form').serialize(),
@@ -439,7 +497,7 @@ $(document).on('change','select[name="country_id"]',function(e){
 	var $this=$(this),param=$this.data('param');
 
 	$.ajax({
-		url:'index.php?route=account/register/country&country_id='+$this.val(),
+		url:'account/register/country/country_id/'+$this.val(),
 		dataType:'json',
 		beforeSend:function(){
 			$this.after($('<i>',{class:'icon-loading'}));
@@ -495,14 +553,14 @@ $(document).on('click','#checkout-container .panel-heading a.close',function(){
 	$(this).parent().parent().find('.panel-collapse').slideDown('slow');
 });
 
-// $('.btn-social .btn').on('click',function(e){
-// 	e.preventDefault();
-// 	var w=580;
-// 	var h=340;
-// 	var left=(screen.width/2)-(w/2);
-// 	var top=(screen.height/2)-(h/2);
-// 	window.open($(this).attr('href'),'sharer','toolbar=0,status=0,width='+w+',height='+h+',top='+top+',left='+left);
-// });
+$('.btn-social .btn').on('click',function(e){
+	e.preventDefault();
+	var w=580;
+	var h=340;
+	var left=(screen.width/2)-(w/2);
+	var top=(screen.height/2)-(h/2);
+	window.open($(this).attr('href'),'sharer','toolbar=0,status=0,width='+w+',height='+h+',top='+top+',left='+left);
+});
 
 $('[data-ride="carousel"]').each(function(){
 	var $this=$(this);

@@ -1,7 +1,7 @@
 <script>
 
 var calendar = $('#calendar').calendar({
-	events_source: 'index.php?route=content/calendar/fetch',
+	events_source: 'content/calendar/fetch',
 	view: 'month',
 	time_start: '06:00',
 	time_end:   '22:00',

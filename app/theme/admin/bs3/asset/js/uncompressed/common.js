@@ -1,19 +1,10 @@
 function getURLVar(a){
-	var b=String(document.location).toLowerCase().split('?'),c='';
-	if(b[1]){
-		var d=b[1].split('&');
-		for(var i=0;i<=d.length;i++){
-			if(d[i]){
-				var e=d[i].split('=');
-				if(e[0]&&e[0]==a.toLowerCase()){
-					c=e[1];
-				}
-			}
-		}
-	}
-	return c;
+	var path = window.location.pathname.split('/');
+	var b = $.inArray(a, path);
+	var c = b + 1;
+
+	return path[c];
 }
-route=getURLVar('route');
 
 if(!route){
 	$('#dashboard').addClass('active');
@@ -25,7 +16,7 @@ if(!route){
 }
 
 function filter(){
-	url='index.php?route='+getURLVar('route');
+	url=getURLVar('route');
 	$('#filter').find('select,:text').each(function(){
 		var a=$(this).val();
 		if(a&&a!='*'){
@@ -98,7 +89,7 @@ $(document).ready(function(){
 		data.append("directory", 'content');
 		
 		$.ajax({
-			url:'index.php?route=common/file_manager/editor_upload',
+			url:'common/file_manager/editor_upload',
 			data: data,
 			cache: false,
 			contentType: false,
@@ -214,7 +205,7 @@ $(document).ready(function(){
 		var a=$(this),b=a.data('target');
 		a.typeahead({
 			source:function(q,process){
-				return $.getJSON('index.php?route='+a.data('url')+'/autocomplete&filter_'+b+'='+encodeURIComponent(q),function(json){
+				return $.getJSON(a.data('url')+'/autocomplete/filter_'+b+'/'+encodeURIComponent(q),function(json){
 					var data=[];
 					$.each(json,function(){
 						data.push(this[b]);
@@ -235,7 +226,7 @@ $(document).ready(function(){
 	var a=$('input[name="path"]'),mapped={};
 	a.typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=catalog/category/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+			return $.getJSON('catalog/category/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.name]=item.category_id;
@@ -255,7 +246,7 @@ $(document).ready(function(){
 	var a=$('input[name="event_path"]'),mapped={};
 	a.typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=calendar/category/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+			return $.getJSON('calendar/category/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.name]=item.category_id;
@@ -275,7 +266,7 @@ $(document).ready(function(){
 	var mapped={};
 	$('#return-customer').typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=people/customer/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+			return $.getJSON('people/customer/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.name]=item;
@@ -300,7 +291,7 @@ $(document).ready(function(){
 	var mapped={};
 	$('#return-product').typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=catalog/product/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+			return $.getJSON('catalog/product/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.name]=item;
@@ -321,7 +312,7 @@ $(document).ready(function(){
 	var mapped={};
 	$('#review-product').typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=catalog/product/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+			return $.getJSON('catalog/product/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.name]=item.product_id;
@@ -341,7 +332,7 @@ $(document).ready(function(){
 	var mapped={};
 	$('input[name="manufacturer"]').typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=catalog/manufacturer/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+			return $.getJSON('catalog/manufacturer/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.name]=item.manufacturer_id;
@@ -360,7 +351,7 @@ $(document).ready(function(){
 		var a=$(this),b=a.data('target'),mapped={};
 		a.typeahead({
 			source:function(q,process){
-				return $.getJSON('index.php?route=catalog/category/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+				return $.getJSON('catalog/category/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 					var data=[];
 					$.each(json,function(i,item){
 						mapped[item.name]=item.category_id;
@@ -380,7 +371,7 @@ $(document).ready(function(){
 	var a=$('input[name="filter"]'),b=a.data('target'),mapped={};
 	a.typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=catalog/filter/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+			return $.getJSON('catalog/filter/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.name]=item.filter_id;
@@ -398,7 +389,7 @@ $(document).ready(function(){
 	var mapped={};
 	$('input[name="download"]').typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=catalog/download/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+			return $.getJSON('catalog/download/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.name]=item.download_id;
@@ -417,7 +408,7 @@ $(document).ready(function(){
 	var mapped={};
 	$('input[name="related"]').typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=catalog/product/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+			return $.getJSON('catalog/product/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.name]=item.product_id;
@@ -436,7 +427,7 @@ $(document).ready(function(){
 	var mapped={};
 	$('input[name="postrelated"]').typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=content/post/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+			return $.getJSON('content/post/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.name]=item.post_id;
@@ -455,7 +446,7 @@ $(document).ready(function(){
 	var mapped={};
 	$('input[name="post"]').typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=content/post/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+			return $.getJSON('content/post/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.name]=item.post_id;
@@ -473,7 +464,7 @@ $(document).ready(function(){
 	var mapped={};
 	$('input[name="products"]').typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=catalog/product/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+			return $.getJSON('catalog/product/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.name]=item.product_id;
@@ -492,7 +483,7 @@ $(document).ready(function(){
 	var mapped={};
 	$('input[name="coupon_products"]').typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=catalog/product/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+			return $.getJSON('catalog/product/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.name]=item.product_id;
@@ -511,7 +502,7 @@ $(document).ready(function(){
 	var mapped={};
 	$('input[name="affiliates"]').typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=people/customer/autocomplete&filter_username='+encodeURIComponent(q),function(json){
+			return $.getJSON('people/customer/autocomplete/filter_username/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.username]=item.customer_id;
@@ -531,7 +522,7 @@ function attributeautocomplete(attribute_row){
 	var mapped={};
 	$('input[name="product_attribute['+attribute_row+'][name]"]').typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=catalog/attribute/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+			return $.getJSON('catalog/attribute/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.name]=item.attribute_id;
@@ -549,11 +540,11 @@ function attributeautocomplete(attribute_row){
 	});
 }
 function image_upload(field,thumb){
-	$('#modal .modal-body').html('<iframe src="index.php?route=common/file_manager&field='+encodeURIComponent(field)+'" frameborder="no" scrolling="auto"></iframe>');
+	$('#modal .modal-body').html('<iframe src="common/file_manager/field/'+encodeURIComponent(field)+'" frameborder="no" scrolling="auto"></iframe>');
 	$('#modal').on('hidden.bs.modal',function(e){
 		if($('#'+field).val()){
 			$.ajax({
-				url:'index.php?route=common/file_manager/image&image='+encodeURIComponent($('#'+field).val()),
+				url:'common/file_manager/image/image/'+encodeURIComponent($('#'+field).val()),
 				dataType:'text',
 				success:function(text){
 					$('#'+thumb).attr({'src':text,'id':thumb});
@@ -569,7 +560,7 @@ $(function(){
 	$('#button-history').click(function(){
 		var a=$(this),b=a.data('action'),c=a.data('id');
 		$.ajax({
-			url:'index.php?route=sale/'+b+'/history&'+b+'_id='+c,
+			url:'sale/'+b+'/history/'+b+'_id/'+c,
 			type:'post',
 			dataType:'html',
 			data:b+'_status_id='+encodeURIComponent($('select[name="'+b+'_status_id"]').val())+'&notify='+encodeURIComponent($('input[name="notify"]').attr('checked') ? 1 :0)+'&append='+encodeURIComponent($('input[name="append"]').attr('checked') ? 1 :0)+'&comment='+encodeURIComponent($('textarea[name="comment"]').val()),
@@ -590,7 +581,7 @@ $(function(){
 	$('#button-history-returns').click(function(){
 		var a=$(this),b=a.data('action'),c=a.data('id');
 		$.ajax({
-			url:'index.php?route=sale/'+b+'/history&return_id='+c,
+			url:'sale/'+b+'/history/return_id/'+c,
 			type:'post',
 			dataType:'html',
 			data:'return_status_id='+encodeURIComponent($('select[name="return_status_id"]').val())+'&notify='+encodeURIComponent($('input[name="notify"]').attr('checked') ? 1 :0)+'&append='+encodeURIComponent($('input[name="append"]').attr('checked') ? 1 :0)+'&comment='+encodeURIComponent($('textarea[name="comment"]').val()),
@@ -638,7 +629,7 @@ $(function(){
 	$(document).on('click','#button-credit',function(e){
 		var a=$(this),b=a.data('target');
 		$.ajax({
-			url:'index.php?route=people/'+b+'/credit&'+b+'_id='+a.data('id'),
+			url:'people/'+b+'/credit/'+b+'_id/'+a.data('id'),
 			type:'post',
 			dataType:'html',
 			data:'description='+encodeURIComponent($('#tab-credit input[name="description"]').val())+'&amount='+encodeURIComponent($('#tab-credit input[name="amount"]').val()),
@@ -657,7 +648,7 @@ $(function(){
 	$(document).on('click','#button-commission',function(e){
 		var a=$(this),b=a.data('target');
 		$.ajax({
-			url:'index.php?route=people/'+b+'/commission&'+b+'_id='+a.data('id'),
+			url:'people/'+b+'/commission/'+b+'_id/'+a.data('id'),
 			type:'post',
 			dataType:'html',
 			data:'description='+encodeURIComponent($('#tab-commission input[name="description"]').val())+'&amount='+encodeURIComponent($('#tab-commission input[name="amount"]').val()),
@@ -685,9 +676,9 @@ $(function(){
 		var name = $('#language1 input[name="page_description[1][title]"]').val().toLowerCase();
 		var slug = $('#slug').val().toLowerCase();
 		var send = (name == slug || slug == '') ? name : slug;
-		$url = 'index.php?route=content/page/slug&name='+encodeURIComponent(send);
+		$url = 'content/page/slug/name/'+encodeURIComponent(send);
 		if (page_id) {
-			$url += '&page_id='+page_id;
+			$url += '/page_id/'+page_id;
 		}
 		$.ajax({
 			url: $url,
@@ -708,9 +699,9 @@ $(function(){
 		var name = $('#language1 input[name="category_description[1][name]"]').val().toLowerCase();
 		var slug = $('#slug').val().toLowerCase();
 		var send = (name == slug || slug == '') ? name : slug;
-		$url = 'index.php?route=catalog/category/slug&name='+encodeURIComponent(send);
+		$url = 'catalog/category/slug/name/'+encodeURIComponent(send);
 		if (category_id) {
-			$url += '&category_id='+category_id;
+			$url += '/category_id/'+category_id;
 		}
 		$.ajax({
 			url: $url,
@@ -731,9 +722,9 @@ $(function(){
 		var name = $('#language1 input[name="product_description[1][name]"]').val().toLowerCase();
 		var slug = $('#slug').val().toLowerCase();
 		var send = (name == slug || slug == '') ? name : slug;
-		$url = 'index.php?route=catalog/product/slug&name='+encodeURIComponent(send);
+		$url = 'catalog/product/slug/name/'+encodeURIComponent(send);
 		if (product_id) {
-			$url += '&product_id='+product_id;
+			$url += '/product_id/'+product_id;
 		}
 		$.ajax({
 			url: $url,
@@ -754,9 +745,9 @@ $(function(){
 		var name = $('input[name="name"]').val().toLowerCase();
 		var slug = $('#slug').val().toLowerCase();
 		var send = (name == slug || slug == '') ? name : slug;
-		$url = 'index.php?route=catalog/manufacturer/slug&name='+encodeURIComponent(send);
+		$url = 'catalog/manufacturer/slug/name/'+encodeURIComponent(send);
 		if (manufacturer_id) {
-			$url += '&manufacturer_id='+manufacturer_id;
+			$url += '/manufacturer_id/'+manufacturer_id;
 		}
 		$.ajax({
 			url: $url,
@@ -777,9 +768,9 @@ $(function(){
 		var name = $('#language1 input[name="category_description[1][name]"]').val().toLowerCase();
 		var slug = $('#slug').val().toLowerCase();
 		var send = (name == slug || slug == '') ? name : slug;
-		$url = 'index.php?route=content/category/slug&name='+encodeURIComponent(send);
+		$url = 'content/category/slug/name/'+encodeURIComponent(send);
 		if (blog_category_id) {
-			$url += '&category_id='+blog_category_id;
+			$url += '/category_id/'+blog_category_id;
 		}
 		$.ajax({
 			url: $url,
@@ -800,9 +791,9 @@ $(function(){
 		var name = $('#language1 input[name="post_description[1][name]').val().toLowerCase();
 		var slug = $('#slug').val().toLowerCase();
 		var send = (name == slug || slug == '') ? name : slug;
-		$url = 'index.php?route=content/post/slug&name='+encodeURIComponent(send);
+		$url = 'content/post/slug/name/'+encodeURIComponent(send);
 		if (post_id) {
-			$url += '&post_id='+post_id;
+			$url += '/post_id/'+post_id;
 		}
 		$.ajax({
 			url: $url,
@@ -828,7 +819,7 @@ var alertMessage=function(state,msg){
 };
 function sendGiftcard(gift_card_id,b){
 	$.ajax({
-		url:'index.php?route=sale/gift_card/send&gift_card_id='+gift_card_id,
+		url:'sale/gift_card/send/gift_card_id'+gift_card_id,
 		type:'post',
 		dataType:'json',
 		beforeSend:function(){
@@ -848,7 +839,7 @@ function sendGiftcard(gift_card_id,b){
 $(function(){
 	$('#invoice-generate').click(function(){
 		$.ajax({
-			url:'index.php?route=sale/order/createinvoiceno&order_id='+getURLVar('order_id'),
+			url:'sale/order/createinvoiceno/order_id/'+getURLVar('order_id'),
 			dataType:'json',
 			beforeSend:function(){
 				$('#invoice-generate').button('loading').append($('<i>',{class:'icon-loading'}));
@@ -870,7 +861,7 @@ $(function(){
 	var mapped={};
 	$('#order-customer').typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=people/customer/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+			return $.getJSON('people/customer/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.name]=item;
@@ -903,7 +894,7 @@ $(function(){
 		var $this=$(this),param=$this.data('param');
 
 		$.ajax({
-			url:'index.php?route=people/customer/country&country_id='+$this.val(),
+			url:'people/customer/country/country_id/'+$this.val(),
 			dataType:'json',
 			beforeSend:function(){
 				$this.after($('<i>',{class:'icon-loading'}));
@@ -944,7 +935,7 @@ $(function(){
 	$('[data-provide="countries"]').on('change',function(){
 		var a=$(this),b=a.data('target');
 		$.ajax({
-			url:'index.php?route=sale/order/country&country_id='+this.value,
+			url:'sale/order/country/country_id/'+this.value,
 			dataType:'json',
 			beforeSend:function(){
 				a.after($('<i>',{class:'icon-loading'}));
@@ -981,7 +972,7 @@ $(function(){
 	$('select[name="config_country_id"]').on('change',function(e){
 		var a=$(this);
 		$.ajax({
-			url:'index.php?route=setting/setting/country&country_id='+this.value,
+			url:'setting/setting/country/country_id/'+this.value,
 			dataType:'json',
 			beforeSend:function(){
 				a.after($('<i>',{class:'icon-loading'}));
@@ -1013,7 +1004,7 @@ $(function(){
 
 	$(document).on('change','select[name="payment_address"]',function(){
 		$.ajax({
-			url:'index.php?route=people/customer/address&address_id='+this.value,
+			url:'people/customer/address/address_id/'+this.value,
 			dataType:'json',
 			success:function(json){
 				if(json!=''){
@@ -1034,7 +1025,7 @@ $(function(){
 	});
 	$(document).on('change','select[name="shipping_address"]',function(){
 		$.ajax({
-			url:'index.php?route=people/customer/address&address_id='+this.value,
+			url:'people/customer/address/address_id/'+this.value,
 			dataType:'json',
 			success:function(json){
 				if(json!=''){
@@ -1072,7 +1063,7 @@ $(function(){
 	var mapped={};
 	$('input[name="affiliate"]').typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=people/customer/autocomplete&filter_username='+encodeURIComponent(q),function(json){
+			return $.getJSON('people/customer/autocomplete/filter_username/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.username]=item.customer_id;
@@ -1090,7 +1081,7 @@ $(function(){
 	var a=$('#order-product'),mapped={};
 	a.typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=catalog/product/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+			return $.getJSON('catalog/product/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.name]=item;
@@ -1194,7 +1185,7 @@ $(function(){
 							$('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display:none;"><input type="file" name="file"></form>');
 							$('#form-upload input[name="file"]').on('change',function(){
 								$.ajax({
-									url:'index.php?route=sale/order/upload',
+									url:'sale/order/upload',
 									type:'post',
 									dataType:'json',
 									data:new FormData($(this).parent()[0]),
@@ -1249,7 +1240,7 @@ $(function(){
 		data+='#tab-total input[type="text"],#tab-total input[type="hidden"],#tab-total input[type="radio"]:checked,#tab-total input[type="checkbox"]:checked,#tab-total select,#tab-total textarea';
 		
 		$.ajax({
-			url:$('#store_url').val()+'index.php?route=checkout/manual',
+			url:$('#store_url').val()+'checkout/manual',
 			type:'post',
 			data: $(data),
 			dataType:'json',
@@ -1529,7 +1520,7 @@ $(document).on('click','#button-upload',function(){
 	$('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display:none;"><input type="file" name="file"></form>');
 	$('#form-upload input[name="file"]').on('change',function(){
 		$.ajax({
-			url:'index.php?route=catalog/download/upload',
+			url:'catalog/download/upload',
 			type:'post',
 			dataType:'json',
 			data:new FormData($(this).parent()[0]),
@@ -1613,7 +1604,7 @@ $(function(){
 	var mapped={};
 	$('input[name="customers"]').typeahead({
 		source:function(q,process){
-			return $.getJSON('index.php?route=people/customer/autocomplete&filter_name='+encodeURIComponent(q),function(json){
+			return $.getJSON('people/customer/autocomplete/filter_name/'+encodeURIComponent(q),function(json){
 				var data=[];
 				$.each(json,function(i,item){
 					mapped[item.name]=item.customer_id;

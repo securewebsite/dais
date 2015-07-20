@@ -106,7 +106,7 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2"><?= $lang_entry_theme; ?></label>
 						<div class="control-field col-sm-4">
-							<select name="config_theme" onchange="$('#theme').load('index.php?route=setting/store/theme&theme=' +encodeURIComponent(this.value));" class="form-control">
+							<select name="config_theme" onchange="$('#theme').load('setting/store/theme/theme/' +encodeURIComponent(this.value));" class="form-control">
 								<?php foreach ($themes as $theme) { ?>
 									<?php if ($theme == $config_theme) { ?>
 									<option value="<?= $theme; ?>" selected><?= $theme; ?></option>

@@ -3,7 +3,7 @@ $('#tabs-chart a[data-toggle="tab"]').on('shown.bs.tab',function(e){
 	var $this=$(this);
 	$.ajax({
 		type:'get',
-		url:'index.php?route=common/dashboard/sale&range='+$this.attr('href'),
+		url:'common/dashboard/sale/range/'+$this.attr('href'),
 		dataType:'json',
 		beforeSend:function(){
 			$('#report').html('<i class="fa fa-cog fa-spin"></i>');

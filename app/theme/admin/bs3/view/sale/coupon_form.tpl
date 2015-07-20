@@ -178,7 +178,7 @@
 				</div>
 				<?php if ($coupon_id) { ?>
 					<div class="tab-pane" id="tab-history">
-						<div id="history" data-href="index.php?route=sale/coupon/history&coupon_id=<?= $coupon_id; ?>"></div>
+						<div id="history" data-href="sale/coupon/history/coupon_id/<?= $coupon_id; ?>"></div>
 					</div>
 				<?php } ?>
 			</div>

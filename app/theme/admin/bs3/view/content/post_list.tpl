@@ -36,7 +36,7 @@
 				<tbody data-link="row" class="rowlink">
 					<tr id="filter" class="info">
 						<td class="text-center">
-							<a class="btn btn-default btn-block" href="index.php?route=content/post" rel="tooltip" title="Reset">
+							<a class="btn btn-default btn-block" href="content/post" rel="tooltip" title="Reset">
 								<i class="fa fa-power-off fa-fw"></i></a>
 						</td>
 						<td><input type="text" name="filter_name" value="<?= $filter_name; ?>" class="form-control" data-target="name" data-url="content/post"></td>

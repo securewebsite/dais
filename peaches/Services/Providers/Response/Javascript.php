@@ -91,7 +91,7 @@ final class Javascript {
         
         $this->cache_key = md5($key);
         
-        $cachefile = Filecache::get_asset($this->cache_key, 'js');
+        $cachefile = (!env('APP_DEBUG')) ? Filecache::get_asset($this->cache_key, 'js') : false;
         
         if (is_bool($cachefile)):
             $cached = '';

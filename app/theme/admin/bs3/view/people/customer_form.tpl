@@ -294,7 +294,7 @@
 				</div>
 				<?php if ($customer_id) { ?>
 					<div class="tab-pane" id="tab-credit">
-						<div id="credit" data-href="index.php?route=people/customer/credit&customer_id=<?= $customer_id; ?>"></div>
+						<div id="credit" data-href="people/customer/credit/customer_id/<?= $customer_id; ?>"></div>
 						<div class="form-group">
 							<label class="control-label col-sm-2"><?= $lang_entry_description; ?></label>
 							<div class="control-field col-sm-4">
@@ -314,7 +314,7 @@
 						</div>
 					</div>
 					<div class="tab-pane" id="tab-reward">
-						<div id="reward" data-href="index.php?route=people/customer/reward&customer_id=<?= $customer_id; ?>"></div>
+						<div id="reward" data-href="people/customer/reward/customer_id/<?= $customer_id; ?>"></div>
 						<div class="form-group">
 							<label class="control-label col-sm-2"><?= $lang_entry_description; ?></label>
 							<div class="control-field col-sm-4">
@@ -471,7 +471,7 @@
 						</div>
 					</div>
 					<div class="tab-pane" id="tab-commission">
-						<div id="commission" data-href="index.php?route=people/customer/commission&customer_id=<?= $customer_id; ?>"></div>
+						<div id="commission" data-href="people/customer/commission/customer_id/<?= $customer_id; ?>"></div>
 						<div class="form-group">
 							<label class="control-label col-sm-2"><?= $lang_entry_description; ?></label>
 							<div class="control-field col-sm-4">

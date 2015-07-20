@@ -3561,11 +3561,6 @@ textarea.input-group-sm>.form-control, textarea.input-group-sm>.input-group-addo
 		background-color: transparent;
 	}
 }
-@media (min-width:768px) {
-    .navbar-nav>li:first-child a {
-        padding-left: 0px;
-    }
-}
 .navbar-menu .navbar-link {
     color: #999;
 }

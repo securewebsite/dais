@@ -16,7 +16,7 @@
 				type:'POST',
 				dataType:'json',
 				data: {'amount':amt, 'order_id':<?= $order_id; ?>, 'complete': captureComplete},
-				url:'index.php?route=payment/paypal_express/capture',
+				url:'payment/paypal_express/capture',
 				beforeSend:function(){
 					$('#btn_capture').hide();
 					$('#img_loading_capture').show();
@@ -32,8 +32,8 @@
 							html += '<td>'+data.data.pending_reason+'</td>';
 							html += '<td>'+data.data.created+'</td>';
 							html += '<td>';
-								html += '<a href="<?= $view_link; ?>&transaction_id='+data.data.transaction_id+'"><?= $lang_text_view; ?></a>';
-								html += '&nbsp;<a href="<?= $refund_link; ?>&transaction_id='+data.data.transaction_id+'"><?= $lang_text_refund; ?></a>';
+								html += '<a href="<?= $view_link; ?>/transaction_id/'+data.data.transaction_id+'"><?= $lang_text_view; ?></a>';
+								html += '&nbsp;<a href="<?= $refund_link; ?>/transaction_id/'+data.data.transaction_id+'"><?= $lang_text_refund; ?></a>';
 							html += '</td>';
 						html += '</tr>';
 						$('#paypal_captured').text(data.data.captured);
@@ -84,7 +84,7 @@
 				type:'POST',
 				dataType:'json',
 				data: {'order_id':<?= $order_id; ?> },
-				url:'index.php?route=payment/paypal_express/void',
+				url:'payment/paypal_express/void',
 				beforeSend:function(){
 					$('#btn_void').hide();
 					$('#img_loading_void').show();

@@ -16,7 +16,7 @@
 				type:'POST',
 				dataType:'json',
 				data: {'amount':amt, 'order_id':<?= $order_id ?>, 'complete': captureComplete},
-				url:'index.php?route=payment/paypal_pro_iframe/capture',
+				url:'payment/paypal_pro_iframe/capture',
 				beforeSend:function(){
 					$('#button-capture').hide();
 					$('#img_loading_capture').show();
@@ -32,8 +32,8 @@
 						html += '<td>'+data.data.pending_reason +'</td>';
 						html += '<td>'+data.data.created +'</td>';
 						html += '<td>';
-						html += '<a href="<?= $view_link; ?>&transaction_id='+data.data.transaction_id +'"><?= $lang_text_view; ?></a>';
-						html += '&nbsp;<a href="<?= $refund_link; ?>&transaction_id='+data.data.transaction_id +'"><?= $lang_text_refund; ?></a>';
+						html += '<a href="<?= $view_link; ?>/transaction_id/'+data.data.transaction_id +'"><?= $lang_text_view; ?></a>';
+						html += '&nbsp;<a href="<?= $refund_link; ?>/transaction_id/'+data.data.transaction_id +'"><?= $lang_text_refund; ?></a>';
 						html += '</td>';
 						html += '</tr>';
 						$('#paypal_captured').text(data.data.captured);
@@ -66,7 +66,7 @@
 							html += '<td></td>';
 							html += '<td></td>';
 							html += '<td>'+data.failed_transaction.created +'</td>';
-							html += '<td><a onclick="resendTransaction(this); return false;" href="<?= $resend_link ?>&paypal_iframe_order_transaction_id='+data.failed_transaction.paypal_iframe_order_transaction_id +'"><?= $lang_text_resend ?></a></td>';
+							html += '<td><a onclick="resendTransaction(this); return false;" href="<?= $resend_link ?>/paypal_iframe_order_transaction_id/'+data.failed_transaction.paypal_iframe_order_transaction_id +'"><?= $lang_text_resend ?></a></td>';
 							html += '/<tr>';
 							$('#paypal_transactions').append(html);
 						}
@@ -83,7 +83,7 @@
 				type:'POST',
 				dataType:'json',
 				data: {'order_id':<?= $order_id ?> },
-				url:'index.php?route=payment/paypal_pro_iframe/void',
+				url:'payment/paypal_pro_iframe/void',
 				beforeSend:function(){
 					$('#button-void').hide();
 					$('#img_loading_void').show();
@@ -118,7 +118,7 @@ function reauthorise() {
 		type:'POST',
 		dataType:'json',
 		data: {'order_id':<?= $order_id ?> },
-		url:'index.php?route=payment/paypal_pro_iframe/reauthorise',
+		url:'payment/paypal_pro_iframe/reauthorise',
 		beforeSend:function(){
 			$('#button-reauthorise').hide();
 			$('.icon-loading').remove();

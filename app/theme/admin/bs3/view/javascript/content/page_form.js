@@ -5,7 +5,7 @@ $('#meta-description<?= $language["language_id"]; ?>').bind('click', function(e)
 	e.preventDefault();
 	$data = $('textarea[name="page_description[<?= $language["language_id"]; ?>][description]"]').code();
 	$.ajax({
-		url: 'index.php?route=content/page/description',
+		url: 'content/page/description',
 		type: 'post',
 		dataType: 'json',
 		data: {
@@ -23,7 +23,7 @@ $('#meta-keyword<?= $language["language_id"]; ?>').bind('click', function(e) {
 	e.preventDefault();
 	$data = $('textarea[name="page_description[<?= $language["language_id"]; ?>][description]"]').code();
 	$.ajax({
-		url: 'index.php?route=content/page/keyword',
+		url: 'content/page/keyword',
 		type: 'post',
 		dataType: 'json',
 		data: {

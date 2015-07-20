@@ -145,9 +145,9 @@ class Plugin {
     }
     
     public function view($template, $data = array()) {
-        $dir  = $this->directory . $this->plugin_name . SEP . $this->locale . 'view' . SEP;
+        $dir  = $this->directory . $this->plugin_name . SEP . $this->locale;
 
-        \View::addFolder($dir);
+        \View::setDirectory($dir);
         
         return \View::make($template, $data);
     }

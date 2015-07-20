@@ -10,7 +10,7 @@ function doVoid(){
 			type:'POST',
 			dataType:'json',
 			data: {'order_id': <?= $order_id; ?> },
-			url:'index.php?route=payment/payflow_iframe/void',
+			url:'payment/payflow_iframe/void',
 			beforeSend:function(){
 				$('#button-void').after('<img src="asset/default/img/loading.gif" class="loading">');
 				$('#button-void').hide();
@@ -50,7 +50,7 @@ function capture(){
 		type:'POST',
 		dataType:'json',
 		data: {'order_id': <?= $order_id; ?>, 'amount' : amount, 'complete' : complete },
-		url:'index.php?route=payment/payflow_iframe/capture',
+		url:'payment/payflow_iframe/capture',
 		beforeSend:function(){
 			$('#button-capture').after('<img src="asset/default/img/loading.gif" class="loading">');
 			$('#button-capture').hide();

@@ -839,7 +839,7 @@ class Order extends Model {
 				'sku'              => $product_data['sku'], 
 				'stock_quantity'   => $product_data['quantity'], 
 				'stock_status'     => $product_data['stock_status'], 
-				'url'              => $order_info['store_url'] . 'index.php?route=catalog/product&product_id=' . $product['product_id'], 
+				'url'              => Url::link('catalog/product', 'product_id=' . $product['product_id'], 'SSL'), 
 				'name'             => $product['name'], 
 				'model'            => $product['model'], 
 				'option'           => $option_data, 

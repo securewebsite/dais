@@ -50,10 +50,8 @@ final class Action {
         // Run pre-controller hooks for this class
         $this->preControl();
         
-        $controller = new $this->class;
-        
-        if (is_callable(array($controller, $this->method))):
-            return call_user_func_array(array($controller, $this->method), $this->args);
+        if (is_callable(array($this->class, $this->method))):
+            return call_user_func_array(array(new $this->class, $this->method), $this->args);
         else:
             return false;
         endif;
@@ -80,9 +78,9 @@ final class Action {
                     );
                     
                     $callable = function () use ($callback) {
-                        $hook = new $callback['class'];
-                        if (is_callable(array($hook, $callback['method']))):
-                            return call_user_func_array(array($hook, $callback['method']) , array($callback['args']));
+                        $hook = $callback;
+                        if (is_callable(array($hook['class'], $hook['method']))):
+                            return call_user_func_array(array(new $hook['class'], $hook['method']) , array($hook['args']));
                         endif;
                     };
                 endif;

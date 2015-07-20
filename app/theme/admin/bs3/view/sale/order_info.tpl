@@ -347,7 +347,7 @@
 					<?php } ?>
 				</div>
 				<div id="tab-history" class="tab-pane">
-					<div id="history" data-href="index.php?route=sale/order/history&order_id=<?= $order_id; ?>"></div>
+					<div id="history" data-href="sale/order/history/order_id/<?= $order_id; ?>"></div>
 					<div class="form-horizontal">
 						<div class="form-group">
 							<label class="control-label col-sm-2"><?= $lang_entry_order_status; ?></label>

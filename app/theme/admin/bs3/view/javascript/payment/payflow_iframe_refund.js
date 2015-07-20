@@ -6,7 +6,7 @@ function refund(){
 		type:'POST',
 		dataType:'json',
 		data: {'transaction_reference': '<?= $transaction_reference; ?>', 'amount' : amount },
-		url:'index.php?route=payment/payflow_iframe/do_refund',
+		url:'payment/payflow_iframe/do_refund',
 		beforeSend:function(){
 			$('#button-refund').after('<img src="asset/default/img/loading.gif" class="loading">');
 			$('#button-refund').hide();

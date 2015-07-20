@@ -81,7 +81,7 @@ class Css {
         
         $this->cache_key = md5($key);
         
-        $cachefile = Filecache::get_asset($this->cache_key, 'css');
+        $cachefile = (!env('APP_DEBUG')) ? Filecache::get_asset($this->cache_key, 'css') : false;
         
         if (is_bool($cachefile)):
             $cached = '';

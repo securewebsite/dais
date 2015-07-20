@@ -32,6 +32,10 @@ class View {
         
         return $this->output();
     }
+
+    public function setDirectory($directory) {
+        $this->directory = $directory;
+    }
     
     private function output() {
         if (is_readable($this->file)):

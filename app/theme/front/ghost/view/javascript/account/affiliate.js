@@ -27,7 +27,7 @@ $(document).on('click', '#affiliate-slug-btn', function(){
 	var $slug   = $('#slug');
 	var $button = $(this);
 	var name    = $slug.val().toLowerCase();
-	$url = 'index.php?route=account/affiliate/slug&name='+encodeURIComponent(name);
+	$url = 'account/affiliate/slug/name/'+encodeURIComponent(name);
 	$.ajax({
 		url: $url,
 		type: 'get',
