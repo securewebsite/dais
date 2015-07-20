@@ -161,7 +161,7 @@ class GiftCard extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/gift_card', $data));
+        Response::setOutput(View::make('account/gift_card', $data));
     }
     
     public function success() {
@@ -181,7 +181,7 @@ class GiftCard extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('common/success', $data));
+        Response::setOutput(View::make('common/success', $data));
     }
     
     protected function validate() {

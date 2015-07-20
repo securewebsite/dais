@@ -140,7 +140,7 @@ class Comment extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'ASC';
+            $order = 'asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -199,10 +199,10 @@ class Comment extends Controller {
         
         $url = '';
         
-        if ($order == 'ASC') {
-            $url.= '&order=DESC';
+        if ($order == 'asc') {
+            $url.= '&order=desc';
         } else {
-            $url.= '&order=ASC';
+            $url.= '&order=asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -234,7 +234,7 @@ class Comment extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('content/comment_list', $data));
+        Response::setOutput(View::make('content/comment_list', $data));
     }
     
     private function getForm() {
@@ -352,7 +352,7 @@ class Comment extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('content/comment_form', $data));
+        Response::setOutput(View::make('content/comment_form', $data));
     }
     
     private function validateForm() {

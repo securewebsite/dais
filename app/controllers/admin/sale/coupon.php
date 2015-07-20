@@ -140,7 +140,7 @@ class Coupon extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'ASC';
+            $order = 'asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -200,10 +200,10 @@ class Coupon extends Controller {
         
         $url = '';
         
-        if ($order == 'ASC') {
-            $url.= '&order=DESC';
+        if ($order == 'asc') {
+            $url.= '&order=desc';
         } else {
-            $url.= '&order=ASC';
+            $url.= '&order=asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -236,7 +236,7 @@ class Coupon extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('sale/coupon_list', $data));
+        Response::setOutput(View::make('sale/coupon_list', $data));
     }
     
     protected function getForm() {
@@ -446,7 +446,7 @@ class Coupon extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('sale/coupon_form', $data));
+        Response::setOutput(View::make('sale/coupon_form', $data));
     }
     
     protected function validateForm() {
@@ -512,6 +512,6 @@ class Coupon extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(View::render('sale/coupon_history', $data));
+        Response::setOutput(View::make('sale/coupon_history', $data));
     }
 }

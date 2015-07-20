@@ -137,7 +137,7 @@ class PaypalPro extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/paypal_pro', $data));
+        Response::setOutput(View::make('payment/paypal_pro', $data));
     }
     
     protected function validate() {

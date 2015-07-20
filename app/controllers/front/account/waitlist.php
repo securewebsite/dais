@@ -51,6 +51,6 @@ class Waitlist extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/waitlist', $data));
+        Response::setOutput(View::make('account/waitlist', $data));
     }
 }

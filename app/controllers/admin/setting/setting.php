@@ -1258,7 +1258,7 @@ class Setting extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('setting/setting', $data));
+        Response::setOutput(View::make('setting/setting', $data));
     }
     
     protected function validate() {

@@ -144,7 +144,7 @@ class PaymentMethod extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(View::render('checkout/payment_method', $data));
+        Response::setOutput(View::make('checkout/payment_method', $data));
     }
     
     public function validate() {

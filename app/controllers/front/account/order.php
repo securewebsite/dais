@@ -121,7 +121,7 @@ class Order extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/order_list', $data));
+        Response::setOutput(View::make('account/order_list', $data));
     }
     
     public function info() {
@@ -322,7 +322,7 @@ class Order extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('account/order_info', $data));
+            Response::setOutput(View::make('account/order_info', $data));
         } else {
             Theme::setTitle(Lang::get('lang_text_order'));
             
@@ -343,7 +343,7 @@ class Order extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('error/not_found', $data));
+            Response::setOutput(View::make('error/not_found', $data));
         }
     }
 }

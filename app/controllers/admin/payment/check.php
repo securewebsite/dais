@@ -101,7 +101,7 @@ class Check extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/check', $data));
+        Response::setOutput(View::make('payment/check', $data));
     }
     
     protected function validate() {

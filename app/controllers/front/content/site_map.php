@@ -81,6 +81,6 @@ class SiteMap extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('content/site_map', $data));
+        Response::setOutput(View::make('content/site_map', $data));
     }
 }

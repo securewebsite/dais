@@ -72,6 +72,6 @@ class Featured extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/featured', $data);
+        return View::make('widget/featured', $data);
     }
 }

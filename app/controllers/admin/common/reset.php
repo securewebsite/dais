@@ -94,7 +94,7 @@ class Reset extends Controller {
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('common/reset', $data));
+            Response::setOutput(View::make('common/reset', $data));
         else:
             Theme::model('setting/setting');
             SettingSetting::editSettingValue('config', 'config_password', '0');

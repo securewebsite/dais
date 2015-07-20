@@ -62,7 +62,7 @@ class GoogleSiteMap extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('feed/google_site_map', $data));
+        Response::setOutput(View::make('feed/google_site_map', $data));
     }
     
     protected function validate() {

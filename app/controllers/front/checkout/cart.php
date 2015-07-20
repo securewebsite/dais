@@ -389,7 +389,7 @@ class Cart extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('checkout/cart', $data));
+            Response::setOutput(View::make('checkout/cart', $data));
         } else {
             Theme::setTitle(Lang::get('lang_heading_title'));
             
@@ -408,7 +408,7 @@ class Cart extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('error/not_found', $data));
+            Response::setOutput(View::make('error/not_found', $data));
         }
     }
     

@@ -55,7 +55,7 @@ class Home extends Controller {
                 
                 $data = Theme::renderControllers($data);
                 
-                Response::setOutput(View::render('content/homepage', $data));
+                Response::setOutput(View::make('content/homepage', $data));
             endif;
         else:
             $data = Theme::language('content/home');
@@ -80,7 +80,7 @@ class Home extends Controller {
             if (isset(Request::p()->get['order'])):
                 $order = Request::p()->get['order'];
             else:
-                $order = 'DESC';
+                $order = 'desc';
             endif;
             
             if (isset(Request::p()->get['page'])):
@@ -165,7 +165,7 @@ class Home extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('content/home', $data));
+            Response::setOutput(View::make('content/home', $data));
         endif;
     }
 }

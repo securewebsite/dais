@@ -171,7 +171,7 @@ class Page extends Controller {
             $data['share_bar'] = Theme::controller('common/share_bar', array('event', $data));
             $data             = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('event/page', $data));
+            Response::setOutput(View::make('event/page', $data));
         else:
             Breadcrumb::add('lang_text_error', 'event/page', 'event_page_id=' . $page_id);
             Theme::setTitle(Lang::get('lang_text_error'));
@@ -184,7 +184,7 @@ class Page extends Controller {
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('error/not_found', $data));
+            Response::setOutput(View::make('error/not_found', $data));
         endif;
     }
 }

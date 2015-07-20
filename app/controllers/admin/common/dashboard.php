@@ -86,7 +86,7 @@ class Dashboard extends Controller {
         
         $filter = array(
             'sort'  => 'o.date_added',
-            'order' => 'DESC',
+            'order' => 'desc',
             'start' => 0,
             'limit' => 10
         );
@@ -123,7 +123,7 @@ class Dashboard extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('common/dashboard', $data));
+        Response::setOutput(View::make('common/dashboard', $data));
     }
     
     public function sale() {

@@ -987,10 +987,10 @@ class Product extends Model {
             $sql.= " ORDER BY pd.name";
         }
         
-        if (isset($data['order']) && ($data['order'] == 'DESC')) {
+        if (isset($data['order']) && ($data['order'] == 'desc')) {
             $sql.= " DESC";
         } else {
-            $sql.= " ASC";
+            $sql.= " asc";
         }
         
         if (isset($data['start']) || isset($data['limit'])) {

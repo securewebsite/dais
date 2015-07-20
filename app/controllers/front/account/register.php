@@ -430,7 +430,7 @@ class Register extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/register', $data));
+        Response::setOutput(View::make('account/register', $data));
     }
     
     protected function validate() {
@@ -592,7 +592,7 @@ class Register extends Controller {
         else:
             
             // build slug
-            $slug = Url::build_slug(Request::p()->get['affiliate']['slug']);
+            $slug = Naming::build_slug(Request::p()->get['affiliate']['slug']);
             
             // check that the slug is globally unique
             $query = ToolUtility::findSlugByName($slug);

@@ -38,6 +38,6 @@ class Home extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('shop/home', $data));
+        Response::setOutput(View::make('shop/home', $data));
     }
 }

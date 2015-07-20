@@ -110,6 +110,6 @@ class ProductPurchased extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('report/product_purchased', $data));
+        Response::setOutput(View::make('report/product_purchased', $data));
     }
 }

@@ -89,7 +89,7 @@ class Item extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('shipping/item', $data));
+        Response::setOutput(View::make('shipping/item', $data));
     }
     
     protected function validate() {

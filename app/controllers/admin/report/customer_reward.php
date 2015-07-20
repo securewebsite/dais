@@ -95,6 +95,6 @@ class CustomerReward extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('report/customer_reward', $data));
+        Response::setOutput(View::make('report/customer_reward', $data));
     }
 }

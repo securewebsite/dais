@@ -177,7 +177,7 @@ class Menu extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('module/menu_builder_list', $data));
+        Response::setOutput(View::make('module/menu_builder_list', $data));
     }
     
     public function getForm() {
@@ -265,7 +265,7 @@ class Menu extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('module/menu_builder_form', $data));
+        Response::setOutput(View::make('module/menu_builder_form', $data));
     }
     
     private function validateForm() {
@@ -341,7 +341,7 @@ class Menu extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(View::render('module/menu_category', $data));
+        Response::setOutput(View::make('module/menu_category', $data));
     }
     
     public function content_category() {
@@ -381,7 +381,7 @@ class Menu extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(View::render('module/menu_category', $data));
+        Response::setOutput(View::make('module/menu_category', $data));
     }
     
     public function page() {
@@ -414,7 +414,7 @@ class Menu extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(View::render('module/menu_single', $data));
+        Response::setOutput(View::make('module/menu_single', $data));
     }
     
     public function post() {
@@ -447,7 +447,7 @@ class Menu extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(View::render('module/menu_single', $data));
+        Response::setOutput(View::make('module/menu_single', $data));
     }
     
     public function custom() {
@@ -477,6 +477,6 @@ class Menu extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        Response::setOutput(View::render('module/menu_custom', $data));
+        Response::setOutput(View::make('module/menu_custom', $data));
     }
 }

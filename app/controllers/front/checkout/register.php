@@ -87,7 +87,7 @@ class Register extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        Response::setOutput(View::render('checkout/register', $data));
+        Response::setOutput(View::make('checkout/register', $data));
     }
     
     public function validate() {

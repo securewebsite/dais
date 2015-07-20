@@ -85,7 +85,7 @@ class PostWall extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/post_wall', $data));
+        Response::setOutput(View::make('widget/post_wall', $data));
     }
     
     private function validate() {

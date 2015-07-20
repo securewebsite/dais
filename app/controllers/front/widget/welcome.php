@@ -29,6 +29,6 @@ class Welcome extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/welcome', $data);
+        return View::make('widget/welcome', $data);
     }
 }

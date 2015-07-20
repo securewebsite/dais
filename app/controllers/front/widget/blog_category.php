@@ -62,6 +62,6 @@ class BlogCategory extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/blog_category', $data);
+        return View::make('widget/blog_category', $data);
     }
 }

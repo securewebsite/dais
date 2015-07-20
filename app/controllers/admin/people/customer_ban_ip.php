@@ -140,7 +140,7 @@ class CustomerBanIp extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'ASC';
+            $order = 'asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -200,10 +200,10 @@ class CustomerBanIp extends Controller {
         
         $url = '';
         
-        if ($order == 'ASC') {
-            $url.= '&order=DESC';
+        if ($order == 'asc') {
+            $url.= '&order=desc';
         } else {
-            $url.= '&order=ASC';
+            $url.= '&order=asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -231,7 +231,7 @@ class CustomerBanIp extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('people/customer_ban_ip_list', $data));
+        Response::setOutput(View::make('people/customer_ban_ip_list', $data));
     }
     
     protected function getForm() {
@@ -289,7 +289,7 @@ class CustomerBanIp extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('people/customer_ban_ip_form', $data));
+        Response::setOutput(View::make('people/customer_ban_ip_form', $data));
     }
     
     protected function validateForm() {

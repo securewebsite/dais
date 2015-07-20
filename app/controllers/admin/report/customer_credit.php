@@ -115,6 +115,6 @@ class CustomerCredit extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('report/customer_credit', $data));
+        Response::setOutput(View::make('report/customer_credit', $data));
     }
 }

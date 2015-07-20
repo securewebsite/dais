@@ -94,7 +94,7 @@ class Widget extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('module/widget', $data));
+        Response::setOutput(View::make('module/widget', $data));
     }
     
     public function install() {

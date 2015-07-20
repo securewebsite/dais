@@ -165,7 +165,7 @@ class PayflowIframe extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/payflow_iframe', $data));
+        Response::setOutput(View::make('payment/payflow_iframe', $data));
     }
     
     public function install() {
@@ -206,7 +206,7 @@ class PayflowIframe extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::setOutput(View::render('payment/payflow_iframe_refund', $data));
+            Response::setOutput(View::make('payment/payflow_iframe_refund', $data));
         } else {
             return new Action('error/not_found');
         }
@@ -397,7 +397,7 @@ class PayflowIframe extends Controller {
             
             $data['javascript'] = Theme::controller('common/javascript');
             
-            Response::setOutput(View::render('payment/payflow_iframe_order', $data));
+            Response::setOutput(View::make('payment/payflow_iframe_order', $data));
         }
     }
     

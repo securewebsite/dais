@@ -33,7 +33,7 @@ class Reward extends Model {
             $sql.= " ORDER BY date_added";
         }
         
-        if (isset($data['order']) && ($data['order'] == 'DESC')) {
+        if (isset($data['order']) && ($data['order'] == 'desc')) {
             $sql.= " DESC";
         } else {
             $sql.= " ASC";

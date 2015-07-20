@@ -89,6 +89,6 @@ class Product extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/customer_product', $data));
+        Response::setOutput(View::make('account/customer_product', $data));
     }
 }

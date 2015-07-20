@@ -68,7 +68,7 @@ class Moneybookers extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        return View::render('payment/moneybookers', $data);
+        return View::make('payment/moneybookers', $data);
     }
     
     public function callback() {

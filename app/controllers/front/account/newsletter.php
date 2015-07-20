@@ -57,6 +57,6 @@ class Newsletter extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/newsletter', $data));
+        Response::setOutput(View::make('account/newsletter', $data));
     }
 }

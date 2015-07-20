@@ -44,7 +44,7 @@ class Category extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'ASC';
+            $order = 'asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -275,58 +275,58 @@ class Category extends Controller {
             
             $data['sorts'][] = array(
                 'text'  => Lang::get('lang_text_default'), 
-                'value' => 'p.sort_order-ASC', 
-                'href'  => Url::link('catalog/category', 'path=' . Request::p()->get['path'] . '&sort=p.sort_order&order=ASC' . $url)
+                'value' => 'p.sort_order-asc', 
+                'href'  => Url::link('catalog/category', 'path=' . Request::p()->get['path'] . '&sort=p.sort_order&order=asc' . $url)
             );
             
             $data['sorts'][] = array(
                 'text'  => Lang::get('lang_text_name_asc'), 
-                'value' => 'pd.name-ASC', 
-                'href'  => Url::link('catalog/category', 'path=' . Request::p()->get['path'] . '&sort=pd.name&order=ASC' . $url)
+                'value' => 'pd.name-asc', 
+                'href'  => Url::link('catalog/category', 'path=' . Request::p()->get['path'] . '&sort=pd.name&order=asc' . $url)
             );
             
             $data['sorts'][] = array(
                 'text'  => Lang::get('lang_text_name_desc'), 
-                'value' => 'pd.name-DESC', 
-                'href'  => Url::link('catalog/category', 'path=' . Request::p()->get['path'] . '&sort=pd.name&order=DESC' . $url)
+                'value' => 'pd.name-desc', 
+                'href'  => Url::link('catalog/category', 'path=' . Request::p()->get['path'] . '&sort=pd.name&order=desc' . $url)
             );
             
             $data['sorts'][] = array(
                 'text'  => Lang::get('lang_text_price_asc'), 
-                'value' => 'p.price-ASC', 
-                'href'  => Url::link('catalog/category', 'path=' . Request::p()->get['path'] . '&sort=p.price&order=ASC' . $url)
+                'value' => 'p.price-asc', 
+                'href'  => Url::link('catalog/category', 'path=' . Request::p()->get['path'] . '&sort=p.price&order=asc' . $url)
             );
             
             $data['sorts'][] = array(
                 'text'  => Lang::get('lang_text_price_desc'), 
-                'value' => 'p.price-DESC', 
-                'href'  => Url::link('catalog/category', 'path=' . Request::p()->get['path'] . '&sort=p.price&order=DESC' . $url)
+                'value' => 'p.price-desc', 
+                'href'  => Url::link('catalog/category', 'path=' . Request::p()->get['path'] . '&sort=p.price&order=desc' . $url)
             );
             
             if (Config::get('config_review_status')) {
                 $data['sorts'][] = array(
                     'text'  => Lang::get('lang_text_rating_desc'), 
-                    'value' => 'rating-DESC', 
-                    'href'  => Url::link('catalog/category', 'path=' . Request::p()->get['path'] . '&sort=rating&order=DESC' . $url)
+                    'value' => 'rating-desc', 
+                    'href'  => Url::link('catalog/category', 'path=' . Request::p()->get['path'] . '&sort=rating&order=desc' . $url)
                 );
                 
                 $data['sorts'][] = array(
                     'text'  => Lang::get('lang_text_rating_asc'), 
-                    'value' => 'rating-ASC', 
-                    'href'  => Url::link('catalog/category', 'path=' . Request::p()->get['path'] . '&sort=rating&order=ASC' . $url)
+                    'value' => 'rating-asc', 
+                    'href'  => Url::link('catalog/category', 'path=' . Request::p()->get['path'] . '&sort=rating&order=asc' . $url)
                 );
             }
             
             $data['sorts'][] = array(
                 'text'  => Lang::get('lang_text_model_asc'), 
-                'value' => 'p.model-ASC', 
-                'href'  => Url::link('catalog/category', 'path=' . Request::p()->get['path'] . '&sort=p.model&order=ASC' . $url)
+                'value' => 'p.model-asc', 
+                'href'  => Url::link('catalog/category', 'path=' . Request::p()->get['path'] . '&sort=p.model&order=asc' . $url)
             );
             
             $data['sorts'][] = array(
                 'text'  => Lang::get('lang_text_model_desc'), 
-                'value' => 'p.model-DESC', 
-                'href'  => Url::link('catalog/category', 'path=' . Request::p()->get['path'] . '&sort=p.model&order=DESC' . $url)
+                'value' => 'p.model-desc', 
+                'href'  => Url::link('catalog/category', 'path=' . Request::p()->get['path'] . '&sort=p.model&order=desc' . $url)
             );
             
             $data['image_width'] = Config::get('config_image_product_width');
@@ -412,7 +412,7 @@ class Category extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('catalog/category', $data));
+            Response::setOutput(View::make('catalog/category', $data));
         } else {
             $url = '';
             
@@ -457,7 +457,7 @@ class Category extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('error/not_found', $data));
+            Response::setOutput(View::make('error/not_found', $data));
         }
     }
 }

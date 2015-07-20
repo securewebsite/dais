@@ -74,7 +74,7 @@ class SlideShow extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/slide_show', $data));
+        Response::setOutput(View::make('widget/slide_show', $data));
     }
     
     protected function validate() {

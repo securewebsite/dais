@@ -95,7 +95,7 @@ class GuestShipping extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        Response::setOutput(View::render('checkout/guest_shipping', $data));
+        Response::setOutput(View::make('checkout/guest_shipping', $data));
     }
     
     public function validate() {

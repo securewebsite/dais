@@ -43,7 +43,7 @@ class AuthorizeNet extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        return View::render('payment/authorize_net', $data);
+        return View::make('payment/authorize_net', $data);
     }
     
     public function send() {

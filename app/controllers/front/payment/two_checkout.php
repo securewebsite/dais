@@ -84,7 +84,7 @@ class TwoCheckout extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        return View::render('payment/two_checkout', $data);
+        return View::make('payment/two_checkout', $data);
     }
     
     public function callback() {

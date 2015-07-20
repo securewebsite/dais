@@ -129,7 +129,7 @@ class Route extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('design/route_list', $data));
+        Response::setOutput(View::make('design/route_list', $data));
 	}
 
 	protected function getForm() {
@@ -164,7 +164,7 @@ class Route extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('design/route_form', $data));
+        Response::setOutput(View::make('design/route_form', $data));
 	}
 
 	protected function validateForm() {

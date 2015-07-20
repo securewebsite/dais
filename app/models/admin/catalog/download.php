@@ -139,7 +139,7 @@ class Download extends Model {
             $sql.= " ORDER BY dd.name";
         }
         
-        if (isset($data['order']) && ($data['order'] == 'DESC')) {
+        if (isset($data['order']) && ($data['order'] == 'desc')) {
             $sql.= " DESC";
         } else {
             $sql.= " ASC";

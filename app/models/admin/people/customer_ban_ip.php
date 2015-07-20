@@ -57,7 +57,7 @@ class CustomerBanIp extends Model {
         
         $sql.= " ORDER BY `ip`";
         
-        if (isset($data['order']) && ($data['order'] == 'DESC')) {
+        if (isset($data['order']) && ($data['order'] == 'desc')) {
             $sql.= " DESC";
         } else {
             $sql.= " ASC";

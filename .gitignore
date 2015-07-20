@@ -1,4 +1,3 @@
-/app/front/controller/tool/test.php
 /database/config
 # change this to /public/image/* once installed
 /public/image/cache/*

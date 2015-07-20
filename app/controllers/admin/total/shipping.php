@@ -68,7 +68,7 @@ class Shipping extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('total/shipping', $data));
+        Response::setOutput(View::make('total/shipping', $data));
     }
     
     protected function validate() {

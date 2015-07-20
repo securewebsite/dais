@@ -94,7 +94,7 @@ class Featured extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/featured', $data));
+        Response::setOutput(View::make('widget/featured', $data));
     }
     
     protected function validate() {

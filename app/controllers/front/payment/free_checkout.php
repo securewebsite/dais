@@ -31,7 +31,7 @@ class FreeCheckout extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        return View::render('payment/free_checkout', $data);
+        return View::make('payment/free_checkout', $data);
     }
     
     public function confirm() {

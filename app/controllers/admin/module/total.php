@@ -85,7 +85,7 @@ class Total extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('module/total', $data));
+        Response::setOutput(View::make('module/total', $data));
     }
     
     public function install() {

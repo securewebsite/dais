@@ -144,7 +144,7 @@ class Store extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('setting/store_list', $data));
+        Response::setOutput(View::make('setting/store_list', $data));
     }
     
     public function getForm() {
@@ -744,7 +744,7 @@ class Store extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('setting/store_form', $data));
+        Response::setOutput(View::make('setting/store_form', $data));
     }
     
     protected function validateForm() {

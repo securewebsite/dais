@@ -102,10 +102,6 @@ class Address extends Controller {
             
             Session::p()->data['success'] = Lang::get('lang_text_update');
             
-            if (!Session::p()->data['address_complete']):
-                Session::p()->data['address_complete'] = true;
-            endif;
-            
             Response::redirect(Url::link('account/address', '', 'SSL'));
         }
         
@@ -234,7 +230,7 @@ class Address extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/address_list', $data));
+        Response::setOutput(View::make('account/address_list', $data));
     }
     
     protected function getForm() {
@@ -440,7 +436,7 @@ class Address extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/address_form', $data));
+        Response::setOutput(View::make('account/address_form', $data));
     }
     
     protected function validateForm() {

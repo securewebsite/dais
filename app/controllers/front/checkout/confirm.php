@@ -456,6 +456,6 @@ class Confirm extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(View::render('checkout/confirm', $data));
+        Response::setOutput(View::make('checkout/confirm', $data));
     }
 }

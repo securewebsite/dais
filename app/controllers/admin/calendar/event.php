@@ -245,7 +245,7 @@ class Event extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('calendar/waitlist', $data));
+        Response::setOutput(View::make('calendar/waitlist', $data));
     }
     
     public function add_to_event() {
@@ -344,7 +344,7 @@ class Event extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('calendar/event_list', $data));
+        Response::setOutput(View::make('calendar/event_list', $data));
     }
     
     public function getForm() {
@@ -749,7 +749,7 @@ class Event extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('calendar/event_form', $data));
+        Response::setOutput(View::make('calendar/event_form', $data));
     }
     
     public function presenter_list() {
@@ -819,7 +819,7 @@ class Event extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('calendar/presenter_list', $data));
+        Response::setOutput(View::make('calendar/presenter_list', $data));
     }
     
     public function presenter_form() {
@@ -913,7 +913,7 @@ class Event extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('calendar/presenter_form', $data));
+        Response::setOutput(View::make('calendar/presenter_form', $data));
     }
     
     public function roster() {
@@ -976,7 +976,7 @@ class Event extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('calendar/roster', $data));
+        Response::setOutput(View::make('calendar/roster', $data));
     }
     
     public function autocomplete() {

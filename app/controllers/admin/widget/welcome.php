@@ -68,7 +68,7 @@ class Welcome extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/welcome', $data));
+        Response::setOutput(View::make('widget/welcome', $data));
     }
     
     protected function validate() {

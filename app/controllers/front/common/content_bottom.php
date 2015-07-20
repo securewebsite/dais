@@ -124,6 +124,6 @@ class ContentBottom extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('common/content_bottom', $data);
+        return View::make('common/content_bottom', $data);
     }
 }

@@ -296,7 +296,7 @@ class Product extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'ASC';
+            $order = 'asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -430,22 +430,22 @@ class Product extends Controller {
             $url.= '&filter_status=' . Request::p()->get['filter_status'];
         }
         
-        if ($order == 'ASC') {
-            $url.= '&order=DESC';
+        if ($order == 'asc') {
+            $url.= '&order=desc';
         } else {
-            $url.= '&order=ASC';
+            $url.= '&order=asc';
         }
         
         if (isset(Request::p()->get['page'])) {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('catalog/product', '' . 'sort=pd.name' . $url, 'SSL');
-        $data['sort_model'] = Url::link('catalog/product', '' . 'sort=p.model' . $url, 'SSL');
-        $data['sort_price'] = Url::link('catalog/product', '' . 'sort=p.price' . $url, 'SSL');
+        $data['sort_name']     = Url::link('catalog/product', '' . 'sort=pd.name' . $url, 'SSL');
+        $data['sort_model']    = Url::link('catalog/product', '' . 'sort=p.model' . $url, 'SSL');
+        $data['sort_price']    = Url::link('catalog/product', '' . 'sort=p.price' . $url, 'SSL');
         $data['sort_quantity'] = Url::link('catalog/product', '' . 'sort=p.quantity' . $url, 'SSL');
-        $data['sort_status'] = Url::link('catalog/product', '' . 'sort=p.status' . $url, 'SSL');
-        $data['sort_order'] = Url::link('catalog/product', '' . 'sort=p.sort_order' . $url, 'SSL');
+        $data['sort_status']   = Url::link('catalog/product', '' . 'sort=p.status' . $url, 'SSL');
+        $data['sort_order']    = Url::link('catalog/product', '' . 'sort=p.sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -477,22 +477,27 @@ class Product extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($product_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/product', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate(
+            $product_total, $page, 
+            Config::get('config_admin_limit'), 
+            Lang::get('lang_text_pagination'), 
+            Url::link('catalog/product', '' . $url . '&page={page}', 'SSL')
+        );
         
-        $data['filter_name'] = $filter_name;
-        $data['filter_model'] = $filter_model;
-        $data['filter_price'] = $filter_price;
+        $data['filter_name']     = $filter_name;
+        $data['filter_model']    = $filter_model;
+        $data['filter_price']    = $filter_price;
         $data['filter_quantity'] = $filter_quantity;
-        $data['filter_status'] = $filter_status;
+        $data['filter_status']   = $filter_status;
         
-        $data['sort'] = $sort;
+        $data['sort']  = $sort;
         $data['order'] = $order;
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('catalog/product_list', $data));
+        Response::setOutput(View::make('catalog/product_list', $data));
     }
     
     protected function getForm() {
@@ -1123,7 +1128,7 @@ class Product extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('catalog/product_form', $data));
+        Response::setOutput(View::make('catalog/product_form', $data));
     }
     
     protected function validateForm() {
@@ -1301,7 +1306,7 @@ class Product extends Controller {
         else:
             
             // build slug
-            $slug = Url::build_slug(Request::p()->get['name']);
+            $slug = Naming::build_slug(Request::p()->get['name']);
             
             // check that the slug is globally unique
             $query = ToolUtility::findSlugByName($slug);

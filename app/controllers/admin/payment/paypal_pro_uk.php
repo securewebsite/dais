@@ -140,7 +140,7 @@ class PaypalProUk extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/paypal_pro_uk', $data));
+        Response::setOutput(View::make('payment/paypal_pro_uk', $data));
     }
     
     private function validate() {

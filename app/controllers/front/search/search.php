@@ -160,6 +160,6 @@ class Search extends Controller {
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('search/search', $data));
+        Response::setOutput(View::make('search/search', $data));
 	}
 }

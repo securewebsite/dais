@@ -89,7 +89,7 @@ class Cod extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/cod', $data));
+        Response::setOutput(View::make('payment/cod', $data));
     }
     
     protected function validate() {

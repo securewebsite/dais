@@ -150,7 +150,7 @@ class Download extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'ASC';
+            $order = 'asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -210,10 +210,10 @@ class Download extends Controller {
         
         $url = '';
         
-        if ($order == 'ASC') {
-            $url.= '&order=DESC';
+        if ($order == 'asc') {
+            $url.= '&order=desc';
         } else {
-            $url.= '&order=ASC';
+            $url.= '&order=asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -242,7 +242,7 @@ class Download extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('catalog/download_list', $data));
+        Response::setOutput(View::make('catalog/download_list', $data));
     }
     
     protected function getForm() {
@@ -356,7 +356,7 @@ class Download extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('catalog/download_form', $data));
+        Response::setOutput(View::make('catalog/download_form', $data));
     }
     
     protected function validateForm() {

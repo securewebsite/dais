@@ -57,6 +57,6 @@ class Maintenance extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('common/maintenance', $data));
+        Response::setOutput(View::make('common/maintenance', $data));
     }
 }

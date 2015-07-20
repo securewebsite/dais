@@ -59,7 +59,7 @@ class Manufacturer extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('catalog/manufacturer_list', $data));
+        Response::setOutput(View::make('catalog/manufacturer_list', $data));
     }
     
     public function info() {
@@ -86,7 +86,7 @@ class Manufacturer extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'ASC';
+            $order = 'asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -186,25 +186,25 @@ class Manufacturer extends Controller {
             
             $data['sorts'] = array();
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_default'), 'value' => 'p.sort_order-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.sort_order&order=ASC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_default'), 'value' => 'p.sort_order-asc', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.sort_order&order=asc' . $url));
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_name_asc'), 'value' => 'pd.name-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=pd.name&order=ASC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_name_asc'), 'value' => 'pd.name-asc', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=pd.name&order=asc' . $url));
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_name_desc'), 'value' => 'pd.name-DESC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=pd.name&order=DESC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_name_desc'), 'value' => 'pd.name-desc', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=pd.name&order=desc' . $url));
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_price_asc'), 'value' => 'p.price-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.price&order=ASC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_price_asc'), 'value' => 'p.price-asc', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.price&order=asc' . $url));
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_price_desc'), 'value' => 'p.price-DESC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.price&order=DESC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_price_desc'), 'value' => 'p.price-desc', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.price&order=desc' . $url));
             
             if (Config::get('config_review_status')) {
-                $data['sorts'][] = array('text' => Lang::get('lang_text_rating_desc'), 'value' => 'rating-DESC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=rating&order=DESC' . $url));
+                $data['sorts'][] = array('text' => Lang::get('lang_text_rating_desc'), 'value' => 'rating-desc', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=rating&order=desc' . $url));
                 
-                $data['sorts'][] = array('text' => Lang::get('lang_text_rating_asc'), 'value' => 'rating-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=rating&order=ASC' . $url));
+                $data['sorts'][] = array('text' => Lang::get('lang_text_rating_asc'), 'value' => 'rating-asc', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=rating&order=asc' . $url));
             }
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_model_asc'), 'value' => 'p.model-ASC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.model&order=ASC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_model_asc'), 'value' => 'p.model-asc', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.model&order=asc' . $url));
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_model_desc'), 'value' => 'p.model-DESC', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.model&order=DESC' . $url));
+            $data['sorts'][] = array('text' => Lang::get('lang_text_model_desc'), 'value' => 'p.model-desc', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.model&order=desc' . $url));
             
             $url = '';
             
@@ -263,7 +263,7 @@ class Manufacturer extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('catalog/manufacturer_info', $data));
+            Response::setOutput(View::make('catalog/manufacturer_info', $data));
         } else {
             $url = '';
             
@@ -304,7 +304,7 @@ class Manufacturer extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('error/not_found', $data));
+            Response::setOutput(View::make('error/not_found', $data));
         }
     }
 }

@@ -136,6 +136,6 @@ class SaleShipping extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('report/sale_shipping', $data));
+        Response::setOutput(View::make('report/sale_shipping', $data));
     }
 }

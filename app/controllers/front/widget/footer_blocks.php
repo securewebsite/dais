@@ -138,7 +138,7 @@ class FooterBlocks extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/footer_blocks', $data);
+        return View::make('widget/footer_blocks', $data);
     }
     
     private function product_category() {

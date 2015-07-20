@@ -71,7 +71,7 @@ class Latest extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/latest', $data));
+        Response::setOutput(View::make('widget/latest', $data));
     }
     
     protected function validate() {

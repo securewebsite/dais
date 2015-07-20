@@ -64,7 +64,7 @@ class Account extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/account', $data));
+        Response::setOutput(View::make('widget/account', $data));
     }
     
     protected function validate() {

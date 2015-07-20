@@ -64,7 +64,7 @@ class BlogCategory extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/blog_category', $data));
+        Response::setOutput(View::make('widget/blog_category', $data));
     }
     
     protected function validate() {

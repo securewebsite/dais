@@ -84,7 +84,7 @@ class Handling extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('total/handling', $data));
+        Response::setOutput(View::make('total/handling', $data));
     }
     
     protected function validate() {

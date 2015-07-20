@@ -64,7 +64,7 @@ class Category extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/category', $data));
+        Response::setOutput(View::make('widget/category', $data));
     }
     
     protected function validate() {

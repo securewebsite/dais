@@ -319,7 +319,7 @@ class Customer extends Model {
             $sql.= " ORDER BY name";
         endif;
         
-        if (isset($data['order']) && ($data['order'] == 'DESC')):
+        if (isset($data['order']) && ($data['order'] == 'desc')):
             $sql.= " DESC";
         else:
             $sql.= " ASC";
@@ -904,7 +904,7 @@ class Customer extends Model {
             $sql.= " ORDER BY name";
         endif;
         
-        if (isset($data['order']) && ($data['order'] == 'DESC')):
+        if (isset($data['order']) && ($data['order'] == 'desc')):
             $sql.= " DESC";
         else:
             $sql.= " ASC";

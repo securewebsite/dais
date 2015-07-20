@@ -509,7 +509,7 @@ class Product extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('catalog/product', $data));
+            Response::setOutput(View::make('catalog/product', $data));
         } else {
             $url = '';
             
@@ -578,7 +578,7 @@ class Product extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('error/not_found', $data));
+            Response::setOutput(View::make('error/not_found', $data));
         }
     }
     
@@ -626,7 +626,7 @@ class Product extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(View::render('catalog/review', $data));
+        Response::setOutput(View::make('catalog/review', $data));
     }
     
     public function getRecurringDescription() {

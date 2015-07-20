@@ -173,7 +173,7 @@ class PaypalStandard extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/paypal_standard', $data));
+        Response::setOutput(View::make('payment/paypal_standard', $data));
     }
     
     private function validate() {

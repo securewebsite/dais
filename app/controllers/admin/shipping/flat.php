@@ -89,7 +89,7 @@ class Flat extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('shipping/flat', $data));
+        Response::setOutput(View::make('shipping/flat', $data));
     }
     
     protected function validate() {

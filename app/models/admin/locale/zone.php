@@ -95,7 +95,7 @@ class Zone extends Model {
             $sql.= " ORDER BY c.name";
         }
         
-        if (isset($data['order']) && ($data['order'] == 'DESC')) {
+        if (isset($data['order']) && ($data['order'] == 'desc')) {
             $sql.= " DESC";
         } else {
             $sql.= " ASC";

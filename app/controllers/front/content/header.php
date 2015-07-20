@@ -164,6 +164,6 @@ class Header extends Controller {
         $data['cart']     = Theme::controller('shop/cart');
         $data['menu']     = Theme::controller('widget/header_menu');
         
-        return View::render('content/header', $data);
+        return View::make('content/header', $data);
     }
 }

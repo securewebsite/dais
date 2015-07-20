@@ -178,7 +178,7 @@ class Customer extends Controller {
         
         $filter_default = array(
             'sort'  => 'username',
-            'order' => 'ASC',
+            'order' => 'asc',
             'page'  => 1
         );
 
@@ -236,10 +236,10 @@ class Customer extends Controller {
         $sort = Filter::unsort($this->filters);
         $url  = Filter::uri($sort);
         
-        if ($filter['order'] == 'ASC'):
-            $url .= '&order=DESC';
+        if ($filter['order'] == 'asc'):
+            $url .= '&order=desc';
         else:
-            $url .= '&order=ASC'; 
+            $url .= '&order=asc'; 
         endif;
         
         $data['sort_username']       = Url::link('people/customer', '' . 'sort=username' . $url, 'SSL');
@@ -282,7 +282,7 @@ class Customer extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('people/customer_list', $data));
+        Response::setOutput(View::make('people/customer_list', $data));
     }
     
     protected function getForm() {
@@ -414,7 +414,7 @@ class Customer extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('people/customer_form', $data));
+        Response::setOutput(View::make('people/customer_form', $data));
     }
     
     protected function validateForm() {
@@ -607,7 +607,7 @@ class Customer extends Controller {
             Theme::setTitle(Lang::get('lang_heading_title'));
             Breadcrumb::add('lang_heading_title', 'error/not_found');
             $data = Theme::renderControllers($data);
-            Response::setOutput(View::render('error/not_found', $data));
+            Response::setOutput(View::make('error/not_found', $data));
         endif;
     }
     
@@ -658,7 +658,7 @@ class Customer extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(View::render('people/customer_history', $data));
+        Response::setOutput(View::make('people/customer_history', $data));
     }
     
     public function credit() {
@@ -715,7 +715,7 @@ class Customer extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        Response::setOutput(View::render('people/customer_credit', $data));
+        Response::setOutput(View::make('people/customer_credit', $data));
     }
 
     public function commission() {
@@ -772,7 +772,7 @@ class Customer extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        Response::setOutput(View::render('people/customer_commission', $data));
+        Response::setOutput(View::make('people/customer_commission', $data));
     }
     
     public function reward() {
@@ -829,7 +829,7 @@ class Customer extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        Response::setOutput(View::render('people/customer_reward', $data));
+        Response::setOutput(View::make('people/customer_reward', $data));
     }
     
     public function addBanIP() {

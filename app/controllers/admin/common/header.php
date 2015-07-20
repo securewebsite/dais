@@ -44,10 +44,10 @@ class Header extends Controller {
         
         $data             = Theme::listen(__CLASS__, __FUNCTION__, $data);
         $data['menu']     = Theme::controller('common/menu');
-
+        
         $key              = CSS::compile();
         $data['css_link'] = Config::get('https.public') . 'asset/css/' . Filecache::get_key($key, 'css');
         
-        return View::render('common/header', $data);
+        return View::make('common/header', $data);
     }
 }

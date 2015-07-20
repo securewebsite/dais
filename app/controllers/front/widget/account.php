@@ -48,6 +48,6 @@ class Account extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/account', $data);
+        return View::make('widget/account', $data);
     }
 }

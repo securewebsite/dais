@@ -71,6 +71,6 @@ class Footer extends Controller {
         $data['javascript']    = Theme::controller('common/javascript');
         $data['footer_blocks'] = Theme::controller('widget/footer_blocks');
         
-        return View::render('content/footer', $data);
+        return View::make('content/footer', $data);
     }
 }

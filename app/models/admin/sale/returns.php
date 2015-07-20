@@ -167,7 +167,7 @@ class Returns extends Model {
             $sql.= " ORDER BY r.return_id";
         }
         
-        if (isset($data['order']) && ($data['order'] == 'DESC')) {
+        if (isset($data['order']) && ($data['order'] == 'desc')) {
             $sql.= " DESC";
         } else {
             $sql.= " ASC";

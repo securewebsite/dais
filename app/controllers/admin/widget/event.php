@@ -63,7 +63,7 @@ class Event extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/event', $data));
+        Response::setOutput(View::make('widget/event', $data));
     }
     
     private function validate() {

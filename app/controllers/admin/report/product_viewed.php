@@ -83,7 +83,7 @@ class ProductViewed extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('report/product_viewed', $data));
+        Response::setOutput(View::make('report/product_viewed', $data));
     }
     
     public function reset() {

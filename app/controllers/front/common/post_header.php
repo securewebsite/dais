@@ -124,6 +124,6 @@ class PostHeader extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('common/post_header', $data);
+        return View::make('common/post_header', $data);
     }
 }

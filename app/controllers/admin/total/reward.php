@@ -62,7 +62,7 @@ class Reward extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('total/reward', $data));
+        Response::setOutput(View::make('total/reward', $data));
     }
     
     protected function validate() {

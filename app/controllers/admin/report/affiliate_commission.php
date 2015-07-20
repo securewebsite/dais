@@ -115,6 +115,6 @@ class AffiliateCommission extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('report/affiliate_commission', $data));
+        Response::setOutput(View::make('report/affiliate_commission', $data));
     }
 }

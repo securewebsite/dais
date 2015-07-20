@@ -84,7 +84,7 @@ class SideBarMenu extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/side_bar', $data);
+        return View::make('widget/side_bar', $data);
     }
     
     private function product_category() {

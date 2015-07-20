@@ -74,7 +74,7 @@ class FooterBlocks extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/footer_blocks', $data));
+        Response::setOutput(View::make('widget/footer_blocks', $data));
     }
     
     protected function validate() {

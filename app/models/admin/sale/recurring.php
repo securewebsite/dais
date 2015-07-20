@@ -103,7 +103,7 @@ class Recurring extends Model {
             $sql.= " ORDER BY or.order_recurring_id";
         }
         
-        if (isset($data['order']) && ($data['order'] == 'DESC')) {
+        if (isset($data['order']) && ($data['order'] == 'desc')) {
             $sql.= " DESC";
         } else {
             $sql.= " ASC";

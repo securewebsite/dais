@@ -39,7 +39,11 @@ class FileHandler implements SessionHandlerInterface  {
     }
 
     public function read($id) {
-        return (string)file_get_contents($this->savePath . 'dais_sess_' . $id);
+        if (is_readable($file = $this->savePath . 'dais_sess_' . $id)):
+            return (string)file_get_contents($file);
+        else:
+            return '';
+        endif;
     }
    
     public function write($id, $data) {

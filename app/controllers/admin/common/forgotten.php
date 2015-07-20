@@ -75,7 +75,7 @@ class Forgotten extends Controller {
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('common/forgotten', $data));
+        Response::setOutput(View::make('common/forgotten', $data));
     }
     
     protected function validate() {

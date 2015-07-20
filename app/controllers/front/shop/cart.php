@@ -145,7 +145,7 @@ class Cart extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('shop/cart', $data);
+        return View::make('shop/cart', $data);
     }
     
     public function info() {

@@ -65,7 +65,7 @@ class FileManager extends Controller {
         $data['css_link'] = Config::get('https.public') . 'asset/' . Config::get('theme.name') . '/compiled/' . Filecache::get_key($css_key, 'css');
         $data['js_link']  = Config::get('https.public') . 'asset/' . Config::get('theme.name') . '/compiled/' . Filecache::get_key($js_key, 'js');
         
-        Response::setOutput(View::render('common/file_manager', $data));
+        Response::setOutput(View::make('common/file_manager', $data));
     }
     
     public function image() {

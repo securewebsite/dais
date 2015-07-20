@@ -31,6 +31,6 @@ class Footer extends Controller {
 		$key             = JS::compile();
 		$data['js_link'] = Config::get('https.public') . 'asset/js/' . Filecache::get_key($key, 'js');
         
-        return View::render('common/footer', $data);
+        return View::make('common/footer', $data);
     }
 }

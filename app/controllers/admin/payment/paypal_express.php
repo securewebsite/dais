@@ -231,7 +231,7 @@ class PaypalExpress extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/paypal_express', $data));
+        Response::setOutput(View::make('payment/paypal_express', $data));
     }
     
     public function imageLogo() {
@@ -559,7 +559,7 @@ class PaypalExpress extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/paypal_express_refund', $data));
+        Response::setOutput(View::make('payment/paypal_express_refund', $data));
     }
     
     public function doRefund() {
@@ -705,7 +705,7 @@ class PaypalExpress extends Controller {
                 
                 Theme::listen(__CLASS__, __FUNCTION__);
                 
-                return View::render('payment/paypal_express_order', $data);
+                return View::make('payment/paypal_express_order', $data);
             }
         }
     }
@@ -732,7 +732,7 @@ class PaypalExpress extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/paypal_express_search', $data));
+        Response::setOutput(View::make('payment/paypal_express_search', $data));
     }
     
     public function doSearch() {
@@ -853,7 +853,7 @@ class PaypalExpress extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/paypal_express_view', $data));
+        Response::setOutput(View::make('payment/paypal_express_view', $data));
     }
     
     private function formatRows($data) {
@@ -931,6 +931,6 @@ class PaypalExpress extends Controller {
         
         Theme::listen(__CLASS__, __FUNCTION__);
         
-        return View::render('common/buttons', $data);
+        return View::make('common/buttons', $data);
     }
 }

@@ -130,7 +130,7 @@ class Share extends Controller {
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('module/share', $data));
+        Response::setOutput(View::make('module/share', $data));
 	}
 
 	protected function validate() {

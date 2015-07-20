@@ -32,7 +32,7 @@ class Banner extends Controller {
         
         foreach ($results as $result) {
             if (is_readable(Config::get('path.image') . $result['image'])) {
-                $result['link'] = (Config::get('config_ucfirst')) ? Url::cap_slug($result['link']) : $result['link'];
+                $result['link'] = (Config::get('config_ucfirst')) ? Naming::cap_slug($result['link']) : $result['link'];
                 
                 $data['banners'][] = [
                     'title' => $result['title'], 
@@ -46,6 +46,6 @@ class Banner extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/banner', $data);
+        return View::make('widget/banner', $data);
     }
 }

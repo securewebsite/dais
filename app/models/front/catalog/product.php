@@ -324,7 +324,7 @@ class Product extends Model {
                     $sql.= " ORDER BY p.sort_order";
                 endif;
                 
-                if (isset($data['order']) && ($data['order'] == 'DESC')):
+                if (isset($data['order']) && ($data['order'] == 'desc')):
                     $sql.= " DESC, LCASE(pd.name) DESC";
                 else:
                     $sql.= " ASC, LCASE(pd.name) ASC";
@@ -480,7 +480,7 @@ class Product extends Model {
                     $sql.= " ORDER BY p.sort_order";
                 endif;
                 
-                if (isset($data['order']) && ($data['order'] == 'DESC')):
+                if (isset($data['order']) && ($data['order'] == 'desc')):
                     $sql.= " DESC, LCASE(pd.name) DESC";
                 else:
                     $sql.= " ASC, LCASE(pd.name) ASC";

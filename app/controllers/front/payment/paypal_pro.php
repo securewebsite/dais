@@ -63,7 +63,7 @@ class PaypalPro extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        return View::render('payment/paypal_pro', $data);
+        return View::make('payment/paypal_pro', $data);
     }
     
     public function send() {

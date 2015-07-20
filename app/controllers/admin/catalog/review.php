@@ -168,7 +168,7 @@ class Review extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'ASC';
+            $order = 'asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -236,10 +236,10 @@ class Review extends Controller {
             $url.= '&filter_status=' . Request::p()->get['filter_status'];
         }
         
-        if ($order == 'ASC') {
-            $url.= '&order=DESC';
+        if ($order == 'asc') {
+            $url.= '&order=desc';
         } else {
-            $url.= '&order=ASC';
+            $url.= '&order=asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -276,7 +276,7 @@ class Review extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('catalog/review_list', $data));
+        Response::setOutput(View::make('catalog/review_list', $data));
     }
     
     protected function getForm() {
@@ -398,7 +398,7 @@ class Review extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('catalog/review_form', $data));
+        Response::setOutput(View::make('catalog/review_form', $data));
     }
     
     protected function validateForm() {

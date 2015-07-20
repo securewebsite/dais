@@ -58,6 +58,6 @@ class BlogFeatured extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/blog_featured', $data);
+        return View::make('widget/blog_featured', $data);
     }
 }

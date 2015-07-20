@@ -138,7 +138,7 @@ class Page extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'ASC';
+            $order = 'asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -212,10 +212,10 @@ class Page extends Controller {
         
         $url = '';
         
-        if ($order == 'ASC') {
-            $url.= '&order=DESC';
+        if ($order == 'asc') {
+            $url.= '&order=desc';
         } else {
-            $url.= '&order=ASC';
+            $url.= '&order=asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -249,7 +249,7 @@ class Page extends Controller {
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('content/page_list', $data));
+        Response::setOutput(View::make('content/page_list', $data));
     }
     
     protected function getForm() {
@@ -420,7 +420,7 @@ class Page extends Controller {
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('content/page_form', $data));
+        Response::setOutput(View::make('content/page_form', $data));
     }
     
     protected function validateForm() {
@@ -518,7 +518,7 @@ class Page extends Controller {
         else:
             
             // build slug
-            $slug = Url::build_slug(Request::p()->get['name']);
+            $slug = Naming::build_slug(Request::p()->get['name']);
             
             // check that the slug is globally unique
             $query = ToolUtility::findSlugByName($slug);

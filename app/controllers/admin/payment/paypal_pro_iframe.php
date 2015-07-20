@@ -204,7 +204,7 @@ class PaypalProIframe extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/paypal_pro_iframe', $data));
+        Response::setOutput(View::make('payment/paypal_pro_iframe', $data));
     }
     
     public function install() {
@@ -269,7 +269,7 @@ class PaypalProIframe extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/paypal_pro_iframe_refund', $data));
+        Response::setOutput(View::make('payment/paypal_pro_iframe_refund', $data));
     }
     
     public function doRefund() {
@@ -430,7 +430,7 @@ class PaypalProIframe extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/paypal_pro_iframe_transaction', $data));
+        Response::setOutput(View::make('payment/paypal_pro_iframe_transaction', $data));
     }
     
     public function capture() {
@@ -622,7 +622,7 @@ class PaypalProIframe extends Controller {
             
             $data['javascript'] = Theme::controller('common/javascript');
             
-            Response::setOutput(View::render('payment/paypal_pro_iframe_order', $data));
+            Response::setOutput(View::make('payment/paypal_pro_iframe_order', $data));
         }
     }
     

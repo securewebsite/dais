@@ -16,8 +16,7 @@
 
 namespace Dais\Services\Providers\Storage;
 
-use Dais\Driver\Session\FileHandler;
-use Dais\Driver\Session\DatabaseHandler;
+use SessionHandlerInterface;
 
 class Session {
     
@@ -28,7 +27,7 @@ class Session {
         $this->path = $session_path;
     }
     
-    public function admin_session(FileHandler $handler) {
+    public function admin_session(SessionHandlerInterface $handler) {
         if (!session_id()):
             ini_set('session.use_only_cookies', 'On');
             ini_set('session.use_trans_sid', 'Off');
@@ -54,7 +53,7 @@ class Session {
         $this->data = & $_SESSION;
     }
     
-    public function front_session(DatabaseHandler $handler) {
+    public function front_session(SessionHandlerInterface $handler) {
         if (!session_id()):
             ini_set('session.use_only_cookies', 'On');
             ini_set('session.use_trans_sid', 'Off');

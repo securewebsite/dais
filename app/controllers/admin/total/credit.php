@@ -62,7 +62,7 @@ class Credit extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('total/credit', $data));
+        Response::setOutput(View::make('total/credit', $data));
     }
     
     protected function validate() {

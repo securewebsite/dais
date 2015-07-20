@@ -63,6 +63,6 @@ class NotFound extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('error/not_found', $data));
+        Response::setOutput(View::make('error/not_found', $data));
     }
 }

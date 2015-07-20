@@ -200,7 +200,7 @@ class Post extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'DESC';
+            $order = 'desc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -348,10 +348,10 @@ class Post extends Controller {
             $url.= '&filter_status=' . Request::p()->get['filter_status'];
         }
         
-        if ($order == 'ASC') {
-            $url.= '&order=DESC';
+        if ($order == 'asc') {
+            $url.= '&order=desc';
         } else {
-            $url.= '&order=ASC';
+            $url.= '&order=asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -435,7 +435,7 @@ class Post extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('content/post_list', $data));
+        Response::setOutput(View::make('content/post_list', $data));
     }
     
     private function getForm() {
@@ -695,7 +695,7 @@ class Post extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('content/post_form', $data));
+        Response::setOutput(View::make('content/post_form', $data));
     }
     
     private function validateForm() {
@@ -851,7 +851,7 @@ class Post extends Controller {
         else:
             
             // build slug
-            $slug = Url::build_slug(Request::p()->get['name']);
+            $slug = Naming::build_slug(Request::p()->get['name']);
             
             // check that the slug is globally unique
             $query = ToolUtility::findSlugByName($slug);

@@ -61,6 +61,6 @@ class BestSeller extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/best_seller', $data);
+        return View::make('widget/best_seller', $data);
     }
 }

@@ -88,6 +88,6 @@ class Dashboard extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/dashboard', $data));
+        Response::setOutput(View::make('account/dashboard', $data));
     }
 }

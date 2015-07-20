@@ -132,7 +132,7 @@ class CustomerGroup extends Model {
             $sql.= " ORDER BY cg.sort_order";
         }
         
-        if (isset($data['order']) && ($data['order'] == 'DESC')) {
+        if (isset($data['order']) && ($data['order'] == 'desc')) {
             $sql.= " DESC";
         } else {
             $sql.= " ASC";

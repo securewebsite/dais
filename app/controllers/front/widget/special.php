@@ -29,7 +29,7 @@ class Special extends Controller {
         
         $data['products'] = array();
         
-        $filter = array('sort' => 'pd.name', 'order' => 'ASC', 'start' => 0, 'limit' => $setting['limit']);
+        $filter = array('sort' => 'pd.name', 'order' => 'asc', 'start' => 0, 'limit' => $setting['limit']);
         
         $results = CatalogProduct::getProductSpecials($filter);
         
@@ -63,6 +63,6 @@ class Special extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/special', $data);
+        return View::make('widget/special', $data);
     }
 }

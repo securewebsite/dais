@@ -78,7 +78,7 @@ class Recurring extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'DESC';
+            $order = 'desc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -180,10 +180,10 @@ class Recurring extends Controller {
             $url.= '&filter_date_added=' . Request::p()->get['filter_date_added'];
         }
         
-        if ($order == 'ASC') {
-            $url.= '&order=DESC';
+        if ($order == 'asc') {
+            $url.= '&order=desc';
         } else {
-            $url.= '&order=ASC';
+            $url.= '&order=asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -249,7 +249,7 @@ class Recurring extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('sale/recurring_list', $data));
+        Response::setOutput(View::make('sale/recurring_list', $data));
     }
     
     public function info() {
@@ -365,7 +365,7 @@ class Recurring extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('sale/recurring_info', $data));
+            Response::setOutput(View::make('sale/recurring_info', $data));
         } else {
             return new Action('error/not_found');
         }

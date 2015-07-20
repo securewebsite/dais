@@ -124,6 +124,6 @@ class PreFooter extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('common/pre_footer', $data);
+        return View::make('common/pre_footer', $data);
     }
 }

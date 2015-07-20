@@ -124,7 +124,7 @@ class Compare extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('catalog/compare', $data));
+        Response::setOutput(View::make('catalog/compare', $data));
     }
     
     public function add() {

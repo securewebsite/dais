@@ -74,7 +74,7 @@ class SideBarMenu extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/side_bar_menu', $data));
+        Response::setOutput(View::make('widget/side_bar_menu', $data));
     }
     
     protected function validate() {

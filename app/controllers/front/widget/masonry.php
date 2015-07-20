@@ -88,7 +88,7 @@ class Masonry extends Controller {
             } elseif ($setting['product_type'] == 'special') {
                 $results = CatalogProduct::getProductSpecials(array(
                     'sort' => 'pd.name',
-                    'order' => 'ASC',
+                    'order' => 'asc',
                     'start' => 0,
                     'limit' => $setting['limit']
                 ));
@@ -97,7 +97,7 @@ class Masonry extends Controller {
             } else {
                 $results = CatalogProduct::getProducts(array(
                     'sort' => 'p.date_added',
-                    'order' => 'DESC',
+                    'order' => 'desc',
                     'start' => 0,
                     'limit' => $setting['limit']
                 ));
@@ -173,7 +173,7 @@ class Masonry extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/masonry', $data);
+        return View::make('widget/masonry', $data);
     }
     
     protected function formatDescription($description, $chars = 100) {

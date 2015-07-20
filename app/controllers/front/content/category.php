@@ -40,7 +40,7 @@ class Category extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'DESC';
+            $order = 'desc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -237,7 +237,7 @@ class Category extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('content/category', $data));
+            Response::setOutput(View::make('content/category', $data));
         } else {
             $url = '';
             
@@ -281,7 +281,7 @@ class Category extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('error/not_found', $data));
+            Response::setOutput(View::make('error/not_found', $data));
         }
     }
 }

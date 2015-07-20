@@ -132,7 +132,7 @@ class Category extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('content/category_list', $data));
+        Response::setOutput(View::make('content/category_list', $data));
     }
     
     private function getForm() {
@@ -277,7 +277,7 @@ class Category extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('content/category_form', $data));
+        Response::setOutput(View::make('content/category_form', $data));
     }
     
     private function validateForm() {
@@ -340,7 +340,7 @@ class Category extends Controller {
         else:
             
             // build slug
-            $slug = Url::build_slug(Request::p()->get['name']);
+            $slug = Naming::build_slug(Request::p()->get['name']);
             
             // check that the slug is globally unique
             $query = ToolUtility::findSlugByName($slug);

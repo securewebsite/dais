@@ -85,7 +85,7 @@ class Feed extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('module/feed', $data));
+        Response::setOutput(View::make('module/feed', $data));
     }
     
     public function install() {

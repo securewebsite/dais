@@ -71,7 +71,7 @@ class Special extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/special', $data));
+        Response::setOutput(View::make('widget/special', $data));
     }
     
     protected function validate() {

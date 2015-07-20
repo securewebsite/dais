@@ -80,7 +80,7 @@ class Password extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/password', $data));
+        Response::setOutput(View::make('account/password', $data));
     }
     
     protected function validate() {

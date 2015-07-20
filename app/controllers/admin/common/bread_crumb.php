@@ -26,6 +26,6 @@ class BreadCrumb extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('common/bread_crumb', $data);
+        return View::make('common/bread_crumb', $data);
     }
 }

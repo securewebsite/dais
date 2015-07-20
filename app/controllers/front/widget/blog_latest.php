@@ -28,7 +28,7 @@ class BlogLatest extends Controller {
         
         $data['posts'] = array();
         
-        $filter = array('sort' => 'p.date_added', 'order' => 'DESC', 'start' => 0, 'limit' => $setting['limit']);
+        $filter = array('sort' => 'p.date_added', 'order' => 'desc', 'start' => 0, 'limit' => $setting['limit']);
         
         $results = ContentPost::getPosts($filter);
         
@@ -44,6 +44,6 @@ class BlogLatest extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/blog_latest', $data);
+        return View::make('widget/blog_latest', $data);
     }
 }

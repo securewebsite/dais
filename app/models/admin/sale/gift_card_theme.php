@@ -101,7 +101,7 @@ class GiftCardTheme extends Model {
 				ORDER BY vtd.name
 			";
             
-            if (isset($data['order']) && ($data['order'] == 'DESC')) {
+            if (isset($data['order']) && ($data['order'] == 'desc')) {
                 $sql.= " DESC";
             } else {
                 $sql.= " ASC";

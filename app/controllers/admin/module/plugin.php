@@ -85,7 +85,7 @@ class Plugin extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('module/plugin', $data));
+        Response::setOutput(View::make('module/plugin', $data));
     }
     
     public function install() {

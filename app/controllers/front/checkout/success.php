@@ -62,6 +62,6 @@ class Success extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('common/success', $data));
+        Response::setOutput(View::make('common/success', $data));
     }
 }

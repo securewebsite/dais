@@ -74,7 +74,7 @@ class Banner extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/banner', $data));
+        Response::setOutput(View::make('widget/banner', $data));
     }
     
     protected function validate() {

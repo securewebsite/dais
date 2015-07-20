@@ -74,7 +74,7 @@ class Carousel extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/carousel', $data));
+        Response::setOutput(View::make('widget/carousel', $data));
     }
     
     protected function validate() {

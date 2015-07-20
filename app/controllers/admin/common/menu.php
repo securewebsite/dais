@@ -200,6 +200,6 @@ class Menu extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('common/menu', $data);
+        return View::make('common/menu', $data);
     }
 }

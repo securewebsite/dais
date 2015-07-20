@@ -143,7 +143,7 @@ class Moneybookers extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/moneybookers', $data));
+        Response::setOutput(View::make('payment/moneybookers', $data));
     }
     
     protected function validate() {

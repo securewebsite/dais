@@ -27,6 +27,6 @@ class Javascript extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('common/javascript', $data);
+        return View::make('common/javascript', $data);
     }
 }

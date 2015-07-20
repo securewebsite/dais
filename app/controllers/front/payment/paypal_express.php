@@ -36,7 +36,7 @@ class PaypalExpress extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        return View::render('payment/paypal_express', $data);
+        return View::make('payment/paypal_express', $data);
     }
     
     public function express() {
@@ -744,7 +744,7 @@ class PaypalExpress extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/paypal_express_confirm', $data));
+        Response::setOutput(View::make('payment/paypal_express_confirm', $data));
     }
     
     public function expressComplete() {
@@ -1577,7 +1577,7 @@ class PaypalExpress extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('error/not_found', $data));
+            Response::setOutput(View::make('error/not_found', $data));
         }
     }
     
@@ -1990,6 +1990,6 @@ class PaypalExpress extends Controller {
             'link' => Url::link('account/recurring', '', 'SSL')
         );
         
-        return View::render('common/buttons', $data);
+        return View::make('common/buttons', $data);
     }
 }

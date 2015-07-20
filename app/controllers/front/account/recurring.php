@@ -71,7 +71,7 @@ class Recurring extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/recurring_list', $data));
+        Response::setOutput(View::make('account/recurring_list', $data));
     }
     
     public function info() {
@@ -140,7 +140,7 @@ class Recurring extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('account/recurring_info', $data));
+            Response::setOutput(View::make('account/recurring_info', $data));
         else:
             Response::redirect(Url::link('account/recurring', '', 'SSL'));
         endif;

@@ -93,7 +93,7 @@ class Masonry extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/masonry', $data));
+        Response::setOutput(View::make('widget/masonry', $data));
     }
     
     private function validate() {

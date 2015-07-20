@@ -125,7 +125,7 @@ class Edit extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/edit', $data));
+        Response::setOutput(View::make('account/edit', $data));
     }
     
     protected function validate() {

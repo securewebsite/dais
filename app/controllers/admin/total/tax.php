@@ -62,7 +62,7 @@ class Tax extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('total/tax', $data));
+        Response::setOutput(View::make('total/tax', $data));
     }
     
     protected function validate() {

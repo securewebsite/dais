@@ -29,7 +29,7 @@ class Latest extends Controller {
         
         $data['products'] = array();
         
-        $filter = array('sort' => 'p.date_added', 'order' => 'DESC', 'start' => 0, 'limit' => $setting['limit']);
+        $filter = array('sort' => 'p.date_added', 'order' => 'desc', 'start' => 0, 'limit' => $setting['limit']);
         
         $results = CatalogProduct::getProducts($filter);
         
@@ -63,6 +63,6 @@ class Latest extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/latest', $data);
+        return View::make('widget/latest', $data);
     }
 }

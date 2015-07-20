@@ -104,7 +104,7 @@ class HeaderMenu extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/header_menu', $data);
+        return View::make('widget/header_menu', $data);
     }
     
     private function product_category() {

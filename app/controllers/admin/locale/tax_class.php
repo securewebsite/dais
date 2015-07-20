@@ -140,7 +140,7 @@ class TaxClass extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'ASC';
+            $order = 'asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -200,10 +200,10 @@ class TaxClass extends Controller {
         
         $url = '';
         
-        if ($order == 'ASC') {
-            $url.= '&order=DESC';
+        if ($order == 'asc') {
+            $url.= '&order=desc';
         } else {
-            $url.= '&order=ASC';
+            $url.= '&order=asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -231,7 +231,7 @@ class TaxClass extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('locale/tax_class_list', $data));
+        Response::setOutput(View::make('locale/tax_class_list', $data));
     }
     
     protected function getForm() {
@@ -317,7 +317,7 @@ class TaxClass extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('locale/tax_class_form', $data));
+        Response::setOutput(View::make('locale/tax_class_form', $data));
     }
     
     protected function validateForm() {

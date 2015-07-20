@@ -58,7 +58,7 @@ class GiftCardTheme extends Model {
 					WHERE vtd.language_id = '" . (int)Config::get('config_language_id') . "' 
 					ORDER BY vtd.name";
                 
-                if (isset($data['order']) && ($data['order'] == 'DESC')):
+                if (isset($data['order']) && ($data['order'] == 'desc')):
                     $sql.= " DESC";
                 else:
                     $sql.= " ASC";

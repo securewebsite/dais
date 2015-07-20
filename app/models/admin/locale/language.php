@@ -497,7 +497,7 @@ class Language extends Model {
                 $sql.= " ORDER BY sort_order, name";
             }
             
-            if (isset($data['order']) && ($data['order'] == 'DESC')) {
+            if (isset($data['order']) && ($data['order'] == 'desc')) {
                 $sql.= " DESC";
             } else {
                 $sql.= " ASC";

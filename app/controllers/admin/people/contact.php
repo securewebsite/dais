@@ -44,7 +44,7 @@ class Contact extends Controller {
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('people/contact', $data));
+        Response::setOutput(View::make('people/contact', $data));
     }
     
     public function send() {

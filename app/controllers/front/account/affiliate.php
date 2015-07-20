@@ -207,7 +207,7 @@ class Affiliate extends Controller {
         
         $filter = array(
 			'sort'  => 't.date_added', 
-			'order' => 'DESC', 
+			'order' => 'desc', 
 			'start' => ($page - 1) * 10, 
 			'limit' => 10
         );
@@ -241,7 +241,7 @@ class Affiliate extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/affiliate', $data));
+        Response::setOutput(View::make('account/affiliate', $data));
 	}
 
 	public function autocomplete() {
@@ -354,7 +354,7 @@ class Affiliate extends Controller {
         else:
             
             // build slug
-            $slug = Url::build_slug(Request::p()->get['name']);
+            $slug = Naming::build_slug(Request::p()->get['name']);
             
             // check that the slug is globally unique
             $query = ToolUtility::findSlugByName($slug);

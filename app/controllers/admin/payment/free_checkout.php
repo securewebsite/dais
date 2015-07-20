@@ -73,7 +73,7 @@ class FreeCheckout extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/free_checkout', $data));
+        Response::setOutput(View::make('payment/free_checkout', $data));
     }
     
     protected function validate() {

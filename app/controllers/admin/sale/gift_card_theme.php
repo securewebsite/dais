@@ -140,7 +140,7 @@ class GiftCardTheme extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'ASC';
+            $order = 'asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -213,10 +213,10 @@ class GiftCardTheme extends Controller {
         
         $url = '';
         
-        if ($order == 'ASC') {
-            $url.= '&order=DESC';
+        if ($order == 'asc') {
+            $url.= '&order=desc';
         } else {
-            $url.= '&order=ASC';
+            $url.= '&order=asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -250,7 +250,7 @@ class GiftCardTheme extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('sale/gift_card_theme_list', $data));
+        Response::setOutput(View::make('sale/gift_card_theme_list', $data));
     }
     
     protected function getForm() {
@@ -336,7 +336,7 @@ class GiftCardTheme extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('sale/gift_card_theme_form', $data));
+        Response::setOutput(View::make('sale/gift_card_theme_form', $data));
     }
     
     protected function validateForm() {

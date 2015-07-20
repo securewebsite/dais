@@ -149,6 +149,6 @@ class Plugin {
 
         \View::addFolder($dir);
         
-        return \View::render($template, $data);
+        return \View::make($template, $data);
     }
 }

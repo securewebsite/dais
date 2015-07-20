@@ -84,7 +84,7 @@ class LowOrderFee extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('total/low_order_fee', $data));
+        Response::setOutput(View::make('total/low_order_fee', $data));
     }
     
     protected function validate() {

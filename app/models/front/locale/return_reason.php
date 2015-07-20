@@ -50,7 +50,7 @@ class ReturnReason extends Model {
             
             $sql.= " ORDER BY name";
             
-            if (isset($data['return']) && ($data['return'] == 'DESC')) {
+            if (isset($data['return']) && ($data['return'] == 'desc')) {
                 $sql.= " DESC";
             } else {
                 $sql.= " ASC";

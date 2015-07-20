@@ -85,7 +85,7 @@ class Payment extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('module/payment', $data));
+        Response::setOutput(View::make('module/payment', $data));
     }
     
     public function install() {

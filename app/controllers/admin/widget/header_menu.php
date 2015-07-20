@@ -74,7 +74,7 @@ class HeaderMenu extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/header_menu', $data));
+        Response::setOutput(View::make('widget/header_menu', $data));
     }
     
     protected function validate() {

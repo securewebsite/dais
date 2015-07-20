@@ -114,6 +114,6 @@ class CustomerOrder extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('report/customer_order', $data));
+        Response::setOutput(View::make('report/customer_order', $data));
     }
 }

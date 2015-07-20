@@ -67,6 +67,6 @@ class ShareBar extends Controller {
 
 		$data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('common/share_bar', $data);
+        return View::make('common/share_bar', $data);
 	}
 }

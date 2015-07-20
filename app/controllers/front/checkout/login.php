@@ -40,7 +40,7 @@ class Login extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        Response::setOutput(View::render('checkout/login', $data));
+        Response::setOutput(View::make('checkout/login', $data));
     }
     
     public function validate() {

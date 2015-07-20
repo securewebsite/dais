@@ -138,6 +138,6 @@ class SaleTax extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('report/sale_tax', $data));
+        Response::setOutput(View::make('report/sale_tax', $data));
     }
 }

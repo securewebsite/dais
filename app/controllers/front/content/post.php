@@ -295,7 +295,7 @@ class Post extends Controller {
             $data['share_bar'] = Theme::controller('common/share_bar', array('post', $data));
             $data             = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('content/post', $data));
+            Response::setOutput(View::make('content/post', $data));
         } else {
             $url = '';
             
@@ -335,7 +335,7 @@ class Post extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('error/not_found', $data));
+            Response::setOutput(View::make('error/not_found', $data));
         }
     }
     
@@ -388,7 +388,7 @@ class Post extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(View::render('content/comment', $data));
+        Response::setOutput(View::make('content/comment', $data));
     }
     
     public function write() {

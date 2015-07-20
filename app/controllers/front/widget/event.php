@@ -62,6 +62,6 @@ class Event extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/event', $data);
+        return View::make('widget/event', $data);
     }
 }

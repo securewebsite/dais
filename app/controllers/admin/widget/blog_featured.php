@@ -94,7 +94,7 @@ class BlogFeatured extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/blog_featured', $data));
+        Response::setOutput(View::make('widget/blog_featured', $data));
     }
     
     private function validate() {

@@ -62,7 +62,7 @@ class GoogleBase extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('feed/google_base', $data));
+        Response::setOutput(View::make('feed/google_base', $data));
     }
     
     protected function validate() {

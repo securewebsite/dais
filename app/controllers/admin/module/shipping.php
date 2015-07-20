@@ -99,7 +99,7 @@ class Shipping extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('module/shipping', $data));
+        Response::setOutput(View::make('module/shipping', $data));
     }
     
     public function install() {

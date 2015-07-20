@@ -38,6 +38,6 @@ class Test extends Controller {
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('tool/test', $data));
+        Response::setOutput(View::make('tool/test', $data));
     }
 }

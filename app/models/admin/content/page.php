@@ -344,7 +344,7 @@ class Page extends Model {
                 $sql.= " ORDER BY id.title";
             }
             
-            if (isset($data['order']) && ($data['order'] == 'DESC')) {
+            if (isset($data['order']) && ($data['order'] == 'desc')) {
                 $sql.= " DESC";
             } else {
                 $sql.= " ASC";

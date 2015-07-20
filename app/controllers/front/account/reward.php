@@ -43,7 +43,7 @@ class Reward extends Controller {
         
         $data['rewards'] = array();
         
-        $filter = array('sort' => 'date_added', 'order' => 'DESC', 'start' => ($page - 1) * 10, 'limit' => 10);
+        $filter = array('sort' => 'date_added', 'order' => 'desc', 'start' => ($page - 1) * 10, 'limit' => 10);
         
         $reward_total = AccountReward::getTotalRewards($filter);
         
@@ -66,6 +66,6 @@ class Reward extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/reward', $data));
+        Response::setOutput(View::make('account/reward', $data));
     }
 }

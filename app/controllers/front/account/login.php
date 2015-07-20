@@ -176,7 +176,7 @@ class Login extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/login', $data));
+        Response::setOutput(View::make('account/login', $data));
     }
     
     protected function validate() {

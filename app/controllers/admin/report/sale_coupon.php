@@ -96,6 +96,6 @@ class SaleCoupon extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('report/sale_coupon', $data));
+        Response::setOutput(View::make('report/sale_coupon', $data));
     }
 }

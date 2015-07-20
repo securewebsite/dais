@@ -68,7 +68,7 @@ class Forgotten extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/forgotten', $data));
+        Response::setOutput(View::make('account/forgotten', $data));
     }
     
     protected function validate() {

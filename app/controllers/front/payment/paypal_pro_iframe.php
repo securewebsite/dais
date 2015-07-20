@@ -49,7 +49,7 @@ class PaypalProIframe extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('payment/paypal_pro_iframe', $data);
+        return View::make('payment/paypal_pro_iframe', $data);
     }
     
     public function create() {
@@ -83,7 +83,7 @@ class PaypalProIframe extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(View::render('payment/paypal_pro_iframe_body', $data));
+        Response::setOutput(View::make('payment/paypal_pro_iframe_body', $data));
     }
     
     public function notify() {

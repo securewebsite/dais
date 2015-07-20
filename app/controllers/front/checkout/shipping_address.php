@@ -63,7 +63,7 @@ class ShippingAddress extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        Response::setOutput(View::render('checkout/shipping_address', $data));
+        Response::setOutput(View::make('checkout/shipping_address', $data));
     }
     
     public function validate() {

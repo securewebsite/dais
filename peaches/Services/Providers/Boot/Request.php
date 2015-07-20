@@ -52,17 +52,17 @@ class Request {
                 array_shift($paths);
                 
                 if (!empty($paths)):
-                    if ($face === FRONT_FACADE):
+                    //if ($face === FRONT_FACADE):
                         $route = implode('/', $paths);
-                    else:
-                        $route = null;
-                    endif;
+                    //else:
+                        //$route = null;
+                    //endif;
                 endif;
             else:
                 $route = $this->get['_route_'];
             endif;
         endif;
-
+        //var_dump($route);exit;
         // we'll need this to build configuarations
         $this->facade = $face;
 

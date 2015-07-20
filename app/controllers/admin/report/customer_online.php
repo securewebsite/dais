@@ -106,6 +106,6 @@ class CustomerOnline extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('report/customer_online', $data));
+        Response::setOutput(View::make('report/customer_online', $data));
     }
 }

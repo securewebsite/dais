@@ -80,6 +80,6 @@ class Currency extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/currency', $data);
+        return View::make('widget/currency', $data);
     }
 }

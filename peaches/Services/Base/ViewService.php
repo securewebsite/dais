@@ -16,38 +16,15 @@
 
 namespace Dais\Services\Base;
 
-use Foil\Foil;
+use Dais\Base\View;
 use Pimple\Container;
-use Foil\Extensions\Uri;
 use Pimple\ServiceProviderInterface;
 
 class ViewService implements ServiceProviderInterface {
- 
-	public function register(Container $app) {
-
-        $app['foil.options'] = [
-            'ext'            => 'tpl',
-            'template_class' => 'Dais\Base\View',
-            'folders'        => [$app['theme']->getPath() . 'view'],
-        ];
-
-        $app['foil.boostrap'] = function(Container $app) {
-            return Foil::boot($app['foil.options']);
-        };
-
-        $app['foil.uri.options'] = [
-            'host'   => env('APP_ENV'),
-        ];
-
-        $app['foil.uri'] = function(Container $app) {
-            return new Uri();
-        };
-
-        $app['foil'] = function(Container $app) {
-            $engine = $app['foil.boostrap']->engine();
-            $engine->loadExtension($app['foil.uri'], $app['foil.uri.options']);
-
-            return $engine;
-        };
-    } 
+    
+       public function register(Container $app) {
+            $app['view'] = function (Container $app) {
+                return new View(Theme::getPath());
+            };
+       } 
 }

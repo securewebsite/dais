@@ -108,7 +108,7 @@ class Wishlist extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/wishlist', $data));
+        Response::setOutput(View::make('account/wishlist', $data));
     }
     
     public function add() {

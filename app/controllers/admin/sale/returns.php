@@ -294,7 +294,7 @@ class Returns extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'DESC';
+            $order = 'desc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -424,10 +424,10 @@ class Returns extends Controller {
             $url.= '&filter_date_modified=' . Request::p()->get['filter_date_modified'];
         }
         
-        if ($order == 'ASC') {
-            $url.= '&order=DESC';
+        if ($order == 'asc') {
+            $url.= '&order=desc';
         } else {
-            $url.= '&order=ASC';
+            $url.= '&order=asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -507,7 +507,7 @@ class Returns extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('sale/return_list', $data));
+        Response::setOutput(View::make('sale/return_list', $data));
     }
     
     protected function getForm() {
@@ -773,7 +773,7 @@ class Returns extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('sale/return_form', $data));
+        Response::setOutput(View::make('sale/return_form', $data));
     }
     
     public function info() {
@@ -913,7 +913,7 @@ class Returns extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('sale/return_info', $data));
+            Response::setOutput(View::make('sale/return_info', $data));
         } else {
             $data = Theme::language('error/not_found');
             
@@ -925,7 +925,7 @@ class Returns extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('error/not_found', $data));
+            Response::setOutput(View::make('error/not_found', $data));
         }
     }
     
@@ -1049,6 +1049,6 @@ class Returns extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        Response::setOutput(View::render('sale/return_history', $data));
+        Response::setOutput(View::make('sale/return_history', $data));
     }
 }

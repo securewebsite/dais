@@ -52,6 +52,6 @@ class Permission extends Controller {
         $data = Theme::renderControllers($data);
 
         Response::addHeader(Request::p()->server['SERVER_PROTOCOL'] . '/1.1 401 Unauthorized');
-        Response::setOutput(View::render('error/permission', $data));
+        Response::setOutput(View::make('error/permission', $data));
     }
 }

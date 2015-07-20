@@ -98,7 +98,7 @@ class PaypalStandard extends Controller {
             
             $data['javascript'] = Theme::controller('common/javascript');
             
-            return View::render('payment/paypal_standard', $data);
+            return View::make('payment/paypal_standard', $data);
         }
     }
     

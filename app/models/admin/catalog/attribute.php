@@ -117,7 +117,7 @@ class Attribute extends Model {
             $sql.= " ORDER BY attribute_group, ad.name";
         }
         
-        if (isset($data['order']) && ($data['order'] == 'DESC')) {
+        if (isset($data['order']) && ($data['order'] == 'desc')) {
             $sql.= " DESC";
         } else {
             $sql.= " ASC";
@@ -183,7 +183,7 @@ class Attribute extends Model {
             $sql.= " ORDER BY ad.name";
         }
         
-        if (isset($data['order']) && ($data['order'] == 'DESC')) {
+        if (isset($data['order']) && ($data['order'] == 'desc')) {
             $sql.= " DESC";
         } else {
             $sql.= " ASC";

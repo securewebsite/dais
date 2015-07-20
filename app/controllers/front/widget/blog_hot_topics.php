@@ -88,6 +88,6 @@ class BlogHotTopics extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/blog_hot_topics', $data);
+        return View::make('widget/blog_hot_topics', $data);
     }
 }

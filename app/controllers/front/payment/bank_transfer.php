@@ -33,7 +33,7 @@ class BankTransfer extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        return View::render('payment/bank_transfer', $data);
+        return View::make('payment/bank_transfer', $data);
     }
     
     public function confirm() {

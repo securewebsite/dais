@@ -194,7 +194,7 @@ class Notification extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('module/notification_list', $data));
+        Response::setOutput(View::make('module/notification_list', $data));
 	}
 
 	public function getForm() {
@@ -324,7 +324,7 @@ class Notification extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('module/notification_form', $data));
+        Response::setOutput(View::make('module/notification_form', $data));
 
 	}
 

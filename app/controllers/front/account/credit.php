@@ -46,7 +46,7 @@ class Credit extends Controller {
         
         $filter = array(
             'sort'  => 'date_added', 
-            'order' => 'DESC', 
+            'order' => 'desc', 
             'start' => ($page - 1) * 10, 
             'limit' => 10
         );
@@ -79,6 +79,6 @@ class Credit extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/credit', $data));
+        Response::setOutput(View::make('account/credit', $data));
     }
 }

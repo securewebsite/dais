@@ -34,7 +34,7 @@ class Check extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        return View::render('payment/check', $data);
+        return View::make('payment/check', $data);
     }
     
     public function confirm() {

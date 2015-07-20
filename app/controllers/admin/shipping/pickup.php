@@ -73,7 +73,7 @@ class Pickup extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('shipping/pickup', $data));
+        Response::setOutput(View::make('shipping/pickup', $data));
     }
     
     protected function validate() {

@@ -21,7 +21,7 @@ use Dais\Support\Facade;
 class View extends Facade {
     
     protected static function getFacadeAccessor() {
-        return 'foil';
+        return 'view';
     }
 
     /*

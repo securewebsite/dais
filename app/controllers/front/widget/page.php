@@ -36,6 +36,6 @@ class Page extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/page', $data);
+        return View::make('widget/page', $data);
     }
 }

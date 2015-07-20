@@ -36,7 +36,7 @@ class Calendar extends Controller {
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('content/calendar', $data));
+        Response::setOutput(View::make('content/calendar', $data));
     }
     
     public function fetch() {

@@ -18,6 +18,9 @@ namespace Dais\Services\Providers\Base;
 
 class Router {
 
+	protected static $current;
+	protected static $route;
+
 	public function dispatch() {
 
 		if (!is_null(Request::get('route'))):
@@ -28,7 +31,9 @@ class Router {
 
 		if (!is_null(Request::get('_route_'))):
 
-			$segments   = explode('/', Request::get('_route_'));
+			static::$current = Request::get('_route_');
+
+			$segments   = explode('/', static::$current);
 			
 			$controller = count($segments) > 1 ? $segments[0] . '/' . $segments[1] : $segments[0];
 
@@ -45,7 +50,13 @@ class Router {
 			
 			// This handles all native files :not custom routes
 			if (!is_null(Naming::file_from_route($controller))):
-				Request::get('route', implode('/', $segments));
+				$args = (count($segments) % 2) ? static::to_assoc(3) : static::to_assoc(2);
+
+				Request::get('route', static::$route);
+				
+				foreach($args as $key => $value):
+					Request::get($key, $value);
+				endforeach;
 
 				$action = new Action(Request::get('route'));
 			endif;
@@ -145,5 +156,25 @@ class Router {
 		endif;
 
 		return $result;
+	}
+
+	public static function to_assoc($offset = 0) {
+		$segments  = explode('/', static::$current);
+		$arguments = [];
+		$route     = [];
+
+		for ($i = 0; $i < $offset; $i++):
+			$route[] = array_shift($segments);
+		endfor;
+		
+		$length = count($segments);
+
+		static::$route = implode('/', $route);
+
+		for ($i = 0; $i < $length; $i = $i + 2):
+			$arguments[$segments[$i]] = $segments[$i + 1];
+		endfor;
+		
+		return $arguments;
 	}
 }

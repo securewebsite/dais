@@ -72,7 +72,7 @@ class Backup extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('tool/backup', $data));
+        Response::setOutput(View::make('tool/backup', $data));
     }
     
     public function backup() {

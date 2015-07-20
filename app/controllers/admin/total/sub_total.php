@@ -62,7 +62,7 @@ class SubTotal extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('total/sub_total', $data));
+        Response::setOutput(View::make('total/sub_total', $data));
     }
     
     protected function validate() {

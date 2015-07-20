@@ -248,7 +248,7 @@ class Order extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'DESC';
+            $order = 'desc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -387,10 +387,10 @@ class Order extends Controller {
             $url.= '&filter_date_modified=' . Request::p()->get['filter_date_modified'];
         }
         
-        if ($order == 'ASC') {
-            $url.= '&order=DESC';
+        if ($order == 'asc') {
+            $url.= '&order=desc';
         } else {
-            $url.= '&order=ASC';
+            $url.= '&order=asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -464,7 +464,7 @@ class Order extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('sale/order_list', $data));
+        Response::setOutput(View::make('sale/order_list', $data));
     }
     
     public function getForm() {
@@ -1060,7 +1060,7 @@ class Order extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('sale/order_form', $data));
+        Response::setOutput(View::make('sale/order_form', $data));
     }
     
     protected function validateForm() {
@@ -1673,7 +1673,7 @@ class Order extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('sale/order_info', $data));
+            Response::setOutput(View::make('sale/order_info', $data));
         } else {
             $data = Theme::language('error/not_found');
             
@@ -1685,7 +1685,7 @@ class Order extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('error/not_found', $data));
+            Response::setOutput(View::make('error/not_found', $data));
         }
     }
     
@@ -1952,7 +1952,7 @@ class Order extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        Response::setOutput(View::render('sale/order_history', $data));
+        Response::setOutput(View::make('sale/order_history', $data));
     }
     
     public function download() {
@@ -1999,7 +1999,7 @@ class Order extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('error/not_found', $data));
+            Response::setOutput(View::make('error/not_found', $data));
         }
     }
     
@@ -2286,6 +2286,6 @@ class Order extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(View::render('sale/order_invoice', $data));
+        Response::setOutput(View::make('sale/order_invoice', $data));
     }
 }

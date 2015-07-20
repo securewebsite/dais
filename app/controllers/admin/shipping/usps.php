@@ -437,7 +437,7 @@ class Usps extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('shipping/usps', $data));
+        Response::setOutput(View::make('shipping/usps', $data));
     }
     
     protected function validate() {

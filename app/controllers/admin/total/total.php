@@ -62,7 +62,7 @@ class Total extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('total/total', $data));
+        Response::setOutput(View::make('total/total', $data));
     }
     
     protected function validate() {

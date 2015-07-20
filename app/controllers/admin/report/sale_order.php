@@ -136,6 +136,6 @@ class SaleOrder extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('report/sale_order', $data));
+        Response::setOutput(View::make('report/sale_order', $data));
     }
 }

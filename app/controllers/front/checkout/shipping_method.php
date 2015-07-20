@@ -94,7 +94,7 @@ class ShippingMethod extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(View::render('checkout/shipping_method', $data));
+        Response::setOutput(View::make('checkout/shipping_method', $data));
     }
     
     public function validate() {

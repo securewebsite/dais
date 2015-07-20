@@ -247,7 +247,7 @@ class Fedex extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('shipping/fedex', $data));
+        Response::setOutput(View::make('shipping/fedex', $data));
     }
     
     protected function validate() {

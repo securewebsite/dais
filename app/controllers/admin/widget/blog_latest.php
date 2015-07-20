@@ -72,7 +72,7 @@ class BlogLatest extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/blog_latest', $data));
+        Response::setOutput(View::make('widget/blog_latest', $data));
     }
     
     private function validate() {

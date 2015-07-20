@@ -81,7 +81,7 @@ class PayflowIframe extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('payment/payflow_iframe', $data);
+        return View::make('payment/payflow_iframe', $data);
     }
     
     public function pp_return() {
@@ -89,7 +89,7 @@ class PayflowIframe extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(View::render('payment/payflow_iframe_return', $data));
+        Response::setOutput(View::make('payment/payflow_iframe_return', $data));
     }
     
     public function pp_cancel() {
@@ -97,7 +97,7 @@ class PayflowIframe extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(View::render('payment/payflow_iframe_cancel', $data));
+        Response::setOutput(View::make('payment/payflow_iframe_cancel', $data));
     }
     
     public function pp_error() {
@@ -105,7 +105,7 @@ class PayflowIframe extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(View::render('payment/payflow_iframe_error', $data));
+        Response::setOutput(View::make('payment/payflow_iframe_error', $data));
     }
     
     public function pp_post() {

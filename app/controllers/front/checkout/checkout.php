@@ -66,7 +66,7 @@ class Checkout extends Controller {
             $data['quickconfirm'] = Request::p()->get['quickconfirm'];
         }
         
-        Response::setOutput(View::render('checkout/checkout', $data));
+        Response::setOutput(View::make('checkout/checkout', $data));
     }
     
     public function country() {

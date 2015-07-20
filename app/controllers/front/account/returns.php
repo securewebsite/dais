@@ -86,7 +86,7 @@ class Returns extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/return_list', $data));
+        Response::setOutput(View::make('account/return_list', $data));
     }
     
     public function info() {
@@ -159,7 +159,7 @@ class Returns extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('account/return_info', $data));
+            Response::setOutput(View::make('account/return_info', $data));
         } else {
             Theme::setTitle(Lang::get('lang_text_return'));
             
@@ -186,7 +186,7 @@ class Returns extends Controller {
             
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('error/not_found', $data));
+            Response::setOutput(View::make('error/not_found', $data));
         }
     }
     
@@ -413,7 +413,7 @@ class Returns extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/return_form', $data));
+        Response::setOutput(View::make('account/return_form', $data));
     }
     
     public function success() {
@@ -433,7 +433,7 @@ class Returns extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('common/success', $data));
+        Response::setOutput(View::make('common/success', $data));
     }
     
     protected function validate() {

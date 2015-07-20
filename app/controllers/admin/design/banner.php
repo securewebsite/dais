@@ -150,7 +150,7 @@ class Banner extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'ASC';
+            $order = 'asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -210,10 +210,10 @@ class Banner extends Controller {
         
         $url = '';
         
-        if ($order == 'ASC') {
-            $url.= '&order=DESC';
+        if ($order == 'asc') {
+            $url.= '&order=desc';
         } else {
-            $url.= '&order=ASC';
+            $url.= '&order=asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -242,7 +242,7 @@ class Banner extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('design/banner_list', $data));
+        Response::setOutput(View::make('design/banner_list', $data));
     }
     
     protected function getForm() {
@@ -344,7 +344,7 @@ class Banner extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('design/banner_form', $data));
+        Response::setOutput(View::make('design/banner_form', $data));
     }
     
     protected function validateForm() {

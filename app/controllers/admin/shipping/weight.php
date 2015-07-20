@@ -93,7 +93,7 @@ class Weight extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('shipping/weight', $data));
+        Response::setOutput(View::make('shipping/weight', $data));
     }
     
     protected function validate() {

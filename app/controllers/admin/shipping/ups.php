@@ -625,7 +625,7 @@ class Ups extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('shipping/ups', $data));
+        Response::setOutput(View::make('shipping/ups', $data));
     }
     
     protected function validate() {

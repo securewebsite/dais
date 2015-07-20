@@ -113,7 +113,7 @@ class BankTransfer extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/bank_transfer', $data));
+        Response::setOutput(View::make('payment/bank_transfer', $data));
     }
     
     protected function validate() {

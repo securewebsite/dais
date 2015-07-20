@@ -79,7 +79,7 @@ class Free extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('shipping/free', $data));
+        Response::setOutput(View::make('shipping/free', $data));
     }
     
     protected function validate() {

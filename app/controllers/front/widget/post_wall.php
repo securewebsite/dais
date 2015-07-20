@@ -80,7 +80,7 @@ class PostWall extends Controller {
                     }
                 }
             } else {
-                $results = ContentPost::getPosts(array('sort' => 'p.date_added', 'order' => 'DESC', 'start' => 0, 'limit' => $setting['limit']));
+                $results = ContentPost::getPosts(array('sort' => 'p.date_added', 'order' => 'desc', 'start' => 0, 'limit' => $setting['limit']));
             }
             
             $chars = $setting['span'] * 40;
@@ -125,7 +125,7 @@ class PostWall extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/post_wall', $data);
+        return View::make('widget/post_wall', $data);
     }
     
     protected function formatDescription($description, $chars = 100) {

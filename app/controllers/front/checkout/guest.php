@@ -149,7 +149,7 @@ class Guest extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        Response::setOutput(View::render('checkout/guest', $data));
+        Response::setOutput(View::make('checkout/guest', $data));
     }
     
     public function validate() {

@@ -62,7 +62,7 @@ class Coupon extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('total/coupon', $data));
+        Response::setOutput(View::make('total/coupon', $data));
     }
     
     protected function validate() {

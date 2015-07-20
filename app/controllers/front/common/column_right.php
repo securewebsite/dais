@@ -98,6 +98,6 @@ class ColumnRight extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('common/column_right', $data);
+        return View::make('common/column_right', $data);
     }
 }

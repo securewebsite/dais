@@ -99,7 +99,7 @@ class Notification extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('account/notification', $data));
+        Response::setOutput(View::make('account/notification', $data));
 	}
 
     public function inbox() {
@@ -139,7 +139,7 @@ class Notification extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        Response::setOutput(View::render('account/inbox', $data));
+        Response::setOutput(View::make('account/inbox', $data));
     }
 
     public function read() {
@@ -191,7 +191,7 @@ class Notification extends Controller {
             $data['webversion'] = AccountNotification::getWebversion(Request::p()->get['id']);
         endif;
 
-        Response::setOutput(View::render('account/webversion', $data));
+        Response::setOutput(View::make('account/webversion', $data));
     }
 
     public function preferences() {

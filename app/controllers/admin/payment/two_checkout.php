@@ -122,7 +122,7 @@ class TwoCheckout extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/two_checkout', $data));
+        Response::setOutput(View::make('payment/two_checkout', $data));
     }
     
     protected function validate() {

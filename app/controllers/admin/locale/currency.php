@@ -150,7 +150,7 @@ class Currency extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'ASC';
+            $order = 'asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -210,10 +210,10 @@ class Currency extends Controller {
         
         $url = '';
         
-        if ($order == 'ASC') {
-            $url.= '&order=DESC';
+        if ($order == 'asc') {
+            $url.= '&order=desc';
         } else {
-            $url.= '&order=ASC';
+            $url.= '&order=asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -244,7 +244,7 @@ class Currency extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('locale/currency_list', $data));
+        Response::setOutput(View::make('locale/currency_list', $data));
     }
     
     protected function getForm() {
@@ -356,7 +356,7 @@ class Currency extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('locale/currency_form', $data));
+        Response::setOutput(View::make('locale/currency_form', $data));
     }
     
     protected function validateForm() {

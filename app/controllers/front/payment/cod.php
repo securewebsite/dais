@@ -31,7 +31,7 @@ class Cod extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        return View::render('payment/cod', $data);
+        return View::make('payment/cod', $data);
     }
     
     public function confirm() {

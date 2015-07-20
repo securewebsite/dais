@@ -31,6 +31,6 @@ class Help extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('setting/help', $data));
+        Response::setOutput(View::make('setting/help', $data));
 	}
 }

@@ -62,7 +62,7 @@ class GiftCard extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('total/gift_card', $data));
+        Response::setOutput(View::make('total/gift_card', $data));
     }
     
     protected function validate() {

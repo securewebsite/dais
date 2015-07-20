@@ -87,7 +87,7 @@ class PaymentAddress extends Controller {
         
         $data['javascript'] = Theme::controller('common/javascript');
         
-        Response::setOutput(View::render('checkout/payment_address', $data));
+        Response::setOutput(View::make('checkout/payment_address', $data));
     }
     
     public function validate() {

@@ -150,7 +150,7 @@ class Filter extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'ASC';
+            $order = 'asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -210,10 +210,10 @@ class Filter extends Controller {
         
         $url = '';
         
-        if ($order == 'ASC') {
-            $url.= '&order=DESC';
+        if ($order == 'asc') {
+            $url.= '&order=desc';
         } else {
-            $url.= '&order=ASC';
+            $url.= '&order=asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -242,7 +242,7 @@ class Filter extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('catalog/filter_list', $data));
+        Response::setOutput(View::make('catalog/filter_list', $data));
     }
     
     protected function getForm() {
@@ -328,7 +328,7 @@ class Filter extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('catalog/filter_form', $data));
+        Response::setOutput(View::make('catalog/filter_form', $data));
     }
     
     protected function validateForm() {

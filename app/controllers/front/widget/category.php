@@ -90,6 +90,6 @@ class Category extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/category', $data);
+        return View::make('widget/category', $data);
     }
 }

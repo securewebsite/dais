@@ -174,7 +174,7 @@ class Recurring extends Controller {
         if (isset(Request::p()->get['order'])) {
             $order = Request::p()->get['order'];
         } else {
-            $order = 'ASC';
+            $order = 'asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -237,10 +237,10 @@ class Recurring extends Controller {
         
         $url = '';
         
-        if ($order == 'ASC') {
-            $url.= '&order=DESC';
+        if ($order == 'asc') {
+            $url.= '&order=desc';
         } else {
-            $url.= '&order=ASC';
+            $url.= '&order=asc';
         }
         
         if (isset(Request::p()->get['page'])) {
@@ -269,7 +269,7 @@ class Recurring extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('catalog/recurring_list', $data));
+        Response::setOutput(View::make('catalog/recurring_list', $data));
     }
     
     protected function getForm() {
@@ -430,7 +430,7 @@ class Recurring extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('catalog/recurring_form', $data));
+        Response::setOutput(View::make('catalog/recurring_form', $data));
     }
     
     protected function validateForm() {

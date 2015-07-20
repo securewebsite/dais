@@ -104,7 +104,7 @@ class Currency extends Model {
                 $sql.= " ORDER BY title";
             endif;
             
-            if (isset($data['order']) && ($data['order'] == 'DESC')):
+            if (isset($data['order']) && ($data['order'] == 'desc')):
                 $sql.= " DESC";
             else:
                 $sql.= " ASC";

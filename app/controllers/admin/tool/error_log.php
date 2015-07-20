@@ -49,7 +49,7 @@ class ErrorLog extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('tool/error_log', $data));
+        Response::setOutput(View::make('tool/error_log', $data));
     }
     
     public function clear() {

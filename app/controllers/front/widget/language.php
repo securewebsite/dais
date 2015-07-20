@@ -77,6 +77,6 @@ class Language extends Controller {
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
-        return View::render('widget/language', $data);
+        return View::make('widget/language', $data);
     }
 }

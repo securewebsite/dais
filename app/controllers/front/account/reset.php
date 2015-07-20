@@ -90,7 +90,7 @@ class Reset extends Controller {
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             $data = Theme::renderControllers($data);
             
-            Response::setOutput(View::render('account/reset', $data));
+            Response::setOutput(View::make('account/reset', $data));
         else:
              Response::redirect(Url::link('account/login', '', 'SSL'));
         endif;

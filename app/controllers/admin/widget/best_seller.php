@@ -71,7 +71,7 @@ class BestSeller extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/best_seller', $data));
+        Response::setOutput(View::make('widget/best_seller', $data));
     }
     
     protected function validate() {

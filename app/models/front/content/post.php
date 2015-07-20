@@ -197,7 +197,7 @@ class Post extends Model {
                 $sql.= " ORDER BY p.date_added";
             }
             
-            if (isset($data['order']) && ($data['order'] == 'DESC')) {
+            if (isset($data['order']) && ($data['order'] == 'desc')) {
                 $sql.= " DESC, LCASE(pd.name) DESC";
             } else {
                 $sql.= " ASC, LCASE(pd.name) ASC";

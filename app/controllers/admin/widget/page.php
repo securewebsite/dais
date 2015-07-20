@@ -64,7 +64,7 @@ class Page extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/page', $data));
+        Response::setOutput(View::make('widget/page', $data));
     }
     
     protected function validate() {

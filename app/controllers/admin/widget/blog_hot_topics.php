@@ -64,7 +64,7 @@ class BlogHotTopics extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('widget/blog_hot_topics', $data));
+        Response::setOutput(View::make('widget/blog_hot_topics', $data));
     }
     
     private function validate() {

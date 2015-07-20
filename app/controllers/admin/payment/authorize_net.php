@@ -137,7 +137,7 @@ class AuthorizeNet extends Controller {
         
         $data = Theme::renderControllers($data);
         
-        Response::setOutput(View::render('payment/authorize_net', $data));
+        Response::setOutput(View::make('payment/authorize_net', $data));
     }
     
     protected function validate() {
