@@ -376,6 +376,7 @@ class Confirm extends Controller {
             endif;
             
             Theme::model('checkout/order');
+            Theme::model('catalog/product');
             
             Session::p()->data['order_id'] = CheckoutOrder::addOrder($order);
             
@@ -430,7 +431,7 @@ class Confirm extends Controller {
                     'subtract'   => $product['subtract'], 
                     'price'      => Currency::format(Tax::calculate($product['price'], $product['tax_class_id'], Config::get('config_tax'))), 
                     'total'      => Currency::format(Tax::calculate($product['price'], $product['tax_class_id'], Config::get('config_tax')) * $product['quantity']), 
-                    'href'       => Url::link('catalog/product', 'product_id=' . $product['product_id']), 
+                    'href'       => Url::link('catalog/product', 'path=' . $product['paths'] . '&product_id=' . $product['product_id']), 
                     'recurring'  => $recurring
                 );
             endforeach;

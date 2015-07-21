@@ -39,7 +39,12 @@ class BlogLatest extends Controller {
                 $image = ToolImage::resize('placeholder.png', $setting['image_width'], $setting['image_height'], 'h');
             }
             
-            $data['posts'][] = array('post_id' => $result['post_id'], 'thumb' => $image, 'name' => $result['name'], 'href' => Url::link('content/post', 'post_id=' . $result['post_id']),);
+            $data['posts'][] = array(
+                'post_id' => $result['post_id'], 
+                'thumb'   => $image, 
+                'name'    => $result['name'], 
+                'href'    => Url::link('content/post', 'bpath=' . $result['bpaths'] . '&post_id=' . $result['post_id'])
+            );
         }
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);

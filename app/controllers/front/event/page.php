@@ -36,7 +36,7 @@ class Page extends Controller {
         if ($page_info):
             
             if (Customer::isLogged()):
-            	if ($page_info['visibility'] > Customer::customer_group_id):
+            	if ($page_info['visibility'] > Customer::getGroupId()):
             		Response::redirect(Url::link('error/permission', '', 'SSL'));
             	endif;
             elseif ($page_info['visibility'] > Config::get('config_default_visibility')):

@@ -121,7 +121,7 @@ class Cart extends Controller {
                 'quantity'  => $product['quantity'], 
                 'price'     => $price, 
                 'total'     => $total, 
-                'href'      => Url::link('catalog/product', 'product_id=' . $product['product_id']), 
+                'href'      => Url::link('catalog/product', 'path=' . $product['paths'] . '&product_id=' . $product['product_id']), 
                 'recurring' => ($product['recurring'] ? $product['recurring']['name'] : '')
             );
         }

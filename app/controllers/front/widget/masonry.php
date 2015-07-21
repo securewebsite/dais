@@ -148,7 +148,7 @@ class Masonry extends Controller {
                 } else {
                     $rating = false;
                 }
-                
+
                 $masonry_products[] = array(
                     'product_id'  => $result['product_id'],
                     'event_id'    => $result['event_id'],
@@ -159,7 +159,7 @@ class Masonry extends Controller {
                     'special'     => $special,
                     'rating'      => $rating,
                     'reviews'     => sprintf(Lang::get('lang_text_reviews') , (int)$result['reviews']) ,
-                    'href'        => Url::link('catalog/product', 'product_id=' . $result['product_id']) ,
+                    'href'        => Url::link('catalog/product', 'path=' . $result['paths'] . '&product_id=' . $result['product_id']) ,
                 );
             }
             

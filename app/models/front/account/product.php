@@ -93,7 +93,52 @@ class Product extends Model {
 			");
             
             if ($query->num_rows):
-                $product = array('product_id' => $query->row['product_id'], 'name' => $query->row['name'], 'description' => $query->row['description'], 'meta_description' => $query->row['meta_description'], 'meta_keyword' => $query->row['meta_keyword'], 'tag' => $query->row['tag'], 'model' => $query->row['model'], 'sku' => $query->row['sku'], 'upc' => $query->row['upc'], 'ean' => $query->row['ean'], 'jan' => $query->row['jan'], 'isbn' => $query->row['isbn'], 'mpn' => $query->row['mpn'], 'location' => $query->row['location'], 'visibility' => $query->row['visibility'], 'quantity' => $query->row['quantity'], 'stock_status' => $query->row['stock_status'], 'image' => $query->row['image'], 'manufacturer_id' => $query->row['manufacturer_id'], 'manufacturer' => $query->row['manufacturer'], 'price' => ($query->row['discount'] ? $query->row['discount'] : $query->row['price']), 'special' => $query->row['special'], 'reward' => $query->row['reward'], 'points' => $query->row['points'], 'tax_class_id' => $query->row['tax_class_id'], 'date_available' => $query->row['date_available'], 'weight' => $query->row['weight'], 'weight_class_id' => $query->row['weight_class_id'], 'length' => $query->row['length'], 'width' => $query->row['width'], 'height' => $query->row['height'], 'length_class_id' => $query->row['length_class_id'], 'subtract' => $query->row['subtract'], 'rating' => round($query->row['rating']), 'reviews' => $query->row['reviews'] ? $query->row['reviews'] : 0, 'minimum' => $query->row['minimum'], 'sort_order' => $query->row['sort_order'], 'status' => $query->row['status'], 'date_added' => $query->row['date_added'], 'event_id' => (isset($query->row['event_id']) ? $query->row['event_id'] : 0), 'date_modified' => $query->row['date_modified'], 'viewed' => $query->row['viewed'], 'customer_id' => $query->row['customer_id']);
+                $product = array(
+					'product_id'       => $query->row['product_id'], 
+					'name'             => $query->row['name'], 
+					'description'      => $query->row['description'], 
+					'meta_description' => $query->row['meta_description'], 
+					'meta_keyword'     => $query->row['meta_keyword'], 
+					'tag'              => $query->row['tag'], 
+					'model'            => $query->row['model'], 
+					'sku'              => $query->row['sku'], 
+					'upc'              => $query->row['upc'], 
+					'ean'              => $query->row['ean'], 
+					'jan'              => $query->row['jan'], 
+					'isbn'             => $query->row['isbn'], 
+					'mpn'              => $query->row['mpn'], 
+					'location'         => $query->row['location'], 
+					'visibility'       => $query->row['visibility'], 
+					'quantity'         => $query->row['quantity'], 
+					'stock_status'     => $query->row['stock_status'], 
+					'image'            => $query->row['image'], 
+					'manufacturer_id'  => $query->row['manufacturer_id'], 
+					'manufacturer'     => $query->row['manufacturer'], 
+					'price'            => ($query->row['discount'] ? $query->row['discount'] : $query->row['price']), 
+					'special'          => $query->row['special'], 
+					'reward'           => $query->row['reward'], 
+					'points'           => $query->row['points'], 
+					'tax_class_id'     => $query->row['tax_class_id'], 
+					'date_available'   => $query->row['date_available'], 
+					'weight'           => $query->row['weight'], 
+					'weight_class_id'  => $query->row['weight_class_id'], 
+					'length'           => $query->row['length'], 
+					'width'            => $query->row['width'], 
+					'height'           => $query->row['height'], 
+					'length_class_id'  => $query->row['length_class_id'], 
+					'subtract'         => $query->row['subtract'], 
+					'rating'           => round($query->row['rating']), 
+					'reviews'          => $query->row['reviews'] ? $query->row['reviews'] : 0, 
+					'minimum'          => $query->row['minimum'], 
+					'sort_order'       => $query->row['sort_order'], 
+					'status'           => $query->row['status'], 
+					'date_added'       => $query->row['date_added'], 
+					'event_id'         => (isset($query->row['event_id']) ? $query->row['event_id'] : 0), 
+					'date_modified'    => $query->row['date_modified'], 
+					'viewed'           => $query->row['viewed'], 
+					'customer_id'      => $query->row['customer_id'],
+					'paths'            => $this->buildPaths($query->row['product_id'])
+                );
                 
                 $cachefile = $product;
                 $this->cache->set($key, $cachefile);
@@ -104,5 +149,24 @@ class Product extends Model {
         endif;
         
         return $cachefile;
+    }
+
+    public function buildPaths($product_id) {
+        $query = DB::query("
+            SELECT category_id 
+            FROM " . DB::prefix() . "product_to_category 
+            WHERE product_id ='" . (int)$product_id . "' 
+            ORDER BY category_id ASC
+        ");
+
+        $segments = [];
+
+        if ($query->num_rows):
+            foreach($query->rows as $category):
+                $segments[] = $category['category_id'];
+            endforeach;
+        endif;
+
+        return implode('_', $segments);
     }
 }

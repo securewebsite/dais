@@ -47,7 +47,10 @@ class Manufacturer extends Controller {
                 $data['categories'][$key]['name'] = $key;
             }
             
-            $data['categories'][$key]['manufacturer'][] = array('name' => $result['name'], 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $result['manufacturer_id']));
+            $data['categories'][$key]['manufacturer'][] = array(
+                'name' => $result['name'], 
+                'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . $result['manufacturer_id'])
+            );
         }
         
         $data['continue'] = Url::link('shop/home');
@@ -138,7 +141,13 @@ class Manufacturer extends Controller {
             
             $data['products'] = array();
             
-            $filter = array('filter_manufacturer_id' => $manufacturer_id, 'sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $limit, 'limit' => $limit);
+            $filter = array(
+                'filter_manufacturer_id' => $manufacturer_id, 
+                'sort'                   => $sort, 
+                'order'                  => $order, 
+                'start'                  => ($page - 1) * $limit, 
+                'limit'                  => $limit
+            );
             
             $product_total = CatalogProduct::getTotalProducts($filter);
             
@@ -175,7 +184,21 @@ class Manufacturer extends Controller {
                     $rating = false;
                 }
                 
-                $data['products'][] = array('product_id' => $result['product_id'], 'event_id' => $result['event_id'], 'thumb' => $image, 'name' => $result['name'], 'description' => Encode::substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..', 'price' => $price, 'special' => $special, 'tax' => $tax, 'rating' => $rating, 'reviews' => sprintf(Lang::get('lang_text_reviews'), (int)$result['reviews']), 'href' => Url::link('catalog/product', 'product_id=' . $result['product_id'] . $url));
+                $path = CatalogProduct::getProductParentCategory($result['product_id']);
+
+                $data['products'][] = array(
+                    'product_id'  => $result['product_id'], 
+                    'event_id'    => $result['event_id'], 
+                    'thumb'       => $image, 
+                    'name'        => $result['name'], 
+                    'description' => Encode::substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..', 
+                    'price'       => $price, 
+                    'special'     => $special, 
+                    'tax'         => $tax, 
+                    'rating'      => $rating, 
+                    'reviews'     => sprintf(Lang::get('lang_text_reviews'), (int)$result['reviews']), 
+                    'href'        => Url::link('catalog/product', 'path=' . $result['paths'] . '&product_id=' . $result['product_id'] . $url)
+                );
             }
             
             $url = '';
@@ -186,25 +209,61 @@ class Manufacturer extends Controller {
             
             $data['sorts'] = array();
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_default'), 'value' => 'p.sort_order-asc', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.sort_order&order=asc' . $url));
+            $data['sorts'][] = array(
+                'text'  => Lang::get('lang_text_default'), 
+                'value' => 'p.sort_order-asc', 
+                'href'  => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.sort_order&order=asc' . $url)
+            );
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_name_asc'), 'value' => 'pd.name-asc', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=pd.name&order=asc' . $url));
+            $data['sorts'][] = array(
+                'text'  => Lang::get('lang_text_name_asc'), 
+                'value' => 'pd.name-asc', 
+                'href'  => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=pd.name&order=asc' . $url)
+            );
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_name_desc'), 'value' => 'pd.name-desc', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=pd.name&order=desc' . $url));
+            $data['sorts'][] = array(
+                'text'  => Lang::get('lang_text_name_desc'), 
+                'value' => 'pd.name-desc', 
+                'href'  => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=pd.name&order=desc' . $url)
+            );
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_price_asc'), 'value' => 'p.price-asc', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.price&order=asc' . $url));
+            $data['sorts'][] = array(
+                'text'  => Lang::get('lang_text_price_asc'), 
+                'value' => 'p.price-asc', 
+                'href'  => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.price&order=asc' . $url)
+            );
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_price_desc'), 'value' => 'p.price-desc', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.price&order=desc' . $url));
+            $data['sorts'][] = array(
+                'text'  => Lang::get('lang_text_price_desc'), 
+                'value' => 'p.price-desc', 
+                'href'  => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.price&order=desc' . $url)
+            );
             
             if (Config::get('config_review_status')) {
-                $data['sorts'][] = array('text' => Lang::get('lang_text_rating_desc'), 'value' => 'rating-desc', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=rating&order=desc' . $url));
+                $data['sorts'][] = array(
+                    'text'  => Lang::get('lang_text_rating_desc'), 
+                    'value' => 'rating-desc', 
+                    'href'  => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=rating&order=desc' . $url)
+                );
                 
-                $data['sorts'][] = array('text' => Lang::get('lang_text_rating_asc'), 'value' => 'rating-asc', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=rating&order=asc' . $url));
+                $data['sorts'][] = array(
+                    'text'  => Lang::get('lang_text_rating_asc'), 
+                    'value' => 'rating-asc', 
+                    'href'  => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=rating&order=asc' . $url)
+                );
             }
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_model_asc'), 'value' => 'p.model-asc', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.model&order=asc' . $url));
+            $data['sorts'][] = array(
+                'text'  => Lang::get('lang_text_model_asc'), 
+                'value' => 'p.model-asc', 
+                'href'  => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.model&order=asc' . $url)
+            );
             
-            $data['sorts'][] = array('text' => Lang::get('lang_text_model_desc'), 'value' => 'p.model-desc', 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.model&order=desc' . $url));
+            $data['sorts'][] = array(
+                'text'  => Lang::get('lang_text_model_desc'), 
+                'value' => 'p.model-desc', 
+                'href'  => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . '&sort=p.model&order=desc' . $url)
+            );
             
             $url = '';
             
@@ -223,7 +282,11 @@ class Manufacturer extends Controller {
             sort($limits);
             
             foreach ($limits as $value) {
-                $data['limits'][] = array('text' => $value, 'value' => $value, 'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . $url . '&limit=' . $value));
+                $data['limits'][] = array(
+                    'text' => $value, 
+                    'value' => $value, 
+                    'href' => Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . $url . '&limit=' . $value)
+                );
             }
             
             $url = '';
@@ -240,9 +303,15 @@ class Manufacturer extends Controller {
                 $url.= '&limit=' . Request::p()->get['limit'];
             }
             
-            $data['pagination'] = Theme::paginate($product_total, $page, $limit, Lang::get('lang_text_pagination'), Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . $url . '&page={page}'));
+            $data['pagination'] = Theme::paginate(
+                $product_total, 
+                $page, 
+                $limit, 
+                Lang::get('lang_text_pagination'), 
+                Url::link('catalog/manufacturer/info', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . $url . '&page={page}')
+            );
             
-            $data['sort'] = $sort;
+            $data['sort']  = $sort;
             $data['order'] = $order;
             $data['limit'] = $limit;
             

@@ -169,7 +169,7 @@ class Router {
 		static::$route = implode('/', $route);
 
 		for ($i = 0; $i < $length; $i = $i + 2):
-			$arguments[$segments[$i]] = $segments[$i + 1];
+			$arguments[str_replace('-', '_', $segments[$i])] = $segments[$i + 1];
 		endfor;
 		
 		return $arguments;

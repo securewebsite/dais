@@ -56,7 +56,17 @@ class BestSeller extends Controller {
                 $rating = false;
             }
             
-            $data['products'][] = array('product_id' => $result['product_id'], 'event_id' => $result['event_id'], 'thumb' => $image, 'name' => $result['name'], 'price' => $price, 'special' => $special, 'rating' => $rating, 'reviews' => sprintf(Lang::get('lang_text_reviews'), (int)$result['reviews']), 'href' => Url::link('catalog/product', 'product_id=' . $result['product_id']),);
+            $data['products'][] = array(
+                'product_id' => $result['product_id'], 
+                'event_id'   => $result['event_id'], 
+                'thumb'      => $image, 
+                'name'       => $result['name'], 
+                'price'      => $price, 
+                'special'    => $special, 
+                'rating'     => $rating, 
+                'reviews'    => sprintf(Lang::get('lang_text_reviews'), (int)$result['reviews']), 
+                'href'       => Url::link('catalog/product', 'path=' . $result['paths'] . '&product_id=' . $result['product_id']),
+            );
         }
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);

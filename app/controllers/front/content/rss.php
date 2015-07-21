@@ -39,7 +39,7 @@ class Rss extends Controller {
             if ($post['description']) {
                 $output.= '<item>';
                 $output.= '<title>' . $post['name'] . '</title>';
-                $output.= '<link>' . Url::link('content/post', 'post_id=' . $post['post_id']) . '</link>';
+                $output.= '<link>' . Url::link('content/post', 'bpath=' . $post['bpaths'] . '&post_id=' . $post['post_id']) . '</link>';
                 $output.= '<description>' . $post['description'] . '</description>';
                 $output.= '<g:condition>new</g:condition>';
                 $output.= '<g:id>' . $post['post_id'] . '</g:id>';

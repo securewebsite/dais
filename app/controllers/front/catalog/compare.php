@@ -100,8 +100,28 @@ class Compare extends Controller {
                         $attribute_data[$attribute['attribute_id']] = $attribute['text'];
                     }
                 }
-                
-                $data['products'][$product_id] = array('product_id' => $product_info['product_id'], 'event_id' => $product_info['event_id'], 'name' => $product_info['name'], 'thumb' => $image, 'price' => $price, 'special' => $special, 'description' => Encode::substr(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8')), 0, 200) . '..', 'model' => $product_info['model'], 'manufacturer' => $product_info['manufacturer'], 'availability' => $availability, 'rating' => (int)$product_info['rating'], 'reviews' => sprintf(Lang::get('lang_text_reviews'), (int)$product_info['reviews']), 'weight' => $this->weight->format($product_info['weight'], $product_info['weight_class_id']), 'length' => $this->length->format($product_info['length'], $product_info['length_class_id']), 'width' => $this->length->format($product_info['width'], $product_info['length_class_id']), 'height' => $this->length->format($product_info['height'], $product_info['length_class_id']), 'attribute' => $attribute_data, 'href' => Url::link('catalog/product', 'product_id=' . $product_id), 'remove' => Url::link('catalog/compare', 'remove=' . $product_id));
+
+                $data['products'][$product_id] = array(
+                    'product_id'   => $product_info['product_id'], 
+                    'event_id'     => $product_info['event_id'], 
+                    'name'         => $product_info['name'], 
+                    'thumb'        => $image, 
+                    'price'        => $price, 
+                    'special'      => $special, 
+                    'description'  => Encode::substr(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8')), 0, 200) . '..', 
+                    'model'        => $product_info['model'], 
+                    'manufacturer' => $product_info['manufacturer'], 
+                    'availability' => $availability, 
+                    'rating'       => (int)$product_info['rating'], 
+                    'reviews'      => sprintf(Lang::get('lang_text_reviews'), (int)$product_info['reviews']), 
+                    'weight'       => $this->weight->format($product_info['weight'], $product_info['weight_class_id']), 
+                    'length'       => $this->length->format($product_info['length'], $product_info['length_class_id']), 
+                    'width'        => $this->length->format($product_info['width'], $product_info['length_class_id']), 
+                    'height'       => $this->length->format($product_info['height'], $product_info['length_class_id']), 
+                    'attribute'    => $attribute_data, 
+                    'href'         => Url::link('catalog/product', 'path=' . $product_info['paths'] . '&product_id=' . $product_id), 
+                    'remove'       => Url::link('catalog/compare', 'remove=' . $product_id)
+                );
                 
                 foreach ($attribute_groups as $attribute_group) {
                     $data['attribute_groups'][$attribute_group['attribute_group_id']]['name'] = $attribute_group['name'];
@@ -145,17 +165,17 @@ class Compare extends Controller {
         Theme::model('catalog/product');
         
         $product_info = CatalogProduct::getProduct($product_id);
-        
+
         if ($product_info) {
             if (!in_array(Request::p()->post['product_id'], Session::p()->data['compare'])) {
                 if (count(Session::p()->data['compare']) >= 4) {
                     array_shift(Session::p()->data['compare']);
                 }
                 
-                Session::p()->data['compare'][] = Request::p()->post['product_id'];
+                Session::p()->data['compare'][] = $product_id;
             }
             
-            $json['success'] = sprintf(Lang::get('lang_text_success'), Url::link('catalog/product', 'product_id=' . Request::p()->post['product_id']), $product_info['name'], Url::link('catalog/compare'));
+            $json['success'] = sprintf(Lang::get('lang_text_success'), Url::link('catalog/product', 'path=' . $product_info['paths'] . '&product_id=' . $product_id), $product_info['name'], Url::link('catalog/compare'));
             
             $json['total'] = sprintf(Lang::get('lang_text_compare'), (isset(Session::p()->data['compare']) ? count(Session::p()->data['compare']) : 0));
         }

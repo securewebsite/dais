@@ -94,7 +94,7 @@ class Post extends Controller {
             $url = '';
             
             if (Customer::isLogged()):
-                if ($post_info['visibility'] > Customer::customer_group_id):
+                if ($post_info['visibility'] > Customer::getGroupId()):
                     Response::redirect(Url::link('error/permission', '', 'SSL'));
                 endif;
             else:
@@ -103,8 +103,8 @@ class Post extends Controller {
                 endif;
             endif;
             
-            if (isset(Request::p()->get['path'])) {
-                $url.= '&path=' . Request::p()->get['path'];
+            if (isset(Request::p()->get['bpath'])) {
+                $url.= '&bpath=' . Request::p()->get['bpath'];
             }
             
             if (isset(Request::p()->get['author_id'])) {
@@ -144,6 +144,7 @@ class Post extends Controller {
             
             $data['post_id']   = Request::p()->get['post_id'];
             $data['author_id'] = $post_info['author_id'];
+            $data['bpaths']    = $post_info['bpaths'];
             
             Theme::model('tool/image');
             
@@ -206,7 +207,7 @@ class Post extends Controller {
                     'short_description' => Encode::substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 80) . '..', 
                     'rating'            => $rating, 
                     'reviews'           => sprintf(Lang::get('lang_text_reviews'), (int)$result['reviews']), 
-                    'href'              => Url::link('content/post', 'post_id=' . $result['post_id'])
+                    'href'              => Url::link('content/post', 'bpath=' . $result['bpaths'] . '&post_id=' . $result['post_id'])
                 );
             }
             
@@ -238,7 +239,12 @@ class Post extends Controller {
                 $prev_post_info = ContentPost::getPost($prev_post_id);
                 
                 if ($prev_post_info) {
-                    $data['prev_post'] = array('post_id' => $prev_post_info['post_id'], 'name' => $prev_post_info['name'], 'prev_thumb' => ToolImage::resize($prev_post_info['image'], 50, 50), 'href' => Url::link('content/post', 'post_id=' . $prev_post_info['post_id']));
+                    $data['prev_post'] = array(
+                        'post_id'    => $prev_post_info['post_id'], 
+                        'name'       => $prev_post_info['name'], 
+                        'prev_thumb' => ToolImage::resize($prev_post_info['image'], 50, 50), 
+                        'href'       => Url::link('content/post', 'bpath=' . $prev_post_info['bpaths'] . '&post_id=' . $prev_post_info['post_id'])
+                    );
                 }
             }
             
@@ -250,7 +256,12 @@ class Post extends Controller {
                 $next_post_info = ContentPost::getPost($next_post_id);
                 
                 if ($next_post_info) {
-                    $data['next_post'] = array('post_id' => $next_post_info['post_id'], 'name' => $next_post_info['name'], 'next_thumb' => ToolImage::resize($next_post_info['image'], 50, 50), 'href' => Url::link('content/post', 'post_id=' . $next_post_info['post_id']));
+                    $data['next_post'] = array(
+                        'post_id'    => $next_post_info['post_id'], 
+                        'name'       => $next_post_info['name'], 
+                        'next_thumb' => ToolImage::resize($next_post_info['image'], 50, 50), 
+                        'href'       => Url::link('content/post', 'bpath=' . $next_post_info['bpaths'] . '&post_id=' . $next_post_info['post_id'])
+                    );
                 }
             }
             

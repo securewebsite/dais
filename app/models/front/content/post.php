@@ -80,7 +80,8 @@ class Post extends Model {
                     'date_added'       => $query->row['date_added'], 
                     'date_modified'    => $query->row['date_modified'], 
                     'viewed'           => $query->row['viewed'], 
-                    'visibility'       => $query->row['visibility']
+                    'visibility'       => $query->row['visibility'],
+                    'bpaths'           => $this->buildPaths($query->row['post_id'])
                 );
                 
                 $cachefile = $post;
@@ -422,6 +423,25 @@ class Post extends Model {
         endif;
         
         return $cachefile;
+    }
+
+    public function buildPaths($post_id) {
+        $query = DB::query("
+            SELECT category_id 
+            FROM " . DB::prefix() . "blog_post_to_category 
+            WHERE post_id = '" . (int)$post_id . "' 
+            ORDER BY category_id ASC
+        ");
+
+        $segments = [];
+
+        if ($query->num_rows):
+            foreach($query->rows as $category):
+                $segments[] = $category['category_id'];
+            endforeach;
+        endif;
+
+        return implode('_', $segments);
     }
     
     public function getNextPostId($current_post_id) {

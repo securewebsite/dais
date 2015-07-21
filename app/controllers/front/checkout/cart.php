@@ -227,6 +227,8 @@ class Cart extends Controller {
                 
                 $remove_url = Url::link('checkout/cart', 'remove=' . $product['key']);
                 
+                $path = CatalogProduct::getProductParentCategory($product['product_id']);
+
                 $data['products'][] = array(
                     'key'       => $product['key'], 
                     'thumb'     => $image, 
@@ -238,7 +240,7 @@ class Cart extends Controller {
                     'reward'    => ($product['reward'] ? sprintf(Lang::get('lang_text_points'), $product['reward']) : ''), 
                     'price'     => $price, 
                     'total'     => $total, 
-                    'href'      => Url::link('catalog/product', 'product_id=' . $product['product_id']), 
+                    'href'      => Url::link('catalog/product', 'path=' . $product['paths'] . '&product_id=' . $product['product_id']), 
                     'remove'    => urldecode($remove_url), 
                     'recurring' => $recurring
                 );
@@ -511,9 +513,9 @@ class Cart extends Controller {
             } else {
                 $quantity = 1;
             }
-            
+
             if (isset(Request::p()->post['event_id'])):
-                $json['redirect'] = Url::link('catalog/product', 'product_id=' . $product_id);
+                $json['redirect'] = Url::link('catalog/product', 'path=' . $product_info['paths'] . '&product_id=' . $product_id);
             endif;
             
             if (isset(Request::p()->post['option'])) {
@@ -551,9 +553,9 @@ class Cart extends Controller {
             }
             
             if (!$json) {
-                \Cart::add(Request::p()->post['product_id'], $quantity, $option, $recurring_id);
-                
-                $json['success'] = sprintf(Lang::get('lang_text_success'), Url::link('catalog/product', 'product_id=' . Request::p()->post['product_id']), $product_info['name'], Url::link('checkout/cart'));
+                \Cart::add($product_id, $quantity, $option, $recurring_id);
+
+                $json['success'] = sprintf(Lang::get('lang_text_success'), Url::link('catalog/product', 'path=' . $product_info['paths'] . '&product_id=' . $product_id), $product_info['name'], Url::link('checkout/cart'));
                 
                 unset(Session::p()->data['shipping_method']);
                 unset(Session::p()->data['shipping_methods']);
@@ -598,7 +600,7 @@ class Cart extends Controller {
                 
                 $json['total'] = sprintf(Lang::get('lang_text_items'), \Cart::countProducts() + (isset(Session::p()->data['gift_cards']) ? count(Session::p()->data['gift_cards']) : 0), Currency::format($total));
             } else {
-                $json['redirect'] = str_replace('&amp;', '&', Url::link('catalog/product', 'product_id=' . Request::p()->post['product_id']));
+                $json['redirect'] = str_replace('&amp;', '&', Url::link('catalog/product', 'path=' . $product_info['paths'] . '&product_id=' . $product_id));
             }
         }
         

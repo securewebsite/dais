@@ -25,6 +25,7 @@ class ShareBar extends Controller {
 		$data = Theme::language('common/share_bar', $data[0]);
 
 		Theme::model('setting/setting');
+		Theme::model('content/post');
 
 		$settings = SettingSetting::getSetting('share_bar');
 
@@ -40,7 +41,7 @@ class ShareBar extends Controller {
 
 		switch ($type):
 			case 'product':
-				$href        = Url::link('catalog/product', 'product_id=' . $data['product_id']);
+				$href        = Url::link('catalog/product', 'path=' . $data['paths'] . '&product_id=' . $data['product_id']);
 				$description = $data['description'];
 				break;
 			case 'page':
@@ -49,7 +50,7 @@ class ShareBar extends Controller {
 				$data['pinterest_enabled'] = false;
 				break;
 			case 'post':
-				$href        = Url::link('content/post', 'post_id=' . $data['post_id']);
+				$href        = Url::link('content/post', 'bpath=' . $data['bpaths'] . '&post_id=' . $data['post_id']);
 				$description = $data['description'];
 				$data['pinterest_enabled'] = false;
 				break;
@@ -64,7 +65,7 @@ class ShareBar extends Controller {
 		$data['social_desc'] = urlencode($data['heading_title'] . "\n" . substr(strip_tags($description), 0, 500) . "...");
 		
 		$data['social_site'] = Config::get('config_name');
-
+		
 		$data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
         return View::make('common/share_bar', $data);

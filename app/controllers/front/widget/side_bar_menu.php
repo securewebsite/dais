@@ -189,7 +189,7 @@ class SideBarMenu extends Controller {
             if (in_array($post['post_id'], $this->items['post'])):
                 $menu_items[] = array(
                     'name' => $post['name'], 
-                    'href' => Url::link('content/post', 'post_id=' . $post['post_id'])
+                    'href' => Url::link('content/post', 'bpath=' . $post['bpaths'] . '&post_id=' . $post['post_id'])
                 );
             endif;
         endforeach;

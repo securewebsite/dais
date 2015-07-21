@@ -46,7 +46,12 @@ class BlogHotTopics extends Controller {
                     $image = ToolImage::resize('placeholder.png', 40, 30, 'h');
                 }
                 
-                $data['recent_posts'][] = array('post_id' => $result['post_id'], 'name' => $result['name'], 'pic' => $image, 'href' => Url::link('content/post', 'post_id=' . $result['post_id'], 'SSL'));
+                $data['recent_posts'][] = array(
+                    'post_id' => $result['post_id'], 
+                    'name'    => $result['name'], 
+                    'pic'     => $image, 
+                    'href'    => Url::link('content/post', 'bpath=' . $result['bpaths'] . '&post_id=' . $result['post_id'], 'SSL')
+                );
             }
         }
         
@@ -62,7 +67,12 @@ class BlogHotTopics extends Controller {
                     $image = ToolImage::resize('placeholder.png', 40, 30, 'h');
                 }
                 
-                $data['most_viewed'][] = array('post_id' => $result['post_id'], 'name' => $result['name'], 'pic' => $image, 'href' => Url::link('content/post', 'post_id=' . $result['post_id'], 'SSL'));
+                $data['most_viewed'][] = array(
+                    'post_id' => $result['post_id'], 
+                    'name'    => $result['name'], 
+                    'pic'     => $image, 
+                    'href'    => Url::link('content/post', 'bpath=' . $result['bpaths'] . '&post_id=' . $result['post_id'], 'SSL')
+                );
             }
         }
         
@@ -78,7 +88,12 @@ class BlogHotTopics extends Controller {
                     $image = ToolImage::resize('placeholder.png', 40, 30, 'h');
                 }
                 
-                $data['most_discussed'][] = array('post_id' => $result['post_id'], 'name' => $result['name'], 'pic' => $image, 'href' => Url::link('content/post', 'post_id=' . $result['post_id'], 'SSL'));
+                $data['most_discussed'][] = array(
+                    'post_id' => $result['post_id'], 
+                    'name'    => $result['name'], 
+                    'pic'     => $image, 
+                    'href'    => Url::link('content/post', 'bpath=' . $result['bpaths'] . '&post_id=' . $result['post_id'], 'SSL')
+                );
             }
         }
         

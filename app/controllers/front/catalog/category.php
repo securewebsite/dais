@@ -257,7 +257,7 @@ class Category extends Controller {
                     'tax'         => $tax, 
                     'rating'      => $rating, 
                     'reviews'     => sprintf(Lang::get('lang_text_reviews'), (int)$result['reviews']), 
-                    'href'        => Url::link('catalog/product', 'product_id=' . $result['product_id'] . $url)
+                    'href'        => Url::link('catalog/product', 'path=' . $result['paths'] . '&product_id=' . $result['product_id'] . $url)
                 );
             }
             

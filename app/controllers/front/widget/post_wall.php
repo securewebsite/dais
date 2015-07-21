@@ -80,7 +80,12 @@ class PostWall extends Controller {
                     }
                 }
             } else {
-                $results = ContentPost::getPosts(array('sort' => 'p.date_added', 'order' => 'desc', 'start' => 0, 'limit' => $setting['limit']));
+                $results = ContentPost::getPosts(array(
+                    'sort'  => 'p.date_added', 
+                    'order' => 'desc', 
+                    'start' => 0, 
+                    'limit' => $setting['limit'])
+                );
             }
             
             $chars = $setting['span'] * 40;
@@ -112,7 +117,15 @@ class PostWall extends Controller {
                     $rating = false;
                 }
                 
-                $masonry_posts[] = array('post_id' => $result['post_id'], 'thumb' => $image, 'name' => $result['name'], 'description' => $description, 'rating' => $rating, 'comments' => sprintf(Lang::get('lang_text_comments'), (int)$result['comments']), 'href' => Url::link('content/post', 'post_id=' . $result['post_id']),);
+                $masonry_posts[] = array(
+                    'post_id'     => $result['post_id'], 
+                    'thumb'       => $image, 
+                    'name'        => $result['name'], 
+                    'description' => $description, 
+                    'rating'      => $rating, 
+                    'comments'    => sprintf(Lang::get('lang_text_comments'), (int)$result['comments']), 
+                    'href'        => Url::link('content/post', 'bpath=' . $result['bpaths'] . '&post_id=' . $result['post_id'])
+                );
             }
             
             $cachefile = $masonry_posts;

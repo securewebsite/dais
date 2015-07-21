@@ -200,7 +200,22 @@ class Category extends Controller {
                 
                 $comment_text = ($result['comments'] == 1) ? rtrim(Lang::get('lang_text_comments'), 's') : Lang::get('lang_text_comments');
                 
-                $data['posts'][] = array('post_id' => $result['post_id'], 'author_name' => $result['author_name'], 'thumb' => $image, 'name' => $result['name'], 'short' => Encode::substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 450) . '..', 'blurb' => Encode::substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 200) . '..', 'rating' => $rating, 'views' => sprintf(Lang::get('lang_text_views'), (int)$result['viewed']), 'comments' => sprintf($comment_text, (int)$result['comments']), 'href' => Url::link('content/post', 'bpath=' . Request::p()->get['bpath'] . '&post_id=' . $result['post_id']), 'comments_href' => Url::link('content/post', 'post_id=' . $result['post_id'] . '&to_comments=1'), 'author_href' => Url::link('content/search', '&filter_author_id=' . $result['author_id']), 'date_added' => date(Lang::get('lang_post_date'), strtotime($result['date_added'])), 'categories' => $posted_in_categories);
+                $data['posts'][] = array(
+                    'post_id'       => $result['post_id'], 
+                    'author_name'   => $result['author_name'], 
+                    'thumb'         => $image, 
+                    'name'          => $result['name'], 
+                    'short'         => Encode::substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 450) . '..', 
+                    'blurb'         => Encode::substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 200) . '..', 
+                    'rating'        => $rating, 
+                    'views'         => sprintf(Lang::get('lang_text_views'), (int)$result['viewed']), 
+                    'comments'      => sprintf($comment_text, (int)$result['comments']), 
+                    'href'          => Url::link('content/post', 'bpath=' . Request::p()->get['bpath'] . '&post_id=' . $result['post_id']), 
+                    'comments_href' => Url::link('content/post', 'bpath=' . Request::p()->get['bpath'] . '&post_id=' . $result['post_id'] . '&to_comments=1'), 
+                    'author_href'   => Url::link('content/search', '&filter_author_id=' . $result['author_id']), 
+                    'date_added'    => date(Lang::get('lang_post_date'), strtotime($result['date_added'])), 
+                    'categories'    => $posted_in_categories
+                );
             }
             
             $url = '';

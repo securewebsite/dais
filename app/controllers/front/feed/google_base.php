@@ -40,7 +40,7 @@ class GoogleBase extends Controller {
                 if ($product['description']) {
                     $output.= '<item>';
                     $output.= '<title>' . $product['name'] . '</title>';
-                    $output.= '<link>' . Url::link('catalog/product', 'product_id=' . $product['product_id']) . '</link>';
+                    $output.= '<link>' . Url::link('catalog/product', 'path=' . $product['paths'] . '&product_id=' . $product['product_id']) . '</link>';
                     $output.= '<description>' . $product['description'] . '</description>';
                     $output.= '<g:brand>' . html_entity_decode($product['manufacturer'], ENT_QUOTES, 'UTF-8') . '</g:brand>';
                     $output.= '<g:condition>new</g:condition>';

@@ -56,7 +56,8 @@ class Calendar extends Controller {
                 $image = false;
 
                 if ($event['product_id']):
-                    $url   = Url::link('catalog/product', 'product_id=' . $event['product_id']);
+                    $path  = CatalogProduct::buildPaths($event['product_id']);
+                    $url   = Url::link('catalog/product', 'path=' . $path . '&product_id=' . $event['product_id']);
                     $image = CatalogProduct::getEventImage($event['product_id']);
                     $image = ToolImage::resize($image, 100, 100, 'h');
                 endif;

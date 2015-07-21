@@ -236,6 +236,7 @@ class Product extends Controller {
             $data['model']         = $product_info['model'];
             $data['reward']        = $product_info['reward'];
             $data['points']        = $product_info['points'];
+            $data['paths']         = $product_info['paths'];
             
             if ($product_info['event_id'] > 0):
                 $data['event_id']    = $product_info['event_id'];
@@ -477,7 +478,7 @@ class Product extends Controller {
                     'special'    => $special, 
                     'rating'     => $rating, 
                     'reviews'    => sprintf(Lang::get('lang_text_reviews'), (int)$result['reviews']), 
-                    'href'       => Url::link('catalog/product', 'product_id=' . $result['product_id'])
+                    'href'       => Url::link('catalog/product', 'path=' . $result['paths'] . '&product_id=' . $result['product_id'])
                 );
             }
             

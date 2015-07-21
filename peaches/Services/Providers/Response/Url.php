@@ -72,7 +72,7 @@ class Url {
             endif;
         endif;
 
-        return $link;
+        return str_replace('_', '-', $link);
     }
     
     /*

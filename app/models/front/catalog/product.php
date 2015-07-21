@@ -36,7 +36,7 @@ class Product extends Model {
         endif;
         
         $key = 'product.' . $product_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -146,13 +146,14 @@ class Product extends Model {
                     'event_id'         => (isset($query->row['event_id']) ? $query->row['event_id'] : 0), 
                     'date_modified'    => $query->row['date_modified'], 
                     'viewed'           => $query->row['viewed'], 
-                    'customer_id'      => $query->row['customer_id']
+                    'customer_id'      => $query->row['customer_id'],
+                    'paths'            => $this->buildPaths($query->row['product_id'])
                 );
                 
                 $cachefile = $product;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, 0);
+                Cache::set($key, 0);
                 return false;
             endif;
         endif;
@@ -169,7 +170,7 @@ class Product extends Model {
         
         if (!empty($data)):
             $key = 'products.all.' . md5(serialize($data));
-            $cachefile = $this->cache->get($key);
+            $cachefile = Cache::get($key);
             
             if (is_bool($cachefile)):
                 if (!empty($data['filter_tag'])):
@@ -274,31 +275,31 @@ class Product extends Model {
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.model) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.model) = '" . DB::escape(Encode::strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.sku) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.sku) = '" . DB::escape(Encode::strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.upc) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.upc) = '" . DB::escape(Encode::strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.ean) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.ean) = '" . DB::escape(Encode::strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.jan) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.jan) = '" . DB::escape(Encode::strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.isbn) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.isbn) = '" . DB::escape(Encode::strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.mpn) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.mpn) = '" . DB::escape(Encode::strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     $sql.= ")";
@@ -351,12 +352,12 @@ class Product extends Model {
                 endforeach;
                 
                 $cachefile = $product_data;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             endif;
             unset($key);
         else:
             $key = 'products.all.' . (int)Config::get('config_store_id');
-            $cachefile = $this->cache->get($key);
+            $cachefile = Cache::get($key);
             
             if (is_bool($cachefile)):
                 $query = DB::query("
@@ -404,7 +405,7 @@ class Product extends Model {
                 endforeach;
                 
                 $cachefile = $product_data;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             endif;
         endif;
         
@@ -440,7 +441,7 @@ class Product extends Model {
         
         if (!empty($data)):
             $key = 'products.special' . md5(serialize($data));
-            $cachefile = $this->cache->get($key);
+            $cachefile = Cache::get($key);
             
             if (is_bool($cachefile)):
                 $sql = "
@@ -507,12 +508,12 @@ class Product extends Model {
                 endforeach;
                 
                 $cachefile = $product_data;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             endif;
             unset($key);
         else:
             $key = 'products.special.' . (int)Config::get('config_store_id');
-            $cachefile = $this->cache->get($key);
+            $cachefile = Cache::get($key);
             
             if (is_bool($cachefile)):
                 $query = DB::query("
@@ -549,7 +550,7 @@ class Product extends Model {
                 endforeach;
                 
                 $cachefile = $product_data;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             endif;
         endif;
         
@@ -564,7 +565,7 @@ class Product extends Model {
         endif;
         
         $key = 'products.latest.' . (int)Config::get('config_store_id');
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $product_data = array();
@@ -586,7 +587,7 @@ class Product extends Model {
             endforeach;
             
             $cachefile = $product_data;
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         endif;
         
         return $cachefile;
@@ -600,7 +601,7 @@ class Product extends Model {
         endif;
         
         $key = 'products.popular.' . (int)Config::get('config_store_id');
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $product_data = array();
@@ -622,7 +623,7 @@ class Product extends Model {
             endforeach;
             
             $cachefile = $product_data;
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         endif;
         
         return $product_data;
@@ -636,7 +637,7 @@ class Product extends Model {
         endif;
         
         $key = 'products.best_seller.' . (int)Config::get('config_store_id');
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $product_data = array();
@@ -666,7 +667,7 @@ class Product extends Model {
             endforeach;
             
             $cachefile = $product_data;
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         endif;
         
         return $cachefile;
@@ -674,7 +675,7 @@ class Product extends Model {
     
     public function getProductAttributes($product_id) {
         $key = 'product.attributes.' . $product_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $product_attribute_group_data = array();
@@ -724,7 +725,7 @@ class Product extends Model {
             endforeach;
             
             $cachefile = $product_attribute_group_data;
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         endif;
         
         return $cachefile;
@@ -732,7 +733,7 @@ class Product extends Model {
     
     public function getProductOptions($product_id) {
         $key = 'product.options.' . $product_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $product_option_data = array();
@@ -777,7 +778,7 @@ class Product extends Model {
             endforeach;
             
             $cachefile = $product_option_data;
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         endif;
         
         return $cachefile;
@@ -791,7 +792,7 @@ class Product extends Model {
         endif;
         
         $key = 'product.discounts.' . $product_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -807,9 +808,9 @@ class Product extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->rows;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -819,7 +820,7 @@ class Product extends Model {
     
     public function getProductImages($product_id) {
         $key = 'product.images.' . $product_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -831,9 +832,9 @@ class Product extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->rows;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -849,7 +850,7 @@ class Product extends Model {
         endif;
         
         $key = 'product.related.' . $product_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $product_data = array();
@@ -874,7 +875,7 @@ class Product extends Model {
             endforeach;
             
             $cachefile = $product_data;
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         endif;
         
         return $cachefile;
@@ -882,7 +883,7 @@ class Product extends Model {
     
     public function getProductLayoutId($product_id) {
         $key = 'product.layoutid.' . $product_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -894,10 +895,10 @@ class Product extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->row['layout_id'];
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
                 $cachefile = 0;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             endif;
         endif;
         
@@ -906,20 +907,21 @@ class Product extends Model {
     
     public function getCategories($product_id) {
         $key = 'product.categories.' . $product_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
 				SELECT * 
 				FROM " . DB::prefix() . "product_to_category 
-				WHERE product_id = '" . (int)$product_id . "'
-			");
+				WHERE product_id = '" . (int)$product_id . "' 
+                ORDER BY category_id ASC
+            ");
             
             if ($query->num_rows):
                 $cachefile = $query->rows;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -948,6 +950,25 @@ class Product extends Model {
             return $this->getProductParentCategory($product_id, $query->row['parent_id'], false);
         endif;
     }
+
+    public function buildPaths($product_id) {
+        $query = DB::query("
+            SELECT category_id 
+            FROM " . DB::prefix() . "product_to_category 
+            WHERE product_id ='" . (int)$product_id . "' 
+            ORDER BY category_id ASC
+        ");
+
+        $segments = [];
+
+        if ($query->num_rows):
+            foreach($query->rows as $category):
+                $segments[] = $category['category_id'];
+            endforeach;
+        endif;
+
+        return implode('_', $segments);
+    }
     
     public function getTotalProducts($data = array()) {
         if (Customer::isLogged()):
@@ -958,7 +979,7 @@ class Product extends Model {
         
         if (!empty($data)):
             $key = 'products.total.' . md5(serialize($data));
-            $cachefile = $this->cache->get($key);
+            $cachefile = Cache::get($key);
             
             if (is_bool($cachefile)):
                 
@@ -1044,31 +1065,31 @@ class Product extends Model {
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.model) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.model) = '" . DB::escape(Encode::strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.sku) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.sku) = '" . DB::escape(Encode::strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.upc) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.upc) = '" . DB::escape(Encode::strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.ean) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.ean) = '" . DB::escape(Encode::strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.jan) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.jan) = '" . DB::escape(Encode::strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.isbn) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.isbn) = '" . DB::escape(Encode::strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     if (!empty($data['filter_name'])):
-                        $sql.= " OR LCASE(p.mpn) = '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "'";
+                        $sql.= " OR LCASE(p.mpn) = '" . DB::escape(Encode::strtolower($data['filter_name'])) . "'";
                     endif;
                     
                     $sql.= ")";
@@ -1081,12 +1102,12 @@ class Product extends Model {
                 $query = DB::query($sql);
                 
                 $cachefile = $query->row['total'];
-                $this->cache->set($key, (int)$cachefile);
+                Cache::set($key, (int)$cachefile);
             endif;
             unset($key);
         else:
             $key = 'products.total.' . (int)Config::get('config_store_id');
-            $cachefile = $this->cache->get($key);
+            $cachefile = Cache::get($key);
             
             if (is_bool($cachefile)):
                 $query = DB::query("
@@ -1105,7 +1126,7 @@ class Product extends Model {
 				");
                 
                 $cachefile = $query->row['total'];
-                $this->cache->set($key, (int)$cachefile);
+                Cache::set($key, (int)$cachefile);
             endif;
         endif;
         
@@ -1150,7 +1171,7 @@ class Product extends Model {
         endif;
         
         $key = 'product.recurring.all.' . $product_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -1168,9 +1189,9 @@ class Product extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->rows;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -1186,7 +1207,7 @@ class Product extends Model {
         endif;
         
         $key = 'product.recurring.' . $product_id . ':' . $recurring_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -1201,9 +1222,9 @@ class Product extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->row;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -1219,7 +1240,7 @@ class Product extends Model {
         endif;
         
         $key = 'product.specials.total.' . (int)Config::get('config_store_id');
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -1241,7 +1262,7 @@ class Product extends Model {
             
             if (isset($query->row['total'])):
                 $cachefile = $query->row['total'];
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
                 $cachefile = 0;
             endif;

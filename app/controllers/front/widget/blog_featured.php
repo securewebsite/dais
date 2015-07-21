@@ -50,7 +50,12 @@ class BlogFeatured extends Controller {
                     $image = ToolImage::resize('placeholder.png', $setting['image_width'], $setting['image_height'], 'h');
                 }
                 
-                $data['posts'][] = array('post_id' => $post_info['post_id'], 'thumb' => $image, 'name' => $post_info['name'], 'href' => Url::link('content/post', 'post_id=' . $post_info['post_id']));
+                $data['posts'][] = array(
+                    'post_id' => $post_info['post_id'], 
+                    'thumb'   => $image, 
+                    'name'    => $post_info['name'], 
+                    'href'    => Url::link('content/post', 'bpath=' . $post_info['bpaths'] . '&post_id=' . $post_info['post_id'])
+                );
             }
         }
         

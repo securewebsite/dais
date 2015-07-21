@@ -30,7 +30,7 @@ class GoogleSiteMap extends Controller {
             
             foreach ($products as $product) {
                 $output.= '<url>';
-                $output.= '<loc>' . Url::link('catalog/product', 'product_id=' . $product['product_id']) . '</loc>';
+                $output.= '<loc>' . Url::link('catalog/product', 'path=' . $product['paths'] . '&product_id=' . $product['product_id']) . '</loc>';
                 $output.= '<changefreq>weekly</changefreq>';
                 $output.= '<priority>1.0</priority>';
                 $output.= '</url>';
@@ -55,7 +55,7 @@ class GoogleSiteMap extends Controller {
                 
                 foreach ($products as $product) {
                     $output.= '<url>';
-                    $output.= '<loc>' . Url::link('catalog/product', 'product_id=' . $product['product_id']) . '</loc>';
+                    $output.= '<loc>' . Url::link('catalog/product', 'path=' . $product['paths'] . '&product_id=' . $product['product_id']) . '</loc>';
                     $output.= '<changefreq>weekly</changefreq>';
                     $output.= '<priority>1.0</priority>';
                     $output.= '</url>';

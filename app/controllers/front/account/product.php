@@ -80,7 +80,19 @@ class Product extends Controller {
                 $rating = false;
             }
             
-            $data['products'][] = array('product_id' => $result['product_id'], 'event_id' => $result['event_id'], 'thumb' => $image, 'name' => $result['name'], 'description' => Encode::substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..', 'price' => $price, 'special' => $special, 'tax' => $tax, 'rating' => $rating, 'reviews' => sprintf(Lang::get('lang_text_reviews'), (int)$result['reviews']), 'href' => Url::link('catalog/product', 'product_id=' . $result['product_id']));
+            $data['products'][] = array(
+                'product_id'  => $result['product_id'], 
+                'event_id'    => $result['event_id'], 
+                'thumb'       => $image, 
+                'name'        => $result['name'], 
+                'description' => Encode::substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 100) . '..', 
+                'price'       => $price, 
+                'special'     => $special, 
+                'tax'         => $tax, 
+                'rating'      => $rating, 
+                'reviews'     => sprintf(Lang::get('lang_text_reviews'), (int)$result['reviews']), 
+                'href'        => Url::link('catalog/product', 'path=' . $result['paths'] . '&product_id=' . $result['product_id'])
+            );
         }
         
         $data['continue'] = Url::link('account/dashboard', '', 'SSL');

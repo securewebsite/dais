@@ -66,7 +66,17 @@ class Featured extends Controller {
                     $rating = false;
                 }
                 
-                $data['products'][] = array('product_id' => $product_info['product_id'], 'event_id' => $product_info['event_id'], 'thumb' => $image, 'name' => $product_info['name'], 'price' => $price, 'special' => $special, 'rating' => $rating, 'reviews' => sprintf(Lang::get('lang_text_reviews'), (int)$product_info['reviews']), 'href' => Url::link('catalog/product', 'product_id=' . $product_info['product_id']));
+                $data['products'][] = array(
+                    'product_id' => $product_info['product_id'], 
+                    'event_id'   => $product_info['event_id'], 
+                    'thumb'      => $image, 
+                    'name'       => $product_info['name'], 
+                    'price'      => $price, 
+                    'special'    => $special, 
+                    'rating'     => $rating, 
+                    'reviews'    => sprintf(Lang::get('lang_text_reviews'), (int)$product_info['reviews']), 
+                    'href'       => Url::link('catalog/product', 'path=' . $product_info['paths'] . '&product_id=' . $product_info['product_id'])
+                );
             }
         }
         
