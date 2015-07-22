@@ -55,7 +55,7 @@ class GiftCardTheme extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('sale/gift_card_theme', '' . $url, 'SSL'));
+            Response::redirect(Url::link('sale/gift_card_theme', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,7 +86,7 @@ class GiftCardTheme extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('sale/gift_card_theme', '' . $url, 'SSL'));
+            Response::redirect(Url::link('sale/gift_card_theme', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -120,7 +120,7 @@ class GiftCardTheme extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('sale/gift_card_theme', '' . $url, 'SSL'));
+            Response::redirect(Url::link('sale/gift_card_theme', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,8 +165,8 @@ class GiftCardTheme extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'sale/gift_card_theme', $url);
         
-        $data['insert'] = Url::link('sale/gift_card_theme/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('sale/gift_card_theme/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('sale/gift_card_theme/insert', $url, 'SSL');
+        $data['delete'] = Url::link('sale/gift_card_theme/delete', $url, 'SSL');
         
         $data['gift_card_themes'] = array();
         
@@ -186,7 +186,7 @@ class GiftCardTheme extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('sale/gift_card_theme/update', '' . 'gift_card_theme_id=' . $result['gift_card_theme_id'] . $url, 'SSL')
+                'href' => Url::link('sale/gift_card_theme/update', 'gift_card_theme_id=' . $result['gift_card_theme_id'] . $url, 'SSL')
             );
             
             $data['gift_card_themes'][] = array(
@@ -223,7 +223,7 @@ class GiftCardTheme extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('sale/gift_card_theme', '' . 'sort=name' . $url, 'SSL');
+        $data['sort_name'] = Url::link('sale/gift_card_theme', 'sort=name' . $url, 'SSL');
         
         $url = '';
         
@@ -240,7 +240,7 @@ class GiftCardTheme extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('sale/gift_card_theme', '' . $url . '&page={page}', 'SSL')
+            Url::link('sale/gift_card_theme', $url . '&page={page}', 'SSL')
         );
         
         $data['sort']  = $sort;
@@ -291,12 +291,12 @@ class GiftCardTheme extends Controller {
         Breadcrumb::add('lang_heading_title', 'sale/gift_card_theme', $url);
         
         if (!isset(Request::p()->get['gift_card_theme_id'])) {
-            $data['action'] = Url::link('sale/gift_card_theme/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('sale/gift_card_theme/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('sale/gift_card_theme/update', '' . 'gift_card_theme_id=' . Request::p()->get['gift_card_theme_id'] . $url, 'SSL');
+            $data['action'] = Url::link('sale/gift_card_theme/update', 'gift_card_theme_id=' . Request::p()->get['gift_card_theme_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('sale/gift_card_theme', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('sale/gift_card_theme', $url, 'SSL');
         
         if (isset(Request::p()->get['gift_card_theme_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $gift_card_theme_info = SaleGiftCardTheme::getGiftcardTheme(Request::p()->get['gift_card_theme_id']);

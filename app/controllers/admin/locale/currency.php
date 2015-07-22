@@ -60,7 +60,7 @@ class Currency extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/currency', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/currency', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -94,7 +94,7 @@ class Currency extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/currency', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/currency', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -130,7 +130,7 @@ class Currency extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/currency', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/currency', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -175,8 +175,8 @@ class Currency extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'locale/currency', $url);
         
-        $data['insert'] = Url::link('locale/currency/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('locale/currency/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('locale/currency/insert', $url, 'SSL');
+        $data['delete'] = Url::link('locale/currency/delete', $url, 'SSL');
         
         $data['currencies'] = array();
         
@@ -189,7 +189,7 @@ class Currency extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/currency/update', '' . 'currency_id=' . $result['currency_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/currency/update', 'currency_id=' . $result['currency_id'] . $url, 'SSL'));
             
             $data['currencies'][] = array('currency_id' => $result['currency_id'], 'title' => $result['title'] . (($result['code'] == Config::get('config_currency')) ? Lang::get('lang_text_default') : null), 'code' => $result['code'], 'value' => $result['value'], 'date_modified' => date(Lang::get('lang_date_format_short'), strtotime($result['date_modified'])), 'selected' => isset(Request::p()->post['selected']) && in_array($result['currency_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -220,10 +220,10 @@ class Currency extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_title'] = Url::link('locale/currency', '' . 'sort=title' . $url, 'SSL');
-        $data['sort_code'] = Url::link('locale/currency', '' . 'sort=code' . $url, 'SSL');
-        $data['sort_value'] = Url::link('locale/currency', '' . 'sort=value' . $url, 'SSL');
-        $data['sort_date_modified'] = Url::link('locale/currency', '' . 'sort=date_modified' . $url, 'SSL');
+        $data['sort_title'] = Url::link('locale/currency', 'sort=title' . $url, 'SSL');
+        $data['sort_code'] = Url::link('locale/currency', 'sort=code' . $url, 'SSL');
+        $data['sort_value'] = Url::link('locale/currency', 'sort=value' . $url, 'SSL');
+        $data['sort_date_modified'] = Url::link('locale/currency', 'sort=date_modified' . $url, 'SSL');
         
         $url = '';
         
@@ -235,7 +235,7 @@ class Currency extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($currency_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/currency', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($currency_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/currency', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -285,12 +285,12 @@ class Currency extends Controller {
         Breadcrumb::add('lang_heading_title', 'locale/currency', $url);
         
         if (!isset(Request::p()->get['currency_id'])) {
-            $data['action'] = Url::link('locale/currency/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('locale/currency/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/currency/update', '' . 'currency_id=' . Request::p()->get['currency_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/currency/update', 'currency_id=' . Request::p()->get['currency_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('locale/currency', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('locale/currency', $url, 'SSL');
         
         if (isset(Request::p()->get['currency_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $currency_info = LocaleCurrency::getCurrency(Request::p()->get['currency_id']);

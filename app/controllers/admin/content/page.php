@@ -53,7 +53,7 @@ class Page extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('content/page', '' . $url, 'SSL'));
+            Response::redirect(Url::link('content/page', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -84,7 +84,7 @@ class Page extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('content/page', '' . $url, 'SSL'));
+            Response::redirect(Url::link('content/page', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -118,7 +118,7 @@ class Page extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('content/page', '' . $url, 'SSL'));
+            Response::redirect(Url::link('content/page', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -163,8 +163,8 @@ class Page extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'content/page', $url);
         
-        $data['insert'] = Url::link('content/page/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('content/page/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('content/page/insert', $url, 'SSL');
+        $data['delete'] = Url::link('content/page/delete', $url, 'SSL');
         
         $data['pages'] = array();
         
@@ -184,7 +184,7 @@ class Page extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('content/page/update', '' . 'page_id=' . $result['page_id'] . $url, 'SSL')
+                'href' => Url::link('content/page/update', 'page_id=' . $result['page_id'] . $url, 'SSL')
             );
             
             $data['pages'][] = array(
@@ -222,8 +222,8 @@ class Page extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_title']      = Url::link('content/page', '' . 'sort=id.title' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('content/page', '' . 'sort=i.sort_order' . $url, 'SSL');
+        $data['sort_title']      = Url::link('content/page', 'sort=id.title' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('content/page', 'sort=i.sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -240,7 +240,7 @@ class Page extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('content/page', '' . $url . '&page={page}', 'SSL')
+            Url::link('content/page', $url . '&page={page}', 'SSL')
         );
         
         $data['sort']  = $sort;
@@ -302,12 +302,12 @@ class Page extends Controller {
         Breadcrumb::add('lang_heading_title', 'content/page', $url);
         
         if (!isset(Request::p()->get['page_id'])) {
-            $data['action'] = Url::link('content/page/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('content/page/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('content/page/update', '' . 'page_id=' . Request::p()->get['page_id'] . $url, 'SSL');
+            $data['action'] = Url::link('content/page/update', 'page_id=' . Request::p()->get['page_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('content/page', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('content/page', $url, 'SSL');
         
         if (isset(Request::p()->get['page_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $page_info = ContentPage::getPage(Request::p()->get['page_id']);
@@ -387,7 +387,7 @@ class Page extends Controller {
 
         if ($data['event_id'] > 0):
             $data['event_name'] = ContentPage::getEventName($data['event_id']);
-            $data['event_url']  = Url::link('calendar/event/update', '' . 'event_id=' . $data['event_id'], 'SSL');
+            $data['event_url']  = Url::link('calendar/event/update', 'event_id=' . $data['event_id'], 'SSL');
             $data['slug']       = ContentPage::getEventSlug(Request::p()->get['page_id']);
         endif;
         

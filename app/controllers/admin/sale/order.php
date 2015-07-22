@@ -79,7 +79,7 @@ class Order extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('sale/order', '' . $url, 'SSL'));
+            Response::redirect(Url::link('sale/order', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -134,7 +134,7 @@ class Order extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('sale/order', '' . $url, 'SSL'));
+            Response::redirect(Url::link('sale/order', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -192,7 +192,7 @@ class Order extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('sale/order', '' . $url, 'SSL'));
+            Response::redirect(Url::link('sale/order', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -299,7 +299,7 @@ class Order extends Controller {
         
         $data['invoice'] = Url::link('sale/order/invoice', '', 'SSL');
         $data['insert']  = Url::link('sale/order/insert', '', 'SSL');
-        $data['delete']  = Url::link('sale/order/delete', '' . $url, 'SSL');
+        $data['delete']  = Url::link('sale/order/delete', $url, 'SSL');
         
         $data['orders'] = array();
         
@@ -325,13 +325,13 @@ class Order extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_view'), 
-                'href' => Url::link('sale/order/info', '' . 'order_id=' . $result['order_id'] . $url, 'SSL')
+                'href' => Url::link('sale/order/info', 'order_id=' . $result['order_id'] . $url, 'SSL')
             );
             
             if (strtotime($result['date_added']) > strtotime('-' . (int)Config::get('config_order_edit') . ' day')) {
                 $action[] = array(
                     'text' => Lang::get('lang_text_edit'), 
-                    'href' => Url::link('sale/order/update', '' . 'order_id=' . $result['order_id'] . $url, 'SSL')
+                    'href' => Url::link('sale/order/update', 'order_id=' . $result['order_id'] . $url, 'SSL')
                 );
             }
             
@@ -397,12 +397,12 @@ class Order extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_order']         = Url::link('sale/order', '' . 'sort=o.order_id' . $url, 'SSL');
-        $data['sort_customer']      = Url::link('sale/order', '' . 'sort=customer' . $url, 'SSL');
-        $data['sort_status']        = Url::link('sale/order', '' . 'sort=status' . $url, 'SSL');
-        $data['sort_total']         = Url::link('sale/order', '' . 'sort=o.total' . $url, 'SSL');
-        $data['sort_date_added']    = Url::link('sale/order', '' . 'sort=o.date_added' . $url, 'SSL');
-        $data['sort_date_modified'] = Url::link('sale/order', '' . 'sort=o.date_modified' . $url, 'SSL');
+        $data['sort_order']         = Url::link('sale/order', 'sort=o.order_id' . $url, 'SSL');
+        $data['sort_customer']      = Url::link('sale/order', 'sort=customer' . $url, 'SSL');
+        $data['sort_status']        = Url::link('sale/order', 'sort=status' . $url, 'SSL');
+        $data['sort_total']         = Url::link('sale/order', 'sort=o.total' . $url, 'SSL');
+        $data['sort_date_added']    = Url::link('sale/order', 'sort=o.date_added' . $url, 'SSL');
+        $data['sort_date_modified'] = Url::link('sale/order', 'sort=o.date_modified' . $url, 'SSL');
         
         $url = '';
         
@@ -443,7 +443,7 @@ class Order extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('sale/order', '' . $url . '&page={page}', 'SSL')
+            Url::link('sale/order', $url . '&page={page}', 'SSL')
         );
         
         $data['filter_order_id']        = $filter_order_id;
@@ -647,12 +647,12 @@ class Order extends Controller {
         Breadcrumb::add('lang_heading_title', 'sale/order', $url);
         
         if (!isset(Request::p()->get['order_id'])) {
-            $data['action'] = Url::link('sale/order/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('sale/order/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('sale/order/update', '' . 'order_id=' . Request::p()->get['order_id'] . $url, 'SSL');
+            $data['action'] = Url::link('sale/order/update', 'order_id=' . Request::p()->get['order_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('sale/order', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('sale/order', $url, 'SSL');
         
         if (isset(Request::p()->get['order_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $order_info = SaleOrder::getOrder(Request::p()->get['order_id']);
@@ -1287,8 +1287,8 @@ class Order extends Controller {
             
             Breadcrumb::add('lang_heading_title', 'sale/order', $url);
             
-            $data['invoice'] = Url::link('sale/order/invoice', '' . 'order_id=' . (int)Request::p()->get['order_id'], 'SSL');
-            $data['cancel']  = Url::link('sale/order', '' . $url, 'SSL');
+            $data['invoice'] = Url::link('sale/order/invoice', 'order_id=' . (int)Request::p()->get['order_id'], 'SSL');
+            $data['cancel']  = Url::link('sale/order', $url, 'SSL');
             
             $data['order_id'] = Request::p()->get['order_id'];
             
@@ -1304,7 +1304,7 @@ class Order extends Controller {
             $data['lastname']   = $order_info['lastname'];
             
             if ($order_info['customer_id']) {
-                $data['customer'] = Url::link('people/customer/update', '' . 'customer_id=' . $order_info['customer_id'], 'SSL');
+                $data['customer'] = Url::link('people/customer/update', 'customer_id=' . $order_info['customer_id'], 'SSL');
             } else {
                 $data['customer'] = '';
             }
@@ -1341,7 +1341,7 @@ class Order extends Controller {
             $data['affiliate_lastname']  = $order_info['affiliate_lastname'];
             
             if ($order_info['affiliate_id']) {
-                $data['affiliate'] = Url::link('people/customer/update', '' . 'customer_id=' . $order_info['affiliate_id'], 'SSL');
+                $data['affiliate'] = Url::link('people/customer/update', 'customer_id=' . $order_info['affiliate_id'], 'SSL');
             } else {
                 $data['affiliate'] = '';
             }
@@ -1409,7 +1409,7 @@ class Order extends Controller {
                             'name'  => $option['name'], 
                             'value' => Encode::substr($option['value'], 0, Encode::strrpos($option['value'], '.')), 
                             'type'  => $option['type'], 
-                            'href'  => Url::link('sale/order/download', '' . 'order_id=' . Request::p()->get['order_id'] . '&order_option_id=' . $option['order_option_id'], 'SSL')
+                            'href'  => Url::link('sale/order/download', 'order_id=' . Request::p()->get['order_id'] . '&order_option_id=' . $option['order_option_id'], 'SSL')
                         );
                     }
                 }
@@ -1423,7 +1423,7 @@ class Order extends Controller {
                     'quantity'         => $product['quantity'], 
                     'price'            => Currency::format($product['price'] + (Config::get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']), 
                     'total'            => Currency::format($product['total'] + (Config::get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']), 
-                    'href'             => Url::link('catalog/product/update', '' . 'product_id=' . $product['product_id'], 'SSL')
+                    'href'             => Url::link('catalog/product/update', 'product_id=' . $product['product_id'], 'SSL')
                 );
             }
             
@@ -1435,7 +1435,7 @@ class Order extends Controller {
                 $data['gift_cards'][] = array(
                     'description' => $gift_card['description'], 
                     'amount'      => Currency::format($gift_card['amount'], $order_info['currency_code'], $order_info['currency_value']), 
-                    'href'        => Url::link('sale/gift_card/update', '' . 'gift_card_id=' . $gift_card['gift_card_id'], 'SSL')
+                    'href'        => Url::link('sale/gift_card/update', 'gift_card_id=' . $gift_card['gift_card_id'], 'SSL')
                 );
             }
             
@@ -1943,7 +1943,7 @@ class Order extends Controller {
             $page, 
             10, 
             Lang::get('lang_text_pagination'), 
-            Url::link('sale/order/history', '' . 'order_id=' . Request::p()->get['order_id'] . '&page={page}', 'SSL')
+            Url::link('sale/order/history', 'order_id=' . Request::p()->get['order_id'] . '&page={page}', 'SSL')
         );
         
         Theme::loadjs('javascript/sale/order_history', $data);

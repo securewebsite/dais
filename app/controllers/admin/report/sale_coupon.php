@@ -72,7 +72,7 @@ class SaleCoupon extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('sale/coupon/update', '' . 'coupon_id=' . $result['coupon_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('sale/coupon/update', 'coupon_id=' . $result['coupon_id'] . $url, 'SSL'));
             
             $data['coupons'][] = array('name' => $result['name'], 'code' => $result['code'], 'orders' => $result['orders'], 'total' => Currency::format($result['total'], Config::get('config_currency')), 'action' => $action);
         }
@@ -87,7 +87,7 @@ class SaleCoupon extends Controller {
             $url.= '&filter_date_end=' . Request::p()->get['filter_date_end'];
         }
         
-        $data['pagination'] = Theme::paginate($coupon_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/sale_coupon', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($coupon_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/sale_coupon', $url . '&page={page}', 'SSL'));
         
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;

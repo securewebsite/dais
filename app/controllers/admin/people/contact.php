@@ -183,7 +183,7 @@ class Contact extends Controller {
                     endif;
                     
                     if ($end < $email_total):
-                        $json['next'] = str_replace('&amp;', '&', Url::link('people/contact/send', '' . 'page=' . ($page + 1), 'SSL'));
+                        $json['next'] = str_replace('&amp;', '&', Url::link('people/contact/send', 'page=' . ($page + 1), 'SSL'));
                     else:
                         $json['next'] = '';
                     endif;

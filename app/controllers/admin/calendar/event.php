@@ -180,7 +180,7 @@ class Event extends Controller {
             endforeach;
             CalendarEvent::updateSeats(Request::p()->get['event_id'], $a);
             Session::p()->data['success'] = Lang::get('lang_text_delete_s_success');
-            Response::redirect(Url::link('calendar/event/roster', '' . 'event_id=' . Request::p()->get['event_id'], 'SSL'));
+            Response::redirect(Url::link('calendar/event/roster', 'event_id=' . Request::p()->get['event_id'], 'SSL'));
         endif;
         $this->roster();
     }
@@ -218,11 +218,11 @@ class Event extends Controller {
                 $actions = array();
                 $actions[] = array(
                     'text' => Lang::get('lang_text_add'), 
-                    'href' => Url::link('calendar/event/add_to_event', '' . 'event_id=' . $result['event_id'] . '&customer_id=' . $result['customer_id'], 'SSL')
+                    'href' => Url::link('calendar/event/add_to_event', 'event_id=' . $result['event_id'] . '&customer_id=' . $result['customer_id'], 'SSL')
                 );
                 $actions[] = array(
                     'text' => Lang::get('lang_text_remove'), 
-                    'href' => Url::link('calendar/event/remove_from_list', '' . 'event_id=' . $result['event_id'] . '&event_wait_list_id=' . $result['event_wait_list_id'], 'SSL')
+                    'href' => Url::link('calendar/event/remove_from_list', 'event_id=' . $result['event_id'] . '&event_wait_list_id=' . $result['event_wait_list_id'], 'SSL')
                 );
                 
                 Theme::model('people/customer');
@@ -253,7 +253,7 @@ class Event extends Controller {
         Theme::model('calendar/event');
         CalendarEvent::addToEvent(Request::get());
         Session::p()->data['success'] = Lang::get('lang_text_add_to_event');
-        Response::redirect(Url::link('calendar/event/get_wait_list', '' . 'event_id=' . Request::p()->get['event_id'], 'SSL'));
+        Response::redirect(Url::link('calendar/event/get_wait_list', 'event_id=' . Request::p()->get['event_id'], 'SSL'));
     }
     
     public function remove_from_list() {
@@ -261,7 +261,7 @@ class Event extends Controller {
         Theme::model('calendar/event');
         CalendarEvent::removeFromList(Request::p()->get['event_wait_list_id']);
         Session::p()->data['success'] = Lang::get('lang_text_remove_from_list');
-        Response::redirect(Url::link('calendar/event/get_wait_list', '' . 'event_id=' . Request::p()->get['event_id'], 'SSL'));
+        Response::redirect(Url::link('calendar/event/get_wait_list', 'event_id=' . Request::p()->get['event_id'], 'SSL'));
     }
     
     public function empty_wait_list() {
@@ -304,12 +304,12 @@ class Event extends Controller {
                 
                 $actions[] = array(
                     'text' => Lang::get('lang_text_edit'), 
-                    'href' => Url::link('calendar/event/update', '' . 'event_id=' . $result['event_id'], 'SSL')
+                    'href' => Url::link('calendar/event/update', 'event_id=' . $result['event_id'], 'SSL')
                 );
                 
                 $actions[] = array(
                     'text' => Lang::get('lang_text_roster'), 
-                    'href' => Url::link('calendar/event/roster', '' . 'event_id=' . $result['event_id'], 'SSL')
+                    'href' => Url::link('calendar/event/roster', 'event_id=' . $result['event_id'], 'SSL')
                 );
                 
                 if ($result['link']):
@@ -328,7 +328,7 @@ class Event extends Controller {
                     'seats'         => $result['seats'], 
                     'filled'        => $result['seats'] - $result['filled'], 
                     'waitlist'      => CalendarEvent::getWaitListCount($result['event_id']), 
-                    'waitlist_href' => Url::link('calendar/event/get_wait_list', '' . 'event_id=' . $result['event_id'], 'SSL'), 
+                    'waitlist_href' => Url::link('calendar/event/get_wait_list', 'event_id=' . $result['event_id'], 'SSL'), 
                     'presenter'     => CalendarEvent::getPresenterName($result['presenter_id']), 
                     'selected'      => isset(Request::p()->post['selected']) && in_array($result['result_id'], Request::p()->post['selected']), 
                     'action'        => $actions
@@ -440,7 +440,7 @@ class Event extends Controller {
             $data['action'] = Url::link('calendar/event/insert', '', 'SSL');
             $data['method'] = 'insert';
         } else {
-            $data['action'] = Url::link('calendar/event/update', '' . 'event_id=' . Request::p()->get['event_id'], 'SSL');
+            $data['action'] = Url::link('calendar/event/update', 'event_id=' . Request::p()->get['event_id'], 'SSL');
             $data['method'] = 'edit';
         }
         
@@ -790,7 +790,7 @@ class Event extends Controller {
                 
                 $action[] = array(
                     'text' => Lang::get('lang_text_edit'), 
-                    'href' => Url::link('calendar/event/update_presenter', '' . 'presenter_id=' . $result['presenter_id'], 'SSL')
+                    'href' => Url::link('calendar/event/update_presenter', 'presenter_id=' . $result['presenter_id'], 'SSL')
                 );
 
                 if ($result['image'] && file_exists(Config::get('path.image') . $result['image'])):
@@ -850,7 +850,7 @@ class Event extends Controller {
         if (!isset(Request::p()->get['presenter_id'])) {
             $data['action'] = Url::link('calendar/event/insert_presenter', '', 'SSL');
         } else {
-            $data['action'] = Url::link('calendar/event/update_presenter', '' . 'presenter_id=' . Request::p()->get['presenter_id'], 'SSL');
+            $data['action'] = Url::link('calendar/event/update_presenter', 'presenter_id=' . Request::p()->get['presenter_id'], 'SSL');
         }
         
         $data['cancel'] = Url::link('calendar/event/presenter_list', '', 'SSL');
@@ -967,7 +967,7 @@ class Event extends Controller {
         $data['seats']      = CalendarEvent::getSeats($event_id);
         $data['available']  = CalendarEvent::getAvailable($event_id);
         $data['event_id']   = $event_id;
-        $data['delete']     = Url::link('calendar/event/delete_attendee', '' . 'event_id=' . $event_id, 'SSL');
+        $data['delete']     = Url::link('calendar/event/delete_attendee', 'event_id=' . $event_id, 'SSL');
         $data['cancel']     = Url::link('calendar/event', '', 'SSL');
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);

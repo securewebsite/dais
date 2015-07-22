@@ -52,7 +52,7 @@ class Route extends Controller {
                 $url .= '&page=' . Request::p()->get['page'];
             endif;
             
-            Response::redirect(Url::link('design/route', '' . $url, 'SSL'));
+            Response::redirect(Url::link('design/route', $url, 'SSL'));
         endif;
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -77,7 +77,7 @@ class Route extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'design/route', $url);
         
-        $data['edit'] = Url::link('design/route/edit', '' . $url, 'SSL');
+        $data['edit'] = Url::link('design/route/edit', $url, 'SSL');
         
         $data['routes'] = array();
         
@@ -122,7 +122,7 @@ class Route extends Controller {
         	$page, 
         	Config::get('config_admin_limit'), 
         	Lang::get('lang_text_pagination'), 
-        	Url::link('design/route', '' . $url . '&page={page}', 'SSL')
+        	Url::link('design/route', $url . '&page={page}', 'SSL')
         );
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
@@ -149,8 +149,8 @@ class Route extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'design/route', $url);
         
-        $data['action'] = Url::link('design/route/edit', '' . $url, 'SSL');
-        $data['cancel'] = Url::link('design/route', '' . $url, 'SSL');
+        $data['action'] = Url::link('design/route/edit', $url, 'SSL');
+        $data['cancel'] = Url::link('design/route', $url, 'SSL');
         
         if (isset(Request::p()->post['custom_route'])):
             $data['custom_routes'] = Request::p()->post['custom_route'];

@@ -23,11 +23,18 @@ class Router {
 
 	public function dispatch() {
 
+		if (!is_null(Request::get('route'))):
+			Response::test(Request::get('route'));
+		endif;
+
 		if (!is_null(Request::get('_route_'))):
 
 			static::$current = Request::get('_route_');
 
-			$segments   = explode('/', static::$current);
+			$segments = explode('/', str_replace('-', '_', static::$current));
+			
+			// slug specific array
+			$parts    = explode('/', static::$current);
 			
 			$controller = count($segments) > 1 ? $segments[0] . '/' . $segments[1] : $segments[0];
 
@@ -41,10 +48,29 @@ class Router {
                     Request::post('search', end($segments));
                 endif;
             endif;
-			
+
+            // Slugs and Custom routes for front module only
+            if (!static::$route && Config::get('active.facade') === FRONT_FACADE):
+            	foreach (Routes::getCustomRoutes() as $key => $value):
+	                if ($key === static::$current):
+	                    if (Finder::find($value)):
+	                    	static::$route = $value;
+						endif;
+	                endif;
+	            endforeach;
+
+	            if (!static::$route):
+		            $result = $this->iterate($parts);
+					
+					if (!empty($result)):
+						static::$route = $result['controller'];
+					endif;
+				endif;
+            endif;
+            
 			// This handles all native files :not custom routes
 			if (!static::$route):
-				if (!is_null(Naming::file_from_route($controller))):
+				if (Finder::find($controller)):
 					$args = (count($segments) % 2) ? static::to_assoc(3) : static::to_assoc(2);
 					
 					foreach($args as $key => $value):
@@ -53,30 +79,7 @@ class Router {
 					
 				endif;
 			endif;
-			
-			// This handles any custom routes
-			if (!static::$route):
-				foreach (Routes::getCustomRoutes() as $key => $value):
-	                if ($key === static::$current):
-	                    if (!is_null(Naming::file_from_route($value))):
-	                    	static::$route = $value;
-						endif;
-	                endif;
-	            endforeach;
-            endif;
-
-            // This handles all slug routes
-            if (!static::$route):
-	            $result = $this->iterate($segments);
-				
-				if (!empty($result)):
-					static::$route = $result['controller'];
-				endif;
-			endif;
-			
 		endif;
-
-		$error = new Action('error/not_found');
 
         switch (Config::get('active.facade')):
             case FRONT_FACADE:
@@ -92,8 +95,8 @@ class Router {
         Request::get('route', $route);
 
         $actions['action'] = (static::$route) ? new Action(static::$route) : $default;
-        $actions['error']  = $error;
-
+        $actions['error']  = new Action('error/not_found');
+        
         return $actions;
 	}
 

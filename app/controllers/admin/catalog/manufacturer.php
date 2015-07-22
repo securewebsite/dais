@@ -60,7 +60,7 @@ class Manufacturer extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/manufacturer', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/manufacturer', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -94,7 +94,7 @@ class Manufacturer extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/manufacturer', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/manufacturer', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -130,7 +130,7 @@ class Manufacturer extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/manufacturer', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/manufacturer', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -175,8 +175,8 @@ class Manufacturer extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'catalog/manufacturer', $url);
         
-        $data['insert'] = Url::link('catalog/manufacturer/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('catalog/manufacturer/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('catalog/manufacturer/insert', $url, 'SSL');
+        $data['delete'] = Url::link('catalog/manufacturer/delete', $url, 'SSL');
         
         $data['manufacturers'] = array();
         
@@ -189,7 +189,7 @@ class Manufacturer extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/manufacturer/update', '' . 'manufacturer_id=' . $result['manufacturer_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/manufacturer/update', 'manufacturer_id=' . $result['manufacturer_id'] . $url, 'SSL'));
             
             $data['manufacturers'][] = array('manufacturer_id' => $result['manufacturer_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['manufacturer_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -220,8 +220,8 @@ class Manufacturer extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('catalog/manufacturer', '' . 'sort=name' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('catalog/manufacturer', '' . 'sort=sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('catalog/manufacturer', 'sort=name' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('catalog/manufacturer', 'sort=sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -233,7 +233,7 @@ class Manufacturer extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($manufacturer_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/manufacturer', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($manufacturer_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/manufacturer', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -283,12 +283,12 @@ class Manufacturer extends Controller {
         Breadcrumb::add('lang_heading_title', 'catalog/manufacturer', $url);
         
         if (!isset(Request::p()->get['manufacturer_id'])) {
-            $data['action'] = Url::link('catalog/manufacturer/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('catalog/manufacturer/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/manufacturer/update', '' . 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/manufacturer/update', 'manufacturer_id=' . Request::p()->get['manufacturer_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('catalog/manufacturer', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('catalog/manufacturer', $url, 'SSL');
         
         if (isset(Request::p()->get['manufacturer_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $manufacturer_info = CatalogManufacturer::getManufacturer(Request::p()->get['manufacturer_id']);

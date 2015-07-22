@@ -92,7 +92,7 @@ class Returns extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('sale/returns', '' . $url, 'SSL'));
+            Response::redirect(Url::link('sale/returns', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -158,7 +158,7 @@ class Returns extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('sale/returns', '' . $url, 'SSL'));
+            Response::redirect(Url::link('sale/returns', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -226,7 +226,7 @@ class Returns extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('sale/returns', '' . $url, 'SSL'));
+            Response::redirect(Url::link('sale/returns', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -351,8 +351,8 @@ class Returns extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'sale/returns', $url);
         
-        $data['insert'] = Url::link('sale/returns/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('sale/returns/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('sale/returns/insert', $url, 'SSL');
+        $data['delete'] = Url::link('sale/returns/delete', $url, 'SSL');
         
         $data['returns'] = array();
         
@@ -365,9 +365,9 @@ class Returns extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_view'), 'href' => Url::link('sale/returns/info', '' . 'return_id=' . $result['return_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_view'), 'href' => Url::link('sale/returns/info', 'return_id=' . $result['return_id'] . $url, 'SSL'));
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('sale/returns/update', '' . 'return_id=' . $result['return_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('sale/returns/update', 'return_id=' . $result['return_id'] . $url, 'SSL'));
             
             $data['returns'][] = array('return_id' => $result['return_id'], 'order_id' => $result['order_id'], 'customer' => $result['customer'], 'product' => $result['product'], 'model' => $result['model'], 'status' => $result['status'], 'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 'date_modified' => date(Lang::get('lang_date_format_short'), strtotime($result['date_modified'])), 'selected' => isset(Request::p()->post['selected']) && in_array($result['return_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -434,14 +434,14 @@ class Returns extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_return_id']     = Url::link('sale/returns', '' . 'sort=r.return_id' . $url, 'SSL');
-        $data['sort_order_id']      = Url::link('sale/returns', '' . 'sort=r.order_id' . $url, 'SSL');
-        $data['sort_customer']      = Url::link('sale/returns', '' . 'sort=customer' . $url, 'SSL');
-        $data['sort_product']       = Url::link('sale/returns', '' . 'sort=product' . $url, 'SSL');
-        $data['sort_model']         = Url::link('sale/returns', '' . 'sort=model' . $url, 'SSL');
-        $data['sort_status']        = Url::link('sale/returns', '' . 'sort=status' . $url, 'SSL');
-        $data['sort_date_added']    = Url::link('sale/returns', '' . 'sort=r.date_added' . $url, 'SSL');
-        $data['sort_date_modified'] = Url::link('sale/returns', '' . 'sort=r.date_modified' . $url, 'SSL');
+        $data['sort_return_id']     = Url::link('sale/returns', 'sort=r.return_id' . $url, 'SSL');
+        $data['sort_order_id']      = Url::link('sale/returns', 'sort=r.order_id' . $url, 'SSL');
+        $data['sort_customer']      = Url::link('sale/returns', 'sort=customer' . $url, 'SSL');
+        $data['sort_product']       = Url::link('sale/returns', 'sort=product' . $url, 'SSL');
+        $data['sort_model']         = Url::link('sale/returns', 'sort=model' . $url, 'SSL');
+        $data['sort_status']        = Url::link('sale/returns', 'sort=status' . $url, 'SSL');
+        $data['sort_date_added']    = Url::link('sale/returns', 'sort=r.date_added' . $url, 'SSL');
+        $data['sort_date_modified'] = Url::link('sale/returns', 'sort=r.date_modified' . $url, 'SSL');
         
         $url = '';
         
@@ -485,7 +485,7 @@ class Returns extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($return_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('sale/returns', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($return_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('sale/returns', $url . '&page={page}', 'SSL'));
         
         $data['filter_return_id']        = $filter_return_id;
         $data['filter_order_id']         = $filter_order_id;
@@ -610,12 +610,12 @@ class Returns extends Controller {
         Breadcrumb::add('lang_heading_title', 'sale/returns', $url);
         
         if (!isset(Request::p()->get['return_id'])) {
-            $data['action'] = Url::link('sale/returns/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('sale/returns/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('sale/returns/update', '' . 'return_id=' . Request::p()->get['return_id'] . $url, 'SSL');
+            $data['action'] = Url::link('sale/returns/update', 'return_id=' . Request::p()->get['return_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('sale/returns', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('sale/returns', $url, 'SSL');
         
         if (isset(Request::p()->get['return_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $return_info = SaleReturns::getReturn(Request::p()->get['return_id']);
@@ -840,7 +840,7 @@ class Returns extends Controller {
             
             Breadcrumb::add('lang_heading_title', 'sale/returns', $url);
             
-            $data['cancel'] = Url::link('sale/returns', '' . $url, 'SSL');
+            $data['cancel'] = Url::link('sale/returns', $url, 'SSL');
             
             Theme::model('sale/order');
             
@@ -850,7 +850,7 @@ class Returns extends Controller {
             $data['order_id'] = $return_info['order_id'];
             
             if ($return_info['order_id'] && $order_info) {
-                $data['order'] = Url::link('sale/order/info', '' . 'order_id=' . $return_info['order_id'], 'SSL');
+                $data['order'] = Url::link('sale/order/info', 'order_id=' . $return_info['order_id'], 'SSL');
             } else {
                 $data['order'] = '';
             }
@@ -860,7 +860,7 @@ class Returns extends Controller {
             $data['lastname'] = $return_info['lastname'];
             
             if ($return_info['customer_id']) {
-                $data['customer'] = Url::link('people/customer/update', '' . 'customer_id=' . $return_info['customer_id'], 'SSL');
+                $data['customer'] = Url::link('people/customer/update', 'customer_id=' . $return_info['customer_id'], 'SSL');
             } else {
                 $data['customer'] = '';
             }
@@ -1041,7 +1041,7 @@ class Returns extends Controller {
         
         $history_total = SaleReturns::getTotalReturnHistories(Request::p()->get['return_id']);
         
-        $data['pagination'] = Theme::paginate($history_total, $page, 10, Lang::get('lang_text_pagination'), Url::link('sale/returns/history', '' . 'return_id=' . Request::p()->get['return_id'] . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($history_total, $page, 10, Lang::get('lang_text_pagination'), Url::link('sale/returns/history', 'return_id=' . Request::p()->get['return_id'] . '&page={page}', 'SSL'));
         
         Theme::loadjs('javascript/sale/return_history', $data);
         

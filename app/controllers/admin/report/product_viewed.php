@@ -67,7 +67,7 @@ class ProductViewed extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['reset'] = Url::link('report/product_viewed/reset', '' . $url, 'SSL');
+        $data['reset'] = Url::link('report/product_viewed/reset', $url, 'SSL');
         
         if (isset(Session::p()->data['success'])) {
             $data['success'] = Session::p()->data['success'];
@@ -77,7 +77,7 @@ class ProductViewed extends Controller {
             $data['success'] = '';
         }
         
-        $data['pagination'] = Theme::paginate($product_viewed_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/product_viewed', '' . 'page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($product_viewed_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/product_viewed', 'page={page}', 'SSL'));
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         

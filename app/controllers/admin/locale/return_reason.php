@@ -55,7 +55,7 @@ class ReturnReason extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/return_reason', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/return_reason', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,7 +86,7 @@ class ReturnReason extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/return_reason', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/return_reason', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -120,7 +120,7 @@ class ReturnReason extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/return_reason', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/return_reason', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,8 +165,8 @@ class ReturnReason extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'locale/return_reason', $url);
         
-        $data['insert'] = Url::link('locale/return_reason/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('locale/return_reason/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('locale/return_reason/insert', $url, 'SSL');
+        $data['delete'] = Url::link('locale/return_reason/delete', $url, 'SSL');
         
         $data['return_reasons'] = array();
         
@@ -179,7 +179,7 @@ class ReturnReason extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/return_reason/update', '' . 'return_reason_id=' . $result['return_reason_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/return_reason/update', 'return_reason_id=' . $result['return_reason_id'] . $url, 'SSL'));
             
             $data['return_reasons'][] = array('return_reason_id' => $result['return_reason_id'], 'name' => $result['name'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['return_reason_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -210,7 +210,7 @@ class ReturnReason extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('locale/return_reason', '' . 'sort=name' . $url, 'SSL');
+        $data['sort_name'] = Url::link('locale/return_reason', 'sort=name' . $url, 'SSL');
         
         $url = '';
         
@@ -222,7 +222,7 @@ class ReturnReason extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($return_reason_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/return_reason', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($return_reason_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/return_reason', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -266,12 +266,12 @@ class ReturnReason extends Controller {
         Breadcrumb::add('lang_heading_title', 'locale/return_reason', $url);
         
         if (!isset(Request::p()->get['return_reason_id'])) {
-            $data['action'] = Url::link('locale/return_reason/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('locale/return_reason/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/return_reason/update', '' . 'return_reason_id=' . Request::p()->get['return_reason_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/return_reason/update', 'return_reason_id=' . Request::p()->get['return_reason_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('locale/return_reason', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('locale/return_reason', $url, 'SSL');
         
         Theme::model('locale/language');
         

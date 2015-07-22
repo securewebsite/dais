@@ -55,7 +55,7 @@ class TaxClass extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/tax_class', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/tax_class', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,7 +86,7 @@ class TaxClass extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/tax_class', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/tax_class', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -120,7 +120,7 @@ class TaxClass extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/tax_class', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/tax_class', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,8 +165,8 @@ class TaxClass extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'locale/tax_class', $url);
         
-        $data['insert'] = Url::link('locale/tax_class/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('locale/tax_class/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('locale/tax_class/insert', $url, 'SSL');
+        $data['delete'] = Url::link('locale/tax_class/delete', $url, 'SSL');
         
         $data['tax_classes'] = array();
         
@@ -179,7 +179,7 @@ class TaxClass extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/tax_class/update', '' . 'tax_class_id=' . $result['tax_class_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/tax_class/update', 'tax_class_id=' . $result['tax_class_id'] . $url, 'SSL'));
             
             $data['tax_classes'][] = array('tax_class_id' => $result['tax_class_id'], 'title' => $result['title'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['tax_class_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -210,7 +210,7 @@ class TaxClass extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_title'] = Url::link('locale/tax_class', '' . 'sort=title' . $url, 'SSL');
+        $data['sort_title'] = Url::link('locale/tax_class', 'sort=title' . $url, 'SSL');
         
         $url = '';
         
@@ -222,7 +222,7 @@ class TaxClass extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($tax_class_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/tax_class', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($tax_class_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/tax_class', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -272,12 +272,12 @@ class TaxClass extends Controller {
         Breadcrumb::add('lang_heading_title', 'locale/tax_class', $url);
         
         if (!isset(Request::p()->get['tax_class_id'])) {
-            $data['action'] = Url::link('locale/tax_class/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('locale/tax_class/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/tax_class/update', '' . 'tax_class_id=' . Request::p()->get['tax_class_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/tax_class/update', 'tax_class_id=' . Request::p()->get['tax_class_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('locale/tax_class', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('locale/tax_class', $url, 'SSL');
         
         if (isset(Request::p()->get['tax_class_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $tax_class_info = LocaleTaxClass::getTaxClass(Request::p()->get['tax_class_id']);

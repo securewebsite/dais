@@ -63,7 +63,7 @@ class Post extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('content/post', '' . $url, 'SSL'));
+            Response::redirect(Url::link('content/post', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -102,7 +102,7 @@ class Post extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('content/post', '' . $url, 'SSL'));
+            Response::redirect(Url::link('content/post', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -144,7 +144,7 @@ class Post extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('content/post', '' . $url, 'SSL'));
+            Response::redirect(Url::link('content/post', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -249,8 +249,8 @@ class Post extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'content/post');
         
-        $data['insert'] = Url::link('content/post/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('content/post/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('content/post/insert', $url, 'SSL');
+        $data['delete'] = Url::link('content/post/delete', $url, 'SSL');
         
         $data['posts'] = array();
         
@@ -278,7 +278,7 @@ class Post extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('content/post/update', '' . 'post_id=' . $result['post_id'] . $url, 'SSL')
+                'href' => Url::link('content/post/update', 'post_id=' . $result['post_id'] . $url, 'SSL')
             );
             
             if ($result['image'] && file_exists(Config::get('path.image') . $result['image'])) {
@@ -358,12 +358,12 @@ class Post extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name']          = Url::link('content/post', '' . 'sort=pd.name' . $url, 'SSL');
-        $data['sort_status']        = Url::link('content/post', '' . 'sort=p.status' . $url, 'SSL');
-        $data['sort_viewed']        = Url::link('content/post', '' . 'sort=p.viewed' . $url, 'SSL');
-        $data['sort_date_added']    = Url::link('content/post', '' . 'sort=p.date_added' . $url, 'SSL');
-        $data['sort_date_modified'] = Url::link('content/post', '' . 'sort=p.date_modified' . $url, 'SSL');
-        $data['sort_order']         = Url::link('content/post', '' . 'sort=p.sort_order' . $url, 'SSL');
+        $data['sort_name']          = Url::link('content/post', 'sort=pd.name' . $url, 'SSL');
+        $data['sort_status']        = Url::link('content/post', 'sort=p.status' . $url, 'SSL');
+        $data['sort_viewed']        = Url::link('content/post', 'sort=p.viewed' . $url, 'SSL');
+        $data['sort_date_added']    = Url::link('content/post', 'sort=p.date_added' . $url, 'SSL');
+        $data['sort_date_modified'] = Url::link('content/post', 'sort=p.date_modified' . $url, 'SSL');
+        $data['sort_order']         = Url::link('content/post', 'sort=p.sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -410,7 +410,7 @@ class Post extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('content/post', '' . $url . '&page={page}', 'SSL')
+            Url::link('content/post', $url . '&page={page}', 'SSL')
         );
         
         $data['filter_name']          = $filter_name;
@@ -502,12 +502,12 @@ class Post extends Controller {
         Breadcrumb::add('lang_heading_title', 'content/post');
         
         if (!isset(Request::p()->get['post_id'])) {
-            $data['action'] = Url::link('content/post/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('content/post/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('content/post/update', '' . 'post_id=' . Request::p()->get['post_id'] . $url, 'SSL');
+            $data['action'] = Url::link('content/post/update', 'post_id=' . Request::p()->get['post_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('content/post', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('content/post', $url, 'SSL');
         
         if (isset(Request::p()->get['post_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $post_info = ContentPost::getPost(Request::p()->get['post_id']);

@@ -14,7 +14,7 @@
 |	
 */
 
-namespace App\Plugin\Git\Front\Controller;
+namespace App\Plugin\Git\Front\Controllers;
 
 use Exception;
 use App\Controllers\Controller;

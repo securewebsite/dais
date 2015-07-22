@@ -55,7 +55,7 @@ class User extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('people/user', '' . $url, 'SSL'));
+            Response::redirect(Url::link('people/user', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,7 +86,7 @@ class User extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('people/user', '' . $url, 'SSL'));
+            Response::redirect(Url::link('people/user', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -120,7 +120,7 @@ class User extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('people/user', '' . $url, 'SSL'));
+            Response::redirect(Url::link('people/user', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,8 +165,8 @@ class User extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'people/user', $url);
         
-        $data['insert'] = Url::link('people/user/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('people/user/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('people/user/insert', $url, 'SSL');
+        $data['delete'] = Url::link('people/user/delete', $url, 'SSL');
         
         $data['users'] = array();
         
@@ -186,7 +186,7 @@ class User extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('people/user/update', '' . 'user_id=' . $result['user_id'] . $url, 'SSL')
+                'href' => Url::link('people/user/update', 'user_id=' . $result['user_id'] . $url, 'SSL')
             );
             
             $data['users'][] = array(
@@ -225,9 +225,9 @@ class User extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_user_name']  = Url::link('people/user', '' . 'sort=user_name' . $url, 'SSL');
-        $data['sort_status']     = Url::link('people/user', '' . 'sort=status' . $url, 'SSL');
-        $data['sort_date_added'] = Url::link('people/user', '' . 'sort=date_added' . $url, 'SSL');
+        $data['sort_user_name']  = Url::link('people/user', 'sort=user_name' . $url, 'SSL');
+        $data['sort_status']     = Url::link('people/user', 'sort=status' . $url, 'SSL');
+        $data['sort_date_added'] = Url::link('people/user', 'sort=date_added' . $url, 'SSL');
         
         $url = '';
         
@@ -244,7 +244,7 @@ class User extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('people/user', '' . $url . '&page={page}', 'SSL')
+            Url::link('people/user', $url . '&page={page}', 'SSL')
         );
         
         $data['sort']  = $sort;
@@ -319,12 +319,12 @@ class User extends Controller {
         Breadcrumb::add('lang_heading_title', 'people/user', $url);
         
         if (!isset(Request::p()->get['user_id'])) {
-            $data['action'] = Url::link('people/user/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('people/user/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('people/user/update', '' . 'user_id=' . Request::p()->get['user_id'] . $url, 'SSL');
+            $data['action'] = Url::link('people/user/update', 'user_id=' . Request::p()->get['user_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('people/user', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('people/user', $url, 'SSL');
         
         if (isset(Request::p()->get['user_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $user_info = PeopleUser::getUser(Request::p()->get['user_id']);

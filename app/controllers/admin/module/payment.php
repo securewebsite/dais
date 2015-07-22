@@ -46,16 +46,14 @@ class Payment extends Controller {
         
         $modules = SettingModule::getInstalled('payment');
         
-        foreach ($modules as $key => $value) {
-            $theme_file = Theme::getPath() . 'controller/payment/' . $value . '.php';
-            $core_file  = Config::get('path.application') . 'payment/' . $value . '.php';
+        foreach ($modules as $key => $value):
+            $class = Finder::find('payment' . SEP . $value);
             
-            if (!is_readable($theme_file) && !is_readable($core_file)) {
+            if (!$class):
                 SettingModule::uninstall('payment', $value);
-                
                 unset($modules[$key]);
-            }
-        }
+            endif;
+        endforeach;
         
         $data['modules'] = array();
         
@@ -70,14 +68,28 @@ class Payment extends Controller {
                 $action = array();
                 
                 if (!in_array($module, $modules)) {
-                    $action[] = array('text' => Lang::get('lang_text_install'), 'href' => Url::link('module/payment/install', '' . 'module=' . $module, 'SSL'));
+                    $action[] = array(
+                        'text' => Lang::get('lang_text_install'), 
+                        'href' => Url::link('module/payment/install', 'payment=' . $module, 'SSL')
+                    );
                 } else {
-                    $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('payment/' . $module . '', '', 'SSL'));
+                    $action[] = array(
+                        'text' => Lang::get('lang_text_edit'), 
+                        'href' => Url::link('payment/' . $module, '', 'SSL')
+                    );
                     
-                    $action[] = array('text' => Lang::get('lang_text_uninstall'), 'href' => Url::link('module/payment/uninstall', '' . 'module=' . $module, 'SSL'));
+                    $action[] = array(
+                        'text' => Lang::get('lang_text_uninstall'), 
+                        'href' => Url::link('module/payment/uninstall', 'payment=' . $module, 'SSL')
+                    );
                 }
                 
-                $data['modules'][] = array('name' => Lang::get('lang_heading_title'), 'status' => Config::get($module . '_status') ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled'), 'sort_order' => Config::get($module . '_sort_order'), 'action' => $action);
+                $data['modules'][] = array(
+                    'name'       => Lang::get('lang_heading_title'), 
+                    'status'     => Config::get($module . '_status') ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled'), 
+                    'sort_order' => Config::get($module . '_sort_order'), 
+                    'action'     => $action
+                );
             }
         }
         
@@ -99,28 +111,21 @@ class Payment extends Controller {
             Response::redirect(Url::link('module/payment', '', 'SSL'));
         } else {
             Theme::model('setting/module');
+
+            $payment = Request::p()->get['payment'];
             
-            SettingModule::install('payment', Request::p()->get['module']);
+            SettingModule::install('payment', $payment);
             
             Theme::model('people/user_group');
             
-            PeopleUserGroup::addPermission(User::getId(), 'access', 'payment/' . Request::p()->get['module']);
-            PeopleUserGroup::addPermission(User::getId(), 'modify', 'payment/' . Request::p()->get['module']);
+            PeopleUserGroup::addPermission(User::getId(), 'access', 'payment/' . $payment);
+            PeopleUserGroup::addPermission(User::getId(), 'modify', 'payment/' . $payment);
             
-            $base_path  = Config::get('path.application') . 'payment' . SEP;
-            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'payment' . SEP;
+            $class = Finder::make('payment' . SEP . $payment);
             
-            if (is_readable($file = $theme_path . Request::p()->get['module'] . '.php')):
-                $class = Naming::class_from_filename($file);
-            else:
-                $class = Naming::class_from_filename($base_path . Request::p()->get['module'] . '.php');
-            endif;
-            
-            $class = new $class;
-            
-            if (method_exists($class, 'install')) {
+            if (method_exists($class, 'install')):
                 $class->install();
-            }
+            endif;
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
@@ -140,24 +145,17 @@ class Payment extends Controller {
         } else {
             Theme::model('setting/module');
             Theme::model('setting/setting');
+
+            $payment = Request::p()->get['payment'];
             
-            SettingModule::uninstall('payment', Request::p()->get['module']);
-            SettingSetting::deleteSetting(Request::p()->get['module']);
+            SettingModule::uninstall('payment', $payment);
+            SettingSetting::deleteSetting($payment);
             
-            $base_path  = Config::get('path.application') . 'payment' . SEP;
-            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'payment' . SEP;
+            $class = Finder::make('payment' . SEP . $payment);
             
-            if (is_readable($file = $theme_path . Request::p()->get['module'] . '.php')):
-                $class = Naming::class_from_filename($file);
-            else:
-                $class = Naming::class_from_filename($base_path . Request::p()->get['module'] . '.php');
-            endif;
-            
-            $class = new $class;
-            
-            if (method_exists($class, 'uninstall')) {
+            if (method_exists($class, 'uninstall')):
                 $class->uninstall();
-            }
+            endif;
             
             Theme::listen(__CLASS__, __FUNCTION__);
             

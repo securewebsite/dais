@@ -32,7 +32,7 @@ class Menu extends Controller {
             $data['dashboard']                   = Url::link('common/dashboard', '', 'SSL');
             $data['allowed'] = false;
             if (Config::get('config_affiliate_allowed')):
-                $data['affiliate'] = Url::link('people/customer', '' . 'filter_affiliate=1', 'SSL');
+                $data['affiliate'] = Url::link('people/customer', 'filter_affiliate=1', 'SSL');
                 $data['allowed']   = true;
             endif;
             $data['attribute']                   = Url::link('catalog/attribute', '', 'SSL');
@@ -121,13 +121,13 @@ class Menu extends Controller {
             
             $data['order_status_total'] = $order_status_total;
             
-            $data['alert_order_status'] = Url::link('sale/order', '' . 'filter_order_status_id=' . Config::get('config_order_status_id'), 'SSL');
+            $data['alert_order_status'] = Url::link('sale/order', 'filter_order_status_id=' . Config::get('config_order_status_id'), 'SSL');
             
             $data['text_pending_status'] = LocaleOrderStatus::getMenuStatusDescription(Config::get('config_order_status_id'));
             
             $data['complete_status_total'] = SaleOrder::getTotalOrders(array('filter_order_status_id' => Config::get('config_complete_status_id')));
             
-            $data['alert_complete_status'] = Url::link('sale/order', '' . 'filter_order_status_id=' . Config::get('config_complete_status_id'), 'SSL');
+            $data['alert_complete_status'] = Url::link('sale/order', 'filter_order_status_id=' . Config::get('config_complete_status_id'), 'SSL');
             
             $data['text_complete_status'] = LocaleOrderStatus::getMenuStatusDescription(Config::get('config_complete_status_id'));
             
@@ -156,7 +156,7 @@ class Menu extends Controller {
             $customer_total = PeopleCustomer::getTotalCustomers(array('filter_approved' => false));
             
             $data['customer_total'] = $customer_total;
-            $data['alert_customer_approval'] = Url::link('people/customer', '' . 'filter_approved=0', 'SSL');
+            $data['alert_customer_approval'] = Url::link('people/customer', 'filter_approved=0', 'SSL');
             
             // Products
             Theme::model('catalog/product');
@@ -165,7 +165,7 @@ class Menu extends Controller {
             
             $data['product_total'] = $product_total;
             
-            $data['alert_product'] = Url::link('catalog/product', '' . 'filter_order_status_id=' . Config::get('config_complete_status_id'), 'SSL');
+            $data['alert_product'] = Url::link('catalog/product', 'filter_order_status_id=' . Config::get('config_complete_status_id'), 'SSL');
             
             // Reviews
             Theme::model('catalog/review');
@@ -174,7 +174,7 @@ class Menu extends Controller {
             
             $data['review_total'] = $review_total;
             
-            $data['alert_review'] = Url::link('catalog/review', '' . 'filter_status=0', 'SSL');
+            $data['alert_review'] = Url::link('catalog/review', 'filter_status=0', 'SSL');
             
             $data['alerts'] = $order_status_total + $customer_total + $product_total + $review_total + $return_total;
             

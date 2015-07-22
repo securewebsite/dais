@@ -55,7 +55,7 @@ class WeightClass extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/weight_class', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/weight_class', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,7 +86,7 @@ class WeightClass extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/weight_class', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/weight_class', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -120,7 +120,7 @@ class WeightClass extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/weight_class', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/weight_class', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,8 +165,8 @@ class WeightClass extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'locale/weight_class', $url);
         
-        $data['insert'] = Url::link('locale/weight_class/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('locale/weight_class/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('locale/weight_class/insert', $url, 'SSL');
+        $data['delete'] = Url::link('locale/weight_class/delete', $url, 'SSL');
         
         $data['weight_classes'] = array();
         
@@ -179,7 +179,7 @@ class WeightClass extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/weight_class/update', '' . 'weight_class_id=' . $result['weight_class_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/weight_class/update', 'weight_class_id=' . $result['weight_class_id'] . $url, 'SSL'));
             
             $data['weight_classes'][] = array('weight_class_id' => $result['weight_class_id'], 'title' => $result['title'] . (($result['unit'] == Config::get('config_weight_class')) ? Lang::get('lang_text_default') : null), 'unit' => $result['unit'], 'value' => $result['value'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['weight_class_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -210,9 +210,9 @@ class WeightClass extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_title'] = Url::link('locale/weight_class', '' . 'sort=title' . $url, 'SSL');
-        $data['sort_unit'] = Url::link('locale/weight_class', '' . 'sort=unit' . $url, 'SSL');
-        $data['sort_value'] = Url::link('locale/weight_class', '' . 'sort=value' . $url, 'SSL');
+        $data['sort_title'] = Url::link('locale/weight_class', 'sort=title' . $url, 'SSL');
+        $data['sort_unit'] = Url::link('locale/weight_class', 'sort=unit' . $url, 'SSL');
+        $data['sort_value'] = Url::link('locale/weight_class', 'sort=value' . $url, 'SSL');
         
         $url = '';
         
@@ -224,7 +224,7 @@ class WeightClass extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($weight_class_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/weight_class', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($weight_class_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/weight_class', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -274,12 +274,12 @@ class WeightClass extends Controller {
         Breadcrumb::add('lang_heading_title', 'locale/weight_class', $url);
         
         if (!isset(Request::p()->get['weight_class_id'])) {
-            $data['action'] = Url::link('locale/weight_class/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('locale/weight_class/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/weight_class/update', '' . 'weight_class_id=' . Request::p()->get['weight_class_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/weight_class/update', 'weight_class_id=' . Request::p()->get['weight_class_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('locale/weight_class', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('locale/weight_class', $url, 'SSL');
         
         if (isset(Request::p()->get['weight_class_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $weight_class_info = LocaleWeightClass::getWeightClass(Request::p()->get['weight_class_id']);

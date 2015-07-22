@@ -153,7 +153,7 @@ class SaleReturn extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('report/sale_return', '' . $url . '&page={page}', 'SSL')
+            Url::link('report/sale_return', $url . '&page={page}', 'SSL')
         );
         
         $data['filter_date_start']       = $filter_date_start;

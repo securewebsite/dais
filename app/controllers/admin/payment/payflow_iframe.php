@@ -198,7 +198,7 @@ class PayflowIframe extends Controller {
             
             $data['transaction_reference'] = $transaction['transaction_reference'];
             $data['transaction_amount'] = number_format($transaction['amount'], 2);
-            $data['cancel'] = Url::link('sale/order/info', '' . 'order_id=' . $transaction['order_id'], 'SSL');
+            $data['cancel'] = Url::link('sale/order/info', 'order_id=' . $transaction['order_id'], 'SSL');
             
             Theme::loadjs('javascript/payment/payflow_iframe_refund', $data);
             

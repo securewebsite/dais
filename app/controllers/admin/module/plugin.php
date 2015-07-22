@@ -57,27 +57,39 @@ class Plugin extends Controller {
         
         $data['modules'] = array();
         
-        $files = $this->plugin->getPlugins();
+        $files = \Plugin::getPlugins();
         
         if ($files) {
             foreach ($files as $file) {
                 $module = strtolower(basename($file));
                 
-                $data = $this->plugin->language($module, $data);
+                $data = \Plugin::language($module, $data);
                 
                 $action = array();
                 
                 if (!in_array($module, $modules)) {
-                    $action[] = array('text' => Lang::get('lang_text_install'), 'href' => Url::link('module/plugin/install', '' . 'module=' . $module, 'SSL'));
+                    $action[] = [
+                        'text' => Lang::get('lang_text_install'), 
+                        'href' => Url::link('module/plugin/install', 'plugin=' . $module, 'SSL')
+                    ];
                 } else {
-                    if (is_readable(Config::get('path.plugin') . $module . '/admin/controller/' . $module . '.php')):
-                        $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('plugin/' . $module . '', '', 'SSL'));
+                    if (is_readable(Config::get('path.plugin') . $module . '/admin/controllers/' . $module . '.php')):
+                        $action[] = [
+                            'text' => Lang::get('lang_text_edit'), 
+                            'href' => Url::link('plugin/' . $module, '', 'SSL')
+                        ];
                     endif;
                     
-                    $action[] = array('text' => Lang::get('lang_text_uninstall'), 'href' => Url::link('module/plugin/uninstall', '' . 'module=' . $module, 'SSL'));
+                    $action[] = [
+                        'text' => Lang::get('lang_text_uninstall'), 
+                        'href' => Url::link('module/plugin/uninstall', 'plugin=' . $module, 'SSL')
+                    ];
                 }
                 
-                $data['modules'][] = array('name' => Lang::get('lang_heading_title'), 'action' => $action);
+                $data['modules'][] = [
+                    'name'   => Lang::get('lang_heading_title'), 
+                    'action' => $action
+                ];
             }
         }
         
@@ -99,17 +111,19 @@ class Plugin extends Controller {
             Response::redirect(Url::link('module/plugin', '', 'SSL'));
         } else {
             Theme::model('setting/module');
+
+            $plugin = Request::p()->get['plugin'];
             
-            SettingModule::install('plugin', Request::p()->get['module']);
+            SettingModule::install('plugin', $plugin);
             
-            if (is_readable(Config::get('path.plugin') . Request::p()->get['module'] . '/controller/' . Request::p()->get['module'] . '.php')):
+            if (is_readable(Config::get('path.plugin') . $plugin . '/admin/controllers/' . $plugin . '.php')):
                 Theme::model('people/user_group');
                 
-                PeopleUserGroup::addPermission(User::getId(), 'access', 'plugin/' . Request::p()->get['module']);
-                PeopleUserGroup::addPermission(User::getId(), 'modify', 'plugin/' . Request::p()->get['module']);
+                PeopleUserGroup::addPermission(User::getId(), 'access', 'plugin/' . $plugin);
+                PeopleUserGroup::addPermission(User::getId(), 'modify', 'plugin/' . $plugin);
             endif;
             
-            $this->plugin->install(Request::p()->get['module']);
+            \Plugin::install($plugin);
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
@@ -129,11 +143,13 @@ class Plugin extends Controller {
         } else {
             Theme::model('setting/module');
             Theme::model('setting/setting');
+
+            $plugin = Request::p()->get['plugin'];
             
-            SettingModule::uninstall('plugin', Request::p()->get['module']);
-            SettingSetting::deleteSetting(Request::p()->get['module']);
+            SettingModule::uninstall('plugin', $plugin);
+            SettingSetting::deleteSetting($plugin);
             
-            $this->plugin->uninstall(Request::p()->get['module']);
+            \Plugin::uninstall($plugin);
             
             Theme::listen(__CLASS__, __FUNCTION__);
             

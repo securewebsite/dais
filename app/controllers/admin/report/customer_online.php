@@ -73,7 +73,7 @@ class CustomerOnline extends Controller {
             $action = array();
             
             if ($result['customer_id']) {
-                $action[] = array('text' => 'Edit', 'href' => Url::link('people/customer/update', '' . 'customer_id=' . $result['customer_id'], 'SSL'));
+                $action[] = array('text' => 'Edit', 'href' => Url::link('people/customer/update', 'customer_id=' . $result['customer_id'], 'SSL'));
             }
             
             $customer_info = PeopleCustomer::getCustomer($result['customer_id']);
@@ -97,7 +97,7 @@ class CustomerOnline extends Controller {
             $url.= '&filter_ip=' . Request::p()->get['filter_ip'];
         }
         
-        $data['pagination'] = Theme::paginate($customer_total, $page, 20, Lang::get('lang_text_pagination'), Url::link('report/customer_online', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($customer_total, $page, 20, Lang::get('lang_text_pagination'), Url::link('report/customer_online', $url . '&page={page}', 'SSL'));
         
         $data['filter_customer'] = $filter_customer;
         $data['filter_ip'] = $filter_ip;

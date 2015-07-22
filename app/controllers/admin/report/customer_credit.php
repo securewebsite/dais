@@ -78,7 +78,7 @@ class CustomerCredit extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('people/customer/update', '' . 'customer_id=' . $result['customer_id'] . $url, 'SSL'));
+                'href' => Url::link('people/customer/update', 'customer_id=' . $result['customer_id'] . $url, 'SSL'));
             
             $data['customers'][] = array(
                 'customer'       => $result['customer'], 
@@ -105,7 +105,7 @@ class CustomerCredit extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('report/customer_credit', '' . $url . '&page={page}', 'SSL')
+            Url::link('report/customer_credit', $url . '&page={page}', 'SSL')
         );
         
         $data['filter_date_start'] = $filter_date_start;

@@ -55,7 +55,7 @@ class TaxRate extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/tax_rate', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/tax_rate', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,7 +86,7 @@ class TaxRate extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/tax_rate', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/tax_rate', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -120,7 +120,7 @@ class TaxRate extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/tax_rate', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/tax_rate', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,8 +165,8 @@ class TaxRate extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'locale/tax_rate', $url);
         
-        $data['insert'] = Url::link('locale/tax_rate/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('locale/tax_rate/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('locale/tax_rate/insert', $url, 'SSL');
+        $data['delete'] = Url::link('locale/tax_rate/delete', $url, 'SSL');
         
         $data['tax_rates'] = array();
         
@@ -179,7 +179,7 @@ class TaxRate extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/tax_rate/update', '' . 'tax_rate_id=' . $result['tax_rate_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/tax_rate/update', 'tax_rate_id=' . $result['tax_rate_id'] . $url, 'SSL'));
             
             $data['tax_rates'][] = array('tax_rate_id' => $result['tax_rate_id'], 'name' => $result['name'], 'rate' => $result['rate'], 'type' => ($result['type'] == 'F' ? Lang::get('lang_text_amount') : Lang::get('lang_text_percent')), 'geo_zone' => $result['geo_zone'], 'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 'date_modified' => date(Lang::get('lang_date_format_short'), strtotime($result['date_modified'])), 'selected' => isset(Request::p()->post['selected']) && in_array($result['tax_rate_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -210,12 +210,12 @@ class TaxRate extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('locale/tax_rate', '' . 'sort=tr.name' . $url, 'SSL');
-        $data['sort_rate'] = Url::link('locale/tax_rate', '' . 'sort=tr.rate' . $url, 'SSL');
-        $data['sort_type'] = Url::link('locale/tax_rate', '' . 'sort=tr.type' . $url, 'SSL');
-        $data['sort_geo_zone'] = Url::link('locale/tax_rate', '' . 'sort=gz.name' . $url, 'SSL');
-        $data['sort_date_added'] = Url::link('locale/tax_rate', '' . 'sort=tr.date_added' . $url, 'SSL');
-        $data['sort_date_modified'] = Url::link('locale/tax_rate', '' . 'sort=tr.date_modified' . $url, 'SSL');
+        $data['sort_name'] = Url::link('locale/tax_rate', 'sort=tr.name' . $url, 'SSL');
+        $data['sort_rate'] = Url::link('locale/tax_rate', 'sort=tr.rate' . $url, 'SSL');
+        $data['sort_type'] = Url::link('locale/tax_rate', 'sort=tr.type' . $url, 'SSL');
+        $data['sort_geo_zone'] = Url::link('locale/tax_rate', 'sort=gz.name' . $url, 'SSL');
+        $data['sort_date_added'] = Url::link('locale/tax_rate', 'sort=tr.date_added' . $url, 'SSL');
+        $data['sort_date_modified'] = Url::link('locale/tax_rate', 'sort=tr.date_modified' . $url, 'SSL');
         
         $url = '';
         
@@ -227,7 +227,7 @@ class TaxRate extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($tax_rate_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/tax_rate', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($tax_rate_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/tax_rate', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -277,12 +277,12 @@ class TaxRate extends Controller {
         Breadcrumb::add('lang_heading_title', 'locale/tax_rate', $url);
         
         if (!isset(Request::p()->get['tax_rate_id'])) {
-            $data['action'] = Url::link('locale/tax_rate/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('locale/tax_rate/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/tax_rate/update', '' . 'tax_rate_id=' . Request::p()->get['tax_rate_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/tax_rate/update', 'tax_rate_id=' . Request::p()->get['tax_rate_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('locale/tax_rate', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('locale/tax_rate', $url, 'SSL');
         
         if (isset(Request::p()->get['tax_rate_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $tax_rate_info = LocaleTaxRate::getTaxRate(Request::p()->get['tax_rate_id']);

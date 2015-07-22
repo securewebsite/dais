@@ -55,7 +55,7 @@ class UserPermission extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('people/user_permission', '' . $url, 'SSL'));
+            Response::redirect(Url::link('people/user_permission', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,7 +86,7 @@ class UserPermission extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('people/user_permission', '' . $url, 'SSL'));
+            Response::redirect(Url::link('people/user_permission', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -120,7 +120,7 @@ class UserPermission extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('people/user_permission', '' . $url, 'SSL'));
+            Response::redirect(Url::link('people/user_permission', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,8 +165,8 @@ class UserPermission extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'people/user_permission', $url);
         
-        $data['insert'] = Url::link('people/user_permission/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('people/user_permission/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('people/user_permission/insert', $url, 'SSL');
+        $data['delete'] = Url::link('people/user_permission/delete', $url, 'SSL');
         
         $data['user_groups'] = array();
         
@@ -179,7 +179,7 @@ class UserPermission extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/user_permission/update', '' . 'user_group_id=' . $result['user_group_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/user_permission/update', 'user_group_id=' . $result['user_group_id'] . $url, 'SSL'));
             
             $data['user_groups'][] = array('user_group_id' => $result['user_group_id'], 'name' => $result['name'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['user_group_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -210,7 +210,7 @@ class UserPermission extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('people/user_permission', '' . 'sort=name' . $url, 'SSL');
+        $data['sort_name'] = Url::link('people/user_permission', 'sort=name' . $url, 'SSL');
         
         $url = '';
         
@@ -222,7 +222,7 @@ class UserPermission extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($user_group_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('people/user_permission', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($user_group_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('people/user_permission', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -266,12 +266,12 @@ class UserPermission extends Controller {
         Breadcrumb::add('lang_heading_title', 'people/user_permission', $url);
         
         if (!isset(Request::p()->get['user_group_id'])) {
-            $data['action'] = Url::link('people/user_permission/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('people/user_permission/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('people/user_permission/update', '' . 'user_group_id=' . Request::p()->get['user_group_id'] . $url, 'SSL');
+            $data['action'] = Url::link('people/user_permission/update', 'user_group_id=' . Request::p()->get['user_group_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('people/user_permission', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('people/user_permission', $url, 'SSL');
         
         if (isset(Request::p()->get['user_group_id']) && Request::p()->server['REQUEST_METHOD'] != 'POST') {
             $user_group_info = PeopleUserGroup::getUserGroup(Request::p()->get['user_group_id']);

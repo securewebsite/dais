@@ -14,7 +14,7 @@
 |	
 */
 
-namespace App\Plugin\Example\Admin\Controller;
+namespace App\Plugin\Example\Admin\Controllers;
 
 use App\Controllers\Controller;
 

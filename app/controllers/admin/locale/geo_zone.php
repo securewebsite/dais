@@ -56,7 +56,7 @@ class GeoZone extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/geo_zone', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/geo_zone', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -87,7 +87,7 @@ class GeoZone extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/geo_zone', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/geo_zone', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -121,7 +121,7 @@ class GeoZone extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/geo_zone', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/geo_zone', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -166,8 +166,8 @@ class GeoZone extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'locale/geo_zone', $url);
         
-        $data['insert'] = Url::link('locale/geo_zone/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('locale/geo_zone/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('locale/geo_zone/insert', $url, 'SSL');
+        $data['delete'] = Url::link('locale/geo_zone/delete', $url, 'SSL');
         
         $data['geo_zones'] = array();
         
@@ -180,7 +180,7 @@ class GeoZone extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/geo_zone/update', '' . 'geo_zone_id=' . $result['geo_zone_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/geo_zone/update', 'geo_zone_id=' . $result['geo_zone_id'] . $url, 'SSL'));
             
             $data['geo_zones'][] = array('geo_zone_id' => $result['geo_zone_id'], 'name' => $result['name'], 'description' => $result['description'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['geo_zone_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -211,8 +211,8 @@ class GeoZone extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('locale/geo_zone', '' . 'sort=name' . $url, 'SSL');
-        $data['sort_description'] = Url::link('locale/geo_zone', '' . 'sort=description' . $url, 'SSL');
+        $data['sort_name'] = Url::link('locale/geo_zone', 'sort=name' . $url, 'SSL');
+        $data['sort_description'] = Url::link('locale/geo_zone', 'sort=description' . $url, 'SSL');
         
         $url = '';
         
@@ -224,7 +224,7 @@ class GeoZone extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($geo_zone_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/geo_zone', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($geo_zone_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/geo_zone', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -274,12 +274,12 @@ class GeoZone extends Controller {
         Breadcrumb::add('lang_heading_title', 'locale/geo_zone', $url);
         
         if (!isset(Request::p()->get['geo_zone_id'])) {
-            $data['action'] = Url::link('locale/geo_zone/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('locale/geo_zone/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/geo_zone/update', '' . 'geo_zone_id=' . Request::p()->get['geo_zone_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/geo_zone/update', 'geo_zone_id=' . Request::p()->get['geo_zone_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('locale/geo_zone', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('locale/geo_zone', $url, 'SSL');
         
         if (isset(Request::p()->get['geo_zone_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $geo_zone_info = LocaleGeoZone::getGeoZone(Request::p()->get['geo_zone_id']);

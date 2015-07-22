@@ -76,7 +76,7 @@ class AffiliateCommission extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('people/customer/update', '' . 'customer_id=' . $result['customer_id'] . $url, 'SSL')
+                'href' => Url::link('people/customer/update', 'customer_id=' . $result['customer_id'] . $url, 'SSL')
             );
             
             $data['affiliates'][] = array(
@@ -105,7 +105,7 @@ class AffiliateCommission extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('report/affiliate_commission', '' . $url . '&page={page}', 'SSL')
+            Url::link('report/affiliate_commission', $url . '&page={page}', 'SSL')
         );
         
         $data['filter_date_start'] = $filter_date_start;

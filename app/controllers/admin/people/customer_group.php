@@ -55,7 +55,7 @@ class CustomerGroup extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('people/customer_group', '' . $url, 'SSL'));
+            Response::redirect(Url::link('people/customer_group', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,7 +86,7 @@ class CustomerGroup extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('people/customer_group', '' . $url, 'SSL'));
+            Response::redirect(Url::link('people/customer_group', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -120,7 +120,7 @@ class CustomerGroup extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('people/customer_group', '' . $url, 'SSL'));
+            Response::redirect(Url::link('people/customer_group', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,8 +165,8 @@ class CustomerGroup extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'people/customer_group', $url);
         
-        $data['insert'] = Url::link('people/customer_group/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('people/customer_group/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('people/customer_group/insert', $url, 'SSL');
+        $data['delete'] = Url::link('people/customer_group/delete', $url, 'SSL');
         
         $data['customer_groups'] = array();
         
@@ -179,7 +179,7 @@ class CustomerGroup extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/customer_group/update', '' . 'customer_group_id=' . $result['customer_group_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/customer_group/update', 'customer_group_id=' . $result['customer_group_id'] . $url, 'SSL'));
             
             $data['customer_groups'][] = array('customer_group_id' => $result['customer_group_id'], 'name' => $result['name'] . (($result['customer_group_id'] == Config::get('config_customer_group_id')) ? Lang::get('lang_text_default') : null), 'sort_order' => $result['sort_order'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['customer_group_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -210,8 +210,8 @@ class CustomerGroup extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('people/customer_group', '' . 'sort=cgd.name' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('people/customer_group', '' . 'sort=cg.sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('people/customer_group', 'sort=cgd.name' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('people/customer_group', 'sort=cg.sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -223,7 +223,7 @@ class CustomerGroup extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($customer_group_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('people/customer_group', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($customer_group_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('people/customer_group', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -267,12 +267,12 @@ class CustomerGroup extends Controller {
         Breadcrumb::add('lang_heading_title', 'people/customer_group', $url);
         
         if (!isset(Request::p()->get['customer_group_id'])) {
-            $data['action'] = Url::link('people/customer_group/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('people/customer_group/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('people/customer_group/update', '' . 'customer_group_id=' . Request::p()->get['customer_group_id'] . $url, 'SSL');
+            $data['action'] = Url::link('people/customer_group/update', 'customer_group_id=' . Request::p()->get['customer_group_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('people/customer_group', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('people/customer_group', $url, 'SSL');
         
         if (isset(Request::p()->get['customer_group_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $customer_group_info = PeopleCustomerGroup::getCustomerGroup(Request::p()->get['customer_group_id']);

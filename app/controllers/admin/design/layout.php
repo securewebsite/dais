@@ -60,7 +60,7 @@ class Layout extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('design/layout', '' . $url, 'SSL'));
+            Response::redirect(Url::link('design/layout', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -94,7 +94,7 @@ class Layout extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('design/layout', '' . $url, 'SSL'));
+            Response::redirect(Url::link('design/layout', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -130,7 +130,7 @@ class Layout extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('design/layout', '' . $url, 'SSL'));
+            Response::redirect(Url::link('design/layout', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -175,8 +175,8 @@ class Layout extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'design/layout', $url);
         
-        $data['insert'] = Url::link('design/layout/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('design/layout/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('design/layout/insert', $url, 'SSL');
+        $data['delete'] = Url::link('design/layout/delete', $url, 'SSL');
         
         $data['layouts'] = array();
         
@@ -189,7 +189,7 @@ class Layout extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('design/layout/update', '' . 'layout_id=' . $result['layout_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('design/layout/update', 'layout_id=' . $result['layout_id'] . $url, 'SSL'));
             
             $data['layouts'][] = array('layout_id' => $result['layout_id'], 'name' => $result['name'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['layout_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -220,7 +220,7 @@ class Layout extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('design/layout', '' . 'sort=name' . $url, 'SSL');
+        $data['sort_name'] = Url::link('design/layout', 'sort=name' . $url, 'SSL');
         
         $url = '';
         
@@ -232,7 +232,7 @@ class Layout extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($layout_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('design/layout', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($layout_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('design/layout', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -276,12 +276,12 @@ class Layout extends Controller {
         Breadcrumb::add('lang_heading_title', 'design/layout', $url);
         
         if (!isset(Request::p()->get['layout_id'])) {
-            $data['action'] = Url::link('design/layout/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('design/layout/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('design/layout/update', '' . 'layout_id=' . Request::p()->get['layout_id'] . $url, 'SSL');
+            $data['action'] = Url::link('design/layout/update', 'layout_id=' . Request::p()->get['layout_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('design/layout', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('design/layout', $url, 'SSL');
         
         if (isset(Request::p()->get['layout_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $layout_info = DesignLayout::getLayout(Request::p()->get['layout_id']);

@@ -617,7 +617,7 @@ class PaypalExpress extends Controller {
                     if ($result === false) {
                         $transaction['payment_status'] = 'Failed';
                         PaymentPaypalExpress::addTransaction($transaction, $call_data);
-                        Response::redirect(Url::link('sale/order/info', '' . 'order_id=' . $paypal_order['order_id'], 'SSL'));
+                        Response::redirect(Url::link('sale/order/info', 'order_id=' . $paypal_order['order_id'], 'SSL'));
                     } else if ($result['ACK'] != 'Failure' && $result['ACK'] != 'FailureWithWarning') {
                         
                         $transaction['transaction_id'] = $result['REFUNDTRANSACTIONID'];
@@ -645,20 +645,20 @@ class PaypalExpress extends Controller {
                         }
                         
                         //redirect back to the order
-                        Response::redirect(Url::link('sale/order/info', '' . 'order_id=' . $paypal_order['order_id'], 'SSL'));
+                        Response::redirect(Url::link('sale/order/info', 'order_id=' . $paypal_order['order_id'], 'SSL'));
                     } else {
                         PaymentPaypalExpress::log(json_encode($result));
                         Session::p()->data['error'] = (isset($result['L_SHORTMESSAGE0']) ? $result['L_SHORTMESSAGE0'] : 'There was an error') . (isset($result['L_LONGMESSAGE0']) ? '<br />' . $result['L_LONGMESSAGE0'] : '');
-                        Response::redirect(Url::link('payment/paypal_express/refund', '' . 'transaction_id=' . Request::p()->post['transaction_id'], 'SSL'));
+                        Response::redirect(Url::link('payment/paypal_express/refund', 'transaction_id=' . Request::p()->post['transaction_id'], 'SSL'));
                     }
                 } else {
                     Session::p()->data['error'] = Lang::get('lang_error_data_missing');
-                    Response::redirect(Url::link('payment/paypal_express/refund', '' . 'transaction_id=' . Request::p()->post['transaction_id'], 'SSL'));
+                    Response::redirect(Url::link('payment/paypal_express/refund', 'transaction_id=' . Request::p()->post['transaction_id'], 'SSL'));
                 }
             }
         } else {
             Session::p()->data['error'] = Lang::get('lang_error_data');
-            Response::redirect(Url::link('payment/paypal_express/refund', '' . 'transaction_id=' . Request::p()->post['transaction_id'], 'SSL'));
+            Response::redirect(Url::link('payment/paypal_express/refund', 'transaction_id=' . Request::p()->post['transaction_id'], 'SSL'));
         }
     }
     

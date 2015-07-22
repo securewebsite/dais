@@ -55,7 +55,7 @@ class ReturnStatus extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/return_status', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/return_status', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,7 +86,7 @@ class ReturnStatus extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/return_status', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/return_status', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -120,7 +120,7 @@ class ReturnStatus extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/return_status', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/return_status', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,8 +165,8 @@ class ReturnStatus extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'locale/return_status', $url);
         
-        $data['insert'] = Url::link('locale/return_status/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('locale/return_status/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('locale/return_status/insert', $url, 'SSL');
+        $data['delete'] = Url::link('locale/return_status/delete', $url, 'SSL');
         
         $data['return_statuses'] = array();
         
@@ -179,7 +179,7 @@ class ReturnStatus extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/return_status/update', '' . 'return_status_id=' . $result['return_status_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/return_status/update', 'return_status_id=' . $result['return_status_id'] . $url, 'SSL'));
             
             $data['return_statuses'][] = array('return_status_id' => $result['return_status_id'], 'name' => $result['name'] . (($result['return_status_id'] == Config::get('config_return_status_id')) ? Lang::get('lang_text_default') : null), 'selected' => isset(Request::p()->post['selected']) && in_array($result['return_status_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -210,7 +210,7 @@ class ReturnStatus extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('locale/return_status', '' . 'sort=name' . $url, 'SSL');
+        $data['sort_name'] = Url::link('locale/return_status', 'sort=name' . $url, 'SSL');
         
         $url = '';
         
@@ -222,7 +222,7 @@ class ReturnStatus extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($return_status_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/return_status', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($return_status_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/return_status', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -266,12 +266,12 @@ class ReturnStatus extends Controller {
         Breadcrumb::add('lang_heading_title', 'locale/return_status', $url);
         
         if (!isset(Request::p()->get['return_status_id'])) {
-            $data['action'] = Url::link('locale/return_status/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('locale/return_status/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/return_status/update', '' . 'return_status_id=' . Request::p()->get['return_status_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/return_status/update', 'return_status_id=' . Request::p()->get['return_status_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('locale/return_status', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('locale/return_status', $url, 'SSL');
         
         Theme::model('locale/language');
         

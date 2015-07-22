@@ -101,16 +101,6 @@ class Naming {
 		endif;
 	}
 
-	public static function method_from_route($route) {
-		$segments = explode(SEP, $route);
-		
-		if (count($segments) > 2):
-			return $segments[2];
-		endif;
-
-		return 'index';
-	}
-
 	public static function class_for_model($model) {
 		$base_path  = Config::get('path.app') . 'models' . SEP . Config::get('prefix.facade');
 		$theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'models' . SEP;

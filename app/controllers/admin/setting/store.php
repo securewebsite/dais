@@ -64,7 +64,7 @@ class Store extends Controller {
             SettingSetting::editSetting('config', Request::post(), Request::p()->get['store_id']);
             Session::p()->data['success'] = Lang::get('lang_text_success');
             
-            Response::redirect(Url::link('setting/store', '' . 'store_id=' . Request::p()->get['store_id'], 'SSL'));
+            Response::redirect(Url::link('setting/store', 'store_id=' . Request::p()->get['store_id'], 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -121,7 +121,7 @@ class Store extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('setting/store/update', '' . 'store_id=' . $result['store_id'], 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('setting/store/update', 'store_id=' . $result['store_id'], 'SSL'));
             
             $data['stores'][] = array('store_id' => $result['store_id'], 'name' => $result['name'], 'url' => $result['url'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['store_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -277,7 +277,7 @@ class Store extends Controller {
         if (!isset(Request::p()->get['store_id'])) {
             $data['action'] = Url::link('setting/store/insert', '', 'SSL');
         } else {
-            $data['action'] = Url::link('setting/store/update', '' . 'store_id=' . Request::p()->get['store_id'], 'SSL');
+            $data['action'] = Url::link('setting/store/update', 'store_id=' . Request::p()->get['store_id'], 'SSL');
         }
         
         $data['cancel'] = Url::link('setting/store', '', 'SSL');

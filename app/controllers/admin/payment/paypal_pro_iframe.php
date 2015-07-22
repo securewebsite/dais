@@ -234,7 +234,7 @@ class PaypalProIframe extends Controller {
         $data['action'] = Url::link('payment/paypal_pro_iframe/doRefund', '', 'SSL');
         
         if (isset(Request::p()->get['order_id'])) {
-            $data['cancel'] = Url::link('sale/order/info', '' . 'order_id=' . Request::p()->get['order_id'], 'SSL');
+            $data['cancel'] = Url::link('sale/order/info', 'order_id=' . Request::p()->get['order_id'], 'SSL');
         } else {
             $data['cancel'] = '';
         }
@@ -317,7 +317,7 @@ class PaypalProIframe extends Controller {
                         
                         Theme::listen(__CLASS__, __FUNCTION__);
                         
-                        Response::redirect(Url::link('sale/order/info', '' . 'order_id=' . $paypal_order['order_id'], 'SSL'));
+                        Response::redirect(Url::link('sale/order/info', 'order_id=' . $paypal_order['order_id'], 'SSL'));
                     } else if ($result['ACK'] != 'Failure' && $result['ACK'] != 'FailureWithWarning') {
                         
                         $transaction['transaction_id'] = $result['REFUNDTRANSACTIONID'];
@@ -336,21 +336,21 @@ class PaypalProIframe extends Controller {
                         Theme::listen(__CLASS__, __FUNCTION__);
                         
                         //redirect back to the order
-                        Response::redirect(Url::link('sale/order/info', '' . 'order_id=' . $paypal_order['order_id'], 'SSL'));
+                        Response::redirect(Url::link('sale/order/info', 'order_id=' . $paypal_order['order_id'], 'SSL'));
                     } else {
                         PaymentPaypalProIframe::log(json_encode($result));
                         Session::p()->data['error'] = (isset($result['L_SHORTMESSAGE0']) ? $result['L_SHORTMESSAGE0'] : 'There was an error') . (isset($result['L_LONGMESSAGE0']) ? '<br />' . $result['L_LONGMESSAGE0'] : '');
                         
                         Theme::listen(__CLASS__, __FUNCTION__);
                         
-                        Response::redirect(Url::link('payment/paypal_pro_iframe/refund', '' . 'transaction_id=' . Request::p()->post['transaction_id'], 'SSL'));
+                        Response::redirect(Url::link('payment/paypal_pro_iframe/refund', 'transaction_id=' . Request::p()->post['transaction_id'], 'SSL'));
                     }
                 } else {
                     Session::p()->data['error'] = Lang::get('lang_error_data_missing');
                     
                     Theme::listen(__CLASS__, __FUNCTION__);
                     
-                    Response::redirect(Url::link('payment/paypal_pro_iframe/refund', '' . 'transaction_id=' . Request::p()->post['transaction_id'], 'SSL'));
+                    Response::redirect(Url::link('payment/paypal_pro_iframe/refund', 'transaction_id=' . Request::p()->post['transaction_id'], 'SSL'));
                 }
             }
         } else {
@@ -358,7 +358,7 @@ class PaypalProIframe extends Controller {
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
-            Response::redirect(Url::link('payment/paypal_pro_iframe/refund', '' . 'transaction_id=' . Request::p()->post['transaction_id'], 'SSL'));
+            Response::redirect(Url::link('payment/paypal_pro_iframe/refund', 'transaction_id=' . Request::p()->post['transaction_id'], 'SSL'));
         }
     }
     
@@ -421,7 +421,7 @@ class PaypalProIframe extends Controller {
         Theme::setTitle(Lang::get('lang_text_transaction'));
         
         if (isset(Request::p()->get['order_id'])) {
-            $data['back'] = Url::link('sale/order/info', '' . 'order_id=' . Request::p()->get['order_id'], 'SSL');
+            $data['back'] = Url::link('sale/order/info', 'order_id=' . Request::p()->get['order_id'], 'SSL');
         } else {
             $data['back'] = '';
         }
@@ -610,7 +610,7 @@ class PaypalProIframe extends Controller {
                 $data['paypal_order']['remaining'] = number_format($paypal_order['total'] - $captured, 2);
                 
                 foreach ($paypal_order['transactions'] as $transaction) {
-                    $data['transactions'][] = array('paypal_iframe_order_transaction_id' => $transaction['paypal_iframe_order_transaction_id'], 'transaction_id' => $transaction['transaction_id'], 'amount' => $transaction['amount'], 'created' => $transaction['created'], 'payment_type' => $transaction['payment_type'], 'payment_status' => $transaction['payment_status'], 'pending_reason' => $transaction['pending_reason'], 'view' => Url::link('payment/paypal_pro_iframe/viewTransaction', '' . "&transaction_id=" . $transaction['transaction_id'] . '&order_id=' . Request::p()->get['order_id'], 'SSL'), 'refund' => Url::link('payment/paypal_pro_iframe/refund', '' . "&transaction_id=" . $transaction['transaction_id'] . "&order_id=" . Request::p()->get['order_id'], 'SSL'), 'resend' => Url::link('payment/paypal_pro_iframe/resend', '' . "&paypal_iframe_order_transaction_id=" . $transaction['paypal_iframe_order_transaction_id'], 'SSL'),);
+                    $data['transactions'][] = array('paypal_iframe_order_transaction_id' => $transaction['paypal_iframe_order_transaction_id'], 'transaction_id' => $transaction['transaction_id'], 'amount' => $transaction['amount'], 'created' => $transaction['created'], 'payment_type' => $transaction['payment_type'], 'payment_status' => $transaction['payment_status'], 'pending_reason' => $transaction['pending_reason'], 'view' => Url::link('payment/paypal_pro_iframe/viewTransaction', "&transaction_id=" . $transaction['transaction_id'] . '&order_id=' . Request::p()->get['order_id'], 'SSL'), 'refund' => Url::link('payment/paypal_pro_iframe/refund', "&transaction_id=" . $transaction['transaction_id'] . "&order_id=" . Request::p()->get['order_id'], 'SSL'), 'resend' => Url::link('payment/paypal_pro_iframe/resend', "&paypal_iframe_order_transaction_id=" . $transaction['paypal_iframe_order_transaction_id'], 'SSL'),);
                 }
             }
             

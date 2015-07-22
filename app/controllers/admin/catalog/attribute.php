@@ -56,7 +56,7 @@ class Attribute extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/attribute', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/attribute', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -88,7 +88,7 @@ class Attribute extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/attribute', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/attribute', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -122,7 +122,7 @@ class Attribute extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/attribute', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/attribute', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -167,8 +167,8 @@ class Attribute extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'catalog/attribute', $url);
         
-        $data['insert'] = Url::link('catalog/attribute/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('catalog/attribute/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('catalog/attribute/insert', $url, 'SSL');
+        $data['delete'] = Url::link('catalog/attribute/delete', $url, 'SSL');
         
         $data['attributes'] = array();
         
@@ -181,7 +181,7 @@ class Attribute extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/attribute/update', '' . 'attribute_id=' . $result['attribute_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/attribute/update', 'attribute_id=' . $result['attribute_id'] . $url, 'SSL'));
             
             $data['attributes'][] = array('attribute_id' => $result['attribute_id'], 'name' => $result['name'], 'attribute_group' => $result['attribute_group'], 'sort_order' => $result['sort_order'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['attribute_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -212,9 +212,9 @@ class Attribute extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('catalog/attribute', '' . 'sort=ad.name' . $url, 'SSL');
-        $data['sort_attribute_group'] = Url::link('catalog/attribute', '' . 'sort=attribute_group' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('catalog/attribute', '' . 'sort=a.sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('catalog/attribute', 'sort=ad.name' . $url, 'SSL');
+        $data['sort_attribute_group'] = Url::link('catalog/attribute', 'sort=attribute_group' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('catalog/attribute', 'sort=a.sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -226,7 +226,7 @@ class Attribute extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($attribute_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/attribute', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($attribute_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/attribute', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -270,12 +270,12 @@ class Attribute extends Controller {
         Breadcrumb::add('lang_heading_title', 'catalog/attribute', $url);
         
         if (!isset(Request::p()->get['attribute_id'])) {
-            $data['action'] = Url::link('catalog/attribute/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('catalog/attribute/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/attribute/update', '' . 'attribute_id=' . Request::p()->get['attribute_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/attribute/update', 'attribute_id=' . Request::p()->get['attribute_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('catalog/attribute', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('catalog/attribute', $url, 'SSL');
         
         if (isset(Request::p()->get['attribute_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $attribute_info = CatalogAttribute::getAttribute(Request::p()->get['attribute_id']);

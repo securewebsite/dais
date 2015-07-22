@@ -55,7 +55,7 @@ class Recurring extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/recurring', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/recurring', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,7 +86,7 @@ class Recurring extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/recurring', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/recurring', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -120,7 +120,7 @@ class Recurring extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/recurring', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/recurring', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -154,7 +154,7 @@ class Recurring extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/recurring', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/recurring', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -199,9 +199,9 @@ class Recurring extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'catalog/recurring');
         
-        $data['insert'] = Url::link('catalog/recurring/add', '' . $url, 'SSL');
-        $data['copy'] = Url::link('catalog/recurring/copy', '' . $url, 'SSL');
-        $data['delete'] = Url::link('catalog/recurring/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('catalog/recurring/add', $url, 'SSL');
+        $data['copy'] = Url::link('catalog/recurring/copy', $url, 'SSL');
+        $data['delete'] = Url::link('catalog/recurring/delete', $url, 'SSL');
         
         $data['recurrings'] = array();
         
@@ -212,7 +212,7 @@ class Recurring extends Controller {
         $results = CatalogRecurring::getRecurrings($filter_data);
         
         foreach ($results as $result) {
-            $data['recurrings'][] = array('recurring_id' => $result['recurring_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'edit' => Url::link('catalog/recurring/edit', '' . 'recurring_id=' . $result['recurring_id'] . $url, 'SSL'));
+            $data['recurrings'][] = array('recurring_id' => $result['recurring_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'edit' => Url::link('catalog/recurring/edit', 'recurring_id=' . $result['recurring_id'] . $url, 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -247,8 +247,8 @@ class Recurring extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('catalog/recurring', '' . 'sort=pd.name' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('catalog/recurring', '' . 'sort=p.sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('catalog/recurring', 'sort=pd.name' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('catalog/recurring', 'sort=p.sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -260,7 +260,7 @@ class Recurring extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($recurring_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/recurring', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($recurring_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/recurring', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -304,12 +304,12 @@ class Recurring extends Controller {
         Breadcrumb::add('lang_heading_title', 'catalog/recurring');
         
         if (!isset(Request::p()->get['recurring_id'])) {
-            $data['action'] = Url::link('catalog/recurring/add', '' . $url, 'SSL');
+            $data['action'] = Url::link('catalog/recurring/add', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/recurring/edit', '' . 'recurring_id=' . Request::p()->get['recurring_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/recurring/edit', 'recurring_id=' . Request::p()->get['recurring_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('catalog/recurring', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('catalog/recurring', $url, 'SSL');
         
         if (isset(Request::p()->get['recurring_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $recurring_info = CatalogRecurring::getRecurring(Request::p()->get['recurring_id']);

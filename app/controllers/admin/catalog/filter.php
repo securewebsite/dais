@@ -60,7 +60,7 @@ class Filter extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/filter', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/filter', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -94,7 +94,7 @@ class Filter extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/filter', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/filter', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -130,7 +130,7 @@ class Filter extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/filter', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/filter', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -175,8 +175,8 @@ class Filter extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'catalog/filter', $url);
         
-        $data['insert'] = Url::link('catalog/filter/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('catalog/filter/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('catalog/filter/insert', $url, 'SSL');
+        $data['delete'] = Url::link('catalog/filter/delete', $url, 'SSL');
         
         $data['filters'] = array();
         
@@ -189,7 +189,7 @@ class Filter extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/filter/update', '' . 'filter_group_id=' . $result['filter_group_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/filter/update', 'filter_group_id=' . $result['filter_group_id'] . $url, 'SSL'));
             
             $data['filters'][] = array('filter_group_id' => $result['filter_group_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['filter_group_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -220,8 +220,8 @@ class Filter extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('catalog/filter', '' . 'sort=fgd.name' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('catalog/filter', '' . 'sort=fg.sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('catalog/filter', 'sort=fgd.name' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('catalog/filter', 'sort=fg.sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -233,7 +233,7 @@ class Filter extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($filter_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/filter', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($filter_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/filter', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -283,12 +283,12 @@ class Filter extends Controller {
         Breadcrumb::add('lang_heading_title', 'catalog/filter', $url);
         
         if (!isset(Request::p()->get['filter_group_id'])) {
-            $data['action'] = Url::link('catalog/filter/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('catalog/filter/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/filter/update', '' . 'filter_group_id=' . Request::p()->get['filter_group_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/filter/update', 'filter_group_id=' . Request::p()->get['filter_group_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('catalog/filter', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('catalog/filter', $url, 'SSL');
         
         if (isset(Request::p()->get['filter_group_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $filter_group_info = CatalogFilter::getFilterGroup(Request::p()->get['filter_group_id']);

@@ -46,16 +46,14 @@ class Feed extends Controller {
         
         $modules = SettingModule::getInstalled('feed');
         
-        foreach ($modules as $key => $value) {
-            $theme_file = Theme::getPath() . 'controller/feed/' . $value . '.php';
-            $core_file  = Config::get('path.application') . 'feed/' . $value . '.php';
+        foreach ($modules as $key => $value):
+            $class = Finder::find('feed' . SEP . $value);
             
-            if (!is_readable($theme_file) && !is_readable($core_file)) {
+            if (!$class):
                 SettingModule::uninstall('feed', $value);
-                
                 unset($modules[$key]);
-            }
-        }
+            endif;
+        endforeach;
         
         $data['modules'] = array();
         
@@ -67,17 +65,30 @@ class Feed extends Controller {
                 
                 $data = Theme::language('feed/' . $module, $data);
                 
-                $action = array();
+                $action = [];
                 
                 if (!in_array($module, $modules)) {
-                    $action[] = array('text' => Lang::get('lang_text_install'), 'href' => Url::link('module/feed/install', '' . 'module=' . $module, 'SSL'));
+                    $action[] = [
+                        'text' => Lang::get('lang_text_install'), 
+                        'href' => Url::link('module/feed/install', 'feed=' . $module, 'SSL')
+                    ];
                 } else {
-                    $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('feed/' . $module . '', '', 'SSL'));
+                    $action[] = [
+                        'text' => Lang::get('lang_text_edit'), 
+                        'href' => Url::link('feed/' . $module, '', 'SSL')
+                    ];
                     
-                    $action[] = array('text' => Lang::get('lang_text_uninstall'), 'href' => Url::link('module/feed/uninstall', '' . 'module=' . $module, 'SSL'));
+                    $action[] = [
+                        'text' => Lang::get('lang_text_uninstall'), 
+                        'href' => Url::link('module/feed/uninstall', 'feed=' . $module, 'SSL')
+                    ];
                 }
                 
-                $data['modules'][] = array('name' => Lang::get('lang_heading_title'), 'status' => Config::get($module . '_status') ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled'), 'action' => $action);
+                $data['modules'][] = [
+                    'name'   => Lang::get('lang_heading_title'), 
+                    'status' => Config::get($module . '_status') ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled'), 
+                    'action' => $action
+                ];
             }
         }
         
@@ -99,24 +110,17 @@ class Feed extends Controller {
             Response::redirect(Url::link('module/feed', '', 'SSL'));
         } else {
             Theme::model('setting/module');
+
+            $feed = Request::p()->get['feed'];
             
-            SettingModule::install('feed', Request::p()->get['module']);
+            SettingModule::install('feed', $feed);
             
             Theme::model('people/user_group');
             
-            PeopleUserGroup::addPermission(User::getId(), 'access', 'feed/' . Request::p()->get['module']);
-            PeopleUserGroup::addPermission(User::getId(), 'modify', 'feed/' . Request::p()->get['module']);
+            PeopleUserGroup::addPermission(User::getId(), 'access', 'feed/' . $feed);
+            PeopleUserGroup::addPermission(User::getId(), 'modify', 'feed/' . $feed);
             
-            $base_path  = Config::get('path.application') . 'feed' . SEP;
-            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'feed' . SEP;
-            
-            if (is_readable($file = $theme_path . Request::p()->get['module'] . '.php')):
-                $class = Naming::class_from_filename($file);
-            else:
-                $class = Naming::class_from_filename($base_path . Request::p()->get['module'] . '.php');
-            endif;
-            
-            $class = new $class;
+            $class = Finder::make('feed' . SEP . $feed);
             
             if (method_exists($class, 'install')) {
                 $class->install();
@@ -140,20 +144,13 @@ class Feed extends Controller {
         } else {
             Theme::model('setting/module');
             Theme::model('setting/setting');
+
+            $feed = Request::p()->get['feed'];
             
-            SettingModule::uninstall('feed', Request::p()->get['module']);
-            SettingSetting::deleteSetting(Request::p()->get['module']);
+            SettingModule::uninstall('feed', $feed);
+            SettingSetting::deleteSetting($feed);
             
-            $base_path  = Config::get('path.application') . 'feed' . SEP;
-            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'feed' . SEP;
-            
-            if (is_readable($file = $theme_path . Request::p()->get['module'] . '.php')):
-                $class = Naming::class_from_filename($file);
-            else:
-                $class = Naming::class_from_filename($base_path . Request::p()->get['module'] . '.php');
-            endif;
-            
-            $class = new $class;
+            $class = Finder::make('feed' . SEP . $feed);
             
             if (method_exists($class, 'uninstall')) {
                 $class->uninstall();

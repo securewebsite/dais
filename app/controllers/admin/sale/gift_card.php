@@ -55,7 +55,7 @@ class GiftCard extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('sale/gift_card', '' . $url, 'SSL'));
+            Response::redirect(Url::link('sale/gift_card', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,7 +86,7 @@ class GiftCard extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('sale/gift_card', '' . $url, 'SSL'));
+            Response::redirect(Url::link('sale/gift_card', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -120,7 +120,7 @@ class GiftCard extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('sale/gift_card', '' . $url, 'SSL'));
+            Response::redirect(Url::link('sale/gift_card', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,8 +165,8 @@ class GiftCard extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'sale/gift_card', $url);
         
-        $data['insert'] = Url::link('sale/gift_card/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('sale/gift_card/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('sale/gift_card/insert', $url, 'SSL');
+        $data['delete'] = Url::link('sale/gift_card/delete', $url, 'SSL');
         
         $data['gift_cards'] = array();
         
@@ -186,7 +186,7 @@ class GiftCard extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('sale/gift_card/update', '' . 'gift_card_id=' . $result['gift_card_id'] . $url, 'SSL')
+                'href' => Url::link('sale/gift_card/update', 'gift_card_id=' . $result['gift_card_id'] . $url, 'SSL')
             );
             
             $data['gift_cards'][] = array(
@@ -229,13 +229,13 @@ class GiftCard extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_code']       = Url::link('sale/gift_card', '' . 'sort=v.code' . $url, 'SSL');
-        $data['sort_from']       = Url::link('sale/gift_card', '' . 'sort=v.from_name' . $url, 'SSL');
-        $data['sort_to']         = Url::link('sale/gift_card', '' . 'sort=v.to_name' . $url, 'SSL');
-        $data['sort_theme']      = Url::link('sale/gift_card', '' . 'sort=theme' . $url, 'SSL');
-        $data['sort_amount']     = Url::link('sale/gift_card', '' . 'sort=v.amount' . $url, 'SSL');
-        $data['sort_status']     = Url::link('sale/gift_card', '' . 'sort=v.date_end' . $url, 'SSL');
-        $data['sort_date_added'] = Url::link('sale/gift_card', '' . 'sort=v.date_added' . $url, 'SSL');
+        $data['sort_code']       = Url::link('sale/gift_card', 'sort=v.code' . $url, 'SSL');
+        $data['sort_from']       = Url::link('sale/gift_card', 'sort=v.from_name' . $url, 'SSL');
+        $data['sort_to']         = Url::link('sale/gift_card', 'sort=v.to_name' . $url, 'SSL');
+        $data['sort_theme']      = Url::link('sale/gift_card', 'sort=theme' . $url, 'SSL');
+        $data['sort_amount']     = Url::link('sale/gift_card', 'sort=v.amount' . $url, 'SSL');
+        $data['sort_status']     = Url::link('sale/gift_card', 'sort=v.date_end' . $url, 'SSL');
+        $data['sort_date_added'] = Url::link('sale/gift_card', 'sort=v.date_added' . $url, 'SSL');
         
         $url = '';
         
@@ -252,7 +252,7 @@ class GiftCard extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('sale/gift_card', '' . $url . '&page={page}', 'SSL')
+            Url::link('sale/gift_card', $url . '&page={page}', 'SSL')
         );
         
         $data['sort']  = $sort;
@@ -333,12 +333,12 @@ class GiftCard extends Controller {
         Breadcrumb::add('lang_heading_title', 'sale/gift_card', $url);
         
         if (!isset(Request::p()->get['gift_card_id'])) {
-            $data['action'] = Url::link('sale/gift_card/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('sale/gift_card/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('sale/gift_card/update', '' . 'gift_card_id=' . Request::p()->get['gift_card_id'] . $url, 'SSL');
+            $data['action'] = Url::link('sale/gift_card/update', 'gift_card_id=' . Request::p()->get['gift_card_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('sale/gift_card', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('sale/gift_card', $url, 'SSL');
         
         if (isset(Request::p()->get['gift_card_id']) && (!Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $gift_card_info = SaleGiftCard::getGiftcard(Request::p()->get['gift_card_id']);
@@ -482,7 +482,7 @@ class GiftCard extends Controller {
             $order_gift_card_info = SaleOrder::getOrderGiftcardByGiftcardId($gift_card_id);
             
             if ($order_gift_card_info) {
-                $this->error['warning'] = sprintf(Lang::get('lang_error_order'), Url::link('sale/order/info', '' . 'order_id=' . $order_gift_card_info['order_id'], 'SSL'));
+                $this->error['warning'] = sprintf(Lang::get('lang_error_order'), Url::link('sale/order/info', 'order_id=' . $order_gift_card_info['order_id'], 'SSL'));
                 
                 break;
             }
@@ -524,7 +524,7 @@ class GiftCard extends Controller {
             $page, 
             10, 
             Lang::get('lang_text_pagination'), 
-            Url::link('sale/gift_card/history', '' . 'gift_card_id=' . Request::p()->get['gift_card_id'] . '&page={page}', 'SSL')
+            Url::link('sale/gift_card/history', 'gift_card_id=' . Request::p()->get['gift_card_id'] . '&page={page}', 'SSL')
         );
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);

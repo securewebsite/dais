@@ -55,7 +55,7 @@ class CustomerBanIp extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('people/customer_ban_ip', '' . $url, 'SSL'));
+            Response::redirect(Url::link('people/customer_ban_ip', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,7 +86,7 @@ class CustomerBanIp extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('people/customer_ban_ip', '' . $url, 'SSL'));
+            Response::redirect(Url::link('people/customer_ban_ip', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -120,7 +120,7 @@ class CustomerBanIp extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('people/customer_ban_ip', '' . $url, 'SSL'));
+            Response::redirect(Url::link('people/customer_ban_ip', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,8 +165,8 @@ class CustomerBanIp extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'people/customer_ban_ip', $url);
         
-        $data['insert'] = Url::link('people/customer_ban_ip/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('people/customer_ban_ip/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('people/customer_ban_ip/insert', $url, 'SSL');
+        $data['delete'] = Url::link('people/customer_ban_ip/delete', $url, 'SSL');
         
         $data['customer_ban_ips'] = array();
         
@@ -179,9 +179,9 @@ class CustomerBanIp extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/customer_ban_ip/update', '' . 'customer_ban_ip_id=' . $result['customer_ban_ip_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/customer_ban_ip/update', 'customer_ban_ip_id=' . $result['customer_ban_ip_id'] . $url, 'SSL'));
             
-            $data['customer_ban_ips'][] = array('customer_ban_ip_id' => $result['customer_ban_ip_id'], 'ip' => $result['ip'], 'total' => $result['total'], 'customer' => Url::link('people/customer', '' . 'filter_ip=' . $result['ip'], 'SSL'), 'selected' => isset(Request::p()->post['selected']) && in_array($result['customer_ban_ip_id'], Request::p()->post['selected']), 'action' => $action);
+            $data['customer_ban_ips'][] = array('customer_ban_ip_id' => $result['customer_ban_ip_id'], 'ip' => $result['ip'], 'total' => $result['total'], 'customer' => Url::link('people/customer', 'filter_ip=' . $result['ip'], 'SSL'), 'selected' => isset(Request::p()->post['selected']) && in_array($result['customer_ban_ip_id'], Request::p()->post['selected']), 'action' => $action);
         }
         
         if (isset($this->error['warning'])) {
@@ -210,7 +210,7 @@ class CustomerBanIp extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_ip'] = Url::link('people/customer_ban_ip', '' . 'sort=ip' . $url, 'SSL');
+        $data['sort_ip'] = Url::link('people/customer_ban_ip', 'sort=ip' . $url, 'SSL');
         
         $url = '';
         
@@ -222,7 +222,7 @@ class CustomerBanIp extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($customer_ban_ip_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('people/customer_ban_ip', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($customer_ban_ip_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('people/customer_ban_ip', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -266,12 +266,12 @@ class CustomerBanIp extends Controller {
         Breadcrumb::add('lang_heading_title', 'people/customer_ban_ip', $url);
         
         if (!isset(Request::p()->get['customer_ban_ip_id'])) {
-            $data['action'] = Url::link('people/customer_ban_ip/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('people/customer_ban_ip/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('people/customer_ban_ip/update', '' . 'customer_ban_ip_id=' . Request::p()->get['customer_ban_ip_id'] . $url, 'SSL');
+            $data['action'] = Url::link('people/customer_ban_ip/update', 'customer_ban_ip_id=' . Request::p()->get['customer_ban_ip_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('people/customer_ban_ip', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('people/customer_ban_ip', $url, 'SSL');
         
         if (isset(Request::p()->get['customer_ban_ip_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $customer_ban_ip_info = PeopleCustomerBanIp::getCustomerBanIp(Request::p()->get['customer_ban_ip_id']);

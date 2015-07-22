@@ -60,7 +60,7 @@ class Option extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/option', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/option', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -94,7 +94,7 @@ class Option extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/option', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/option', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -130,7 +130,7 @@ class Option extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/option', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/option', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -175,8 +175,8 @@ class Option extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'catalog/option', $url);
         
-        $data['insert'] = Url::link('catalog/option/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('catalog/option/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('catalog/option/insert', $url, 'SSL');
+        $data['delete'] = Url::link('catalog/option/delete', $url, 'SSL');
         
         $data['options'] = array();
         
@@ -189,7 +189,7 @@ class Option extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/option/update', '' . 'option_id=' . $result['option_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/option/update', 'option_id=' . $result['option_id'] . $url, 'SSL'));
             
             $data['options'][] = array('option_id' => $result['option_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['option_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -220,8 +220,8 @@ class Option extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('catalog/option', '' . 'sort=od.name' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('catalog/option', '' . 'sort=o.sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('catalog/option', 'sort=od.name' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('catalog/option', 'sort=o.sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -233,7 +233,7 @@ class Option extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($option_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/option', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($option_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/option', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -283,12 +283,12 @@ class Option extends Controller {
         Breadcrumb::add('lang_heading_title', 'catalog/option', $url);
         
         if (!isset(Request::p()->get['option_id'])) {
-            $data['action'] = Url::link('catalog/option/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('catalog/option/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/option/update', '' . 'option_id=' . Request::p()->get['option_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/option/update', 'option_id=' . Request::p()->get['option_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('catalog/option', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('catalog/option', $url, 'SSL');
         
         if (isset(Request::p()->get['option_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $option_info = CatalogOption::getOption(Request::p()->get['option_id']);

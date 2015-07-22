@@ -56,7 +56,7 @@ class GoogleSiteMap extends Controller {
             $data['google_site_map_status'] = Config::get('google_site_map_status');
         }
         
-        $data['data_feed'] = Config::get('http.public') . 'feed/google_site_map';
+        $data['data_feed'] = Config::get('http.public') . 'feed/google-site-map';
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         

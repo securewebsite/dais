@@ -47,17 +47,15 @@ class Widget extends Controller {
         $modules = SettingModule::getInstalled('widget');
         
         foreach ($modules as $key => $value) {
-            $theme_file = Theme::getPath() . 'controller/widget/' . $value . '.php';
-            $core_file  = Config::get('path.application') . 'widget/' . $value . '.php';
+            $class = Finder::find('widget' . SEP . $value);
             
-            if (!is_readable($theme_file) && !is_readable($core_file)) {
+            if (!$class):
                 SettingModule::uninstall('widget', $value);
-                
                 unset($modules[$key]);
-            }
+            endif;
         }
         
-        $data['modules'] = array();
+        $data['modules'] = [];
         
         $files = Theme::getFiles('widget');
         
@@ -67,26 +65,29 @@ class Widget extends Controller {
                 
                 $data = Theme::language('widget/' . $module, $data);
                 
-                $action = array();
+                $action = [];
                 
                 if (!in_array($module, $modules)) {
                     $action[] = array(
                         'text' => Lang::get('lang_text_install'), 
-                        'href' => Url::link('module/widget/install', '' . 'module=' . $module, 'SSL')
+                        'href' => Url::link('module/widget/install', '&widget=' . $module, 'SSL')
                     );
                 } else {
                     $action[] = array(
                         'text' => Lang::get('lang_text_edit'), 
-                        'href' => Url::link('widget/' . $module . '', '', 'SSL')
+                        'href' => Url::link('widget/' . $module, '', 'SSL')
                     );
                     
                     $action[] = array(
                         'text' => Lang::get('lang_text_uninstall'), 
-                        'href' => Url::link('module/widget/uninstall', '' . 'module=' . $module, 'SSL')
+                        'href' => Url::link('module/widget/uninstall', '&widget=' . $module, 'SSL')
                     );
                 }
                 
-                $data['modules'][] = array('name' => Lang::get('lang_heading_title'), 'action' => $action);
+                $data['modules'][] = array(
+                    'name'   => Lang::get('lang_heading_title'), 
+                    'action' => $action
+                );
             }
         }
         
@@ -108,28 +109,21 @@ class Widget extends Controller {
             Response::redirect(Url::link('module/widget', '', 'SSL'));
         } else {
             Theme::model('setting/module');
+
+            $widget =  Request::p()->get['widget'];
             
-            SettingModule::install('widget', Request::p()->get['module']);
+            SettingModule::install('widget', $widget);
             
             Theme::model('people/user_group');
             
-            PeopleUserGroup::addPermission(User::getId(), 'access', 'widget/' . Request::p()->get['module']);
-            PeopleUserGroup::addPermission(User::getId(), 'modify', 'widget/' . Request::p()->get['module']);
+            PeopleUserGroup::addPermission(User::getId(), 'access', 'widget' . SEP . $widget);
+            PeopleUserGroup::addPermission(User::getId(), 'modify', 'widget' . SEP . $widget);
             
-            $base_path  = Config::get('path.application') . 'widget' . SEP;
-            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'widget' . SEP;
+            $class = Finder::make('widget' . SEP . $widget);
             
-            if (is_readable($file = $theme_path . Request::p()->get['module'] . '.php')):
-                $class = Naming::class_from_filename($file);
-            else:
-                $class = Naming::class_from_filename($base_path . Request::p()->get['module'] . '.php');
-            endif;
-            
-            $class = new $class;
-            
-            if (method_exists($class, 'install')) {
+            if (method_exists($class, 'install')):
                 $class->install();
-            }
+            endif;
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
@@ -149,24 +143,17 @@ class Widget extends Controller {
         } else {
             Theme::model('setting/module');
             Theme::model('setting/setting');
+
+            $widget = Request::p()->get['widget'];
             
-            SettingModule::uninstall('widget', Request::p()->get['module']);
-            SettingSetting::deleteSetting(Request::p()->get['module']);
+            SettingModule::uninstall('widget', $widget);
+            SettingSetting::deleteSetting($widget);
             
-            $base_path  = Config::get('path.application') . 'widget' . SEP;
-            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'widget' . SEP;
+            $class = Finder::make('widget' . SEP . $widget);
             
-            if (is_readable($file = $theme_path . Request::p()->get['module'] . '.php')):
-                $class = Naming::class_from_filename($file);
-            else:
-                $class = Naming::class_from_filename($base_path . Request::p()->get['module'] . '.php');
-            endif;
-            
-            $class = new $class;
-            
-            if (method_exists($class, 'uninstall')) {
+            if (method_exists($class, 'uninstall')):
                 $class->uninstall();
-            }
+            endif;
             
             Theme::listen(__CLASS__, __FUNCTION__);
             

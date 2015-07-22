@@ -55,7 +55,7 @@ class Zone extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/zone', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/zone', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,7 +86,7 @@ class Zone extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/zone', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/zone', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -120,7 +120,7 @@ class Zone extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/zone', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/zone', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,8 +165,8 @@ class Zone extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'locale/zone', $url);
         
-        $data['insert'] = Url::link('locale/zone/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('locale/zone/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('locale/zone/insert', $url, 'SSL');
+        $data['delete'] = Url::link('locale/zone/delete', $url, 'SSL');
         
         $data['zones'] = array();
         
@@ -179,7 +179,7 @@ class Zone extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/zone/update', '' . 'zone_id=' . $result['zone_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/zone/update', 'zone_id=' . $result['zone_id'] . $url, 'SSL'));
             
             $data['zones'][] = array('zone_id' => $result['zone_id'], 'country' => $result['country'], 'name' => $result['name'] . (($result['zone_id'] == Config::get('config_zone_id')) ? Lang::get('lang_text_default') : null), 'code' => $result['code'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['zone_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -210,9 +210,9 @@ class Zone extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_country'] = Url::link('locale/zone', '' . 'sort=c.name' . $url, 'SSL');
-        $data['sort_name'] = Url::link('locale/zone', '' . 'sort=z.name' . $url, 'SSL');
-        $data['sort_code'] = Url::link('locale/zone', '' . 'sort=z.code' . $url, 'SSL');
+        $data['sort_country'] = Url::link('locale/zone', 'sort=c.name' . $url, 'SSL');
+        $data['sort_name'] = Url::link('locale/zone', 'sort=z.name' . $url, 'SSL');
+        $data['sort_code'] = Url::link('locale/zone', 'sort=z.code' . $url, 'SSL');
         
         $url = '';
         
@@ -224,7 +224,7 @@ class Zone extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($zone_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/zone', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($zone_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/zone', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -268,12 +268,12 @@ class Zone extends Controller {
         Breadcrumb::add('lang_heading_title', 'locale/zone', $url);
         
         if (!isset(Request::p()->get['zone_id'])) {
-            $data['action'] = Url::link('locale/zone/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('locale/zone/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/zone/update', '' . 'zone_id=' . Request::p()->get['zone_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/zone/update', 'zone_id=' . Request::p()->get['zone_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('locale/zone', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('locale/zone', $url, 'SSL');
         
         if (isset(Request::p()->get['zone_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $zone_info = LocaleZone::getZone(Request::p()->get['zone_id']);

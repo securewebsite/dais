@@ -100,7 +100,7 @@ class ProductPurchased extends Controller {
             $url.= '&filter_order_status_id=' . Request::p()->get['filter_order_status_id'];
         }
         
-        $data['pagination'] = Theme::paginate($product_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/product_purchased', '' . $url . '&page={page}'));
+        $data['pagination'] = Theme::paginate($product_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/product_purchased', $url . '&page={page}'));
         
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;

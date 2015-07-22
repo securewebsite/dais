@@ -137,7 +137,7 @@ class Recurring extends Controller {
         foreach ($results as $result) {
             $date_added = date(Lang::get('lang_date_format_short'), strtotime($result['date_added']));
             
-            $data['recurrings'][] = array('order_recurring_id' => $result['order_recurring_id'], 'order_id' => $result['order_id'], 'order_link' => Url::link('sale/order/info', '' . 'order_id=' . $result['order_id'], 'SSL'), 'reference' => $result['reference'], 'customer' => $result['customer'], 'status' => $result['status'], 'date_added' => $date_added, 'view' => Url::link('sale/recurring/info', '' . 'order_recurring_id=' . $result['order_recurring_id'] . $url, 'SSL'));
+            $data['recurrings'][] = array('order_recurring_id' => $result['order_recurring_id'], 'order_id' => $result['order_id'], 'order_link' => Url::link('sale/order/info', 'order_id=' . $result['order_id'], 'SSL'), 'reference' => $result['reference'], 'customer' => $result['customer'], 'status' => $result['status'], 'date_added' => $date_added, 'view' => Url::link('sale/recurring/info', 'order_recurring_id=' . $result['order_recurring_id'] . $url, 'SSL'));
         }
         
         if (isset($this->error['warning'])) {
@@ -190,12 +190,12 @@ class Recurring extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_order_recurring'] = Url::link('sale/recurring', '' . 'sort=or.order_recurring_id' . $url, 'SSL');
-        $data['sort_order'] = Url::link('sale/recurring', '' . 'sort=or.order_id' . $url, 'SSL');
-        $data['sort_reference'] = Url::link('sale/recurring', '' . 'sort=or.reference' . $url, 'SSL');
-        $data['sort_customer'] = Url::link('sale/recurring', '' . 'sort=customer' . $url, 'SSL');
-        $data['sort_status'] = Url::link('sale/recurring', '' . 'sort=or.status' . $url, 'SSL');
-        $data['sort_date_added'] = Url::link('sale/recurring', '' . 'sort=or.date_added' . $url, 'SSL');
+        $data['sort_order_recurring'] = Url::link('sale/recurring', 'sort=or.order_recurring_id' . $url, 'SSL');
+        $data['sort_order'] = Url::link('sale/recurring', 'sort=or.order_id' . $url, 'SSL');
+        $data['sort_reference'] = Url::link('sale/recurring', 'sort=or.reference' . $url, 'SSL');
+        $data['sort_customer'] = Url::link('sale/recurring', 'sort=customer' . $url, 'SSL');
+        $data['sort_status'] = Url::link('sale/recurring', 'sort=or.status' . $url, 'SSL');
+        $data['sort_date_added'] = Url::link('sale/recurring', 'sort=or.date_added' . $url, 'SSL');
         
         $url = '';
         
@@ -231,7 +231,7 @@ class Recurring extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($recurrings_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('sale/recurring', '' . 'page={page}' . $url, 'SSL'));
+        $data['pagination'] = Theme::paginate($recurrings_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('sale/recurring', 'page={page}' . $url, 'SSL'));
         
         $data['filter_order_recurring_id'] = $filter_order_recurring_id;
         $data['filter_order_id'] = $filter_order_id;
@@ -329,7 +329,7 @@ class Recurring extends Controller {
             $data['recurring_name'] = $order_recurring['recurring_name'];
             
             $data['order_id'] = $order['order_id'];
-            $data['order_href'] = Url::link('sale/order/info', '' . 'order_id=' . $order['order_id'], 'SSL');
+            $data['order_href'] = Url::link('sale/order/info', 'order_id=' . $order['order_id'], 'SSL');
             
             $data['customer'] = $order['customer'];
             $data['email'] = $order['email'];
@@ -339,13 +339,13 @@ class Recurring extends Controller {
             $data['options'] = array();
             
             if ($order['customer_id']) {
-                $data['customer_href'] = Url::link('sale/customer/edit', '' . 'customer_id=' . $order['customer_id'], 'SSL');
+                $data['customer_href'] = Url::link('sale/customer/edit', 'customer_id=' . $order['customer_id'], 'SSL');
             } else {
                 $data['customer_href'] = '';
             }
             
             if ($order_recurring['recurring_id'] != '0') {
-                $data['recurring'] = Url::link('catalog/recurring/edit', '' . 'recurring_id=' . $order_recurring['recurring_id'], 'SSL');
+                $data['recurring'] = Url::link('catalog/recurring/edit', 'recurring_id=' . $order_recurring['recurring_id'], 'SSL');
             } else {
                 $data['recurring'] = '';
             }
@@ -357,7 +357,7 @@ class Recurring extends Controller {
                 $data['transactions'][] = array('date_added' => $transaction['date_added'], 'type' => $transaction['type'], 'amount' => Currency::format($transaction['amount'], $order['currency_code'], $order['currency_value']));
             }
             
-            $data['return'] = Url::link('sale/recurring', '' . $url, 'SSL');
+            $data['return'] = Url::link('sale/recurring', $url, 'SSL');
             
             $data['buttons'] = Theme::controller('payment/' . $order['payment_code'] . '/recurringButtons');
             

@@ -55,7 +55,7 @@ class Comment extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('content/comment', '' . $url, 'SSL'));
+            Response::redirect(Url::link('content/comment', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,7 +86,7 @@ class Comment extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('content/comment', '' . $url, 'SSL'));
+            Response::redirect(Url::link('content/comment', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -120,7 +120,7 @@ class Comment extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('content/comment', '' . $url, 'SSL'));
+            Response::redirect(Url::link('content/comment', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,8 +165,8 @@ class Comment extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'content/comment');
         
-        $data['insert'] = Url::link('content/comment/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('content/comment/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('content/comment/insert', $url, 'SSL');
+        $data['delete'] = Url::link('content/comment/delete', $url, 'SSL');
         
         $data['comments'] = array();
         
@@ -178,7 +178,7 @@ class Comment extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('content/comment/update', '' . 'comment_id=' . $result['comment_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('content/comment/update', 'comment_id=' . $result['comment_id'] . $url, 'SSL'));
             
             $data['comments'][] = array('comment_id' => $result['comment_id'], 'name' => $result['name'], 'author' => $result['author'], 'rating' => $result['rating'], 'status' => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 'selected' => isset(Request::p()->post['selected']) && in_array($result['comment_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -209,11 +209,11 @@ class Comment extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_post'] = Url::link('content/comment', '' . 'sort=pd.name' . $url, 'SSL');
-        $data['sort_author'] = Url::link('content/comment', '' . 'sort=r.author' . $url, 'SSL');
-        $data['sort_rating'] = Url::link('content/comment', '' . 'sort=r.rating' . $url, 'SSL');
-        $data['sort_status'] = Url::link('content/comment', '' . 'sort=r.status' . $url, 'SSL');
-        $data['sort_date_added'] = Url::link('content/comment', '' . 'sort=r.date_added' . $url, 'SSL');
+        $data['sort_post'] = Url::link('content/comment', 'sort=pd.name' . $url, 'SSL');
+        $data['sort_author'] = Url::link('content/comment', 'sort=r.author' . $url, 'SSL');
+        $data['sort_rating'] = Url::link('content/comment', 'sort=r.rating' . $url, 'SSL');
+        $data['sort_status'] = Url::link('content/comment', 'sort=r.status' . $url, 'SSL');
+        $data['sort_date_added'] = Url::link('content/comment', 'sort=r.date_added' . $url, 'SSL');
         
         $url = '';
         
@@ -225,7 +225,7 @@ class Comment extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($comment_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('content/comment', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($comment_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('content/comment', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -287,12 +287,12 @@ class Comment extends Controller {
         Breadcrumb::add('lang_heading_title', 'content/comment');
         
         if (!isset(Request::p()->get['comment_id'])) {
-            $data['action'] = Url::link('content/comment/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('content/comment/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('content/comment/update', '' . 'comment_id=' . Request::p()->get['comment_id'] . $url, 'SSL');
+            $data['action'] = Url::link('content/comment/update', 'comment_id=' . Request::p()->get['comment_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('content/comment', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('content/comment', $url, 'SSL');
         
         if (isset(Request::p()->get['comment_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $comment_info = ContentComment::getComment(Request::p()->get['comment_id']);

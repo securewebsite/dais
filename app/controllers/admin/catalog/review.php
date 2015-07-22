@@ -64,7 +64,7 @@ class Review extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/review', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/review', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -102,7 +102,7 @@ class Review extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/review', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/review', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -142,7 +142,7 @@ class Review extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/review', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/review', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -197,8 +197,8 @@ class Review extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'catalog/review', $url);
         
-        $data['insert'] = Url::link('catalog/review/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('catalog/review/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('catalog/review/insert', $url, 'SSL');
+        $data['delete'] = Url::link('catalog/review/delete', $url, 'SSL');
         
         $data['reviews'] = array();
         
@@ -211,7 +211,7 @@ class Review extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/review/update', '' . 'review_id=' . $result['review_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/review/update', 'review_id=' . $result['review_id'] . $url, 'SSL'));
             
             $data['reviews'][] = array('review_id' => $result['review_id'], 'name' => $result['name'], 'author' => $result['author'], 'rating' => $result['rating'], 'status' => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 'selected' => isset(Request::p()->post['selected']) && in_array($result['review_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -246,11 +246,11 @@ class Review extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_product'] = Url::link('catalog/review', '' . 'sort=pd.name' . $url, 'SSL');
-        $data['sort_author'] = Url::link('catalog/review', '' . 'sort=r.author' . $url, 'SSL');
-        $data['sort_rating'] = Url::link('catalog/review', '' . 'sort=r.rating' . $url, 'SSL');
-        $data['sort_status'] = Url::link('catalog/review', '' . 'sort=r.status' . $url, 'SSL');
-        $data['sort_date_added'] = Url::link('catalog/review', '' . 'sort=r.date_added' . $url, 'SSL');
+        $data['sort_product'] = Url::link('catalog/review', 'sort=pd.name' . $url, 'SSL');
+        $data['sort_author'] = Url::link('catalog/review', 'sort=r.author' . $url, 'SSL');
+        $data['sort_rating'] = Url::link('catalog/review', 'sort=r.rating' . $url, 'SSL');
+        $data['sort_status'] = Url::link('catalog/review', 'sort=r.status' . $url, 'SSL');
+        $data['sort_date_added'] = Url::link('catalog/review', 'sort=r.date_added' . $url, 'SSL');
         
         $url = '';
         
@@ -266,7 +266,7 @@ class Review extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($review_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/review', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($review_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/review', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -333,12 +333,12 @@ class Review extends Controller {
         Breadcrumb::add('lang_heading_title', 'catalog/review', $url);
         
         if (!isset(Request::p()->get['review_id'])) {
-            $data['action'] = Url::link('catalog/review/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('catalog/review/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/review/update', '' . 'review_id=' . Request::p()->get['review_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/review/update', 'review_id=' . Request::p()->get['review_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('catalog/review', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('catalog/review', $url, 'SSL');
         
         if (isset(Request::p()->get['review_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $review_info = CatalogReview::getReview(Request::p()->get['review_id']);

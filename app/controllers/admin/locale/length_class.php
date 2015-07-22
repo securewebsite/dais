@@ -55,7 +55,7 @@ class LengthClass extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/length_class', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/length_class', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,7 +86,7 @@ class LengthClass extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/length_class', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/length_class', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -120,7 +120,7 @@ class LengthClass extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/length_class', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/length_class', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,8 +165,8 @@ class LengthClass extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'locale/length_class', $url);
         
-        $data['insert'] = Url::link('locale/length_class/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('locale/length_class/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('locale/length_class/insert', $url, 'SSL');
+        $data['delete'] = Url::link('locale/length_class/delete', $url, 'SSL');
         
         $data['length_classes'] = array();
         
@@ -179,7 +179,7 @@ class LengthClass extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/length_class/update', '' . 'length_class_id=' . $result['length_class_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/length_class/update', 'length_class_id=' . $result['length_class_id'] . $url, 'SSL'));
             
             $data['length_classes'][] = array('length_class_id' => $result['length_class_id'], 'title' => $result['title'] . (($result['unit'] == Config::get('config_length_class')) ? Lang::get('lang_text_default') : null), 'unit' => $result['unit'], 'value' => $result['value'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['length_class_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -210,9 +210,9 @@ class LengthClass extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_title'] = Url::link('locale/length_class', '' . 'sort=title' . $url, 'SSL');
-        $data['sort_unit'] = Url::link('locale/length_class', '' . 'sort=unit' . $url, 'SSL');
-        $data['sort_value'] = Url::link('locale/length_class', '' . 'sort=value' . $url, 'SSL');
+        $data['sort_title'] = Url::link('locale/length_class', 'sort=title' . $url, 'SSL');
+        $data['sort_unit'] = Url::link('locale/length_class', 'sort=unit' . $url, 'SSL');
+        $data['sort_value'] = Url::link('locale/length_class', 'sort=value' . $url, 'SSL');
         
         $url = '';
         
@@ -224,7 +224,7 @@ class LengthClass extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($length_class_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/length_class', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($length_class_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/length_class', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -274,12 +274,12 @@ class LengthClass extends Controller {
         Breadcrumb::add('lang_heading_title', 'locale/length_class', $url);
         
         if (!isset(Request::p()->get['length_class_id'])) {
-            $data['action'] = Url::link('locale/length_class/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('locale/length_class/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/length_class/update', '' . 'length_class_id=' . Request::p()->get['length_class_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/length_class/update', 'length_class_id=' . Request::p()->get['length_class_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('locale/length_class', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('locale/length_class', $url, 'SSL');
         
         if (isset(Request::p()->get['length_class_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $length_class_info = LocaleLengthClass::getLengthClass(Request::p()->get['length_class_id']);

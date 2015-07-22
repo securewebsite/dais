@@ -47,7 +47,7 @@ class Category extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/category', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/category', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -70,7 +70,7 @@ class Category extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/category', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/category', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -96,7 +96,7 @@ class Category extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/category', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/category', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -138,9 +138,9 @@ class Category extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'catalog/category', $url);
         
-        $data['insert'] = Url::link('catalog/category/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('catalog/category/delete', '' . $url, 'SSL');
-        $data['repair'] = Url::link('catalog/category/repair', '' . $url, 'SSL');
+        $data['insert'] = Url::link('catalog/category/insert', $url, 'SSL');
+        $data['delete'] = Url::link('catalog/category/delete', $url, 'SSL');
+        $data['repair'] = Url::link('catalog/category/repair', $url, 'SSL');
         
         $data['categories'] = array();
         
@@ -153,7 +153,7 @@ class Category extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/category/update', '' . 'category_id=' . $result['category_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/category/update', 'category_id=' . $result['category_id'] . $url, 'SSL'));
             
             $data['categories'][] = array('category_id' => $result['category_id'], 'name' => $result['name'], 'sort_order' => $result['sort_order'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['category_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -172,7 +172,7 @@ class Category extends Controller {
             $data['success'] = '';
         }
         
-        $data['pagination'] = Theme::paginate($category_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/category', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($category_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/category', $url . '&page={page}', 'SSL'));
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         
@@ -211,12 +211,12 @@ class Category extends Controller {
         Breadcrumb::add('lang_heading_title', 'catalog/category', $url);
         
         if (!isset(Request::p()->get['category_id'])) {
-            $data['action'] = Url::link('catalog/category/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('catalog/category/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/category/update', '' . 'category_id=' . Request::p()->get['category_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/category/update', 'category_id=' . Request::p()->get['category_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('catalog/category', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('catalog/category', $url, 'SSL');
         
         if (isset(Request::p()->get['category_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $category_info = CatalogCategory::getCategory(Request::p()->get['category_id']);

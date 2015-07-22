@@ -55,7 +55,7 @@ class Language extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/language', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/language', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,7 +86,7 @@ class Language extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/language', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/language', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -120,7 +120,7 @@ class Language extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/language', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/language', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,8 +165,8 @@ class Language extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'locale/language', $url);
         
-        $data['insert'] = Url::link('locale/language/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('locale/language/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('locale/language/insert', $url, 'SSL');
+        $data['delete'] = Url::link('locale/language/delete', $url, 'SSL');
         
         $data['languages'] = array();
         
@@ -179,7 +179,7 @@ class Language extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/language/update', '' . 'language_id=' . $result['language_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/language/update', 'language_id=' . $result['language_id'] . $url, 'SSL'));
             
             $data['languages'][] = array('language_id' => $result['language_id'], 'name' => $result['name'] . (($result['code'] == Config::get('config_language')) ? Lang::get('lang_text_default') : null), 'code' => $result['code'], 'sort_order' => $result['sort_order'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['language_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -210,9 +210,9 @@ class Language extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('locale/language', '' . 'sort=name' . $url, 'SSL');
-        $data['sort_code'] = Url::link('locale/language', '' . 'sort=code' . $url, 'SSL');
-        $data['sort_sort_order'] = Url::link('locale/language', '' . 'sort=sort_order' . $url, 'SSL');
+        $data['sort_name'] = Url::link('locale/language', 'sort=name' . $url, 'SSL');
+        $data['sort_code'] = Url::link('locale/language', 'sort=code' . $url, 'SSL');
+        $data['sort_sort_order'] = Url::link('locale/language', 'sort=sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -224,7 +224,7 @@ class Language extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($language_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/language', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($language_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/language', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -298,12 +298,12 @@ class Language extends Controller {
         Breadcrumb::add('lang_heading_title', 'locale/language', $url);
         
         if (!isset(Request::p()->get['language_id'])) {
-            $data['action'] = Url::link('locale/language/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('locale/language/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/language/update', '' . 'language_id=' . Request::p()->get['language_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/language/update', 'language_id=' . Request::p()->get['language_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('locale/language', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('locale/language', $url, 'SSL');
         
         if (isset(Request::p()->get['language_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $language_info = LocaleLanguage::getLanguage(Request::p()->get['language_id']);

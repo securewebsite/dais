@@ -46,16 +46,14 @@ class Shipping extends Controller {
         
         $modules = SettingModule::getInstalled('shipping');
         
-        foreach ($modules as $key => $value) {
-            $theme_file = Theme::getPath() . 'controller/shipping/' . $value . '.php';
-            $core_file  = Config::get('path.application') . 'shipping/' . $value . '.php';
+        foreach ($modules as $key => $value):
+            $class = Finder::find('shipping' . SEP . $value);
             
-            if (!is_readable($theme_file) && !is_readable($core_file)) {
+            if (!$class):
                 SettingModule::uninstall('shipping', $value);
-                
                 unset($modules[$key]);
-            }
-        }
+            endif;
+        endforeach;
         
         $data['modules'] = array();
         
@@ -67,31 +65,31 @@ class Shipping extends Controller {
                 
                 $data = Theme::language('shipping/' . $module, $data);
                 
-                $action = array();
+                $action = [];
                 
                 if (!in_array($module, $modules)) {
-                    $action[] = array(
+                    $action[] = [
                         'text' => Lang::get('lang_text_install'), 
-                        'href' => Url::link('module/shipping/install', '' . 'module=' . $module, 'SSL')
-                    );
+                        'href' => Url::link('module/shipping/install', 'shipping=' . $module, 'SSL')
+                    ];
                 } else {
-                    $action[] = array(
+                    $action[] = [
                         'text' => Lang::get('lang_text_edit'), 
-                        'href' => Url::link('shipping/' . $module . '', '', 'SSL')
-                    );
+                        'href' => Url::link('shipping/' . $module, '', 'SSL')
+                    ];
                     
-                    $action[] = array(
+                    $action[] = [
                         'text' => Lang::get('lang_text_uninstall'), 
-                        'href' => Url::link('module/shipping/uninstall', '' . 'module=' . $module, 'SSL')
-                    );
+                        'href' => Url::link('module/shipping/uninstall', 'shipping=' . $module, 'SSL')
+                    ];
                 }
                 
-                $data['modules'][] = array(
+                $data['modules'][] = [
                     'name'       => Lang::get('lang_heading_title'), 
                     'status'     => Config::get($module . '_status') ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled'), 
                     'sort_order' => Config::get($module . '_sort_order'), 
                     'action'     => $action
-                );
+                ];
             }
         }
         
@@ -113,28 +111,21 @@ class Shipping extends Controller {
             Response::redirect(Url::link('module/shipping', '', 'SSL'));
         } else {
             Theme::model('setting/module');
+
+            $shipping = Request::p()->get['shipping'];
             
-            SettingModule::install('shipping', Request::p()->get['module']);
+            SettingModule::install('shipping', $shipping);
             
             Theme::model('people/user_group');
             
-            PeopleUserGroup::addPermission(User::getId(), 'access', 'shipping/' . Request::p()->get['module']);
-            PeopleUserGroup::addPermission(User::getId(), 'modify', 'shipping/' . Request::p()->get['module']);
+            PeopleUserGroup::addPermission(User::getId(), 'access', 'shipping/' . $shipping);
+            PeopleUserGroup::addPermission(User::getId(), 'modify', 'shipping/' . $shipping);
             
-            $base_path  = Config::get('path.application') . 'shipping' . SEP;
-            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'shipping' . SEP;
+            $class = Finder::make('shipping' . SEP . $shipping);
             
-            if (is_readable($file = $theme_path . Request::p()->get['module'] . '.php')):
-                $class = Naming::class_from_filename($file);
-            else:
-                $class = Naming::class_from_filename($base_path . Request::p()->get['module'] . '.php');
-            endif;
-            
-            $class = new $class;
-            
-            if (method_exists($class, 'install')) {
+            if (method_exists($class, 'install')):
                 $class->install();
-            }
+            endif;
             
             Theme::listen(__CLASS__, __FUNCTION__);
             
@@ -154,24 +145,17 @@ class Shipping extends Controller {
         } else {
             Theme::model('setting/module');
             Theme::model('setting/setting');
+
+            $shipping = Request::p()->get['shipping'];
             
-            SettingModule::uninstall('shipping', Request::p()->get['module']);
-            SettingSetting::deleteSetting(Request::p()->get['module']);
+            SettingModule::uninstall('shipping', $shipping);
+            SettingSetting::deleteSetting($shipping);
             
-            $base_path  = Config::get('path.application') . 'shipping' . SEP;
-            $theme_path = Config::get('path.theme') . Config::get('theme.name') . SEP . 'controller' . SEP . 'shipping' . SEP;
+            $class = Finder::make('shipping' . SEP . $shipping);
             
-            if (is_readable($file = $theme_path . Request::p()->get['module'] . '.php')):
-                $class = Naming::class_from_filename($file);
-            else:
-                $class = Naming::class_from_filename($base_path . Request::p()->get['module'] . '.php');
-            endif;
-            
-            $class = new $class;
-            
-            if (method_exists($class, 'uninstall')) {
+            if (method_exists($class, 'uninstall')):
                 $class->uninstall();
-            }
+            endif;
             
             Theme::listen(__CLASS__, __FUNCTION__);
             

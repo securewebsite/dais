@@ -64,14 +64,16 @@ class Url {
 
         $link = $uri . $url;
 
-        if (Theme::getStyle() === 'shop'):
-            $link = str_replace('/shop', '', $link);
-        else:
-            if (!Config::get('config_home_page')):
-                $link = str_replace('/blog', '', $link);
+        if (Config::get('active.facade') === FRONT_FACADE):
+            if (Theme::getStyle() === 'shop'):
+                $link = str_replace('/shop', '', $link);
+            else:
+                if (!Config::get('config_home_page')):
+                    $link = str_replace('/blog', '', $link);
+                endif;
             endif;
         endif;
-
+        
         return str_replace('_', '-', $link);
     }
     

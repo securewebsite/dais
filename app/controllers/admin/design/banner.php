@@ -60,7 +60,7 @@ class Banner extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('design/banner', '' . $url, 'SSL'));
+            Response::redirect(Url::link('design/banner', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -94,7 +94,7 @@ class Banner extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('design/banner', '' . $url, 'SSL'));
+            Response::redirect(Url::link('design/banner', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -130,7 +130,7 @@ class Banner extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('design/banner', '' . $url, 'SSL'));
+            Response::redirect(Url::link('design/banner', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -175,8 +175,8 @@ class Banner extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'design/banner', $url);
         
-        $data['insert'] = Url::link('design/banner/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('design/banner/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('design/banner/insert', $url, 'SSL');
+        $data['delete'] = Url::link('design/banner/delete', $url, 'SSL');
         
         $data['banners'] = array();
         
@@ -189,7 +189,7 @@ class Banner extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('design/banner/update', '' . 'banner_id=' . $result['banner_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('design/banner/update', 'banner_id=' . $result['banner_id'] . $url, 'SSL'));
             
             $data['banners'][] = array('banner_id' => $result['banner_id'], 'name' => $result['name'], 'status' => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 'selected' => isset(Request::p()->post['selected']) && in_array($result['banner_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -220,8 +220,8 @@ class Banner extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('design/banner', '' . 'sort=name' . $url, 'SSL');
-        $data['sort_status'] = Url::link('design/banner', '' . 'sort=status' . $url, 'SSL');
+        $data['sort_name'] = Url::link('design/banner', 'sort=name' . $url, 'SSL');
+        $data['sort_status'] = Url::link('design/banner', 'sort=status' . $url, 'SSL');
         
         $url = '';
         
@@ -233,7 +233,7 @@ class Banner extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($banner_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('design/banner', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($banner_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('design/banner', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -283,12 +283,12 @@ class Banner extends Controller {
         Breadcrumb::add('lang_heading_title', 'design/banner', $url);
         
         if (!isset(Request::p()->get['banner_id'])) {
-            $data['action'] = Url::link('design/banner/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('design/banner/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('design/banner/update', '' . 'banner_id=' . Request::p()->get['banner_id'] . $url, 'SSL');
+            $data['action'] = Url::link('design/banner/update', 'banner_id=' . Request::p()->get['banner_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('design/banner', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('design/banner', $url, 'SSL');
         
         if (isset(Request::p()->get['banner_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $banner_info = DesignBanner::getBanner(Request::p()->get['banner_id']);

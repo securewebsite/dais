@@ -295,6 +295,7 @@ class Application extends Container implements ApplicationContract {
 
         $aliases = [
             'App'         => 'Dais\Facades\App',
+            'Finder'      => 'Dais\Facades\Finder',
             'DB'          => 'Dais\Facades\Db',
             'Request'     => 'Dais\Facades\Request',
             'Config'      => 'Dais\Facades\Config',
@@ -474,6 +475,7 @@ class Application extends Container implements ApplicationContract {
 
     protected function baseProviders() {
         return [
+            Services\Boot\FinderService::class,
             Services\Boot\DatabaseService::class,
             Services\Boot\RequestService::class,
             Services\Boot\ConfigService::class,

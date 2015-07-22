@@ -81,7 +81,7 @@ class CustomerOrder extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/customer/update', '' . 'customer_id=' . $result['customer_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('people/customer/update', 'customer_id=' . $result['customer_id'] . $url, 'SSL'));
             
             $data['customers'][] = array('customer' => $result['customer'], 'email' => $result['email'], 'customer_group' => $result['customer_group'], 'status' => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 'orders' => $result['orders'], 'products' => $result['products'], 'total' => Currency::format($result['total'], Config::get('config_currency')), 'action' => $action);
         }
@@ -104,7 +104,7 @@ class CustomerOrder extends Controller {
             $url.= '&filter_order_status_id=' . Request::p()->get['filter_order_status_id'];
         }
         
-        $data['pagination'] = Theme::paginate($customer_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/customer_order', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($customer_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('report/customer_order', $url . '&page={page}', 'SSL'));
         
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;

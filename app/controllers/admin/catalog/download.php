@@ -60,7 +60,7 @@ class Download extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/download', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/download', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -94,7 +94,7 @@ class Download extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/download', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/download', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -130,7 +130,7 @@ class Download extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/download', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/download', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -175,8 +175,8 @@ class Download extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'catalog/download', $url);
         
-        $data['insert'] = Url::link('catalog/download/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('catalog/download/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('catalog/download/insert', $url, 'SSL');
+        $data['delete'] = Url::link('catalog/download/delete', $url, 'SSL');
         
         $data['downloads'] = array();
         
@@ -189,7 +189,7 @@ class Download extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/download/update', '' . 'download_id=' . $result['download_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('catalog/download/update', 'download_id=' . $result['download_id'] . $url, 'SSL'));
             
             $data['downloads'][] = array('download_id' => $result['download_id'], 'name' => $result['name'], 'remaining' => $result['remaining'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['download_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -220,8 +220,8 @@ class Download extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('catalog/download', '' . 'sort=dd.name' . $url, 'SSL');
-        $data['sort_remaining'] = Url::link('catalog/download', '' . 'sort=d.remaining' . $url, 'SSL');
+        $data['sort_name'] = Url::link('catalog/download', 'sort=dd.name' . $url, 'SSL');
+        $data['sort_remaining'] = Url::link('catalog/download', 'sort=d.remaining' . $url, 'SSL');
         
         $url = '';
         
@@ -233,7 +233,7 @@ class Download extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($download_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/download', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($download_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('catalog/download', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -291,12 +291,12 @@ class Download extends Controller {
         Breadcrumb::add('lang_heading_title', 'catalog/download', $url);
         
         if (!isset(Request::p()->get['download_id'])) {
-            $data['action'] = Url::link('catalog/download/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('catalog/download/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/download/update', '' . 'download_id=' . Request::p()->get['download_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/download/update', 'download_id=' . Request::p()->get['download_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('catalog/download', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('catalog/download', $url, 'SSL');
         
         Theme::model('locale/language');
         

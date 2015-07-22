@@ -55,7 +55,7 @@ class Coupon extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('sale/coupon', '' . $url, 'SSL'));
+            Response::redirect(Url::link('sale/coupon', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -86,7 +86,7 @@ class Coupon extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('sale/coupon', '' . $url, 'SSL'));
+            Response::redirect(Url::link('sale/coupon', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -120,7 +120,7 @@ class Coupon extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('sale/coupon', '' . $url, 'SSL'));
+            Response::redirect(Url::link('sale/coupon', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -165,8 +165,8 @@ class Coupon extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'sale/coupon', $url);
         
-        $data['insert'] = Url::link('sale/coupon/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('sale/coupon/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('sale/coupon/insert', $url, 'SSL');
+        $data['delete'] = Url::link('sale/coupon/delete', $url, 'SSL');
         
         $data['coupons'] = array();
         
@@ -179,7 +179,7 @@ class Coupon extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('sale/coupon/update', '' . 'coupon_id=' . $result['coupon_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('sale/coupon/update', 'coupon_id=' . $result['coupon_id'] . $url, 'SSL'));
             
             $data['coupons'][] = array('coupon_id' => $result['coupon_id'], 'name' => $result['name'], 'code' => $result['code'], 'discount' => $result['discount'], 'date_start' => date(Lang::get('lang_date_format_short'), strtotime($result['date_start'])), 'date_end' => date(Lang::get('lang_date_format_short'), strtotime($result['date_end'])), 'status' => ($result['status'] ? Lang::get('lang_text_enabled') : Lang::get('lang_text_disabled')), 'selected' => isset(Request::p()->post['selected']) && in_array($result['coupon_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -210,12 +210,12 @@ class Coupon extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('sale/coupon', '' . 'sort=name' . $url);
-        $data['sort_code'] = Url::link('sale/coupon', '' . 'sort=code' . $url);
-        $data['sort_discount'] = Url::link('sale/coupon', '' . 'sort=discount' . $url);
-        $data['sort_date_start'] = Url::link('sale/coupon', '' . 'sort=date_start' . $url);
-        $data['sort_date_end'] = Url::link('sale/coupon', '' . 'sort=date_end' . $url);
-        $data['sort_status'] = Url::link('sale/coupon', '' . 'sort=status' . $url);
+        $data['sort_name'] = Url::link('sale/coupon', 'sort=name' . $url);
+        $data['sort_code'] = Url::link('sale/coupon', 'sort=code' . $url);
+        $data['sort_discount'] = Url::link('sale/coupon', 'sort=discount' . $url);
+        $data['sort_date_start'] = Url::link('sale/coupon', 'sort=date_start' . $url);
+        $data['sort_date_end'] = Url::link('sale/coupon', 'sort=date_end' . $url);
+        $data['sort_status'] = Url::link('sale/coupon', 'sort=status' . $url);
         
         $url = '';
         
@@ -227,7 +227,7 @@ class Coupon extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($coupon_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('sale/coupon', '' . $url . '&page={page}'));
+        $data['pagination'] = Theme::paginate($coupon_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('sale/coupon', $url . '&page={page}'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -295,12 +295,12 @@ class Coupon extends Controller {
         Breadcrumb::add('lang_heading_title', 'sale/coupon', $url);
         
         if (!isset(Request::p()->get['coupon_id'])) {
-            $data['action'] = Url::link('sale/coupon/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('sale/coupon/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('sale/coupon/update', '' . 'coupon_id=' . Request::p()->get['coupon_id'] . $url, 'SSL');
+            $data['action'] = Url::link('sale/coupon/update', 'coupon_id=' . Request::p()->get['coupon_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('sale/coupon', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('sale/coupon', $url, 'SSL');
         
         if (isset(Request::p()->get['coupon_id']) && (!Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $coupon_info = SaleCoupon::getCoupon(Request::p()->get['coupon_id']);
@@ -508,7 +508,7 @@ class Coupon extends Controller {
         
         $history_total = SaleCoupon::getTotalCouponHistories(Request::p()->get['coupon_id']);
         
-        $data['pagination'] = Theme::paginate($history_total, $page, 10, Lang::get('lang_text_pagination'), Url::link('sale/coupon/history', '' . 'coupon_id=' . Request::p()->get['coupon_id'] . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($history_total, $page, 10, Lang::get('lang_text_pagination'), Url::link('sale/coupon/history', 'coupon_id=' . Request::p()->get['coupon_id'] . '&page={page}', 'SSL'));
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         

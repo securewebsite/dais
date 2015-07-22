@@ -56,7 +56,7 @@ class GoogleBase extends Controller {
             $data['google_base_status'] = Config::get('google_base_status');
         }
         
-        $data['data_feed'] = Config::get('http.public') . 'feed/google_base';
+        $data['data_feed'] = Config::get('http.public') . 'feed/google-base';
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
         

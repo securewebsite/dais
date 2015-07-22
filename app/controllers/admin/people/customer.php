@@ -83,7 +83,7 @@ class Customer extends Controller {
             
             $url = Filter::uri($this->filters);
             
-            Response::redirect(Url::link('people/customer', '' . $url, 'SSL'));
+            Response::redirect(Url::link('people/customer', $url, 'SSL'));
         endif;
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -102,7 +102,7 @@ class Customer extends Controller {
             
             $url = Filter::uri($this->filters);
             
-            Response::redirect(Url::link('people/customer', '' . $url, 'SSL'));
+            Response::redirect(Url::link('people/customer', $url, 'SSL'));
         endif;
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -124,7 +124,7 @@ class Customer extends Controller {
             
             $url = Filter::uri($this->filters);
             
-            Response::redirect(Url::link('people/customer', '' . $url, 'SSL'));
+            Response::redirect(Url::link('people/customer', $url, 'SSL'));
         endif;
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -157,7 +157,7 @@ class Customer extends Controller {
             
             $url = Filter::uri($this->filters);
             
-            Response::redirect(Url::link('people/customer', '' . $url, 'SSL'));
+            Response::redirect(Url::link('people/customer', $url, 'SSL'));
         endif;
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -172,9 +172,9 @@ class Customer extends Controller {
 
         Breadcrumb::add('lang_heading_title', 'people/customer', $url);
         
-        $data['approve'] = Url::link('people/customer/approve', '' . $url, 'SSL');
-        $data['insert']  = Url::link('people/customer/insert',  '' . $url, 'SSL');
-        $data['delete']  = Url::link('people/customer/delete',  '' . $url, 'SSL');
+        $data['approve'] = Url::link('people/customer/approve', $url, 'SSL');
+        $data['insert']  = Url::link('people/customer/insert',  $url, 'SSL');
+        $data['delete']  = Url::link('people/customer/delete',  $url, 'SSL');
         
         $filter_default = array(
             'sort'  => 'username',
@@ -202,7 +202,7 @@ class Customer extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('people/customer/update', '' . 'customer_id=' . $result['customer_id'] . $url, 'SSL')
+                'href' => Url::link('people/customer/update', 'customer_id=' . $result['customer_id'] . $url, 'SSL')
             );
             
             $data['customers'][] = array(
@@ -242,11 +242,11 @@ class Customer extends Controller {
             $url .= '&order=asc'; 
         endif;
         
-        $data['sort_username']       = Url::link('people/customer', '' . 'sort=username' . $url, 'SSL');
-        $data['sort_name']           = Url::link('people/customer', '' . 'sort=name' . $url, 'SSL');
-        $data['sort_email']          = Url::link('people/customer', '' . 'sort=c.email' . $url, 'SSL');
-        $data['sort_customer_group'] = Url::link('people/customer', '' . 'sort=customer_group' . $url, 'SSL');
-        $data['sort_status']         = Url::link('people/customer', '' . 'sort=c.status' . $url, 'SSL');
+        $data['sort_username']       = Url::link('people/customer', 'sort=username' . $url, 'SSL');
+        $data['sort_name']           = Url::link('people/customer', 'sort=name' . $url, 'SSL');
+        $data['sort_email']          = Url::link('people/customer', 'sort=c.email' . $url, 'SSL');
+        $data['sort_customer_group'] = Url::link('people/customer', 'sort=customer_group' . $url, 'SSL');
+        $data['sort_status']         = Url::link('people/customer', 'sort=c.status' . $url, 'SSL');
         
         $paging = Filter::unpage($this->filters);
         $url    = Filter::uri($paging);
@@ -256,7 +256,7 @@ class Customer extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('people/customer', '' . $url . '&page={page}', 'SSL')
+            Url::link('people/customer', $url . '&page={page}', 'SSL')
         );
         
         $data['filter_username']          = $filter['filter_username'];
@@ -312,7 +312,7 @@ class Customer extends Controller {
             $data['action'] = Url::link('people/customer/update', 'token=' . $data['token'] . '&customer_id=' . Request::p()->get['customer_id'] . $url, 'SSL');
         endif;
         
-        $data['cancel'] = Url::link('people/customer', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('people/customer', $url, 'SSL');
         
         if (isset(Request::p()->get['customer_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')):
             $customer_info = PeopleCustomer::getCustomer(Request::p()->get['customer_id']);
@@ -385,7 +385,7 @@ class Customer extends Controller {
                     'firstname' => $referrer['firstname'],
                     'lastname'  => $referrer['lastname'],
                     'username'  => $referrer['username'],
-                    'href'      => Url::link('people/customer', '' . 'filter_username=' . $referrer['username'], 'SSL')
+                    'href'      => Url::link('people/customer', 'filter_username=' . $referrer['username'], 'SSL')
                 );
             endif;
         endif;
@@ -402,7 +402,7 @@ class Customer extends Controller {
                     'ip'         => $result['ip'], 
                     'total'      => PeopleCustomer::getTotalCustomersByIp($result['ip']), 
                     'date_added' => date(Lang::get('lang_date_format_short'), strtotime($result['date_added'])), 
-                    'filter_ip'  => Url::link('people/customer', '' . 'filter_ip=' . $result['ip'], 'SSL'), 
+                    'filter_ip'  => Url::link('people/customer', 'filter_ip=' . $result['ip'], 'SSL'), 
                     'ban_ip'     => $ban_ip_total
                 );
             endforeach;
@@ -653,7 +653,7 @@ class Customer extends Controller {
             $page, 
             10, 
             Lang::get('lang_text_pagination'), 
-            Url::link('people/customer/history', '' . 'customer_id=' . Request::p()->get['customer_id'] . '&page={page}', 'SSL')
+            Url::link('people/customer/history', 'customer_id=' . Request::p()->get['customer_id'] . '&page={page}', 'SSL')
         );
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
@@ -706,7 +706,7 @@ class Customer extends Controller {
             $page, 
             10, 
             Lang::get('lang_text_pagination'), 
-            Url::link('people/customer/credit', '' . 'customer_id=' . Request::p()->get['customer_id'] . '&page={page}', 'SSL')
+            Url::link('people/customer/credit', 'customer_id=' . Request::p()->get['customer_id'] . '&page={page}', 'SSL')
         );
         
         Theme::loadjs('javascript/people/customer_alert', $data);
@@ -763,7 +763,7 @@ class Customer extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('people/customer/commission', '' . 'customer_id=' . Request::p()->get['customer_id'] . '&page={page}', 'SSL')
+            Url::link('people/customer/commission', 'customer_id=' . Request::p()->get['customer_id'] . '&page={page}', 'SSL')
         );
         
         Theme::loadjs('javascript/people/customer_alert', $data);
@@ -820,7 +820,7 @@ class Customer extends Controller {
             $page, 
             10, 
             Lang::get('lang_text_pagination'), 
-            Url::link('people/customer/reward', '' . 'customer_id=' . Request::p()->get['customer_id'] . '&page={page}', 'SSL')
+            Url::link('people/customer/reward', 'customer_id=' . Request::p()->get['customer_id'] . '&page={page}', 'SSL')
         );
         
         Theme::loadjs('javascript/people/customer_alert', $data);

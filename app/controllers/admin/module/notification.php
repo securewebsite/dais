@@ -46,7 +46,7 @@ class Notification extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             endif;
             
-            Response::redirect(Url::link('module/notification', '' . $url, 'SSL'));
+            Response::redirect(Url::link('module/notification', $url, 'SSL'));
         endif;
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -69,7 +69,7 @@ class Notification extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             endif;
             
-            Response::redirect(Url::link('module/notification', '' . $url, 'SSL'));
+            Response::redirect(Url::link('module/notification', $url, 'SSL'));
         endif;
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -95,7 +95,7 @@ class Notification extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             endif;
             
-            Response::redirect(Url::link('module/notification', '' . $url, 'SSL'));
+            Response::redirect(Url::link('module/notification', $url, 'SSL'));
         endif;
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -118,8 +118,8 @@ class Notification extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'module/notification', $url);
         
-        $data['insert'] = Url::link('module/notification/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('module/notification/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('module/notification/insert', $url, 'SSL');
+        $data['delete'] = Url::link('module/notification/delete', $url, 'SSL');
 
         $data['notifications'] = array();
         
@@ -136,7 +136,7 @@ class Notification extends Controller {
             
             $action[] = array(
             	'text' => Lang::get('lang_text_edit'), 
-            	'href' => Url::link('module/notification/update', '' . 'notification_id=' . $result['email_id'] . $url, 'SSL')
+            	'href' => Url::link('module/notification/update', 'notification_id=' . $result['email_id'] . $url, 'SSL')
             );
 
             // Let's display a nice name
@@ -187,7 +187,7 @@ class Notification extends Controller {
         	$page, 
         	Config::get('config_admin_limit'), 
         	Lang::get('lang_text_pagination'), 
-        	Url::link('module/notification', '' . $url . '&page={page}', 'SSL')
+        	Url::link('module/notification', $url . '&page={page}', 'SSL')
         );
 
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
@@ -246,12 +246,12 @@ class Notification extends Controller {
         Breadcrumb::add('lang_heading_title', 'module/notification', $url);
 
         if (!isset(Request::p()->get['notification_id'])):
-            $data['action'] = Url::link('module/notification/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('module/notification/insert', $url, 'SSL');
         else:
-            $data['action'] = Url::link('module/notification/update', '' . 'notification_id=' . Request::p()->get['notification_id'] . $url, 'SSL');
+            $data['action'] = Url::link('module/notification/update', 'notification_id=' . Request::p()->get['notification_id'] . $url, 'SSL');
         endif;
         
-        $data['cancel'] = Url::link('module/notification', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('module/notification', $url, 'SSL');
         
         if (isset(Request::p()->get['notification_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')):
             $notification_info = ModuleNotification::getNotification(Request::p()->get['notification_id']);

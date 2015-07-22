@@ -47,7 +47,7 @@ class Menu extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('module/menu', '' . $url, 'SSL'));
+            Response::redirect(Url::link('module/menu', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -70,7 +70,7 @@ class Menu extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('module/menu', '' . $url, 'SSL'));
+            Response::redirect(Url::link('module/menu', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -96,7 +96,7 @@ class Menu extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('module/menu', '' . $url, 'SSL'));
+            Response::redirect(Url::link('module/menu', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -121,8 +121,8 @@ class Menu extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'module/menu');
         
-        $data['insert'] = Url::link('module/menu/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('module/menu/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('module/menu/insert', $url, 'SSL');
+        $data['delete'] = Url::link('module/menu/delete', $url, 'SSL');
         
         $data['menus'] = array();
         
@@ -132,14 +132,14 @@ class Menu extends Controller {
         );
         
         $menu_total = ModuleMenu::getTotalMenus();
-        $results = ModuleMenu::getMenus($filter);
+        $results    = ModuleMenu::getMenus($filter);
         
         foreach ($results as $result):
             $action = array();
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('module/menu/update', '' . 'menu_id=' . $result['menu_id'] . $url, 'SSL')
+                'href' => Url::link('module/menu/update', 'menu_id=' . $result['menu_id'] . $url, 'SSL')
             );
             
             $data['menus'][] = array(
@@ -170,7 +170,7 @@ class Menu extends Controller {
             $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('module/menu', '' . $url . '&page={page}', 'SSL')
+            Url::link('module/menu', $url . '&page={page}', 'SSL')
         );
         
         $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
@@ -207,12 +207,12 @@ class Menu extends Controller {
         Breadcrumb::add('lang_heading_title', 'module/menu', $url);
         
         if (!isset(Request::p()->get['menu_id'])):
-            $data['action'] = Url::link('module/menu/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('module/menu/insert', $url, 'SSL');
         else:
-            $data['action'] = Url::link('module/menu/update', '' . 'menu_id=' . Request::p()->get['menu_id'] . $url, 'SSL');
+            $data['action'] = Url::link('module/menu/update', 'menu_id=' . Request::p()->get['menu_id'] . $url, 'SSL');
         endif;
         
-        $data['cancel'] = Url::link('module/menu', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('module/menu', $url, 'SSL');
         
         $data['menu_id'] = false;
         

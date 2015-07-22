@@ -18,7 +18,6 @@ namespace Dais\Base;
 
 final class Action {
     
-    protected $file;
     protected $class;
     protected $method;
     protected $args = array();
@@ -29,15 +28,14 @@ final class Action {
             $this->args = $args;
         endif;
 
-        $this->method = Naming::method_from_route($route);
+        $this->method = static::method_from_route($route);
 
         // Method override via passed args (specific for single file routes)
         if (isset($this->args['method'])):
             $this->method = $this->args['method'];
         endif;
         
-        $this->file  = Naming::file_from_route($route);
-        $this->class = Naming::class_from_filename($this->file);
+        $this->class = Finder::find($route);
         
         return $this;
     }
@@ -90,5 +88,15 @@ final class Action {
                 endif;
             endforeach;
         endif;
+    }
+
+    protected static function method_from_route($route) {
+        $segments = explode(SEP, $route);
+        
+        if (count($segments) > 2):
+            return $segments[2];
+        endif;
+
+        return 'index';
     }
 }

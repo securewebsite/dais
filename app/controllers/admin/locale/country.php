@@ -60,7 +60,7 @@ class Country extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/country', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/country', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -94,7 +94,7 @@ class Country extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/country', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/country', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -130,7 +130,7 @@ class Country extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('locale/country', '' . $url, 'SSL'));
+            Response::redirect(Url::link('locale/country', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -175,8 +175,8 @@ class Country extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'locale/country', $url);
         
-        $data['insert'] = Url::link('locale/country/insert', '' . $url, 'SSL');
-        $data['delete'] = Url::link('locale/country/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('locale/country/insert', $url, 'SSL');
+        $data['delete'] = Url::link('locale/country/delete', $url, 'SSL');
         
         $data['countries'] = array();
         
@@ -189,7 +189,7 @@ class Country extends Controller {
         foreach ($results as $result) {
             $action = array();
             
-            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/country/update', '' . 'country_id=' . $result['country_id'] . $url, 'SSL'));
+            $action[] = array('text' => Lang::get('lang_text_edit'), 'href' => Url::link('locale/country/update', 'country_id=' . $result['country_id'] . $url, 'SSL'));
             
             $data['countries'][] = array('country_id' => $result['country_id'], 'name' => $result['name'] . (($result['country_id'] == Config::get('config_country_id')) ? Lang::get('lang_text_default') : null), 'iso_code_2' => $result['iso_code_2'], 'iso_code_3' => $result['iso_code_3'], 'selected' => isset(Request::p()->post['selected']) && in_array($result['country_id'], Request::p()->post['selected']), 'action' => $action);
         }
@@ -220,9 +220,9 @@ class Country extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name'] = Url::link('locale/country', '' . 'sort=name' . $url, 'SSL');
-        $data['sort_iso_code_2'] = Url::link('locale/country', '' . 'sort=iso_code_2' . $url, 'SSL');
-        $data['sort_iso_code_3'] = Url::link('locale/country', '' . 'sort=iso_code_3' . $url, 'SSL');
+        $data['sort_name'] = Url::link('locale/country', 'sort=name' . $url, 'SSL');
+        $data['sort_iso_code_2'] = Url::link('locale/country', 'sort=iso_code_2' . $url, 'SSL');
+        $data['sort_iso_code_3'] = Url::link('locale/country', 'sort=iso_code_3' . $url, 'SSL');
         
         $url = '';
         
@@ -234,7 +234,7 @@ class Country extends Controller {
             $url.= '&order=' . Request::p()->get['order'];
         }
         
-        $data['pagination'] = Theme::paginate($country_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/country', '' . $url . '&page={page}', 'SSL'));
+        $data['pagination'] = Theme::paginate($country_total, $page, Config::get('config_admin_limit'), Lang::get('lang_text_pagination'), Url::link('locale/country', $url . '&page={page}', 'SSL'));
         
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -278,12 +278,12 @@ class Country extends Controller {
         Breadcrumb::add('lang_heading_title', 'locale/country', $url);
         
         if (!isset(Request::p()->get['country_id'])) {
-            $data['action'] = Url::link('locale/country/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('locale/country/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('locale/country/update', '' . 'country_id=' . Request::p()->get['country_id'] . $url, 'SSL');
+            $data['action'] = Url::link('locale/country/update', 'country_id=' . Request::p()->get['country_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('locale/country', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('locale/country', $url, 'SSL');
         
         if (isset(Request::p()->get['country_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $country_info = LocaleCountry::getCountry(Request::p()->get['country_id']);

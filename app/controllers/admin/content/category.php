@@ -102,7 +102,7 @@ class Category extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('content/category/update', '' . 'category_id=' . $result['category_id'], 'SSL')
+                'href' => Url::link('content/category/update', 'category_id=' . $result['category_id'], 'SSL')
             );
             
             $data['categories'][] = array(
@@ -161,7 +161,7 @@ class Category extends Controller {
         if (!isset(Request::p()->get['category_id'])) {
             $data['action'] = Url::link('content/category/insert', '', 'SSL');
         } else {
-            $data['action'] = Url::link('content/category/update', '' . 'category_id=' . Request::p()->get['category_id'], 'SSL');
+            $data['action'] = Url::link('content/category/update', 'category_id=' . Request::p()->get['category_id'], 'SSL');
         }
         
         $data['cancel'] = Url::link('content/category', '', 'SSL');

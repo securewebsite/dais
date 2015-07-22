@@ -14,7 +14,7 @@
 |   
 */
 
-namespace App\Plugin\Git\Admin\Controller;
+namespace App\Plugin\Git\Admin\Controllers;
 
 use App\Controllers\Controller;
 

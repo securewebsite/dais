@@ -80,7 +80,7 @@ class Product extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/product', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/product', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -134,7 +134,7 @@ class Product extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/product', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/product', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -190,7 +190,7 @@ class Product extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/product', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/product', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -246,7 +246,7 @@ class Product extends Controller {
                 $url.= '&page=' . Request::p()->get['page'];
             }
             
-            Response::redirect(Url::link('catalog/product', '' . $url, 'SSL'));
+            Response::redirect(Url::link('catalog/product', $url, 'SSL'));
         }
         
         Theme::listen(__CLASS__, __FUNCTION__);
@@ -341,9 +341,9 @@ class Product extends Controller {
         
         Breadcrumb::add('lang_heading_title', 'catalog/product', $url);
         
-        $data['insert'] = Url::link('catalog/product/insert', '' . $url, 'SSL');
-        $data['copy']   = Url::link('catalog/product/copy', '' . $url, 'SSL');
-        $data['delete'] = Url::link('catalog/product/delete', '' . $url, 'SSL');
+        $data['insert'] = Url::link('catalog/product/insert', $url, 'SSL');
+        $data['copy']   = Url::link('catalog/product/copy', $url, 'SSL');
+        $data['delete'] = Url::link('catalog/product/delete', $url, 'SSL');
         
         $data['products'] = array();
         
@@ -370,7 +370,7 @@ class Product extends Controller {
             
             $action[] = array(
                 'text' => Lang::get('lang_text_edit'), 
-                'href' => Url::link('catalog/product/update', '' . 'product_id=' . $result['product_id'] . $url, 'SSL')
+                'href' => Url::link('catalog/product/update', 'product_id=' . $result['product_id'] . $url, 'SSL')
             );
             
             if ($result['image'] && file_exists(Config::get('path.image') . $result['image'])) {
@@ -440,12 +440,12 @@ class Product extends Controller {
             $url.= '&page=' . Request::p()->get['page'];
         }
         
-        $data['sort_name']     = Url::link('catalog/product', '' . 'sort=pd.name' . $url, 'SSL');
-        $data['sort_model']    = Url::link('catalog/product', '' . 'sort=p.model' . $url, 'SSL');
-        $data['sort_price']    = Url::link('catalog/product', '' . 'sort=p.price' . $url, 'SSL');
-        $data['sort_quantity'] = Url::link('catalog/product', '' . 'sort=p.quantity' . $url, 'SSL');
-        $data['sort_status']   = Url::link('catalog/product', '' . 'sort=p.status' . $url, 'SSL');
-        $data['sort_order']    = Url::link('catalog/product', '' . 'sort=p.sort_order' . $url, 'SSL');
+        $data['sort_name']     = Url::link('catalog/product', 'sort=pd.name' . $url, 'SSL');
+        $data['sort_model']    = Url::link('catalog/product', 'sort=p.model' . $url, 'SSL');
+        $data['sort_price']    = Url::link('catalog/product', 'sort=p.price' . $url, 'SSL');
+        $data['sort_quantity'] = Url::link('catalog/product', 'sort=p.quantity' . $url, 'SSL');
+        $data['sort_status']   = Url::link('catalog/product', 'sort=p.status' . $url, 'SSL');
+        $data['sort_order']    = Url::link('catalog/product', 'sort=p.sort_order' . $url, 'SSL');
         
         $url = '';
         
@@ -481,7 +481,7 @@ class Product extends Controller {
             $product_total, $page, 
             Config::get('config_admin_limit'), 
             Lang::get('lang_text_pagination'), 
-            Url::link('catalog/product', '' . $url . '&page={page}', 'SSL')
+            Url::link('catalog/product', $url . '&page={page}', 'SSL')
         );
         
         $data['filter_name']     = $filter_name;
@@ -582,12 +582,12 @@ class Product extends Controller {
         Breadcrumb::add('lang_heading_title', 'catalog/product', $url);
         
         if (!isset(Request::p()->get['product_id'])) {
-            $data['action'] = Url::link('catalog/product/insert', '' . $url, 'SSL');
+            $data['action'] = Url::link('catalog/product/insert', $url, 'SSL');
         } else {
-            $data['action'] = Url::link('catalog/product/update', '' . 'product_id=' . Request::p()->get['product_id'] . $url, 'SSL');
+            $data['action'] = Url::link('catalog/product/update', 'product_id=' . Request::p()->get['product_id'] . $url, 'SSL');
         }
         
-        $data['cancel'] = Url::link('catalog/product', '' . $url, 'SSL');
+        $data['cancel'] = Url::link('catalog/product', $url, 'SSL');
         
         if (isset(Request::p()->get['product_id']) && (Request::p()->server['REQUEST_METHOD'] != 'POST')) {
             $product_info = CatalogProduct::getProduct(Request::p()->get['product_id']);
