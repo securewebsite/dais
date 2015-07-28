@@ -42,8 +42,8 @@ class Customer extends Model {
                 password          = '" . DB::escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', 
                 newsletter        = '" . (isset($data['newsletter']) ? (int)$data['newsletter'] : 0) . "', 
                 customer_group_id = '" . (int)$customer_group_id . "', 
-                referral_id       = '" . (isset($this->request->cookie['referrer']) ? $this->request->cookie['referrer'] : 0) . "', 
-                ip                = '" . DB::escape($this->request->server['REMOTE_ADDR']) . "', 
+                referral_id       = '" . (isset(Request::p()->cookie['referrer']) ? Request::p()->cookie['referrer'] : 0) . "', 
+                ip                = '" . DB::escape(Request::p()->server['REMOTE_ADDR']) . "', 
                 status            = '1', 
                 approved          = '" . (int)!$customer_group_info['approval'] . "', 
                 date_added        = NOW()
@@ -56,7 +56,7 @@ class Customer extends Model {
             INSERT INTO " . DB::prefix() . "customer_ip 
             SET 
                 customer_id = '" . (int)$customer_id . "', 
-                ip = '" . DB::escape($this->request->server['REMOTE_ADDR']) . "', 
+                ip = '" . DB::escape(Request::p()->server['REMOTE_ADDR']) . "', 
                 date_added = NOW()
         ");
         
@@ -270,7 +270,7 @@ class Customer extends Model {
         $query = DB::query("
 			SELECT * 
 			FROM " . DB::prefix() . "customer 
-			WHERE LOWER(email) = '" . DB::escape($this->encode->strtolower($email)) . "'
+			WHERE LOWER(email) = '" . DB::escape(Encode::strtolower($email)) . "'
 		");
         
         return $query->row;
@@ -304,11 +304,11 @@ class Customer extends Model {
         $implode = array();
         
         if (isset($data['filter_name']) && !is_null($data['filter_name'])) {
-            $implode[] = "LCASE(CONCAT(c.firstname, ' ', c.lastname)) LIKE '" . DB::escape($this->encode->strtolower($data['filter_name'])) . "%'";
+            $implode[] = "LCASE(CONCAT(c.firstname, ' ', c.lastname)) LIKE '" . DB::escape(Encode::strtolower($data['filter_name'])) . "%'";
         }
         
         if (isset($data['filter_email']) && !is_null($data['filter_email'])) {
-            $implode[] = "LCASE(c.email) = '" . DB::escape($this->encode->strtolower($data['filter_email'])) . "'";
+            $implode[] = "LCASE(c.email) = '" . DB::escape(Encode::strtolower($data['filter_email'])) . "'";
         }
         
         if (isset($data['filter_customer_group_id']) && !is_null($data['filter_customer_group_id'])) {
@@ -371,7 +371,7 @@ class Customer extends Model {
         $query = DB::query("
 			SELECT COUNT(*) AS total 
 			FROM " . DB::prefix() . "customer 
-			WHERE LOWER(email) = '" . DB::escape($this->encode->strtolower($email)) . "'
+			WHERE LOWER(email) = '" . DB::escape(Encode::strtolower($email)) . "'
 		");
         
         return $query->row['total'];
@@ -381,7 +381,7 @@ class Customer extends Model {
         $query = DB::query("
 			SELECT COUNT(*) AS total 
 			FROM " . DB::prefix() . "customer 
-			WHERE LOWER(username) = '" . DB::escape($this->encode->strtolower($username)) . "'
+			WHERE LOWER(username) = '" . DB::escape(Encode::strtolower($username)) . "'
 		");
         
         return $query->row['total'];

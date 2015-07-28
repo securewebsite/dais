@@ -472,7 +472,7 @@ class Order extends Model {
                 endforeach;
             endforeach;
             
-            $this->cache->delete('products.popular');
+            Cache::delete('products.popular');
             
             // Downloads
             $order_download_query = DB::query("
@@ -816,7 +816,7 @@ class Order extends Model {
             
             foreach ($product['options'] as $option):
                 if ($option['type'] == 'file'):
-                	$value = $this->encode->substr($option['value'], 0, $this->encode->strrpos($option['value'], '.'));
+                	$value = Encode::substr($option['value'], 0, Encode::strrpos($option['value'], '.'));
                 elseif ($option['type'] == 'date' || $option['type'] == 'time' || $option['type'] == 'datetime'):
                 	$value = date(Lang::get('lang_date_format_short'), strtotime($option['value']));
                 else:
@@ -825,7 +825,7 @@ class Order extends Model {
                 
                 $option_data[] = array(
                 	'name'  => $option['name'], 
-                	'value' => ($this->encode->strlen($value) > 20 ? $this->encode->substr($value, 0, 20) . '..' : $value)
+                	'value' => (Encode::strlen($value) > 20 ? Encode::substr($value, 0, 20) . '..' : $value)
                 );
             endforeach;
             
@@ -835,7 +835,7 @@ class Order extends Model {
 				'link'             => $link, 
 				'product_id'       => $product['product_id'], 
 				'weight'           => $product_data['weight'], 
-				'weight_fvalue'    => $this->weight->format($product_data['weight'], $product_data['weight_class_id']), 
+				'weight_fvalue'    => Weight::format($product_data['weight'], $product_data['weight_class_id']), 
 				'sku'              => $product_data['sku'], 
 				'stock_quantity'   => $product_data['quantity'], 
 				'stock_status'     => $product_data['stock_status'], 

@@ -41,8 +41,8 @@ class Ups extends Model {
         $method_data = array();
         
         if ($status):
-            $weight      = $this->weight->convert(Cart::getWeight(), Config::get('config_weight_class_id'), Config::get('ups_weight_class_id'));
-            $weight_code = strtoupper($this->weight->getUnit(Config::get('ups_weight_class_id')));
+            $weight      = Weight::convert(Cart::getWeight(), Config::get('config_weight_class_id'), Config::get('ups_weight_class_id'));
+            $weight_code = strtoupper(Weight::getUnit(Config::get('ups_weight_class_id')));
             
             if ($weight_code == 'KG'):
                 $weight_code = 'KGS';
@@ -51,10 +51,10 @@ class Ups extends Model {
             endif;
             
             $weight      = ($weight < 0.1 ? 0.1 : $weight);
-            $length      = $this->length->convert(Config::get('ups_length'), Config::get('config_length_class_id'), Config::get('ups_length_class_id'));
-            $width       = $this->length->convert(Config::get('ups_width'), Config::get('config_length_class_id'), Config::get('ups_length_class_id'));
-            $height      = $this->length->convert(Config::get('ups_height'), Config::get('config_length_class_id'), Config::get('ups_length_class_id'));
-            $length_code = strtoupper($this->length->getUnit(Config::get('ups_length_class_id')));
+            $length      = Length::convert(Config::get('ups_length'), Config::get('config_length_class_id'), Config::get('ups_length_class_id'));
+            $width       = Length::convert(Config::get('ups_width'), Config::get('config_length_class_id'), Config::get('ups_length_class_id'));
+            $height      = Length::convert(Config::get('ups_height'), Config::get('config_length_class_id'), Config::get('ups_length_class_id'));
+            $length_code = strtoupper(Length::getUnit(Config::get('ups_length_class_id')));
             
             $service_code = array(
                 // US Origin
@@ -253,8 +253,8 @@ class Ups extends Model {
             
             if ($result):
                 if (Config::get('ups_debug')):
-                    $this->log->write("UPS DATA SENT: " . $xml);
-                    $this->log->write("UPS DATA RECV: " . $result);
+                    Log::write("UPS DATA SENT: " . $xml);
+                    Log::write("UPS DATA RECV: " . $result);
                 endif;
                 
                 $dom = new \DOMDocument('1.0', 'UTF-8');
@@ -296,7 +296,7 @@ class Ups extends Model {
             $title = Lang::get('lang_text_title');
             
             if (Config::get('ups_display_weight')):
-                $title.= ' (' . Lang::get('lang_text_weight') . ' ' . $this->weight->format($weight, Config::get('ups_weight_class_id')) . ')';
+                $title.= ' (' . Lang::get('lang_text_weight') . ' ' . Weight::format($weight, Config::get('ups_weight_class_id')) . ')';
             endif;
             
             $method_data = array(

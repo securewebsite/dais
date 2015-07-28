@@ -57,7 +57,7 @@ class Comment extends Model {
         }
         
         $key = 'post.comments.by.post.id.' . $post_id . '.' . $start . '.' . $limit;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -86,9 +86,9 @@ class Comment extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->rows;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -98,7 +98,7 @@ class Comment extends Model {
     
     public function getAverageRating($post_id) {
         $key = 'post.average.rating.' . $post_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -111,10 +111,10 @@ class Comment extends Model {
             
             if (isset($query->row['total'])):
                 $cachefile = (int)$query->row['total'];
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
                 $cachefile = 0;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             endif;
         endif;
         
@@ -123,7 +123,7 @@ class Comment extends Model {
     
     public function getTotalComments() {
         $key = 'posts.comments.total';
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -137,7 +137,7 @@ class Comment extends Model {
 			");
             
             $cachefile = $query->row['total'];
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         endif;
         
         return $cachefile;
@@ -145,7 +145,7 @@ class Comment extends Model {
     
     public function getTotalCommentsByPostId($post_id) {
         $key = 'post.comment.total.by.post.id.' . $post_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -163,7 +163,7 @@ class Comment extends Model {
 			");
             
             $cachefile = $query->row['total'];
-            $this->cache->set($key, (int)$cachefile);
+            Cache::set($key, (int)$cachefile);
         endif;
         
         return $cachefile;

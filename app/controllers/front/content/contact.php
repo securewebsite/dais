@@ -94,19 +94,19 @@ class Contact extends Controller {
                 'email'     => Request::p()->post['email']
             );
 
-            $this->notify->setGenericCustomer($callback);
+            Notify::setGenericCustomer($callback);
 
-            $message  = $this->notify->fetch('public_contact_customer');
+            $message  = Notify::fetch('public_contact_customer');
             $priority = $message['priority'];
 
-            $this->notify->fetchWrapper($priority);
+            Notify::fetchWrapper($priority);
 
-            $message = $this->notify->formatEmail($message, 1);
+            $message = Notify::formatEmail($message, 1);
 
             if ($priority == 1):
-                $this->notify->send($message);
+                Notify::send($message);
             else:
-                $this->notify->addToEmailQueue($message);
+                Notify::addToEmailQueue($message);
             endif;
 
         else:

@@ -142,22 +142,22 @@ class GiftCard extends Model {
                     'email'     => $gift_card['to_email']
                 );
 
-                $this->notify->setGenericCustomer($callback);
+                Notify::setGenericCustomer($callback);
                 
-                $message  = $this->notify->fetch('public_gift_card_confirm');
+                $message  = Notify::fetch('public_gift_card_confirm');
                 $priority = $message['priority'];
                 
                 // decorate the base email
                 $message = $this->buildMessage($gift_card, $message);
 
-                $this->notify->fetchWrapper($priority);
+                Notify::fetchWrapper($priority);
 
-                $message = $this->notify->formatEmail($message, 1);
+                $message = Notify::formatEmail($message, 1);
                 
                 if ($priority == 1):
-                    $this->notify->send($message);
+                    Notify::send($message);
                 else:
-                    $this->notify->addToEmailQueue($message);
+                    Notify::addToEmailQueue($message);
                 endif;
                 
             endforeach;

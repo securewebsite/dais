@@ -94,8 +94,8 @@ class Product extends Model {
 				endforeach;
 			endif;
 
-			$this->search->add($language_id, 'product', $product_id, $value['name']);
-			$this->search->add($language_id, 'product', $product_id, $value['description']);
+			Search::add($language_id, 'product', $product_id, $value['name']);
+			Search::add($language_id, 'product', $product_id, $value['description']);
         }
         
         if (isset($data['product_store'])) {
@@ -452,10 +452,10 @@ class Product extends Model {
 				endforeach;
 			endif;
 
-			$this->search->delete('product', $product_id);
+			Search::delete('product', $product_id);
 
-			$this->search->add($language_id, 'product', $product_id, $value['name']);
-			$this->search->add($language_id, 'product', $product_id, $value['description']);
+			Search::add($language_id, 'product', $product_id, $value['name']);
+			Search::add($language_id, 'product', $product_id, $value['description']);
         }
         
         DB::query("
@@ -894,7 +894,7 @@ class Product extends Model {
 			WHERE section  = 'product' 
 			AND element_id = '" . (int)$product_id . "'");
 
-        $this->search->delete('product', $product_id);
+        Search::delete('product', $product_id);
         
         Cache::delete('product');
         Cache::delete('products.total');

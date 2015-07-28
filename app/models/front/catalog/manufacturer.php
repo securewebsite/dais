@@ -20,7 +20,7 @@ use App\Models\Model;
 class Manufacturer extends Model {
     public function getManufacturer($manufacturer_id) {
         $key = 'manufacturer.' . $manufacturer_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -34,9 +34,9 @@ class Manufacturer extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->row;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -84,7 +84,7 @@ class Manufacturer extends Model {
             return $query->rows;
         } else {
             $key = 'manufacturer.all.' . (int)Config::get('config_store_id');
-            $manufacturer_data = $this->cache->get($key);
+            $manufacturer_data = Cache::get($key);
             
             if (!$manufacturer_data) {
                 $query = DB::query("
@@ -98,7 +98,7 @@ class Manufacturer extends Model {
                 
                 $manufacturer_data = $query->rows;
                 
-                $this->cache->set($key, $manufacturer_data);
+                Cache::set($key, $manufacturer_data);
             }
             
             return $manufacturer_data;

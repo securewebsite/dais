@@ -96,7 +96,7 @@ class PaypalExpress extends Model {
     
     public function log($data, $title = null) {
         if (Config::get('paypal_express_debug')) {
-            $this->log->write('PayPal Express debug (' . $title . '): ' . json_encode($data));
+            Log::write('PayPal Express debug (' . $title . '): ' . json_encode($data));
         }
     }
     

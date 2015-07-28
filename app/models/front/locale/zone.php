@@ -20,7 +20,7 @@ use App\Models\Model;
 class Zone extends Model {
     public function getZone($zone_id) {
         $key = 'zone.' . $zone_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -31,9 +31,9 @@ class Zone extends Model {
 			");
             if ($query->num_rows):
                 $cachefile = $query->row;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -43,7 +43,7 @@ class Zone extends Model {
     
     public function getZonesByCountryId($country_id) {
         $key = 'zones.country.' . $country_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -56,9 +56,9 @@ class Zone extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->rows;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;

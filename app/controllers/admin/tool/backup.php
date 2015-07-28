@@ -28,8 +28,8 @@ class Backup extends Controller {
         Theme::model('tool/backup');
         
         if (Request::p()->server['REQUEST_METHOD'] == 'POST' && User::hasPermission('modify', 'tool/backup')) {
-            if (is_uploaded_file($this->request->files['import']['tmp_name'])) {
-                $content = file_get_contents($this->request->files['import']['tmp_name']);
+            if (is_uploaded_file(Request::p()->files['import']['tmp_name'])) {
+                $content = file_get_contents(Request::p()->files['import']['tmp_name']);
             } else {
                 $content = false;
             }

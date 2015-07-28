@@ -79,22 +79,24 @@ class Router {
 					
 				endif;
 			endif;
+		else:
+			switch (Config::get('active.facade')):
+	            case FRONT_FACADE:
+	                $default = Config::get('config_site_style') . '/home';
+	                break;
+	            case ADMIN_FACADE:
+	                $default = 'common/dashboard';
+	                break;
+	        endswitch;
 		endif;
 
-        switch (Config::get('active.facade')):
-            case FRONT_FACADE:
-                $default = new Action (Config::get('config_site_style') . '/home');
-                break;
-            case ADMIN_FACADE:
-                $default = new Action('common/dashboard');
-                break;
-        endswitch;
+        if (is_null(static::$route) && is_null(static::$current)):
+        	static::$route = $default;
+        endif;
         
-        $route = (static::$route) ? static::$route : 'error/not_found';
-        
-        Request::get('route', $route);
+        Request::get('route', static::$route);
 
-        $actions['action'] = (static::$route) ? new Action(static::$route) : $default;
+        $actions['action'] = new Action(static::$route);
         $actions['error']  = new Action('error/not_found');
         
         return $actions;
@@ -107,8 +109,8 @@ class Router {
 		$result = [];
 
 		// Blog and Product Category Holders
-		$blog    = false;
-		$bpath   = '';
+		$blog  = false;
+		$bpath = '';
 
 		$product = false;
 		$path    = '';

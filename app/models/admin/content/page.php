@@ -60,8 +60,8 @@ class Page extends Model {
                 endforeach;
             endif;
 
-            $this->search->add($language_id, 'page', $page_id, $value['title']);
-            $this->search->add($language_id, 'page', $page_id, $value['description']);
+            Search::add($language_id, 'page', $page_id, $value['title']);
+            Search::add($language_id, 'page', $page_id, $value['description']);
         }
         
         if (isset($data['page_store'])) {
@@ -154,10 +154,10 @@ class Page extends Model {
                 endforeach;
             endif;
 
-            $this->search->delete('page', $page_id);
+            Search::delete('page', $page_id);
 
-            $this->search->add($language_id, 'page', $page_id, $value['title']);
-            $this->search->add($language_id, 'page', $page_id, $value['description']);
+            Search::add($language_id, 'page', $page_id, $value['title']);
+            Search::add($language_id, 'page', $page_id, $value['description']);
         }
         
         DB::query("
@@ -266,7 +266,7 @@ class Page extends Model {
             WHERE section  = 'page' 
             AND element_id = '" . (int)$page_id . "'");
         
-        $this->search->delete('page', $page_id);
+        Search::delete('page', $page_id);
         
         Cache::delete('page');
         

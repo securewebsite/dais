@@ -802,7 +802,7 @@ class Setting extends Controller {
         
         if (isset(Request::p()->post['config_commission'])) {
             $data['config_commission'] = Request::p()->post['config_commission'];
-        } elseif ($this->config->has('config_commission')) {
+        } elseif (Config::has('config_commission')) {
             $data['config_commission'] = Config::get('config_commission');
         } else {
             $data['config_commission'] = '5.00';

@@ -142,7 +142,7 @@ class Cart extends Controller {
             $data['action'] = Url::link('checkout/cart');
             
             if (Config::get('config_cart_weight')) {
-                $data['weight'] = $this->weight->format(\Cart::getWeight(), Config::get('config_weight_class_id'), Lang::get('lang_decimal_point'), Lang::get('lang_thousand_point'));
+                $data['weight'] = Weight::format(\Cart::getWeight(), Config::get('config_weight_class_id'), Lang::get('lang_decimal_point'), Lang::get('lang_thousand_point'));
             } else {
                 $data['weight'] = '';
             }
@@ -178,7 +178,7 @@ class Cart extends Controller {
                     if ($option['type'] != 'file') {
                         $value = $option['option_value'];
                     } else {
-                        $filename = $this->encryption->decrypt($option['option_value']);
+                        $filename = Encryption::decrypt($option['option_value']);
                         
                         $value = Encode::substr($filename, 0, Encode::strrpos($filename, '.'));
                     }

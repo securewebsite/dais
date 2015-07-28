@@ -19,12 +19,12 @@ use App\Models\Model;
 
 class Reward extends Model {
     public function getTotal(&$total_data, &$total, &$taxes) {
-        if (isset($this->session->data['reward'])):
+        if (isset(Session::p()->data['reward'])):
             Lang::load('total/reward');
             
             $points = Customer::getRewardPoints();
             
-            if ($this->session->data['reward'] <= $points):
+            if (Session::p()->data['reward'] <= $points):
                 $discount_total = 0;
                 
                 $points_total = 0;
@@ -41,7 +41,7 @@ class Reward extends Model {
                     $discount = 0;
                     
                     if ($product['points']):
-                        $discount = $product['total'] * ($this->session->data['reward'] / $points_total);
+                        $discount = $product['total'] * (Session::p()->data['reward'] / $points_total);
                         
                         if ($product['tax_class_id']):
                             $tax_rates = \Tax::getRates($product['total'] - ($product['total'] - $discount), $product['tax_class_id']);
@@ -59,7 +59,7 @@ class Reward extends Model {
                 
                 $total_data[] = array(
                     'code'       => 'reward', 
-                    'title'      => sprintf(Lang::get('lang_text_reward'), $this->session->data['reward']), 
+                    'title'      => sprintf(Lang::get('lang_text_reward'), Session::p()->data['reward']), 
                     'text'       => Currency::format(-$discount_total), 
                     'value'      => - $discount_total, 
                     'sort_order' => Config::get('reward_sort_order')

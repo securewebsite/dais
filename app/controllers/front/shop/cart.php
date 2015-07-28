@@ -86,7 +86,7 @@ class Cart extends Controller {
                 if ($option['type'] != 'file') {
                     $value = $option['option_value'];
                 } else {
-                    $filename = $this->encryption->decrypt($option['option_value']);
+                    $filename = Encryption::decrypt($option['option_value']);
                     
                     $value = Encode::substr($filename, 0, Encode::strrpos($filename, '.'));
                 }

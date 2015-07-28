@@ -14,17 +14,4 @@
 |	
 */
 
-namespace Dais;
-
-use Laravel\Lumen\Application;
-
-class Api extends Application {
-
-	public function __construct($basePath = null) {
-		parent::__construct($basePath);
-	}
-
-	public function version() {
-		return 'Peach (' . APP_VERSION . ') (Dais Components 1.0.*)';
-	}
-}
+define('APP_VERSION', '1.0.1');

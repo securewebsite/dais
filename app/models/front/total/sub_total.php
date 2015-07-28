@@ -23,8 +23,8 @@ class SubTotal extends Model {
         
         $sub_total = Cart::getSubTotal();
 
-        if (isset($this->session->data['gift_cards']) && $this->session->data['gift_cards']):
-            foreach ($this->session->data['gift_cards'] as $gift_card):
+        if (isset(Session::p()->data['gift_cards']) && Session::p()->data['gift_cards']):
+            foreach (Session::p()->data['gift_cards'] as $gift_card):
                 $sub_total+= $gift_card['amount'];
             endforeach;
         endif;

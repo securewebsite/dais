@@ -85,7 +85,7 @@ class Affiliate extends Model {
 			");
         endif;
 
-        $this->cache->delete('default.store.routes');
+        Cache::delete('default.store.routes');
 	}
 
 	public function addAffiliate() {

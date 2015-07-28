@@ -19,12 +19,12 @@ use App\Models\Model;
 
 class GiftCard extends Model {
     public function getTotal(&$total_data, &$total, &$taxes) {
-        if (isset($this->session->data['gift_card'])):
+        if (isset(Session::p()->data['gift_card'])):
             Lang::load('total/gift_card');
             
             Theme::model('checkout/gift_card');
             
-            $gift_card_info = CheckoutGiftCard::getGiftcard($this->session->data['gift_card']);
+            $gift_card_info = CheckoutGiftCard::getGiftcard(Session::p()->data['gift_card']);
             
             if ($gift_card_info):
                 if ($gift_card_info['amount'] > $total):
@@ -35,7 +35,7 @@ class GiftCard extends Model {
                 
                 $total_data[] = array(
                     'code'       => 'gift_card', 
-                    'title'      => sprintf(Lang::get('lang_text_gift_card'), $this->session->data['gift_card']), 
+                    'title'      => sprintf(Lang::get('lang_text_gift_card'), Session::p()->data['gift_card']), 
                     'text'       => Currency::format(-$amount), 
                     'value'      => - $amount, 
                     'sort_order' => Config::get('gift_card_sort_order')

@@ -42,7 +42,7 @@ class Image extends Model {
         $extension = $info['extension'];
         
         $old_image = $filename;
-        $new_image = 'cache/' . $this->encode->substr($filename, 0, $this->encode->strrpos($filename, '.')) . '-' . $width . 'x' . $height . $type . '.' . $extension;
+        $new_image = 'cache/' . Encode::substr($filename, 0, Encode::strrpos($filename, '.')) . '-' . $width . 'x' . $height . $type . '.' . $extension;
         
         if (!file_exists(Config::get('path.image') . $new_image) || (filemtime(Config::get('path.image') . $old_image) > filemtime(Config::get('path.image') . $new_image))) {
             $path = '';
@@ -77,7 +77,7 @@ class Image extends Model {
             }
         }
         
-        if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+        if (isset(Request::p()->server['HTTPS']) && ((Request::p()->server['HTTPS'] == 'on') || (Request::p()->server['HTTPS'] == '1'))) {
             return Config::get('config_ssl') . 'image/' . $new_image;
         } else {
             return Config::get('config_url') . 'image/' . $new_image;

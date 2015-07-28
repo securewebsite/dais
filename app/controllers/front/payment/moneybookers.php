@@ -129,7 +129,7 @@ class Moneybookers extends Controller {
                         break;
                 }
             } else {
-                $this->log->write('md5sig returned (' + $md5sig + ') does not match generated (' + $md5hash + '). Verify Manually. Current order state: ' . Config::get('config_order_status_id'));
+                Log::write('md5sig returned (' + $md5sig + ') does not match generated (' + $md5hash + '). Verify Manually. Current order state: ' . Config::get('config_order_status_id'));
             }
         }
     }

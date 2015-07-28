@@ -60,7 +60,7 @@ class Manufacturer extends Model {
 			");
         }
 
-        $this->search->add(Config::get('config_language_id'), 'manufacturer', $manufacturer_id, $data['name']);
+        Search::add(Config::get('config_language_id'), 'manufacturer', $manufacturer_id, $data['name']);
         
         Cache::delete('manufacturer');
         
@@ -115,10 +115,10 @@ class Manufacturer extends Model {
         }
 
         // delete
-        $this->search->delete('manufacturer', $manufacturer_id);
+        Search::delete('manufacturer', $manufacturer_id);
 
         // insert
-        $this->search->add(Config::get('config_language_id'), 'manufacturer', $manufacturer_id, $data['name']);
+        Search::add(Config::get('config_language_id'), 'manufacturer', $manufacturer_id, $data['name']);
         
         Cache::delete('manufacturer');
         
@@ -138,7 +138,7 @@ class Manufacturer extends Model {
             DELETE FROM " . DB::prefix() . "route 
             WHERE query = 'manufacturer_id:" . (int)$manufacturer_id . "'");
         
-        $this->search->delete('manufacturer', $manufacturer_id);
+        Search::delete('manufacturer', $manufacturer_id);
 
         Cache::delete('manufacturer');
         

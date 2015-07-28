@@ -20,7 +20,7 @@ use App\Models\Model;
 class Category extends Model {
     public function getCategory($category_id) {
         $key = 'post.category.' . $category_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -39,9 +39,9 @@ class Category extends Model {
             if ($query->num_rows):
                 $query->row['tag'] = $this->getBlogCategoryTags($category_id);
                 $cachefile = $query->row;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -71,7 +71,7 @@ class Category extends Model {
     
     public function getCategories($parent_id = 0) {
         $key = 'post.categories.' . $parent_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -90,9 +90,9 @@ class Category extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->rows;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -124,7 +124,7 @@ class Category extends Model {
     
     public function getCategoryLayoutId($category_id) {
         $key = 'post.category.layout.' . $category_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -136,10 +136,10 @@ class Category extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->row['layout_id'];
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
                 $cachefile = Config::get('config_layout_category');
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             endif;
         endif;
         
@@ -148,7 +148,7 @@ class Category extends Model {
     
     public function getCategoriesByPostId($post_id) {
         $key = 'post.categories.by.postid.' . $post_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $category_data = array();
@@ -173,13 +173,13 @@ class Category extends Model {
                         $category_data[] = array(
                             'category_id' => $category_info['category_id'], 
                             'name'        => $category_info['name'], 
-                            'href'        => $this->url->link('content/category', 'bpath=' . $path, 'SSL')
+                            'href'        => Url::link('content/category', 'bpath=' . $path, 'SSL')
                         );
                     endif;
                 endforeach;
                 
                 $cachefile = $category_data;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             endif;
         endif;
         
@@ -188,7 +188,7 @@ class Category extends Model {
     
     public function getTotalCategoriesByCategoryId($parent_id = 0) {
         $key = 'post.categories.by.categoryid.' . $post_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -202,7 +202,7 @@ class Category extends Model {
 			");
             
             $cachefile = $query->row['total'];
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         endif;
         
         return $cachefile;

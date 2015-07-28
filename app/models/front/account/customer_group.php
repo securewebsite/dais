@@ -20,7 +20,7 @@ use App\Models\Model;
 class CustomerGroup extends Model {
     public function getCustomerGroup($customer_group_id) {
         $key = 'customer_group.' . $customer_group_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -34,9 +34,9 @@ class CustomerGroup extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->row;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -46,7 +46,7 @@ class CustomerGroup extends Model {
     
     public function getCustomerGroups() {
         $key = 'customer_group.all.' . (int)Config::get('config_store_id');
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -60,9 +60,9 @@ class CustomerGroup extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->rows;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;

@@ -70,8 +70,8 @@ class Category extends Model {
                 endforeach;
             endif;
 
-            $this->search->add($language_id, 'blog_category', $category_id, $value['name']);
-            $this->search->add($language_id, 'blog_category', $category_id, $value['description']);
+            Search::add($language_id, 'blog_category', $category_id, $value['name']);
+            Search::add($language_id, 'blog_category', $category_id, $value['description']);
         }
         
         if (isset($data['category_store'])) {
@@ -173,10 +173,10 @@ class Category extends Model {
                 endforeach;
             endif;
 
-            $this->search->delete('blog_category', $category_id);
+            Search::delete('blog_category', $category_id);
 
-            $this->search->add($language_id, 'blog_category', $category_id, $value['name']);
-            $this->search->add($language_id, 'blog_category', $category_id, $value['description']);
+            Search::add($language_id, 'blog_category', $category_id, $value['name']);
+            Search::add($language_id, 'blog_category', $category_id, $value['description']);
         }
         
         DB::query("
@@ -272,7 +272,7 @@ class Category extends Model {
             $this->deleteCategory($result['category_id']);
         }
         
-        $this->search->delete('blog_category', $category_id);
+        Search::delete('blog_category', $category_id);
         
         Cache::delete('post.category');
         Cache::delete('post.categories');

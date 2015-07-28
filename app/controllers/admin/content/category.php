@@ -369,7 +369,7 @@ class Category extends Controller {
         $json = array();
 
         if (isset(Request::p()->post['description']))
-            $json['success'] = $this->keyword->getDescription(Request::p()->post['description']);
+            $json['success'] = Keyword::getDescription(Request::p()->post['description']);
 
         Response::setOutput(json_encode($json));
     }
@@ -379,8 +379,8 @@ class Category extends Controller {
 
         if (isset(Request::p()->post['keywords'])):
             // let's clean up the data first
-            $keywords        = $this->keyword->getDescription(Request::p()->post['keywords']);
-            $json['success'] = $this->keyword->getKeywords($keywords);
+            $keywords        = Keyword::getDescription(Request::p()->post['keywords']);
+            $json['success'] = Keyword::getKeywords($keywords);
         endif;
 
         Response::setOutput(json_encode($json));

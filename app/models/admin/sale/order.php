@@ -271,9 +271,9 @@ class Order extends Model {
 		$affiliate_id = 0;
 		$commission   = 0;
         
-        if (!empty($this->request->post['affiliate_id'])) {
+        if (!empty(Request::p()->post['affiliate_id'])) {
             Theme::model('people/customer');
-            $affiliate_info = PeopleCustomer::getCustomer($this->request->post['affiliate_id']);
+            $affiliate_info = PeopleCustomer::getCustomer(Request::p()->post['affiliate_id']);
             
             if ($affiliate_info) {
                 $affiliate_id = $affiliate_info['customer_id'];
@@ -551,10 +551,10 @@ class Order extends Model {
 		$affiliate_id = 0;
 		$commission   = 0;
         
-        if (!empty($this->request->post['affiliate_id'])) {
+        if (!empty(Request::p()->post['affiliate_id'])) {
             Theme::model('people/customer');
             
-            $affiliate_info = PeopleCustomer::getCustomer($this->request->post['affiliate_id']);
+            $affiliate_info = PeopleCustomer::getCustomer(Request::p()->post['affiliate_id']);
             
             if ($affiliate_info) {
                 $affiliate_id = $affiliate_info['customer_id'];

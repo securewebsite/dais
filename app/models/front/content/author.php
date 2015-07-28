@@ -20,7 +20,7 @@ use App\Models\Model;
 class Author extends Model {
     public function getPostAuthor($author_id) {
         $key = 'author.' . $author_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -31,7 +31,7 @@ class Author extends Model {
             
             if ($query->num_rows):
                 $cachefile = $this->getAuthorNameRelatedToPostedBy($query->row);
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
                 $cachefile = '';
             endif;
@@ -56,7 +56,7 @@ class Author extends Model {
     
     public function getTotalPostsByAuthorId($author_id) {
         $key = 'author.total.' . $author_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -67,7 +67,7 @@ class Author extends Model {
             ");
             
             $cachefile = $query->row['total'];
-            $this->cache->set($cachefile);
+            Cache::set($cachefile);
         endif;
         
         return $cachefile;

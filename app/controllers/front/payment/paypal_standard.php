@@ -48,7 +48,7 @@ class PaypalStandard extends Controller {
                     if ($option['type'] != 'file') {
                         $value = $option['option_value'];
                     } else {
-                        $filename = $this->encryption->decrypt($option['option_value']);
+                        $filename = Encryption::decrypt($option['option_value']);
                         
                         $value = Encode::substr($filename, 0, Encode::strrpos($filename, '.'));
                     }
@@ -136,12 +136,12 @@ class PaypalStandard extends Controller {
             $response = curl_exec($curl);
             
             if (!$response) {
-                $this->log->write('PP_STANDARD :: CURL failed ' . curl_error($curl) . '(' . curl_errno($curl) . ')');
+                Log::write('PP_STANDARD :: CURL failed ' . curl_error($curl) . '(' . curl_errno($curl) . ')');
             }
             
             if (Config::get('paypal_standard_debug')) {
-                $this->log->write('PP_STANDARD :: IPN REQUEST: ' . $request);
-                $this->log->write('PP_STANDARD :: IPN RESPONSE: ' . $response);
+                Log::write('PP_STANDARD :: IPN REQUEST: ' . $request);
+                Log::write('PP_STANDARD :: IPN RESPONSE: ' . $response);
             }
             
             if ((strcmp($response, 'VERIFIED') == 0 || strcmp($response, 'UNVERIFIED') == 0) && isset(Request::p()->post['payment_status'])) {
@@ -156,7 +156,7 @@ class PaypalStandard extends Controller {
                         if ((strtolower(Request::p()->post['receiver_email']) == strtolower(Config::get('paypal_standard_email'))) && ((float)Request::p()->post['mc_gross'] == Currency::format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false))) {
                             $order_status_id = Config::get('paypal_standard_completed_status_id');
                         } else {
-                            $this->log->write('PP_STANDARD :: RECEIVER EMAIL MISMATCH! ' . strtolower(Request::p()->post['receiver_email']));
+                            Log::write('PP_STANDARD :: RECEIVER EMAIL MISMATCH! ' . strtolower(Request::p()->post['receiver_email']));
                         }
                         break;
 

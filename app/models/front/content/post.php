@@ -32,7 +32,7 @@ class Post extends Model {
         Theme::model('content/author');
         
         $key = 'post.' . $post_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -85,7 +85,7 @@ class Post extends Model {
                 );
                 
                 $cachefile = $post;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
                 $cachefile = false;
             endif;
@@ -116,7 +116,7 @@ class Post extends Model {
 
     public function getPosts($data = array()) {
         $key = 'posts.all.' . (int)Config::get('config_store_id');
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)) {
             $sql = "
@@ -149,11 +149,11 @@ class Post extends Model {
                 if (!empty($data['filter_name'])) {
                     if (!empty($data['filter_description'])) {
                         $sql.= "LCASE(pd.name) 
-								 LIKE '%" . DB::escape($this->encode->strtolower($data['filter_name'])) . "%' 
+								 LIKE '%" . DB::escape(Encode::strtolower($data['filter_name'])) . "%' 
 								 OR MATCH(pd.description) 
-								 AGAINST('" . DB::escape($this->encode->strtolower($data['filter_name'])) . "')";
+								 AGAINST('" . DB::escape(Encode::strtolower($data['filter_name'])) . "')";
                     } else {
-                        $sql.= "LCASE(pd.name) LIKE '%" . DB::escape($this->encode->strtolower($data['filter_name'])) . "%'";
+                        $sql.= "LCASE(pd.name) LIKE '%" . DB::escape(Encode::strtolower($data['filter_name'])) . "%'";
                     }
                 }
                 
@@ -225,7 +225,7 @@ class Post extends Model {
             }
             
             $cachefile = $post_data;
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         }
         
         return $cachefile;
@@ -233,7 +233,7 @@ class Post extends Model {
     
     public function getLatestPosts($limit) {
         $key = 'posts.latest.' . (int)Config::get('config_store_id');
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)) {
             $post_data = array();
@@ -253,7 +253,7 @@ class Post extends Model {
             endforeach;
             
             $cachefile = $post_data;
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         }
         
         return $cachefile;
@@ -261,7 +261,7 @@ class Post extends Model {
     
     public function getPopularPosts($limit) {
         $key = 'posts.popular.' . (int)Config::get('config_store_id');
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $post_data = array();
@@ -281,7 +281,7 @@ class Post extends Model {
             endforeach;
             
             $cachefile = $post_data;
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         endif;
         
         return $cachefile;
@@ -289,7 +289,7 @@ class Post extends Model {
     
     public function getMostCommentedPosts($limit) {
         $key = 'posts.most.commented.' . (int)Config::get('config_store_id');
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $post_data = array();
@@ -315,7 +315,7 @@ class Post extends Model {
             endforeach;
             
             $cachefile = $post_data;
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         endif;
         
         return $cachefile;
@@ -323,7 +323,7 @@ class Post extends Model {
     
     public function getPostImages($post_id) {
         $key = 'post.images.' . $post_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -335,9 +335,9 @@ class Post extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->rows;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -347,7 +347,7 @@ class Post extends Model {
     
     public function getPostRelated($post_id) {
         $key = 'post.related.' . $post_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $post_data = array();
@@ -371,7 +371,7 @@ class Post extends Model {
             endforeach;
             
             $cachefile = $post_data;
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         endif;
         
         return $cachefile;
@@ -379,7 +379,7 @@ class Post extends Model {
     
     public function getPostLayoutId($post_id) {
         $key = 'post.layoutid.' . $post_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -391,7 +391,7 @@ class Post extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->row['layout_id'];
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
                 $cachefile = Config::get('config_layout_product');
                  /// this needs to be checked, should be blog post id
@@ -404,7 +404,7 @@ class Post extends Model {
     
     public function getCategories($post_id) {
         $key = 'posts.categories.' . $post_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -415,9 +415,9 @@ class Post extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->rows;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -446,7 +446,7 @@ class Post extends Model {
     
     public function getNextPostId($current_post_id) {
         $key = 'post.next.post.id.' . $current_post_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -459,9 +459,9 @@ class Post extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->row['post_id'];
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, (int)0);
+                Cache::set($key, (int)0);
                 return 0;
             endif;
         endif;
@@ -471,7 +471,7 @@ class Post extends Model {
     
     public function getPrevPostId($current_post_id) {
         $key = 'post.previous.post.id.' . $current_post_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -484,9 +484,9 @@ class Post extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->row['post_id'];
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, (int)0);
+                Cache::set($key, (int)0);
                 return 0;
             endif;
         endif;
@@ -496,7 +496,7 @@ class Post extends Model {
     
     public function getTotalPosts($data = array()) {
         $key = 'posts.total.' . (int)Config::get('config_store_id');
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)) {
             $sql = "
@@ -523,11 +523,11 @@ class Post extends Model {
                 if (!empty($data['filter_name'])) {
                     if (!empty($data['filter_description'])) {
                         $sql.= "LCASE(pd.name) 
-								 LIKE '%" . DB::escape($this->encode->strtolower($data['filter_name'])) . "%' 
+								 LIKE '%" . DB::escape(Encode::strtolower($data['filter_name'])) . "%' 
 								 OR MATCH(pd.description) 
-								 AGAINST('" . DB::escape($this->encode->strtolower($data['filter_name'])) . "')";
+								 AGAINST('" . DB::escape(Encode::strtolower($data['filter_name'])) . "')";
                     } else {
-                        $sql.= "LCASE(pd.name) LIKE '%" . DB::escape($this->encode->strtolower($data['filter_name'])) . "%'";
+                        $sql.= "LCASE(pd.name) LIKE '%" . DB::escape(Encode::strtolower($data['filter_name'])) . "%'";
                     }
                 }
                 
@@ -561,7 +561,7 @@ class Post extends Model {
             $query = DB::query($sql);
             
             $cachefile = $query->row['total'];
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         }
         
         return $cachefile;

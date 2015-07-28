@@ -70,8 +70,8 @@ class Post extends Model {
                 endforeach;
             endif;
 
-            $this->search->add($language_id, 'post', $post_id, $value['name']);
-            $this->search->add($language_id, 'post', $post_id, $value['description']);
+            Search::add($language_id, 'post', $post_id, $value['name']);
+            Search::add($language_id, 'post', $post_id, $value['description']);
         }
         
         if (isset($data['post_store'])) {
@@ -227,10 +227,10 @@ class Post extends Model {
                 endforeach;
             endif;
 
-            $this->search->delete('post', $post_id);
+            Search::delete('post', $post_id);
 
-            $this->search->add($language_id, 'post', $post_id, $value['name']);
-            $this->search->add($language_id, 'post', $post_id, $value['description']);
+            Search::add($language_id, 'post', $post_id, $value['name']);
+            Search::add($language_id, 'post', $post_id, $value['description']);
         }
         
         DB::query("
@@ -400,7 +400,7 @@ class Post extends Model {
             WHERE section  = 'post' 
             AND element_id = '" . (int)$post_id . "'");
         
-        $this->search->delete('post', $post_id);
+        Search::delete('post', $post_id);
         
         Cache::delete('post');
         Cache::delete('posts');

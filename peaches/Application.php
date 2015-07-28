@@ -49,7 +49,7 @@ class Application extends Container implements ApplicationContract {
     protected $isBooted = false;
 
     public function __construct($basePath = null) {
-        static::$version = env('APP_VERSION');
+        static::$version = APP_VERSION;
 
         static::setInstance($this);
 

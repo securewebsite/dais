@@ -41,7 +41,7 @@ class PaypalExpress extends Controller {
     
     public function express() {
         if ((!Cart::hasProducts() && empty(Session::p()->data['gift_cards'])) || (!Cart::hasStock() && !Config::get('config_stock_checkout'))) {
-            $this->log->write('No product redirect');
+            Log::write('No product redirect');
             Response::redirect(Url::link('checkout/cart'));
         }
         
@@ -124,7 +124,7 @@ class PaypalExpress extends Controller {
              * If PayPal debug log is off then still log error to normal error log.
              */
             if (Config::get('paypal_express_debug') == 1) {
-                $this->log->write(serialize($result));
+                Log::write(serialize($result));
             }
             
             Response::redirect(Url::link('checkout/checkout', '', 'SSL'));
@@ -219,10 +219,10 @@ class PaypalExpress extends Controller {
                 
                 Session::p()->data['shipping_postcode']             = $result['PAYMENTREQUEST_0_SHIPTOZIP'];
                 
-                $country_info = $this->db->query("
+                $country_info = DB::query("
 					SELECT * 
-					FROM `{$this->db->prefix}country` 
-					WHERE `iso_code_2` = '" . $this->db->escape($result['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']) . "' 
+					FROM `" . DB::prefix() . "country` 
+					WHERE `iso_code_2` = '" . DB::escape($result['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']) . "' 
 					AND `status` = '1' 
 					LIMIT 1")->row;
                 
@@ -258,10 +258,10 @@ class PaypalExpress extends Controller {
                     $returned_shipping_zone = '';
                 }
                 
-                $zone_info = $this->db->query("
+                $zone_info = DB::query("
 					SELECT * 
-					FROM `{$this->db->prefix}zone` 
-					WHERE (`name` = '" . $this->db->escape($returned_shipping_zone) . "' OR `code` = '" . $this->db->escape($returned_shipping_zone) . "') 
+					FROM `" . DB::prefix() . "zone` 
+					WHERE (`name` = '" . DB::escape($returned_shipping_zone) . "' OR `code` = '" . DB::escape($returned_shipping_zone) . "') 
 					AND `status` = '1' 
 					AND `country_id` = '" . (int)$country_info['country_id'] . "' 
 					LIMIT 1")->row;
@@ -350,17 +350,17 @@ class PaypalExpress extends Controller {
                     unset($shipping_name[0]);
                     $shipping_last_name = implode(' ', $shipping_name);
                     
-                    $country_info = $this->db->query("
+                    $country_info = DB::query("
 						SELECT * 
-						FROM `{$this->db->prefix}country` 
-						WHERE `iso_code_2` = '" . $this->db->escape($result['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']) . "' 
+						FROM `" . DB::prefix() . "country` 
+						WHERE `iso_code_2` = '" . DB::escape($result['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']) . "' 
 						AND `status` = '1' 
 						LIMIT 1")->row;
                     
-                    $zone_info = $this->db->query("
+                    $zone_info = DB::query("
 						SELECT * 
-						FROM `{$this->db->prefix}zone` 
-						WHERE `name` = '" . $this->db->escape($result['PAYMENTREQUEST_0_SHIPTOSTATE']) . "' 
+						FROM `" . DB::prefix() . "zone` 
+						WHERE `name` = '" . DB::escape($result['PAYMENTREQUEST_0_SHIPTOSTATE']) . "' 
 						AND `status` = '1' 
 						AND `country_id` = '" . (int)$country_info['country_id'] . "'")->row;
                     
@@ -479,7 +479,7 @@ class PaypalExpress extends Controller {
                 if ($option['type'] != 'file') {
                     $value = $option['option_value'];
                 } else {
-                    $filename = $this->encryption->decrypt($option['option_value']);
+                    $filename = Encryption::decrypt($option['option_value']);
                     
                     $value    = Encode::substr($filename, 0, Encode::strrpos($filename, '.'));
                 }
@@ -962,7 +962,7 @@ class PaypalExpress extends Controller {
                     if ($option['type'] != 'file') {
                         $value = $option['option_value'];
                     } else {
-                        $value = $this->encryption->decrypt($option['option_value']);
+                        $value = Encryption::decrypt($option['option_value']);
                     }
                     
                     $option_data[] = array(
@@ -1337,7 +1337,7 @@ class PaypalExpress extends Controller {
              * If PayPal debug log is off then still log error to normal error log.
              */
             if (Config::get('paypal_express_debug') == 1) {
-                $this->log->write(serialize($result));
+                Log::write(serialize($result));
             }
             
             Response::redirect(Url::link('checkout/checkout', '', 'SSL'));
@@ -1620,7 +1620,7 @@ class PaypalExpress extends Controller {
         if ((string)$response == "VERIFIED") {
             
             if (Config::get('paypal_express_debug') == 1) {
-                if (isset(Request::p()->post['transaction_entity'])) $this->log->write(Request::p()->post['transaction_entity']);
+                if (isset(Request::p()->post['transaction_entity'])) Log::write(Request::p()->post['transaction_entity']);
             }
             
             if (isset(Request::p()->post['txn_id'])) {
@@ -1632,7 +1632,7 @@ class PaypalExpress extends Controller {
             if ($transaction) {
                 
                 //transaction exists, check for cleared payment or updates etc
-                if (Config::get('paypal_express_debug') == 1) $this->log->write('Transaction exists');
+                if (Config::get('paypal_express_debug') == 1) Log::write('Transaction exists');
                 
                 //if the transaction is pending but the new status is completed
                 if ($transaction['payment_status'] != Request::p()->post['payment_status']) {
@@ -1641,7 +1641,7 @@ class PaypalExpress extends Controller {
                     PaymentExpressIpn::updatePending(Request::p()->post['pending_reason'], $transaction['transaction_id']);
                 }
             } else {
-                if (Config::get('paypal_express_debug') == 1) $this->log->write('Transaction does not exist');
+                if (Config::get('paypal_express_debug') == 1) Log::write('Transaction does not exist');
                 
                 $parent_transaction = false;
                 
@@ -1652,7 +1652,7 @@ class PaypalExpress extends Controller {
                 }
                 
                 if ($parent_transaction) {
-                    if (Config::get('paypal_express_debug') == 1) $this->log->write('Parent transaction exists');
+                    if (Config::get('paypal_express_debug') == 1) Log::write('Parent transaction exists');
                     
                     //parent transaction exists
                     //add new related transaction
@@ -1689,9 +1689,9 @@ class PaypalExpress extends Controller {
                         $remaining = Currency::format($parent_transaction['amount'] - $captured + $refunded, false, false, false);
                         
                         if (Config::get('paypal_express_debug') == 1) {
-                            $this->log->write('Captured: ' . $captured);
-                            $this->log->write('Refunded: ' . $refunded);
-                            $this->log->write('Remaining: ' . $remaining);
+                            Log::write('Captured: ' . $captured);
+                            Log::write('Refunded: ' . $refunded);
+                            Log::write('Remaining: ' . $remaining);
                         }
                         
                         if ($remaining > 0.00) {
@@ -1718,7 +1718,7 @@ class PaypalExpress extends Controller {
                 } else {
                     
                     //parent transaction doesn't exists, need to investigate?
-                    if (Config::get('paypal_express_debug') == 1) $this->log->write('Parent transaction not found');
+                    if (Config::get('paypal_express_debug') == 1) Log::write('Parent transaction not found');
                 }
             }
             
@@ -1826,7 +1826,7 @@ class PaypalExpress extends Controller {
             PaymentPaypalExpress::log(array('IPN was invalid'), 'IPN fail');
         } else {
             if (Config::get('paypal_express_debug') == 1) {
-                $this->log->write('string unknown ');
+                Log::write('string unknown ');
             }
         }
         
@@ -1875,15 +1875,15 @@ class PaypalExpress extends Controller {
             $result = PaymentPaypalExpress::recurringCancel($recur['reference']);
             
             if (isset($result['PROFILEID'])) {
-                $this->db->query("
-					INSERT INTO `{$this->db->prefix}order_recurring_transaction` 
+                DB::query("
+					INSERT INTO `" . DB::prefix() . "order_recurring_transaction` 
 					SET 
 						`order_recurring_id` = '" . (int)$recur['order_recurring_id'] . "', 
 						`date_added` = NOW(), 
 						`type` = '5'");
                 
-                $this->db->query("
-					UPDATE `{$this->db->prefix}order_recurring` 
+                DB::query("
+					UPDATE `" . DB::prefix() . "order_recurring` 
 					SET 
 						`status` = 4 
 					WHERE `order_recurring_id` = '" . (int)$recur['order_recurring_id'] . "' 

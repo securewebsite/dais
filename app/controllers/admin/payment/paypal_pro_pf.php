@@ -91,7 +91,7 @@ class PaypalProPf extends Controller {
         
         if (isset(Request::p()->post['paypal_pro_pf_partner'])) {
             $data['paypal_pro_pf_partner'] = Request::p()->post['paypal_pro_pf_partner'];
-        } elseif ($this->config->has('paypal_pro_pf_partner')) {
+        } elseif (Config::has('paypal_pro_pf_partner')) {
             $data['paypal_pro_pf_partner'] = Config::get('paypal_pro_pf_partner');
         } else {
             $data['paypal_pro_pf_partner'] = 'PayPal';

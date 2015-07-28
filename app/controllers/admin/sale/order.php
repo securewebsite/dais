@@ -2009,8 +2009,8 @@ class Order extends Controller {
         $json = array();
         
         if (Request::p()->server['REQUEST_METHOD'] == 'POST') {
-            if (!empty($this->request->files['file']['name'])) {
-                $filename = html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8');
+            if (!empty(Request::p()->files['file']['name'])) {
+                $filename = html_entity_decode(Request::p()->files['file']['name'], ENT_QUOTES, 'UTF-8');
                 
                 if ((Encode::strlen($filename) < 3) || (Encode::strlen($filename) > 128)) {
                     $json['error'] = Lang::get('lang_error_filename');
@@ -2037,31 +2037,31 @@ class Order extends Controller {
                     $allowed[] = trim($filetype);
                 }
                 
-                if (!in_array($this->request->files['file']['type'], $allowed)) {
+                if (!in_array(Request::p()->files['file']['type'], $allowed)) {
                     $json['error'] = Lang::get('lang_error_filetype');
                 }
                 
                 // Check to see if any PHP files are trying to be uploaded
-                $content = file_get_contents($this->request->files['file']['tmp_name']);
+                $content = file_get_contents(Request::p()->files['file']['tmp_name']);
                 
                 if (preg_match('/\<\?php/i', $content)) {
                     $json['error'] = Lang::get('lang_error_filetype');
                 }
                 
-                if ($this->request->files['file']['error'] != UPLOAD_ERR_OK) {
-                    $json['error'] = Lang::get('lang_error_upload_' . $this->request->files['file']['error']);
+                if (Request::p()->files['file']['error'] != UPLOAD_ERR_OK) {
+                    $json['error'] = Lang::get('lang_error_upload_' . Request::p()->files['file']['error']);
                 }
             } else {
                 $json['error'] = Lang::get('lang_error_upload');
             }
             
             if (!isset($json['error'])) {
-                if (is_uploaded_file($this->request->files['file']['tmp_name']) && file_exists($this->request->files['file']['tmp_name'])) {
+                if (is_uploaded_file(Request::p()->files['file']['tmp_name']) && file_exists(Request::p()->files['file']['tmp_name'])) {
                     $file = basename($filename) . '.' . md5(mt_rand());
                     
                     $json['file'] = $file;
                     
-                    move_uploaded_file($this->request->files['file']['tmp_name'], Config::get('path.download') . $file);
+                    move_uploaded_file(Request::p()->files['file']['tmp_name'], Config::get('path.download') . $file);
                 }
                 
                 $json['success'] = Lang::get('lang_text_upload');

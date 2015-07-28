@@ -54,7 +54,7 @@ class PostWall extends Controller {
         }
         
         $key = 'posts.masonry.' . (int)$widget;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)) {
             $image_width = 60 + (($setting['span'] - 1) * 100);
@@ -129,7 +129,7 @@ class PostWall extends Controller {
             }
             
             $cachefile = $masonry_posts;
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         }
         
         $data['posts'] = $cachefile;

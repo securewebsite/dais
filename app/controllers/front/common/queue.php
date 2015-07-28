@@ -44,9 +44,9 @@ class Queue extends Controller {
 	private function process() {
 		if ($this->queued):
 			foreach ($this->queued as $email):
-				$this->mailer->build($email['subject'], $email['email'], $email['name'], $email['text'], $email['html'], true);
+				Mailer::build($email['subject'], $email['email'], $email['name'], $email['text'], $email['html'], true);
 				// comment previous and uncomment below to test text message
-				//$this->mailer->build($email['subject'], $email['email'], $email['name'], $email['text'], false, true);
+				//Mailer::build($email['subject'], $email['email'], $email['name'], $email['text'], false, true);
 				ToolUtility::updateQueue($email['queue_id']);
 			endforeach;
 		endif;

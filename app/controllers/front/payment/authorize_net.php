@@ -122,7 +122,7 @@ class AuthorizeNet extends Controller {
         if (curl_error($curl)) {
             $json['error'] = 'CURL ERROR: ' . curl_errno($curl) . '::' . curl_error($curl);
             
-            $this->log->write('AUTHNET AIM CURL ERROR: ' . curl_errno($curl) . '::' . curl_error($curl));
+            Log::write('AUTHNET AIM CURL ERROR: ' . curl_errno($curl) . '::' . curl_error($curl));
         } elseif ($response) {
             $i = 1;
             
@@ -172,7 +172,7 @@ class AuthorizeNet extends Controller {
         } else {
             $json['error'] = 'Empty Gateway Response';
             
-            $this->log->write('AUTHNET AIM CURL ERROR: Empty Gateway Response');
+            Log::write('AUTHNET AIM CURL ERROR: Empty Gateway Response');
         }
         
         curl_close($curl);

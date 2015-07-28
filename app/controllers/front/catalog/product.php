@@ -789,7 +789,7 @@ class Product extends Controller {
             $file = basename($filename) . '.' . md5(mt_rand());
             
             // Hide the uploaded file name so people can not link to it directly.
-            $json['file'] = $this->encryption->encrypt($file);
+            $json['file'] = Encryption::encrypt($file);
             
             move_uploaded_file(Request::p()->files['file']['tmp_name'], Config::get('path.download') . $file);
             

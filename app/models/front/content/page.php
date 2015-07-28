@@ -20,7 +20,7 @@ use App\Models\Model;
 class Page extends Model {
     public function getPage($page_id) {
         $key = 'page.' . $page_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -40,9 +40,9 @@ class Page extends Model {
                 $query->row['tag'] = $this->getPageTags($page_id);
             
                 $cachefile = $query->row;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -52,7 +52,7 @@ class Page extends Model {
     
     public function getPages() {
         $key = 'pages.all.' . (int)Config::get('config_store_id');
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -71,9 +71,9 @@ class Page extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->rows;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -103,7 +103,7 @@ class Page extends Model {
     
     public function getPageLayoutId($page_id) {
         $key = 'page.layoutid.' . $page_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -115,9 +115,9 @@ class Page extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->row['layout_id'];
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, (int)0);
+                Cache::set($key, (int)0);
                 return 0;
             endif;
         endif;

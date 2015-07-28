@@ -298,12 +298,12 @@ class UserPermission extends Controller {
             'common/bread_crumb'
         );
         
-        $plugin_files = $this->plugin->getControllers();
+        $plugin_files = Plugin::getControllers();
         
         $data['permissions'] = array();
         
         $files = Theme::getFiles();
-        $files = array_merge($files, $this->plugin->getPlugins());
+        $files = array_merge($files, Plugin::getPlugins());
         
         foreach ($files as $file) {
             $filter = explode('/', dirname($file));

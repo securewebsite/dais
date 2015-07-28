@@ -20,7 +20,7 @@ use App\Models\Model;
 class ReturnReason extends Model {
     public function getReturnReason($return_reason_id) {
         $key = 'return.reason.' . $return_reason_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -32,9 +32,9 @@ class ReturnReason extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->row;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -73,7 +73,7 @@ class ReturnReason extends Model {
             $cachefile = $query->rows;
         } else {
             $key = 'return.reasons.all.' . (int)Config::get('config_store_id');
-            $cachefile = $this->cache->get($key);
+            $cachefile = Cache::get($key);
             
             if (is_bool($cachefile)) {
                 $query = DB::query("
@@ -85,9 +85,9 @@ class ReturnReason extends Model {
                 
                 if ($query->num_rows):
                     $cachefile = $query->rows;
-                    $this->cache->set($key, $cachefile);
+                    Cache::set($key, $cachefile);
                 else:
-                    $this->cache->set($key, array());
+                    Cache::set($key, array());
                     return array();
                 endif;
             }
@@ -98,7 +98,7 @@ class ReturnReason extends Model {
     
     public function getReturnReasonDescriptions($return_reason_id) {
         $key = 'return.reasons.descriptions.' . $return_reason_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $return_reason_data = array();
@@ -114,7 +114,7 @@ class ReturnReason extends Model {
             endforeach;
             
             $cachefile = $return_reason_data;
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         endif;
         
         return $cachefile;
@@ -122,7 +122,7 @@ class ReturnReason extends Model {
     
     public function getTotalReturnReasons() {
         $key = 'return.reasons.total.' . (int)Config::get('config_store_id');
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -131,7 +131,7 @@ class ReturnReason extends Model {
 				WHERE language_id = '" . (int)Config::get('config_language_id') . "'
 			");
             $cachefile = $query->row['total'];
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         endif;
         
         return $cachefile;

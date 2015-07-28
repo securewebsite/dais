@@ -28,10 +28,10 @@ class Mpdo implements DBContract {
     private $prefix;
 
     public function __construct() {
-        $this->prefix = env('DB_PREFIX' , '');
+        $this->prefix = $_ENV['DB_PREFIX'];
         
         try {
-            $this->pdo = new PDO("mysql:host=" . env('DB_HOST', '') . ";port=" . env('DB_PORT', '') . ";dbname=" . env('DB_DATABASE', ''), env('DB_USERNAME', ''), env('DB_PASSWORD', ''), array(PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true));
+            $this->pdo = new PDO("mysql:host=" . $_ENV['DB_HOST'] . ";port=" . $_ENV['DB_PORT'] . ";dbname=" . $_ENV['DB_DATABASE'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], array(PDO::ATTR_PERSISTENT => true, PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true));
         } catch(PDOException $e) {
             trigger_error('Error: Could not make a database link ( ' . $e->getMessage() . '). Error Code : ' . $e->getCode() . ' <br />');
         }

@@ -74,7 +74,7 @@ class PaypalExpress extends Model {
     
     public function log($data, $title = null) {
         if (Config::get('paypal_express_debug')) {
-            $this->log->write('PayPal Express debug (' . $title . '): ' . json_encode($data));
+            Log::write('PayPal Express debug (' . $title . '): ' . json_encode($data));
         }
     }
     
@@ -168,11 +168,11 @@ class PaypalExpress extends Model {
                 if ($option['type'] != 'file') {
                     $value = $option['value'];
                 } else {
-                    $filename = $this->encryption->decrypt($option['value']);
-                    $value = $this->encode->substr($filename, 0, $this->encode->strrpos($filename, '.'));
+                    $filename = Encryption::decrypt($option['value']);
+                    $value = Encode::substr($filename, 0, Encode::strrpos($filename, '.'));
                 }
                 
-                $data['L_PAYMENTREQUEST_0_DESC' . $i].= ($option_count > 0 ? ', ' : '') . $option['name'] . ':' . ($this->encode->strlen($value) > 20 ? $this->encode->substr($value, 0, 20) . '..' : $value);
+                $data['L_PAYMENTREQUEST_0_DESC' . $i].= ($option_count > 0 ? ', ' : '') . $option['name'] . ':' . (Encode::strlen($value) > 20 ? Encode::substr($value, 0, 20) . '..' : $value);
                 
                 $option_count++;
             }
@@ -189,16 +189,16 @@ class PaypalExpress extends Model {
             
             $data['L_PAYMENTREQUEST_0_QTY' . $i] = $item['quantity'];
             
-            $data['L_PAYMENTREQUEST_0_ITEMURL' . $i] = $this->url->link('catalog/product', 'product_id=' . $item['product_id']);
+            $data['L_PAYMENTREQUEST_0_ITEMURL' . $i] = Url::link('catalog/product', 'product_id=' . $item['product_id']);
             
             if (Config::get('config_cart_weight')) {
-                $weight = $this->weight->convert($item['weight'], $item['weight_class_id'], Config::get('config_weight_class_id'));
+                $weight = Weight::convert($item['weight'], $item['weight_class_id'], Config::get('config_weight_class_id'));
                 $data['L_PAYMENTREQUEST_0_ITEMWEIGHTVALUE' . $i] = number_format($weight / $item['quantity'], 2);
-                $data['L_PAYMENTREQUEST_0_ITEMWEIGHTUNIT' . $i] = $this->weight->getUnit(Config::get('config_weight_class_id'));
+                $data['L_PAYMENTREQUEST_0_ITEMWEIGHTUNIT' . $i] = Weight::getUnit(Config::get('config_weight_class_id'));
             }
             
             if ($item['length'] > 0 || $item['width'] > 0 || $item['height'] > 0) {
-                $unit = $this->length->getUnit($item['length_class_id']);
+                $unit = Length::getUnit($item['length_class_id']);
                 $data['L_PAYMENTREQUEST_0_ITEMLENGTHVALUE' . $i] = $item['length'];
                 $data['L_PAYMENTREQUEST_0_ITEMLENGTHUNIT' . $i] = $unit;
                 $data['L_PAYMENTREQUEST_0_ITEMWIDTHVALUE' . $i] = $item['width'];
@@ -210,8 +210,8 @@ class PaypalExpress extends Model {
             $i++;
         }
         
-        if (!empty($this->session->data['gift_cards'])) {
-            foreach ($this->session->data['gift_cards'] as $gift_card) {
+        if (!empty(Session::p()->data['gift_cards'])) {
+            foreach (Session::p()->data['gift_cards'] as $gift_card) {
                 $item_total+= Currency::format($gift_card['amount'], false, false, false);;
                 
                 $data['L_PAYMENTREQUEST_0_DESC' . $i] = '';
@@ -315,7 +315,7 @@ class PaypalExpress extends Model {
         /*
          * This will check the user agent and "try" to match if it is a mobile device
         */
-        if (preg_match("/Mobile|Android|BlackBerry|iPhone|Windows Phone/", $this->request->server['HTTP_USER_AGENT'])) {
+        if (preg_match("/Mobile|Android|BlackBerry|iPhone|Windows Phone/", Request::p()->server['HTTP_USER_AGENT'])) {
             return true;
         } else {
             return false;

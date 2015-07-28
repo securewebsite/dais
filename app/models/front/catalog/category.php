@@ -20,7 +20,7 @@ use App\Models\Model;
 class Category extends Model {
     public function getCategory($category_id) {
         $key = 'category.category.' . $category_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -39,9 +39,9 @@ class Category extends Model {
             if ($query->num_rows):
                 $query->row['tag'] = $this->getProductCategoryTags($category_id);
                 $cachefile = $query->row;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -71,7 +71,7 @@ class Category extends Model {
     
     public function getCategories($parent_id = 0) {
         $key = 'category.categories.' . $parent_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -90,9 +90,9 @@ class Category extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->rows;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -163,7 +163,7 @@ class Category extends Model {
     
     public function getCategoryLayoutId($category_id) {
         $key = 'category.category.layout.' . $category_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -175,9 +175,9 @@ class Category extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->row['layout_id'];
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, 0);
+                Cache::set($key, 0);
                 return false;
             endif;
         endif;
@@ -187,7 +187,7 @@ class Category extends Model {
     
     public function getTotalCategoriesByCategoryId($parent_id = 0) {
         $key = 'category.categories.total.' . $parent_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -201,7 +201,7 @@ class Category extends Model {
 			");
             
             $cachefile = $query->row['total'];
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         endif;
         
         return $cachefile;

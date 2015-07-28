@@ -20,7 +20,7 @@ use App\Models\Model;
 class GiftCardTheme extends Model {
     public function getGiftcardTheme($gift_card_theme_id) {
         $key = md5('gift_card.themeid.' . $gift_card_theme_id);
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -34,9 +34,9 @@ class GiftCardTheme extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->row;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -47,7 +47,7 @@ class GiftCardTheme extends Model {
     public function getGiftcardThemes($data = array()) {
         if (!empty($data)):
             $key = 'gift_card.themes.all.' . md5(serialize($data));
-            $cachefile = $this->cache->get($key);
+            $cachefile = Cache::get($key);
             
             if (is_bool($cachefile)):
                 $sql = "
@@ -80,16 +80,16 @@ class GiftCardTheme extends Model {
                 
                 if ($query->num_rows):
                     $cachefile = $query->rows;
-                    $this->cache->set($key, $cachefile);
+                    Cache::set($key, $cachefile);
                 else:
-                    $this->cache->set($key, array());
+                    Cache::set($key, array());
                     return array();
                 endif;
             endif;
             unset($key);
         else:
             $key = 'gift_card.themes.all.' . (int)Config::get('config_store_id');
-            $cachefile = $this->cache->get($key);
+            $cachefile = Cache::get($key);
             
             if (is_bool($cachefile)):
                 $query = DB::query("
@@ -103,9 +103,9 @@ class GiftCardTheme extends Model {
                 
                 if ($query->num_rows):
                     $cachefile = $query->rows;
-                    $this->cache->set($key, $cachefile);
+                    Cache::set($key, $cachefile);
                 else:
-                    $this->cache->set($key, array());
+                    Cache::set($key, array());
                     return array();
                 endif;
             endif;

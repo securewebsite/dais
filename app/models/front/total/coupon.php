@@ -19,12 +19,12 @@ use App\Models\Model;
 
 class Coupon extends Model {
     public function getTotal(&$total_data, &$total, &$taxes) {
-        if (isset($this->session->data['coupon'])):
+        if (isset(Session::p()->data['coupon'])):
             Lang::load('total/coupon');
             
             Theme::model('checkout/coupon');
             
-            $coupon_info = CheckoutCoupon::getCoupon($this->session->data['coupon']);
+            $coupon_info = CheckoutCoupon::getCoupon(Session::p()->data['coupon']);
             
             if ($coupon_info):
                 $discount_total = 0;
@@ -79,9 +79,9 @@ class Coupon extends Model {
                     $discount_total+= $discount;
                 endforeach;
                 
-                if ($coupon_info['shipping'] && isset($this->session->data['shipping_method'])):
-                    if (!empty($this->session->data['shipping_method']['tax_class_id'])):
-                        $tax_rates = \Tax::getRates($this->session->data['shipping_method']['cost'], $this->session->data['shipping_method']['tax_class_id']);
+                if ($coupon_info['shipping'] && isset(Session::p()->data['shipping_method'])):
+                    if (!empty(Session::p()->data['shipping_method']['tax_class_id'])):
+                        $tax_rates = \Tax::getRates(Session::p()->data['shipping_method']['cost'], Session::p()->data['shipping_method']['tax_class_id']);
                         
                         foreach ($tax_rates as $tax_rate):
                             if ($tax_rate['type'] == 'P'):
@@ -90,12 +90,12 @@ class Coupon extends Model {
                         endforeach;
                     endif;
                     
-                    $discount_total+= $this->session->data['shipping_method']['cost'];
+                    $discount_total+= Session::p()->data['shipping_method']['cost'];
                 endif;
                 
                 $total_data[] = array(
                     'code'       => 'coupon', 
-                    'title'      => sprintf(Lang::get('lang_text_coupon'), $this->session->data['coupon']), 
+                    'title'      => sprintf(Lang::get('lang_text_coupon'), Session::p()->data['coupon']), 
                     'text'       => Currency::format(-$discount_total), 
                     'value'      => - $discount_total, 
                     'sort_order' => Config::get('coupon_sort_order')

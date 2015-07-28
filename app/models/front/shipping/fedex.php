@@ -42,8 +42,8 @@ class Fedex extends Model {
         $quote_data = array();
         
         if ($status):
-            $weight      = $this->weight->convert(Cart::getWeight(), Config::get('config_weight_class_id'), Config::get('fedex_weight_class_id'));
-            $weight_code = strtoupper($this->weight->getUnit(Config::get('fedex_weight_class_id')));
+            $weight      = Weight::convert(Cart::getWeight(), Config::get('config_weight_class_id'), Config::get('fedex_weight_class_id'));
+            $weight_code = strtoupper(Weight::getUnit(Config::get('fedex_weight_class_id')));
             $date        = time();
             $day         = date('l', $date);
             
@@ -212,7 +212,7 @@ class Fedex extends Model {
             $title = Lang::get('lang_text_title');
             
             if (Config::get('fedex_display_weight')):
-                $title.= ' (' . Lang::get('lang_text_weight') . ' ' . $this->weight->format($weight, Config::get('fedex_weight_class_id')) . ')';
+                $title.= ' (' . Lang::get('lang_text_weight') . ' ' . Weight::format($weight, Config::get('fedex_weight_class_id')) . ')';
             endif;
             
             $method_data = array(

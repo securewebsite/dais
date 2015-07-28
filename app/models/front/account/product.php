@@ -26,7 +26,7 @@ class Product extends Model {
         endif;
         
         $key = 'product.' . $product_id . '.' . $customer_id;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -141,9 +141,9 @@ class Product extends Model {
                 );
                 
                 $cachefile = $product;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, 0);
+                Cache::set($key, 0);
                 return false;
             endif;
         endif;

@@ -40,7 +40,7 @@ class Fraud extends Model {
             $request.= '&region=' . urlencode($data['payment_zone']);
             $request.= '&postal=' . urlencode($data['payment_postcode']);
             $request.= '&country=' . urlencode($data['payment_country']);
-            $request.= '&domain=' . urlencode($this->encode->substr(strrchr($data['email'], '@'), 1));
+            $request.= '&domain=' . urlencode(Encode::substr(strrchr($data['email'], '@'), 1));
             $request.= '&custPhone=' . urlencode($data['telephone']);
             $request.= '&license_key=' . urlencode(Config::get('config_fraud_key'));
             
@@ -54,7 +54,7 @@ class Fraud extends Model {
             
             $request.= '&user_agent=' . urlencode($data['user_agent']);
             $request.= '&forwardedIP=' . urlencode($data['forwarded_ip']);
-            $request.= '&emailMD5=' . urlencode(md5($this->encode->strtolower($data['email'])));
+            $request.= '&emailMD5=' . urlencode(md5(Encode::strtolower($data['email'])));
             $request.= '&accept_language=' . urlencode($data['accept_language']);
             $request.= '&order_amount=' . urlencode(Currency::format($data['total'], $data['currency_code'], $data['currency_value'], false));
             $request.= '&order_currency=' . urlencode($data['currency_code']);

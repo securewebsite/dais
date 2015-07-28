@@ -417,8 +417,8 @@ class Download extends Controller {
         }
         
         if (!isset($json['error'])) {
-            if (!empty($this->request->files['file']['name'])) {
-                $filename = basename(html_entity_decode($this->request->files['file']['name'], ENT_QUOTES, 'UTF-8'));
+            if (!empty(Request::p()->files['file']['name'])) {
+                $filename = basename(html_entity_decode(Request::p()->files['file']['name'], ENT_QUOTES, 'UTF-8'));
                 
                 if ((Encode::strlen($filename) < 3) || (Encode::strlen($filename) > 128)) {
                     $json['error'] = Lang::get('lang_error_filename');
@@ -446,12 +446,12 @@ class Download extends Controller {
                     $allowed[] = trim($filetype);
                 }
                 
-                if (!in_array($this->request->files['file']['type'], $allowed)) {
+                if (!in_array(Request::p()->files['file']['type'], $allowed)) {
                     $json['error'] = Lang::get('lang_error_filetype');
                 }
                 
-                if ($this->request->files['file']['error'] != UPLOAD_ERR_OK) {
-                    $json['error'] = Lang::get('lang_error_upload_' . $this->request->files['file']['error']);
+                if (Request::p()->files['file']['error'] != UPLOAD_ERR_OK) {
+                    $json['error'] = Lang::get('lang_error_upload_' . Request::p()->files['file']['error']);
                 }
             } else {
                 $json['error'] = Lang::get('lang_error_upload');
@@ -459,13 +459,13 @@ class Download extends Controller {
         }
         
         if (!isset($json['error'])) {
-            if (is_uploaded_file($this->request->files['file']['tmp_name']) && file_exists($this->request->files['file']['tmp_name'])) {
+            if (is_uploaded_file(Request::p()->files['file']['tmp_name']) && file_exists(Request::p()->files['file']['tmp_name'])) {
                 $ext = md5(mt_rand());
                 
                 $json['filename'] = $filename . '.' . $ext;
                 $json['mask'] = $filename;
                 
-                move_uploaded_file($this->request->files['file']['tmp_name'], Config::get('path.download') . $filename . '.' . $ext);
+                move_uploaded_file(Request::p()->files['file']['tmp_name'], Config::get('path.download') . $filename . '.' . $ext);
             }
             
             $json['success'] = Lang::get('lang_text_upload');

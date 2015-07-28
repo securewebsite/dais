@@ -60,7 +60,7 @@ class Masonry extends Controller {
         }
         
         $key = 'products.masonry.' . (int)$widget;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)) {
             $image_width = 60 + (($setting['span'] - 1) * 100);
@@ -164,7 +164,7 @@ class Masonry extends Controller {
             }
             
             $cachefile = $masonry_products;
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         }
         
         $data['products'] = $cachefile;

@@ -90,7 +90,7 @@ class PaypalProIframe extends Controller {
         Theme::model('payment/paypal_pro_iframe');
         
         if (isset(Request::p()->post['custom'])) {
-            $order_id = $this->encryption->decrypt(Request::p()->post['custom']);
+            $order_id = Encryption::decrypt(Request::p()->post['custom']);
         } else {
             $order_id = 0;
         }
@@ -270,7 +270,7 @@ class PaypalProIframe extends Controller {
         $s_data['L_BUTTONVAR51'] = 'orderSummaryBgColor=#AEAEAE';
         $s_data['L_BUTTONVAR55'] = 'template=templateD';
         $s_data['L_BUTTONVAR56'] = 'return=' . Url::link('checkout/success', '', 'SSL');
-        $s_data['L_BUTTONVAR57'] = 'custom=' . $this->encryption->encrypt($order_info['order_id']);
+        $s_data['L_BUTTONVAR57'] = 'custom=' . Encryption::encrypt($order_info['order_id']);
         
         if (Config::get('paypal_pro_iframe_test')) {
             $url = 'https://api-3t.sandbox.paypal.com/nvp';

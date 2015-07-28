@@ -115,7 +115,7 @@ class Fedex extends Controller {
         
         if (isset(Request::p()->post['fedex_service'])) {
             $data['fedex_service'] = Request::p()->post['fedex_service'];
-        } elseif ($this->config->has('fedex_service')) {
+        } elseif (Config::has('fedex_service')) {
             $data['fedex_service'] = Config::get('fedex_service');
         } else {
             $data['fedex_service'] = array();

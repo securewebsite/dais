@@ -19,17 +19,17 @@ use App\Models\Model;
 
 class Shipping extends Model {
     public function getTotal(&$total_data, &$total, &$taxes) {
-        if (Cart::hasShipping() && isset($this->session->data['shipping_method'])):
+        if (Cart::hasShipping() && isset(Session::p()->data['shipping_method'])):
             $total_data[] = array(
                 'code'       => 'shipping', 
-                'title'      => $this->session->data['shipping_method']['title'], 
-                'text'       => Currency::format($this->session->data['shipping_method']['cost']), 
-                'value'      => $this->session->data['shipping_method']['cost'], 
+                'title'      => Session::p()->data['shipping_method']['title'], 
+                'text'       => Currency::format(Session::p()->data['shipping_method']['cost']), 
+                'value'      => Session::p()->data['shipping_method']['cost'], 
                 'sort_order' => Config::get('shipping_sort_order')
             );
             
-            if ($this->session->data['shipping_method']['tax_class_id']):
-                $tax_rates = \Tax::getRates($this->session->data['shipping_method']['cost'], $this->session->data['shipping_method']['tax_class_id']);
+            if (Session::p()->data['shipping_method']['tax_class_id']):
+                $tax_rates = \Tax::getRates(Session::p()->data['shipping_method']['cost'], Session::p()->data['shipping_method']['tax_class_id']);
                 
                 foreach ($tax_rates as $tax_rate):
                     if (!isset($taxes[$tax_rate['tax_rate_id']])):
@@ -40,7 +40,7 @@ class Shipping extends Model {
                 endforeach;
             endif;
             
-            $total += $this->session->data['shipping_method']['cost'];
+            $total += Session::p()->data['shipping_method']['cost'];
         endif;
     }
 }

@@ -51,7 +51,7 @@ class Image extends Model {
             $image->save(Config::get('path.image') . $new_image);
         }
         
-        if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+        if (isset(Request::p()->server['HTTPS']) && ((Request::p()->server['HTTPS'] == 'on') || (Request::p()->server['HTTPS'] == '1'))) {
             return Config::get('https.public') . 'image/' . $new_image;
         } else {
             return Config::get('http.public') . 'image/' . $new_image;

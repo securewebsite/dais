@@ -20,7 +20,7 @@ use App\Models\Model;
 class Layout extends Model {
     public function getLayout($route) {
         $key = 'layoutid.' . str_replace('/', '.', $route);
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -33,9 +33,9 @@ class Layout extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->row['layout_id'];
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, 0);
+                Cache::set($key, 0);
                 return 0;
             endif;
         endif;

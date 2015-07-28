@@ -20,7 +20,7 @@ use App\Models\Model;
 class Currency extends Model {
     public function getCurrencyByCode($currency) {
         $key = 'currency.' . $currency;
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $query = DB::query("
@@ -31,9 +31,9 @@ class Currency extends Model {
             
             if ($query->num_rows):
                 $cachefile = $query->row;
-                $this->cache->set($key, $cachefile);
+                Cache::set($key, $cachefile);
             else:
-                $this->cache->set($key, array());
+                Cache::set($key, array());
                 return array();
             endif;
         endif;
@@ -43,7 +43,7 @@ class Currency extends Model {
     
     public function getCurrencies() {
         $key = 'currency.all.' . (int)Config::get('config_store_id');
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)) {
             $currency_data = array();
@@ -55,7 +55,7 @@ class Currency extends Model {
             }
             
             $cachefile = $currency_data;
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         }
         
         return $cachefile;

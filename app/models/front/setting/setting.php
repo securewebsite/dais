@@ -20,7 +20,7 @@ use App\Models\Model;
 class Setting extends Model {
     public function getSetting($group, $store_id = 0) {
         $key = $group . '.setting.' . $store_id;
-        $rows = $this->cache->get($key);
+        $rows = Cache::get($key);
         
         $data = array();
         
@@ -33,7 +33,7 @@ class Setting extends Model {
 			");
             
             $rows = $query->rows;
-            $this->cache->set($key, $rows);
+            Cache::set($key, $rows);
         endif;
         
         foreach ($rows as $result):

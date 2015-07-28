@@ -64,8 +64,8 @@ class Search extends Controller {
 
         if ($search):
 
-            $results      = $this->search->execute($search, $filter);
-            $result_total = $this->search->total();
+            $results      = \Search::execute($search, $filter);
+            $result_total = \Search::total();
 
             if ($results):
                 foreach ($results as $key => $result):

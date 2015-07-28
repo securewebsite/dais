@@ -165,16 +165,9 @@ class Home extends Controller {
             
             $data['pagination'] = Theme::paginate($post_total, $page, $limit, Lang::get('lang_text_pagination'), Url::link('content/home', $url . '&page={page}'));
             
-            $data['sort'] = $sort;
+            $data['sort']  = $sort;
             $data['order'] = $order;
             $data['limit'] = $limit;
-            
-            // Search
-            if (isset(Request::p()->get['filter_name'])):
-                $data['filter_name'] = Request::p()->get['filter_name'];
-            else:
-                $data['filter_name'] = '';
-            endif;
             
             $data = Theme::listen(__CLASS__, __FUNCTION__, $data);
             

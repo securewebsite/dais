@@ -27,9 +27,9 @@ class Mysqli implements DBContract {
 	private $prefix;
 
 	public function __construct() {
-		$this->prefix = env('DB_PREFIX' , '');
+		$this->prefix = $_ENV['DB_PREFIX'];
 
-		$this->link = new Msq(env('DB_HOST', ''), env('DB_USERNAME',''), env('DB_PASSWORD', ''), env('DB_DATABASE',''));
+		$this->link = new Msq($_ENV['DB_HOST'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], $_ENV['DB_DATABASE']);
 
 		if ($this->link->connect_error):
 			trigger_error('Error: Could not make a database link (' . $this->link->connect_errno . ') ' . $this->link->connect_error);

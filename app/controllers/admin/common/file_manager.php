@@ -430,8 +430,8 @@ class FileManager extends Controller {
         $json = array();
         
         if (isset(Request::p()->post['directory'])) {
-            if (isset($this->request->files['image']) && $this->request->files['image']['tmp_name']) {
-                $filename = basename(html_entity_decode($this->request->files['image']['name'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->files['image']) && Request::p()->files['image']['tmp_name']) {
+                $filename = basename(html_entity_decode(Request::p()->files['image']['name'], ENT_QUOTES, 'UTF-8'));
                 
                 if ((strlen($filename) < 3) || (strlen($filename) > 255)) {
                     $json['error'] = Lang::get('lang_error_filename');
@@ -443,13 +443,13 @@ class FileManager extends Controller {
                     $json['error'] = Lang::get('lang_error_directory');
                 }
                 
-                if ($this->request->files['image']['size'] > 300000000) {
+                if (Request::p()->files['image']['size'] > 300000000) {
                     $json['error'] = Lang::get('lang_error_file_size');
                 }
                 
                 $allowed = array('image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png', 'image/gif', 'application/x-shockwave-flash');
                 
-                if (!in_array($this->request->files['image']['type'], $allowed)) {
+                if (!in_array(Request::p()->files['image']['type'], $allowed)) {
                     $json['error'] = Lang::get('lang_error_file_type');
                 }
                 
@@ -460,14 +460,14 @@ class FileManager extends Controller {
                 }
                 
                 // Check to see if any PHP files are trying to be uploaded
-                $content = file_get_contents($this->request->files['image']['tmp_name']);
+                $content = file_get_contents(Request::p()->files['image']['tmp_name']);
                 
                 if (preg_match('/\<\?php/i', $content)) {
                     $json['error'] = Lang::get('lang_error_file_type');
                 }
                 
-                if ($this->request->files['image']['error'] != UPLOAD_ERR_OK) {
-                    $json['error'] = 'error_upload_' . $this->request->files['image']['error'];
+                if (Request::p()->files['image']['error'] != UPLOAD_ERR_OK) {
+                    $json['error'] = 'error_upload_' . Request::p()->files['image']['error'];
                 }
             } else {
                 $json['error'] = Lang::get('lang_error_file');
@@ -481,7 +481,7 @@ class FileManager extends Controller {
         }
         
         if (!isset($json['error'])) {
-            if (@move_uploaded_file($this->request->files['image']['tmp_name'], $directory . '/' . $filename)) {
+            if (@move_uploaded_file(Request::p()->files['image']['tmp_name'], $directory . '/' . $filename)) {
                 $json['success'] = Lang::get('lang_text_uploaded');
             } else {
                 $json['error'] = Lang::get('lang_error_uploaded');
@@ -499,8 +499,8 @@ class FileManager extends Controller {
         $json = array();
         
         if (isset(Request::p()->post['directory'])) {
-            if (isset($this->request->files['image']) && $this->request->files['image']['tmp_name']) {
-                $filename = basename(html_entity_decode($this->request->files['image']['name'], ENT_QUOTES, 'UTF-8'));
+            if (isset(Request::p()->files['image']) && Request::p()->files['image']['tmp_name']) {
+                $filename = basename(html_entity_decode(Request::p()->files['image']['name'], ENT_QUOTES, 'UTF-8'));
                 
                 if ((strlen($filename) < 3) || (strlen($filename) > 255)) {
                     $json['error'] = Lang::get('lang_error_filename');
@@ -512,13 +512,13 @@ class FileManager extends Controller {
                     $json['error'] = Lang::get('lang_error_directory');
                 }
                 
-                if ($this->request->files['image']['size'] > 300000) {
+                if (Request::p()->files['image']['size'] > 300000) {
                     $json['error'] = Lang::get('lang_error_file_size');
                 }
                 
                 $allowed = array('image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png', 'image/gif', 'application/x-shockwave-flash');
                 
-                if (!in_array($this->request->files['image']['type'], $allowed)) {
+                if (!in_array(Request::p()->files['image']['type'], $allowed)) {
                     $json['error'] = Lang::get('lang_error_file_type');
                 }
                 
@@ -529,14 +529,14 @@ class FileManager extends Controller {
                 }
                 
                 // Check to see if any PHP files are trying to be uploaded
-                $content = file_get_contents($this->request->files['image']['tmp_name']);
+                $content = file_get_contents(Request::p()->files['image']['tmp_name']);
                 
                 if (preg_match('/\<\?php/i', $content)) {
                     $json['error'] = Lang::get('lang_error_file_type');
                 }
                 
-                if ($this->request->files['image']['error'] != UPLOAD_ERR_OK) {
-                    $json['error'] = 'error_upload_' . $this->request->files['image']['error'];
+                if (Request::p()->files['image']['error'] != UPLOAD_ERR_OK) {
+                    $json['error'] = 'error_upload_' . Request::p()->files['image']['error'];
                 }
             } else {
                 $json['error'] = Lang::get('lang_error_file');
@@ -550,7 +550,7 @@ class FileManager extends Controller {
         }
         
         if (!isset($json['error'])) {
-            if (@move_uploaded_file($this->request->files['image']['tmp_name'], $directory . '/' . $filename)) {
+            if (@move_uploaded_file(Request::p()->files['image']['tmp_name'], $directory . '/' . $filename)) {
                 $json['success'] = PUBLIC_IMAGE . Request::p()->post['directory'] . '/' . $filename;
             } else {
                 $json['error'] = Lang::get('lang_error_uploaded');

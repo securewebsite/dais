@@ -45,7 +45,7 @@ class Usps extends Model {
             
             $quote_data = array();
             
-            $weight     = $this->weight->convert(Cart::getWeight(), Config::get('config_weight_class_id'), Config::get('usps_weight_class_id'));
+            $weight     = Weight::convert(Cart::getWeight(), Config::get('config_weight_class_id'), Config::get('usps_weight_class_id'));
             $weight     = ($weight < 0.1 ? 0.1 : $weight);
             $pounds     = floor($weight);
             $ounces     = round(16 * ($weight - $pounds), 2);
@@ -137,8 +137,8 @@ class Usps extends Model {
                 
                 if ($result):
                     if (Config::get('usps_debug')):
-                        $this->log->write("USPS DATA SENT: " . urldecode($request));
-                        $this->log->write("USPS DATA RECV: " . $result);
+                        Log::write("USPS DATA SENT: " . urldecode($request));
+                        Log::write("USPS DATA RECV: " . $result);
                     endif;
                     
                     $dom = new \DOMDocument('1.0', 'UTF-8');
@@ -247,7 +247,7 @@ class Usps extends Model {
                 $title = Lang::get('lang_text_title');
                 
                 if (Config::get('usps_display_weight')):
-                    $title.= ' (' . Lang::get('lang_text_weight') . ' ' . $this->weight->format($weight, Config::get('usps_weight_class_id')) . ')';
+                    $title.= ' (' . Lang::get('lang_text_weight') . ' ' . Weight::format($weight, Config::get('usps_weight_class_id')) . ')';
                 endif;
                 
                 $method_data = array(

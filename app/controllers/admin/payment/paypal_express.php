@@ -285,18 +285,18 @@ class PaypalExpress extends Controller {
                     $parent_transaction = PaymentPaypalExpress::getLocalTransaction($transaction['parent_transaction_id']);
                     
                     if ($parent_transaction['amount'] == abs($transaction['amount'])) {
-                        $this->db->query("
-							UPDATE `{$this->db->prefix}paypal_order_transaction` 
+                        DB::query("
+							UPDATE `" . DB::prefix() . "paypal_order_transaction` 
 							SET 
 								`payment_status` = 'Refunded' 
-							WHERE `transaction_id` = '" . $this->db->escape($transaction['parent_transaction_id']) . "' 
+							WHERE `transaction_id` = '" . DB::escape($transaction['parent_transaction_id']) . "' 
 							LIMIT 1");
                     } else {
-                        $this->db->query("
-							UPDATE `{$this->db->prefix}paypal_order_transaction` 
+                        DB::query("
+							UPDATE `" . DB::prefix() . "paypal_order_transaction` 
 							SET 
 								`payment_status` = 'Partially-Refunded' 
-							WHERE `transaction_id` = '" . $this->db->escape($transaction['parent_transaction_id']) . "' 
+							WHERE `transaction_id` = '" . DB::escape($transaction['parent_transaction_id']) . "' 
 							LIMIT 1");
                     }
                     
@@ -629,18 +629,18 @@ class PaypalExpress extends Controller {
                         
                         //edit transaction to refunded status
                         if ($result['TOTALREFUNDEDAMOUNT'] == Request::p()->post['amount_original']) {
-                            $this->db->query("
-								UPDATE `{$this->db->prefix}paypal_order_transaction` 
+                            DB::query("
+								UPDATE `" . DB::prefix() . "paypal_order_transaction` 
 								SET 
 									`payment_status` = 'Refunded' 
-								WHERE `transaction_id` = '" . $this->db->escape(Request::p()->post['transaction_id']) . "' 
+								WHERE `transaction_id` = '" . DB::escape(Request::p()->post['transaction_id']) . "' 
 								LIMIT 1");
                         } else {
-                            $this->db->query("
-								UPDATE `{$this->db->prefix}paypal_order_transaction` 
+                            DB::query("
+								UPDATE `" . DB::prefix() . "paypal_order_transaction` 
 								SET 
 									`payment_status` = 'Partially-Refunded' 
-								WHERE `transaction_id` = '" . $this->db->escape(Request::p()->post['transaction_id']) . "' 
+								WHERE `transaction_id` = '" . DB::escape(Request::p()->post['transaction_id']) . "' 
 								LIMIT 1");
                         }
                         
@@ -888,15 +888,15 @@ class PaypalExpress extends Controller {
             $result = PaymentPaypalExpress::recurringCancel($recurring['reference']);
             
             if (isset($result['PROFILEID'])) {
-                $this->db->query("
-					INSERT INTO `{$this->db->prefix}order_recurring_transaction` 
+                DB::query("
+					INSERT INTO `" . DB::prefix() . "order_recurring_transaction` 
 					SET 
 						`order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "', 
 						`date_added` = NOW(), 
 						`type` = '5'");
                 
-                $this->db->query("
-					UPDATE `{$this->db->prefix}order_recurring` 
+                DB::query("
+					UPDATE `" . DB::prefix() . "order_recurring` 
 					SET 
 						`status` = 4 
 					WHERE `order_recurring_id` = '" . (int)$recurring['order_recurring_id'] . "' 

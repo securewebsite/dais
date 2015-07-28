@@ -143,7 +143,7 @@ class PaypalPro extends Controller {
         curl_close($curl);
         
         if (!$response) {
-            $this->log->write('DoDirectPayment failed: ' . curl_error($curl) . '(' . curl_errno($curl) . ')');
+            Log::write('DoDirectPayment failed: ' . curl_error($curl) . '(' . curl_errno($curl) . ')');
         }
         
         $response_info = array();

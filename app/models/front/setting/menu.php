@@ -20,7 +20,7 @@ use App\Models\Model;
 class Menu extends Model {
     public function getMenu($menu_id) {
         $key = 'menu.' . $menu_id;
-        $row = $this->cache->get($key);
+        $row = Cache::get($key);
         
         if (is_bool($row)):
             $query = DB::query("
@@ -31,7 +31,7 @@ class Menu extends Model {
 			");
             
             $row = $query->row;
-            $this->cache->set($key, $row);
+            Cache::set($key, $row);
         endif;
         unset($key);
         
@@ -48,7 +48,7 @@ class Menu extends Model {
     
     public function getDefault() {
         $key = 'menu.default.layoutid';
-        $row = $this->cache->get($key);
+        $row = Cache::get($key);
         
         if (is_bool($row)):
             $query = DB::query("
@@ -58,7 +58,7 @@ class Menu extends Model {
 			");
             
             $row = $query->row['layout_id'];
-            $this->cache->set($key, $row);
+            Cache::set($key, $row);
         endif;
         
         return $row;
@@ -66,7 +66,7 @@ class Menu extends Model {
     
     public function getLayouts($route) {
         $key = 'menu.layouts.' . str_replace('/', '.', rtrim($route, '/'));
-        $cachefile = $this->cache->get($key);
+        $cachefile = Cache::get($key);
         
         if (is_bool($cachefile)):
             $layouts = array();
@@ -82,7 +82,7 @@ class Menu extends Model {
             endforeach;
             
             $cachefile = $layouts;
-            $this->cache->set($key, $cachefile);
+            Cache::set($key, $cachefile);
         endif;
         
         return $cachefile;

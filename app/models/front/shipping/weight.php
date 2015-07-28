@@ -66,7 +66,7 @@ class Weight extends Model {
                 if ((string)$cost != ''):
                     $quote_data['weight_' . $result['geo_zone_id']] = array(
                         'code'         => 'weight.weight_' . $result['geo_zone_id'], 
-                        'title'        => $result['name'] . '  (' . Lang::get('lang_text_weight') . ' ' . $this->weight->format($weight, Config::get('config_weight_class_id')) . ')', 
+                        'title'        => $result['name'] . '  (' . Lang::get('lang_text_weight') . ' ' . Weight::format($weight, Config::get('config_weight_class_id')) . ')', 
                         'cost'         => $cost, 
                         'tax_class_id' => Config::get('weight_tax_class_id'), 
                         'text'         => Currency::format(Tax::calculate($cost, Config::get('weight_tax_class_id'), Config::get('config_tax')))

@@ -72,8 +72,8 @@ class Category extends Model {
                 endforeach;
             endif;
 
-            $this->search->add($language_id, 'category', $category_id, $value['name']);
-            $this->search->add($language_id, 'category', $category_id, $value['description']);
+            Search::add($language_id, 'category', $category_id, $value['name']);
+            Search::add($language_id, 'category', $category_id, $value['description']);
         }
         
         // MySQL Hierarchical Data Closure Table Pattern
@@ -218,11 +218,11 @@ class Category extends Model {
             endif;
 
             // delete
-            $this->search->delete('category', $category_id);
+            Search::delete('category', $category_id);
 
             // insert
-            $this->search->add($language_id, 'category', $category_id, $value['name']);
-            $this->search->add($language_id, 'category', $category_id, $value['description']);
+            Search::add($language_id, 'category', $category_id, $value['name']);
+            Search::add($language_id, 'category', $category_id, $value['description']);
         }
         
         // MySQL Hierarchical Data Closure Table Pattern
@@ -447,7 +447,7 @@ class Category extends Model {
             WHERE section  = 'product_category' 
             AND element_id = '" . (int)$category_id . "'");
 
-        $this->search->delete('category', $category_id);
+        Search::delete('category', $category_id);
         
         Cache::delete('category');
         

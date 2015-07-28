@@ -110,6 +110,9 @@ if (!isset($_ENV) || empty($_ENV['DB_DATABASE'])):
 endif;
 
 
+// Include our version file
+require dirname(__DIR__) . SEP . 'peaches' . SEP . 'version.php';
+
 /*
 |--------------------------------------------------------------------------
 |   Assemble Application
